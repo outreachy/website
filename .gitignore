@@ -1,0 +1,5 @@
+# Python compiled files
+*.pyc
+# Django sqlite database for local development experiments
+# The real server will use a different post gres database
+db.sqlite3
