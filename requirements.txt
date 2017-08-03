@@ -1,16 +1,18 @@
 beautifulsoup4==4.6.0
 certifi==2017.7.27.1
 chardet==3.0.4
+dj-database-url==0.4.2
 Django==1.11.4
 django-modelcluster==3.1
 django-taggit==0.22.1
 django-treebeard==4.1.2
 djangorestframework==3.6.3
+gunicorn==19.7.1
 html5lib==0.999999999
 idna==2.5
 olefile==0.44
 Pillow==4.2.1
-pkg-resources==0.0.0
+psycopg2==2.7.3
 pytz==2017.2
 requests==2.18.2
 six==1.10.0
@@ -18,4 +20,5 @@ Unidecode==0.4.21
 urllib3==1.22
 wagtail==1.11.1
 webencodings==0.5.1
+whitenoise==3.3.0
 Willow==0.4
