@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-roundindexpage{% endblock %}
+
+{% block content %}
+    <h1>Outreachy Round {{ page.specific.roundnumber }}</h1>
+
+    <p>This page contains information specific to the {{ page.specific.internshipstartdate }} to {{ page.specific.internshipenddate }}
+       round of {# FIXME how do I reference the root URL #}Outreachy internships.
+       The application deadline for this round is {{ page.specific.applicationsopendate }}.
+    </p>
+
+    <h1>Sponsors</h1>
+
+    {{ page.specific.sponsordetails|richtext }}
+
+    <p>This round is generously sponsored by the following organizations and companies.</p>
+
+    {# I think there's a way to conditionally add the ul tags only if there's page children, but meh for now. #}
+    <ul>
+    {% for round in page.get_children %}
+	{# Rounds may have spread the word pages as children, so instead of using get_children, we should do http://docs.wagtail.io/en/v1.11.1/topics/pages.html#customising-template-context #}
+        <li><a href="{% pageurl round %}">{{ round.specific.roundname }}</a> ({{ round.specific.internshipstartdate }} - {{ round.specific.internshipenddate }}) {{ round.get_children|length }} FOSS communities offered internships
+        </li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}
