@@ -1,4 +1,5 @@
 {% load static wagtailuserbar %}
+{% load wagtailcore_tags %}
 
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -22,7 +23,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         {# Global stylesheets #}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/outreachyhome.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 
         {% block extra_css %}
             {# Override this in templates to add extra stylesheets #}
@@ -31,11 +34,45 @@
 
     <body class="{% block body_class %}{% endblock %}">
         {% wagtailuserbar %}
+        <div class="fixed-container">
+                <div class="navbar nav-container">
+                        <div class="container">
+                                <button type="button" class="btn btn-navbar collapsed" data-toggle="collapse" data-target=".nav-collapse" >
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span></button>
+                                        <a class="brand" href="/">Outreachy</a>                
+                                        <div class="nav-collapse collapse" style="height: 0px;">
+                                            <ul class="nav">
+						{% for headerp in header_pages %}
+                                                    <li><a href="{% pageurl headerp %}">{{ headerp.title }}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                </div>
+                        </div>
+
+                </div>
+        </div>
+        <div class="container" id="home">
 
         {% block content %}{% endblock %}
+        </div>
 
+        <div class="footer">
+                <div class="footer-art"></div>
+                <div class="footer-grass"></div>
+                <div class="footer-wrapper">
+                        <ul class="footer-links">
+                                <li>Copyright © 2017 Outreachy</li>
+                                <li class="cc-description">Free to share and remix: <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons CC-BY</a>, except for the individual organization logos, which are property of their respective owners.</li>
+                        </ul>
+                </div>
+        </div>
         {# Global javascript #}
-        <script type="text/javascript" src="{% static 'js/outreachyhome.js' %}"></script>
+	<script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
+	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
 
         {% block extra_js %}
             {# Override this in templates to add extra javascript #}
