@@ -4,13 +4,23 @@ from django.db import models
 
 from wagtail.wagtailcore.models import Page
 from wagtail.wagtailcore.fields import RichTextField
+from wagtail.wagtailcore.fields import StreamField
 from wagtail.wagtailadmin.edit_handlers import FieldPanel
+from wagtail.wagtailcore import blocks
+from wagtail.wagtailadmin.edit_handlers import StreamFieldPanel
+from wagtail.wagtailimages.blocks import ImageChooserBlock
+from wagtail.contrib.table_block.blocks import TableBlock
 
 class HomePage(Page):
-
-    body = RichTextField(default='<p>Outreachy provides three-month, paid, remote internships for people traditionally underrepresented in tech. Individual donors and corporate sponsors provide funding for the program, and interns are often hired by our sponsors! Interns work directly with mentors from Free and Open Source (FOSS) communities on projects ranging from programming, user experience, documentation, illustration and graphical design, and data science.</p><p>Outreachy internships are open internationally to women (cis and trans), trans men, and genderqueer people. Internships are also open to residents and nationals of the United States of any gender who are Black/African American, Hispanic/Latin@, American Indian, Alaska Native, Native Hawaiian, or Pacific Islander. We are planning to expand the program to more participants from underrepresented backgrounds in the future.</p><p>Outreachy internships run twice a year.</p>')
+    body = StreamField([
+        ('heading', blocks.CharBlock(classname="full title")),
+        ('paragraph', blocks.RichTextBlock()),
+        ('image', ImageChooserBlock()),
+        ('date', blocks.DateBlock()),
+        ('table', TableBlock()),
+    ])
     content_panels = Page.content_panels + [
-        FieldPanel('body', classname="full"),
+        StreamFieldPanel('body', classname="full"),
     ]
 
 class RichTextOnly(Page):
