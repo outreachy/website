@@ -2,6 +2,7 @@ beautifulsoup4==4.6.0
 certifi==2017.7.27.1
 chardet==3.0.4
 dj-database-url==0.4.2
+dj-static==0.0.6
 Django==1.11.4
 django-modelcluster==3.1
 django-taggit==0.22.1
@@ -16,6 +17,7 @@ psycopg2==2.7.3
 pytz==2017.2
 requests==2.18.2
 six==1.10.0
+static3==0.7.0
 Unidecode==0.4.21
 urllib3==1.22
 wagtail==1.11.1
