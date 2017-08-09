@@ -1,9 +1,16 @@
 {% extends "base.html" %}
 
 {% load wagtailcore_tags %}
+{% load wagtailimages_tags %}
 
 {% block body_class %}template-homepage{% endblock %}
 
 {% block content %}
-    {% include_block page.body %}
+    {% for thingie in page.body %}
+        {% if thingie.block_type == 'logo' %}
+            <center>{% image thingie.value max-200x200 %}</center>
+        {% else %}
+            {% include_block thingie %}
+        {% endif %}
+    {% endfor %}
 {% endblock %}

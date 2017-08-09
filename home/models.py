@@ -16,6 +16,7 @@ class HomePage(Page):
         ('heading', blocks.CharBlock(classname="full title")),
         ('paragraph', blocks.RichTextBlock()),
         ('image', ImageChooserBlock()),
+        ('logo', ImageChooserBlock()),
         ('date', blocks.DateBlock()),
         ('table', TableBlock()),
     ])
