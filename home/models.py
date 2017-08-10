@@ -10,6 +10,7 @@ from wagtail.wagtailcore import blocks
 from wagtail.wagtailadmin.edit_handlers import StreamFieldPanel
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 from wagtail.contrib.table_block.blocks import TableBlock
+from wagtail.wagtailembeds.blocks import EmbedBlock
 
 class HomePage(Page):
     body = StreamField([
@@ -19,6 +20,7 @@ class HomePage(Page):
         ('logo', ImageChooserBlock()),
         ('date', blocks.DateBlock()),
         ('table', TableBlock()),
+        ('quote', blocks.RichTextBlock()),
     ])
     content_panels = Page.content_panels + [
         StreamFieldPanel('body', classname="full"),
