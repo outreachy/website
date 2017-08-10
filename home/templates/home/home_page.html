@@ -12,6 +12,8 @@
         {# Note: Wagtail's BlockQuoteBlock uses raw text as the value, so this is a work-around with a rich text base. #}
         {% elif thingie.block_type == 'quote' %}
             <blockquote>{{ thingie.value }}</blockquote>
+        {% elif thingie.block_type == 'table' %}
+            <div class="table">{% include_block thingie %}</div>
         {% else %}
             {% include_block thingie %}
         {% endif %}
