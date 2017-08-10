@@ -44,7 +44,6 @@ INSTALLED_APPS = [
 
     'modelcluster',
     'taggit',
-    'wagtailtinymce',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -147,14 +146,3 @@ WAGTAIL_SITE_NAME = "outreachyhome"
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 BASE_URL = 'http://example.com'
-
-# Don't use the default wagtail richtext editor, since it can't handle bulleted sub-lists:
-# https://stackoverflow.com/questions/45622014/creating-sub-lists-with-wagtail-richtext-streamfield/45622309#45622309
-#
-# Revisit this for the next round to see if the Wagtail devs have migrated
-# to a better default rich text editor.
-WAGTAILADMIN_RICH_TEXT_EDITORS = {
-    'default': {
-        'WIDGET': 'wagtailtinymce.rich_text.TinyMCERichTextArea'
-    },
-}
