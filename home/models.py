@@ -41,15 +41,33 @@ class RoundsIndexPage(Page):
 
 class RoundPage(Page):
     roundnumber = models.IntegerField()
-    applicationsopendate = models.DateField("Date applications open")
-    internshipstartdate = models.DateField("Date internships start")
-    internshipenddate = models.DateField("Date internships end")
+    pingnew = models.DateField("Date to start pinging new orgs", blank=True, default='2017-08-01')
+    pingold = models.DateField("Date to start pinging past orgs", blank=True, default='2017-08-07')
+    orgreminder = models.DateField("Date to remind orgs to submit their home pages", blank=True, default='2017-08-14')
+    landingdue = models.DateField("Date community landing pages are due", blank=True, default='2017-08-28')
+    appsopen = models.DateField("Date applications open", default='2017-09-07')
+    lateorgs = models.DateField("Last date to add community landing pages", blank=True, default='2017-10-02')
+    appsclose = models.DateField("Date applications are due", blank=True, default='2017-10-23')
+    appslate = models.DateField("Date extended applications are due", blank=True, default='2017-10-30')
+    internstarts = models.DateField("Date internships start", default='2017-12-05')
+    midfeedback = models.DateField("Date mid-point feedback is due", blank=True, default='2018-01-16')
+    internends = models.DateField("Date internships end", default='2018-03-05')
+    finalfeedback = models.DateField("Date final feedback is due", blank=True, default='2018-03-12')
     sponsordetails = RichTextField(default='<p>Outreachy is hosted by the <a href="https://sfconservancy.org/">Software Freedom Conservancy</a> with special support from Red Hat, GNOME, and <a href="http://otter.technology">Otter Tech</a>. We invite companies and free and open source communities to sponsor internships in the next round.</p>')
 
     content_panels = Page.content_panels + [
         FieldPanel('roundnumber'),
-        FieldPanel('applicationsopendate'),
-        FieldPanel('internshipstartdate'),
-        FieldPanel('internshipenddate'),
+        FieldPanel('pingnew'),
+        FieldPanel('pingold'),
+        FieldPanel('orgreminder'),
+        FieldPanel('landingdue'),
+        FieldPanel('appsopen'),
+        FieldPanel('lateorgs'),
+        FieldPanel('appsclose'),
+        FieldPanel('appslate'),
+        FieldPanel('internstarts'),
+        FieldPanel('midfeedback'),
+        FieldPanel('internends'),
+        FieldPanel('finalfeedback'),
         FieldPanel('sponsordetails', classname="full"),
     ]
