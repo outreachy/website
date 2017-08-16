@@ -8,7 +8,7 @@
 {% block content %}
     {% for thingie in page.body %}
         {% if thingie.block_type == 'logo' %}
-            <center>{% image thingie.value max-200x200 %}</center>
+            <center>{% image thingie.value max-200x200 style="padding-top:20px; padding-left:30px;" %}</center>
         {# Note: Wagtail's BlockQuoteBlock uses raw text as the value, so this is a work-around with a rich text base. #}
         {% elif thingie.block_type == 'quote' %}
             <blockquote>{{ thingie.value }}</blockquote>
