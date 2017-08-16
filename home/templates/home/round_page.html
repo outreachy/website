@@ -19,4 +19,8 @@
         <tr><td>{{ page.specific.internannounce }}</td><td>Accepted interns announced on this page at 4pm UTC</td></tr>
         <tr><td>{{ page.specific.appsopen }}</td><td>Internships period</td></tr>
     </table>
+    <h2>Participating Organizations</h2>
+    {% if not page.get_children %}
+        <p>Free and open source software (FOSS) communities that are are offering internships in this round will be listed soon!</p>
+    {% endif %}
 {% endblock %}
