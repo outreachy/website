@@ -1,11 +1,17 @@
 from __future__ import absolute_import, unicode_literals
 
+from os import urandom
+from base64 import urlsafe_b64encode
+
 from django.db import models
 
+from modelcluster.fields import ParentalKey
+from wagtail.wagtailcore.models import Orderable
 from wagtail.wagtailcore.models import Page
 from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailcore.fields import StreamField
 from wagtail.wagtailadmin.edit_handlers import FieldPanel
+from wagtail.wagtailadmin.edit_handlers import InlinePanel
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailadmin.edit_handlers import StreamFieldPanel
 from wagtail.wagtailimages.blocks import ImageChooserBlock
@@ -72,4 +78,38 @@ class RoundPage(Page):
         FieldPanel('internends'),
         FieldPanel('finalfeedback'),
         FieldPanel('sponsordetails', classname="full"),
+    ]
+
+def mentor_id():
+    # should be a multiple of three
+    return urlsafe_b64encode(urandom(9))
+
+class CommunityPage(Page):
+    community_name = models.CharField(max_length=255)
+
+    content_panels = Page.content_panels + [
+            FieldPanel('community_name'),
+            InlinePanel('mentors', label="Mentor, reviewer, and coordinator invitations", help_text="Please provide email addresses so we can send invitations to mentors, coordinators, and reviewers to create an Outreachy site login."),
+    ]
+
+class CommunityMentorInvite(Orderable):
+    page = ParentalKey(CommunityPage, related_name='mentors')
+    name = models.CharField(max_length=255, verbose_name="Mentor name")
+    email = models.EmailField(verbose_name="Mentor email")
+    COORDINATOR = 'CO'
+    MENTOR = 'ME'
+    REVIEWER = 'RE'
+    ROLE_CHOICES = (
+            (COORDINATOR, 'Coordinator. They are helping track mentors and find funding. Coordinators may also be mentors, and thus also have permissions to add or edit project pages.'),
+            (MENTOR, "Mentor. They need to add a project page or edit a co-mentor's project page."),
+            (REVIEWER, "Applicant reviewer. They will not be given access to modify the community page or add/modify project pages."),
+    )
+
+    role = models.CharField(max_length=2, default=MENTOR, choices=ROLE_CHOICES)
+    token = models.CharField(max_length=42, unique=True, default=mentor_id)
+
+    panels = [
+            FieldPanel('name'),
+            FieldPanel('email'),
+            FieldPanel('role'),
     ]
