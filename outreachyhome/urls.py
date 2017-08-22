@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^documents/', include(wagtaildocs_urls)),
 
     url(r'^search/$', search_views.search, name='search'),
+    url(r'^accounts/', include('registration.backends.simple.urls')),
     url(r'^mentor-confirm/$', home_views.MentorConfirmationView.as_view(), name='mentor-confirm'),
 
     # For anything not caught by a more specific rule above, hand over to
