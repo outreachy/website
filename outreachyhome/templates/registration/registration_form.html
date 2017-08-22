@@ -27,8 +27,8 @@
 </tr>
 </table>
 
-<input type="submit" value="login" />
-<input type="hidden" name="next" value="{{ next }}" />
+<input type="submit" value="Create Account" />
+<p>Already have an account? <a href="{% url 'login' %}?next={{ next|urlencode }}">Login.</a></p>
 </form>
 
 {% endblock %}

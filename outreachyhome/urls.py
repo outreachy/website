@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 
 from wagtail.wagtailadmin import urls as wagtailadmin_urls
 from wagtail.wagtailcore import urls as wagtail_urls
@@ -18,7 +19,8 @@ urlpatterns = [
     url(r'^documents/', include(wagtaildocs_urls)),
 
     url(r'^search/$', search_views.search, name='search'),
-    url(r'^accounts/', include('registration.backends.simple.urls')),
+    url(r'^register/', home_views.CreateUser.as_view(), name='register'),
+    url(r'^login/$', auth_views.LoginView.as_view(), name='login'),
     url(r'^mentor-confirm/$', home_views.MentorConfirmationView.as_view(), name='mentor-confirm'),
 
     # For anything not caught by a more specific rule above, hand over to

@@ -147,3 +147,5 @@ WAGTAIL_SITE_NAME = "outreachyhome"
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 BASE_URL = 'http://example.com'
 REGISTRATION_OPEN = True
+LOGIN_REDIRECT_URL='/'
+LOGIN_URL='/login/'

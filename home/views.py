@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.views.generic.edit import UpdateView
+from registration.backends.simple.views import RegistrationView
 
 # Before the form is displayed, require the mentor to create a login (LoginRequiredMixin).
 # Then bring them back to this form to confirm their participation and role.
@@ -36,3 +37,15 @@ class MentorConfirmationView(LoginRequiredMixin, UpdateView):
     # object returned by get_object() will be used.
     def get_object(self, queryset=None):
         return self.request.user
+
+class CreateUser(RegistrationView):
+    def get_success_url(self, user):
+        return self.request.GET.get('next', '/')
+
+    # The RegistrationView that django-registration provides
+    # doesn't respect the next query parameter, so we have to
+    # add it to the context of the template.
+    def get_context_data(self, **kwargs):
+        context = super(CreateUser, self).get_context_data(**kwargs)
+        context['next'] = self.request.GET.get('next')
+        return context
