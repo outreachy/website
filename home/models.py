@@ -60,6 +60,12 @@ class DonatePage(Page):
         FieldPanel('outro', classname="full"),
     ]
 
+class StatsRoundFifteen(Page):
+    unused = RichTextField(blank=True)
+    content_panels = Page.content_panels + [
+        FieldPanel('unused', classname="full"),
+    ]
+
 class RoundPage(Page):
     roundnumber = models.IntegerField()
     pingnew = models.DateField("Date to start pinging new orgs", blank=True, default='2017-08-01')
