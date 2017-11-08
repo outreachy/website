@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block content %}
+    <h1>Outreachy {{ page.specific.round_start|date:"M Y" }} to {{ page.specific.round_end|date:"M Y" }} Interns</h1>
+    {% with participants=page.specific.participant.all|dictsort:"name"|dictsort:"community" %}
+    <p>Congratulations to the {{ participants|length }} interns accepted to the Outreachy program!</p>
+    {% for intern in participants %}
+    	<p>
+	{% if intern.blog %}
+		<a href="{{ intern.blog }}">
+	{% endif %}
+	{{ intern.name }}
+	{% if intern.blog %}
+		</a>
+	{% endif %}
+	{% if intern.nick %}
+		({{ intern.nick }})
+	{% endif %}
+	{% if intern.location %}
+		<BR>Location: {{ intern.location }}
+	{% endif %}
+	<BR>{{ intern.community }} mentor(s): {{ intern.mentors }}
+	<BR>Project: {{ intern.project }}
+	</p>
+    {% endfor %}
+    {% endwith %}
+{% endblock %}

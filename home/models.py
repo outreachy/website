@@ -14,6 +14,7 @@ from wagtail.wagtailadmin.edit_handlers import FieldPanel
 from wagtail.wagtailadmin.edit_handlers import InlinePanel
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailadmin.edit_handlers import StreamFieldPanel
+from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.wagtailembeds.blocks import EmbedBlock
@@ -99,6 +100,46 @@ class RoundPage(Page):
         FieldPanel('internends'),
         FieldPanel('finalfeedback'),
         FieldPanel('sponsordetails', classname="full"),
+    ]
+
+class CohortPage(Page):
+    round_start = models.DateField("Round start date")
+    round_end = models.DateField("Round end date")
+    content_panels = Page.content_panels + [
+            FieldPanel('round_start'),
+            FieldPanel('round_end'),
+            InlinePanel('participant', label="Intern or alumns information", help_text="Please add information about the alumn or intern"),
+    ]
+
+class AlumInfo(Orderable):
+    page = ParentalKey(CohortPage, related_name='participant')
+    name = models.CharField(max_length=255, verbose_name="Name")
+    email = models.EmailField(verbose_name="Email")
+    picture = models.ForeignKey(
+            'wagtailimages.Image',
+            null=True,
+            blank=True,
+            on_delete=models.SET_NULL,
+            related_name='+'
+            )
+    gravitar = models.BooleanField(max_length=255, verbose_name="Use gravitar image associated with email?")
+    location = models.CharField(max_length=255, blank=True, verbose_name="Location (optional)")
+    nick = models.CharField(max_length=255, blank=True, verbose_name="Chat/Forum/IRC username (optional)")
+    blog = models.URLField(blank=True, verbose_name="Blog URL (not RSS URL) (optional)")
+    community = models.CharField(max_length=255, verbose_name="Community name")
+    project = models.CharField(max_length=255, verbose_name="Project description")
+    mentors = models.CharField(max_length=255, verbose_name="Mentor name(s)")
+    panels = [
+            FieldPanel('name'),
+            FieldPanel('email'),
+            ImageChooserPanel('picture'),
+            FieldPanel('gravitar'),
+            FieldPanel('location'),
+            FieldPanel('nick'),
+            FieldPanel('blog'),
+            FieldPanel('community'),
+            FieldPanel('project'),
+            FieldPanel('mentors'),
     ]
 
 def mentor_id():
