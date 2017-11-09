@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load wagtailcore_tags %}
+{% load wagtailimages_tags %}
 
 {% block body_class %}template-homepage{% endblock %}
 
@@ -9,23 +10,27 @@
     {% with participants=page.specific.participant.all|dictsort:"name"|dictsort:"community" %}
     <p>Congratulations to the {{ participants|length }} interns accepted to the Outreachy program!</p>
     {% for intern in participants %}
-    	<p>
-	{% if intern.blog %}
-		<a href="{{ intern.blog }}">
+    	<div class="media">
+	{% if intern.picture %}
+		{% image intern.picture fill-200x200 class="pull-left" %}
 	{% endif %}
+	<div class="media body">
+	<h4 class="mt-0">
 	{{ intern.name }}
+	</h4>
+	{% if intern.location %}
+		Location: {{ intern.location }}<BR>
+	{% endif %}
 	{% if intern.blog %}
-		</a>
+		Blog: <a href="{{ intern.blog }}">{{ intern.blog }}</a><BR>
 	{% endif %}
 	{% if intern.nick %}
-		({{ intern.nick }})
-	{% endif %}
-	{% if intern.location %}
-		<BR>Location: {{ intern.location }}
+		IRC/Chat/Forum username: {{ intern.nick }}<BR>
 	{% endif %}
 	<BR>{{ intern.community }} mentor(s): {{ intern.mentors }}
 	<BR>Project: {{ intern.project }}
-	</p>
+	</div>
+	</div>
     {% endfor %}
     {% endwith %}
 {% endblock %}
