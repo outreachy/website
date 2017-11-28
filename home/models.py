@@ -125,7 +125,8 @@ class AlumInfo(Orderable):
     gravitar = models.BooleanField(max_length=255, verbose_name="Use gravitar image associated with email?")
     location = models.CharField(max_length=255, blank=True, verbose_name="Location (optional)")
     nick = models.CharField(max_length=255, blank=True, verbose_name="Chat/Forum/IRC username (optional)")
-    blog = models.URLField(blank=True, verbose_name="Blog URL (not RSS URL) (optional)")
+    blog = models.URLField(blank=True, verbose_name="Blog URL (optional)")
+    rss = models.URLField(blank=True, verbose_name="RSS URL (optional)")
     community = models.CharField(max_length=255, verbose_name="Community name")
     project = models.CharField(max_length=255, verbose_name="Project description")
     mentors = models.CharField(max_length=255, verbose_name="Mentor name(s)")
@@ -137,6 +138,7 @@ class AlumInfo(Orderable):
             FieldPanel('location'),
             FieldPanel('nick'),
             FieldPanel('blog'),
+            FieldPanel('rss'),
             FieldPanel('community'),
             FieldPanel('project'),
             FieldPanel('mentors'),
