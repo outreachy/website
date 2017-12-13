@@ -47,3 +47,56 @@ CiviCRM proved too clunky to use, and ultimately their data model didn't necessa
 There are other proprietary tools for tracking sponsorship information, but since Outreachy is a project under the Software Freedom Conservancy and the Outreachy organizers believe in the power of free and open source, we have decided not to use proprietary software wherever possible.
 
 Django fit our needs for flexibility, data model definition, and future use cases. However, the Django admin interface is pretty clunky and intimidating. We wanted to have a very easy way for all our organizers to quickly edit content. The Wagtail CMS plugin provides a nice user interface and template system, while still allowing programmers to fully use Django to implement models. It also provides internal revision tracking for page content, which means we can easily roll back content changes from the wagtail admin web interface if necessary.
+
+# How does the Outreachy website tech work together?
+
+The Outreachy website is built on a [Python](https://www.python.org/) and a web framework called [Django](https://www.djangoproject.com/). Additionally, the Outreachy website uses a content management system called [Wagtail](https://wagtail.io/), which builds on top of Django. On the Outreachy webserver, we run [Dokku](http://dokku.viewdocs.io/dokku/), which helps us deploy new code, manage our Let's Encrypt SSL certificates, and backup the Outreachy website database. Only Outreachy organizers have ssh access to push new code to the server.
+
+# Optional helpful background reading
+
+[Django topic guides](https://docs.djangoproject.com/en/1.11/topics/), particularly the [models](https://docs.djangoproject.com/en/1.11/topics/db/models/) guide.
+
+# Setting up your development environment
+
+You can run Django locally to test changes to the code, test creating new pages, test adding new users, etc. The local tests you run will not impact the main Outreachy website, only your local version of the website. You should test changes locally before submitting a pull request.
+
+To set up your local development environment, first clone the repository to your local machine:
+
+```
+git clone https://github.com/sagesharp/outreachy-django-wagtail.git
+```
+
+Next, you'll need to create a new virtualenv. A "virtualenv" is a separate virtual environment for working on different Python projects. It's good practice to create a virtual environment for each Pyton project you're working on, in case they have conflicting dependencies, and so that you make sure to record all the dependencies for each project.
+
+These instructions will help you create a new virtualenv that will have all the python packages installed that you need to work on the Outreachy website. We use the `-r` option to specify where the file is that contains the list and version numbers of Python packages to install in the virtual environment. The `-a` option means that when you activate the virtual environment, you will automatically change directories to the directory where the repository source code was cloned. If you need help understanding the mkvirtualenv command, run `mkvirtualenv --help`
+
+```
+mkvirtualenv -a ~/PATH/TO/outreachy-django-wagtail -r ~/PATH/TO/outreachy-django-wagtail/requirements.txt outreachy-django
+```
+
+Now, you activate the virtual environment by typing the following command:
+
+```
+workon outreachy-django
+```
+
+If this is your first time creating a local version of the website for testing, you'll need to set up the local website database from scratch. The following command will create a new database with the models in the Outreachy website. The database will initially have no website pages, but will eventually store your local test pages.
+
+```
+./manage.py migrate
+```
+
+The next step is to create an admin account for the local website.
+
+```
+./manage.py createsuperuser
+```
+# Testing the local website
+
+Once you've run the above setup commands, you should be all set to start testing your local website. First, run the command to start the Django webserver and serve up the local website.
+
+```
+./manage.py runserver
+```
+
+In your web browser, go to `http://localhost:8000/admin/` to get to the Wagtail administrative interface.
