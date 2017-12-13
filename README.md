@@ -100,3 +100,11 @@ Once you've run the above setup commands, you should be all set to start testing
 ```
 
 In your web browser, go to `http://localhost:8000/admin/` to get to the Wagtail administrative interface.
+
+# Tour of the code base
+
+Django breaks up functionality into a project (settings, views, and models that apply globally) and apps (smaller functionality that could possibly be reused). There is only one project deployed on a site at a time, but there could be many apps deployed. In the Outreachy repository, the directory `outreachy-home` is the project. We have several apps `home` which contains models used on the Outreachy home pages, `search` which was set up during the wagtail installation to allow searching for pages and media, and `contacts` which is a Django app for our contact page.
+
+The top-level directory `docs` is where our maintenance and design documents go.
+
+If you've been running Django to test locally, you may have two directories `static` and `media`. These will store site images and media you've uploaded through your local site. These directories are in the .gitignore file and should never be committed.
