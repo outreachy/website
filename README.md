@@ -103,8 +103,36 @@ In your web browser, go to `http://localhost:8000/admin/` to get to the Wagtail 
 
 # Tour of the code base
 
-Django breaks up functionality into a project (settings, views, and models that apply globally) and apps (smaller functionality that could possibly be reused). There is only one project deployed on a site at a time, but there could be many apps deployed. In the Outreachy repository, the directory `outreachy-home` is the project. We have several apps `home` which contains models used on the Outreachy home pages, `search` which was set up during the wagtail installation to allow searching for pages and media, and `contacts` which is a Django app for our contact page.
+Django breaks up functionality into a project (a Django web application) and apps (smaller a set of Python code that implements a specific feature). There is only one project deployed on a site at a time, but there could be many apps deployed. You can read more about what an application is in [the Django documentation](https://docs.djangoproject.com/en/2.0/ref/applications/).
+
+In the Outreachy repository, the directory `outreachy-home` is the project. We have several apps:
+* `home` which contains models (based on wagtail) used on the Outreachy home pages
+* `search` which was set up during the wagtail installation to allow searching for pages and media
+* `contacts` which is a Django app for our contact page.
+
+The Outreachy website also uses some apps that are listed in the `INSTALLED_APPS` variable in `outreachyhome/settings/base.py`, but aren't found in top-level directories in the repository. That's because the apps' code was installed into your virtualenv directory when you ran `mkvirtualenv -r requirements.txt`. That command looked at the Python package requirements listed in requirements.txt and ran `pip install` for each of them. For example, if your virtualenv name is `outreachy-django` and you're running Python 2.7 locally, you'll be able to find the code for Wagtail forms (wagtail.wagtailforms) in `~/.virtualenvs/outreachy-django/lib/python2.7/site-packages/wagtail/wagtailforms`.
 
 The top-level directory `docs` is where our maintenance and design documents go.
 
 If you've been running Django to test locally, you may have two directories `static` and `media`. These will store site images and media you've uploaded through your local site. These directories are in the .gitignore file and should never be committed.
+
+# Adding a new app
+
+If you have a set of Django models, views, and templates that is a discrete chunk of functionality, you may want to create a new app in the top-level directory. If we want to call our new app `contacts` we can run the helper script to set up our app:
+
+```
+./manage.py startapp contact
+```
+
+That script will stick some boilerplate examples in a new directory:
+
+```
+$ ls contacts/
+admin.py  apps.py  __init__.py  migrations  models.py  tests.py  views.py
+```
+
+You may need to add a `templates` directory to that app:
+
+```
+makedir contacts/templates
+```
