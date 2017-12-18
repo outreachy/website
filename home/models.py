@@ -144,36 +144,10 @@ class AlumInfo(Orderable):
             FieldPanel('mentors'),
     ]
 
+# We can't remove this old function because the default value
+# for the token field used mentor_id and so an old migration
+# refers to mentor_id
+# FIXME - squash migrations after applied to server
 def mentor_id():
     # should be a multiple of three
     return urlsafe_b64encode(urandom(9))
-
-class CommunityPage(Page):
-    community_name = models.CharField(max_length=255)
-
-    content_panels = Page.content_panels + [
-            FieldPanel('community_name'),
-            InlinePanel('mentors', label="Mentor, reviewer, and coordinator invitations", help_text="Please provide email addresses so we can send invitations to mentors, coordinators, and reviewers to create an Outreachy site login."),
-    ]
-
-class CommunityMentorInvite(Orderable):
-    page = ParentalKey(CommunityPage, related_name='mentors')
-    name = models.CharField(max_length=255, verbose_name="Mentor name")
-    email = models.EmailField(verbose_name="Mentor email")
-    COORDINATOR = 'CO'
-    MENTOR = 'ME'
-    REVIEWER = 'RE'
-    ROLE_CHOICES = (
-            (COORDINATOR, 'Coordinator. They are helping track mentors and find funding. Coordinators may also be mentors, and thus also have permissions to add or edit project pages.'),
-            (MENTOR, "Mentor. They need to add a project page or edit a co-mentor's project page."),
-            (REVIEWER, "Applicant reviewer. They will not be given access to modify the community page or add/modify project pages."),
-    )
-
-    role = models.CharField(max_length=2, default=MENTOR, choices=ROLE_CHOICES)
-    token = models.CharField(max_length=42, unique=True, default=mentor_id)
-
-    panels = [
-            FieldPanel('name'),
-            FieldPanel('email'),
-            FieldPanel('role'),
-    ]
