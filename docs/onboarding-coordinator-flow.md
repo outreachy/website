@@ -1,3 +1,157 @@
+Background
+---
+
+The Outreachy community and mentor sign-up process currently involves too much manual labor
+for Outreachy organizers. In order to allocate organizer time towards expanding the program,
+working with applicants, and finding additional funding, we need to automate this process.
+
+Updating Project Listings is Tedious
+===
+
+A year ago, we switched the Outreachy community page to list all projects and the skills
+they required. This allowed applicants to quickly scan the list for projects that
+included programming languages, tools, or skills they were interested in. Before this
+change, Outreachy organizers would receive 5-10 emails each round from applicants
+who were confused as to how to pick a project. Now the only emails we get are from
+applicants who can't find a project that fits their needs.
+
+The problem with listing projects is that Outreachy organizers needed to manually
+update the community project list page against each participating FOSS community's page.
+Just keeping the project listings up to date during the round takes approximately
+10-15 hours per round.
+
+Mentors Get Lost in On-boarding
+===
+
+A very common problem that leads to additional Outreachy organizer manual labor
+is the mentor on-boarding process. Each Outreachy mentor needs to:
+ * Receive a welcome email explaining how the process works and how to set a
+   filter to ensure the mentor mailing list posts don't end up in the Gmail
+   promotions tab
+ * Be signed up for the mentors mailing list
+ * Apply to be a mentor in the Outreachy application system
+ * Be manually approved by the Outreachy organizers to be a mentor
+ * Select their intern by navigating to the application and selecting "willing to mentor"
+ * Go to their application profile and sign the mentor agreement
+
+This manual process of mentor on-boarding and herding mentors towards the next
+steps adds at least 6-10 hours per round.
+
+We often lose mentors during the wait to be approved for the application system
+by Outreachy organizers (who often have to ask coordinators about a mentor if
+they aren't listed on the community landing page). This also adds additional
+stress on organizers during the intern selection process, as all mentors who
+want to select an intern must "claim" their intern in the application system
+and sign the mentor agreement.
+
+Projects Disappear in Six Months
+===
+
+In order for a FOSS community to participate in Outreachy, they need to have:
+ * Funding for at least one intern
+ * 1 coordinator
+ * At least one mentor and project
+
+There is usually six months between the first Call for Outreachy communities going out,
+and when the internship starts. Projects often get completed in that time, or change
+scope in such a way that it makes them unlikely to be appropriate for Outreachy interns.
+
+Our coordinators have asked for a way to gather information on volunteers who are
+willing to help guide Outreachy applicants, but may not necessarily have a project
+in mind yet. Volunteers can sign up, and then coordinators can remind them closer to
+the application process opening that they should submit a project.
+
+Mentors Select Ineligible Applicants
+===
+
+Many mentors don't review applications in the system before selecting an
+intern, which can lead them to select someone who isn't eligible or has
+borderline time eligibility.
+
+Applicants often fill out applications at the last minute, after working with a
+mentor. We need to add a two step process: Applicants check their eligibility,
+and then they start working with mentors.
+
+We want mentors to be aware of who is eligible, so that they can focus early on
+applicants who they can select as interns. We want the application system to be
+something that helps mentors, not something they wrestle with at the last
+minute. Adding a dashboard stating which applicants are eligible will help.
+
+Unclear Project Descriptions Trigger Impostor Syndrome
+===
+
+There are also negative impacts to Outreachy applicants for each community
+having a different landing page style.  Some project list both required and
+optional skills, and other projects list skills without any indication whether
+they are required or optional.  Some projects note that they'll teach
+applicants and interns about a skill. 
+
+This leads to confusion in applicants. Many Outreachy applicants have impostor
+syndrome, and they won't apply for a project unless they have all the skills.
+Additionally, most projects don't list what level of experience applicants need
+for each skill.  This leads applicants to assume they need to be an "expert" in
+a skill to apply. Many potential Outreachy applicants talk themselves out of
+applying because mentors aren't clear about which skills are required,
+optional, or teachable, and what skill level is needed.
+
+Inappropriate Projects Added At the Last Minute
+===
+
+Finally, not all projects proposed by mentors are appropriate for Outreachy.
+
+Outreachy projects need to have an established community, unlike the
+student-created projects that GSoC allows. Outreachy's goal is to find open
+source communities who have multiple people who can provide interns mentorship
+and sponsorship. Interns learn how to work with an open source community,
+rather than working solo on their own project.  An established FOSS community
+provides interns networking opportunities and conferences they can attend or
+speak at, which increases their chances of being hired to work on open source.
+Student-created projects are unlikely to help with these goals.
+
+The goal for Outreachy listing projects is to allow people who wouldn't
+normally propose their own project to GSoC to apply for an internship. Another
+requirement for Outreachy projects is that applicants must make at least one
+contribution to the project (and most make many small contributions during the
+application process).
+
+Adding a new project a week or two before the application project doesn't give
+enough time for all Outreachy applicants to have a fair chance at making a
+contribution. Instead, late project additions are usually added for applicants
+who already have connections with open source project mentors. This unduly
+favors people who already have some experience contributing to open source,
+which is more likely to be white, college-educated students.
+
+We've had issues in the past with Outreachy mentors not understanding the
+goals and requirements for Outreachy projects. By adding additional required
+questions about the projects, Outreachy organizers can be notified of projects
+that may not meet our requirements, and reject or accept those projects.
+
+Solutions
+===
+
+This new coordinator, mentor, and volunteer on-boarding system will help these
+issues by:
+
+ * Pushing down mentor and volunteer approval from Outreachy organizers to
+   community coordinators, who are in a better position to know whether the
+   person should participate
+ * Automatically collecting mentor and volunteer information
+ * Automatically subscribing approved mentors and volunteers to the mentors
+   mailing list and sending them a welcome onboarding email.
+ * Providing a way for people to sign up as volunteers and proposing a project later
+ * Only showing mentor and community contact information to signed in
+   applicants who are eligible for this round (unless a project mentor wants to
+   work with ineligible applicants)
+ * Providing applicants clearer information about the skills they need to apply
+ * Allowing Outreachy organizers to reject projects that aren't appropriate
+   for Outreachy due to project newness, community size, or mentor inexperience
+ * Forcing applicants to check their eligibility with an automated process
+   before working with mentors. (goal by end of January)
+ * Providing mentors with a dashboard with clear information of which
+   applicants are eligible or borderline (goal by end of January)
+ * Providing a community page for use with GSoC with all contact information
+   and only listing projects appropriate to GSoC (stretch goal)
+
 New Coordinator Flow
 ----
 
@@ -58,10 +212,11 @@ Mentor Flow
 
 [Page] Call for volunteers and mentors
  * Create account or login
- * Fill out the form with mentor information and project information, click submit
+ * Fill out the form with mentor information and (optionally) project information, click submit
+ * mentors who are not yet approved can also submit projects?
 
-Coordinator is emailed
-Coordinator approves mentor's project, or replies back to the email to give the mentor feedback (set In-reply-to to be the mentor)
+Coordinator is emailed - approves mentor
+(Optional) Coordinator approves mentor's project, or replies back to the email to give the mentor feedback (set In-reply-to to be the mentor)
 
 Organizers must approve projects for Outreachy that have any of the following characteristics:
  * How long has the project accepted contributions from external contributors?
@@ -142,15 +297,15 @@ Data to Gather
    * (Optional, shared with applicants) CLA URL
    * (Optional, shared with applicants) DCO URL - note that a DCO that requires contributors to use their full legal name can mean that trans contributors cannot participate, since it may be expensive or impossible to change their birth name
  * Static community info (enter once, probably never modify from round to round):
-   * Name
-   * Description of community
+   * Longer description of community
    * Communication channels for mentors and coordinators
    * (Optional) Email to reach all coordinators and mentors
    * (Optional) Description or links to documentation/tutorials for how new contributors get started.
    * (Optional) Link to your bug/issue tracker's "easy" or "newcomer friendly" bugs/features.
    * (Optional) Community blog or planet
    * (Optional) Community contributor list (e.g. contributors.debian.org)
-   * (Optional) Community mentor list (e.g. mentors.debian.net) 
+   * (Optional) Community mentor list (e.g. mentors.debian.net)
+   * (Optional) Link to community logo image (will be scaled to 200 pixels wide)
  * Information specific to this round:
    * What organization(s) do you expect to be able to provide funding for your community interns?
    * How many interns do you expect to fund for this round?
@@ -235,6 +390,8 @@ New pages to create
 ----
 
 [Page] List of all past and current participating FOSS communities in Outreachy
+* Timeline of this round (link to dates in most recent round page)
+* Outreachy blurb, link to mentor and coordinator pages
 * Page shows the status of whether a community is going to participate
 
 * Possible status:
@@ -252,6 +409,9 @@ New pages to create
  * Forces login or account creation
  * The page should have both a 'Save' and 'Submit for moderation' button
  * Coordinators should get periodic email reminders if they have Saved but not Submitted a community
+ * Only users with community permissions can publish a new page
+ * Logged in users can submit a community page for moderation (or 'Save draft' to come back to it later)
+   * Implementation: possibly we could set a page signal on page save, and check the 'submitted_for_moderation' flag? Or just use Django instead of wagtail pages? Maybe use django-ckeditor for a RichText field?
 
 [Page] Edit community data
  * Forces login or account creation
