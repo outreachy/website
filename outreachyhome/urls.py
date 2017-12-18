@@ -22,7 +22,6 @@ urlpatterns = [
     url(r'^search/$', search_views.search, name='search'),
     url(r'^register/', home_views.CreateUser.as_view(), name='register'),
     url(r'^login/$', auth_views.LoginView.as_view(), name='login'),
-    url(r'^mentor-confirm/$', home_views.MentorConfirmationView.as_view(), name='mentor-confirm'),
     url(r'^contact/', include(contacts_urls)),
 
     # For anything not caught by a more specific rule above, hand over to
