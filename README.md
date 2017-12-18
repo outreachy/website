@@ -102,9 +102,7 @@ Once you've run the above setup commands, you should be all set to start testing
 In your web browser, go to `http://localhost:8000/admin/` to get to the Wagtail administrative interface.
 
 # Tour of the code base
-
-Django breaks up functionality into a project (a Django web application) and apps (smaller a set of Python code that implements a specific feature). There is only one project deployed on a site at a time, but there could be many apps deployed. You can read more about what an application is in [the Django documentation](https://docs.djangoproject.com/en/2.0/ref/applications/).
-
+Django breaks up functionality into a project (a Django web application) and apps (smaller a set of Python code that implements a specific feature). There is only one project deployed on a site at a time, but there could be many apps deployed. You can read more about what an application is in [the Django documentation](https://docs.djangoproject.com/en/2.0/ref/applications/).  
 In the Outreachy repository, the directory `outreachy-home` is the project. We have several apps:
 * `home` which contains models (based on wagtail) used on the Outreachy home pages
 * `search` which was set up during the wagtail installation to allow searching for pages and media
@@ -135,4 +133,12 @@ You may need to add a `templates` directory to that app:
 
 ```
 makedir contacts/templates
+```
+
+# Rolling back migrations
+
+If you have migrated the database (either locally or on the server) and want to go back to a previous migration, you can run:
+
+```
+./manage.py migrate home [version number]
 ```
