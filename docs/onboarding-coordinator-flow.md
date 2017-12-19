@@ -289,7 +289,9 @@ Data to Gather
    * Website URL
    * How big is your community?
    * What different organizations and companies participate in the project?
-   * Community open source license file URL
+   * Will all projects involve contributing to software with an [OSI-approved open source license](https://opensource.org/licenses/alphabetical), or creative works with a [Creative Commons license](https://creativecommons.org/share-your-work/licensing-types-examples/)?
+     * If no: Please detail your licenses, with links to license text.
+   * Community open source license file URL (if all projects are under the same license)
    * Do you rely or build upon proprietary software? Please elaborate.
    * (Optional) What is the community make-up with respect to volunteer and paid contributors?
    * (Optional) What is the community governance?
@@ -354,6 +356,8 @@ Data to Gather
      * 21-50 people
      * 50-100 people
      * > 100 people
+   * Does your project use an [OSI-approved open source license](https://opensource.org/licenses/alphabetical) or a [Creative Commons license](https://creativecommons.org/share-your-work/licensing-types-examples/)?
+     * If no: Please detail your licenses, with links to license text.
  * Information for the applicants:
    * Short title (nine words or less, assuming the person has never heard of your technology before, starting with an adverb like "Create", "Improve", "Extend", "Survey", "Document")
    * Description
