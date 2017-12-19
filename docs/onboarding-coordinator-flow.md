@@ -320,7 +320,7 @@ Data to Gather
    * Looking for volunteers - coordinator has claimed listing, CFP for mentors is out
    * Closed to projects - it's two weeks before the deadline, and no new Outreachy projects can be added
    * Funded - Outreachy organizers have approved the community for X number of interns
-   * Staffed - community has at least one mentor and project that has been approved
+   * Staffed - community has at least one mentor and project that has been approved - if walking through project statuses causes performance impacts, we may want to denormalize this
 
 4. For each volunteer that wants to apply to a community for a particular round, the organizers and coordinators need to know:
    * How long have you been contributing to the community?
