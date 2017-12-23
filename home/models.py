@@ -151,3 +151,41 @@ class AlumInfo(Orderable):
 def mentor_id():
     # should be a multiple of three
     return urlsafe_b64encode(urandom(9))
+
+# Current maximum description paragraph on round 15 page is 684.
+PARAGRAPH_LENGTH=800
+THREE_PARAGRAPH_LENGTH=3000
+
+class Community(models.Model):
+    name = models.CharField(
+            max_length=50, verbose_name="Community name")
+    description = models.CharField(
+            max_length=PARAGRAPH_LENGTH,
+            verbose_name="Short description of community (3 sentences for someone who has never heard of your community or the technologies involved)")
+    rounds = models.ManyToManyField(RoundPage, through='Participation')
+
+    def __str__(self):
+        return self.name
+
+class Participation(models.Model):
+    community = models.ForeignKey(Community)
+    participating_round = models.ForeignKey(RoundPage)
+
+    interns_funded = models.IntegerField(
+            verbose_name="How many interns do you expect to fund for this round? (Include any Outreachy community credits to round up to an integer number.)")
+    cfp_text = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
+            verbose_name="Additional information to provide on a call for mentors and volunteers page (e.g. what kinds of projects you're looking for, ways for volunteers to help Outreachy applicants)")
+    # Note that this should automatically close two weeks before the round deadline and not allow coordinators to set it to True
+    cfp_open = models.BooleanField(
+            verbose_name="Open call for mentors and volunteers?")
+    # FIXME: hide this for everyone except those in the organizer group (or perhaps admin for now)
+    list_community = models.BooleanField(
+            default=False,
+            verbose_name="Organizers: Check this box once you have reviewed the community information, confirmed funding, and collected billing information")
+
+    def __str__(self):
+        return '{community} in {start:%B %Y} to {end:%B %Y} round'.format(
+                community = self.community.name,
+                start = self.participating_round.internstarts,
+                end = self.participating_round.internends,
+                )
