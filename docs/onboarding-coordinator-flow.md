@@ -310,7 +310,9 @@ Data to Gather
    * (Optional) Link to community logo image (will be scaled to 200 pixels wide)
  * Information specific to this round:
    * What organization(s) do you expect to be able to provide funding for your community interns?
-   * How many interns do you expect to fund for this round?
+   * Is that funding confirmed by all organizations?
+     * If no: What approximate date to you expect to have funding confirmed by?
+   * How many interns do you expect to fund for this round? (Include any Outreachy community credits to round up to an integer number.)
    * Blurb for [Page] Call for Volunteers and Mentors
    * (Optional) Additional questions to ask volunteers
    * (Optional) Additional questions to ask mentors
