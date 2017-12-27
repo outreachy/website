@@ -425,13 +425,13 @@ New pages to create
  * Coordinators should get periodic email reminders if they have Saved but not Submitted a community
 
 [Page] Community status or call for volunteers and mentors
- * State is unclaimed:
+ * Community is not participating in the current round:
    * Notify me when this community signs up
    * Sign up to be a community coordinator
- * State is claimed and community information has been edited and submitted:
+ * Community is participating in the current round:
    * Community status: (waiting on funding, coordinators are, etc...)
    * Propose a new project -> login -> mentor/project sign-up
-   * Lists any submitted projects
+   * Lists any submitted and approved projects (submitted only visible to coordinator)
    * 'Apply to co-mentor this project' -> login -> mentor sign-up
    * Project status:
      * Waiting on coordinator approval

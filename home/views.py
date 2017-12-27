@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 
 from registration.backends.simple.views import RegistrationView
 
@@ -74,5 +75,29 @@ def community_cfp_view(request):
             'current_round' : current_round,
             'participating_communities': participating_communities,
             'not_participating_communities': not_participating_communities,
+            },
+            )
+
+# This is the page for volunteers, mentors, and coordinators.
+# It's a read-only page that displays information about the community,
+# what projects are accepted, and how volunteers can help.
+# If the community isn't participating in this round, the page displays
+# instructions for being notified or signing the community up to participate.
+def community_read_only_view(request, slug):
+    current_round = RoundPage.objects.latest('internstarts')
+    community = get_object_or_404(Community, slug=slug)
+
+    # Try to see if this community is participating in the current round
+    # and get the Participation object if so.
+    try:
+        participation_info = Participation.objects.get(community=community, participating_round=current_round)
+    except Participation.DoesNotExist:
+        participation_info = None
+
+    return render(request, 'home/community_read_only.html',
+            {
+            'current_round' : current_round,
+            'community': community,
+            'participation_info': participation_info,
             },
             )

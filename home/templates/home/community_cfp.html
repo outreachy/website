@@ -30,7 +30,7 @@ Call for Outreachy community coordinators, mentors, and volunteers
 
 <ul>
 {% for c in participating_communities %}
-	<li>{{ c.name }}</li>
+	<li><a href="/communities/cfp/{{ c.slug }}/">{{ c.name }}</a></li>
 {% endfor %}
 </ul>
 
@@ -41,7 +41,7 @@ Call for Outreachy community coordinators, mentors, and volunteers
 
 <ul>
 {% for c in not_participating_communities %}
-	<li>{{ c.name }}</li>
+	<li><a href="/communities/cfp/{{ c.slug }}/">{{ c.name }}</a></li>
 {% endfor %}
 </ul>
 
