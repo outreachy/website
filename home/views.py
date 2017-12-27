@@ -51,9 +51,28 @@ def community_cfp_view(request):
     # Grab the most current round, based on the internship start date.
     # See https://docs.djangoproject.com/en/1.11/ref/models/querysets/#latest
     current_round = RoundPage.objects.latest('internstarts')
+
+    # Now grab the community IDs of all communities participating in the current round
+    # https://docs.djangoproject.com/en/1.11/topics/db/queries/#following-relationships-backward
+    # https://docs.djangoproject.com/en/1.11/ref/models/querysets/#values-list
+    # https://docs.djangoproject.com/en/1.11/ref/models/querysets/#values
+    participating_communities_ids = set(
+            current_round.participation_set.values_list('community_id', flat=True)
+            )
+    all_communities = Community.objects.all()
+    participating_communities = []
+    not_participating_communities = []
+    for c in all_communities:
+        if c.id in participating_communities_ids:
+            participating_communities.append(c)
+        else:
+            not_participating_communities.append(c)
+
     # See https://docs.djangoproject.com/en/1.11/topics/http/shortcuts/
     return render(request, 'home/community_cfp.html',
             {
-            'current_round' : current_round
+            'current_round' : current_round,
+            'participating_communities': participating_communities,
+            'not_participating_communities': not_participating_communities,
             },
             )
