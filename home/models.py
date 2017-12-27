@@ -24,10 +24,10 @@ class HomePage(Page):
         ('heading', blocks.CharBlock(classname="full title")),
         ('paragraph', blocks.RichTextBlock()),
         ('image', ImageChooserBlock()),
-        ('logo', ImageChooserBlock()),
+        ('logo', ImageChooserBlock(template="home/blocks/logo.html")),
         ('date', blocks.DateBlock()),
-        ('table', TableBlock()),
-        ('quote', blocks.RichTextBlock()),
+        ('table', TableBlock(template="home/blocks/table.html")),
+        ('quote', blocks.RichTextBlock(template="home/blocks/quote.html")),
     ])
     content_panels = Page.content_panels + [
         StreamFieldPanel('body', classname="full"),
