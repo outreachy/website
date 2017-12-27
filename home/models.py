@@ -193,7 +193,7 @@ class Participation(models.Model):
             verbose_name="Organizers: Check this box once you have reviewed the community information, confirmed funding, and collected billing information")
 
     def __str__(self):
-        return '{community} in {start:%B %Y} to {end:%B %Y} round'.format(
+        return '{start:%Y %B} to {end:%Y %B} round - {community}'.format(
                 community = self.community.name,
                 start = self.participating_round.internstarts,
                 end = self.participating_round.internends,
