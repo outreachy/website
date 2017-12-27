@@ -187,9 +187,6 @@ class Participation(models.Model):
             verbose_name="How many interns do you expect to fund for this round? (Include any Outreachy community credits to round up to an integer number.)")
     cfp_text = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
             verbose_name="Additional information to provide on a call for mentors and volunteers page (e.g. what kinds of projects you're looking for, ways for volunteers to help Outreachy applicants)")
-    # Note that this should automatically close two weeks before the round deadline and not allow coordinators to set it to True
-    cfp_open = models.BooleanField(
-            verbose_name="Open call for mentors and volunteers?")
     # FIXME: hide this for everyone except those in the organizer group (or perhaps admin for now)
     list_community = models.BooleanField(
             default=False,
