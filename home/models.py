@@ -2,6 +2,7 @@ from __future__ import absolute_import, unicode_literals
 
 from os import urandom
 from base64 import urlsafe_b64encode
+from datetime import timedelta
 
 from django.db import models
 
@@ -101,6 +102,17 @@ class RoundPage(Page):
         FieldPanel('finalfeedback'),
         FieldPanel('sponsordetails', classname="full"),
     ]
+    def ProjectsDeadline(self):
+        return(self.appsclose - timedelta(days=14))
+
+    def LateApplicationsDeadline(self):
+        return(self.appsclose + timedelta(days=7))
+    
+    def InternSelectionDeadline(self):
+        return(self.appsclose + timedelta(days=10))
+    
+    def InternConfirmationDeadline(self):
+        return(self.appsclose + timedelta(days=24))
 
 class CohortPage(Page):
     round_start = models.DateField("Round start date")

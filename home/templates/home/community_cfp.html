@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}
+Call for Outreachy community coordinators, mentors, and volunteers
+{% endblock %}
+
+{% block content %}
+
+<h1>Call for Participation in Outreachy</h1>
+<p>Outreachy provides three-month internships for people from <a href="/apply/eligibility/">groups traditionally underrepresented in tech</a>. Internships run twice a year.</p>
+<p>Outreachy welcomes participation from FOSS communities and people seeking to help out as Outreachy coordinators, mentors, and volunteers. Google Summer of Code mentors may also need to sign up to be a mentor if their coordinator is using Outreachy community page for GSoC project listings.</p>
+<h2>Timeline for {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} internship round</h2>
+    <table class=table>
+	<tr><td>{{ current_round.pingnew }}</td><td>Outreachy call for participating communities opens. Mentor and volunteer sign up opens.</td></tr>
+	<tr><td>{{ current_round.appsopen }}</td><td>Outreachy application period opens for applicants and most FOSS communities are listed</td></tr>
+	<tr><td>{{ current_round.lateorgs }}</td><td>Last date for FOSS communities to sign up to participate</td></tr>
+	<tr><td>{{ current_round.ProjectsDeadline }}</td><td>Last date to add new Outreachy internship projects</td></tr>
+	<tr><td>{{ current_round.appsclose }}</td><td>Outreachy application period ends for most communities</td></tr>
+	<tr><td>{{ current_round.LateApplicationsDeadline }}</td><td>Outreachy application period ends for communities with an extended deadline</td></tr>
+	<tr><td>{{ current_round.InternSelectionDeadline }}</td><td>Deadline for coordinators and mentors to select interns</td></tr>
+	<tr><td>{{ current_round.InternConfirmationDeadline }}</td><td>FOSS communities receive confirmation from Outreachy organizers of final approved interns</td></tr>
+	<tr><td>{{ current_round.internannounce }}</td><td>Interns are publicly announced on <a href="/alums/">the alums page</a></td></tr>
+    </table>
+<h2>Participate in Outreachy</h2>
+<p>If you would like to volunteer or mentor with Outreachy, review the list of participating communities below who are looking for help. Make sure to <a href="/mentor/">review the duties and expections</a> for mentors and volunteers before you sign up to help a community.</p>
+<p>If a community that participated in Outreachy in the past hasn't announced they're participating in this round, you can sign up to receive an email notification when the community joins the current round.</p>
+<p>If you want a new community to participate in Outreachy, you will need to review the <a href="/mentor/">coordinator duties</a> and <a href="/mentor/community-faq/">community requirements</a> for participating in internships. Then submit a new community for review below.
+</p>
+
+
+{% endblock %}
