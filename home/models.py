@@ -174,7 +174,6 @@ class Community(models.Model):
     slug = models.SlugField(
             max_length=50,
             unique=True,
-            null=True,
             verbose_name="Community URL slug: https://www.outreachy.org/communities/SLUG/")
     description = models.CharField(
             max_length=PARAGRAPH_LENGTH,
