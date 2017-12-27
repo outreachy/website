@@ -21,7 +21,7 @@ from wagtail.wagtailembeds.blocks import EmbedBlock
 
 class HomePage(Page):
     body = StreamField([
-        ('heading', blocks.CharBlock(classname="full title")),
+        ('heading', blocks.CharBlock(template="home/blocks/heading.html")),
         ('paragraph', blocks.RichTextBlock()),
         ('image', ImageChooserBlock()),
         ('logo', ImageChooserBlock(template="home/blocks/logo.html")),
