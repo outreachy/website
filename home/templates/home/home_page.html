@@ -1,21 +1,9 @@
 {% extends "base.html" %}
 
 {% load wagtailcore_tags %}
-{% load wagtailimages_tags %}
 
 {% block body_class %}template-homepage{% endblock %}
 
 {% block content %}
-    {% for thingie in page.body %}
-        {% if thingie.block_type == 'logo' %}
-            <center>{% image thingie.value max-200x200 style="padding-top:20px; padding-left:30px;" %}</center>
-        {# Note: Wagtail's BlockQuoteBlock uses raw text as the value, so this is a work-around with a rich text base. #}
-        {% elif thingie.block_type == 'quote' %}
-            <blockquote>{{ thingie.value }}</blockquote>
-        {% elif thingie.block_type == 'table' %}
-            <div class="table">{% include_block thingie %}</div>
-        {% else %}
-            {% include_block thingie %}
-        {% endif %}
-    {% endfor %}
+{% include_block page.body %}
 {% endblock %}
