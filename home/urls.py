@@ -5,7 +5,6 @@ from django.conf.urls import url
 
 urlpatterns = [
     url(r'^communities/cfp/(?P<slug>[^/]+)/$', community_read_only_view, name='community-read-only'),
-    url(r'^(?P<round_slug>[^/]+)/communities/(?P<slug>[^/]+)/$', community_landing_view, {'gsoc': False}, name='community-landing'),
-    url(r'^(?P<round_slug>[^/]+)/communities/(?P<slug>[^/]+)/gsoc/$', community_landing_view, {'gsoc': True}, name='community-landing-gsoc'),
+    url(r'^(?P<round_slug>[^/]+)/communities/(?P<slug>[^/]+)/$', community_landing_view, name='community-landing'),
     url(r'^communities/cfp/$', community_cfp_view, name='community-cfp'),
 ]

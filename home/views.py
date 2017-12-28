@@ -102,7 +102,7 @@ def community_read_only_view(request, slug):
             },
             )
 
-def community_landing_view(request, round_slug, slug, gsoc):
+def community_landing_view(request, round_slug, slug):
     this_round = get_object_or_404(RoundPage, slug=round_slug)
     community = get_object_or_404(Community, slug=slug)
 
@@ -115,6 +115,5 @@ def community_landing_view(request, round_slug, slug, gsoc):
             'current_round' : this_round,
             'community': community,
             'participation_info': participation_info,
-            'gsoc': gsoc,
             },
             )
