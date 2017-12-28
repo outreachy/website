@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}
+Outreachy internships working with {{ community.name }}
+{% endblock %}
+
+{% block content %}
+
+{% if not gsoc %}
+	<h1>Outreachy internships working with {{ community.name }}</h1>
+	<p>{{ community.name }} is participating in the Outreachy {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} internships.
+	For more information on who is eligible for Outreachy internships, see the <a href="/apply/eligibility/">eligibility page</a>.
+	Additional internship opportunities with other organizations can be found on the <a href="/{{ current_round.url }}">the current round page</a>.
+	The timeline for applicants is below:</p>
+	<table class=table>
+		<tr><td>{{ current_round.appsopen }}</td><td>Outreachy application period opens and applicants make their required contributions to projects</td></tr>
+		{% comment %}FIXME: special case this for communities with an extended application deadline{% endcomment %}
+		<tr><td>{{ current_round.appsclose }}</td><td>Outreachy applications due for {{ community.name }} </td></tr>
+		<tr><td>{{ current_round.internannounce }}</td><td>Interns are publicly announced at 4pm UTC on <a href="/alums/">the alums page</a></td></tr>
+		<tr><td>{{ current_round.internstarts }} to {{ current_round.internends }}</td><td>Internships period</td></tr>
+	</table>
+{% else %}
+	<p>{{ community.name }} is participating in Google Summer of Code {{ current_round.internstarts|date:"Y" }}.
+	For more information on Google Summer of Code (GSoC), read the
+	<a href="https://summerofcode.withgoogle.com">GSoC homepage</a>,
+	<a href="https://google.github.io/gsocguides/student/">student guidelines</a>,
+	<a href="https://developers.google.com/open-source/gsoc/faq">FAQ</a>,
+	and <a href="https://summerofcode.withgoogle.com/how-it-works/#timeline">timeline</a>.
+	</p>
+{% endif %}
+
+<h1>What is {{ community.name }}?</h1>
+<p>{{ community.description }}</p>
+
+{% endblock %}

@@ -101,3 +101,20 @@ def community_read_only_view(request, slug):
             'participation_info': participation_info,
             },
             )
+
+def community_landing_view(request, slug, gsoc):
+    current_round = RoundPage.objects.latest('internstarts')
+    community = get_object_or_404(Community, slug=slug)
+
+    # Try to see if this community is participating in the current round
+    # and get the Participation object if so.
+    participation_info = get_object_or_404(Participation, community=community, participating_round=current_round)
+
+    return render(request, 'home/community_landing.html',
+            {
+            'current_round' : current_round,
+            'community': community,
+            'participation_info': participation_info,
+            'gsoc': gsoc,
+            },
+            )
