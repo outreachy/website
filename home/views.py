@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.shortcuts import get_list_or_404
+from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from registration.backends.simple.views import RegistrationView
 
@@ -125,3 +127,15 @@ def community_landing_view(request, round_slug, slug):
             'approved_projects': projects,
             },
             )
+
+class CommunityCreate(CreateView):
+    model = Community
+    fields = ['name', 'description']
+
+class CommunityUpdate(UpdateView):
+    model = Community
+    fields = ['name', 'description']
+
+class CommunityDelete(DeleteView):
+    model = Community
+    success_url = reverse_lazy('community-cfp')
