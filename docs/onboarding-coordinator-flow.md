@@ -149,8 +149,6 @@ issues by:
    before working with mentors. (goal by end of January)
  - Providing mentors with a dashboard with clear information of which
    applicants are eligible or borderline (goal by end of January)
- - Providing a community page for use with GSoC with all contact information
-   and only listing projects appropriate to GSoC (stretch goal)
 
 New Coordinator Flow
 ----
@@ -366,7 +364,7 @@ Data to Gather
  - [ ] Information for the coordinators and mentors:
    - [ ] Benefits of the project to the intern
    - [ ] Importance of the project to the community
-   - [x] How long has the project accepted contributions from external contributors? (Note that new projects without a community are not allowed for Outreachy projects, but may be approved for GSoC.)
+   - [x] How long has the project accepted contributions from external contributors?
      - [x] 0-3 months
      - [x] 3-6 months
      - [x] 6-12 months
@@ -404,10 +402,6 @@ Data to Gather
      information from these applicants, so that you will only work with applicants
      can be selected as interns. We recommend setting this to 'No' unless you have a
      lot of spare bandwidth.
-   - [ ] List project for applicants of:
-     - [ ] Outreachy
-     - [ ] Google Summer of Code (must be a programming project)
-     - [ ] Both
    - [ ] Is the project currently accepting new applicants?
    - [ ] Project status:
      - [ ] Waiting on coordinator approval
@@ -476,9 +470,7 @@ New pages to create
   - [ ] Mentors should get periodic email reminders if they have Saved but not Submitted their project
 
 - [ ] [Page] Community landing page
-  - [ ] Customized link and CSS for GSoC communities
 
 - [ ] [Page] Project page
   - [ ] Details hidden - please apply as an Outreachy applicant to see details
-  - [ ] Customized link and CSS for GSoC communities
   - [ ] 'Apply to co-mentor this project' -> login -> mentor sign-up
