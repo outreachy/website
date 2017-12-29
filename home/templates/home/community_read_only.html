@@ -42,11 +42,17 @@ Past community participation in Outreachy
 {% else %}
 
 	<h1>{{ community.name }} in Outreachy</h1>
-
+	<h2>Mentors and Volunteers</h2>
 	<p>The coordinator(s) for {{ community.name }} has not yet indicated whether the community will be participating in {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} internship round.</p>
-	<p><a href="/communities/cfp/{{ community.slug }}/notify-me/">Sign up</a> to be notified when the coordinator finds funding and opens the call for volunteers and mentors.</p>
+	<p>Sign up to be notified when the coordinator finds funding and opens the call for volunteers and mentors.</p>
+	<a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/notify-me/">Notify me</a>
+	<h2>Coordinators</h2>
 	<p>If you have been a community coordinator in the past but have not yet created an account on this site, or you would like to volunteer to be a new coordinator and you understand the <a href="/mentor/">coordinator duties</a>, you can <a href="/communities/cfp/{{ community.slug }}/coordinator-signup/">claim the community</a>.</p>
-	<p>Once you are an approved coordinator for this community, you can <a href="/communities/cfp/{{ community.slug }}/participate/">sign the community up to participate in the current round</a>.</p>
+	<p>Once you are an approved coordinator for this community, you can sign the community up to participate in the current round.</p>
+	<a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/participate/">Coordinate for the current round</a>
+	<h2>Community Information</h2>
+	<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
+	<a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a>
 
 {% endif %}
 
