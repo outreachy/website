@@ -164,6 +164,9 @@ def mentor_id():
     # should be a multiple of three
     return urlsafe_b64encode(urandom(9))
 
+# There are several project descriptions on the last round page
+# that are far too long. This feels about right.
+SENTENCE_LENGTH=100
 # Current maximum description paragraph on round 15 page is 684.
 PARAGRAPH_LENGTH=800
 THREE_PARAGRAPH_LENGTH=3000
@@ -201,4 +204,68 @@ class Participation(models.Model):
                 community = self.community.name,
                 start = self.participating_round.internstarts,
                 end = self.participating_round.internends,
+                )
+
+class Project(models.Model):
+    project_round = models.ForeignKey(Participation, verbose_name="Outreachy round and community")
+
+    THREE_MONTHS = '3M'
+    SIX_MONTHS = '6M'
+    ONE_YEAR = '1Y'
+    TWO_YEARS = '2Y'
+    OLD_YEARS = 'OL'
+    LONGEVITY_CHOICES = (
+        (THREE_MONTHS, '0-3 months'),
+        (SIX_MONTHS, '3-6 months'),
+        (ONE_YEAR, '6-12 months'),
+        (TWO_YEARS, '1-2 years'),
+        (OLD_YEARS, 'More than 2 years'),
+    )
+    longevity = models.CharField(
+        max_length=2,
+        choices=LONGEVITY_CHOICES,
+        default=THREE_MONTHS,
+        help_text="How long has the project accepted contributions from external contributors?",
+    )
+
+    SMOL = '3'
+    TINY = '5'
+    MEDIUM = '10'
+    SIZABLE = '20'
+    BIG = '50'
+    LARGER = '100'
+    GINORMOUS = '999'
+    COMMUNITY_SIZE_CHOICES = (
+        (SMOL, '1-3 people'),
+        (TINY, '3-5 people'),
+        (MEDIUM, '5-10 people'),
+        (SIZABLE, '11-20 people'),
+        (BIG, '21-50 people'),
+        (LARGER, '50-100 people'),
+        (GINORMOUS, 'More than 100 people'),
+    )
+    community_size = models.CharField(
+        max_length=3,
+        choices=COMMUNITY_SIZE_CHOICES,
+        default=SMOL,
+        help_text="How many people are contributing to this project regularly?",
+    )
+
+    approved_license = models.BooleanField(help_text='I assert that my project is released under an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> or a <a href="https://creativecommons.org/share-your-work/licensing-types-examples/">Creative Commons license</a>')
+
+    short_title = models.CharField(
+            max_length=SENTENCE_LENGTH,
+            help_text='Short project title. This should be 100 characters or less, starting with a verb like "Create", "Improve", "Extend", "Survey", "Document", etc. Assume the applicant has never heard of your technology before and keep it simple.',
+            unique=True)
+
+    list_project = models.BooleanField(
+            default=False,
+            verbose_name="Coordinators: Check this box once you have reviewed the project information")
+
+    def __str__(self):
+        return '{start:%Y %B} to {end:%Y %B} round - {community} - {title}'.format(
+                start = self.project_round.participating_round.internstarts,
+                end = self.project_round.participating_round.internends,
+                community = self.project_round.community,
+                title = self.short_title,
                 )

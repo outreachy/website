@@ -7,6 +7,7 @@ from registration.backends.simple.views import RegistrationView
 from .models import Community
 from .models import Participation
 from .models import RoundPage
+from .models import Project
 
 class CreateUser(RegistrationView):
     def get_success_url(self, user):
