@@ -209,6 +209,8 @@ class Participation(models.Model):
                 start = self.participating_round.internstarts,
                 end = self.participating_round.internends,
                 )
+    def get_absolute_url(self):
+        return reverse('community-landing', kwargs={'round_slug': self.participating_round, 'slug': self.community.slug})
 
 class Project(models.Model):
     project_round = models.ForeignKey(Participation, verbose_name="Outreachy round and community")

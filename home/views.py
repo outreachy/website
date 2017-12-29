@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.shortcuts import get_list_or_404
+from django.urls import reverse
 from django.urls import reverse_lazy
 from django.utils.text import slugify
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -147,3 +148,27 @@ class CommunityCreate(CreateView):
 class CommunityUpdate(UpdateView):
     model = Community
     fields = ['name', 'description']
+
+# TODO - make sure people can't say they will fund 0 interns
+class ParticipationUpdate(UpdateView):
+    model = Participation
+    fields = ['interns_funded', 'cfp_text']
+
+    # Make sure that someone can't feed us a bad community URL by fetching the Community.
+    # By overriding the get_object method, we reuse the URL for
+    # both creating and updating information about a
+    # community participating in the current round.
+    def get_object(self):
+        community = get_object_or_404(Community, slug=self.kwargs['slug'])
+        participating_round = RoundPage.objects.latest('internstarts')
+        try:
+            return Participation.objects.get(
+                    community=community,
+                    participating_round=participating_round)
+        except Participation.DoesNotExist:
+            return Participation(
+                    community=community,
+                    participating_round=participating_round)
+
+    def get_success_url(self):
+        return reverse('community-read-only', kwargs={'slug': self.object.community.slug})
