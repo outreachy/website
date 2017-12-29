@@ -189,11 +189,11 @@ Organizers approve community for X number of interns after all funding discussio
 
 Community status (not exclusive):
 
- - [ ] Unclaimed - coordinator has not said the community wants to participate
- - [ ] Looking for volunteers - coordinator has claimed listing, CFP for mentors is out
- - [ ] Closed to projects - it's two weeks before the deadline, and no new Outreachy projects can be added
- - [ ] Funded - Outreachy organizers have approved the community for X number of interns
- - [ ] Staffed - community has at least one mentor and project that has been approved
+ - Unclaimed - coordinator has not said the community wants to participate
+ - Looking for volunteers - coordinator has claimed listing, CFP for mentors is out
+ - Closed to projects - it's two weeks before the deadline, and no new Outreachy projects can be added
+ - Funded - Outreachy organizers have approved the community for X number of interns
+ - Staffed - community has at least one mentor and project that has been approved
 
 Once a community has the status set of [Funded AND Staffed], and the date is between the application period opening and closing, the community will appear on the rounds page.
 
@@ -226,15 +226,15 @@ Coordinator is emailed - approves mentor
 
 Organizers must approve projects for Outreachy that have any of the following characteristics:
 
- - [ ] How long has the project accepted contributions from external contributors?
-   - [ ] 0-3 months
-   - [ ] 3-6 months
-   - [ ] 6-12 months
- - [ ] How many people are currently contributing to this project?
-   - [ ] 1-3 people
-   - [ ] 3-5 people
-   - [ ] 5-10 people
- - [ ] The date is two weeks before the application deadline
+ - How long has the project accepted contributions from external contributors?
+   - 0-3 months
+   - 3-6 months
+   - 6-12 months
+ - How many people are currently contributing to this project?
+   - 1-3 people
+   - 3-5 people
+   - 5-10 people
+ - The date is two weeks before the application deadline
 
 Once project is approved by coordinator (and organizer if necessary):
 
@@ -274,8 +274,8 @@ When logged in, mentors can visit their [Page] Project page. There will be a 're
 Static data all projects share
 ----
 
-- [ ] General information on how to start contributing - e.g. from [Fedora's page](https://fedoraproject.org/wiki/Outreachy/2017)
-- [ ] How to use IRC and IRC etiquette - e.g. from [Fedora's page](https://fedoraproject.org/wiki/Outreachy/2017) or [Outreachy's page](https://wiki.gnome.org/Outreachy/IRC)
+ - [ ] General information on how to start contributing - e.g. from [Fedora's page](https://fedoraproject.org/wiki/Outreachy/2017)
+ - [ ] How to use IRC and IRC etiquette - e.g. from [Fedora's page](https://fedoraproject.org/wiki/Outreachy/2017) or [Outreachy's page](https://wiki.gnome.org/Outreachy/IRC)
 
 Data to Gather
 ----
@@ -470,6 +470,8 @@ New pages to create
   - [ ] Mentors should get periodic email reminders if they have Saved but not Submitted their project
 
 - [ ] [Page] Community landing page
+  - [x] Lists project titles
+  - [ ] Includes all fields for applicants in Community and Projects
 
 - [ ] [Page] Project page
   - [ ] Details hidden - please apply as an Outreachy applicant to see details
