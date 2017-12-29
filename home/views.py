@@ -97,8 +97,8 @@ def community_read_only_view(request, slug):
     # and get the Participation object if so.
     try:
         participation_info = Participation.objects.get(community=community, participating_round=current_round)
-        approved_projects = get_list_or_404(participation_info.project_set, list_project=True)
-        pending_projects = get_list_or_404(participation_info.project_set, list_project=False)
+        approved_projects = participation_info.project_set.filter(list_project=True)
+        pending_projects = participation_info.project_set.filter(list_project=False)
     except Participation.DoesNotExist:
         participation_info = None
         approved_projects = None
