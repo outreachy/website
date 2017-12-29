@@ -25,14 +25,14 @@ Mentors Get Lost in On-boarding
 
 A very common problem that leads to additional Outreachy organizer manual labor
 is the mentor on-boarding process. Each Outreachy mentor needs to:
- - [ ] Receive a welcome email explaining how the process works and how to set a
+ - Receive a welcome email explaining how the process works and how to set a
    filter to ensure the mentor mailing list posts don't end up in the Gmail
    promotions tab
- - [ ] Be signed up for the mentors mailing list
- - [ ] Apply to be a mentor in the Outreachy application system
- - [ ] Be manually approved by the Outreachy organizers to be a mentor
- - [ ] Select their intern by navigating to the application and selecting "willing to mentor"
- - [ ] Go to their application profile and sign the mentor agreement
+ - Be signed up for the mentors mailing list
+ - Apply to be a mentor in the Outreachy application system
+ - Be manually approved by the Outreachy organizers to be a mentor
+ - Select their intern by navigating to the application and selecting "willing to mentor"
+ - Go to their application profile and sign the mentor agreement
 
 This manual process of mentor on-boarding and herding mentors towards the next
 steps adds at least 6-10 hours per round.
@@ -48,9 +48,9 @@ Projects Disappear in Six Months
 ===
 
 In order for a FOSS community to participate in Outreachy, they need to have:
- - [ ] Funding for at least one intern
- - [ ] 1 coordinator
- - [ ] At least one mentor and project
+ - Funding for at least one intern
+ - 1 coordinator
+ - At least one mentor and project
 
 There is usually six months between the first Call for Outreachy communities going out,
 and when the internship starts. Projects often get completed in that time, or change
@@ -132,24 +132,24 @@ Solutions
 This new coordinator, mentor, and volunteer on-boarding system will help these
 issues by:
 
- - [ ] Pushing down mentor and volunteer approval from Outreachy organizers to
+ - Pushing down mentor and volunteer approval from Outreachy organizers to
    community coordinators, who are in a better position to know whether the
    person should participate
- - [ ] Automatically collecting mentor and volunteer information
- - [ ] Automatically subscribing approved mentors and volunteers to the mentors
+ - Automatically collecting mentor and volunteer information
+ - Automatically subscribing approved mentors and volunteers to the mentors
    mailing list and sending them a welcome onboarding email.
- - [ ] Providing a way for people to sign up as volunteers and proposing a project later
- - [ ] Only showing mentor and community contact information to signed in
+ - Providing a way for people to sign up as volunteers and proposing a project later
+ - Only showing mentor and community contact information to signed in
    applicants who are eligible for this round (unless a project mentor wants to
    work with ineligible applicants)
- - [ ] Providing applicants clearer information about the skills they need to apply
- - [ ] Allowing Outreachy organizers to reject projects that aren't appropriate
+ - Providing applicants clearer information about the skills they need to apply
+ - Allowing Outreachy organizers to reject projects that aren't appropriate
    for Outreachy due to project newness, community size, or mentor inexperience
- - [ ] Forcing applicants to check their eligibility with an automated process
+ - Forcing applicants to check their eligibility with an automated process
    before working with mentors. (goal by end of January)
- - [ ] Providing mentors with a dashboard with clear information of which
+ - Providing mentors with a dashboard with clear information of which
    applicants are eligible or borderline (goal by end of January)
- - [ ] Providing a community page for use with GSoC with all contact information
+ - Providing a community page for use with GSoC with all contact information
    and only listing projects appropriate to GSoC (stretch goal)
 
 New Coordinator Flow
