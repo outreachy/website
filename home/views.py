@@ -1,7 +1,9 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.shortcuts import get_list_or_404
 from django.urls import reverse_lazy
+from django.utils.text import slugify
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from registration.backends.simple.views import RegistrationView
@@ -133,6 +135,14 @@ def community_landing_view(request, round_slug, slug):
 class CommunityCreate(CreateView):
     model = Community
     fields = ['name', 'description']
+    
+    # We have to over-ride this method because we need to
+    # create a community's slug from its name.
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.slug = slugify(self.object.name)
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 class CommunityUpdate(UpdateView):
     model = Community
