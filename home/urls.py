@@ -1,7 +1,7 @@
 from .views import community_cfp_view
 from .views import community_read_only_view
 from .views import community_landing_view
-from .views import CommunityCreate, CommunityUpdate, CommunityDelete
+from .views import CommunityCreate, CommunityUpdate
 
 from django.conf.urls import url
 
