@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
+from django.shortcuts import get_list_or_404
 
 from registration.backends.simple.views import RegistrationView
 
@@ -93,12 +94,16 @@ def community_read_only_view(request, slug):
         participation_info = Participation.objects.get(community=community, participating_round=current_round)
     except Participation.DoesNotExist:
         participation_info = None
+    approved_projects = get_list_or_404(participation_info.project_set, list_project=True)
+    pending_projects = get_list_or_404(participation_info.project_set, list_project=False)
 
     return render(request, 'home/community_read_only.html',
             {
             'current_round' : current_round,
             'community': community,
             'participation_info': participation_info,
+            'approved_projects': approved_projects,
+            'pending_projects': pending_projects,
             },
             )
 

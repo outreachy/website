@@ -20,9 +20,23 @@ Past community participation in Outreachy
 	{% if participation_info.list_community %}
 		<p>The Outreachy organizers have received confirmation for funding of {{ participation_info.interns_funded }} intern(s).
 		Once the application period starts, the community will be listed on the <a href="/{{ current_round.slug }}/">round home page</a>, with a link to
-		the <a href="/communities/{{ community.slug }}">community landing page</a>. The landing page contains detailed information about the community and approved projects.</p>
+		the <a href="/{{ current_round.slug }}/communities/{{ community.slug }}">community landing page</a>. The landing page contains detailed information about the community and approved projects.</p>
 	{% else %}
 		<p>Outreachy organizers are still working with the coordinator on funding details, so Outreachy applicants will not be shown the community landing page yet.</p>
+	{% endif %}
+	{% if pending_projects %}
+		<h1>Projects waiting for approval</h1>
+		<p>The {{ community.name }} coordinator is currently reviewing the following projects to see if they are a good fit for the Outreachy program and fit with long-term community goals.</p>
+		{% for project in pending_projects %}
+			<h2>{{ project.short_title }}</h2>
+		{% endfor %}
+	{% endif %}
+	{% if approved_projects %}
+		<h1>Approved projects</h1>
+		<p>These projects have been approved to be listed on the community landing page. Mentors are encouraged to start promoting their projects as soon as the Outreachy round opens on {{ current_round.appsopen }}.</p>
+		{% for project in approved_projects %}
+			<h2>{{ project.short_title }}</h2>
+		{% endfor %}
 	{% endif %}
 
 {% else %}
