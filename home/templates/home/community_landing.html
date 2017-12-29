@@ -21,5 +21,9 @@ The timeline for applicants is below:</p>
 
 <h1>What is {{ community.name }}?</h1>
 <p>{{ community.description }}</p>
+<h1>Projects</h1>
+{% for project in approved_projects %}
+<h2>{{ project.short_title }}</h2>
+{% endfor %}
 
 {% endblock %}

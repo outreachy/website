@@ -114,11 +114,13 @@ def community_landing_view(request, round_slug, slug):
     # Try to see if this community is participating in that round
     # and get the Participation object if so.
     participation_info = get_object_or_404(Participation, community=community, participating_round=this_round)
+    projects = get_list_or_404(participation_info.project_set, list_project=True)
 
     return render(request, 'home/community_landing.html',
             {
             'current_round' : this_round,
             'community': community,
             'participation_info': participation_info,
+            'approved_projects': projects,
             },
             )
