@@ -137,7 +137,3 @@ class CommunityCreate(CreateView):
 class CommunityUpdate(UpdateView):
     model = Community
     fields = ['name', 'description']
-
-class CommunityDelete(DeleteView):
-    model = Community
-    success_url = reverse_lazy('community-cfp')
