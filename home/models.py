@@ -188,11 +188,6 @@ class Community(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        # XXX - I'm not sure what this does - returns the read-only URL for the object?
-        # It seems to be used after an object is edited and saved.
-        # I read this:
-        # https://docs.djangoproject.com/en/1.11/ref/models/instances/#django.db.models.Model.get_absolute_url
-        # Not sure what these arguments are for? To look up the object later??
         return reverse('community-read-only', kwargs={'slug': self.slug})
 
 class Participation(models.Model):
