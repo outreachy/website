@@ -263,6 +263,11 @@ class Project(models.Model):
             max_length=SENTENCE_LENGTH,
             help_text='Short project title. This should be 100 characters or less, starting with a verb like "Create", "Improve", "Extend", "Survey", "Document", etc. Assume the applicant has never heard of your technology before and keep it simple.',
             unique=True)
+    slug = models.SlugField(
+            max_length=50,
+            unique=True,
+            null=True,
+            verbose_name="Community URL slug: https://www.outreachy.org/communities/SLUG/")
 
     list_project = models.BooleanField(
             default=False,
