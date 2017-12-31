@@ -412,6 +412,10 @@ Data to Gather
 New pages to create
 ----
 
+- [ ] CFP pages should have links to previous pages
+  - [ ] Community CFP has: Outreachy CFP > NAME Call for Mentors and Volunteers
+  - [ ] Project read-only has: Outreachy CFP > NAME Call for Mentors and Volunteers > [Approved, Pending, Rejected] Project
+
 - [x] [Page] List of all past and current participating FOSS communities in Outreachy
   - [x] Timeline of this round (link to dates in most recent round page)
   - [x] Outreachy blurb, link to mentor and coordinator pages
