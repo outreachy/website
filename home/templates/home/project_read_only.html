@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+{% if project.list_project %}
+Approved {{ community.name }} Project - {{ project.short_title }}
+{% else %}
+Pending {{ community.name }} Project - {{ project.short_title }}
+{% endif %}
+
+{% endblock %}
+
+{% block content %}
+
+{% if project.list_project %}
+	<h1>Approved {{ community.name }} Project</h1>
+	<p>This project has been approved by the community coordinator to participate in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
+{% else %}
+	<h1>Pending {{ community.name }} Project</h1>
+	<p>This project is waiting to be approved by the community coordinator for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
+{% endif %}
+
+<h2>Coordinator Actions</h2>
+{% if not project.approved_license or project.longevity == project.THREE_MONTHS or project.longevity == project.SIX_MONTHS or project.longevity == project.ONE_YEAR or project.community_size == project.SMOL or project.community_size == project.TINY %}
+	<p>Coordinators - please double check with the Outreachy organizers before approving this project!</p>
+{% else %}
+	<p>Coordinators - this project meets Outreachy organizer standards for project community size, project license, and the length of time the project has been accepting contributions from external contributors. You may approve this project if it meets <a href="/mentor/mentor-faq/#define-a-project">other Outreachy project standards</a> and your community's long term goals.</a>
+{% endif %}
+{% if not project.approved_license %}
+	<div class="alert alert-warning" role="alert"><strong>Warning!</strong> This project uses a license that is not an OSI-approved license or Creative Commons license.</div>
+	<p>The Outreachy parent organization, Software Freedom Conservancy, requires that all Outreachy internships further the goals of free and open source communities. Projects that use proprietary licenses are not allowed.</p>
+{% endif %}
+
+{% if project.longevity == project.THREE_MONTHS or project.longevity == project.SIX_MONTHS or project.longevity == project.ONE_YEAR %}
+	<div class="alert alert-warning" role="alert"><strong>Warning!</strong> This project is less than a year old.</div>
+	<p>Outreachy projects should be well-established projects. While GSoC allows students to create their own open source projects, we find Outreachy interns benefit the most from having a well-established community of project contributors to work with.</p>
+{% endif %}
+
+{% if project.community_size == project.SMOL or project.community_size == project.TINY %}
+	<div class="alert alert-warning" role="alert"><strong>Warning!</strong> This project has five or less regular contributors.</div>
+	<p>Outreachy projects should be well-established projects. While GSoC allows students to create their own open source projects, we find Outreachy interns benefit the most from having a well-established community of project contributors to work with.</p>
+{% endif %}
+
+{% comment %}<a class="btn btn-primary" href="">Approve Project</a>{% endcomment %}
+{% comment %}<a class="btn btn-primary" href="">Reject Project</a>{% endcomment %}
+
+<h2>Project Information</h2>
+
+<a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/{{ project.slug }}/edit/">Edit Project Info</a>
+
+<p>{{ project.short_title }}</p>
+<ul>
+	<li>Project has been accepting external contributions for: {{ project.get_longevity_display }}</li>
+	<li>Number of people contributing to this project regularly: {{ project.get_community_size_display }}</li>
+
+	{% if not project.approved_license %}
+		<li>Licenses: This project uses a license that is NOT an OSI-approved license or Creative Commons license.</li>
+	{% else %}
+		<li>Licenses: OSI-approved license or Creative Commons license.</li>
+	{% endif %}
+</ul>
+
+{% endblock %}

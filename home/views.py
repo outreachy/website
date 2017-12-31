@@ -172,3 +172,44 @@ class ParticipationUpdate(UpdateView):
 
     def get_success_url(self):
         return reverse('community-read-only', kwargs={'slug': self.object.community.slug})
+
+# This view is for mentors and coordinators to review project information and approve it
+def project_read_only_view(request, community_slug, project_slug):
+    current_round = RoundPage.objects.latest('internstarts')
+    community = get_object_or_404(Community, slug=community_slug)
+    project = get_object_or_404(Project, slug=project_slug)
+
+    return render(request, 'home/project_read_only.html',
+            {
+            'current_round': current_round,
+            'community': community,
+            'project' : project,
+            },
+            )
+
+class ProjectUpdate(UpdateView):
+    model = Project
+    fields = ['short_title', 'longevity', 'community_size', 'approved_license']
+
+    # Make sure that someone can't feed us a bad community URL by fetching the Community.
+    # By overriding the get_object method, we reuse the URL for
+    # both creating and updating information about a
+    # community participating in the current round.
+    def get_object(self):
+        community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
+        participating_round = RoundPage.objects.latest('internstarts')
+        participation = get_object_or_404(Participation,
+                    community=community,
+                    participating_round=participating_round)
+        if self.kwargs['project_slug']:
+            return get_object_or_404(Project,
+                    project_round=participation,
+                    slug=self.kwargs['project_slug'])
+        else:
+            return Project(project_round=participation)
+
+    def get_success_url(self):
+        community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
+        return reverse('project-read-only',
+                kwargs={'project_slug': self.object.slug,
+                    'community_slug': community.slug})

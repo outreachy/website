@@ -24,19 +24,24 @@ Past community participation in Outreachy
 	{% else %}
 		<p>Outreachy organizers are still working with the coordinator on funding details, so Outreachy applicants will not be shown the community landing page yet.</p>
 	{% endif %}
+	<h2>Submit a Project</h2>
 	{% if pending_projects %}
-		<h1>Projects waiting for approval</h1>
+		<h2>Projects waiting for approval</h2>
 		<p>The {{ community.name }} coordinator is currently reviewing the following projects to see if they are a good fit for the Outreachy program and fit with long-term community goals.</p>
+		<ul>
 		{% for project in pending_projects %}
-			<h2>{{ project.short_title }}</h2>
+			<li><a href="/communities/cfp/{{ community.slug }}/{{ project.slug }}">{{ project.short_title }}</a></li>
 		{% endfor %}
+		</ul>
 	{% endif %}
 	{% if approved_projects %}
-		<h1>Approved projects</h1>
+		<h2>Approved projects</h2>
 		<p>These projects have been approved to be listed on the community landing page. Mentors are encouraged to start promoting their projects as soon as the Outreachy round opens on {{ current_round.appsopen }}.</p>
+		<ul>
 		{% for project in approved_projects %}
-			<h2>{{ project.short_title }}</h2>
+		<li><a href="/communities/cfp/{{ community.slug }}/{{ project.slug }}">{{ project.short_title }}</a></li>
 		{% endfor %}
+		</ul>
 	{% endif %}
 
 {% else %}
