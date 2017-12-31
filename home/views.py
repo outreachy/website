@@ -5,6 +5,7 @@ from django.shortcuts import get_list_or_404
 from django.urls import reverse
 from django.urls import reverse_lazy
 from django.utils.text import slugify
+from django.views.decorators.http import require_POST
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from registration.backends.simple.views import RegistrationView
@@ -219,3 +220,24 @@ class ProjectUpdate(UpdateView):
         return reverse('project-read-only',
                 kwargs={'project_slug': self.object.slug,
                     'community_slug': community.slug})
+
+@require_POST
+def project_status_change(request, community_slug, project_slug):
+    current_round = RoundPage.objects.latest('internstarts')
+    community = get_object_or_404(Community, slug=community_slug)
+
+    # Try to see if this community is participating in that round
+    # and get the Participation object if so.
+    participation_info = get_object_or_404(Participation, community=community, participating_round=current_round)
+    project = get_object_or_404(Project, slug=project_slug, project_round=participation_info)
+
+    if 'approve' in request.POST:
+        project.list_project = True
+        project.save()
+    if 'reject' in request.POST:
+        project.list_project = False
+        project.save()
+
+    return HttpResponseRedirect(reverse('project-read-only',
+            kwargs={'project_slug': project.slug,
+                'community_slug': community.slug}))

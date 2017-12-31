@@ -44,8 +44,16 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 	<p>Outreachy projects should be well-established projects. While GSoC allows students to create their own open source projects, we find Outreachy interns benefit the most from having a well-established community of project contributors to work with.</p>
 {% endif %}
 
-{% comment %}<a class="btn btn-primary" href="">Approve Project</a>{% endcomment %}
-{% comment %}<a class="btn btn-primary" href="">Reject Project</a>{% endcomment %}
+{% comment %}When we name an input, the name and value get added to the POST dictionary.{% endcomment %}
+<form action="{% url 'project-status' community_slug=community.slug project_slug=project.slug %}" method="post">
+    {% csrf_token %}
+    {% if project.list_project is not True %}
+	    <input class="btn btn-primary" type="submit" name="approve" value="Approve Project" />
+    {% endif %}
+    {% if project.list_project is not False %}
+	    <input class="btn btn-primary" type="submit" name="reject" value="Reject Project" />
+    {% endif %}
+</form>
 
 <h2>Project Information</h2>
 
