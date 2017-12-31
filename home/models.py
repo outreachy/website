@@ -271,8 +271,15 @@ class Project(models.Model):
 
     accepting_new_applicants = models.BooleanField(help_text='Is this project currently accepting new applicants? If you have an applicant in mind to accept as an intern (or several promising applicants) who have filled out the eligibility information and an application, you can uncheck this box to close the project to new applicants.', default=True)
 
-    list_project = models.BooleanField(
-            default=False,
+    # A NullBooleanField can be not set in the database (Null),
+    # or it can be set in the database to either True or False.
+    # Django maps a Null value in the database to the Python None value.
+    # Using a NullBooleanField instead of a BooleanField allows us to track three project states:
+    #  * Null/None - Project is pending approval from coordinator
+    #  * True - Project has been approved by coordinator
+    #  * False - Project has been rejected by coordinator
+    list_project = models.NullBooleanField(
+            default=None,
             verbose_name="Coordinators: Check this box once you have reviewed the project information")
 
     def __str__(self):
