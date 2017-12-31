@@ -22,7 +22,7 @@ Past community participation in Outreachy
 		Once the application period starts, the community will be listed on the <a href="/{{ current_round.slug }}/">round home page</a>, with a link to
 		the <a href="/{{ current_round.slug }}/communities/{{ community.slug }}">community landing page</a>. The landing page contains detailed information about the community and approved projects.</p>
 	{% else %}
-		<p>Outreachy organizers are still working with the coordinator on funding details, so Outreachy applicants will not be shown the community landing page yet.</p>
+		<p>Outreachy organizers are still working with the coordinator(s) on funding details, so Outreachy applicants will not be shown the community landing page yet.</p>
 	{% endif %}
 	<h2>Submit a Project</h2>
 	{% if pending_projects %}
@@ -43,14 +43,22 @@ Past community participation in Outreachy
 		{% endfor %}
 		</ul>
 	{% endif %}
+	{% comment %} Only show this to people who aren't a coordinator for this community. {% endcomment %}
+	<h2>Coordinators</h2>
+	<p>This community currently has a coordinator. If you have been a community coordinator in the past but have not yet created an account on this site, or you would like to volunteer to be a new coordinator or a co-coordinator and you understand the <a href="/mentor/">coordinator duties</a>, you can <a href="/communities/cfp/{{ community.slug }}/coordinator-signup/">claim the community</a>.</p>
 
 {% else %}
 
 	<h1>{{ community.name }} in Outreachy</h1>
 	<h2>Mentors and Volunteers</h2>
-	<p>The coordinator(s) for {{ community.name }} has not yet indicated whether the community will be participating in {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} internship round.</p>
+	<p>The coordinator(s) for {{ community.name }} have not yet indicated whether the community will be participating in {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} internship round.</p>
+	{% comment %} The text above is confusing, since once you create a new community, you get taken to its read-only page.
+	Perhaps we need to have two boolean states - one for funding review and one for new community review?
+	<p>This FOSS community is still under review by the Outreachy organizers, since it is new to Outreachy.</p>
+	{% endcomment %}
 	<p>Sign up to be notified when the coordinator finds funding and opens the call for volunteers and mentors.</p>
 	<a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/notify-me/">Notify me</a>
+	{% comment %} Don't show this next sections to coordinators who are logged in (but only for their communities). {% endcomment %}
 	<h2>Coordinators</h2>
 	<p>If you have been a community coordinator in the past but have not yet created an account on this site, or you would like to volunteer to be a new coordinator and you understand the <a href="/mentor/">coordinator duties</a>, you can <a href="/communities/cfp/{{ community.slug }}/coordinator-signup/">claim the community</a>.</p>
 	<p>Once you are an approved coordinator for this community, you can sign the community up to participate in the current round.</p>
