@@ -155,7 +155,7 @@ New Coordinator Flow
 
 [Page] Community participation status in this round.
 
- - [ ] Intro paragraph says, if you don't see your community on this page, or
+ - [x] Intro paragraph says, if you don't see your community on this page, or
    you're a new community, sign up to participate here.
 
 [Page] Sign up to be a participating community
@@ -170,7 +170,7 @@ Existing Coordinator Flow
 
 [Page] Community participation status in this round.
 
- - [ ] Find your community, click 'Participate in this round',
+ - [x] Find your community, click 'Participate in this round',
    - [ ] log in, Django recognizes you as an existing coordinator
    - [ ] create an account, Django says you're not listed as a coordinator
      - [ ] email sent to Outreachy organizers and listed coordinators
@@ -178,9 +178,9 @@ Existing Coordinator Flow
 [Page] Edit community data
 
  - [ ] Update any questions you want to ask volunteers, mentors, or applicants
- - [ ] Update the Call for Volunteers text for this round
- - [ ] Update mentor project selection criteria description for this round
- - [ ] Update information on volunteers positions that are open
+ - [x] Update the Call for Volunteers text for this round
+ - [x] Update mentor project selection criteria description for this round
+ - [x] Update information on volunteers positions that are open
 
 Coordinator emails mailing list with call for volunteers, and sends email to known mentors to tell them to sign up on the call for volunteers page.
 
@@ -441,13 +441,13 @@ New pages to create
   - [ ] Coordinators should get periodic email reminders if they have Saved but not Submitted a community
 
 - [ ] [Page] Community status or call for volunteers and mentors
-  - [ ] Community is not participating in the current round:
+  - [x] Community is not participating in the current round:
     - [ ] Notify me when this community signs up
     - [ ] Sign up to be a community coordinator
   - [ ] Community is participating in the current round:
-    - [ ] Community status: (waiting on funding, coordinators are, etc...)
+    - [x] Community status: (waiting on funding, coordinators are, etc...)
     - [ ] Propose a new project -> login -> mentor/project sign-up
-    - [ ] Lists any submitted and approved projects (submitted only visible to coordinator)
+    - [x] Lists any submitted and approved projects
     - [ ] 'Apply to co-mentor this project' -> login -> mentor sign-up
     - [ ] Project status:
       - [ ] Waiting on coordinator approval
@@ -470,9 +470,10 @@ New pages to create
   - [ ] Mentors should get periodic email reminders if they have Saved but not Submitted their project
 
 - [ ] [Page] Community landing page
-  - [x] Lists project titles
+  - [x] Lists approved project titles
   - [ ] Includes all fields for applicants in Community and Projects
 
 - [ ] [Page] Project page
+  - [ ] Lists project information
   - [ ] Details hidden - please apply as an Outreachy applicant to see details
   - [ ] 'Apply to co-mentor this project' -> login -> mentor sign-up
