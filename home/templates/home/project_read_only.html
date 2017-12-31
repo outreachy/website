@@ -14,10 +14,13 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 
 {% if project.list_project %}
 	<h1>Approved {{ community.name }} Project</h1>
-	<p>This project has been approved by the community coordinator to participate in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
-{% else %}
+	<p>This project has been approved by the {{ community.name }} coordinator(s) to participate in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
+{% elif project.list_project is None %}
 	<h1>Pending {{ community.name }} Project</h1>
-	<p>This project is waiting to be approved by the community coordinator for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
+	<p>This project is waiting to be approved by the {{ community.name }} coordinator(s) for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
+{% else %}
+	<h1>Rejected {{ community.name }} Project</h1>
+	<p>The {{ community.name }} coordinator(s) or Outreachy organizers do not think this project is suitable for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
 {% endif %}
 
 <h2>Coordinator Actions</h2>

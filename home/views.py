@@ -99,11 +99,13 @@ def community_read_only_view(request, slug):
     try:
         participation_info = Participation.objects.get(community=community, participating_round=current_round)
         approved_projects = participation_info.project_set.filter(list_project=True)
-        pending_projects = participation_info.project_set.filter(list_project=False)
+        pending_projects = participation_info.project_set.filter(list_project=None)
+        rejected_projects = participation_info.project_set.filter(list_project=False)
     except Participation.DoesNotExist:
         participation_info = None
         approved_projects = None
         pending_projects = None
+        rejected_projects = None
 
     return render(request, 'home/community_read_only.html',
             {
@@ -112,6 +114,7 @@ def community_read_only_view(request, slug):
             'participation_info': participation_info,
             'approved_projects': approved_projects,
             'pending_projects': pending_projects,
+            'rejected_projects': rejected_projects,
             },
             )
 

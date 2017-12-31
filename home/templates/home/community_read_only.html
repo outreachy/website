@@ -47,6 +47,15 @@ Past community participation in Outreachy
 		{% endfor %}
 		</ul>
 	{% endif %}
+	{% if rejected_projects %}
+		<h2>Rejected projects</h2>
+		<p>The {{ community.name }} coordinator(s) or Outreachy organizers do not think the following projects are suitable for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
+		<ul>
+		{% for project in rejected_projects %}
+			<li><a href="/communities/cfp/{{ community.slug }}/{{ project.slug }}">{{ project.short_title }}</a></li>
+		{% endfor %}
+		</ul>
+	{% endif %}
 	{% comment %} Only show this to people who aren't a coordinator for this community. {% endcomment %}
 	<h2>Coordinators</h2>
 	<p>This community currently has a coordinator. If you have been a community coordinator in the past but have not yet created an account on this site, or you would like to volunteer to be a new coordinator or a co-coordinator and you understand the <a href="/mentor/">coordinator duties</a>, you can <a href="/communities/cfp/{{ community.slug }}/coordinator-signup/">claim the community</a>.</p>
