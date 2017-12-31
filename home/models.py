@@ -269,6 +269,8 @@ class Project(models.Model):
             null=True,
             verbose_name="Community URL slug: https://www.outreachy.org/communities/SLUG/")
 
+    accepting_new_applicants = models.BooleanField(help_text='Is this project currently accepting new applicants? If you have an applicant in mind to accept as an intern (or several promising applicants) who have filled out the eligibility information and an application, you can uncheck this box to close the project to new applicants.', default=True)
+
     list_project = models.BooleanField(
             default=False,
             verbose_name="Coordinators: Check this box once you have reviewed the project information")
