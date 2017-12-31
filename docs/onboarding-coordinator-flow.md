@@ -402,7 +402,7 @@ Data to Gather
      information from these applicants, so that you will only work with applicants
      can be selected as interns. We recommend setting this to 'No' unless you have a
      lot of spare bandwidth.
-   - [ ] Is the project currently accepting new applicants?
+   - [x] Is the project currently accepting new applicants?
    - [ ] Project status:
      - [ ] Waiting on coordinator approval
      - [ ] Waiting on organizer approval
@@ -471,6 +471,7 @@ New pages to create
 
 - [ ] [Page] Community landing page
   - [x] Lists approved project titles
+  - [x] Lists projects that are closed to new applicants
   - [ ] Includes all fields for applicants in Community and Projects
 
 - [ ] [Page] Project page

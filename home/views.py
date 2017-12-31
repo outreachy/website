@@ -123,13 +123,16 @@ def community_landing_view(request, round_slug, slug):
     # and get the Participation object if so.
     participation_info = get_object_or_404(Participation, community=community, participating_round=this_round)
     projects = get_list_or_404(participation_info.project_set, list_project=True)
+    approved_projects = [p for p in projects if p.accepting_new_applicants]
+    closed_projects = [p for p in projects if not p.accepting_new_applicants]
 
     return render(request, 'home/community_landing.html',
             {
             'current_round' : this_round,
             'community': community,
             'participation_info': participation_info,
-            'approved_projects': projects,
+            'approved_projects': approved_projects,
+            'closed_projects': closed_projects,
             },
             )
 
@@ -189,7 +192,7 @@ def project_read_only_view(request, community_slug, project_slug):
 
 class ProjectUpdate(UpdateView):
     model = Project
-    fields = ['short_title', 'longevity', 'community_size', 'approved_license']
+    fields = ['short_title', 'longevity', 'community_size', 'approved_license', 'accepting_new_applicants']
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     # By overriding the get_object method, we reuse the URL for

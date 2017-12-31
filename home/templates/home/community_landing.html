@@ -21,9 +21,21 @@ The timeline for applicants is below:</p>
 
 <h1>What is {{ community.name }}?</h1>
 <p>{{ community.description }}</p>
-<h1>Projects</h1>
-{% for project in approved_projects %}
-<h2>{{ project.short_title }}</h2>
-{% endfor %}
+
+{% if approved_projects %}
+	<h1>Open Projects</h1>
+	<p>Mentors for these projects are willing to work with new Outreachy applicants. Please note that as the round goes on, mentors may close their project to new applicants because they are already working with many applicants. Make sure to contact a mentor and start your contribution as soon as possible!</p>
+	{% for project in approved_projects %}
+		<h2>{{ project.short_title }}</h2>
+	{% endfor %}
+{% endif %}
+
+{% if closed_projects %}
+	<h1>Closed Projects</h1>
+	<p>These projects are closed to new applicants because the mentors are already working with many applicants. Applicants who are already working with a mentor are encouraged to complete their contributions and submit an application for the project.</p>
+	{% for project in closed_projects %}
+		<h2>{{ project.short_title }}</h2>
+	{% endfor %}
+{% endif %}
 
 {% endblock %}

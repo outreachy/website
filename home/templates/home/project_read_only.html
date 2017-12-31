@@ -58,6 +58,11 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 	{% else %}
 		<li>Licenses: OSI-approved license or Creative Commons license.</li>
 	{% endif %}
+	{% if project.accepting_new_applicants %}
+		<li>Open - Project is open to new Outreachy applicants.</li>
+	{% else %}
+		<li>Closed - Project is closed to new Outreachy applicants.</li>
+	{% endif %}
 </ul>
 
 {% endblock %}

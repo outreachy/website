@@ -39,7 +39,11 @@ Past community participation in Outreachy
 		<p>These projects have been approved to be listed on the community landing page. Mentors are encouraged to start promoting their projects as soon as the Outreachy round opens on {{ current_round.appsopen }}.</p>
 		<ul>
 		{% for project in approved_projects %}
-		<li><a href="/communities/cfp/{{ community.slug }}/{{ project.slug }}">{{ project.short_title }}</a></li>
+			{% if project.accepting_new_applicants %}
+				<li><a href="/communities/cfp/{{ community.slug }}/{{ project.slug }}">{{ project.short_title }}</a></li>
+			{% else %}
+				<li>(Closed to new applicants) <a href="/communities/cfp/{{ community.slug }}/{{ project.slug }}">{{ project.short_title }}</a></li>
+			{% endif %}
 		{% endfor %}
 		</ul>
 	{% endif %}
