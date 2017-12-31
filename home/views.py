@@ -148,7 +148,7 @@ class CommunityCreate(CreateView):
     # create a community's slug from its name.
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        self.object.slug = slugify(self.object.name)
+        self.object.slug = slugify(self.object.name)[:self.object._meta.get_field('slug').max_length]
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
 
@@ -214,6 +214,13 @@ class ProjectUpdate(UpdateView):
                     slug=self.kwargs['project_slug'])
         else:
             return Project(project_round=participation)
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        if not self.object.slug:
+            self.object.slug = slugify(self.object.short_title)[:self.object._meta.get_field('slug').max_length]
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
         community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
