@@ -482,3 +482,11 @@ New pages to create
   - [ ] Lists project information
   - [ ] Details hidden - please apply as an Outreachy applicant to see details
   - [ ] 'Apply to co-mentor this project' -> login -> mentor sign-up
+
+TODO
+---
+
+- [ ] Make a unique_together for the combination of Project slug and Participation (shouldn't have the same Project short title in a round, but could have the same project participate in multiple rounds).
+- [ ] Make a unique_together for the combination of Community and Participation (shouldn't have a community participate in a round more than once)
+- [ ] NullBoolean for Community approved/rejected/pending by organizers
+- [ ] Use the URL template tag in various places to set links, e.g. {% url 'project-status' community_slug=community.slug project_slug=project.slug %}
