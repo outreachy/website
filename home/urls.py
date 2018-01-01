@@ -4,6 +4,7 @@ from .views import community_landing_view
 from .views import CommunityCreate, CommunityUpdate
 from .views import community_status_change
 from .views import ParticipationUpdate
+from .views import NotParticipating
 from .views import ProjectUpdate
 from .views import project_read_only_view
 from .views import project_status_change
@@ -13,6 +14,7 @@ from django.conf.urls import url
 urlpatterns = [
     url(r'^communities/cfp/add/$', CommunityCreate.as_view(), name='community-add'),
     url(r'^communities/cfp/(?P<slug>[^/]+)/participate/$', ParticipationUpdate.as_view(), name='community-participate'),
+    url(r'^communities/cfp/(?P<slug>[^/]+)/dont-participate/$', NotParticipating.as_view(), name='community-not-participating'),
     url(r'^communities/cfp/(?P<slug>[^/]+)/edit/$', CommunityUpdate.as_view(), name='community-update'),
     url(r'^communities/cfp/(?P<community_slug>[^/]+)/add/$', ProjectUpdate.as_view(), name='project-participate'),
     url(r'^communities/cfp/(?P<community_slug>[^/]+)/status/$', community_status_change, name='community-status'),
