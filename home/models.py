@@ -199,8 +199,8 @@ class Participation(models.Model):
     cfp_text = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
             verbose_name="Additional information to provide on a call for mentors and volunteers page (e.g. what kinds of projects you're looking for, ways for volunteers to help Outreachy applicants)")
     # FIXME: hide this for everyone except those in the organizer group (or perhaps admin for now)
-    list_community = models.BooleanField(
-            default=False,
+    list_community = models.NullBooleanField(
+            default=None,
             verbose_name="Organizers: Check this box once you have reviewed the community information, confirmed funding, and collected billing information")
 
     def __str__(self):
