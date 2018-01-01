@@ -69,11 +69,19 @@ def community_cfp_view(request):
             current_round.participation_set.values_list('community_id', flat=True)
             )
     all_communities = Community.objects.all()
-    participating_communities = []
+    approved_communities = []
+    pending_communities = []
+    rejected_communities = []
     not_participating_communities = []
     for c in all_communities:
         if c.id in participating_communities_ids:
-            participating_communities.append(c)
+            participation_info = get_object_or_404(Participation, community=c, participating_round=current_round)
+            if participation_info.list_community is None:
+                pending_communities.append(c)
+            elif participation_info.list_community is True:
+                approved_communities.append(c)
+            else:
+                rejected_communities.append(c)
         else:
             not_participating_communities.append(c)
 
@@ -81,7 +89,9 @@ def community_cfp_view(request):
     return render(request, 'home/community_cfp.html',
             {
             'current_round' : current_round,
-            'participating_communities': participating_communities,
+            'pending_communities': pending_communities,
+            'approved_communities': approved_communities,
+            'rejected_communities': rejected_communities,
             'not_participating_communities': not_participating_communities,
             },
             )
@@ -155,6 +165,25 @@ class CommunityCreate(CreateView):
 class CommunityUpdate(UpdateView):
     model = Community
     fields = ['name', 'description']
+
+@require_POST
+def community_status_change(request, community_slug):
+    current_round = RoundPage.objects.latest('internstarts')
+    community = get_object_or_404(Community, slug=community_slug)
+
+    # Try to see if this community is participating in that round
+    # and get the Participation object if so.
+    participation_info = get_object_or_404(Participation, community=community, participating_round=current_round)
+
+    if 'approve' in request.POST:
+        participation_info.list_community = True
+        participation_info.save()
+    if 'reject' in request.POST:
+        participation_info.list_community = False
+        participation_info.save()
+
+    return HttpResponseRedirect(reverse('community-read-only',
+            kwargs={'slug': community.slug}))
 
 # TODO - make sure people can't say they will fund 0 interns
 class ParticipationUpdate(UpdateView):
