@@ -25,6 +25,7 @@ Past community participation in Outreachy
 		<p>Outreachy organizers are still working with the coordinator(s) on funding details, so Outreachy applicants will not be shown the community landing page yet.</p>
 	{% endif %}
 	<h2>Submit a Project</h2>
+	<a class='btn btn-primary' href="{% url 'project-participate' community.slug %}">Submit a New Project</a>
 	{% if pending_projects %}
 		<h2>Projects waiting for approval</h2>
 		<p>The {{ community.name }} coordinator is currently reviewing the following projects to see if they are a good fit for the Outreachy program and fit with long-term community goals.</p>
