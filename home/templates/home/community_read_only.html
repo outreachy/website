@@ -77,15 +77,23 @@ Past community participation in Outreachy
 	{% if participation_info.reason_for_not_participating %}
 		<p>Have you changed your mind and decided your community can participate in this round of Outreachy?</p>
 		<a class="btn btn-success" href="/communities/cfp/{{ community.slug }}/participate/">Community will participate</a>
+		<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
+		<a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a>
+
 	{% elif participation_info.list_community is False %}
 		<p>Unfortunately, the Outreachy organizers have determined your community should not participate in this round. Please <a href="/contact/">contact us</a> for more details.</p>
+		<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
+		<a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a>
+
 	{% else %}
+		<p>Do you need to update information about your community's participation in this round (such as number of interns funded or call for volunteers text)?</p>
+		<a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/participate/">Update Round Info</a>
+		<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
+		<a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a>
 		<p>Do you need to withdraw this Outreachy community from this internship round?</p>
 		<a class="btn btn-warning" href="/communities/cfp/{{ community.slug }}/dont-participate/">Withdraw community</a>
 	{% endif %}
 
-	<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
-	<a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a>
 
 	{% if participation_info.list_community is not False %}
 		<h2>Submit a Project</h2>
