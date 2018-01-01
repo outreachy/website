@@ -200,7 +200,7 @@ class Participation(models.Model):
             verbose_name="Additional information to provide on a call for mentors and volunteers page (e.g. what kinds of projects you're looking for, ways for volunteers to help Outreachy applicants)")
     reason_for_not_participating = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
             blank=True,
-            verbose_name="Please let us know why your community won't be participating in this Outreachy round, and if there's anything the Outreachy organizers can do to help.")
+            verbose_name="Please let Outreachy organizers know why your community won't be participating in this Outreachy round, and if there's anything we can do to help. This private information is only used by the Outreachy organizers, and will not be displayed on your community page.")
     # FIXME: hide this for everyone except those in the organizer group (or perhaps admin for now)
     list_community = models.NullBooleanField(
             default=None,
