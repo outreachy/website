@@ -208,7 +208,7 @@ class ProjectUpdate(UpdateView):
         participation = get_object_or_404(Participation,
                     community=community,
                     participating_round=participating_round)
-        if self.kwargs['project_slug']:
+        if 'project_slug' in self.kwargs:
             return get_object_or_404(Project,
                     project_round=participation,
                     slug=self.kwargs['project_slug'])
