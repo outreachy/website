@@ -190,8 +190,8 @@ class Community(models.Model):
     def get_absolute_url(self):
         return reverse('community-read-only', kwargs={'slug': self.slug})
 
-class NewCommunity(models.Model):
-    community = models.OneToOneField(Community, primary_key=True)
+class NewCommunity(Community):
+    community = models.OneToOneField(Community, primary_key=True, parent_link=True)
 
     SMOL = '3'
     TINY = '5'
