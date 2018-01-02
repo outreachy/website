@@ -190,6 +190,67 @@ class Community(models.Model):
     def get_absolute_url(self):
         return reverse('community-read-only', kwargs={'slug': self.slug})
 
+class NewCommunity(models.Model):
+    community = models.ForeignKey(Community)
+
+    SMOL = '3'
+    TINY = '5'
+    MEDIUM = '10'
+    SIZABLE = '20'
+    BIG = '50'
+    LARGER = '100'
+    GINORMOUS = '999'
+    COMMUNITY_SIZE_CHOICES = (
+        (SMOL, '1-3 people'),
+        (TINY, '3-5 people'),
+        (MEDIUM, '5-10 people'),
+        (SIZABLE, '11-20 people'),
+        (BIG, '21-50 people'),
+        (LARGER, '50-100 people'),
+        (GINORMOUS, 'More than 100 people'),
+    )
+    community_size = models.CharField(
+        max_length=3,
+        choices=COMMUNITY_SIZE_CHOICES,
+        default=SMOL,
+        help_text="How many people are contributing to this community regularly?",
+    )
+
+    THREE_MONTHS = '3M'
+    SIX_MONTHS = '6M'
+    ONE_YEAR = '1Y'
+    TWO_YEARS = '2Y'
+    OLD_YEARS = 'OL'
+    LONGEVITY_CHOICES = (
+        (THREE_MONTHS, '0-3 months'),
+        (SIX_MONTHS, '3-6 months'),
+        (ONE_YEAR, '6-12 months'),
+        (TWO_YEARS, '1-2 years'),
+        (OLD_YEARS, 'More than 2 years'),
+    )
+    longevity = models.CharField(
+        max_length=2,
+        choices=LONGEVITY_CHOICES,
+        default=THREE_MONTHS,
+        help_text="How long has the community been a free and open source software (FOSS) community?",
+    )
+
+    participating_orgs = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
+            help_text="What different organizations and companies participate in the project?")
+
+    approved_license = models.BooleanField(help_text='I assert that all Outreachy projects under my community will be released under an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> or a <a href="https://creativecommons.org/share-your-work/licensing-types-examples/">Creative Commons license</a>')
+    unapproved_license_description = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
+            help_text="(Optional) If your community uses a license that is not an OSI-approved license or a Creative Commons license, please provide links to the licenses or a description.")
+
+    no_proprietary_software = models.BooleanField(help_text='I assert all Outreachy projects under my community will not rely or build upon proprietary software.')
+    proprietary_software_description = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
+            help_text="(Optional) If your community relies or builds upon proprietary software, please provide description of what software is used.")
+
+    goverance = models.URLField(blank=True, help_text="(Optional) Please provide a URL for a description of your community's governance model")
+    code_of_conduct = models.URLField(blank=True, help_text="(Optional) Please provide a URL for to your community's Code of Conduct")
+    cla = models.URLField(blank=True, help_text="(Optional) Please provide a URL for your community's Contributor License Agreement (CLA)")
+    dco = models.URLField(blank=True, help_text="(Optional) Please provide a URL for your community's Developer Certificate of Origin (DCO) agreement")
+
 class Participation(models.Model):
     community = models.ForeignKey(Community)
     participating_round = models.ForeignKey(RoundPage)
