@@ -191,7 +191,7 @@ class Community(models.Model):
         return reverse('community-read-only', kwargs={'slug': self.slug})
 
 class NewCommunity(models.Model):
-    community = models.ForeignKey(Community)
+    community = models.OneToOneField(Community, primary_key=True)
 
     SMOL = '3'
     TINY = '5'
