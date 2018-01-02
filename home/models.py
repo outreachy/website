@@ -240,10 +240,12 @@ class NewCommunity(Community):
 
     approved_license = models.BooleanField(help_text='I assert that all Outreachy projects under my community will be released under an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> or a <a href="https://creativecommons.org/share-your-work/licensing-types-examples/">Creative Commons license</a>')
     unapproved_license_description = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
+            blank=True,
             help_text="(Optional) If your community uses a license that is not an OSI-approved license or a Creative Commons license, please provide links to the licenses or a description.")
 
     no_proprietary_software = models.BooleanField(help_text='I assert all Outreachy projects under my community will not rely or build upon proprietary software.')
     proprietary_software_description = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
+            blank=True,
             help_text="(Optional) If your community relies or builds upon proprietary software, please provide description of what software is used.")
 
     goverance = models.URLField(blank=True, help_text="(Optional) Please provide a URL for a description of your community's governance model")
