@@ -11,6 +11,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from registration.backends.simple.views import RegistrationView
 
 from .models import Community
+from .models import NewCommunity
 from .models import Participation
 from .models import RoundPage
 from .models import Project
@@ -151,8 +152,11 @@ def community_landing_view(request, round_slug, slug):
             )
 
 class CommunityCreate(CreateView):
-    model = Community
-    fields = ['name', 'description']
+    model = NewCommunity
+    fields = ['name', 'description', 'community_size', 'longevity', 'participating_orgs',
+            'approved_license', 'unapproved_license_description',
+            'no_proprietary_software', 'proprietary_software_description',
+            'goverance', 'code_of_conduct', 'cla', 'dco']
     
     # We have to over-ride this method because we need to
     # create a community's slug from its name.
@@ -160,7 +164,10 @@ class CommunityCreate(CreateView):
         self.object = form.save(commit=False)
         self.object.slug = slugify(self.object.name)[:self.object._meta.get_field('slug').max_length]
         self.object.save()
-        return HttpResponseRedirect(self.get_success_url())
+        # When a new community is created, immediately redirect the coordinator
+        # to gather information about their participation in this round
+        return HttpResponseRedirect(reverse('community-participate',
+            kwargs={'slug': self.object.slug}))
 
 class CommunityUpdate(UpdateView):
     model = Community
