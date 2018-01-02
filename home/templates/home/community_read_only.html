@@ -22,11 +22,13 @@ Past community participation in Outreachy
 		<p>The Outreachy organizers have received confirmation for funding of {{ participation_info.interns_funded }} intern(s).
 		Once the application period starts, the community will be listed on the <a href="/{{ current_round.slug }}/">round home page</a>, with a link to
 		the <a href="/{{ current_round.slug }}/communities/{{ community.slug }}">community landing page</a>. The landing page contains detailed information about the community and approved projects.</p>
+		<p>Mentors are encouraged to submit projects for review by coordinators, and volunteers are encouraged to sign up to help Outreachy applicants or review applications.</p>
 
 	{% elif participation_info.list_community is None %}
 		<h1>Pending Outreachy Community</h1>
 		<h2>{{ community.name }}</h2>
-		<p>Outreachy organizers are still working with the coordinator(s) on funding details, so Outreachy applicants will not be shown the community landing page yet. Mentors are encouraged to submit projects for review, and volunteers are encouraged to sign up to help Outreachy applicants.</p>
+		<p>Outreachy organizers are still reviewing this community and/or its funding status, so Outreachy applicants will not be shown the community landing page yet.</p>
+		<p>Mentors are encouraged to submit projects for review by coordinators, and volunteers are encouraged to sign up to help Outreachy applicants or review applications.</p>
 
 	{% else %}
 		<h1>Community Not Participating</h1>
