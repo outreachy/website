@@ -301,22 +301,20 @@ Data to Gather
    - [x] Name
    - [x] Outreachy community URL slug - generated from the name
    - [x] Short description (3 sentences for someone who has never heard of your community or the technologies involved)
-   - [ ] Website URL
-   - [ ] How big is your community?
-   - [ ] What different organizations and companies participate in the project?
-   - [ ] Will all projects involve contributing to software with an [OSI-approved open source license](https://opensource.org/licenses/alphabetical), or creative works with a [Creative Commons license](https://creativecommons.org/share-your-work/licensing-types-examples/)?
+   - [x] How many regular contributors does your community have?
+   - [x] What different organizations and companies participate in the project?
+   - [x] Will all projects involve contributing to software with an [OSI-approved open source license](https://opensource.org/licenses/alphabetical), or creative works with a [Creative Commons license](https://creativecommons.org/share-your-work/licensing-types-examples/)?
      - [ ] If no: Please detail your licenses, with links to license text.
-   - [ ] Community open source license file URL (if all projects are under the same license)
-   - [ ] Do you rely or build upon proprietary software? Please elaborate.
-   - [ ] (Optional) What is the community make-up with respect to volunteer and paid contributors?
-   - [ ] (Optional) What is the community governance?
-   - [ ] (Optional, shared with applicants) Code of Conduct URL
-   - [ ] (Optional, shared with applicants) CLA URL
-   - [ ] (Optional, shared with applicants) DCO URL - note that a DCO that requires contributors to use their full legal name can mean that trans contributors cannot participate, since it may be expensive or impossible to change their birth name
+   - [x] I assert all Outreachy projects under my community will not rely or build upon proprietary software.
+     - [ ] If no: Please elaborate.
+   - [x] (Optional) Community governance description URL
+   - [x] (Optional, shared with applicants) Code of Conduct URL
+   - [x] (Optional, shared with applicants) CLA URL
+   - [x] (Optional, shared with applicants) DCO URL - note that a DCO that requires contributors to use their full legal name can mean that trans contributors cannot participate, since it may be expensive or impossible to change their birth name
  - [ ] Static community info (enter once, probably never modify from round to round):
    - [ ] Longer description of community
    - [ ] Communication channels for mentors and coordinators
-   - [x] Blurb for [Page] Call for Volunteers and Mentors
+   - [ ] Website URL
    - [ ] (Optional) Email to reach all coordinators and mentors
    - [ ] (Optional) Description or links to documentation/tutorials for how new contributors get started.
    - [ ] (Optional) Link to your bug/issue tracker's "easy" or "newcomer friendly" bugs/features.
@@ -331,6 +329,7 @@ Data to Gather
  - [ ] Is that funding confirmed by all organizations?
    - [ ] If no: What approximate date to you expect to have funding confirmed by?
  - [x] How many interns do you expect to fund for this round? (Include any Outreachy community credits to round up to an integer number.)
+ - [x] Blurb for [Page] Call for Volunteers and Mentors
  - [ ] (Optional) Additional questions to ask volunteers
  - [ ] (Optional) Additional questions to ask mentors
  - [ ] (Optional) Additional questions to ask applicants during the application process
