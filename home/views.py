@@ -10,13 +10,16 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from registration.backends.simple.views import RegistrationView
 
+from .forms import ComradeRegister
 from .models import Community
 from .models import NewCommunity
 from .models import Participation
 from .models import RoundPage
 from .models import Project
 
-class CreateUser(RegistrationView):
+class CreateComrade(RegistrationView):
+    form_class = ComradeRegister
+
     def get_success_url(self, user):
         return self.request.GET.get('next', '/')
 
@@ -24,7 +27,7 @@ class CreateUser(RegistrationView):
     # doesn't respect the next query parameter, so we have to
     # add it to the context of the template.
     def get_context_data(self, **kwargs):
-        context = super(CreateUser, self).get_context_data(**kwargs)
+        context = super(CreateComrade, self).get_context_data(**kwargs)
         context['next'] = self.request.GET.get('next')
         return context
 

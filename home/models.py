@@ -4,10 +4,16 @@ from os import urandom
 from base64 import urlsafe_b64encode
 from datetime import timedelta
 
+from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 
 from modelcluster.fields import ParentalKey
+
+from languages.fields import LanguageField
+
+from timezone_field.fields import TimeZoneField
+
 from wagtail.wagtailcore.models import Orderable
 from wagtail.wagtailcore.models import Page
 from wagtail.wagtailcore.fields import RichTextField
@@ -171,6 +177,69 @@ SENTENCE_LENGTH=100
 # Current maximum description paragraph on round 15 page is 684.
 PARAGRAPH_LENGTH=800
 THREE_PARAGRAPH_LENGTH=3000
+LONG_LEGAL_NAME=800
+SHORT_NAME=100
+
+
+# From Wordnik:
+# comrade: A person who shares one's interests or activities; a friend or companion.
+# user: One who uses addictive drugs.
+class Comrade(User):
+    public_name = models.CharField(max_length=LONG_LEGAL_NAME, verbose_name="Name (public)", help_text="Your full name, which will be publicly displayed on the Outreachy website. This is typically your given name, followed by your family name. You may use a pseudonym or abbreviate your given or family names if you have concerns about privacy.")
+
+    nick_name = models.CharField(max_length=SHORT_NAME, verbose_name="Nick name (internal)", help_text="The short name used in emails to you. You would use this name when introducing yourself to a new person, such as 'Hi, I'm (nick name)'. Emails will be addressed 'Hi (nick name)'. This name will be shown to organizers, coordinators, mentors, and volunteers.")
+
+    legal_name = models.CharField(max_length=LONG_LEGAL_NAME, verbose_name="Legal name (private)", help_text="Your name on your government identification. This is the name that you would use to sign a legal document. This will be used only by Outreachy organizers on any private legal contracts. Other applicants, coordinators, mentors, and volunteers will not see this name.")
+
+    # Reference: https://uwm.edu/lgbtrc/support/gender-pronouns/
+    AE_PRONOUNS = ['ae', 'aer', 'aer', 'aers', 'aerself']
+    EY_PRONOUNS = ['ey', 'em', 'eir', 'eirs', 'eirself']
+    FAE_PRONOUNS = ['fae', 'faer', 'faer', 'faers', 'faerself']
+    HE_PRONOUNS = ['he', 'him', 'his', 'his', 'himself']
+    PER_PRONOUNS = ['per', 'per', 'pers', 'pers', 'perself']
+    SHE_PRONOUNS = ['she', 'her', 'her', 'hers', 'herself']
+    THEY_PRONOUNS = ['they', 'them', 'their', 'theirs', 'themself']
+    VE_PRONOUNS = ['ve', 'ver', 'vis', 'vis', 'verself']
+    XE_PRONOUNS = ['xe', 'xem', 'xyr', 'xyrs', 'xemself']
+    ZE_PRONOUNS = ['ze', 'hir', 'hir', 'hirs', 'hirself']
+    PRONOUN_CHOICES = (
+            (SHE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=SHE_PRONOUNS[1], Object=SHE_PRONOUNS[2], possessive=SHE_PRONOUNS[3])),
+            (HE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=HE_PRONOUNS[1], Object=HE_PRONOUNS[2], possessive=HE_PRONOUNS[3])),
+            (THEY_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=THEY_PRONOUNS[1], Object=THEY_PRONOUNS[2], possessive=THEY_PRONOUNS[3])),
+            (AE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=AE_PRONOUNS[1], Object=AE_PRONOUNS[2], possessive=AE_PRONOUNS[3])),
+            (FAE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=FAE_PRONOUNS[1], Object=FAE_PRONOUNS[2], possessive=FAE_PRONOUNS[3])),
+            (EY_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=EY_PRONOUNS[1], Object=EY_PRONOUNS[2], possessive=EY_PRONOUNS[3])),
+            (PER_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=PER_PRONOUNS[1], Object=PER_PRONOUNS[2], possessive=PER_PRONOUNS[3])),
+            (VE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=VE_PRONOUNS[1], Object=VE_PRONOUNS[2], possessive=VE_PRONOUNS[3])),
+            (XE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=XE_PRONOUNS[1], Object=XE_PRONOUNS[2], possessive=XE_PRONOUNS[3])),
+            (ZE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=ZE_PRONOUNS[1], Object=ZE_PRONOUNS[2], possessive=ZE_PRONOUNS[3])),
+            )
+    pronouns = models.CharField(
+            max_length=4,
+            choices=PRONOUN_CHOICES,
+            default=THEY_PRONOUNS,
+            verbose_name="Pronouns",
+            help_text="Your preferred pronoun. This will be used in emails from Outreachy organizers directly to you. The format is subject/object/possessive. Example: '__(subject)__ interned with Outreachy. The mentor liked working with __(object)__. __(possessive)__ project was challenging.",
+            )
+
+    pronouns_to_participants = models.BooleanField(
+            verbose_name = "Share pronouns with Outreachy participants",
+            help_text = "If this box is checked, applicant pronouns will be shared with coordinators, mentors and volunteers. If the box is checked, coordinator and mentor pronouns will be shared with applicants. If you don't want to share your pronouns, all Outreachy organizer email that Cc's another participant will use they/them/their pronouns for you.",
+            default=True,
+            )
+
+    pronouns_public = models.BooleanField(
+            verbose_name = "Share pronouns publicly on the Outreachy website",
+            help_text = "Mentor, coordinator, and accepted interns' pronouns will be displayed publicly on the Outreachy website to anyone who is not logged in. Sharing pronouns can be a way for people to proudly display their gender identity and connect with other Outreachy participants, but other people may prefer to keep their pronouns private.",
+            default=False,
+            )
+
+    timezone = TimeZoneField(blank=True, verbose_name="(Optional) Your timezone", help_text="The timezone in your current location. Shared with other Outreachy participants to help facilitate communication.")
+
+    primary_language = LanguageField(blank=True, verbose_name="(Optional) Primary language", help_text="The spoken/written language you are most comfortable using. Shared with other Outreachy participants to help facilitate communication. Many Outreachy participants have English as a second language, and we want them to find others who speak their native language.")
+    second_language = LanguageField(blank=True, verbose_name="(Optional) Second language", help_text="The second language you are most fluent in.")
+    third_language = LanguageField(blank=True, verbose_name="(Optional) Third language", help_text="The next language you are most fluent in.")
+    fourth_language = LanguageField(blank=True, verbose_name="(Optional) Fourth language", help_text="The next language you are most fluent in.")
 
 class Community(models.Model):
     name = models.CharField(
