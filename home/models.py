@@ -353,6 +353,7 @@ class Participation(models.Model):
 
 class Project(models.Model):
     project_round = models.ForeignKey(Participation, verbose_name="Outreachy round and community")
+    mentors = models.ManyToManyField(Comrade, through='MentorApproval')
 
     THREE_MONTHS = '3M'
     SIX_MONTHS = '6M'
@@ -428,3 +429,15 @@ class Project(models.Model):
                 community = self.project_round.community,
                 title = self.short_title,
                 )
+
+# This through table records whether a mentor is approved for this project.
+# If a mentor creates a project, we set them as approved. The coordinator then reviews the Project.
+# If a co-mentor signs up to join a project, we set them as unapproved.
+# We want the coordinator to review any co-mentors to ensure
+# we don't have a random person signing up who can now see project applications.
+class MentorApproval(models.Model):
+    # If a Project or a Comrade gets deleted, delete this through table.
+    mentor = models.ForeignKey(Comrade, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+    approved = models.BooleanField(default=False)
