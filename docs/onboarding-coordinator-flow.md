@@ -491,3 +491,4 @@ TODO
 - [ ] Use the URL template tag in various places to set links, e.g. {% url 'project-status' community_slug=community.slug project_slug=project.slug %}
 - [ ] Formatting on Project form looks odd - needs a custom template?
 - [ ] Outreachy organizer dashboard for community and project on-boarding status.
+- [ ] Switch from simple one-step sign up workflow to two-step email activation using registration.backends.hmac.urls
