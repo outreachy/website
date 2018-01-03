@@ -1,35 +1,80 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.shortcuts import get_list_or_404
 from django.urls import reverse
 from django.urls import reverse_lazy
+from django.utils.http import urlencode
 from django.utils.text import slugify
 from django.views.decorators.http import require_POST
+from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from registration.backends.simple.views import RegistrationView
 
-from .forms import ComradeRegister
 from .models import Community
+from .models import Comrade
 from .models import NewCommunity
 from .models import Participation
 from .models import RoundPage
 from .models import Project
 
-class CreateComrade(RegistrationView):
-    form_class = ComradeRegister
-
-    def get_success_url(self, user):
-        return self.request.GET.get('next', '/')
+class RegisterUser(RegistrationView):
 
     # The RegistrationView that django-registration provides
     # doesn't respect the next query parameter, so we have to
     # add it to the context of the template.
     def get_context_data(self, **kwargs):
-        context = super(CreateComrade, self).get_context_data(**kwargs)
-        context['next'] = self.request.GET.get('next')
+        context = super(RegisterUser, self).get_context_data(**kwargs)
+        context['next'] = self.request.GET.get('next', '/')
         return context
+
+    def get_success_url(self, user):
+        return '{account_url}?{query_string}'.format(
+                account_url=reverse('account'),
+                query_string=urlencode({'next': self.request.POST.get('next', '/')}))
+
+
+@method_decorator(login_required, name='dispatch')
+class ComradeUpdate(UpdateView):
+    model = Comrade
+
+    # FIXME - we need a way for comrades to change their passwords
+    # and update and re-verify their email address.
+    fields = [
+            'public_name',
+            'nick_name',
+            'legal_name',
+            'pronouns',
+            'pronouns_to_participants',
+            'pronouns_public',
+            'timezone',
+            'primary_language',
+            'second_language',
+            'third_language',
+            'fourth_language',
+            ]
+
+    # FIXME - we need to migrate any existing staff users who aren't a Comrade
+    # to the Comrade model instead of the User model.
+    def get_object(self):
+        # Either grab the current comrade to update, or make a new one
+        try:
+            return self.request.user.comrade
+        except Comrade.DoesNotExist:
+            return Comrade(
+                    account=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super(ComradeUpdate, self).get_context_data(**kwargs)
+        context['next'] = self.request.GET.get('next', '/')
+        return context
+
+    # FIXME - not sure where we should redirect people back to?
+    # Take them back to the home page right now.
+    def get_success_url(self):
+        return self.request.POST.get('next', '/')
 
 # Call for communities, mentors, and volunteers page
 #

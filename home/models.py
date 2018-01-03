@@ -184,7 +184,8 @@ SHORT_NAME=100
 # From Wordnik:
 # comrade: A person who shares one's interests or activities; a friend or companion.
 # user: One who uses addictive drugs.
-class Comrade(User):
+class Comrade(models.Model):
+    account = models.OneToOneField(User, primary_key=True)
     public_name = models.CharField(max_length=LONG_LEGAL_NAME, verbose_name="Name (public)", help_text="Your full name, which will be publicly displayed on the Outreachy website. This is typically your given name, followed by your family name. You may use a pseudonym or abbreviate your given or family names if you have concerns about privacy.")
 
     nick_name = models.CharField(max_length=SHORT_NAME, verbose_name="Nick name (internal)", help_text="The short name used in emails to you. You would use this name when introducing yourself to a new person, such as 'Hi, I'm (nick name)'. Emails will be addressed 'Hi (nick name)'. This name will be shown to organizers, coordinators, mentors, and volunteers.")
@@ -240,6 +241,9 @@ class Comrade(User):
     second_language = LanguageField(blank=True, verbose_name="(Optional) Second language", help_text="The second language you are most fluent in.")
     third_language = LanguageField(blank=True, verbose_name="(Optional) Third language", help_text="The next language you are most fluent in.")
     fourth_language = LanguageField(blank=True, verbose_name="(Optional) Fourth language", help_text="The next language you are most fluent in.")
+
+    def __str__(self):
+        return self.public_name
 
 class Community(models.Model):
     name = models.CharField(
