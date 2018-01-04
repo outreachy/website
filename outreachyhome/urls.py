@@ -21,7 +21,6 @@ urlpatterns = [
     url(r'^documents/', include(wagtaildocs_urls)),
 
     url(r'^search/$', search_views.search, name='search'),
-    url(r'^register/', home_views.CreateUser.as_view(), name='register'),
     url(r'^login/$', auth_views.LoginView.as_view(), name='login'),
     url(r'^contact/', include(contacts_urls)),
     url(r'', include(home_urls)),

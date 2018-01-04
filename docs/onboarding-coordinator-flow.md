@@ -282,13 +282,13 @@ Data to Gather
 
 1. Collaborator (base profile for a coordinator, mentor, or volunteer):
 
-   - [ ] Full name
-   - [ ] nickname (e.g. "Hi, I'm [nickname]" or "Greetings, [nickname]")
-   - [ ] Email
-   - [ ] (Optional) pronouns
+   - [x] Full name
+   - [x] nickname (e.g. "Hi, I'm [nickname]" or "Greetings, [nickname]")
+   - [x] Email
+   - [x] (Optional) pronouns
    - [ ] (Optional) 200x200 avatar picture
-   - [ ] (Optional) What timezone are you normally in?
-   - [ ] (Optional) What language(s) do you speak? (beginner/intermediate/fluent)
+   - [x] (Optional) What timezone are you normally in?
+   - [x] (Optional) What language(s) do you speak? (Up to four listed)
 
 2. Each Outreachy community will have at least one coordinator (who may also be a mentor).
    Coordinators need to approve mentors and volunteers for their community.
@@ -491,3 +491,4 @@ TODO
 - [ ] Use the URL template tag in various places to set links, e.g. {% url 'project-status' community_slug=community.slug project_slug=project.slug %}
 - [ ] Formatting on Project form looks odd - needs a custom template?
 - [ ] Outreachy organizer dashboard for community and project on-boarding status.
+- [ ] Switch from simple one-step sign up workflow to two-step email activation using registration.backends.hmac.urls

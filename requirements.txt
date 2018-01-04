@@ -8,10 +8,12 @@ django-appconf==1.0.2
 django-compressor==2.2
 django-compressor-postcss==0.8.2
 django-contact-form==1.4.2
+django-language-field==0.0.3
 django-libsass==0.7
 django-modelcluster==3.1
 django-registration==2.2
 django-taggit==0.22.1
+django-timezone-field==2.0
 django-treebeard==4.2.0
 djangorestframework==3.6.4
 gunicorn==19.7.1
