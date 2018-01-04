@@ -2,14 +2,9 @@
 
 {% block content %}
 
-{% if form.errors %}
-<p>Please fill out the required fields.</p>
-{% endif %}
-
 <form action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <br>
     <input class="btn btn-primary" type="submit" value="Save project info" />
 </form>
 
