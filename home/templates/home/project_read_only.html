@@ -55,6 +55,26 @@ Pending {{ community.name }} Project - {{ project.short_title }}
     {% endif %}
 </form>
 
+{% if unapproved_mentors %}
+	<p><strong>Unapproved Project Mentors:</strong></p>
+	{% for mentor in unapproved_mentors %}
+		<p>{{ mentor.public_name }} &lt;{{ mentor.account.email }}&gt;</p>
+		<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=mentor.account_id %}" method="post">
+			{% csrf_token %}
+			<input class="btn btn-success" type="submit" name="approve" value="Approve Mentor" />
+			<input class="btn btn-warning" type="submit" name="reject" value="Reject Mentor" />
+		</form>
+		<ul>
+			{% if mentor.pronouns_to_participants %}<li>Pronouns: {{ mentor.get_pronouns_display }}</li>{% endif %}
+			{% if mentor.timezone %}<li>Timezone: {{ mentor.get_timezone_display }}</li>{% endif %}
+			{% if mentor.primary_language %}<li>Primary language: {{ mentor.get_primary_language_display }}</li>{% endif %}
+			{% if mentor.second_language %}<li>Second language: {{ mentor.get_second_language_display }}</li>{% endif %}
+			{% if mentor.third_language %}<li>Third language: {{ mentor.get_third_language_display }}</li>{% endif %}
+			{% if mentor.fourth_language %}<li>Fourth language: {{ mentor.get_fourth_language_display }}</li>{% endif %}
+		</ul>
+	{% endfor %}
+{% endif %}
+
 <h2>Project Information</h2>
 
 <a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/{{ project.slug }}/edit/">Edit Project Info</a>
@@ -75,5 +95,40 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 		<li>Closed - Project is closed to new Outreachy applicants.</li>
 	{% endif %}
 </ul>
+
+{% if approved_mentors %}
+	<p><strong>Project Mentors:</strong></p>
+	{% if comrade %}
+		{% if comrade in unapproved_mentors %}
+			<p>Your request to mentor this project is under review by the community coordinator.</p>
+			<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=comrade.account_id %}" method="post">
+				{% csrf_token %}
+				<input class="btn btn-warning" type="submit" name="reject" value="Withdraw From Mentoring" />
+			</form>
+		{% elif comrade in approved_mentors %}
+			<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=comrade.account_id %}" method="post">
+				{% csrf_token %}
+				<input class="btn btn-warning" type="submit" name="reject" value="Withdraw From Mentoring" />
+			</form>
+		{% else %}
+			<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=comrade.account_id %}" method="post">
+				{% csrf_token %}
+				<input class="btn btn-success" type="submit" name="add" value="Mentor This Project" />
+			</form>
+		{% endif %}
+	{% endif %}
+	{% for mentor in approved_mentors %}
+		<p>{{ mentor.public_name }} &lt;{{ mentor.account.email }}&gt;</p>
+		<ul>
+			{% if mentor.pronouns_to_participants %}<li>Pronouns: {{ mentor.get_pronouns_display }}</li>{% endif %}
+			{% if mentor.timezone %}<li>Timezone: {{ mentor.get_timezone_display }}</li>{% endif %}
+			{% if mentor.primary_language %}<li>Primary language: {{ mentor.get_primary_language_display }}</li>{% endif %}
+			{% if mentor.second_language %}<li>Second language: {{ mentor.get_second_language_display }}</li>{% endif %}
+			{% if mentor.third_language %}<li>Third language: {{ mentor.get_third_language_display }}</li>{% endif %}
+			{% if mentor.fourth_language %}<li>Fourth language: {{ mentor.get_fourth_language_display }}</li>{% endif %}
+		</ul>
+	{% endfor %}
+{% endif %}
+
 
 {% endblock %}

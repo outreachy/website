@@ -15,6 +15,7 @@ from registration.backends.simple.views import RegistrationView
 
 from .models import Community
 from .models import Comrade
+from .models import MentorApproval
 from .models import NewCommunity
 from .models import Participation
 from .models import RoundPage
@@ -161,11 +162,13 @@ def community_read_only_view(request, slug):
         approved_projects = participation_info.project_set.filter(list_project=True)
         pending_projects = participation_info.project_set.filter(list_project=None)
         rejected_projects = participation_info.project_set.filter(list_project=False)
+        pending_mentored_projects = participation_info.project_set.filter(mentorapproval__approved=False).distinct()
     except Participation.DoesNotExist:
         participation_info = None
         approved_projects = None
         pending_projects = None
         rejected_projects = None
+        pending_mentored_projects = None
 
     return render(request, 'home/community_read_only.html',
             {
@@ -175,6 +178,7 @@ def community_read_only_view(request, slug):
             'approved_projects': approved_projects,
             'pending_projects': pending_projects,
             'rejected_projects': rejected_projects,
+            'pending_mentored_projects': pending_mentored_projects,
             },
             )
 
@@ -303,15 +307,28 @@ def project_read_only_view(request, community_slug, project_slug):
     current_round = RoundPage.objects.latest('internstarts')
     community = get_object_or_404(Community, slug=community_slug)
     project = get_object_or_404(Project, slug=project_slug)
+    approved_mentors = [x.mentor for x in MentorApproval.objects.filter(project=project)
+            if x.approved is True]
+    unapproved_mentors = [x.mentor for x in MentorApproval.objects.filter(project=project)
+            if x.approved is False]
+    if request.user:
+        # FIXME: force Comrade creation
+        comrade = get_object_or_404(Comrade, account=request.user)
+    else:
+        comrade = None
 
     return render(request, 'home/project_read_only.html',
             {
             'current_round': current_round,
             'community': community,
             'project' : project,
+            'approved_mentors': approved_mentors,
+            'unapproved_mentors': unapproved_mentors,
+            'comrade': comrade,
             },
             )
 
+@method_decorator(login_required, name='dispatch')
 class ProjectUpdate(UpdateView):
     model = Project
     fields = ['short_title', 'longevity', 'community_size', 'approved_license', 'accepting_new_applicants']
@@ -338,6 +355,11 @@ class ProjectUpdate(UpdateView):
         if not self.object.slug:
             self.object.slug = slugify(self.object.short_title)[:self.object._meta.get_field('slug').max_length]
         self.object.save()
+        if 'project_slug' not in self.kwargs:
+            # If this is a new Project, associate an approved mentor with it
+            MentorApproval.objects.create(
+                    mentor=self.request.user.comrade,
+                    project=self.object, approved=True)
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
@@ -362,6 +384,36 @@ def project_status_change(request, community_slug, project_slug):
     if 'reject' in request.POST:
         project.list_project = False
         project.save()
+
+    return HttpResponseRedirect(reverse('project-read-only',
+            kwargs={'project_slug': project.slug,
+                'community_slug': community.slug}))
+
+# Only superusers and the coordinator for the community should be able to approve project mentors.
+@require_POST
+def project_mentor_update(request, community_slug, project_slug, mentor_id):
+    current_round = RoundPage.objects.latest('internstarts')
+    community = get_object_or_404(Community, slug=community_slug)
+
+    # Try to see if this community is participating in that round
+    # and get the Participation object if so.
+    participation_info = get_object_or_404(Participation, community=community, participating_round=current_round)
+    project = get_object_or_404(Project, slug=project_slug, project_round=participation_info)
+    # FIXME: redirect to a Comrade creation view with next pointing back to this
+    mentor = get_object_or_404(Comrade, account_id=mentor_id)
+
+    if 'add' in request.POST:
+        mentor_status = MentorApproval(mentor=mentor, project=project, approved=False)
+        mentor_status.save()
+    if 'approve' in request.POST:
+        mentor_status = get_object_or_404(MentorApproval, mentor=mentor, project=project)
+        mentor_status.approved = True
+        mentor_status.save()
+    if 'reject' in request.POST:
+        mentor_status = get_object_or_404(MentorApproval, mentor=mentor, project=project)
+        # Yeah, this could be a NullBooleanField and we could tell mentors
+        # that they have been rejected, but TBH I'm running out of time to fix this.
+        mentor_status.delete()
 
     return HttpResponseRedirect(reverse('project-read-only',
             kwargs={'project_slug': project.slug,

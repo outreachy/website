@@ -441,3 +441,12 @@ class MentorApproval(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
     approved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return '{mentor} - {start:%Y %B} to {end:%Y %B} round - {community} - {title}'.format(
+                mentor = self.mentor.public_name,
+                start = self.project.project_round.participating_round.internstarts,
+                end = self.project.project_round.participating_round.internends,
+                community = self.project.project_round.community,
+                title = self.project.short_title,
+                )

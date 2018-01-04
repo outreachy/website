@@ -68,11 +68,21 @@ Past community participation in Outreachy
 	<h2>Coordinator Actions</h2>
 
 	{% if participation_info.list_community is not False and pending_projects %}
+		<p><strong>Approve Projects</strong></p>
 		<p>Coordinators will need to go to each pending project page, review the information, and approve the project. Projects pending coordinator approval:</p>
 		<ul>
 		{% for project in pending_projects %}
 			<li><a href="/communities/cfp/{{ community.slug }}/{{ project.slug }}">{{ project.short_title }}</a></li>
 		{% endfor %}
+		</ul>
+	{% endif %}
+	{% if pending_mentored_projects %}
+		<p><strong>Approve Mentors</strong></p>
+		<p>Coordinators will need to approve additional mentors for projects. Projects that need mentors approved:</p>
+		<ul>
+			{% for project in pending_mentored_projects %}
+				<li><a href="/communities/cfp/{{ community.slug }}/{{ project.slug }}">{{ project.short_title }}</a></li>
+			{% endfor %}
 		</ul>
 	{% endif %}
 
