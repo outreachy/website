@@ -4,7 +4,11 @@ chardet==3.0.4
 dj-database-url==0.4.2
 dj-static==0.0.6
 Django==1.11.8
+django-appconf==1.0.2
+django-compressor==2.2
+django-compressor-postcss==0.8.2
 django-contact-form==1.4.2
+django-libsass==0.7
 django-modelcluster==3.1
 django-registration==2.2
 django-taggit==0.22.1
@@ -13,11 +17,14 @@ djangorestframework==3.6.4
 gunicorn==19.7.1
 html5lib==0.999999999
 idna==2.6
+libsass==0.13.4
 olefile==0.44
 Pillow==4.3.0
 psycopg2==2.7.3.2
 pytz==2017.3
+rcssmin==1.0.6
 requests==2.18.4
+rjsmin==1.0.12
 six==1.11.0
 static3==0.7.0
 Unidecode==0.4.21
