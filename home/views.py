@@ -189,15 +189,27 @@ def community_read_only_view(request, slug):
     except CoordinatorApproval.DoesNotExist:
         pass
 
-    return render(request, 'home/community_read_only.html',
+    if participation_info:
+        return render(request, 'home/community_read_only.html',
+                {
+                'current_round' : current_round,
+                'community': community,
+                'participation_info': participation_info,
+                'approved_projects': approved_projects,
+                'pending_projects': pending_projects,
+                'rejected_projects': rejected_projects,
+                'pending_mentored_projects': pending_mentored_projects,
+                'coordinator': coordinator,
+                'approved_coordinator_list': approved_coordinator_list,
+                'pending_coordinator_list': pending_coordinator_list,
+                'rejected_coordinator_list': pending_coordinator_list,
+                },
+                )
+
+    return render(request, 'home/community_not_participating_read_only.html',
             {
             'current_round' : current_round,
             'community': community,
-            'participation_info': participation_info,
-            'approved_projects': approved_projects,
-            'pending_projects': pending_projects,
-            'rejected_projects': rejected_projects,
-            'pending_mentored_projects': pending_mentored_projects,
             'coordinator': coordinator,
             'approved_coordinator_list': approved_coordinator_list,
             'pending_coordinator_list': pending_coordinator_list,
