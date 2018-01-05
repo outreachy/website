@@ -155,8 +155,11 @@ COMPRESS_ENABLED = True
 
 COMPRESS_CSS_FILTERS = [
     'compressor.filters.css_default.CssAbsoluteFilter',
+
+    # postcss+autoprefixer and clean-css are what Bootstrap uses for
+    # their official builds, so hopefully they will work for us too
     'compressor_postcss.PostCSSFilter',
-    'compressor.filters.cssmin.rCSSMinFilter',
+    'compressor.filters.cleancss.CleanCSSFilter',
 ]
 
 COMPRESS_JS_FILTERS = [
