@@ -450,3 +450,18 @@ class MentorApproval(models.Model):
                 community = self.project.project_round.community,
                 title = self.project.short_title,
                 )
+
+# This through table records whether a coordinator is approved for this community.
+# Both the current coordinators and organizers (staff) can approve new coordinators.
+class CoordinatorApproval(models.Model):
+    # If a Project or a Comrade gets deleted, delete this through table.
+    coordinator = models.ForeignKey(Comrade, on_delete=models.CASCADE)
+    community = models.ForeignKey(Community, on_delete=models.CASCADE)
+
+    approved = models.NullBooleanField(default=None)
+
+    def __str__(self):
+        return '{coordinator} for {community}'.format(
+                coordinator = self.coordinator.public_name,
+                community = self.community,
+                )
