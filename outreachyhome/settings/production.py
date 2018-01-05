@@ -10,6 +10,8 @@ DEBUG = False
 COMPRESS_CSS_FILTERS.append('compressor.filters.cssmin.rCSSMinFilter')
 COMPRESS_JS_FILTERS.append('compressor.filters.jsmin.JSMinFilter')
 
+COMPRESS_OFFLINE = True
+
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '162.242.218.160 .outreachy.org').split()
 
 SECRET_KEY = os.environ['SECRET_KEY']
