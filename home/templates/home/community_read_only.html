@@ -49,32 +49,34 @@ Past community participation in Outreachy
 		<p>This community currently has no approved coordinator.</p>
 	{% endif %}
 
-	<h2>Outreachy Organizer Actions</h2>
+	{% if user.is_staff %}
+		<h2>Outreachy Organizer Actions</h2>
 
-	{% if participation_info.reason_for_not_participating %}
-		<p>The coordinator has indicated that they will not be participating in this Outreachy internship round:</p>
-		<p>"{{ participation_info.reason_for_not_participating }}"</p>
+		{% if participation_info.reason_for_not_participating %}
+			<p>The coordinator has indicated that they will not be participating in this Outreachy internship round:</p>
+			<p>"{{ participation_info.reason_for_not_participating }}"</p>
 
-	{% elif participation_info.list_community is False %}
-		<p>An Outreachy organizer has rejected this community to participate in this round of Outreachy.</p>
-	{% endif %}
+		{% elif participation_info.list_community is False %}
+			<p>An Outreachy organizer has rejected this community to participate in this round of Outreachy.</p>
+		{% endif %}
 
-	{% if not participation_info.reason_for_not_participating %}
-		<p>Outreachy organizers should read over the information coordinators provided about participating in this round (including intern funding information) and information about new communities. Then decide whether the community should participate in this round and either accept or reject the community.</p>
-		<form action="{% url 'community-status' community_slug=community.slug %}" method="post">
-		    {% csrf_token %}
-		    {% if participation_info.list_community is not True %}
-			    <input class="btn btn-block btn-success" type="submit" name="approve" value="Approve Community" />
-		    {% endif %}
-		    {% if participation_info.list_community is not False %}
-			    <input class="btn btn-block btn-warning" type="submit" name="reject" value="Reject Community" />
-		    {% endif %}
-		</form>
-		<p>Round participation information</p>
-		<ul>
-			<li>Number of interns funded: {{ participation_info.interns_funded }}</li>
-			<li>CFP text: {{ participation_info.cfp_text }}</li>
-		</ul>
+		{% if not participation_info.reason_for_not_participating %}
+			<p>Outreachy organizers should read over the information coordinators provided about participating in this round (including intern funding information) and information about new communities. Then decide whether the community should participate in this round and either accept or reject the community.</p>
+			<form action="{% url 'community-status' community_slug=community.slug %}" method="post">
+			    {% csrf_token %}
+			    {% if participation_info.list_community is not True %}
+				    <input class="btn btn-block btn-success" type="submit" name="approve" value="Approve Community" />
+			    {% endif %}
+			    {% if participation_info.list_community is not False %}
+				    <input class="btn btn-block btn-warning" type="submit" name="reject" value="Reject Community" />
+			    {% endif %}
+			</form>
+			<p>Round participation information</p>
+			<ul>
+				<li>Number of interns funded: {{ participation_info.interns_funded }}</li>
+				<li>CFP text: {{ participation_info.cfp_text }}</li>
+			</ul>
+		{% endif %}
 	{% endif %}
 
 	{% if coordinator %}
