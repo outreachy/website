@@ -21,6 +21,32 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 # Environment variables are strings, so we need to convert to an bool
 EMAIL_USE_SSL = bool(os.environ.get('EMAIL_USE_SSL', False))
 
+# In production, log warnings and errors to the console where Dokku will
+# capture them for display using `dokku logs`. You can get more detailed
+# logs by running `dokku config:set $APP DJANGO_LOG_LEVEL=DEBUG`, but
+# you should probably undo that again when you're done debugging.
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[%(levelname)s] %(name)s: %(message)s',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'WARNING'),
+        },
+    },
+}
+
 try:
     from .local import *
 except ImportError:
