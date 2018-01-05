@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
@@ -15,6 +16,7 @@ from registration.backends.simple.views import RegistrationView
 
 from .models import Community
 from .models import Comrade
+from .models import CoordinatorApproval
 from .models import MentorApproval
 from .models import NewCommunity
 from .models import Participation
@@ -170,6 +172,23 @@ def community_read_only_view(request, slug):
         rejected_projects = None
         pending_mentored_projects = None
 
+    coordinator = None
+    approved_coordinator_list = None
+    pending_coordinator_list = None
+    rejected_coordinator_list = None
+    if request.user.is_authenticated:
+        try:
+            coordinator = CoordinatorApproval.objects.get(community=community, coordinator=request.user.comrade)
+        except CoordinatorApproval.DoesNotExist:
+            pass
+
+    try:
+        approved_coordinator_list = CoordinatorApproval.objects.get(community=community, approved=True)
+        pending_coordinator_list = CoordinatorApproval.objects.get(community=community, approved=None)
+        rejected_coordinator_list = CoordinatorApproval.objects.get(community=community, approved=None)
+    except CoordinatorApproval.DoesNotExist:
+        pass
+
     return render(request, 'home/community_read_only.html',
             {
             'current_round' : current_round,
@@ -179,6 +198,10 @@ def community_read_only_view(request, slug):
             'pending_projects': pending_projects,
             'rejected_projects': rejected_projects,
             'pending_mentored_projects': pending_mentored_projects,
+            'coordinator': coordinator,
+            'approved_coordinator_list': approved_coordinator_list,
+            'pending_coordinator_list': pending_coordinator_list,
+            'rejected_coordinator_list': pending_coordinator_list,
             },
             )
 
@@ -203,7 +226,7 @@ def community_landing_view(request, round_slug, slug):
             },
             )
 
-class CommunityCreate(CreateView):
+class CommunityCreate(LoginRequiredMixin, CreateView):
     model = NewCommunity
     fields = ['name', 'description', 'community_size', 'longevity', 'participating_orgs',
             'approved_license', 'unapproved_license_description',
@@ -216,12 +239,17 @@ class CommunityCreate(CreateView):
         self.object = form.save(commit=False)
         self.object.slug = slugify(self.object.name)[:self.object._meta.get_field('slug').max_length]
         self.object.save()
+
+        # FIXME: handle admins who haven't become Comrades.
+        coordinator_status = CoordinatorApproval(coordinator=self.user.comrade, community=community, approved=True)
+        coordinator_status.save()
+
         # When a new community is created, immediately redirect the coordinator
         # to gather information about their participation in this round
         return HttpResponseRedirect(reverse('community-participate',
             kwargs={'slug': self.object.slug}))
 
-class CommunityUpdate(UpdateView):
+class CommunityUpdate(LoginRequiredMixin, UpdateView):
     model = Community
     fields = ['name', 'description']
 
@@ -248,6 +276,10 @@ def community_status_change(request, community_slug):
 class ParticipationUpdate(UpdateView):
     model = Participation
     fields = ['interns_funded', 'cfp_text']
+
+    #def test_func(self):
+    #    community = get_object_or_404(Community, slug=self.kwargs['slug'])
+    #    participating_round = RoundPage.objects.latest('internstarts')
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     # By overriding the get_object method, we reuse the URL for
@@ -418,3 +450,30 @@ def project_mentor_update(request, community_slug, project_slug, mentor_id):
     return HttpResponseRedirect(reverse('project-read-only',
             kwargs={'project_slug': project.slug,
                 'community_slug': community.slug}))
+
+@require_POST
+@login_required
+def community_coordinator_update(request, community_slug, coordinator_id):
+    current_round = RoundPage.objects.latest('internstarts')
+    community = get_object_or_404(Community, slug=community_slug)
+
+    # FIXME: redirect to a Comrade creation view with next pointing back to this
+    coordinator = get_object_or_404(Comrade, account_id=coordinator_id)
+
+    if 'add' in request.POST:
+        coordinator_status = CoordinatorApproval(coordinator=coordinator, community=community, approved=None)
+        coordinator_status.save()
+    if 'approve' in request.POST:
+        coordinator_status = get_object_or_404(CoordinatorApproval, coordinator=coordinator, community=community)
+        coordinator_status.approved = True
+        coordinator_status.save()
+    if 'reject' in request.POST:
+        coordinator_status = get_object_or_404(CoordinatorApproval, coordinator=coordinator, community=community)
+        coordinator_status.approved = False
+        coordinator_status.save()
+    if 'withdraw' in request.POST:
+        coordinator_status = get_object_or_404(CoordinatorApproval, coordinator=coordinator, community=community)
+        coordinator_status.delete()
+
+    return HttpResponseRedirect(reverse('community-read-only',
+            kwargs={'slug': community.slug}))
