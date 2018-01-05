@@ -10,7 +10,7 @@ DEBUG = False
 COMPRESS_CSS_FILTERS.append('compressor.filters.cssmin.rCSSMinFilter')
 COMPRESS_JS_FILTERS.append('compressor.filters.jsmin.JSMinFilter')
 
-ALLOWED_HOSTS = [ '162.242.218.160', '.outreachy.org' ]
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '162.242.218.160 .outreachy.org').split()
 
 SECRET_KEY = os.environ['SECRET_KEY']
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'localhost')
