@@ -7,3 +7,4 @@ db.sqlite3
 *.swo
 /static/
 /media/
+/node_modules/

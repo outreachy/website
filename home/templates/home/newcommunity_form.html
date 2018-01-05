@@ -30,7 +30,7 @@ Volunteers can be granted read access to all applications to help out with revie
 <h2>Community Information</h2>
 <form action="" method="post">
     {% csrf_token %}
-    {{ form }}
+    {{ form.as_p }}
     <br>
     <input class="btn btn-primary" type="submit" value="Submit Community For Review" />
 </form>

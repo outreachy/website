@@ -2,15 +2,10 @@
 
 {% block content %}
 
-{% if form.errors %}
-<p>Some sort of error? XXX</p>
-{% endif %}
-
 {% comment %}XXX - I don't know whether we need to specify a custom action here? Seems like no, but maybe for new communities?{% endcomment %}
 <form action="" method="post">
     {% csrf_token %}
-    {{ form }}
-    <br>
+    {{ form.as_p }}
     <input class="btn btn-primary" type="submit" value="Save community info" />
 </form>
 

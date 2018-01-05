@@ -52,10 +52,10 @@ Past community participation in Outreachy
 		<form action="{% url 'community-status' community_slug=community.slug %}" method="post">
 		    {% csrf_token %}
 		    {% if participation_info.list_community is not True %}
-			    <input class="btn btn-success" type="submit" name="approve" value="Approve Community" />
+			    <input class="btn btn-block btn-success" type="submit" name="approve" value="Approve Community" />
 		    {% endif %}
 		    {% if participation_info.list_community is not False %}
-			    <input class="btn btn-warning" type="submit" name="reject" value="Reject Community" />
+			    <input class="btn btn-block btn-warning" type="submit" name="reject" value="Reject Community" />
 		    {% endif %}
 		</form>
 		<p>Round participation information</p>
@@ -88,28 +88,28 @@ Past community participation in Outreachy
 
 	{% if participation_info.reason_for_not_participating %}
 		<p>Have you changed your mind and decided your community can participate in this round of Outreachy?</p>
-		<a class="btn btn-success" href="/communities/cfp/{{ community.slug }}/participate/">Community will participate</a>
+		<a class="btn btn-block btn-success" href="/communities/cfp/{{ community.slug }}/participate/">Community will participate</a>
 		<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
-		<a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a>
+		<a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a>
 
 	{% elif participation_info.list_community is False %}
 		<p>Unfortunately, the Outreachy organizers have determined your community should not participate in this round. Please <a href="/contact/">contact us</a> for more details.</p>
 		<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
-		<a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a>
+		<a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a>
 
 	{% else %}
 		<p>Do you need to update information about your community's participation in this round (such as number of interns funded or call for volunteers text)?</p>
-		<a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/participate/">Update Round Info</a>
+		<a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/participate/">Update Round Info</a>
 		<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
-		<a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a>
+		<a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a>
 		<p>Do you need to withdraw this Outreachy community from this internship round?</p>
-		<a class="btn btn-warning" href="/communities/cfp/{{ community.slug }}/dont-participate/">Withdraw community</a>
+		<a class="btn btn-block btn-danger" href="/communities/cfp/{{ community.slug }}/dont-participate/">Withdraw community</a>
 	{% endif %}
 
 
 	{% if participation_info.list_community is not False %}
 		<h2>Submit a Project</h2>
-		<a class='btn btn-primary' href="{% url 'project-participate' community.slug %}">Submit a New Project</a>
+		<a class='btn btn-block btn-primary' href="{% url 'project-participate' community.slug %}">Submit a New Project</a>
 		{% if pending_projects %}
 			<h2>Projects waiting for approval</h2>
 			<p>The {{ community.name }} coordinator is currently reviewing the following projects to see if they are a good fit for the Outreachy program and fit with long-term community goals.</p>
@@ -153,21 +153,21 @@ Past community participation in Outreachy
 
 	<h2>Coordinator Actions</h2>
 	<p>Once you are an approved coordinator for this community, you can sign the community up to participate in the current round.</p>
-	<a class="btn btn-success" href="/communities/cfp/{{ community.slug }}/participate/">Community will participate</a>
+	<a class="btn btn-block btn-success" href="/communities/cfp/{{ community.slug }}/participate/">Community will participate</a>
 	<p>If your community doesn't have funding or mentor bandwidth to participate in this round, please let us know so we can redirect mentors and volunteers to other participating Outreachy communities.</p>
-	<a class="btn btn-warning" href="/communities/cfp/{{ community.slug }}/dont-participate/">Community won't participate</a>
+	<a class="btn btn-block btn-warning" href="/communities/cfp/{{ community.slug }}/dont-participate/">Community won't participate</a>
 	<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
-	<a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a>
+	<a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a>
 	
 	{% comment %} Don't show this next section to coordinators for this community who are logged in. {% endcomment %}
 	<h2>New Coordinators or Co-coordinators</h2>
 	<p>If you have been a community coordinator in the past but have not yet created an account on this site, or you would like to volunteer to be a new coordinator and you understand the <a href="/mentor/">coordinator duties</a>, you can sign up to be a community coordinator.</p>
-	<a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/coordinator-signup/">Coordinate Community</a>
+	<a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/coordinator-signup/">Coordinate Community</a>
 	
 	<h2>Mentors and Volunteers</h2>
 	<p>The coordinator(s) for {{ community.name }} have not yet indicated whether the community will be participating in {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} internship round.</p>
 	<p>Sign up to be notified when the coordinator finds funding and opens the call for volunteers and mentors.</p>
-	<a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/notify-me/">Notify me</a>
+	<a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/notify-me/">Notify me</a>
 
 {% endif %}
 {% endblock %}

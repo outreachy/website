@@ -80,6 +80,12 @@ Now, you activate the virtual environment by typing the following command:
 workon outreachy-django
 ```
 
+In addition to the Python packages that were installed for you when you created the virtualenv, you also need to install some Node.js packages; these will be placed in a `node_modules` directory inside your project folder. Make sure you have `npm` installed, then run:
+
+```
+npm install
+```
+
 If this is your first time creating a local version of the website for testing, you'll need to set up the local website database from scratch. The following command will create a new database with the models in the Outreachy website. The database will initially have no website pages, but will eventually store your local test pages.
 
 ```
