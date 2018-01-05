@@ -149,16 +149,19 @@ COMPRESS_PRECOMPILERS = (
 )
 
 # Always use the configured filters, so that browser compatibility hacks
-# are applied even in development. In production.py we add minification
-# as well.
+# are applied even in development and we see exactly how the minifiers
+# are going to screw up before we bother deploying.
 COMPRESS_ENABLED = True
 
 COMPRESS_CSS_FILTERS = [
     'compressor.filters.css_default.CssAbsoluteFilter',
     'compressor_postcss.PostCSSFilter',
+    'compressor.filters.cssmin.rCSSMinFilter',
 ]
 
-COMPRESS_JS_FILTERS = []
+COMPRESS_JS_FILTERS = [
+    'compressor.filters.jsmin.JSMinFilter',
+]
 
 COMPRESS_POSTCSS_ARGS = '-c {}'.format(shlex.quote(os.path.join(BASE_DIR, 'postcss.json')))
 
