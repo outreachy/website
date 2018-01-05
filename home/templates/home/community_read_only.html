@@ -36,7 +36,6 @@ Past community participation in Outreachy
 		<p>Unfortunately, either the community coordinator(s) or the Outreachy organizers have determined that the community will not participate in this round of Outreachy internships.</p>
 
 	{% endif %}
-	<h2>Community Coordinators</h2>
 	{% if approved_coordinator_list %}
 		<p>Coordinators approve mentored projects, and communicate with both mentors and Outreachy organizers. The full list of coordinator duties can be found on <a href="/mentor/">here</a>. {{ community.name }} coordinator(s) are  
 		{% for c in approved_coordinator_list %}
@@ -202,13 +201,9 @@ Past community participation in Outreachy
 		{% comment %} Only show this to people who aren't a coordinator for this community. {% endcomment %}
 	{% endif %}
 
-	<h2>New coordinators or co-coordinators</h2>
-	<p>This community currently has a coordinator. If you have been a community coordinator in the past but have not yet created an account on this site, or you would like to volunteer to be a new coordinator or a co-coordinator and you understand the <a href="/mentor/">coordinator duties</a>, you can <a href="/communities/cfp/{{ community.slug }}/coordinator-signup/">claim the community</a>.</p>
-
 {% else %}
 
 	<h1>{{ community.name }} in Outreachy</h1>
-	<h2>Community Coordinators</h2>
 	{% if approved_coordinator_list %}
 		<p>Past coordinator(s) for {{ community.name }} were
 		{% for c in approved_coordinator_list %}
@@ -222,29 +217,14 @@ Past community participation in Outreachy
 		<p>This community currently has no approved coordinator.</p>
 	{% endif %}
 
-	<h2>Coordinator Actions</h2>
-	<p>Once you are an approved coordinator for this community, you can sign the community up to participate in the current round.</p>
-	<a class="btn btn-block btn-success" href="/communities/cfp/{{ community.slug }}/participate/">Community will participate</a>
-	<p>If your community doesn't have funding or mentor bandwidth to participate in this round, please let us know so we can redirect mentors and volunteers to other participating Outreachy communities.</p>
-	<a class="btn btn-block btn-warning" href="/communities/cfp/{{ community.slug }}/dont-participate/">Community won't participate</a>
-	<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
-	<a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a>
-	
-	{% comment %} Don't show this next section to coordinators for this community who are logged in. {% endcomment %}
-	{% if not coordinator %}
-		<h2>New Coordinators or Co-coordinators</h2>
-		<p>If you have been a community coordinator in the past but have not yet created an account on this site, or you would like to volunteer to be a new coordinator and you understand the <a href="/mentor/">coordinator duties</a>, you can sign up to be a community coordinator.</p>
-		<form action="{% url 'community-coordinator-update' community_slug=community.slug coordinator_id=user.id %}" method="post">
-		    {% csrf_token %}
-		    <input class="btn btn-block btn-success" type="submit" name="add" value="Coordinate for This Community" />
-		</form>
-	{% else %}
-		<h2>Coordinator Request Status</h2>
-		{% if coordinator in pending_coordinator_list %}
-			<p>Your request to coordinate for this community is under review by the community coordinator and Outreachy organizers.</p>
-		{% elif coordinator in rejected_coordinator_list %}
-			<p>Unfortunately, your request to coordinate for this community has been denied.</p>
-		{% endif %}
+	{% if coordinator %}
+		<h2>Coordinator Actions</h2>
+		<p>Once you are an approved coordinator for this community, you can sign the community up to participate in the current round.</p>
+		<a class="btn btn-block btn-success" href="/communities/cfp/{{ community.slug }}/participate/">Community will participate</a>
+		<p>If your community doesn't have funding or mentor bandwidth to participate in this round, please let us know so we can redirect mentors and volunteers to other participating Outreachy communities.</p>
+		<a class="btn btn-block btn-warning" href="/communities/cfp/{{ community.slug }}/dont-participate/">Community won't participate</a>
+		<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
+		<a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a>
 	{% endif %}
 	
 	<h2>Mentors and Volunteers</h2>
@@ -253,4 +233,21 @@ Past community participation in Outreachy
 	<a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/notify-me/">Notify me</a>
 
 {% endif %}
+
+{% if not coordinator %}
+	<h2>New Coordinators or Co-coordinators</h2>
+	<p>If you have been a community coordinator in the past but have not yet created an account on this site, or you would like to volunteer to be a new coordinator and you understand the <a href="/mentor/">coordinator duties</a>, you can sign up to be a community coordinator.</p>
+	<form action="{% url 'community-coordinator-update' community_slug=community.slug coordinator_id=user.id %}" method="post">
+	    {% csrf_token %}
+	    <input class="btn btn-block btn-success" type="submit" name="add" value="Coordinate for This Community" />
+	</form>
+{% else %}
+	<h2>Coordinator Request Status</h2>
+	{% if coordinator in pending_coordinator_list %}
+		<p>Your request to coordinate for this community is under review by the community coordinator and Outreachy organizers.</p>
+	{% elif coordinator in rejected_coordinator_list %}
+		<p>Unfortunately, your request to coordinate for this community has been denied.</p>
+	{% endif %}
+{% endif %}
+
 {% endblock %}
