@@ -6,10 +6,6 @@ import os
 
 DEBUG = False
 
-# Only minify CSS and JavaScript when in production.
-COMPRESS_CSS_FILTERS.append('compressor.filters.cssmin.rCSSMinFilter')
-COMPRESS_JS_FILTERS.append('compressor.filters.jsmin.JSMinFilter')
-
 COMPRESS_OFFLINE = True
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '162.242.218.160 .outreachy.org').split()
