@@ -241,7 +241,7 @@ class CommunityCreate(LoginRequiredMixin, CreateView):
         self.object.save()
 
         # FIXME: handle admins who haven't become Comrades.
-        coordinator_status = CoordinatorApproval(coordinator=self.user.comrade, community=community, approved=True)
+        coordinator_status = CoordinatorApproval(coordinator=self.request.user.comrade, community=community, approved=True)
         coordinator_status.save()
 
         # When a new community is created, immediately redirect the coordinator
