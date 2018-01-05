@@ -492,6 +492,8 @@ TODO
 - [ ] Formatting on Project form looks odd - needs a custom template?
 - [ ] Outreachy organizer dashboard for community and project on-boarding status.
 - [ ] Switch from simple one-step sign up workflow to two-step email activation using registration.backends.hmac.urls
+- [ ] Add pronouns.is links to pronoun displays
+- [ ] Add explanation of roles to community CFP page
 
 Project requirements:
 - [ ] licenses - identified by the FSF as free *and* OSI approved (there are a few licenses that aren't on both lists). Only CC licenses that are "Approved for Free Cultural Works" (no non-derivs or non-commercial).
