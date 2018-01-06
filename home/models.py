@@ -401,12 +401,9 @@ class Project(models.Model):
 
     short_title = models.CharField(
             max_length=SENTENCE_LENGTH,
-            help_text='Short project title. This should be 100 characters or less, starting with a verb like "Create", "Improve", "Extend", "Survey", "Document", etc. Assume the applicant has never heard of your technology before and keep it simple.',
-            unique=True)
+            help_text='Short project title. This should be 100 characters or less, starting with a verb like "Create", "Improve", "Extend", "Survey", "Document", etc. Assume the applicant has never heard of your technology before and keep it simple.')
     slug = models.SlugField(
             max_length=50,
-            unique=True,
-            null=True,
             verbose_name="Community URL slug: https://www.outreachy.org/communities/SLUG/")
 
     accepting_new_applicants = models.BooleanField(help_text='Is this project currently accepting new applicants? If you have an applicant in mind to accept as an intern (or several promising applicants) who have filled out the eligibility information and an application, you can uncheck this box to close the project to new applicants.', default=True)
@@ -421,6 +418,11 @@ class Project(models.Model):
     list_project = models.NullBooleanField(
             default=None,
             verbose_name="Coordinators: Check this box once you have reviewed the project information")
+
+    class Meta:
+        unique_together = (
+                ('slug', 'project_round'),
+                )
 
     def __str__(self):
         return '{start:%Y %B} to {end:%Y %B} round - {community} - {title}'.format(
