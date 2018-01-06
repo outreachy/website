@@ -1,11 +1,11 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
-from django.shortcuts import get_object_or_404
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_list_or_404
+from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
+from django.shortcuts import render
 from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.text import slugify
@@ -20,8 +20,8 @@ from .models import CoordinatorApproval
 from .models import MentorApproval
 from .models import NewCommunity
 from .models import Participation
-from .models import RoundPage
 from .models import Project
+from .models import RoundPage
 
 class RegisterUser(RegistrationView):
 
@@ -246,7 +246,7 @@ class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
             'approved_license', 'unapproved_license_description',
             'no_proprietary_software', 'proprietary_software_description',
             'goverance', 'code_of_conduct', 'cla', 'dco']
-    
+
     # We have to over-ride this method because we need to
     # create a community's slug from its name.
     def form_valid(self, form):
