@@ -160,10 +160,10 @@ New Coordinator Flow
 
 [Page] Sign up to be a participating community
 
- - [ ] Fill out at least new community information
- - [ ] Can also fill out information for the applicants and this round if they want
+ - [x] Fill out at least new community information
+ - [x] Can also fill out information for the applicants and this round if they want
 
-Wait for an email from the Outreachy organizers saying you're approved.
+- [ ] Wait for an email from the Outreachy organizers saying you're approved.
 
 Existing Coordinator Flow
 ----
@@ -171,9 +171,9 @@ Existing Coordinator Flow
 [Page] Community participation status in this round.
 
  - [x] Find your community, click 'Participate in this round',
-   - [ ] log in, Django recognizes you as an existing coordinator
-   - [ ] create an account, Django says you're not listed as a coordinator
-     - [ ] email sent to Outreachy organizers and listed coordinators
+   - [x] log in, Django recognizes you as an existing coordinator
+   - [x] create an account, Django says you're not listed as a coordinator
+     - [ ] email sent to Outreachy organizers
 
 [Page] Edit community data
 
@@ -202,8 +202,8 @@ Volunteer Flow
 
 [Page] Call for volunteers and mentors
 
- - [ ] Create account or login
- - [ ] Fill out the form, submit
+ - [x] Create account or login
+ - [x] Fill out the form, submit
 
 Coordinator is emailed
 Coordinator can (optionally) approve volunteer to read applications
@@ -217,9 +217,9 @@ Mentor Flow
 
 [Page] Call for volunteers and mentors
 
- - [ ] Create account or login
- - [ ] Fill out the form with mentor information and (optionally) project information, click submit
- - [ ] mentors who are not yet approved can also submit projects?
+ - [x] Create account or login
+ - [x] Fill out the form with mentor information and (optionally) project information, click submit
+ - [x] mentors who are not yet approved can also submit projects?
 
 Coordinator is emailed - approves mentor
 (Optional) Coordinator approves mentor's project, or replies back to the email to give the mentor feedback (set In-reply-to to be the mentor)
@@ -250,11 +250,11 @@ Co-mentor or surrogate mentor flow
 
 [Page] Project page or Community page
 
- - [ ] Click 'Apply to co-mentor this project'
+ - [x] Click 'Apply to co-mentor this project'
 
 [Page] Sign up to be a mentor
 
- - [ ] Fill out the form with just mentor information, click submit
+ - [x] Fill out the form with just mentor information, click submit
 
 Coordinator is emailed
 Coordinator approves co-mentor
@@ -431,17 +431,11 @@ New pages to create
   - [ ] Volunteer sign up page
 
 - [ ] [Page] Sign up to be a participating community
-  - [ ] Forces login or account creation
-  - [ ] The page should have both a 'Save' and 'Submit for moderation' button
-  - [ ] Coordinators should get periodic email reminders if they have Saved but not Submitted a community
-  - [ ] Only users with community permissions can publish a new page
-  - [ ] Logged in users can submit a community page for moderation (or 'Save draft' to come back to it later)
-    - [ ] Implementation: possibly we could set a page signal on page save, and check the 'submitted_for_moderation' flag? Or just use Django instead of wagtail pages? Maybe use django-ckeditor for a RichText field?
+  - [x] Forces login or account creation
+  - [x] Logged in users can submit a community page for moderation (or 'Save draft' to come back to it later)
 
 - [ ] [Page] Edit community data
-  - [ ] Forces login or account creation
-  - [ ] The page should have both a 'Save' and 'Submit for moderation' button
-  - [ ] Coordinators should get periodic email reminders if they have Saved but not Submitted a community
+  - [x] Forces login or account creation
 
 - [ ] [Page] Community status or call for volunteers and mentors
   - [x] Community is not participating in the current round:
@@ -449,14 +443,14 @@ New pages to create
     - [ ] Sign up to be a community coordinator
   - [ ] Community is participating in the current round:
     - [x] Community status: (waiting on funding, coordinators are, etc...)
-    - [ ] Propose a new project -> login -> mentor/project sign-up
+    - [x] Propose a new project -> login -> mentor/project sign-up
     - [x] Lists any submitted and approved projects
-    - [ ] 'Apply to co-mentor this project' -> login -> mentor sign-up
-    - [ ] Project status:
-      - [ ] Waiting on coordinator approval
+    - [x] 'Apply to co-mentor this project' -> login -> mentor sign-up
+    - [x] Project status:
+      - [x] Waiting on coordinator approval
       - [ ] Waiting on organizer approval
-      - [ ] Approved to participate
-      - [ ] Not eligible for participation
+      - [x] Approved to participate
+      - [x] Not eligible for participation
 
 - [ ] [Page] Notify me when this community signs up
   - [ ] Forces login or account creation
@@ -468,9 +462,7 @@ New pages to create
   - [ ] Mentors and volunteers should get periodic email reminders if they have Saved but not Submitted their information
 
 - [ ] [Page] Project proposal
-  - [ ] Forces login or account creation
-  - [ ] The page should have both a 'Save' and 'Submit for moderation' button
-  - [ ] Mentors should get periodic email reminders if they have Saved but not Submitted their project
+  - [x] Forces login or account creation
 
 - [ ] [Page] Community landing page
   - [x] Lists approved project titles
