@@ -9,7 +9,6 @@ from django.urls import reverse_lazy
 from django.utils.http import urlencode
 from django.utils.text import slugify
 from django.views.decorators.http import require_POST
-from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from registration.backends.simple.views import RegistrationView
@@ -39,8 +38,7 @@ class RegisterUser(RegistrationView):
                 query_string=urlencode({'next': self.request.POST.get('next', '/')}))
 
 
-@method_decorator(login_required, name='dispatch')
-class ComradeUpdate(UpdateView):
+class ComradeUpdate(LoginRequiredMixin, UpdateView):
     model = Comrade
 
     # FIXME - we need a way for comrades to change their passwords
@@ -372,8 +370,7 @@ def project_read_only_view(request, community_slug, project_slug):
             },
             )
 
-@method_decorator(login_required, name='dispatch')
-class ProjectUpdate(UpdateView):
+class ProjectUpdate(LoginRequiredMixin, UpdateView):
     model = Project
     fields = ['short_title', 'longevity', 'community_size', 'approved_license', 'accepting_new_applicants']
 
