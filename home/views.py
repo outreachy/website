@@ -192,23 +192,25 @@ def community_read_only_view(request, slug):
     return render(request, template, context)
 
 def community_landing_view(request, round_slug, slug):
-    this_round = get_object_or_404(RoundPage, slug=round_slug)
-    community = get_object_or_404(Community, slug=slug)
-
     # Try to see if this community is participating in that round
-    # and get the Participation object if so.
-    participation_info = get_object_or_404(Participation, community=community, participating_round=this_round)
+    # and if so, get the Participation object and related objects.
+    participation_info = get_object_or_404(
+            Participation.objects.select_related('community', 'participating_round'),
+            community__slug=slug,
+            participating_round__slug=round_slug,
+            )
     projects = get_list_or_404(participation_info.project_set, list_project=True)
     approved_projects = [p for p in projects if p.accepting_new_applicants]
     closed_projects = [p for p in projects if not p.accepting_new_applicants]
 
     return render(request, 'home/community_landing.html',
             {
-            'current_round' : this_round,
-            'community': community,
             'participation_info': participation_info,
             'approved_projects': approved_projects,
             'closed_projects': closed_projects,
+            # TODO: make the template get these off the participation_info instead of passing them in the context
+            'current_round' : participation_info.participating_round,
+            'community': participation_info.community,
             },
             )
 
@@ -241,11 +243,13 @@ class CommunityUpdate(LoginRequiredMixin, UpdateView):
 @require_POST
 def community_status_change(request, community_slug):
     current_round = RoundPage.objects.latest('internstarts')
-    community = get_object_or_404(Community, slug=community_slug)
 
     # Try to see if this community is participating in that round
     # and get the Participation object if so.
-    participation_info = get_object_or_404(Participation, community=community, participating_round=current_round)
+    participation_info = get_object_or_404(
+            Participation.objects.select_related('community'),
+            community__slug=community_slug,
+            participating_round=current_round)
 
     if 'approve' in request.POST:
         participation_info.list_community = True
