@@ -260,10 +260,8 @@ def community_status_change(request, community_slug):
 
     return redirect(participation_info.community)
 
-# TODO - make sure people can't say they will fund 0 interns
-class ParticipationUpdate(UpdateView):
+class ParticipationUpdateView(UpdateView):
     model = Participation
-    fields = ['interns_funded', 'cfp_text']
 
     #def test_func(self):
     #    community = get_object_or_404(Community, slug=self.kwargs['slug'])
@@ -277,16 +275,9 @@ class ParticipationUpdate(UpdateView):
         community = get_object_or_404(Community, slug=self.kwargs['slug'])
         participating_round = RoundPage.objects.latest('internstarts')
         try:
-            participation_info = Participation.objects.get(
+            return Participation.objects.get(
                     community=community,
                     participating_round=participating_round)
-            participation_info.reason_for_not_participating = ""
-            # If a community initially says they won't participate,
-            # but then changes their mind, we need to set the
-            # community approval status to pending.
-            if participation_info.list_community is False:
-                participation_info.list_community = None
-            return participation_info
         except Participation.DoesNotExist:
             return Participation(
                     community=community,
@@ -295,32 +286,28 @@ class ParticipationUpdate(UpdateView):
     def get_success_url(self):
         return self.object.community.get_absolute_url()
 
-class NotParticipating(ParticipationUpdate):
+# TODO - make sure people can't say they will fund 0 interns
+class ParticipationUpdate(ParticipationUpdateView):
+    fields = ['interns_funded', 'cfp_text']
+
+    def get_object(self):
+        participation_info = super(ParticipationUpdate, self).get_object()
+        # If a community initially says they won't participate,
+        # but then changes their mind, we need to set the
+        # community approval status to pending.
+        participation_info.reason_for_not_participating = ""
+        if participation_info.list_community is False:
+            participation_info.list_community = None
+        return participation_info
+
+class NotParticipating(ParticipationUpdateView):
     fields = ['reason_for_not_participating']
 
     def get_object(self):
-        community = get_object_or_404(Community, slug=self.kwargs['slug'])
-        participating_round = RoundPage.objects.latest('internstarts')
-        try:
-            # If a community said they were participating but
-            # needs to withdraw from this round
-            participation_info = Participation.objects.get(
-                    community=community,
-                    participating_round=participating_round)
-            participation_info.interns_funded = 0
-            participation_info.cfp_text = "{name} is not participating in this Outreachy internship round and is not accepting mentor project proposals or volunteers at this time.".format(name=community.name),
-            participation_info.list_community = False
-            return participation_info
-        except Participation.DoesNotExist:
-            # If a community says they can't participate at the beginning of a round,
-            # create a new Participation object and set some values
-            return Participation(
-                    community=community,
-                    participating_round=participating_round,
-                    interns_funded=0,
-                    cfp_text="{name} is not participating in this Outreachy internship round and is not accepting mentor project proposals or volunteers at this time.".format(name=community.name),
-                    list_community=False,
-            )
+        participation_info = super(NotParticipating, self).get_object()
+        participation_info.interns_funded = 0
+        participation_info.list_community = False
+        return participation_info
 
 # This view is for mentors and coordinators to review project information and approve it
 def project_read_only_view(request, community_slug, project_slug):
