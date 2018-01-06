@@ -220,7 +220,27 @@ def community_landing_view(request, round_slug, slug):
             },
             )
 
-class CommunityCreate(LoginRequiredMixin, CreateView):
+# If the logged-in user doesn't have a Comrade object, redirect them to
+# create one and then come back to the current page.
+#
+# Note that LoginRequiredMixin must be to the left of this class in the
+# view's list of parent classes, and the base View must be to the right.
+class ComradeRequiredMixin(object):
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            # Check that the logged-in user has a Comrade instance too:
+            # even just trying to access the field will fail if not.
+            request.user.comrade
+        except Comrade.DoesNotExist:
+            # If not, redirect to create one and remember to come back
+            # here afterward.
+            return redirect(
+                    '{account_url}?{query_string}'.format(
+                        account_url=reverse('account'),
+                        query_string=urlencode({'next': request.path})))
+        return super(ComradeRequiredMixin, self).dispatch(request, *args, **kwargs)
+
+class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
     model = NewCommunity
     fields = ['name', 'description', 'community_size', 'longevity', 'participating_orgs',
             'approved_license', 'unapproved_license_description',
@@ -234,9 +254,13 @@ class CommunityCreate(LoginRequiredMixin, CreateView):
         self.object.slug = slugify(self.object.name)[:self.object._meta.get_field('slug').max_length]
         self.object.save()
 
-        # FIXME: handle admins who haven't become Comrades.
-        coordinator_status = CoordinatorApproval(coordinator=self.request.user.comrade, community=community, approved=True)
-        coordinator_status.save()
+        # Whoever created this community is automatically approved as a
+        # coordinator for it, even though the community itself isn't
+        # approved yet.
+        CoordinatorApproval.objects.create(
+                coordinator=self.request.user.comrade,
+                community=self.object,
+                approved=True)
 
         # When a new community is created, immediately redirect the coordinator
         # to gather information about their participation in this round
