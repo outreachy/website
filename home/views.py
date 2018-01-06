@@ -171,21 +171,15 @@ def community_read_only_view(request, slug):
         pending_mentored_projects = None
 
     coordinator = None
-    approved_coordinator_list = None
-    pending_coordinator_list = None
-    rejected_coordinator_list = None
     if request.user.is_authenticated:
         try:
             coordinator = CoordinatorApproval.objects.get(community=community, coordinator=request.user.comrade)
         except CoordinatorApproval.DoesNotExist:
             pass
 
-    try:
-        approved_coordinator_list = CoordinatorApproval.objects.get(community=community, approved=True)
-        pending_coordinator_list = CoordinatorApproval.objects.get(community=community, approved=None)
-        rejected_coordinator_list = CoordinatorApproval.objects.get(community=community, approved=None)
-    except CoordinatorApproval.DoesNotExist:
-        pass
+    approved_coordinator_list = community.coordinatorapproval_set.filter(approved=True)
+    pending_coordinator_list = community.coordinatorapproval_set.filter(approved=None)
+    rejected_coordinator_list = community.coordinatorapproval_set.filter(approved=False)
 
     if participation_info:
         return render(request, 'home/community_read_only.html',
