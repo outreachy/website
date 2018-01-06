@@ -1,7 +1,9 @@
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_list_or_404
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -158,7 +160,11 @@ def community_read_only_view(request, slug):
     coordinator = None
     if request.user.is_authenticated:
         try:
-            coordinator = CoordinatorApproval.objects.get(community=community, coordinator=request.user.comrade)
+            # Although the current user is authenticated, don't assume
+            # that they have a Comrade instance. Instead check that the
+            # approval's coordinator is attached to a User that matches
+            # this one.
+            coordinator = community.coordinatorapproval_set.get(coordinator__account=request.user)
         except CoordinatorApproval.DoesNotExist:
             pass
 
@@ -240,7 +246,14 @@ class CommunityUpdate(LoginRequiredMixin, UpdateView):
     model = Community
     fields = ['name', 'description']
 
+    def get_object(self):
+        community = super(CommunityUpdate, self).get_object()
+        if not community.coordinatorapproval_set.filter(approved=True, coordinator__account=self.request.user).exists():
+            raise PermissionDenied("You are not an approved coordinator for this community.")
+        return community
+
 @require_POST
+@staff_member_required
 def community_status_change(request, community_slug):
     current_round = RoundPage.objects.latest('internstarts')
 
@@ -260,12 +273,8 @@ def community_status_change(request, community_slug):
 
     return redirect(participation_info.community)
 
-class ParticipationUpdateView(UpdateView):
+class ParticipationUpdateView(LoginRequiredMixin, UpdateView):
     model = Participation
-
-    #def test_func(self):
-    #    community = get_object_or_404(Community, slug=self.kwargs['slug'])
-    #    participating_round = RoundPage.objects.latest('internstarts')
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     # By overriding the get_object method, we reuse the URL for
@@ -273,6 +282,9 @@ class ParticipationUpdateView(UpdateView):
     # community participating in the current round.
     def get_object(self):
         community = get_object_or_404(Community, slug=self.kwargs['slug'])
+        if not community.coordinatorapproval_set.filter(approved=True, coordinator__account=self.request.user).exists():
+            raise PermissionDenied("You are not an approved coordinator for this community.")
+
         participating_round = RoundPage.objects.latest('internstarts')
         try:
             return Participation.objects.get(
