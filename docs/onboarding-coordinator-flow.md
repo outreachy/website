@@ -542,6 +542,9 @@ TODO
 - [ ] Switch from simple one-step sign up workflow to two-step email activation using registration.backends.hmac.urls
 - [ ] Add pronouns.is links to pronoun displays
 - [ ] Add explanation of roles to community CFP page
+- [ ] Make community CFP text not required
+- [ ] Make sure organizers can approve coordinators
+- [ ] Remove coordinator request status if the coordinator request has been approved
 
 Project requirements:
 - [ ] licenses - identified by the FSF as free *and* OSI approved (there are a few licenses that aren't on both lists). Only CC licenses that are "Approved for Free Cultural Works" (no non-derivs or non-commercial).
