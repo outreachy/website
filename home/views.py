@@ -155,21 +155,6 @@ def community_read_only_view(request, slug):
     current_round = RoundPage.objects.latest('internstarts')
     community = get_object_or_404(Community, slug=slug)
 
-    # Try to see if this community is participating in the current round
-    # and get the Participation object if so.
-    try:
-        participation_info = Participation.objects.get(community=community, participating_round=current_round)
-        approved_projects = participation_info.project_set.filter(list_project=True)
-        pending_projects = participation_info.project_set.filter(list_project=None)
-        rejected_projects = participation_info.project_set.filter(list_project=False)
-        pending_mentored_projects = participation_info.project_set.filter(mentorapproval__approved=False).distinct()
-    except Participation.DoesNotExist:
-        participation_info = None
-        approved_projects = None
-        pending_projects = None
-        rejected_projects = None
-        pending_mentored_projects = None
-
     coordinator = None
     if request.user.is_authenticated:
         try:
@@ -181,33 +166,30 @@ def community_read_only_view(request, slug):
     pending_coordinator_list = community.coordinatorapproval_set.filter(approved=None)
     rejected_coordinator_list = community.coordinatorapproval_set.filter(approved=False)
 
-    if participation_info:
-        return render(request, 'home/community_read_only.html',
-                {
-                'current_round' : current_round,
-                'community': community,
-                'participation_info': participation_info,
-                'approved_projects': approved_projects,
-                'pending_projects': pending_projects,
-                'rejected_projects': rejected_projects,
-                'pending_mentored_projects': pending_mentored_projects,
-                'coordinator': coordinator,
-                'approved_coordinator_list': approved_coordinator_list,
-                'pending_coordinator_list': pending_coordinator_list,
-                'rejected_coordinator_list': pending_coordinator_list,
-                },
-                )
-
-    return render(request, 'home/community_not_participating_read_only.html',
-            {
+    context = {
             'current_round' : current_round,
             'community': community,
             'coordinator': coordinator,
             'approved_coordinator_list': approved_coordinator_list,
             'pending_coordinator_list': pending_coordinator_list,
             'rejected_coordinator_list': pending_coordinator_list,
-            },
-            )
+            }
+    template = 'home/community_not_participating_read_only.html'
+
+    # Try to see if this community is participating in the current round
+    # and get the Participation object if so.
+    try:
+        participation_info = Participation.objects.get(community=community, participating_round=current_round)
+        context['participation_info'] = participation_info
+        context['approved_projects'] = participation_info.project_set.filter(list_project=True)
+        context['pending_projects'] = participation_info.project_set.filter(list_project=None)
+        context['rejected_projects'] = participation_info.project_set.filter(list_project=False)
+        context['pending_mentored_projects'] = participation_info.project_set.filter(mentorapproval__approved=False).distinct()
+        template = 'home/community_read_only.html'
+    except Participation.DoesNotExist:
+        pass
+
+    return render(request, template, context)
 
 def community_landing_view(request, round_slug, slug):
     this_round = get_object_or_404(RoundPage, slug=round_slug)
