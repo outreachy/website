@@ -432,6 +432,56 @@ class Project(models.Model):
                 title = self.short_title,
                 )
 
+class ProjectSkill(models.Model):
+    project = models.ForeignKey(Project, verbose_name="Project")
+
+    skill = models.CharField(max_length=SENTENCE_LENGTH, verbose_name="Skill description", help_text="What is one skill an the applicant needs to have in order to apply to your project, or what skill will they need to be willing to learn?")
+
+    TEACH_YOU = 'WTU'
+    CONCEPTS = 'CON'
+    EXPERIMENTATION = 'EXP'
+    FAMILIAR = 'FAM'
+    CHALLENGE = 'CHA'
+    EXPERIENCE_CHOICES = (
+            (TEACH_YOU, 'Mentors are willing to teach this skill to applicants with no experience at all'),
+            (CONCEPTS, 'Applicants should have read about the skill'),
+            (EXPERIMENTATION, 'Applicants should have used this skill in class or personal projects'),
+            (FAMILIAR, 'Applicants should be able to expand on their skills with the help of mentors'),
+            (CHALLENGE, 'Applicants who are experienced in this skill will have the chance to expand it further'),
+            )
+    experience_level = models.CharField(
+            max_length=3,
+            choices=EXPERIENCE_CHOICES,
+            default=TEACH_YOU,
+            verbose_name="Expected skill experience level",
+            help_text="Choose this carefully! Many Outreachy applicants choose not to apply to a project unless they meet 100% of the project skill criteria.",
+            )
+
+    BONUS = 'BON'
+    OPTIONAL = 'OPT'
+    STRONG = 'STR'
+    REQUIRED_CHOICES = (
+            (BONUS, "It would be nice if applicants had this skill, but it will not impact intern selection"),
+            (OPTIONAL, "Mentors will prefer applicants who have this skill"),
+            (STRONG, "Mentors will only accept applicants who have this skill as an intern"),
+            )
+    requied = models.CharField(
+            max_length=3,
+            choices=REQUIRED_CHOICES,
+            default=BONUS,
+            verbose_name="Skill impact on intern selection",
+            help_text="Is this skill a hard requirement, a preference, or an optional bonus? Choose this carefully! Many Outreachy applicants choose not to apply to a project unless they meet 100% of the project skill criteria.",
+            )
+
+    def __str__(self):
+        return '{start:%Y %B} to {end:%Y %B} round - {community} - {title} - skill: {skill}'.format(
+                start = self.project.project_round.participating_round.internstarts,
+                end = self.project.project_round.participating_round.internends,
+                community = self.project.project_round.community,
+                title = self.project.skill,
+                )
+
+
 # This through table records whether a mentor is approved for this project.
 # If a mentor creates a project, we set them as approved. The coordinator then reviews the Project.
 # If a co-mentor signs up to join a project, we set them as unapproved.
