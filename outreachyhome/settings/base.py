@@ -109,6 +109,9 @@ DATABASES = {
         default='sqlite:///'+os.path.join(BASE_DIR, 'db.sqlite3'))
 }
 
+# If an error occurs in a view, make sure none of that view's changes are saved.
+ATOMIC_REQUESTS = True
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
