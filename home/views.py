@@ -348,8 +348,12 @@ class NotParticipating(ParticipationUpdateView):
 # This view is for mentors and coordinators to review project information and approve it
 def project_read_only_view(request, community_slug, project_slug):
     current_round = RoundPage.objects.latest('internstarts')
-    community = get_object_or_404(Community, slug=community_slug)
-    project = get_object_or_404(Project, slug=project_slug)
+    project = get_object_or_404(
+            Project.objects.select_related('project_round__participating_round', 'project_round__community'),
+            slug=project_slug,
+            project_round__participating_round=current_round,
+            project_round__community__slug=community_slug,
+            )
     approved_mentors = [x.mentor for x in MentorApproval.objects.filter(project=project)
             if x.approved is True]
     unapproved_mentors = [x.mentor for x in MentorApproval.objects.filter(project=project)
@@ -362,8 +366,8 @@ def project_read_only_view(request, community_slug, project_slug):
 
     return render(request, 'home/project_read_only.html',
             {
-            'current_round': current_round,
-            'community': community,
+            'current_round': project.project_round.participating_round,
+            'community': project.project_round.community,
             'project' : project,
             'approved_mentors': approved_mentors,
             'unapproved_mentors': unapproved_mentors,
@@ -380,10 +384,9 @@ class ProjectUpdate(LoginRequiredMixin, UpdateView):
     # both creating and updating information about a
     # community participating in the current round.
     def get_object(self):
-        community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
         participating_round = RoundPage.objects.latest('internstarts')
         participation = get_object_or_404(Participation,
-                    community=community,
+                    community__slug=self.kwargs['community_slug'],
                     participating_round=participating_round)
         if 'project_slug' in self.kwargs:
             return get_object_or_404(Project,
@@ -402,23 +405,19 @@ class ProjectUpdate(LoginRequiredMixin, UpdateView):
             MentorApproval.objects.create(
                     mentor=self.request.user.comrade,
                     project=self.object, approved=True)
-        return redirect(self.get_success_url())
-
-    def get_success_url(self):
-        community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
-        return reverse('project-read-only',
-                kwargs={'project_slug': self.object.slug,
-                    'community_slug': community.slug})
+        return redirect('project-read-only',
+                project_slug=self.object.slug,
+                community_slug=self.object.project_round.community.slug)
 
 @require_POST
 def project_status_change(request, community_slug, project_slug):
     current_round = RoundPage.objects.latest('internstarts')
-    community = get_object_or_404(Community, slug=community_slug)
-
-    # Try to see if this community is participating in that round
-    # and get the Participation object if so.
-    participation_info = get_object_or_404(Participation, community=community, participating_round=current_round)
-    project = get_object_or_404(Project, slug=project_slug, project_round=participation_info)
+    project = get_object_or_404(
+            Project,
+            slug=project_slug,
+            project_round__participating_round=current_round,
+            project_round__community__slug=community_slug,
+            )
 
     if 'approve' in request.POST:
         project.list_project = True
@@ -428,19 +427,20 @@ def project_status_change(request, community_slug, project_slug):
         project.save()
 
     return redirect('project-read-only',
-            project_slug=project.slug,
-            community_slug=community.slug)
+            project_slug=project_slug,
+            community_slug=community_slug)
 
 # Only superusers and the coordinator for the community should be able to approve project mentors.
 @require_POST
 def project_mentor_update(request, community_slug, project_slug, mentor_id):
     current_round = RoundPage.objects.latest('internstarts')
-    community = get_object_or_404(Community, slug=community_slug)
+    project = get_object_or_404(
+            Project,
+            slug=project_slug,
+            project_round__participating_round=current_round,
+            project_round__community__slug=community_slug,
+            )
 
-    # Try to see if this community is participating in that round
-    # and get the Participation object if so.
-    participation_info = get_object_or_404(Participation, community=community, participating_round=current_round)
-    project = get_object_or_404(Project, slug=project_slug, project_round=participation_info)
     # FIXME: redirect to a Comrade creation view with next pointing back to this
     mentor = get_object_or_404(Comrade, account_id=mentor_id)
 
@@ -458,8 +458,8 @@ def project_mentor_update(request, community_slug, project_slug, mentor_id):
         mentor_status.delete()
 
     return redirect('project-read-only',
-            project_slug=project.slug,
-            community_slug=community.slug)
+            project_slug=project_slug,
+            community_slug=community_slug)
 
 @require_POST
 @login_required
