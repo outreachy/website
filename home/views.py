@@ -1,16 +1,16 @@
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django.shortcuts import get_object_or_404
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_list_or_404
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
+from django.shortcuts import render
 from django.urls import reverse
-from django.urls import reverse_lazy
 from django.utils.http import urlencode
 from django.utils.text import slugify
 from django.views.decorators.http import require_POST
-from django.utils.decorators import method_decorator
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, UpdateView
 
 from registration.backends.simple.views import RegistrationView
 
@@ -20,8 +20,8 @@ from .models import CoordinatorApproval
 from .models import MentorApproval
 from .models import NewCommunity
 from .models import Participation
-from .models import RoundPage
 from .models import Project
+from .models import RoundPage
 
 class RegisterUser(RegistrationView):
 
@@ -39,8 +39,7 @@ class RegisterUser(RegistrationView):
                 query_string=urlencode({'next': self.request.POST.get('next', '/')}))
 
 
-@method_decorator(login_required, name='dispatch')
-class ComradeUpdate(UpdateView):
+class ComradeUpdate(LoginRequiredMixin, UpdateView):
     model = Comrade
 
     # FIXME - we need a way for comrades to change their passwords
@@ -117,17 +116,18 @@ def community_cfp_view(request):
     # https://docs.djangoproject.com/en/1.11/topics/db/queries/#following-relationships-backward
     # https://docs.djangoproject.com/en/1.11/ref/models/querysets/#values-list
     # https://docs.djangoproject.com/en/1.11/ref/models/querysets/#values
-    participating_communities_ids = set(
-            current_round.participation_set.values_list('community_id', flat=True)
-            )
+    participating_communities = {
+            p.community_id: p
+            for p in current_round.participation_set.all()
+            }
     all_communities = Community.objects.all()
     approved_communities = []
     pending_communities = []
     rejected_communities = []
     not_participating_communities = []
     for c in all_communities:
-        if c.id in participating_communities_ids:
-            participation_info = get_object_or_404(Participation, community=c, participating_round=current_round)
+        participation_info = participating_communities.get(c.id)
+        if participation_info is not None:
             if participation_info.list_community is None:
                 pending_communities.append(c)
             elif participation_info.list_community is True:
@@ -157,94 +157,96 @@ def community_read_only_view(request, slug):
     current_round = RoundPage.objects.latest('internstarts')
     community = get_object_or_404(Community, slug=slug)
 
-    # Try to see if this community is participating in the current round
-    # and get the Participation object if so.
-    try:
-        participation_info = Participation.objects.get(community=community, participating_round=current_round)
-        approved_projects = participation_info.project_set.filter(list_project=True)
-        pending_projects = participation_info.project_set.filter(list_project=None)
-        rejected_projects = participation_info.project_set.filter(list_project=False)
-        pending_mentored_projects = participation_info.project_set.filter(mentorapproval__approved=False).distinct()
-    except Participation.DoesNotExist:
-        participation_info = None
-        approved_projects = None
-        pending_projects = None
-        rejected_projects = None
-        pending_mentored_projects = None
-
     coordinator = None
-    approved_coordinator_list = None
-    pending_coordinator_list = None
-    rejected_coordinator_list = None
     if request.user.is_authenticated:
         try:
-            coordinator = CoordinatorApproval.objects.get(community=community, coordinator=request.user.comrade)
+            # Although the current user is authenticated, don't assume
+            # that they have a Comrade instance. Instead check that the
+            # approval's coordinator is attached to a User that matches
+            # this one.
+            coordinator = community.coordinatorapproval_set.get(coordinator__account=request.user)
         except CoordinatorApproval.DoesNotExist:
             pass
 
-    try:
-        approved_coordinator_list = CoordinatorApproval.objects.get(community=community, approved=True)
-        pending_coordinator_list = CoordinatorApproval.objects.get(community=community, approved=None)
-        rejected_coordinator_list = CoordinatorApproval.objects.get(community=community, approved=None)
-    except CoordinatorApproval.DoesNotExist:
-        pass
+    approved_coordinator_list = community.coordinatorapproval_set.filter(approved=True)
+    pending_coordinator_list = community.coordinatorapproval_set.filter(approved=None)
+    rejected_coordinator_list = community.coordinatorapproval_set.filter(approved=False)
 
-    if participation_info:
-        return render(request, 'home/community_read_only.html',
-                {
-                'current_round' : current_round,
-                'community': community,
-                'participation_info': participation_info,
-                'approved_projects': approved_projects,
-                'pending_projects': pending_projects,
-                'rejected_projects': rejected_projects,
-                'pending_mentored_projects': pending_mentored_projects,
-                'coordinator': coordinator,
-                'approved_coordinator_list': approved_coordinator_list,
-                'pending_coordinator_list': pending_coordinator_list,
-                'rejected_coordinator_list': pending_coordinator_list,
-                },
-                )
-
-    return render(request, 'home/community_not_participating_read_only.html',
-            {
+    context = {
             'current_round' : current_round,
             'community': community,
             'coordinator': coordinator,
             'approved_coordinator_list': approved_coordinator_list,
             'pending_coordinator_list': pending_coordinator_list,
             'rejected_coordinator_list': pending_coordinator_list,
-            },
-            )
+            }
+    template = 'home/community_not_participating_read_only.html'
+
+    # Try to see if this community is participating in the current round
+    # and get the Participation object if so.
+    try:
+        participation_info = Participation.objects.get(community=community, participating_round=current_round)
+        context['participation_info'] = participation_info
+        context['approved_projects'] = participation_info.project_set.filter(list_project=True)
+        context['pending_projects'] = participation_info.project_set.filter(list_project=None)
+        context['rejected_projects'] = participation_info.project_set.filter(list_project=False)
+        context['pending_mentored_projects'] = participation_info.project_set.filter(mentorapproval__approved=False).distinct()
+        template = 'home/community_read_only.html'
+    except Participation.DoesNotExist:
+        pass
+
+    return render(request, template, context)
 
 def community_landing_view(request, round_slug, slug):
-    this_round = get_object_or_404(RoundPage, slug=round_slug)
-    community = get_object_or_404(Community, slug=slug)
-
     # Try to see if this community is participating in that round
-    # and get the Participation object if so.
-    participation_info = get_object_or_404(Participation, community=community, participating_round=this_round)
+    # and if so, get the Participation object and related objects.
+    participation_info = get_object_or_404(
+            Participation.objects.select_related('community', 'participating_round'),
+            community__slug=slug,
+            participating_round__slug=round_slug,
+            )
     projects = get_list_or_404(participation_info.project_set, list_project=True)
     approved_projects = [p for p in projects if p.accepting_new_applicants]
     closed_projects = [p for p in projects if not p.accepting_new_applicants]
 
     return render(request, 'home/community_landing.html',
             {
-            'current_round' : this_round,
-            'community': community,
             'participation_info': participation_info,
             'approved_projects': approved_projects,
             'closed_projects': closed_projects,
+            # TODO: make the template get these off the participation_info instead of passing them in the context
+            'current_round' : participation_info.participating_round,
+            'community': participation_info.community,
             },
             )
 
-class CommunityCreate(LoginRequiredMixin, CreateView):
+# If the logged-in user doesn't have a Comrade object, redirect them to
+# create one and then come back to the current page.
+#
+# Note that LoginRequiredMixin must be to the left of this class in the
+# view's list of parent classes, and the base View must be to the right.
+class ComradeRequiredMixin(object):
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            # Check that the logged-in user has a Comrade instance too:
+            # even just trying to access the field will fail if not.
+            request.user.comrade
+        except Comrade.DoesNotExist:
+            # If not, redirect to create one and remember to come back
+            # here afterward.
+            return redirect(
+                    '{account_url}?{query_string}'.format(
+                        account_url=reverse('account'),
+                        query_string=urlencode({'next': request.path})))
+        return super(ComradeRequiredMixin, self).dispatch(request, *args, **kwargs)
+
+class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
     model = NewCommunity
     fields = ['name', 'description', 'community_size', 'longevity', 'participating_orgs',
             'approved_license', 'unapproved_license_description',
             'no_proprietary_software', 'proprietary_software_description',
             'goverance', 'code_of_conduct', 'cla', 'dco']
-    
+
     # We have to over-ride this method because we need to
     # create a community's slug from its name.
     def form_valid(self, form):
@@ -252,27 +254,39 @@ class CommunityCreate(LoginRequiredMixin, CreateView):
         self.object.slug = slugify(self.object.name)[:self.object._meta.get_field('slug').max_length]
         self.object.save()
 
-        # FIXME: handle admins who haven't become Comrades.
-        coordinator_status = CoordinatorApproval(coordinator=self.request.user.comrade, community=community, approved=True)
-        coordinator_status.save()
+        # Whoever created this community is automatically approved as a
+        # coordinator for it, even though the community itself isn't
+        # approved yet.
+        CoordinatorApproval.objects.create(
+                coordinator=self.request.user.comrade,
+                community=self.object,
+                approved=True)
 
         # When a new community is created, immediately redirect the coordinator
         # to gather information about their participation in this round
-        return HttpResponseRedirect(reverse('community-participate',
-            kwargs={'slug': self.object.slug}))
+        return redirect('community-participate', slug=self.object.slug)
 
 class CommunityUpdate(LoginRequiredMixin, UpdateView):
     model = Community
     fields = ['name', 'description']
 
+    def get_object(self):
+        community = super(CommunityUpdate, self).get_object()
+        if not community.coordinatorapproval_set.filter(approved=True, coordinator__account=self.request.user).exists():
+            raise PermissionDenied("You are not an approved coordinator for this community.")
+        return community
+
 @require_POST
+@staff_member_required
 def community_status_change(request, community_slug):
     current_round = RoundPage.objects.latest('internstarts')
-    community = get_object_or_404(Community, slug=community_slug)
 
     # Try to see if this community is participating in that round
     # and get the Participation object if so.
-    participation_info = get_object_or_404(Participation, community=community, participating_round=current_round)
+    participation_info = get_object_or_404(
+            Participation.objects.select_related('community'),
+            community__slug=community_slug,
+            participating_round=current_round)
 
     if 'approve' in request.POST:
         participation_info.list_community = True
@@ -281,17 +295,10 @@ def community_status_change(request, community_slug):
         participation_info.list_community = False
         participation_info.save()
 
-    return HttpResponseRedirect(reverse('community-read-only',
-            kwargs={'slug': community.slug}))
+    return redirect(participation_info.community)
 
-# TODO - make sure people can't say they will fund 0 interns
-class ParticipationUpdate(UpdateView):
+class ParticipationUpdateView(LoginRequiredMixin, UpdateView):
     model = Participation
-    fields = ['interns_funded', 'cfp_text']
-
-    #def test_func(self):
-    #    community = get_object_or_404(Community, slug=self.kwargs['slug'])
-    #    participating_round = RoundPage.objects.latest('internstarts')
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     # By overriding the get_object method, we reuse the URL for
@@ -299,52 +306,44 @@ class ParticipationUpdate(UpdateView):
     # community participating in the current round.
     def get_object(self):
         community = get_object_or_404(Community, slug=self.kwargs['slug'])
+        if not community.coordinatorapproval_set.filter(approved=True, coordinator__account=self.request.user).exists():
+            raise PermissionDenied("You are not an approved coordinator for this community.")
+
         participating_round = RoundPage.objects.latest('internstarts')
         try:
-            participation_info = Participation.objects.get(
+            return Participation.objects.get(
                     community=community,
                     participating_round=participating_round)
-            participation_info.reason_for_not_participating = ""
-            # If a community initially says they won't participate,
-            # but then changes their mind, we need to set the
-            # community approval status to pending.
-            if participation_info.list_community is False:
-                participation_info.list_community = None
-            return participation_info
         except Participation.DoesNotExist:
             return Participation(
                     community=community,
                     participating_round=participating_round)
 
     def get_success_url(self):
-        return reverse('community-read-only', kwargs={'slug': self.object.community.slug})
+        return self.object.community.get_absolute_url()
 
-class NotParticipating(ParticipationUpdate):
+# TODO - make sure people can't say they will fund 0 interns
+class ParticipationUpdate(ParticipationUpdateView):
+    fields = ['interns_funded', 'cfp_text']
+
+    def get_object(self):
+        participation_info = super(ParticipationUpdate, self).get_object()
+        # If a community initially says they won't participate,
+        # but then changes their mind, we need to set the
+        # community approval status to pending.
+        participation_info.reason_for_not_participating = ""
+        if participation_info.list_community is False:
+            participation_info.list_community = None
+        return participation_info
+
+class NotParticipating(ParticipationUpdateView):
     fields = ['reason_for_not_participating']
 
     def get_object(self):
-        community = get_object_or_404(Community, slug=self.kwargs['slug'])
-        participating_round = RoundPage.objects.latest('internstarts')
-        try:
-            # If a community said they were participating but
-            # needs to withdraw from this round
-            participation_info = Participation.objects.get(
-                    community=community,
-                    participating_round=participating_round)
-            participation_info.interns_funded = 0
-            participation_info.cfp_text = "{name} is not participating in this Outreachy internship round and is not accepting mentor project proposals or volunteers at this time.".format(name=community.name),
-            participation_info.list_community = False
-            return participation_info
-        except Participation.DoesNotExist:
-            # If a community says they can't participate at the beginning of a round,
-            # create a new Participation object and set some values
-            return Participation(
-                    community=community,
-                    participating_round=participating_round,
-                    interns_funded=0,
-                    cfp_text="{name} is not participating in this Outreachy internship round and is not accepting mentor project proposals or volunteers at this time.".format(name=community.name),
-                    list_community=False,
-            )
+        participation_info = super(NotParticipating, self).get_object()
+        participation_info.interns_funded = 0
+        participation_info.list_community = False
+        return participation_info
 
 # This view is for mentors and coordinators to review project information and approve it
 def project_read_only_view(request, community_slug, project_slug):
@@ -372,8 +371,7 @@ def project_read_only_view(request, community_slug, project_slug):
             },
             )
 
-@method_decorator(login_required, name='dispatch')
-class ProjectUpdate(UpdateView):
+class ProjectUpdate(LoginRequiredMixin, UpdateView):
     model = Project
     fields = ['short_title', 'longevity', 'community_size', 'approved_license', 'accepting_new_applicants']
 
@@ -404,7 +402,7 @@ class ProjectUpdate(UpdateView):
             MentorApproval.objects.create(
                     mentor=self.request.user.comrade,
                     project=self.object, approved=True)
-        return HttpResponseRedirect(self.get_success_url())
+        return redirect(self.get_success_url())
 
     def get_success_url(self):
         community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
@@ -429,9 +427,9 @@ def project_status_change(request, community_slug, project_slug):
         project.list_project = False
         project.save()
 
-    return HttpResponseRedirect(reverse('project-read-only',
-            kwargs={'project_slug': project.slug,
-                'community_slug': community.slug}))
+    return redirect('project-read-only',
+            project_slug=project.slug,
+            community_slug=community.slug)
 
 # Only superusers and the coordinator for the community should be able to approve project mentors.
 @require_POST
@@ -459,9 +457,9 @@ def project_mentor_update(request, community_slug, project_slug, mentor_id):
         # that they have been rejected, but TBH I'm running out of time to fix this.
         mentor_status.delete()
 
-    return HttpResponseRedirect(reverse('project-read-only',
-            kwargs={'project_slug': project.slug,
-                'community_slug': community.slug}))
+    return redirect('project-read-only',
+            project_slug=project.slug,
+            community_slug=community.slug)
 
 @require_POST
 @login_required
@@ -487,5 +485,4 @@ def community_coordinator_update(request, community_slug, coordinator_id):
         coordinator_status = get_object_or_404(CoordinatorApproval, coordinator=coordinator, community=community)
         coordinator_status.delete()
 
-    return HttpResponseRedirect(reverse('community-read-only',
-            kwargs={'slug': community.slug}))
+    return redirect(community)
