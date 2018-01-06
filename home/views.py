@@ -114,17 +114,18 @@ def community_cfp_view(request):
     # https://docs.djangoproject.com/en/1.11/topics/db/queries/#following-relationships-backward
     # https://docs.djangoproject.com/en/1.11/ref/models/querysets/#values-list
     # https://docs.djangoproject.com/en/1.11/ref/models/querysets/#values
-    participating_communities_ids = set(
-            current_round.participation_set.values_list('community_id', flat=True)
-            )
+    participating_communities = {
+            p.community_id: p
+            for p in current_round.participation_set.all()
+            }
     all_communities = Community.objects.all()
     approved_communities = []
     pending_communities = []
     rejected_communities = []
     not_participating_communities = []
     for c in all_communities:
-        if c.id in participating_communities_ids:
-            participation_info = get_object_or_404(Participation, community=c, participating_round=current_round)
+        participation_info = participating_communities.get(c.id)
+        if participation_info is not None:
             if participation_info.list_community is None:
                 pending_communities.append(c)
             elif participation_info.list_community is True:
