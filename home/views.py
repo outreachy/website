@@ -1,9 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.shortcuts import get_list_or_404
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.text import slugify
@@ -255,8 +255,7 @@ class CommunityCreate(LoginRequiredMixin, CreateView):
 
         # When a new community is created, immediately redirect the coordinator
         # to gather information about their participation in this round
-        return HttpResponseRedirect(reverse('community-participate',
-            kwargs={'slug': self.object.slug}))
+        return redirect('community-participate', slug=self.object.slug)
 
 class CommunityUpdate(LoginRequiredMixin, UpdateView):
     model = Community
@@ -278,8 +277,7 @@ def community_status_change(request, community_slug):
         participation_info.list_community = False
         participation_info.save()
 
-    return HttpResponseRedirect(reverse('community-read-only',
-            kwargs={'slug': community.slug}))
+    return redirect(participation_info.community)
 
 # TODO - make sure people can't say they will fund 0 interns
 class ParticipationUpdate(UpdateView):
@@ -314,7 +312,7 @@ class ParticipationUpdate(UpdateView):
                     participating_round=participating_round)
 
     def get_success_url(self):
-        return reverse('community-read-only', kwargs={'slug': self.object.community.slug})
+        return self.object.community.get_absolute_url()
 
 class NotParticipating(ParticipationUpdate):
     fields = ['reason_for_not_participating']
@@ -400,7 +398,7 @@ class ProjectUpdate(LoginRequiredMixin, UpdateView):
             MentorApproval.objects.create(
                     mentor=self.request.user.comrade,
                     project=self.object, approved=True)
-        return HttpResponseRedirect(self.get_success_url())
+        return redirect(self.get_success_url())
 
     def get_success_url(self):
         community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
@@ -425,9 +423,9 @@ def project_status_change(request, community_slug, project_slug):
         project.list_project = False
         project.save()
 
-    return HttpResponseRedirect(reverse('project-read-only',
-            kwargs={'project_slug': project.slug,
-                'community_slug': community.slug}))
+    return redirect('project-read-only',
+            project_slug=project.slug,
+            community_slug=community.slug)
 
 # Only superusers and the coordinator for the community should be able to approve project mentors.
 @require_POST
@@ -455,9 +453,9 @@ def project_mentor_update(request, community_slug, project_slug, mentor_id):
         # that they have been rejected, but TBH I'm running out of time to fix this.
         mentor_status.delete()
 
-    return HttpResponseRedirect(reverse('project-read-only',
-            kwargs={'project_slug': project.slug,
-                'community_slug': community.slug}))
+    return redirect('project-read-only',
+            project_slug=project.slug,
+            community_slug=community.slug)
 
 @require_POST
 @login_required
@@ -483,5 +481,4 @@ def community_coordinator_update(request, community_slug, coordinator_id):
         coordinator_status = get_object_or_404(CoordinatorApproval, coordinator=coordinator, community=community)
         coordinator_status.delete()
 
-    return HttpResponseRedirect(reverse('community-read-only',
-            kwargs={'slug': community.slug}))
+    return redirect(community)
