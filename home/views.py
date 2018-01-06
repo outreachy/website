@@ -375,7 +375,7 @@ def project_read_only_view(request, community_slug, project_slug):
             },
             )
 
-class ProjectUpdate(LoginRequiredMixin, UpdateView):
+class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     model = Project
     fields = ['short_title', 'longevity', 'community_size', 'approved_license', 'accepting_new_applicants']
 
