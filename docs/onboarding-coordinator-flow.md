@@ -474,6 +474,62 @@ New pages to create
   - [ ] Details hidden - please apply as an Outreachy applicant to see details
   - [ ] 'Apply to co-mentor this project' -> login -> mentor sign-up
 
+Emails
+------
+- [ ] Community approval by Outreachy organizers:
+     - To: Organizers
+     - Subject: Approve Community - NAME
+     - data -> (for new community) licenses, longevity, size, etc. Billing info.
+     - action -> community read-only page
+
+- [ ] Community approved by Outreachy organizers:
+     - To: Coordinators, Approved Mentors (?)
+     - Subject: Community Approved - NAME
+     - action -> create gmail filter for mentors mailing list RIGHT NOW
+     - action -> link to community read-only page, they can start gathering volunteers
+     - (?) action -> if approved projects with mentors, link to community landing page, they can start advertising their community
+
+- [ ] Project approval
+     - To: Coordinators
+     - Cc: Organizers (only if there's warnings about this project)
+     - Subject: Approve Project - NAME
+     - action -> link to project read-only page, approve project
+
+- [ ] Project approved
+     - To: Approved Mentors
+     - Subject: Project Approved - NAME
+     - action -> create gmail filter for mentors mailing list RIGHT NOW
+     - next steps for mentors
+     - action -> link to project read-only page, sign up any co-mentors
+     - action -> (if community approved) link to community or project landing page, spread the word to applicants
+
+- [ ] Mentor approval
+     - To: Coordinators
+     - Subject: Approve Mentor - NAME
+     - action -> link to project read-only page, approve mentor
+
+- [ ] Mentor approved - only send on co-mentor creation, not on project creation
+     - To: Approved Mentors
+     - Cc: Co-mentors (?)
+     - Subject: Mentor Approved - NAME
+     - action -> create gmail filter for mentors mailing list RIGHT NOW
+     - action -> link to project read-only page
+
+- [ ] All Mentors resigned
+     - To: Coordinator
+     - Cc: Organizers
+     - Subject: Project Orphaned - No Mentors for NAME
+     - action -> link to project read-only page
+
+Stretch Goal Emails
+-------------------
+
+- [ ] Community billing change notification to Outreachy organizers:
+     - To: Organizers
+     - Subject: Community Billing Change - NAME
+     - data -> Billing info.
+     - action -> community read-only page
+
 TODO
 ---
 
