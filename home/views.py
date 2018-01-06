@@ -358,11 +358,17 @@ def project_read_only_view(request, community_slug, project_slug):
             if x.approved is True]
     unapproved_mentors = [x.mentor for x in MentorApproval.objects.filter(project=project)
             if x.approved is False]
-    if request.user:
-        # FIXME: force Comrade creation
-        comrade = get_object_or_404(Comrade, account=request.user)
-    else:
-        comrade = None
+
+    mentor_request = None
+    if request.user.is_authenticated:
+        try:
+            # Although the current user is authenticated, don't assume
+            # that they have a Comrade instance. Instead check that the
+            # approval's mentor is attached to a User that matches
+            # this one.
+            mentor_request = project.mentorapproval_set.get(mentor__account=request.user)
+        except MentorApproval.DoesNotExist:
+            pass
 
     return render(request, 'home/project_read_only.html',
             {
@@ -371,7 +377,7 @@ def project_read_only_view(request, community_slug, project_slug):
             'project' : project,
             'approved_mentors': approved_mentors,
             'unapproved_mentors': unapproved_mentors,
-            'comrade': comrade,
+            'mentor_request': mentor_request,
             },
             )
 
@@ -441,8 +447,10 @@ def project_mentor_update(request, community_slug, project_slug, mentor_id):
             project_round__community__slug=community_slug,
             )
 
-    # FIXME: redirect to a Comrade creation view with next pointing back to this
-    mentor = get_object_or_404(Comrade, account_id=mentor_id)
+    # If this user doesn't have a Comrade object, we'd like to help them
+    # by redirecting to the ComradeUpdate form. But because this is a
+    # POST request, we can't. This should be rare, so just 404.
+    mentor = get_object_or_404(Comrade, pk=mentor_id)
 
     if 'add' in request.POST:
         mentor_status = MentorApproval(mentor=mentor, project=project, approved=False)
