@@ -361,6 +361,7 @@ def project_read_only_view(request, community_slug, project_slug):
             if x.approved is False]
 
     mentor_request = None
+    coordinator = None
     if request.user.is_authenticated:
         try:
             # Although the current user is authenticated, don't assume
@@ -371,6 +372,11 @@ def project_read_only_view(request, community_slug, project_slug):
         except MentorApproval.DoesNotExist:
             pass
 
+        try:
+            coordinator = project.project_round.community.coordinatorapproval_set.get(coordinator__account=request.user)
+        except CoordinatorApproval.DoesNotExist:
+            pass
+
     return render(request, 'home/project_read_only.html',
             {
             'current_round': project.project_round.participating_round,
@@ -379,6 +385,7 @@ def project_read_only_view(request, community_slug, project_slug):
             'approved_mentors': approved_mentors,
             'unapproved_mentors': unapproved_mentors,
             'mentor_request': mentor_request,
+            'coordinator': coordinator,
             },
             )
 

@@ -23,54 +23,56 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 	<p>The {{ community.name }} coordinator(s) or Outreachy organizers do not think this project is suitable for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
 {% endif %}
 
-<h2>Coordinator Actions</h2>
-{% if not project.approved_license or project.longevity == project.THREE_MONTHS or project.longevity == project.SIX_MONTHS or project.longevity == project.ONE_YEAR or project.community_size == project.SMOL or project.community_size == project.TINY %}
-	<p>Coordinators - please double check with the Outreachy organizers before approving this project!</p>
-{% else %}
-	<p>Coordinators - this project meets Outreachy organizer standards for project community size, project license, and the length of time the project has been accepting contributions from external contributors. You may approve this project if it meets <a href="/mentor/mentor-faq/#define-a-project">other Outreachy project standards</a> and your community's long term goals.</a>
-{% endif %}
-{% if not project.approved_license %}
-<div class="card border-warning mb-3">
-    <div class="card-header text-white bg-warning">Warning!</div>
-    <div class="card-body">
-        <h5 class="card-title">This project uses a license that is not
-            an OSI-approved license or Creative Commons license.</h5>
-        <p class="card-text">The Outreachy parent organization, Software Freedom Conservancy, requires that all Outreachy internships further the goals of free and open source communities. Projects that use proprietary licenses are not allowed.</p>
-    </div>
-</div>
-{% endif %}
+{% if coordinator %}
+	<h2>Coordinator Actions</h2>
+	{% if not project.approved_license or project.longevity == project.THREE_MONTHS or project.longevity == project.SIX_MONTHS or project.longevity == project.ONE_YEAR or project.community_size == project.SMOL or project.community_size == project.TINY %}
+		<p>Coordinators - please double check with the Outreachy organizers before approving this project!</p>
+	{% else %}
+		<p>Coordinators - this project meets Outreachy organizer standards for project community size, project license, and the length of time the project has been accepting contributions from external contributors. You may approve this project if it meets <a href="/mentor/mentor-faq/#define-a-project">other Outreachy project standards</a> and your community's long term goals.</a>
+	{% endif %}
+	{% if not project.approved_license %}
+	<div class="card border-warning mb-3">
+	    <div class="card-header text-white bg-warning">Warning!</div>
+	    <div class="card-body">
+		<h5 class="card-title">This project uses a license that is not
+		    an OSI-approved license or Creative Commons license.</h5>
+		<p class="card-text">The Outreachy parent organization, Software Freedom Conservancy, requires that all Outreachy internships further the goals of free and open source communities. Projects that use proprietary licenses are not allowed.</p>
+	    </div>
+	</div>
+	{% endif %}
 
-{% if project.longevity == project.THREE_MONTHS or project.longevity == project.SIX_MONTHS or project.longevity == project.ONE_YEAR %}
-<div class="card border-warning mb-3">
-    <div class="card-header text-white bg-warning">Warning!</div>
-    <div class="card-body">
-        <h5 class="card-title">This project is less than a year old.</h5>
-        <p class="card-text">Outreachy projects should be well-established projects. While GSoC allows students to create their own open source projects, we find Outreachy interns benefit the most from having a well-established community of project contributors to work with.</p>
-    </div>
-</div>
-{% endif %}
+	{% if project.longevity == project.THREE_MONTHS or project.longevity == project.SIX_MONTHS or project.longevity == project.ONE_YEAR %}
+	<div class="card border-warning mb-3">
+	    <div class="card-header text-white bg-warning">Warning!</div>
+	    <div class="card-body">
+		<h5 class="card-title">This project is less than a year old.</h5>
+		<p class="card-text">Outreachy projects should be well-established projects. While GSoC allows students to create their own open source projects, we find Outreachy interns benefit the most from having a well-established community of project contributors to work with.</p>
+	    </div>
+	</div>
+	{% endif %}
 
-{% if project.community_size == project.SMOL or project.community_size == project.TINY %}
-<div class="card border-warning mb-3">
-    <div class="card-header text-white bg-warning">Warning!</div>
-    <div class="card-body">
-        <h5 class="card-title">This project has five or less regular
-            contributors.</h5>
-        <p class="card-text">Outreachy projects should be well-established projects. While GSoC allows students to create their own open source projects, we find Outreachy interns benefit the most from having a well-established community of project contributors to work with.</p>
-    </div>
-</div>
-{% endif %}
+	{% if project.community_size == project.SMOL or project.community_size == project.TINY %}
+	<div class="card border-warning mb-3">
+	    <div class="card-header text-white bg-warning">Warning!</div>
+	    <div class="card-body">
+		<h5 class="card-title">This project has five or less regular
+		    contributors.</h5>
+		<p class="card-text">Outreachy projects should be well-established projects. While GSoC allows students to create their own open source projects, we find Outreachy interns benefit the most from having a well-established community of project contributors to work with.</p>
+	    </div>
+	</div>
+	{% endif %}
 
-{% comment %}When we name an input, the name and value get added to the POST dictionary.{% endcomment %}
-<form action="{% url 'project-status' community_slug=community.slug project_slug=project.slug %}" method="post">
-    {% csrf_token %}
-    {% if project.list_project is not True %}
-	    <input class="btn btn-block btn-success" type="submit" name="approve" value="Approve Project" />
-    {% endif %}
-    {% if project.list_project is not False %}
-	    <input class="btn btn-block btn-warning" type="submit" name="reject" value="Reject Project" />
-    {% endif %}
-</form>
+	{% comment %}When we name an input, the name and value get added to the POST dictionary.{% endcomment %}
+	<form action="{% url 'project-status' community_slug=community.slug project_slug=project.slug %}" method="post">
+	    {% csrf_token %}
+	    {% if project.list_project is not True %}
+		    <input class="btn btn-block btn-success" type="submit" name="approve" value="Approve Project" />
+	    {% endif %}
+	    {% if project.list_project is not False %}
+		    <input class="btn btn-block btn-warning" type="submit" name="reject" value="Reject Project" />
+	    {% endif %}
+	</form>
+{% endif %}
 
 {% if unapproved_mentors %}
 	<p><strong>Unapproved Project Mentors:</strong></p>
