@@ -2,7 +2,7 @@
 
 {% block content %}
 
-{% comment %}XXX - I don't know whether we need to specify a custom action here? Seems like no, but maybe for new communities?{% endcomment %}
+<h1>Community Information</h1>
 <form action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}
