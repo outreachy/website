@@ -76,7 +76,7 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 	<p><strong>Unapproved Project Mentors:</strong></p>
 	{% for mentor in unapproved_mentors %}
 		<p>{{ mentor.public_name }} &lt;{{ mentor.account.email }}&gt;</p>
-		<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=mentor.account_id %}" method="post">
+		<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=mentor.pk %}" method="post">
 			{% csrf_token %}
 			<input class="btn btn-success" type="submit" name="approve" value="Approve Mentor" />
 			<input class="btn btn-warning" type="submit" name="reject" value="Reject Mentor" />
@@ -114,20 +114,18 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 </ul>
 
 <p><strong>Project Mentors:</strong></p>
-{% if comrade and comrade in unapproved_mentors %}
-	<p>Your request to mentor this project is under review by the community coordinator.</p>
-	<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=comrade.account_id %}" method="post">
-		{% csrf_token %}
-		<input class="btn btn-warning" type="submit" name="reject" value="Withdraw From Mentoring" />
-	</form>
-{% elif comrade and comrade in approved_mentors %}
+{% if mentor_request %}
+	{% if mentor_request.approved is True %}
 	<p>You are an approved mentor for this project.</p>
-	<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=comrade.account_id %}" method="post">
+	{% else %}
+	<p>Your request to mentor this project is under review by the community coordinator.</p>
+	{% endif %}
+	<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=mentor_request.mentor_id %}" method="post">
 		{% csrf_token %}
 		<input class="btn btn-warning" type="submit" name="reject" value="Withdraw From Mentoring" />
 	</form>
-{% else %}
-	<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=comrade.account_id %}" method="post">
+{% elif request.user.comrade %}
+	<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=request.user.comrade.pk %}" method="post">
 		{% csrf_token %}
 		<input class="btn btn-success" type="submit" name="add" value="Mentor This Project" />
 	</form>

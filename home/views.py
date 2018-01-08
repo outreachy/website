@@ -272,10 +272,11 @@ class CommunityUpdate(LoginRequiredMixin, UpdateView):
 
     def get_object(self):
         community = super(CommunityUpdate, self).get_object()
-        if not community.coordinatorapproval_set.filter(approved=True, coordinator__account=self.request.user).exists():
+        if not community.is_coordinator(self.request.user):
             raise PermissionDenied("You are not an approved coordinator for this community.")
         return community
 
+# Only Outreachy organizers are allowed to approve communities.
 @require_POST
 @staff_member_required
 def community_status_change(request, community_slug):
@@ -306,7 +307,7 @@ class ParticipationUpdateView(LoginRequiredMixin, UpdateView):
     # community participating in the current round.
     def get_object(self):
         community = get_object_or_404(Community, slug=self.kwargs['slug'])
-        if not community.coordinatorapproval_set.filter(approved=True, coordinator__account=self.request.user).exists():
+        if not community.is_coordinator(self.request.user):
             raise PermissionDenied("You are not an approved coordinator for this community.")
 
         participating_round = RoundPage.objects.latest('internstarts')
@@ -358,11 +359,17 @@ def project_read_only_view(request, community_slug, project_slug):
             if x.approved is True]
     unapproved_mentors = [x.mentor for x in MentorApproval.objects.filter(project=project)
             if x.approved is False]
-    if request.user:
-        # FIXME: force Comrade creation
-        comrade = get_object_or_404(Comrade, account=request.user)
-    else:
-        comrade = None
+
+    mentor_request = None
+    if request.user.is_authenticated:
+        try:
+            # Although the current user is authenticated, don't assume
+            # that they have a Comrade instance. Instead check that the
+            # approval's mentor is attached to a User that matches
+            # this one.
+            mentor_request = project.mentorapproval_set.get(mentor__account=request.user)
+        except MentorApproval.DoesNotExist:
+            pass
 
     return render(request, 'home/project_read_only.html',
             {
@@ -371,11 +378,11 @@ def project_read_only_view(request, community_slug, project_slug):
             'project' : project,
             'approved_mentors': approved_mentors,
             'unapproved_mentors': unapproved_mentors,
-            'comrade': comrade,
+            'mentor_request': mentor_request,
             },
             )
 
-class ProjectUpdate(LoginRequiredMixin, UpdateView):
+class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     model = Project
     fields = ['short_title', 'longevity', 'community_size', 'approved_license', 'accepting_new_applicants']
 
@@ -389,10 +396,14 @@ class ProjectUpdate(LoginRequiredMixin, UpdateView):
                     community__slug=self.kwargs['community_slug'],
                     participating_round=participating_round)
         if 'project_slug' in self.kwargs:
-            return get_object_or_404(Project,
+            project = get_object_or_404(Project,
                     project_round=participation,
                     slug=self.kwargs['project_slug'])
+            if not (project.is_mentor(self.request.user) or participation.community.is_coordinator(self.request.user)):
+                raise PermissionDenied("You are not an approved mentor for this project.")
+            return project
         else:
+            # Everyone is allowed to propose projects.
             return Project(project_round=participation)
 
     def form_valid(self, form):
@@ -410,14 +421,18 @@ class ProjectUpdate(LoginRequiredMixin, UpdateView):
                 community_slug=self.object.project_round.community.slug)
 
 @require_POST
+@login_required
 def project_status_change(request, community_slug, project_slug):
     current_round = RoundPage.objects.latest('internstarts')
     project = get_object_or_404(
-            Project,
+            Project.objects.select_related('project_round__community'),
             slug=project_slug,
             project_round__participating_round=current_round,
             project_round__community__slug=community_slug,
             )
+
+    if not project.project_round.community.is_coordinator(request.user):
+        raise PermissionDenied("You are not an approved coordinator for this community.")
 
     if 'approve' in request.POST:
         project.list_project = True
@@ -430,28 +445,42 @@ def project_status_change(request, community_slug, project_slug):
             project_slug=project_slug,
             community_slug=community_slug)
 
-# Only superusers and the coordinator for the community should be able to approve project mentors.
+# Each of add/approve/reject requires different permissions, so read
+# this carefully.
 @require_POST
+@login_required
 def project_mentor_update(request, community_slug, project_slug, mentor_id):
     current_round = RoundPage.objects.latest('internstarts')
     project = get_object_or_404(
-            Project,
+            Project.objects.select_related('project_round__community'),
             slug=project_slug,
             project_round__participating_round=current_round,
             project_round__community__slug=community_slug,
             )
 
-    # FIXME: redirect to a Comrade creation view with next pointing back to this
-    mentor = get_object_or_404(Comrade, account_id=mentor_id)
+    # If this user doesn't have a Comrade object and wants to add
+    # themself as a mentor, we'd like to help them by redirecting to the
+    # ComradeUpdate form. (Approve and reject actions are guaranteed to
+    # have a Comrade already so they're fine, at least.) But because
+    # this is a POST request, we can't. This should be rare; just 404.
+    mentor = get_object_or_404(Comrade, pk=mentor_id)
+
+    is_self = (mentor.account_id == request.user.id)
 
     if 'add' in request.POST:
+        if not is_self:
+            raise PermissionDenied("Hey, no fair volunteering other people without their consent!")
         mentor_status = MentorApproval(mentor=mentor, project=project, approved=False)
         mentor_status.save()
     if 'approve' in request.POST:
+        if not project.project_round.community.is_coordinator(request.user):
+            raise PermissionDenied("You are not an approved coordinator for this community.")
         mentor_status = get_object_or_404(MentorApproval, mentor=mentor, project=project)
         mentor_status.approved = True
         mentor_status.save()
     if 'reject' in request.POST:
+        if not (is_self or project.project_round.community.is_coordinator(request.user)):
+            raise PermissionDenied("You are not an approved coordinator for this community.")
         mentor_status = get_object_or_404(MentorApproval, mentor=mentor, project=project)
         # Yeah, this could be a NullBooleanField and we could tell mentors
         # that they have been rejected, but TBH I'm running out of time to fix this.
@@ -467,21 +496,31 @@ def community_coordinator_update(request, community_slug, coordinator_id):
     current_round = RoundPage.objects.latest('internstarts')
     community = get_object_or_404(Community, slug=community_slug)
 
-    # FIXME: redirect to a Comrade creation view with next pointing back to this
+    # See comment in project_mentor_update for why we just 404.
     coordinator = get_object_or_404(Comrade, account_id=coordinator_id)
 
+    is_self = (coordinator.account_id == request.user.id)
+
     if 'add' in request.POST:
+        if not is_self:
+            raise PermissionDenied("Hey, no fair volunteering other people without their consent!")
         coordinator_status = CoordinatorApproval(coordinator=coordinator, community=community, approved=None)
         coordinator_status.save()
     if 'approve' in request.POST:
+        if not (request.user.is_staff or community.is_coordinator(request.user)):
+            raise PermissionDenied("You are not an approved coordinator for this community.")
         coordinator_status = get_object_or_404(CoordinatorApproval, coordinator=coordinator, community=community)
         coordinator_status.approved = True
         coordinator_status.save()
     if 'reject' in request.POST:
+        if not (request.user.is_staff or community.is_coordinator(request.user)):
+            raise PermissionDenied("You are not an approved coordinator for this community.")
         coordinator_status = get_object_or_404(CoordinatorApproval, coordinator=coordinator, community=community)
         coordinator_status.approved = False
         coordinator_status.save()
     if 'withdraw' in request.POST:
+        if not is_self:
+            raise PermissionDenied("You can only withdraw yourself, not other people.")
         coordinator_status = get_object_or_404(CoordinatorApproval, coordinator=coordinator, community=community)
         coordinator_status.delete()
 
