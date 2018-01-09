@@ -417,6 +417,8 @@ class Project(models.Model):
             max_length=50,
             verbose_name="Community URL slug: https://www.outreachy.org/communities/SLUG/")
 
+    repository = models.URLField(blank=True, help_text="(Optional) Please provide a URL for your project's repository or contribution mechanism")
+
     accepting_new_applicants = models.BooleanField(help_text='Is this project currently accepting new applicants? If you have an applicant in mind to accept as an intern (or several promising applicants) who have filled out the eligibility information and an application, you can uncheck this box to close the project to new applicants.', default=True)
 
     # A NullBooleanField can be not set in the database (Null),
