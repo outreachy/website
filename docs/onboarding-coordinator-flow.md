@@ -385,7 +385,7 @@ Data to Gather
    - [x] Long description
    - [x] URL for project repository or contribution pages
    - [x] URL for project issue/bug tracker
-   - [ ] Project communication channels
+   - [ ] Project communication channels - have link for IRC with Kiwi web IRC
    - [ ] (Optional, shared with applicants) Code of Conduct URL
    - [ ] (Optional, shared with applicants) CLA URL
    - [ ] (Optional, shared with applicants) DCO URL - note that a DCO that requires contributors to use their full legal name can mean that trans contributors cannot participate, since it may be expensive or impossible to change their birth name
