@@ -421,6 +421,10 @@ class Project(models.Model):
     long_description = CKEditorField(
             blank=True,
             help_text='Description of the project, excluding applicant skills.')
+    communication_url = models.URLField(blank=True, help_text='(Optional) URL for your project`s communication channel. For IRC, use irc://<host>[:port]/[channel]. Since many applicants have issues with IRC port blocking at their universities, IRC communication links will use <a href="https://kiwiirc.com/">Kiwi IRC</a> to embed the IRC communications in the project page.')
+    communication_norms = CKEditorField(
+            blank=True,
+            help_text='(Optional) After following the project communication channel link, are there any special instructions? For example: "Join the #outreachy Zulip channel and make sure to introduce yourself.')
 
     repository = models.URLField(blank=True, help_text="(Optional) URL for your project's repository or contribution mechanism")
     issue_tracker = models.URLField(blank=True, help_text="(Optional) URL for your project's issue tracker")
@@ -520,6 +524,10 @@ class MentorApproval(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
     approved = models.BooleanField(default=False)
+    # TODO
+    # Add information about how to contact the mentor for this project
+    # e.g. I'm <username> on IRC
+    # This will require a new MentorApprovalUpdate view and permissions
 
     def __str__(self):
         return '{mentor} - {start:%Y %B} to {end:%Y %B} round - {community} - {title}'.format(
