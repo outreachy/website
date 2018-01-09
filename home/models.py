@@ -5,6 +5,7 @@ from base64 import urlsafe_b64encode
 from datetime import timedelta
 
 from django.contrib.auth.models import User
+from django.core.validators import URLValidator
 from django.db import models
 from django.urls import reverse
 
@@ -421,11 +422,15 @@ class Project(models.Model):
     long_description = CKEditorField(
             blank=True,
             help_text='Description of the project, excluding applicant skills.')
+
     communication_tool = models.CharField(
             blank=True,
             max_length=SENTENCE_LENGTH,
             help_text='(Optional) Name of the communication tool your project uses. E.g. "IRC", "Zulip", or "Discourse"')
-    communication_url = models.URLField(blank=True, help_text='(Optional) URL for your project`s communication channel. For IRC, use irc://<host>[:port]/[channel]. Since many applicants have issues with IRC port blocking at their universities, IRC communication links will use <a href="https://kiwiirc.com/">Kiwi IRC</a> to embed the IRC communications in the project page.')
+    communication_url = models.CharField(blank=True,
+            max_length=200,
+            validators=[URLValidator(schemes=['http', 'https', 'irc'])],
+            help_text='(Optional) URL for your project`s communication channel. For IRC, use irc://<host>[:port]/[channel]. Since many applicants have issues with IRC port blocking at their universities, IRC communication links will use <a href="https://kiwiirc.com/">Kiwi IRC</a> to embed the IRC communications in the project page.')
     communication_norms = CKEditorField(
             blank=True,
             help_text='(Optional) After following the project communication channel link, are there any special instructions? For example: "Join the #outreachy Zulip channel and make sure to introduce yourself.')
