@@ -417,7 +417,12 @@ class Project(models.Model):
             max_length=50,
             verbose_name="Community URL slug: https://www.outreachy.org/communities/SLUG/")
 
-    repository = models.URLField(blank=True, help_text="(Optional) Please provide a URL for your project's repository or contribution mechanism")
+    repository = models.URLField(blank=True, help_text="(Optional) URL for your project's repository or contribution mechanism")
+    issue_tracker = models.URLField(blank=True, help_text="(Optional) URL for your project's issue tracker")
+    newcomer_issue_tag = models.CharField(
+            blank=True,
+            max_length=SENTENCE_LENGTH,
+            help_text="(Optional) What tag is used for newcomer-friendly issues for your project?")
 
     accepting_new_applicants = models.BooleanField(help_text='Is this project currently accepting new applicants? If you have an applicant in mind to accept as an intern (or several promising applicants) who have filled out the eligibility information and an application, you can uncheck this box to close the project to new applicants.', default=True)
 
