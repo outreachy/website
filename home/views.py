@@ -360,9 +360,9 @@ def project_read_only_view(request, community_slug, project_slug):
     required_skills = project.projectskill_set.filter(required=ProjectSkill.STRONG)
     preferred_skills = project.projectskill_set.filter(required=ProjectSkill.OPTIONAL)
     bonus_skills = project.projectskill_set.filter(required=ProjectSkill.BONUS)
-    approved_mentors = [x.mentor for x in MentorApproval.objects.filter(project=project)
+    approved_mentors = [x for x in MentorApproval.objects.filter(project=project)
             if x.approved is True]
-    unapproved_mentors = [x.mentor for x in MentorApproval.objects.filter(project=project)
+    unapproved_mentors = [x for x in MentorApproval.objects.filter(project=project)
             if x.approved is False]
 
     mentor_request = None
