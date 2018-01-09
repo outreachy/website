@@ -13,6 +13,7 @@ from django.views.decorators.http import require_POST
 from django.views.generic.edit import CreateView, UpdateView
 
 from registration.backends.simple.views import RegistrationView
+from extra_views import UpdateWithInlinesView, InlineFormSet
 
 from .models import Community
 from .models import Comrade
@@ -21,6 +22,7 @@ from .models import MentorApproval
 from .models import NewCommunity
 from .models import Participation
 from .models import Project
+from .models import ProjectSkill
 from .models import RoundPage
 
 class RegisterUser(RegistrationView):
@@ -355,6 +357,9 @@ def project_read_only_view(request, community_slug, project_slug):
             project_round__participating_round=current_round,
             project_round__community__slug=community_slug,
             )
+    required_skills = project.projectskill_set.filter(required=ProjectSkill.STRONG)
+    preferred_skills = project.projectskill_set.filter(required=ProjectSkill.OPTIONAL)
+    bonus_skills = project.projectskill_set.filter(required=ProjectSkill.BONUS)
     approved_mentors = [x.mentor for x in MentorApproval.objects.filter(project=project)
             if x.approved is True]
     unapproved_mentors = [x.mentor for x in MentorApproval.objects.filter(project=project)
@@ -386,12 +391,20 @@ def project_read_only_view(request, community_slug, project_slug):
             'unapproved_mentors': unapproved_mentors,
             'mentor_request': mentor_request,
             'coordinator': coordinator,
+            'required_skills': required_skills,
+            'preferred_skills': preferred_skills,
+            'bonus_skills': bonus_skills,
             },
             )
 
-class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
+class ProjectSkillsInline(InlineFormSet):
+    model = ProjectSkill
+    fields = '__all__'
+
+class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesView):
     model = Project
     fields = ['short_title', 'longevity', 'community_size', 'approved_license', 'accepting_new_applicants']
+    inlines = [ ProjectSkillsInline ]
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     # By overriding the get_object method, we reuse the URL for
@@ -413,11 +426,13 @@ class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
             # Everyone is allowed to propose projects.
             return Project(project_round=participation)
 
-    def form_valid(self, form):
+    def forms_valid(self, form, inlines):
         self.object = form.save(commit=False)
         if not self.object.slug:
             self.object.slug = slugify(self.object.short_title)[:self.object._meta.get_field('slug').max_length]
         self.object.save()
+        for formset in inlines:
+            formset.save()
         if 'project_slug' not in self.kwargs:
             # If this is a new Project, associate an approved mentor with it
             MentorApproval.objects.create(

@@ -99,6 +99,39 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 <a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/{{ project.slug }}/edit/">Edit Project Info</a>
 
 <p>{{ project.short_title }}</p>
+
+{% if required_skills %}
+	<h3>Required Skills</h3>
+	<p>{{ required_skills.0.get_required_display }}</p>
+	<table class='table table-bordered'>
+		<tr><th>Skill description</th><th>Experience Level</th></tr>
+	{% for skill in required_skills %}
+		<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
+	{% endfor %}
+	</table>
+{% endif %}
+
+{% if preferred_skills %}
+	<h3>Preferred Skills</h3>
+	<p>{{ preferred_skills.0.get_required_display }}</p>
+	<table class='table table-bordered'>
+		<tr><th>Skill description</th><th>Experience Level</th></tr>
+	{% for skill in preferred_skills %}
+		<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
+	{% endfor %}
+	</table>
+{% endif %}
+
+{% if bonus_skills %}
+	<h3>Bonus Skills</h3>
+	<p>{{ bonus_skills.0.get_required_display }}</p>
+	<table class='table table-bordered'>
+		<tr><th>Skill description</th><th>Experience Level</th></tr>
+	{% for skill in bonus_skills %}
+		<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
+	{% endfor %}
+	</table>
+{% endif %}
 <ul>
 	<li>Project has been accepting external contributions for: {{ project.get_longevity_display }}</li>
 	<li>Number of people contributing to this project regularly: {{ project.get_community_size_display }}</li>
