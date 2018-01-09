@@ -538,6 +538,12 @@ class MentorApproval(models.Model):
     # Add information about how to contact the mentor for this project
     # e.g. I'm <username> on IRC
     # This will require a new MentorApprovalUpdate view and permissions
+    instructions_read = models.BooleanField(
+            default=False,
+            help_text='I have read the <a href="/mentor/#mentor">mentor duties</a> and <a href="/mentor/mentor-faq/">mentor FAQ</a>.')
+
+    def get_absolute_url(self):
+        return reverse('project-read-only', kwargs={'community_slug': self.project.project_round.community.slug, 'project_slug': self.project.slug})
 
     def __str__(self):
         return '{mentor} - {start:%Y %B} to {end:%Y %B} round - {community} - {title}'.format(
