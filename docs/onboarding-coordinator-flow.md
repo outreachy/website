@@ -389,10 +389,10 @@ Data to Gather
    - [ ] (Optional, shared with applicants) Code of Conduct URL
    - [ ] (Optional, shared with applicants) CLA URL
    - [ ] (Optional, shared with applicants) DCO URL - note that a DCO that requires contributors to use their full legal name can mean that trans contributors cannot participate, since it may be expensive or impossible to change their birth name
-   - [ ] Technology interns will work with, or skills they will use or develop:
-     - [ ] Skill or technology name
-     - [ ] Required or optional for applicants
-     - [ ] level of expertise for applicants: we'll teach you, beginner, moderate, advanced
+   - [x] Technology interns will work with, or skills they will use or develop:
+     - [x] Skill or technology name
+     - [x] Required or optional for applicants
+     - [x] level of expertise for applicants: we'll teach you, beginner, moderate, advanced
      - [ ] FIXME: Not sure how to handle sub-projects here - e.g. front-end/back-end -
        each subproject may have different skills
    - [ ] How should applicants find a task to contribute to?
