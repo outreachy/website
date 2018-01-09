@@ -399,6 +399,14 @@ class Project(models.Model):
         default=SMOL,
         help_text="How many people are contributing to this project regularly?",
     )
+    intern_benefits = models.CharField(
+            max_length=PARAGRAPH_LENGTH,
+            blank=True,
+            help_text='What will the intern learn from working on this project?')
+    community_benefits = models.CharField(
+            blank=True,
+            max_length=PARAGRAPH_LENGTH,
+            help_text='How will this project benefit the parent FOSS community?')
 
     approved_license = models.BooleanField(help_text='I assert that my project is released under an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> or a <a href="https://creativecommons.org/share-your-work/licensing-types-examples/">Creative Commons license</a>')
 
