@@ -384,7 +384,7 @@ Data to Gather
    - [x] Short title (nine words or less, assuming the person has never heard of your technology before, starting with a verb like "Create", "Improve", "Extend", "Survey", "Document")
    - [ ] Long description
    - [x] URL for project repository or contribution pages
-   - [ ] URL for project issue/bug tracker
+   - [x] URL for project issue/bug tracker
    - [ ] Project communication channels
    - [ ] (Optional, shared with applicants) Code of Conduct URL
    - [ ] (Optional, shared with applicants) CLA URL

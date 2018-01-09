@@ -144,7 +144,22 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 		</table>
 	{% endif %}
 	<h3>Project Contribution Information</h3>
-	<p>Applicants can contribute to this project through <a href="{{ project.repository }}">the project repository or contribution page</a>.</p>
+	<p>
+	{% if project.repository %}
+		Applicants can contribute to this project through <a href="{{ project.repository }}">the project repository or contribution page</a>.
+	{% else %}
+		Applicants will need to contact project mentors to get information about how to contribute to this project.
+	{% endif %}
+	{% if project.issue_tracker %}
+		The project uses an <a href="{{ project.issue_tracker }}">issue tracker</a> to keep information about bugs to fix, project features to implement, documentation to write, and more.
+		{% if project.newcomer_issue_tag %}
+			Applicants can look for newcomer-friendly issues to use for their first contributions by looking for the following issue tags in the <a href="">project issue tracker</a>:
+			{{ project.newcomer_issue_tag }}
+		{% else %}
+			Applicants will need to contact a mentor to find out how they can make their first contributions to the project.
+		{% endif %}
+	{% endif %}
+	</p>
 	<h3>Project Information for Coordinators</h3>
 	<p>This project information is used by coordinators to determine if the project is appropriate for Outreachy. The information will not be displayed to applicants.</p>
 	<ul>
