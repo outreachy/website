@@ -96,7 +96,7 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 <h2>Project Information</h2>
 
 {% if mentor_request and mentor_request.approved is True %}
-	<a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/{{ project.slug }}/edit/">Edit Project Info</a>
+	<p><a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/{{ project.slug }}/edit/">Edit Project Info</a></p>
 {% endif %}
 
 <p>{{ project.short_title }}</p>
