@@ -471,6 +471,8 @@ class Project(models.Model):
 
     def is_mentor(self, user):
         return self.mentorapproval_set.filter(approved=True, mentor__account=user).exists()
+    def is_pending_mentor(self, user):
+        return self.mentorapproval_set.filter(approved=False, mentor__account=user).exists()
 
 class ProjectSkill(models.Model):
     project = models.ForeignKey(Project, verbose_name="Project")

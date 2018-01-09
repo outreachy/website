@@ -401,6 +401,30 @@ class ProjectSkillsInline(InlineFormSet):
     model = ProjectSkill
     fields = '__all__'
 
+class MentorApprovalUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
+    model = MentorApproval
+    fields = ['instructions_read']
+
+    def get_object(self):
+        participating_round = RoundPage.objects.latest('internstarts')
+        participation = get_object_or_404(Participation,
+                    community__slug=self.kwargs['community_slug'],
+                    participating_round=participating_round)
+        project = get_object_or_404(Project,
+                project_round=participation,
+                slug=self.kwargs['project_slug'])
+
+        if project.is_mentor(self.request.user) or project.is_pending_mentor(self.request.user):
+            return project.mentorapproval_set.filter(mentor__account=self.request.user)
+
+        return MentorApproval(mentor=self.request.user.comrade, project=project, approved=False)
+
+    def forms_valid(self, form):
+        self.object.save()
+        return redirect('project-read-only',
+                project_slug=self.object.project.slug,
+                community_slug=self.object.project.project_round.community.slug)
+
 class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesView):
     model = Project
     fields = ['short_title', 'long_description', 'longevity', 'community_size', 'approved_license', 'intern_benefits', 'community_benefits', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'communication_tool', 'communication_url', 'communication_norms', 'communication_help', 'accepting_new_applicants']
@@ -438,6 +462,10 @@ class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesV
             MentorApproval.objects.create(
                     mentor=self.request.user.comrade,
                     project=self.object, approved=True)
+            return redirect('project-mentor-create',
+                community_slug=self.object.project_round.community.slug,
+                project_slug=self.object.slug,
+                mentor_id=self.request.user)
         return redirect('project-read-only',
                 project_slug=self.object.slug,
                 community_slug=self.object.project_round.community.slug)
@@ -489,11 +517,6 @@ def project_mentor_update(request, community_slug, project_slug, mentor_id):
 
     is_self = (mentor.account_id == request.user.id)
 
-    if 'add' in request.POST:
-        if not is_self:
-            raise PermissionDenied("Hey, no fair volunteering other people without their consent!")
-        mentor_status = MentorApproval(mentor=mentor, project=project, approved=False)
-        mentor_status.save()
     if 'approve' in request.POST:
         if not project.project_round.community.is_coordinator(request.user):
             raise PermissionDenied("You are not an approved coordinator for this community.")

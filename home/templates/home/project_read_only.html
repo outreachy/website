@@ -217,7 +217,7 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 	<p>Full project details are only available for coordinators and approved project mentors, in order to ensure applicants don't contact mentors until the project is approved and the Outreachy application period opens. If you're an applicant, please wait for projects to appear on the <a href="{{ current_round.url }}">current internship round page</a>!</p>
 {% endif %}
 
-<p><strong>Project Mentors:</strong></p>
+<h3>Project Mentors</h3>
 {% if mentor_request %}
 	{% if mentor_request.approved is True %}
 	<p>You are an approved mentor for this project.</p>
@@ -229,10 +229,7 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 		<input class="btn btn-warning" type="submit" name="reject" value="Withdraw From Mentoring" />
 	</form>
 {% elif request.user.comrade %}
-	<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=request.user.comrade.pk %}" method="post">
-		{% csrf_token %}
-		<input class="btn btn-success" type="submit" name="add" value="Mentor This Project" />
-	</form>
+	<a href="{% url 'project-mentor-create' community_slug=community.slug project_slug=project.slug %}" class="btn btn-success">Mentor This Project</a>
 {% else %}
 	<p>You will need to create an account on the Outreachy website in order to sign up to mentor for this project.</p>
 	<a href="{% url 'register' %}?next={{ request.path }}" class="btn btn-success">Create an Account</a>
