@@ -424,7 +424,7 @@ class Project(models.Model):
     communication_tool = models.CharField(
             blank=True,
             max_length=SENTENCE_LENGTH,
-            help_text='(Optional) Which communication tool does your project use? E.g. IRC, Zulip, Discourse, etc.')
+            help_text='(Optional) Name of the communication tool your project uses. E.g. "IRC", "Zulip", or "Discourse"')
     communication_url = models.URLField(blank=True, help_text='(Optional) URL for your project`s communication channel. For IRC, use irc://<host>[:port]/[channel]. Since many applicants have issues with IRC port blocking at their universities, IRC communication links will use <a href="https://kiwiirc.com/">Kiwi IRC</a> to embed the IRC communications in the project page.')
     communication_norms = CKEditorField(
             blank=True,
