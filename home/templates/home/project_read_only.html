@@ -109,6 +109,8 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 {% endif %}
 
 {% if coordinator or mentor_request and mentor_request.approved is True %}
+	<h3>Project Information for Applicants</h3>
+	<p>This information will be displayed to the applicants on the project landing page.</p>
 	{% if required_skills %}
 		<h3>Required Skills</h3>
 		<p>{{ required_skills.0.get_required_display }}</p>
@@ -141,6 +143,8 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 		{% endfor %}
 		</table>
 	{% endif %}
+	<h3>Project Contribution Information</h3>
+	<p>Applicants can contribute to this project through <a href="{{ project.repository }}">the project repository or contribution page</a>.</p>
 	<h3>Project Information for Coordinators</h3>
 	<p>This project information is used by coordinators to determine if the project is appropriate for Outreachy. The information will not be displayed to applicants.</p>
 	<ul>

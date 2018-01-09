@@ -383,7 +383,7 @@ Data to Gather
  - [ ] Information for the applicants:
    - [x] Short title (nine words or less, assuming the person has never heard of your technology before, starting with a verb like "Create", "Improve", "Extend", "Survey", "Document")
    - [ ] Long description
-   - [ ] URL for project repository or contribution pages
+   - [x] URL for project repository or contribution pages
    - [ ] URL for project issue/bug tracker
    - [ ] Project communication channels
    - [ ] (Optional, shared with applicants) Code of Conduct URL
