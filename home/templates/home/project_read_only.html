@@ -101,6 +101,13 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 
 <p>{{ project.short_title }}</p>
 
+<h3>Applicant Status</h3>
+{% if project.accepting_new_applicants %}
+	<p>This project is open to new Outreachy applicants.</p>
+{% else %}
+	<p>This project is closed to new Outreachy applicants.</p>
+{% endif %}
+
 {% if coordinator or mentor_request and mentor_request.approved is True %}
 	{% if required_skills %}
 		<h3>Required Skills</h3>
@@ -134,6 +141,8 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 		{% endfor %}
 		</table>
 	{% endif %}
+	<h3>Project Information for Coordinators</h3>
+	<p>This project information is used by coordinators to determine if the project is appropriate for Outreachy. The information will not be displayed to applicants.</p>
 	<ul>
 		<li>Project has been accepting external contributions for: {{ project.get_longevity_display }}</li>
 		<li>Number of people contributing to this project regularly: {{ project.get_community_size_display }}</li>
@@ -142,11 +151,6 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 			<li>Licenses: This project uses a license that is NOT an OSI-approved license or Creative Commons license.</li>
 		{% else %}
 			<li>Licenses: OSI-approved license or Creative Commons license.</li>
-		{% endif %}
-		{% if project.accepting_new_applicants %}
-			<li>Open - Project is open to new Outreachy applicants.</li>
-		{% else %}
-			<li>Closed - Project is closed to new Outreachy applicants.</li>
 		{% endif %}
 	</ul>
 {% else %}
