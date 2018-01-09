@@ -91,62 +91,67 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 			</ul>
 		{% endfor %}
 	{% endif %}
-
 {% endif %}
 
 <h2>Project Information</h2>
 
-<a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/{{ project.slug }}/edit/">Edit Project Info</a>
+{% if mentor_request and mentor_request.approved is True %}
+	<a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/{{ project.slug }}/edit/">Edit Project Info</a>
+{% endif %}
 
 <p>{{ project.short_title }}</p>
 
-{% if required_skills %}
-	<h3>Required Skills</h3>
-	<p>{{ required_skills.0.get_required_display }}</p>
-	<table class='table table-bordered'>
-		<tr><th>Skill description</th><th>Experience Level</th></tr>
-	{% for skill in required_skills %}
-		<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
-	{% endfor %}
-	</table>
-{% endif %}
-
-{% if preferred_skills %}
-	<h3>Preferred Skills</h3>
-	<p>{{ preferred_skills.0.get_required_display }}</p>
-	<table class='table table-bordered'>
-		<tr><th>Skill description</th><th>Experience Level</th></tr>
-	{% for skill in preferred_skills %}
-		<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
-	{% endfor %}
-	</table>
-{% endif %}
-
-{% if bonus_skills %}
-	<h3>Bonus Skills</h3>
-	<p>{{ bonus_skills.0.get_required_display }}</p>
-	<table class='table table-bordered'>
-		<tr><th>Skill description</th><th>Experience Level</th></tr>
-	{% for skill in bonus_skills %}
-		<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
-	{% endfor %}
-	</table>
-{% endif %}
-<ul>
-	<li>Project has been accepting external contributions for: {{ project.get_longevity_display }}</li>
-	<li>Number of people contributing to this project regularly: {{ project.get_community_size_display }}</li>
-
-	{% if not project.approved_license %}
-		<li>Licenses: This project uses a license that is NOT an OSI-approved license or Creative Commons license.</li>
-	{% else %}
-		<li>Licenses: OSI-approved license or Creative Commons license.</li>
+{% if coordinator or mentor_request and mentor_request.approved is True %}
+	{% if required_skills %}
+		<h3>Required Skills</h3>
+		<p>{{ required_skills.0.get_required_display }}</p>
+		<table class='table table-bordered'>
+			<tr><th>Skill description</th><th>Experience Level</th></tr>
+		{% for skill in required_skills %}
+			<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
+		{% endfor %}
+		</table>
 	{% endif %}
-	{% if project.accepting_new_applicants %}
-		<li>Open - Project is open to new Outreachy applicants.</li>
-	{% else %}
-		<li>Closed - Project is closed to new Outreachy applicants.</li>
+
+	{% if preferred_skills %}
+		<h3>Preferred Skills</h3>
+		<p>{{ preferred_skills.0.get_required_display }}</p>
+		<table class='table table-bordered'>
+			<tr><th>Skill description</th><th>Experience Level</th></tr>
+		{% for skill in preferred_skills %}
+			<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
+		{% endfor %}
+		</table>
 	{% endif %}
-</ul>
+
+	{% if bonus_skills %}
+		<h3>Bonus Skills</h3>
+		<p>{{ bonus_skills.0.get_required_display }}</p>
+		<table class='table table-bordered'>
+			<tr><th>Skill description</th><th>Experience Level</th></tr>
+		{% for skill in bonus_skills %}
+			<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
+		{% endfor %}
+		</table>
+	{% endif %}
+	<ul>
+		<li>Project has been accepting external contributions for: {{ project.get_longevity_display }}</li>
+		<li>Number of people contributing to this project regularly: {{ project.get_community_size_display }}</li>
+
+		{% if not project.approved_license %}
+			<li>Licenses: This project uses a license that is NOT an OSI-approved license or Creative Commons license.</li>
+		{% else %}
+			<li>Licenses: OSI-approved license or Creative Commons license.</li>
+		{% endif %}
+		{% if project.accepting_new_applicants %}
+			<li>Open - Project is open to new Outreachy applicants.</li>
+		{% else %}
+			<li>Closed - Project is closed to new Outreachy applicants.</li>
+		{% endif %}
+	</ul>
+{% else %}
+	<p>Full project details are only available for coordinators and approved project mentors, in order to ensure applicants don't contact mentors until the project is approved and the Outreachy application period opens. If you're an applicant, please wait for projects to appear on the <a href="{{ current_round.url }}">current internship round page</a>!</p>
+{% endif %}
 
 <p><strong>Project Mentors:</strong></p>
 {% if mentor_request %}
