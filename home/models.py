@@ -572,6 +572,11 @@ class MentorApproval(models.Model):
         default=THREE_MONTHS,
         help_text="How long have you been contributing to this project?",
     )
+    communication_channel_username = models.CharField(
+        max_length=SENTENCE_LENGTH,
+        blank=True,
+        help_text="What is your username on the project communication channel? (This information will be shared with applicants.)",
+    )
     OUTREACHY = 'OUT'
     GOOGLE_SUMMER_OF_CODE = 'GSOC'
     RAILS_GIRLS = 'RAILS'
