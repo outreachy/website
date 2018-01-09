@@ -350,13 +350,13 @@ Data to Gather
 
 5. For each potential mentor that wants to apply to a community for a particular round, the organizers and coordinators need to know:
 
-   - [ ] How long have you been contributing to the community?
+   - [x] How long have you been contributing to the community?
    - [ ] What is your current community role?
-   - [ ] What is your mentorship style?
-   - [ ] Have you read the mentor page and understand the process of being a mentor?
-   - [ ] Are you available for 5-10 hours a week for mentoring during the internship period?
-   - [ ] Are you available for 5 hours a week during the application period?
-   - [ ] Are you aware that you will need to sign a mentor contract?
+   - [x] Have you mentored for a three-month internship program before?
+   - [x] Have you read the mentor page and understand the process of being a mentor?
+   - [x] Are you available for 5 hours a week for mentoring during the internship period?
+   - [x] Are you available for 5-10 hours a week during the application period?
+   - [x] Are you aware that you will need to sign a mentor contract?
 
 6. Coordinators and Outreachy organizers need know information about projects, such as:
 
