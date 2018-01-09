@@ -8,6 +8,7 @@
 
 <form action="" method="post">
     {% csrf_token %}
+    {{ form.media }}
     {{ form.as_p }}
     {% for formset in inlines %}
         <h2>Add Project Skills</h2>

@@ -106,6 +106,7 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 			<p>This information will be displayed to the applicants on the project landing page.</p>
 			<h3>Project Description</h3>
 			<p>{{ project.short_title }}</p>
+			{{ project.long_description|safe }}
 
 			<h3>Applicant Status</h3>
 			{% if project.accepting_new_applicants %}
