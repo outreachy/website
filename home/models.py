@@ -421,10 +421,15 @@ class Project(models.Model):
     long_description = CKEditorField(
             blank=True,
             help_text='Description of the project, excluding applicant skills.')
+    communication_tool = models.CharField(
+            blank=True,
+            max_length=SENTENCE_LENGTH,
+            help_text='(Optional) Which communication tool does your project use? E.g. IRC, Zulip, Discourse, etc.')
     communication_url = models.URLField(blank=True, help_text='(Optional) URL for your project`s communication channel. For IRC, use irc://<host>[:port]/[channel]. Since many applicants have issues with IRC port blocking at their universities, IRC communication links will use <a href="https://kiwiirc.com/">Kiwi IRC</a> to embed the IRC communications in the project page.')
     communication_norms = CKEditorField(
             blank=True,
             help_text='(Optional) After following the project communication channel link, are there any special instructions? For example: "Join the #outreachy Zulip channel and make sure to introduce yourself.')
+    communication_help = models.URLField(blank=True, help_text='(Optional) URL for the user documentation for your communication protocol')
 
     repository = models.URLField(blank=True, help_text="(Optional) URL for your project's repository or contribution mechanism")
     issue_tracker = models.URLField(blank=True, help_text="(Optional) URL for your project's issue tracker")
