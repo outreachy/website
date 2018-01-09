@@ -402,11 +402,11 @@ Data to Gather
      can be selected as interns. We recommend setting this to 'No' unless you have a
      lot of spare bandwidth.
    - [x] Is the project currently accepting new applicants?
-   - [ ] Project status:
-     - [ ] Waiting on coordinator approval
-     - [ ] Waiting on organizer approval
-     - [ ] Approved to participate
-     - [ ] Not eligible for participation
+   - [x] Project status:
+     - [x] Waiting on coordinator approval
+     - [x] Waiting on organizer approval
+     - [x] Approved to participate
+     - [x] Not eligible for participation
 
 New pages to create
 ----
