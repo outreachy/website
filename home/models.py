@@ -540,6 +540,7 @@ class MentorApproval(models.Model):
     # Add information about how to contact the mentor for this project
     # e.g. I'm <username> on IRC
     # This will require a new MentorApprovalUpdate view and permissions
+    # FIXME add a validator for this field that requires it to be checked
     instructions_read = models.BooleanField(
             default=False,
             help_text='I have read the <a href="/mentor/#mentor">mentor duties</a> and <a href="/mentor/mentor-faq/">mentor FAQ</a>.')
