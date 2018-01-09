@@ -8,6 +8,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 
+from ckeditor.fields import RichTextField as CKEditorField
+
 from modelcluster.fields import ParentalKey
 
 from languages.fields import LanguageField
@@ -416,6 +418,9 @@ class Project(models.Model):
     slug = models.SlugField(
             max_length=50,
             verbose_name="Community URL slug: https://www.outreachy.org/communities/SLUG/")
+    long_description = CKEditorField(
+            blank=True,
+            help_text='Description of the project, excluding applicant skills.')
 
     repository = models.URLField(blank=True, help_text="(Optional) URL for your project's repository or contribution mechanism")
     issue_tracker = models.URLField(blank=True, help_text="(Optional) URL for your project's issue tracker")

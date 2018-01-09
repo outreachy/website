@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'taggit',
     'timezone_field',
     'languages',
+    'ckeditor',
 
     'django.contrib.admin',
     'django.contrib.auth',
