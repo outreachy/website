@@ -544,6 +544,52 @@ class MentorApproval(models.Model):
     instructions_read = models.BooleanField(
             default=False,
             help_text='I have read the <a href="/mentor/#mentor">mentor duties</a> and <a href="/mentor/mentor-faq/">mentor FAQ</a>.')
+    understands_intern_time_commitment = models.BooleanField(
+            default=False,
+            help_text='I understand that Outreachy mentors will spend a minimum of 5 hours a week mentoring their intern during the three month internship period')
+    understands_applicant_time_commitment = models.BooleanField(
+            default=False,
+            help_text='I understand that Outreachy mentors often find they must spend more time helping applicants during the application period than helping their intern during the intership period')
+    understands_mentor_contract = models.BooleanField(
+            default=False,
+            help_text='I understand that Outreachy mentors will need to sign a <a href="/documents/1/Outreachy-Program--Mentorship-Terms-of-Participation-May-2017.pdf">mentor contract</a> after they accept an applicant as an intern')
+
+    THREE_MONTHS = '3M'
+    SIX_MONTHS = '6M'
+    ONE_YEAR = '1Y'
+    TWO_YEARS = '2Y'
+    OLD_YEARS = 'OL'
+    LONGEVITY_CHOICES = (
+        (THREE_MONTHS, '0-3 months'),
+        (SIX_MONTHS, '3-6 months'),
+        (ONE_YEAR, '6-12 months'),
+        (TWO_YEARS, '1-2 years'),
+        (OLD_YEARS, 'More than 2 years'),
+    )
+    longevity = models.CharField(
+        max_length=2,
+        choices=LONGEVITY_CHOICES,
+        default=THREE_MONTHS,
+        help_text="How long have you been contributing to this project?",
+    )
+    OUTREACHY = 'OUT'
+    GOOGLE_SUMMER_OF_CODE = 'GSOC'
+    RAILS_GIRLS = 'RAILS'
+    OTHER_MENTOR_PROGRAM = 'UNK'
+    NOT_MENTORED = 'NOT'
+    MENTOR_CHOICES = (
+        (OUTREACHY, 'Yes, for a past Outreachy round'),
+        (GOOGLE_SUMMER_OF_CODE, 'Yes, for Google Summer of Code or Google Code In'),
+        (RAILS_GIRLS, 'Yes, for Rails Girls Summer of Code'),
+        (OTHER_MENTOR_PROGRAM, 'Yes, for another mentorship program'),
+        (NOT_MENTORED, 'No, I have never mentored before'),
+    )
+    mentored_before = models.CharField(
+        max_length=4,
+        choices=MENTOR_CHOICES,
+        default=NOT_MENTORED,
+        help_text="Have you been a mentor for a three-month internship program? (Note that Outreachy welcomes first time mentors, but this information allows the coordinator and other mentors to provide extra help to new mentors.)",
+    )
 
     def get_absolute_url(self):
         return reverse('project-read-only', kwargs={'community_slug': self.project.project_round.community.slug, 'project_slug': self.project.slug})
