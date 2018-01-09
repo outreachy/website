@@ -471,7 +471,7 @@ class ProjectSkill(models.Model):
             (OPTIONAL, "Mentors will prefer applicants who have this skill"),
             (STRONG, "Mentors will only accept applicants who have this skill as an intern"),
             )
-    requied = models.CharField(
+    required = models.CharField(
             max_length=3,
             choices=REQUIRED_CHOICES,
             default=BONUS,
@@ -480,11 +480,12 @@ class ProjectSkill(models.Model):
             )
 
     def __str__(self):
-        return '{start:%Y %B} to {end:%Y %B} round - {community} - {title} - skill: {skill}'.format(
+        return '{start:%Y %B} to {end:%Y %B} round - {community} - {title} - {skill}'.format(
                 start = self.project.project_round.participating_round.internstarts,
                 end = self.project.project_round.participating_round.internends,
                 community = self.project.project_round.community,
-                title = self.project.skill,
+                title = self.project.short_title,
+                skill = self.skill,
                 )
 
 
