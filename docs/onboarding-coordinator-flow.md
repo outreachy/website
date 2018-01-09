@@ -361,8 +361,8 @@ Data to Gather
 6. Coordinators and Outreachy organizers need know information about projects, such as:
 
  - [ ] Information for the coordinators and mentors:
-   - [ ] Benefits of the project to the intern
-   - [ ] Importance of the project to the community
+   - [x] Benefits of the project to the intern
+   - [x] Importance of the project to the community
    - [x] How long has the project accepted contributions from external contributors?
      - [x] 0-3 months
      - [x] 3-6 months

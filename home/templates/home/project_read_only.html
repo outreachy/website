@@ -146,7 +146,16 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 	<ul>
 		<li>Project has been accepting external contributions for: {{ project.get_longevity_display }}</li>
 		<li>Number of people contributing to this project regularly: {{ project.get_community_size_display }}</li>
-
+		{% if project.intern_benefits %}
+			<li>Interns will learn about: {{ project.intern_benefits }}</li>
+		{% else %}
+			<li>Mentor did not provide information about what the interns will learn from this project.</li>
+		{% endif %}
+		{% if project.community_benefits %}
+			<li>The FOSS community will benefit from this project because: {{ project.intern_benefits }}</li>
+		{% else %}
+			<li>Mentor did not provide information about how the FOSS community will benefit from this project.</li>
+		{% endif %}
 		{% if not project.approved_license %}
 			<li>Licenses: This project uses a license that is NOT an OSI-approved license or Creative Commons license.</li>
 		{% else %}

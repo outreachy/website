@@ -403,7 +403,7 @@ class ProjectSkillsInline(InlineFormSet):
 
 class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesView):
     model = Project
-    fields = ['short_title', 'longevity', 'community_size', 'approved_license', 'accepting_new_applicants']
+    fields = ['short_title', 'longevity', 'community_size', 'intern_benefits', 'community_benefits', 'approved_license', 'accepting_new_applicants']
     inlines = [ ProjectSkillsInline ]
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
