@@ -99,67 +99,74 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 	<p><a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/{{ project.slug }}/edit/">Edit Project Info</a></p>
 {% endif %}
 
-<p>{{ project.short_title }}</p>
-
-<h3>Applicant Status</h3>
-{% if project.accepting_new_applicants %}
-	<p>This project is open to new Outreachy applicants.</p>
-{% else %}
-	<p>This project is closed to new Outreachy applicants.</p>
-{% endif %}
-
 {% if coordinator or mentor_request and mentor_request.approved is True %}
-	<h3>Project Information for Applicants</h3>
-	<p>This information will be displayed to the applicants on the project landing page.</p>
-	{% if required_skills %}
-		<h3>Required Skills</h3>
-		<p>{{ required_skills.0.get_required_display }}</p>
-		<table class='table table-bordered'>
-			<tr><th>Skill description</th><th>Experience Level</th></tr>
-		{% for skill in required_skills %}
-			<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
-		{% endfor %}
-		</table>
-	{% endif %}
+	<div class="card">
+		<div class="card-header">Project Information for Applicants</div>
+		<div class="card-body">
+			<p>This information will be displayed to the applicants on the project landing page.</p>
+			<h3>Project Description</h3>
+			<p>{{ project.short_title }}</p>
 
-	{% if preferred_skills %}
-		<h3>Preferred Skills</h3>
-		<p>{{ preferred_skills.0.get_required_display }}</p>
-		<table class='table table-bordered'>
-			<tr><th>Skill description</th><th>Experience Level</th></tr>
-		{% for skill in preferred_skills %}
-			<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
-		{% endfor %}
-		</table>
-	{% endif %}
+			<h3>Applicant Status</h3>
+			{% if project.accepting_new_applicants %}
+				<p>This project is open to new Outreachy applicants.</p>
+			{% else %}
+				<p>This project is closed to new Outreachy applicants.</p>
+			{% endif %}
 
-	{% if bonus_skills %}
-		<h3>Bonus Skills</h3>
-		<p>{{ bonus_skills.0.get_required_display }}</p>
-		<table class='table table-bordered'>
-			<tr><th>Skill description</th><th>Experience Level</th></tr>
-		{% for skill in bonus_skills %}
-			<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
-		{% endfor %}
-		</table>
-	{% endif %}
-	<h3>Project Contribution Information</h3>
-	<p>
-	{% if project.repository %}
-		Applicants can contribute to this project through <a href="{{ project.repository }}">the project repository or contribution page</a>.
-	{% else %}
-		Applicants will need to contact project mentors to get information about how to contribute to this project.
-	{% endif %}
-	{% if project.issue_tracker %}
-		The project uses an <a href="{{ project.issue_tracker }}">issue tracker</a> to keep information about bugs to fix, project features to implement, documentation to write, and more.
-		{% if project.newcomer_issue_tag %}
-			Applicants can look for newcomer-friendly issues to use for their first contributions by looking for the following issue tags in the <a href="">project issue tracker</a>:
-			{{ project.newcomer_issue_tag }}
-		{% else %}
-			Applicants will need to contact a mentor to find out how they can make their first contributions to the project.
-		{% endif %}
-	{% endif %}
-	</p>
+			{% if required_skills %}
+				<h3>Required Skills</h3>
+				<p>{{ required_skills.0.get_required_display }}</p>
+				<table class='table table-bordered'>
+					<tr><th>Skill description</th><th>Experience Level</th></tr>
+				{% for skill in required_skills %}
+					<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
+				{% endfor %}
+				</table>
+			{% endif %}
+
+			{% if preferred_skills %}
+				<h3>Preferred Skills</h3>
+				<p>{{ preferred_skills.0.get_required_display }}</p>
+				<table class='table table-bordered'>
+					<tr><th>Skill description</th><th>Experience Level</th></tr>
+				{% for skill in preferred_skills %}
+					<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
+				{% endfor %}
+				</table>
+			{% endif %}
+
+			{% if bonus_skills %}
+				<h3>Bonus Skills</h3>
+				<p>{{ bonus_skills.0.get_required_display }}</p>
+				<table class='table table-bordered'>
+					<tr><th>Skill description</th><th>Experience Level</th></tr>
+				{% for skill in bonus_skills %}
+					<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
+				{% endfor %}
+				</table>
+			{% endif %}
+			<h3>Project Contribution Information</h3>
+			<p>
+			{% if project.repository %}
+				Applicants can contribute to this project through <a href="{{ project.repository }}">the project repository or contribution page</a>.
+			{% else %}
+				Applicants will need to contact project mentors to get information about how to contribute to this project.
+			{% endif %}
+			{% if project.issue_tracker %}
+				The project uses an <a href="{{ project.issue_tracker }}">issue tracker</a> to keep information about bugs to fix, project features to implement, documentation to write, and more.
+				{% if project.newcomer_issue_tag %}
+					Applicants can look for newcomer-friendly issues to use for their first contributions by looking for the following issue tags in the <a href="">project issue tracker</a>:
+					{{ project.newcomer_issue_tag }}
+				{% else %}
+					Applicants will need to contact a mentor to find out how they can make their first contributions to the project.
+				{% endif %}
+			{% endif %}
+			</p>
+		</div>
+	</div>
+
+	<br>
 	<h3>Project Information for Coordinators</h3>
 	<p>This project information is used by coordinators to determine if the project is appropriate for Outreachy. The information will not be displayed to applicants.</p>
 	<ul>
@@ -182,6 +189,7 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 		{% endif %}
 	</ul>
 {% else %}
+	<p>{{ project.short_title }}</p>
 	<p>Full project details are only available for coordinators and approved project mentors, in order to ensure applicants don't contact mentors until the project is approved and the Outreachy application period opens. If you're an applicant, please wait for projects to appear on the <a href="{{ current_round.url }}">current internship round page</a>!</p>
 {% endif %}
 
