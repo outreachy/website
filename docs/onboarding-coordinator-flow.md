@@ -539,13 +539,23 @@ TODO
 - [ ] Outreachy organizer dashboard for community and project on-boarding status.
 - [ ] Switch from simple one-step sign up workflow to two-step email activation using registration.backends.hmac.urls
 - [ ] Add pronouns.is links to pronoun displays
+- [ ] Fix he/him pronouns
 - [ ] Add explanation of roles to community CFP page
 - [ ] Make community CFP text not required
 - [ ] Make sure organizers can approve coordinators
 - [ ] Remove coordinator request status if the coordinator request has been approved
+- [ ] Project communication channels that are IRC should have link to use Kiwi web IRC
+
+Project creation and display:
+- [ ] Add CKEditorField for description of work to be done during the internship
+- [ ] Add CKEditorField for projects that have multiple repositories and issue trackers
+- [ ] Project information should be visible to all approved mentors in that Participation (not just that project's approved mentors)
 
 Project requirements:
 - [ ] licenses - identified by the FSF as free *and* OSI approved (there are a few licenses that aren't on both lists). Only CC licenses that are "Approved for Free Cultural Works" (no non-derivs or non-commercial).
 - [ ] using a non-free license for a project requires Outreachy organizer approval
 - [ ] coordinators can override any other warnings
 - [ ] "Have accepted public contributions from new contributors for at least six months" - use "public" instead of "external"
+
+Mentor sign-up validation:
+- [ ] Make sure mentors must click the "I have read the instructions" button
