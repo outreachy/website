@@ -147,6 +147,27 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 				{% endfor %}
 				</table>
 			{% endif %}
+			<h3>Project Contact Information</h3>
+			<p>Contributors to Free and Open Source Software (FOSS) projects discuss issues, documentation, user experience, and feature design in public communication channels.
+			Mentors are available to help applicants both on public project channels, and via private message or email.
+			Mentors understand that applicants may be hesitant to participate and ask questions in public,
+			but we hope you'll introduce yourself on the public project channels and ask for help when you get stuck.
+			</p>
+			<p>
+			{% if project.communication_tool %}
+				This project uses the communication tool called {{ project.communication_tool }}.
+			{% endif %}
+			{% if project.communication_help %}
+				If you've never used that tool before, <a href="{{ project.communication_help }}">you can read the documentation</a>.
+			{% endif %}
+			{% if project.communication_norms %}
+				Once you join the project's communication channel,
+				the mentors have some additional instructions for you to follow. {{ project.communication_norms|safe }}
+			{% endif %}
+			{% if project.communication_url %}
+				You can join this project's communication channel by <a href="{{ project.communication_url }}">following this link</a>.
+			{% endif %}
+			<p>
 
 			<h3>Project Contribution Information</h3>
 			<p>As part of the application process, all applicants must make at least one contribution to be accepted as an intern for this project.</p>
