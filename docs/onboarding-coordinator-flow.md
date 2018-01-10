@@ -558,7 +558,7 @@ Project creation and display:
 Project requirements:
 - [x] licenses - identified by the FSF as free *and* OSI approved (there are a few licenses that aren't on both lists). Only CC licenses that are "Approved for Free Cultural Works" (no non-derivs or non-commercial).
 - [ ] using a non-free license for a project requires Outreachy organizer approval
-- [ ] coordinators can override any other warnings
+- [x] coordinators can override any other warnings
 - [ ] "Have accepted public contributions from new contributors for at least six months" - use "public" instead of "external"
 
 Mentor sign-up validation:
