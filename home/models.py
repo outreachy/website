@@ -254,10 +254,20 @@ class Community(models.Model):
     slug = models.SlugField(
             max_length=50,
             unique=True,
-            verbose_name="Community URL slug: https://www.outreachy.org/communities/SLUG/")
+            help_text="Community URL slug: https://www.outreachy.org/communities/SLUG/")
+
     description = models.CharField(
             max_length=PARAGRAPH_LENGTH,
-            verbose_name="Short description of community (3 sentences for someone who has never heard of your community or the technologies involved)")
+            help_text="Short description of community. This should be three sentences for someone who has never heard of your community or the technologies involved. Do not put any links in the short description (use the long description instead).")
+
+    long_description = CKEditorField(
+            blank=True,
+            help_text="(Optional) Longer description of community.")
+
+    website = models.URLField(
+            blank=True,
+            help_text="(Optional) Please provide the URL for your FOSS community's website")
+
     rounds = models.ManyToManyField(RoundPage, through='Participation')
 
     def __str__(self):
