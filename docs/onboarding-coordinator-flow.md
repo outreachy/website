@@ -531,15 +531,12 @@ Stretch Goal Emails
 TODO
 ---
 
-- [x] Make a unique_together for the combination of Project slug and Participation (shouldn't have the same Project short title in a round, but could have the same project participate in multiple rounds).
 - [ ] Make a unique_together for the combination of Community and Participation (shouldn't have a community participate in a round more than once)
 - [ ] NullBoolean for Community approved/rejected/pending by organizers
 - [ ] Use the URL template tag in various places to set links, e.g. {% url 'project-status' community_slug=community.slug project_slug=project.slug %}
-- [ ] Formatting on Project form looks odd - needs a custom template?
 - [ ] Outreachy organizer dashboard for community and project on-boarding status.
 - [ ] Switch from simple one-step sign up workflow to two-step email activation using registration.backends.hmac.urls
 - [ ] Add pronouns.is links to pronoun displays
-- [x] Fix he/him pronouns
 - [ ] Add explanation of roles to community CFP page
 - [ ] Make community CFP text not required
 - [ ] Make sure organizers can approve coordinators
@@ -556,9 +553,7 @@ Project creation and display:
 - [ ] Project information should be visible to all approved mentors in that Participation (not just that project's approved mentors)
 
 Project requirements:
-- [x] licenses - identified by the FSF as free *and* OSI approved (there are a few licenses that aren't on both lists). Only CC licenses that are "Approved for Free Cultural Works" (no non-derivs or non-commercial).
 - [ ] using a non-free license for a project requires Outreachy organizer approval
-- [x] coordinators can override any other warnings
 - [ ] "Have accepted public contributions from new contributors for at least six months" - use "public" instead of "external"
 
 Mentor sign-up validation:
