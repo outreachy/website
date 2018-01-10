@@ -16,11 +16,15 @@ Past community participation in Outreachy
 	<h1>Approved Outreachy Community</h1>
 	<h2>{{ community.name }}</h2>
 
-	<p>{{ community.name }} is participating in {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} internship round.
-	The Outreachy organizers have received confirmation for funding of {{ participation_info.interns_funded }} intern(s).
-	Once the application period starts, the community will be listed on the <a href="/{{ current_round.slug }}/">round home page</a>, with a link to
-	the <a href="/{{ current_round.slug }}/communities/{{ community.slug }}">community landing page</a>. The landing page contains detailed information about the community and approved projects.</p>
-	<p>Mentors are encouraged to submit projects for review by coordinators, and volunteers are encouraged to sign up to help Outreachy applicants or review applications.</p>
+	<p>{{ community.name }} is participating in {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.
+	Outreachy provides internships to people from <a href="/apply/eligibility/">groups traditionally underrepresented in tech</a>.
+	The Outreachy organizers have received confirmation for funding of {{ participation_info.interns_funded }} intern{{ participation_info.interns_funded|length|pluralize:",s" }}.
+	</p>
+
+	<h2>Call for Outreachy Project Proposals</h2>
+	<p>{{ community.name }} welcomes experienced community contributors to help out as mentors and volunteers.</p>
+
+	{% include 'home/submit_project_proposals.html' %}
 
 	<h2>Outreachy roles</h2>
 	{% include "home/roles.html" %}
@@ -31,7 +35,8 @@ Past community participation in Outreachy
 	<h1>Pending Outreachy Community</h1>
 	<h2>{{ community.name }}</h2>
 	<p>Outreachy organizers are still reviewing this community and/or its funding status, so Outreachy applicants will not be shown the community landing page yet.</p>
-	<p>Mentors are encouraged to submit projects for review by coordinators, and volunteers are encouraged to sign up to help Outreachy applicants or review applications.</p>
+
+	{% include 'home/submit_project_proposals.html' %}
 
 {% else %}
 	<h1>Community Not Participating</h1>
@@ -55,10 +60,12 @@ Past community participation in Outreachy
 
 {% if participation_info.list_community is not False %}
 	<h2>Submit a Project</h2>
-	<p>Each mentor will need to submit their own project. The project will then be reviewed and approved by the FOSS community coordinator(s). Additional co-mentors will be able to sign up for the project after it is submitted for review.</p>
+	{% include 'home/submit_project_proposals.html' %}
 	{% if participation_info.cfp_text %}
-	<p>The coordinator(s) welcome project proposals from community members. {{ participation_info.cfp_text }}</p>
+		<p>{{ participation_info.cfp_text }}</p>
 	{% endif %}
+
+	<p>Each mentor will need to submit their own project. The project will then be reviewed and approved by the FOSS community coordinator(s). Additional co-mentors will be able to sign up for the project after it is submitted for review.</p>
 	<p><a class='btn btn-block btn-primary' href="{% url 'project-participate' community.slug %}">Submit a New Project</a></p>
 	{% if pending_projects %}
 		<h2>Projects waiting for approval</h2>
