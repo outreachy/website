@@ -1,0 +1,28 @@
+{% if approval.longevity == approval.SIX_MONTHS %}
+	<div class="card border-warning mb-3">
+	    <div class="card-header text-white bg-warning">Warning!</div>
+	    <div class="card-body">
+		<h5 class="card-title">This mentor may be inexperienced</h5>
+		<p class="card-text">This mentor has been contributing to this project for {{ approval.get_longevity_display }}. Mentors should be experienced and be able to guide interns and applicants on complex tasks. If this is a new project, Outreachy organizers generally discourage such projects, because we want interns to work with an established FOSS community.</p>
+	    </div>
+	</div>
+{% endif %}
+{% if approval.mentored_before != approval.OUTREACHY %}
+	<div class="card border-info mb-3">
+	    <div class="card-header text-white bg-info">Information</div>
+	    <div class="card-body">
+		<h5 class="card-title">This mentor is unfamiliar with Outreachy</h5>
+		<p class="card-text">You may want to connect this mentor to other community mentors who have participated in Outreachy in the past. If this is your community's first time participating in Outreachy, encourage the mentor to <a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/mentors">ask any questions on the mentor mailing list</a> or <a href="/contact/">contact Outreachy organizers with questions</a>.</p>
+	    </div>
+	</div>
+{% endif %}
+{% if approval.mentored_before is approval.NOT_MENTORED %}
+	<div class="card border-info mb-3">
+	    <div class="card-header text-white bg-info">Information</div>
+	    <div class="card-body">
+		<h5 class="card-title">This person has never mentored before</h5>
+		<p class="card-text">It may be useful for this project to have a more experienced co-mentor. You may want to connect this mentor to other community mentors who have participated in Outreachy in the past. If this is your community's first time participating in Outreachy, encourage the mentor to <a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/mentors">ask any questions on the mentor mailing list</a> or <a href="/contact/">contact Outreachy organizers with questions</a>.</p>
+	    </div>
+	</div>
+{% endif %}
+

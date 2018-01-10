@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Project Information</h1>
+
+<p>Project information will be reviewed by Outreachy organizers and community coordinators. Approved projects will need to meet <a href="/mentor/mentor-faq/#define-a-project">Outreachy project guidelines</a>.</p>
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.media }}
+    {{ form.as_p }}
+    {% for formset in inlines %}
+        <h2>Add Project Skills</h2>
+	<p>Outreachy applicants often search for projects that fit the skills they have, or the skills they want to learn.
+	However, if mentors aren't specific about what skills applicants need in order to apply versus what skills are optional,
+	applicants may decide they "aren't qualified" when they are. Applicants with imposter syndrome will often believe they
+	need to be an "expert" in a particular skill in order to apply. Listing skills this way enourages people to apply.</p>
+	{{ formset.as_p }}
+    {% endfor %}
+    <input class="btn btn-primary" type="submit" value="Save project info" />
+</form>
+
+{% endblock %}

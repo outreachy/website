@@ -1,0 +1,12 @@
+{
+  "name": "www.outreachy.org",
+  "version": "0.0.1",
+  "repository": "https://github.com/sagesharp/outreachy-django-wagtail",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "autoprefixer": "^7.2.4",
+    "bootstrap": "^4.0.0-beta.3",
+    "clean-css-cli": "^4.1.10",
+    "postcss-cli-simple": "^1.0.4"
+  }
+}

@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+{% if participation_info %}
+Call for Outreachy mentors and volunteers
+{% else %}
+Past community participation in Outreachy
+{% endif %}
+
+{% endblock %}
+
+{% block content %}
+
+{% if participation_info.list_community is True %}
+	<h1>Approved Outreachy Community</h1>
+	<h2>{{ community.name }}</h2>
+
+	<p>{{ community.name }} is participating in {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.
+	Outreachy provides internships to people from <a href="/apply/eligibility/">groups traditionally underrepresented in tech</a>.
+	The Outreachy organizers have received confirmation for funding of {{ participation_info.interns_funded }} intern{{ participation_info.interns_funded|length|pluralize:",s" }}.
+	</p>
+
+	<h2>Call for Outreachy Project Proposals</h2>
+	<p>{{ community.name }} welcomes experienced community contributors to help out as mentors and volunteers.</p>
+
+	{% include 'home/submit_project_proposals.html' %}
+
+	<h2>Outreachy roles</h2>
+	{% include "home/roles.html" %}
+	<h2>Timeline for {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} internship round</h2>
+	{% include "home/mentor-timeline.html" %}
+
+{% elif participation_info.list_community is None %}
+	<h1>Pending Outreachy Community</h1>
+	<h2>{{ community.name }}</h2>
+	<p>Outreachy organizers are still reviewing this community and/or its funding status, so Outreachy applicants will not be shown the community landing page yet.</p>
+
+	{% include 'home/submit_project_proposals.html' %}
+
+{% else %}
+	<h1>Community Not Participating</h1>
+	<h2>{{ community.name }}</h2>
+	<p>Unfortunately, either the community coordinator(s) or the Outreachy organizers have determined that the community will not participate in this round of Outreachy internships.</p>
+
+{% endif %}
+
+{% if approved_coordinator_list %}
+<p>Coordinators approve mentored projects, and communicate with both mentors and Outreachy organizers. The full list of coordinator duties can be found on <a href="/mentor/">here</a>. The {{ community.name }} coordinator{{ approved_coordinator_list|length|pluralize:" is,(s) are" }} 
+	{% for approval in approved_coordinator_list %}
+		{{ approval.coordinator.public_name }}
+		{% if user.is_authenticated %}
+			&lt;{{ approval.coordinator.account.email }}&gt;
+		{% endif %}
+	{% endfor %}
+	</p>
+{% else %}
+	<p>This community currently has no approved coordinator.</p>
+{% endif %}
+
+{% if participation_info.list_community is not False %}
+	<h2>Submit a Project</h2>
+	{% include 'home/submit_project_proposals.html' %}
+	{% if participation_info.cfp_text %}
+		<p>{{ participation_info.cfp_text }}</p>
+	{% endif %}
+
+	<p>Each mentor will need to submit their own project. The project will then be reviewed and approved by the FOSS community coordinator(s). Additional co-mentors will be able to sign up for the project after it is submitted for review.</p>
+	<p><a class='btn btn-block btn-primary' href="{% url 'project-participate' community.slug %}">Submit a New Project</a></p>
+	{% if pending_projects %}
+		<h2>Projects waiting for approval</h2>
+		<p>The {{ community.name }} coordinator is currently reviewing the following projects to see if they are a good fit for the Outreachy program and fit with long-term community goals.</p>
+		<ul>
+		{% for project in pending_projects %}
+			<li><a href="/communities/cfp/{{ community.slug }}/{{ project.slug }}">{{ project.short_title }}</a></li>
+		{% endfor %}
+		</ul>
+	{% endif %}
+	{% if approved_projects %}
+		<h2>Approved projects</h2>
+		<p>These projects have been approved to be listed on the community landing page. Mentors are encouraged to start promoting their projects as soon as the Outreachy round opens on {{ current_round.appsopen }}.</p>
+		<ul>
+		{% for project in approved_projects %}
+			{% if project.accepting_new_applicants %}
+				<li><a href="/communities/cfp/{{ community.slug }}/{{ project.slug }}">{{ project.short_title }}</a></li>
+			{% else %}
+				<li>(Closed to new applicants) <a href="/communities/cfp/{{ community.slug }}/{{ project.slug }}">{{ project.short_title }}</a></li>
+			{% endif %}
+		{% endfor %}
+		</ul>
+	{% endif %}
+	{% if rejected_projects %}
+		<h2>Rejected projects</h2>
+		<p>The {{ community.name }} coordinator(s) or Outreachy organizers do not think the following projects are suitable for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
+		<ul>
+		{% for project in rejected_projects %}
+			<li><a href="/communities/cfp/{{ community.slug }}/{{ project.slug }}">{{ project.short_title }}</a></li>
+		{% endfor %}
+		</ul>
+	{% endif %}
+	{% comment %} Only show this to people who aren't a coordinator for this community. {% endcomment %}
+{% endif %}
+
+{% if not coordinator %}
+	<h2>New Coordinators or Co-coordinators</h2>
+	<p>If you have been a community coordinator in the past but have not yet created an account on this site, or you would like to volunteer to be a new coordinator and you understand the <a href="/mentor/">coordinator duties</a>, you can sign up to be a community coordinator.</p>
+	<form action="{% url 'community-coordinator-update' community_slug=community.slug coordinator_id=user.id %}" method="post">
+	    {% csrf_token %}
+	    <input class="btn btn-block btn-success" type="submit" name="add" value="Coordinate for This Community" />
+	</form>
+{% else %}
+	{% if coordinator in pending_coordinator_list %}
+		<h2>Coordinator Request Status</h2>
+		<p>Your request to coordinate for this community is under review by the community coordinator and Outreachy organizers.</p>
+	{% elif coordinator in rejected_coordinator_list %}
+		<h2>Coordinator Request Status</h2>
+		<p>Unfortunately, your request to coordinate for this community has been denied.</p>
+	{% endif %}
+{% endif %}
+
+{% if user.is_staff %}
+<hr />
+	<h2>Outreachy Organizer Actions</h2>
+
+	{% if participation_info.reason_for_not_participating %}
+		<p>The coordinator has indicated that they will not be participating in this Outreachy internship round:</p>
+		<p>"{{ participation_info.reason_for_not_participating }}"</p>
+
+	{% elif participation_info.list_community is False %}
+		<p>An Outreachy organizer has rejected this community to participate in this round of Outreachy.</p>
+	{% endif %}
+
+	{% if not participation_info.reason_for_not_participating %}
+		<p>Outreachy organizers should read over the information coordinators provided about participating in this round (including intern funding information) and information about new communities. Then decide whether the community should participate in this round and either accept or reject the community.</p>
+		<p>Round participation information</p>
+		<ul>
+			<li>Number of interns funded: {{ participation_info.interns_funded }}</li>
+			<li>CFP text: {{ participation_info.cfp_text }}</li>
+		</ul>
+		<form action="{% url 'community-status' community_slug=community.slug %}" method="post">
+		    {% csrf_token %}
+		    {% if participation_info.list_community is not True %}
+			    <input class="btn btn-block btn-success" type="submit" name="approve" value="Approve Community" />
+		    {% endif %}
+		    {% if participation_info.list_community is not False %}
+			    <input class="btn btn-block btn-warning" type="submit" name="reject" value="Reject Community" />
+		    {% endif %}
+		</form>
+	{% endif %}
+{% endif %}
+
+{% if coordinator %}
+<hr />
+	<h2>Coordinator Actions</h2>
+	{% if pending_coordinators %}
+		<p><strong>Approve Coordinators</strong></p>
+		{% for c in pending_coordinators %}
+			<p>{{ c.public_name }} &lt;{{ c.account.email }}&gt;</p>
+			<form action="{% url 'community-coordinator-update' community_slug=community.slug coordinator_id=c.id %}" method="post">
+				{% csrf_token %}
+				<input class="btn btn-block btn-success" type="submit" name="approve" value="Approve Coordinator" />
+				<input class="btn btn-block btn-warning" type="submit" name="approve" value="Reject Coordinator" />
+			</form>
+			<ul>
+				{% if c.pronouns_to_participants %}<li>Pronouns: {{ c.get_pronouns_display }}</li>{% endif %}
+				{% if c.timezone %}<li>Timezone: {{ c.get_timezone_display }}</li>{% endif %}
+				{% if c.primary_language %}<li>Primary language: {{ c.get_primary_language_display }}</li>{% endif %}
+				{% if c.second_language %}<li>Second language: {{ c.get_second_language_display }}</li>{% endif %}
+				{% if c.third_language %}<li>Third language: {{ c.get_third_language_display }}</li>{% endif %}
+				{% if c.fourth_language %}<li>Fourth language: {{ c.get_fourth_language_display }}</li>{% endif %}
+			</ul>
+		{% endfor %}
+	{% endif %}
+	{% if rejected_coordinators %}
+		<p><strong>Rejected Coordinators</strong></p>
+		{% for c in rejected_coordinators %}
+			<p>{{ c.public_name }} &lt;{{ c.account.email }}&gt;</p>
+			<form action="{% url 'community-coordinator-update' community_slug=community.slug coordinator_id=c.id %}" method="post">
+				{% csrf_token %}
+				<input class="btn btn-block btn-success" type="submit" name="approve" value="Approve Coordinator" />
+			</form>
+			<ul>
+				{% if c.pronouns_to_participants %}<li>Pronouns: {{ c.get_pronouns_display }}</li>{% endif %}
+				{% if c.timezone %}<li>Timezone: {{ c.get_timezone_display }}</li>{% endif %}
+				{% if c.primary_language %}<li>Primary language: {{ c.get_primary_language_display }}</li>{% endif %}
+				{% if c.second_language %}<li>Second language: {{ c.get_second_language_display }}</li>{% endif %}
+				{% if c.third_language %}<li>Third language: {{ c.get_third_language_display }}</li>{% endif %}
+				{% if c.fourth_language %}<li>Fourth language: {{ c.get_fourth_language_display }}</li>{% endif %}
+			</ul>
+		{% endfor %}
+	{% endif %}
+
+	{% if participation_info.list_community is not False and pending_projects %}
+		<p><strong>Approve Projects</strong></p>
+		<p>Coordinators will need to go to each pending project page, review the information, and approve the project. Projects pending coordinator approval:</p>
+		<ul>
+		{% for project in pending_projects %}
+			<li><a href="/communities/cfp/{{ community.slug }}/{{ project.slug }}">{{ project.short_title }}</a></li>
+		{% endfor %}
+		</ul>
+	{% endif %}
+	{% if pending_mentored_projects %}
+		<p><strong>Approve Mentors</strong></p>
+		<p>Coordinators will need to approve additional mentors for projects. Projects that need mentors approved:</p>
+		<ul>
+			{% for project in pending_mentored_projects %}
+				<li><a href="/communities/cfp/{{ community.slug }}/{{ project.slug }}">{{ project.short_title }}</a></li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+	{% if participation_info.reason_for_not_participating %}
+		<p>Have you changed your mind and decided your community can participate in this round of Outreachy?</p>
+		<p><a class="btn btn-block btn-success" href="/communities/cfp/{{ community.slug }}/participate/">Community will participate</a></p>
+		<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
+		<p><a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a></p>
+
+	{% elif participation_info.list_community is False %}
+		<p>Unfortunately, the Outreachy organizers have determined your community should not participate in this round. Please <a href="/contact/">contact us</a> for more details.</p>
+		<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
+		<p><a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a></p>
+
+	{% else %}
+		<h3>Update Community Information</h3>
+		<p>Do you need to update information about your community's participation in this round (such as number of interns funded or call for volunteers text)?</p>
+		<p><a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/participate/">Update Round Info</a></p>
+		<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
+		<p><a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a></p>
+		<div class="card">
+			<div class="card-header">Community Information for Applicants</div>
+			<div class="card-body">
+			{% include 'home/community_landing_snippet.html' %}
+			</div>
+		</div>
+		<br>
+		<h3>Coordinator Actions Rarely Taken</h3>
+		<p>Do you need to withdraw this Outreachy community from this internship round?</p>
+		<a class="btn btn-block btn-danger" href="/communities/cfp/{{ community.slug }}/dont-participate/">Withdraw community</a>
+	{% endif %}
+	<p>Do you need to withdraw as a coordinator for {{ community.name }}?</p>
+	<form action="{% url 'community-coordinator-update' community_slug=community.slug coordinator_id=user.id %}" method="post">
+		{% csrf_token %}
+		<input class="btn btn-block btn-warning" type="submit" name="withdraw" value="Withdraw as Coordinator" />
+	</form>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,54 @@
+Hi Outreachy organizers,
+
+Please review and approve {{ community.name }} to participate in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.
+
+{% if community.newcommunity %}
+This is a new Outreachy community, so please review the following information carefully:
+
+	{% if not community.newcommunity.approved_license %}
+WARNING! This community may be using non-free licenses. Please follow up with the community coordinators.
+
+		{% if community.newcommunity.unapproved_license_description %}
+Coordinators provided this info about non-approved licenses:
+{{ community.newcommunity.unapproved_license_description }}
+		{% else %}
+Coordinators provided no info about the non-approved licenses.
+		{% endif %}
+
+	{% else %}
+Community uses approved licenses.
+	{% endif %}
+
+	{% if not community.newcommunity.no_proprietary_software %}
+WARNING! This community may be using or building upon proprietary software. Please follow up with the community coordinators.
+
+		{% if community.newcommunity.proprietary_software_description %}
+Coordinators provided this info about the proprietary software they use or build upon:
+{{ community.newcommunity.proprietary_software_description }}
+		{% else %}
+Coordinators provided no info about the proprietary software they use or build upon.
+		{% endif %}
+	{% else %}
+Community uses approved licenses.
+	{% endif %}
+
+Community size: {{ community.newcommunity.get_community_size_display }}
+
+Community has been open source for: {{ community.newcommunity.get_longevity_display }}
+
+Organizations that participate in this community:
+{{ community.newcommunity.participating_orgs }}
+
+{% endif %}
+Number of interns funded: {{ participation_info.interns_funded }}
+
+Approve This Community
+----------------------
+
+You can approve this by going to the community page, looking under the "Coordinator Actions" section, and clicking 'Approve community':
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'community-read-only' slug=community.slug %}
+
+Thank you!
+
+This mail is an automated email sent from the Outreachy Django website

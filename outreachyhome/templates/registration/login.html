@@ -2,10 +2,6 @@
 
 {% block content %}
 
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
-
 {% if next %}
     {% if user.is_authenticated %}
     <p>Your account doesn't have access to this page. To proceed,
@@ -17,20 +13,10 @@
 
 <form method="post" action="">
 {% csrf_token %}
-<table>
-<tr>
-    <td>{{ form.username.label_tag }}</td>
-    <td>{{ form.username }}</td>
-</tr>
-<tr>
-    <td>{{ form.password.label_tag }}</td>
-    <td>{{ form.password }}</td>
-</tr>
-</table>
+{{ form.as_p }}
+<input type="submit" class="btn btn-block btn-primary" value="Login" />
 
-<input type="submit" value="Login" />
-
-<p>Don't have an account? <a href="{% url 'register' %}?next={{ next|urlencode }}">Create one.</a></p>
+<p>Don't have an account? <a href="{% url 'register' %}?next={{ next|urlencode }}" class="btn btn-secondary">Create one.</a></p>
 </form>
 
 {% endblock %}

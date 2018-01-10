@@ -14,6 +14,7 @@ from __future__ import absolute_import, unicode_literals
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import shlex
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
@@ -45,6 +46,9 @@ INSTALLED_APPS = [
 
     'modelcluster',
     'taggit',
+    'timezone_field',
+    'languages',
+    'ckeditor',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -53,6 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
+    'compressor',
 ]
 
 MIDDLEWARE = [
@@ -105,6 +110,9 @@ DATABASES = {
         default='sqlite:///'+os.path.join(BASE_DIR, 'db.sqlite3'))
 }
 
+# If an error occurs in a view, make sure none of that view's changes are saved.
+ATOMIC_REQUESTS = True
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -125,6 +133,7 @@ USE_TZ = True
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
 ]
 
 STATICFILES_DIRS = [
@@ -139,6 +148,32 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
+)
+
+# Always use the configured filters, so that browser compatibility hacks
+# are applied even in development and we see exactly how the minifiers
+# are going to screw up before we bother deploying.
+COMPRESS_ENABLED = True
+
+COMPRESS_CSS_FILTERS = [
+    'compressor.filters.css_default.CssAbsoluteFilter',
+
+    # postcss+autoprefixer and clean-css are what Bootstrap uses for
+    # their official builds, so hopefully they will work for us too
+    'compressor_postcss.PostCSSFilter',
+    'compressor.filters.cleancss.CleanCSSFilter',
+]
+
+COMPRESS_JS_FILTERS = [
+    'compressor.filters.jsmin.JSMinFilter',
+]
+
+COMPRESS_POSTCSS_ARGS = '-c {}'.format(shlex.quote(os.path.join(BASE_DIR, 'postcss.json')))
+
+COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage'
+
 
 # Wagtail settings
 
@@ -150,3 +185,8 @@ BASE_URL = 'https://www.outreachy.org'
 REGISTRATION_OPEN = True
 LOGIN_REDIRECT_URL='/'
 LOGIN_URL='/login/'
+
+# If a new account isn't verified in this many days, don't activate it.
+ACCOUNT_ACTIVATION_DAYS = 7
+
+DEFAULT_FROM_EMAIL = 'organizers@outreachy.org'

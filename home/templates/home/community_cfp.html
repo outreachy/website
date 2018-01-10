@@ -1,0 +1,76 @@
+{% extends "base.html" %} 
+{% block title %}
+Call for Outreachy community coordinators, mentors, and volunteers
+{% endblock %}
+
+{% block content %}
+
+<h1>Call for Outreachy Community Participation</h1>
+<p>Outreachy provides three-month internships for people from <a href="/apply/eligibility/">groups traditionally underrepresented in tech</a>. Internships run twice a year.</p>
+
+<h2>Who can participate?</h2>
+<p>Outreachy welcomes participation from FOSS communities and people seeking to help out as Outreachy coordinators, mentors, and volunteers.</p>
+<p>We define a community as a Free and Open Source Software (FOSS) community that uses licenses that are released under either an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> that is also identified by the FSF as a <a href="https://www.gnu.org/licenses/license-list.html">free software license</a>, OR a <a href="https://creativecommons.org/share-your-work/public-domain/freeworks/">Creative Commons license approved for free cultural works</a>. FOSS communities also need to meet <a href="/mentor/community-faq/">additional requirements</a>.</p>
+
+<p>A FOSS <strong>community</strong> can be an umbrella organization for many smaller <strong>projects</strong>. For example, GNOME might participate as a community, with different GNOME applications participating as projects. Smaller organizations might be considered both a community and a project. For example, Git has participated as a community, with one intern project to add new features to Git.</p>
+
+<h2>Outreachy roles</h2>
+<p>There are several different Outreachy roles:<p>
+{% include "home/roles.html" %}
+
+<h2>Timeline for {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} internship round</h2>
+{% include "home/mentor-timeline.html" %}
+
+<h2>Submit a New FOSS community for Organizer Review</h2>
+<p>First, double check that the community isn't listed in the participating communities or past communities list. If the community is listed as a past Outreachy community, you can sign up to coordinate for that community. Coordinators will need to review the <a href="/mentor/#coordinator">coordinator duties</a> and <a href="/mentor/community-faq/">community requirements</a> for participating in internships. Then submit a new community for review.
+</p>
+<p><a class='btn btn-primary' href="/communities/cfp/add/">Submit a New Community</a></p>
+
+{% if approved_communities or pending_communities %}
+	<h2>Mentor or Volunteer for a Participating FOSS Community</h2>
+
+	<p>If you would like to volunteer or mentor with Outreachy, review the list of participating communities below who are looking for help. Make sure to <a href="/mentor/#mentor">review the duties and expections</a> for mentors and volunteers before you sign up to help a community.</p>
+{% endif %}
+
+{% if approved_communities %}
+	<p>The community coordinator has indicated these communities will participate in this Outreachy internship round, and the communities have been approved by the Outreachy organizers to participate.</p>
+	<ul>
+	{% for c in approved_communities %}
+		<li><a href="/communities/cfp/{{ c.slug }}/">{{ c.name }}</a></li>
+	{% endfor %}
+	</ul>
+{% endif %}
+
+{% if pending_communities %}
+	<p>The community coordinator has indicated these communities will participate in this Outreachy internship round, but Outreachy organizer approval is still pending. Mentors and volunteers are encouraged to sign up while the community is under review.  If you would like to volunteer or mentor with Outreachy, make sure to <a href="/mentor/#mentor">review the duties and expections</a> for mentors and volunteers before you sign up to help a community.</p>
+	<ul>
+	{% for c in pending_communities %}
+		<li><a href="/communities/cfp/{{ c.slug }}/">{{ c.name }}</a></li>
+	{% endfor %}
+	</ul>
+{% endif %}
+
+{% if rejected_communities %}
+	<h2>Not Participating FOSS Communities</h2>
+
+	<p>Unfortunately, either the community coordinator(s) or the Outreachy organizers have determined that the following communities will not participate in this round of Outreachy internships.</p>
+
+	<ul>
+	{% for c in rejected_communities %}
+		<li><a href="/communities/cfp/{{ c.slug }}/">{{ c.name }}</a></li>
+	{% endfor %}
+	</ul>
+{% endif %}
+
+<h2>Past Participating FOSS Communities</h2>
+<p>In order for a community to participate in an Outreachy internship round, the community must have at least one coordinator. If you would like to volunteer to be a coordinator, you should <a href="/mentor/">understand the coordinator duties</a> and what <a href="/mentor/community-faq">information they will need to update</a> about the community.</p>
+
+<p>Mentors and volunteers may visit the community page and sign up to receive an email notification when a coordinator signs the community up for this Outreachy round.</p>
+
+<ul>
+{% for c in not_participating_communities %}
+	<li><a href="/communities/cfp/{{ c.slug }}/">{{ c.name }}</a></li>
+{% endfor %}
+</ul>
+
+{% endblock %}

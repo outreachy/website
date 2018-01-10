@@ -1,3 +1,4 @@
+{% load compress %}
 {% load static wagtailuserbar %}
 {% load wagtailcore_tags %}
 
@@ -23,9 +24,118 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         {# Global stylesheets #}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+        {% compress css %}
+        <style type="text/x-scss">
+            // Override simple Bootstrap theming variables.
+            $body-bg: #fff;
+            $body-color: #333;
+
+            // Override maps before importing the default variables
+            // or they will be ignored.
+
+            $theme-colors: (
+                primary: #20b2aa
+            );
+
+            // Base Bootstrap definitions
+            @import "node_modules/bootstrap/scss/functions";
+            @import "node_modules/bootstrap/scss/variables";
+            @import "node_modules/bootstrap/scss/mixins";
+
+            // Most variables can be overridden before importing defaults
+            // but anything that is defined in terms of functions over
+            // other variables must come after importing both functions
+            // and variables, but before the first module that uses them.
+
+            // For example, an assignment like this would go here:
+            // $headings-color: theme-color-level(primary, 5);
+
+            // All Bootstrap variables must have their final values
+            // at this point, before the following imports can work.
+
+            // Next, pull in the Bootstrap modules we use. There are
+            // many more to choose from! If a Bootstrap component that
+            // you're trying to use isn't working, look in
+            // node_modules/bootstrap/scss/ for the missing styles. A
+            // component named e.g. "carousel" is probably in
+            // "_carousel.scss", but if that does not help then you
+            // might need to grep for the class names associated with
+            // your component.
+
+            // These are listed in the same order as in
+            // node_modules/bootstrap/scss/bootstrap.scss. It probably
+            // doesn't matter, but I'd suggest keeping it that way just
+            // in case there are subtle ordering dependencies.
+
+            @import "node_modules/bootstrap/scss/reboot";
+            @import "node_modules/bootstrap/scss/type";
+            @import "node_modules/bootstrap/scss/grid";
+            @import "node_modules/bootstrap/scss/tables";
+            @import "node_modules/bootstrap/scss/forms";
+            @import "node_modules/bootstrap/scss/buttons";
+            @import "node_modules/bootstrap/scss/transitions";
+            @import "node_modules/bootstrap/scss/nav";
+            @import "node_modules/bootstrap/scss/navbar";
+            @import "node_modules/bootstrap/scss/card";
+            @import "node_modules/bootstrap/scss/utilities";
+            @import "node_modules/bootstrap/scss/print";
+
+            // Custom rules for this site
+
+            @font-face {
+                font-family: 'ChunkFiveRegular';
+                src: url(static('css/fonts/Chunkfive-webfont.ttf')) format('truetype');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            body { margin-top: 4em; }
+
+            .navbar-brand {
+                font-family: 'ChunkFiveRegular';
+            }
+
+            // Apply some Bootstrap form styles to all form controls.
+            // In general this is a bad idea because it will change the
+            // layout in too many places--for example, checkboxes look
+            // weird--but it is a good start.
+            input, select, textarea {
+                @extend .form-control;
+            }
+
+            // Django automatically applies a 'helptext' class in forms;
+            // Bootstrap wants us to use other classes instead; so we
+            // let SCSS wire one to the other.
+            .helptext {
+                @extend .form-text;
+                @extend .text-muted;
+            }
+
+	    .errorlist {
+		@extend .bg-danger;
+		@extend .text-light;
+	    }
+
+            .footer-art {
+                background: url(static("css/img/footer-balloons.png")) no-repeat bottom right;
+                height: 160px;
+            }
+
+            .footer-grass {
+                background: url(static("css/img/footer-grass.png"));
+                height: 39px;
+            }
+
+            .footer-wrapper {
+                // This color matches the footer-grass background.
+                background-color: #d1d8cd;
+            }
+
+            .cc-description {
+                font-size: $font-size-sm;
+            }
+        </style>
+        {% endcompress %}
 
         {% block extra_css %}
             {# Override this in templates to add extra stylesheets #}
@@ -34,45 +144,44 @@
 
     <body class="{% block body_class %}{% endblock %}">
         {% wagtailuserbar %}
-        <div class="fixed-container">
-                <div class="navbar nav-container">
-                        <div class="container">
-                                <button type="button" class="btn btn-navbar collapsed" data-toggle="collapse" data-target=".nav-collapse" >
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span></button>
-                                        <a class="brand" href="/">Outreachy</a>                
-                                        <div class="nav-collapse collapse" style="height: 0px;">
-                                            <ul class="nav">
-						{% for headerp in header_pages %}
-                                                    <li><a href="{% pageurl headerp %}">{{ headerp.title }}</a></li>
-                                                {% endfor %}
-                                            </ul>
-                                </div>
-                        </div>
-
+        <div class="navbar navbar-dark bg-primary fixed-top navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand brand" href="/">Outreachy</a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#sitenavbar" aria-controls="sitenavbar" aria-expanded="false" aria-label="Toggle navigation" >
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div id="sitenavbar" class="navbar-collapse collapse">
+                    <ul class="navbar-nav ml-auto">
+                        {% for headerp in header_pages %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% pageurl headerp %}">{{ headerp.title }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
                 </div>
+            </div>
         </div>
-        <div class="container" id="home">
 
+        <div class="container">
         {% block content %}{% endblock %}
         </div>
 
         <div class="footer">
-                <div class="footer-art"></div>
-                <div class="footer-grass"></div>
-                <div class="footer-wrapper">
-			<p>Copyright © 2017 Outreachy</p>
-			<p class="cc-description">Free to share and remix: <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons CC-BY</a>, except for the individual organization logos, which are property of their respective owners, and any pictures with additional creative commons attributions.</p>
-			<p class="cc-description">The Outreachy website is built with <a href="https://www.djangoproject.com/">Django</a>, <a href="https://wagtail.io/">Wagtail</a>, <a href="http://getbootstrap.com/">bootstrap</a> and deployed with <a href="http://dokku.viewdocs.io/dokku/">Dokku</a>. The code is licensed <a href="https://www.gnu.org/licenses/gpl.html">GPL v3</a> and can be found on <a href="http://github.com/sagesharp/outreachy-django-wagtail/">github.</a></p>
-			<p>This program and all offers related to it are void where prohibited or restricted by law or where operation of the program would violate any law or right. All participants in the program must agree to the terms and conditions of the program which will be provided to the selected applicants.</p>
+            <div class="footer-art"></div>
+            <div class="footer-grass"></div>
+            <div class="footer-wrapper">
+                <div class="container">
+                    <p>Copyright © {% now "Y" %} Outreachy</p>
+                    <p class="cc-description">Free to share and remix: <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons CC-BY</a>, except for the individual organization logos, which are property of their respective owners, and any pictures with additional creative commons attributions.</p>
+                    <p class="cc-description">The Outreachy website is built with <a href="https://www.djangoproject.com/">Django</a>, <a href="https://wagtail.io/">Wagtail</a>, <a href="http://getbootstrap.com/">bootstrap</a> and deployed with <a href="http://dokku.viewdocs.io/dokku/">Dokku</a>. The code is licensed <a href="https://www.gnu.org/licenses/gpl.html">GPL v3</a> and can be found on <a href="http://github.com/sagesharp/outreachy-django-wagtail/">github.</a></p>
+                    <p>This program and all offers related to it are void where prohibited or restricted by law or where operation of the program would violate any law or right. All participants in the program must agree to the terms and conditions of the program which will be provided to the selected applicants.</p>
                 </div>
+            </div>
         </div>
         {# Global javascript #}
-	<script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
-	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-	<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
 
         {% block extra_js %}
             {# Override this in templates to add extra javascript #}

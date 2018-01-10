@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+{% if project.list_project %}
+Approved {{ community.name }} Project - {{ project.short_title }}
+{% else %}
+Pending {{ community.name }} Project - {{ project.short_title }}
+{% endif %}
+
+{% endblock %}
+
+{% block content %}
+
+{% if project.list_project %}
+	<h1>Approved {{ community.name }} Project</h1>
+	<p>This project has been approved by the {{ community.name }} coordinator(s) to participate in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
+	
+	<p>
+	Once the application period starts, the community will be listed on the <a href="/{{ current_round.slug }}/">round home page</a>, with a link to
+	the <a href="/{{ current_round.slug }}/communities/{{ community.slug }}">community landing page</a>.
+	Applicants will find detailed information on the landing page about the community and how to contribute to approved projects.</p>
+	<p>
+
+{% elif project.list_project is None %}
+	<h1>Pending {{ community.name }} Project</h1>
+	<p>This project is waiting to be approved by the {{ community.name }} coordinator(s) for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
+{% else %}
+	<h1>Rejected {{ community.name }} Project</h1>
+	<p>The {{ community.name }} coordinator(s) or Outreachy organizers do not think this project is suitable for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
+{% endif %}
+
+{% if coordinator %}
+	<h2>Coordinator Actions</h2>
+	<h3>Project Approval</h3>
+	{% if not project.approved_license or project.longevity == project.THREE_MONTHS or project.longevity == project.SIX_MONTHS or project.longevity == project.ONE_YEAR or project.community_size == project.SMOL or project.community_size == project.TINY %}
+		<p>Coordinators - please double check with the Outreachy organizers before approving this project!</p>
+	{% else %}
+		<p>Coordinators - this project meets Outreachy organizer standards for project community size, project license, and the length of time the project has been accepting contributions from external contributors. You may approve this project if it meets <a href="/mentor/mentor-faq/#define-a-project">other Outreachy project standards</a> and your community's long term goals.</a>
+	{% endif %}
+	{% if not project.approved_license %}
+	<div class="card border-warning mb-3">
+	    <div class="card-header text-white bg-warning">Warning!</div>
+	    <div class="card-body">
+		<h5 class="card-title">This project uses a license that is not
+		    an OSI-approved license or Creative Commons license.</h5>
+		<p class="card-text">The Outreachy parent organization, Software Freedom Conservancy, requires that all Outreachy internships further the goals of free and open source communities. Projects that use proprietary licenses are not allowed.</p>
+	    </div>
+	</div>
+	{% endif %}
+
+	{% if project.longevity == project.THREE_MONTHS or project.longevity == project.SIX_MONTHS or project.longevity == project.ONE_YEAR %}
+	<div class="card border-warning mb-3">
+	    <div class="card-header text-white bg-warning">Warning!</div>
+	    <div class="card-body">
+		<h5 class="card-title">This project is less than a year old.</h5>
+		<p class="card-text">Outreachy projects should be well-established projects. While GSoC allows students to create their own open source projects, we find Outreachy interns benefit the most from having a well-established community of project contributors to work with.</p>
+	    </div>
+	</div>
+	{% endif %}
+
+	{% if project.community_size == project.SMOL or project.community_size == project.TINY %}
+	<div class="card border-warning mb-3">
+	    <div class="card-header text-white bg-warning">Warning!</div>
+	    <div class="card-body">
+		<h5 class="card-title">This project has five or less regular
+		    contributors.</h5>
+		<p class="card-text">Outreachy projects should be well-established projects. While GSoC allows students to create their own open source projects, we find Outreachy interns benefit the most from having a well-established community of project contributors to work with.</p>
+	    </div>
+	</div>
+	{% endif %}
+
+	{% comment %}When we name an input, the name and value get added to the POST dictionary.{% endcomment %}
+	<form action="{% url 'project-status' community_slug=community.slug project_slug=project.slug %}" method="post">
+	    {% csrf_token %}
+	    {% if project.list_project is not True %}
+		    <input class="btn btn-block btn-success" type="submit" name="approve" value="Approve Project" />
+	    {% endif %}
+	    {% if project.list_project is not False %}
+		    <input class="btn btn-block btn-warning" type="submit" name="reject" value="Reject Project" />
+	    {% endif %}
+	</form>
+	{% if unapproved_mentors %}
+		<h3>Approve Mentors</h3>
+		{% for approval in unapproved_mentors %}
+			<p>{{ approval.mentor.public_name }} &lt;{{ approval.mentor.account.email }}&gt;</p>
+			{% include "home/mentor_approval_warnings.html" %}
+			<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=approval.mentor.pk %}" method="post">
+				{% csrf_token %}
+				<input class="btn btn-success" type="submit" name="approve" value="Approve Mentor" />
+				<input class="btn btn-warning" type="submit" name="reject" value="Reject Mentor" />
+			</form>
+			{% include "home/mentor_info.html" %}
+		{% endfor %}
+	{% endif %}
+
+	{% if approved_mentors %}
+		<h3>Review Approved Mentors</h3>
+		{% for approval in approved_mentors %}
+			<p>{{ approval.mentor.public_name }} &lt;{{ approval.mentor.account.email }}&gt;</p>
+			{% include "home/mentor_approval_warnings.html" %}
+			<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=approval.mentor.pk %}" method="post">
+				{% csrf_token %}
+				<input class="btn btn-warning" type="submit" name="reject" value="Reject Mentor" />
+			</form>
+			{% include "home/mentor_info.html" %}
+		{% endfor %}
+	{% endif %}
+
+{% endif %}
+
+<h2>Project Information</h2>
+
+{% if mentor_request and mentor_request.approved is True %}
+	<p><a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/{{ project.slug }}/edit/">Edit Project Info</a></p>
+{% endif %}
+
+{% if coordinator or mentor_request and mentor_request.approved is True %}
+	<div class="card">
+		<div class="card-header">Project Information for Applicants</div>
+		<div class="card-body">
+			<p>This information will be displayed to the applicants on the project landing page.</p>
+			<h3>Project Description</h3>
+			<p>{{ project.short_title }}</p>
+			{{ project.long_description|safe }}
+
+			<h3>Applicant Status</h3>
+			{% if project.accepting_new_applicants %}
+				<p>This project is open to new Outreachy applicants.</p>
+			{% else %}
+				<p>This project is closed to new Outreachy applicants.</p>
+			{% endif %}
+
+			{% if required_skills %}
+				<h3>Required Skills</h3>
+				<p>{{ required_skills.0.get_required_display }}</p>
+				<table class='table table-bordered'>
+					<tr><th>Skill description</th><th>Experience Level</th></tr>
+				{% for skill in required_skills %}
+					<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
+				{% endfor %}
+				</table>
+			{% endif %}
+
+			{% if preferred_skills %}
+				<h3>Preferred Skills</h3>
+				<p>{{ preferred_skills.0.get_required_display }}</p>
+				<table class='table table-bordered'>
+					<tr><th>Skill description</th><th>Experience Level</th></tr>
+				{% for skill in preferred_skills %}
+					<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
+				{% endfor %}
+				</table>
+			{% endif %}
+
+			{% if bonus_skills %}
+				<h3>Bonus Skills</h3>
+				<p>{{ bonus_skills.0.get_required_display }}</p>
+				<table class='table table-bordered'>
+					<tr><th>Skill description</th><th>Experience Level</th></tr>
+				{% for skill in bonus_skills %}
+					<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
+				{% endfor %}
+				</table>
+			{% endif %}
+			<h3>Project Contact Information</h3>
+			<p>Contributors to Free and Open Source Software (FOSS) projects discuss issues, documentation, user experience, and feature design in public communication channels.
+			Mentors are available to help applicants both on public project channels, and via private message or email.
+			Mentors understand that applicants may be hesitant to participate and ask questions in public,
+			but we hope you'll introduce yourself on the public project channels and ask for help when you get stuck.
+			</p>
+			<p>
+			{% if project.communication_tool %}
+				This project uses the communication tool called {{ project.communication_tool }}.
+			{% endif %}
+			{% if project.communication_help %}
+				If you've never used that tool before, <a href="{{ project.communication_help }}">you can read the documentation</a>.
+			{% endif %}
+			{% if project.communication_norms %}
+				Once you join the project's communication channel,
+				the mentors have some additional instructions for you to follow. {{ project.communication_norms|safe }}
+			{% endif %}
+			{% if project.communication_url %}
+				You can join this project's communication channel by <a href="{{ project.communication_url }}">following this link</a>.
+			{% endif %}
+			<p>
+
+			<h3>Project Contribution Information</h3>
+			<p>As part of the application process, all applicants must make at least one contribution to be accepted as an intern for this project.</p>
+			<p>
+			{% if project.repository %}
+				Applicants can contribute to this project through <a href="{{ project.repository }}">the project repository or contribution page</a>.
+			{% else %}
+				Applicants will need to contact project mentors to get information about the project repositories.
+			{% endif %}
+			{% if project.issue_tracker %}
+				The project uses an <a href="{{ project.issue_tracker }}">issue tracker</a> to keep information about bugs to fix, project features to implement, documentation to write, and more.
+				{% if project.newcomer_issue_tag %}
+					Applicants can look for newcomer-friendly issues to use for their first contributions by looking for the following issue tags in the <a href="">project issue tracker</a>:
+					{{ project.newcomer_issue_tag }}
+				{% else %}
+					Applicants will need to contact a mentor to find out how they can make their first contributions to the project.
+				{% endif %}
+			{% endif %}
+			</p>
+			{{ project.contribution_tasks|safe }}
+		</div>
+	</div>
+
+	<br>
+	<h3>Project Information for Coordinators</h3>
+	<p>This project information is used by coordinators to determine if the project is appropriate for Outreachy. The information will not be displayed to applicants.</p>
+	<ul>
+		<li>Project has been accepting external contributions for: {{ project.get_longevity_display }}</li>
+		<li>Number of people contributing to this project regularly: {{ project.get_community_size_display }}</li>
+		{% if project.intern_benefits %}
+			<li>Interns will learn about: {{ project.intern_benefits }}</li>
+		{% else %}
+			<li>Mentor did not provide information about what the interns will learn from this project.</li>
+		{% endif %}
+		{% if project.community_benefits %}
+			<li>The FOSS community will benefit from this project because: {{ project.intern_benefits }}</li>
+		{% else %}
+			<li>Mentor did not provide information about how the FOSS community will benefit from this project.</li>
+		{% endif %}
+		{% if not project.approved_license %}
+			<li>Licenses: This project uses a license that is NOT an OSI-approved license or Creative Commons license.</li>
+		{% else %}
+			<li>Licenses: OSI-approved license or Creative Commons license.</li>
+		{% endif %}
+	</ul>
+{% else %}
+	<p>{{ project.short_title }}</p>
+	<p>Full project details are only available for coordinators and approved project mentors, in order to ensure applicants don't contact mentors until the project is approved and the Outreachy application period opens. If you're an applicant, please wait for projects to appear on the <a href="{{ current_round.url }}">current internship round page</a>!</p>
+{% endif %}
+
+<h3>Project Mentors</h3>
+{% if mentor_request %}
+	{% if mentor_request.approved is True %}
+	<p>You are an approved mentor for this project.</p>
+	{% else %}
+	<p>Your request to mentor this project is under review by the community coordinator.</p>
+	{% endif %}
+	<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=mentor_request.mentor_id %}" method="post">
+		{% csrf_token %}
+		<input class="btn btn-warning" type="submit" name="reject" value="Withdraw From Mentoring" />
+	</form>
+{% elif request.user.comrade %}
+	<a href="{% url 'project-mentor-create' community_slug=community.slug project_slug=project.slug %}" class="btn btn-success">Mentor This Project</a>
+{% else %}
+	<p>You will need to create an account on the Outreachy website in order to sign up to mentor for this project.</p>
+	<p><a href="{% url 'register' %}?next={{ request.path }}" class="btn btn-success">Create an Account</a></p>
+	<p>Already created an account? You'll need to login.</p>
+	<p><a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-success">Log In</a></p>
+{% endif %}
+
+{% endblock %}

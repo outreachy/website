@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Mentor Information</h1>
+
+<p>Mentors provide need to provide some information to be reviewed by the FOSS community coordinators. Additionally, your project communication channel username will be shown to applicants on the project page.</p>
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input class="btn btn-primary" type="submit" value="Save mentor info" />
+</form>
+
+{% endblock %}

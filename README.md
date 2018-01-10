@@ -66,18 +66,26 @@ To set up your local development environment, first clone the repository to your
 git clone https://github.com/sagesharp/outreachy-django-wagtail.git
 ```
 
+In order to develop with Python, you'll need the Python 3 development headers, so install them. If you're running Debian Linux, you'll either need to install nodejs 8 or install the `nodejs-legacy` package, because older versions of the package installs itself as `node` rather than `nodejs`.
+
 Next, you'll need to create a new virtualenv. A "virtualenv" is a separate virtual environment for working on different Python projects. It's good practice to create a virtual environment for each Pyton project you're working on, in case they have conflicting dependencies, and so that you make sure to record all the dependencies for each project.
 
 These instructions will help you create a new virtualenv that will have all the python packages installed that you need to work on the Outreachy website. We use the `-r` option to specify where the file is that contains the list and version numbers of Python packages to install in the virtual environment. The `-a` option means that when you activate the virtual environment, you will automatically change directories to the directory where the repository source code was cloned. If you need help understanding the mkvirtualenv command, run `mkvirtualenv --help`
 
 ```
-mkvirtualenv -a ~/PATH/TO/outreachy-django-wagtail -r ~/PATH/TO/outreachy-django-wagtail/requirements.txt outreachy-django
+mkvirtualenv -a ~/PATH/TO/outreachy-django-wagtail -r ~/PATH/TO/outreachy-django-wagtail/requirements.txt --python=`which python3` outreachy-django
 ```
 
 Now, you activate the virtual environment by typing the following command:
 
 ```
 workon outreachy-django
+```
+
+In addition to the Python packages that were installed for you when you created the virtualenv, you also need to install some Node.js packages; these will be placed in a `node_modules` directory inside your project folder. Make sure you have `npm` installed, then run:
+
+```
+npm install
 ```
 
 If this is your first time creating a local version of the website for testing, you'll need to set up the local website database from scratch. The following command will create a new database with the models in the Outreachy website. The database will initially have no website pages, but will eventually store your local test pages.
@@ -96,7 +104,7 @@ The next step is to create an admin account for the local website.
 Once you've run the above setup commands, you should be all set to start testing your local website. First, run the command to start the Django webserver and serve up the local website.
 
 ```
-./manage.py runserver
+PATH="$PWD/node_modules/.bin:$PATH" ./manage.py runserver
 ```
 
 In your web browser, go to `http://localhost:8000/admin/` to get to the Wagtail administrative interface.

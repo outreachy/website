@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}
+Past community participation in Outreachy
+{% endblock %}
+
+{% block content %}
+<h1>{{ community.name }} in Outreachy</h1>
+{% if approved_coordinator_list %}
+	<p>Past coordinator(s) for {{ community.name }} were
+	{% for c in approved_coordinator_list %}
+		{{ c.public_name }}
+		{% if user.is_authenticated %}
+			&lt;{{ c.account.email }}&gt;
+		{% endif %}
+	{% endfor %}
+	</p>
+{% else %}
+	<p>This community currently has no approved coordinator.</p>
+{% endif %}
+
+{% if coordinator %}
+	<h2>Coordinator Actions</h2>
+	<p>Once you are an approved coordinator for this community, you can sign the community up to participate in the current round.</p>
+	<a class="btn btn-block btn-success" href="/communities/cfp/{{ community.slug }}/participate/">Community will participate</a>
+	<p>If your community doesn't have funding or mentor bandwidth to participate in this round, please let us know so we can redirect mentors and volunteers to other participating Outreachy communities.</p>
+	<a class="btn btn-block btn-warning" href="/communities/cfp/{{ community.slug }}/dont-participate/">Community won't participate</a>
+	<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
+	<a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a>
+{% endif %}
+
+<h2>Mentors and Volunteers</h2>
+<p>The coordinator(s) for {{ community.name }} have not yet indicated whether the community will be participating in {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} internship round.</p>
+<p>Sign up to be notified when the coordinator finds funding and opens the call for volunteers and mentors.</p>
+<a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/notify-me/">Notify me</a>
+
+{% if not coordinator %}
+	<h2>New Coordinators or Co-coordinators</h2>
+	<p>If you have been a community coordinator in the past but have not yet created an account on this site, or you would like to volunteer to be a new coordinator and you understand the <a href="/mentor/">coordinator duties</a>, you can sign up to be a community coordinator.</p>
+	<form action="{% url 'community-coordinator-update' community_slug=community.slug coordinator_id=user.id %}" method="post">
+	    {% csrf_token %}
+	    <input class="btn btn-block btn-success" type="submit" name="add" value="Coordinate for This Community" />
+	</form>
+{% else %}
+	<h2>Coordinator Request Status</h2>
+	{% if coordinator in pending_coordinator_list %}
+		<p>Your request to coordinate for this community is under review by the community coordinator and Outreachy organizers.</p>
+	{% elif coordinator in rejected_coordinator_list %}
+		<p>Unfortunately, your request to coordinate for this community has been denied.</p>
+	{% endif %}
+{% endif %}
+{% endblock %}

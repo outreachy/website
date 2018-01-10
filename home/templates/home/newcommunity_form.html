@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Submit A New Community for Review</h1>
+<h2>Community Sign Up Process</h2>
+<p>
+The first step for Free and Open Source Software (FOSS) communities who want to participate Outreachy is to provide information about your community.
+The Outreachy organizers will review your community information and you will receive an email once your community is approved to participate in this internship round.
+</p>
+
+<p>
+The second step (completed on the next page) will be to fill out information about your participation in this round, such as number of interns funded and billing information.
+</p>
+
+<h2>Mentor and Volunteer Sign Up Process</h2>
+<p>
+Once you have completed both forms, you will be redirected to your community's call for volunteers page.
+You can send that page link to your community's mentors to get them to submit their project descriptions.
+You can also send that page link to your community volunteers who need to review Outreachy applications or otherwise help applicants.
+</p>
+
+<p>
+Both mentors and volunteers should sign up on the Outreachy website, since that grants them special permissions.
+Mentors who sign up will be can be subscribed to the mentors mailing list, which the Outreachy organizers use to send important announcements.
+Mentors will be granted read access to applications for their project and will be notified of new applicants.
+Volunteers can be granted read access to all applications to help out with review.
+</p>
+
+<h2>Community Information</h2>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <br>
+    <input class="btn btn-primary" type="submit" value="Submit Community For Review" />
+</form>
+
+{% endblock %}

@@ -1,0 +1,10 @@
+<ul>
+	<li>Mentor has contributed to this project for: {{ approval.get_longevity_display }}</li>
+	<li>Has the mentor participated in Outreachy before? {{ approval.get_mentored_before_display }}</li>
+	{% if approval.mentor.pronouns_to_participants %}<li>Pronouns: {{ approval.mentor.get_pronouns_display }}</li>{% endif %}
+	{% if approval.mentor.timezone %}<li>Timezone: {{ approval.mentor.get_timezone_display }}</li>{% endif %}
+	{% if approval.mentor.primary_language %}<li>Primary language: {{ approval.mentor.get_primary_language_display }}</li>{% endif %}
+	{% if approval.mentor.second_language %}<li>Second language: {{ approval.mentor.get_second_language_display }}</li>{% endif %}
+	{% if approval.mentor.third_language %}<li>Third language: {{ approval.mentor.get_third_language_display }}</li>{% endif %}
+	{% if approval.mentor.fourth_language %}<li>Fourth language: {{ approval.mentor.get_fourth_language_display }}</li>{% endif %}
+</ul>

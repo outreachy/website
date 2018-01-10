@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form method="post" action="">
+{% csrf_token %}
+    {{ form.as_p }}
+<input type="submit" class="btn btn-block btn-primary" value="Create Account" />
+<input type="hidden" name="next" value="{{ next }}" />
+<p>Already have an account? <a href="{% url 'login' %}?next={{ next|urlencode }}" class="btn btn-secondary">Login.</a></p>
+</form>
+
+{% endblock %}

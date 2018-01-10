@@ -1,0 +1,13 @@
+{% filter wordwrap:68 %}Welcome to Outreachy! We're glad to have you participating.
+
+Next, please verify your email address using the following link, then log in using your username ("{{ user.username }}") and the password that you set.
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'registration_activate' activation_key=activation_key %}
+
+This link will remain valid for {{ expiration_days }} days. If you have not verified your email address by then, you will have to create another account.
+
+If you did not request an account at {{ request.get_host }}, you can safely ignore this email.
+
+Sincerely,
+Outreachy Organizers
+{{ request.scheme }}://{{ request.get_host }}/{% endfilter %}
