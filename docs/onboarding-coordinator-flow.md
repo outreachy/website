@@ -559,6 +559,7 @@ Community CFP:
 Community sign up:
 - [ ] Hide community participation until someone is approved to be a coordinator
 - [ ] Change the text 'once you're an approved coordinator' if the person is a coordinator
+- [ ] Proprietary software question should read "All projects will be free and open source software and will forward free and open source software, not proprietary software"
 
 Project creation and display:
 - [ ] Add CKEditorField for description of work to be done during the internship
