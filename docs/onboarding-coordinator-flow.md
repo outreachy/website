@@ -312,8 +312,8 @@ Data to Gather
    - [x] (Optional, shared with applicants) CLA URL
    - [x] (Optional, shared with applicants) DCO URL - note that a DCO that requires contributors to use their full legal name can mean that trans contributors cannot participate, since it may be expensive or impossible to change their birth name
  - [ ] Static community info (enter once, probably never modify from round to round):
-   - [ ] Longer description of community
-   - [ ] Website URL
+   - [x] Longer description of community
+   - [x] Website URL
    - [ ] (Optional) Email to reach all coordinators and mentors
    - [ ] (Optional) Description or links to documentation/tutorials for how new contributors get started.
    - [ ] (Optional) Community blog or planet
@@ -393,7 +393,7 @@ Data to Gather
      - [x] level of expertise for applicants: we'll teach you, beginner, moderate, advanced
      - [ ] FIXME: Not sure how to handle sub-projects here - e.g. front-end/back-end -
        each subproject may have different skills
-   - [ ] How should applicants find a task to contribute to?
+   - [x] How should applicants find a task to contribute to?
    - [ ] Are you willing to work with ineligible interns? Some applicants may not be
      eligible due to school commitments. Selecting 'No' will hide your contact
      information from these applicants, so that you will only work with applicants
