@@ -539,7 +539,7 @@ TODO
 - [ ] Outreachy organizer dashboard for community and project on-boarding status.
 - [ ] Switch from simple one-step sign up workflow to two-step email activation using registration.backends.hmac.urls
 - [ ] Add pronouns.is links to pronoun displays
-- [ ] Fix he/him pronouns
+- [x] Fix he/him pronouns
 - [ ] Add explanation of roles to community CFP page
 - [ ] Make community CFP text not required
 - [ ] Make sure organizers can approve coordinators
