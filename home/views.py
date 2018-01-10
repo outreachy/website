@@ -342,17 +342,28 @@ class ParticipationUpdate(ParticipationUpdateView):
         return participation_info
 
     def form_valid(self, form):
-        # render the email about this new community to a string
-        email_string = render_to_string('home/email-community-signup.txt', {
-            'community': self.object.community,
-            'current_round': self.object.participating_round,
-            'participation_info': self.object,
-            }, request=self.request)
-        send_mail(
-                from_email='Outreachy Organizers <organizers@outreachy.org>',
-                recipient_list=['organizers@outreachy.org'],
-                subject='Approve community participation - {name}'.format(name=self.object.community.name),
-                message=email_string)
+        # Look up the old value of this object, if it existed, before
+        # saving it, so we can tell when this is just an update to a
+        # participation that already exists and which was neither
+        # rejected nor withdrawn.
+        is_already_participating = Participation.objects.filter(
+                community=self.object.community,
+                participating_round=self.object.participating_round,
+                ).exclude(list_community=False).exists()
+
+        if not is_already_participating:
+            # render the email about this new community to a string
+            email_string = render_to_string('home/email-community-signup.txt', {
+                'community': self.object.community,
+                'current_round': self.object.participating_round,
+                'participation_info': self.object,
+                }, request=self.request)
+            send_mail(
+                    from_email='Outreachy Organizers <organizers@outreachy.org>',
+                    recipient_list=['organizers@outreachy.org'],
+                    subject='Approve community participation - {name}'.format(name=self.object.community.name),
+                    message=email_string)
+
         return super(ParticipationUpdate, self).form_valid(form)
 
 
