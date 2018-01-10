@@ -546,6 +546,10 @@ TODO
 - [ ] Remove coordinator request status if the coordinator request has been approved
 - [ ] Project communication channels that are IRC should have link to use Kiwi web IRC
 
+Community sign up:
+- [ ] Hide community participation until someone is approved to be a coordinator
+- [ ] Change the text 'once you're an approved coordinator' if the person is a coordinator
+
 Project creation and display:
 - [ ] Add CKEditorField for description of work to be done during the internship
 - [ ] Add CKEditorField for projects that have multiple repositories and issue trackers
