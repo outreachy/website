@@ -453,6 +453,9 @@ class Project(models.Model):
             max_length=SENTENCE_LENGTH,
             help_text="(Optional) What tag is used for newcomer-friendly issues for your project?")
 
+    contribution_tasks = CKEditorField(
+            help_text='Instructions for how applicants can make contributions during the Outreachy application period. Make sure to include links to getting started tutorials or documentation, how applicants can find contribution tasks on your project website or issue tracker, who they should ask for tasks, and everything they need to know to get started.')
+
     accepting_new_applicants = models.BooleanField(help_text='Is this project currently accepting new applicants? If you have an applicant in mind to accept as an intern (or several promising applicants) who have filled out the eligibility information and an application, you can uncheck this box to close the project to new applicants.', default=True)
 
     # A NullBooleanField can be not set in the database (Null),
