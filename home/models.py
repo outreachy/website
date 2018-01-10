@@ -327,7 +327,7 @@ class NewCommunity(Community):
     participating_orgs = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
             help_text="What different organizations and companies participate in the project?")
 
-    approved_license = models.BooleanField(help_text='I assert that all Outreachy projects under my community will be released under an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> or a <a href="https://creativecommons.org/share-your-work/licensing-types-examples/">Creative Commons license</a>')
+    approved_license = models.BooleanField(help_text='I assert that all Outreachy projects under my community will be released under either an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> that is also identified by the FSF as a <a href="https://www.gnu.org/licenses/license-list.html">free software license</a>, OR a <a href="https://creativecommons.org/share-your-work/public-domain/freeworks/">Creative Commons license approved for free cultural works</a>')
     unapproved_license_description = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
             blank=True,
             help_text="(Optional) If your community uses a license that is not an OSI-approved license or a Creative Commons license, please provide links to the licenses or a description.")
@@ -421,7 +421,7 @@ class Project(models.Model):
             max_length=PARAGRAPH_LENGTH,
             help_text='How will this project benefit the parent FOSS community?')
 
-    approved_license = models.BooleanField(help_text='I assert that my project is released under an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> or a <a href="https://creativecommons.org/share-your-work/licensing-types-examples/">Creative Commons license</a>')
+    approved_license = models.BooleanField(help_text='I assert that my project is released under either an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> that is also identified by the FSF as a <a href="https://www.gnu.org/licenses/license-list.html">free software license</a>, OR a <a href="https://creativecommons.org/share-your-work/public-domain/freeworks/">Creative Commons license approved for free cultural works</a>')
 
     short_title = models.CharField(
             max_length=SENTENCE_LENGTH,
