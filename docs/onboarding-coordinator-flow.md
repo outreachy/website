@@ -553,6 +553,9 @@ TODO
 - [ ] Remove coordinator request status if the coordinator request has been approved
 - [ ] Project communication channels that are IRC should have link to use Kiwi web IRC
 
+Community CFP:
+- [ ] Define a community and a project. Explain the difference for larger communities and smaller communities.
+
 Community sign up:
 - [ ] Hide community participation until someone is approved to be a coordinator
 - [ ] Change the text 'once you're an approved coordinator' if the person is a coordinator
