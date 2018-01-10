@@ -1,0 +1,70 @@
+<h1>Outreachy internships</h1>
+
+<h2>What is Outreachy?</h2>
+
+<p>Outreachy is a program that provides internships for people from groups traditionally underrepresented in tech.
+Interns are paid a stipend of $5,500 for a three month internship.
+The internship is completely remote, and interns come from around the world.
+</p>
+<p>
+Interns work one-on-one with a mentor from Free and Open Source Software (FOSS) communities.
+The internship projects range from programming, user experience, documentation, illustration and graphical design, to data science.
+</p>
+<p>
+Interns have $500 travel stipend available to use to attend tech events.
+Many interns use the travel stipend to network and find a job.
+Interns often find employment after their internship with <a href="/opportunities/">Outreachy sponsors</a> or in jobs that use the skills they learned during their internship.
+</p>
+
+<p>For more information on who is eligible for Outreachy internships, see the <a href="/apply/eligibility/">eligibility page</a>.
+A description of the application process can be found on the <a href="/apply/">application instructions page</a>
+</p>
+
+<h2>Outreachy Timeline</h2>
+<table class=table>
+	<tr><td>{{ current_round.appsopen }}</td><td>Outreachy application period opens and applicants make their required contributions to projects</td></tr>
+	{% comment %}FIXME: special case this for communities with an extended application deadline{% endcomment %}
+	<tr><td>{{ current_round.appsclose }}</td><td>Outreachy applications due for {{ community.name }} </td></tr>
+	<tr><td>{{ current_round.internannounce }}</td><td>Interns are publicly announced at 4pm UTC on <a href="/alums/">the alums page</a></td></tr>
+	<tr><td>{{ current_round.internstarts }} to {{ current_round.internends }}</td><td>Internships period</td></tr>
+</table>
+
+<h2>Outreachy Internships with {{ community.name }}</h2>
+<p><a href="{{ community.website }}">{{ community.name }}</a>
+is a Free and Open Source Software (FOSS) community
+that is offering internship projects through the Outreachy program.
+Additional Outreachy internship opportunities with other FOSS communities can be found on the <a href="/{{ current_round.url }}">the current round page</a>.
+</p>
+
+<h2>What is {{ community.name }}?</h2>
+<p>{{ community.description }}</p>
+
+{{ community.long_description|safe }}
+
+<h2>How do I get help?</h2>
+<p>Each FOSS community has one or more coordinators, who help answer applicants' questions
+and connect them to project mentors.
+{% if approved_coordinator_list %}
+The {{ community.name }} coordinator{{ approved_coordinator_list|length|pluralize:" is,(s) are" }} 
+	{% for approval in approved_coordinator_list %}
+		{{ approval.coordinator.public_name }}
+		{% if user.is_authenticated %}
+			&lt;{{ approval.coordinator.account.email }}&gt;
+		{% endif %}
+	{% endfor %}
+	</p>
+{% else %}
+	This community currently has no approved coordinator.</p>
+{% endif %}
+
+<p>Each project will have one or more mentors. Outreachy applicants work one-on-one with mentors
+to complete contributions to the project during the application process. Only applicants who
+make a contribution to a project will be eligible to be selected for an internship.
+Interns then work directly with the mentors on their project during the three month internship period.
+</p>
+
+<p>Each project may have different communication channels, issue trackers, and
+different ways to make a contribution. The project mentor is your guide to
+introduce you to the project community and contribution norms. Mentors
+are here to help answer your questions, encourage you, and help you when you get stuck.
+</p>

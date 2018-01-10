@@ -6,21 +6,7 @@ Outreachy internships working with {{ community.name }}
 
 {% block content %}
 
-<h1>Outreachy internships working with {{ community.name }}</h1>
-<p>{{ community.name }} is participating in the Outreachy {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} internships.
-For more information on who is eligible for Outreachy internships, see the <a href="/apply/eligibility/">eligibility page</a>.
-Additional internship opportunities with other organizations can be found on the <a href="/{{ current_round.url }}">the current round page</a>.
-The timeline for applicants is below:</p>
-<table class=table>
-	<tr><td>{{ current_round.appsopen }}</td><td>Outreachy application period opens and applicants make their required contributions to projects</td></tr>
-	{% comment %}FIXME: special case this for communities with an extended application deadline{% endcomment %}
-	<tr><td>{{ current_round.appsclose }}</td><td>Outreachy applications due for {{ community.name }} </td></tr>
-	<tr><td>{{ current_round.internannounce }}</td><td>Interns are publicly announced at 4pm UTC on <a href="/alums/">the alums page</a></td></tr>
-	<tr><td>{{ current_round.internstarts }} to {{ current_round.internends }}</td><td>Internships period</td></tr>
-</table>
-
-<h1>What is {{ community.name }}?</h1>
-<p>{{ community.description }}</p>
+{% include 'home/community_landing_snippet.html' %}
 
 {% if approved_projects %}
 	<h1>Open Projects</h1>
