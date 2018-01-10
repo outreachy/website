@@ -2,10 +2,12 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.core.mail import send_mail
 from django.shortcuts import get_list_or_404
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.text import slugify
@@ -338,6 +340,21 @@ class ParticipationUpdate(ParticipationUpdateView):
         if participation_info.list_community is False:
             participation_info.list_community = None
         return participation_info
+
+    def form_valid(self, form):
+        # render the email about this new community to a string
+        email_string = render_to_string('home/email-community-signup.txt', {
+            'community': self.object.community,
+            'current_round': self.object.participating_round,
+            'participation_info': self.object,
+            }, request=self.request)
+        send_mail(
+                from_email='Outreachy Organizers <organizers@outreachy.org>',
+                recipient_list=['organizers@outreachy.org'],
+                subject='Approve community participation - {name}'.format(name=self.object.community.name),
+                message=email_string)
+        return super(ParticipationUpdate, self).form_valid(form)
+
 
 class NotParticipating(ParticipationUpdateView):
     fields = ['reason_for_not_participating']
