@@ -24,19 +24,19 @@ Past community participation in Outreachy
 	<h2>Call for Outreachy Project Proposals</h2>
 	<p>{{ community.name }} welcomes experienced community contributors to help out as mentors and volunteers.</p>
 
-	{% include 'home/submit_project_proposals.html' %}
+	{% include "home/snippet/submit_project_proposals.html" %}
 
 	<h2>Outreachy roles</h2>
-	{% include "home/roles.html" %}
+	{% include "home/snippet/roles.html" %}
 	<h2>Timeline for {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} internship round</h2>
-	{% include "home/mentor-timeline.html" %}
+	{% include "home/snippet/mentor-timeline.html" %}
 
 {% elif participation_info.list_community is None %}
 	<h1>Pending Outreachy Community</h1>
 	<h2>{{ community.name }}</h2>
 	<p>Outreachy organizers are still reviewing this community and/or its funding status, so Outreachy applicants will not be shown the community landing page yet.</p>
 
-	{% include 'home/submit_project_proposals.html' %}
+	{% include "home/snippet/submit_project_proposals.html" %}
 
 {% else %}
 	<h1>Community Not Participating</h1>
@@ -60,7 +60,7 @@ Past community participation in Outreachy
 
 {% if participation_info.list_community is not False %}
 	<h2>Submit a Project</h2>
-	{% include 'home/submit_project_proposals.html' %}
+	{% include "home/snippet/submit_project_proposals.html" %}
 	{% if participation_info.cfp_text %}
 		<p>{{ participation_info.cfp_text }}</p>
 	{% endif %}
@@ -227,7 +227,7 @@ Past community participation in Outreachy
 		<div class="card">
 			<div class="card-header">Community Information for Applicants</div>
 			<div class="card-body">
-			{% include 'home/community_landing_snippet.html' %}
+			{% include "home/snippet/community_landing_snippet.html" %}
 			</div>
 		</div>
 		<br>

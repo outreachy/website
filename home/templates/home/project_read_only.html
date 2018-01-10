@@ -84,13 +84,13 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 		<h3>Approve Mentors</h3>
 		{% for approval in unapproved_mentors %}
 			<p>{{ approval.mentor.public_name }} &lt;{{ approval.mentor.account.email }}&gt;</p>
-			{% include "home/mentor_approval_warnings.html" %}
+			{% include "home/snippet/mentor_approval_warnings.html" %}
 			<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=approval.mentor.pk %}" method="post">
 				{% csrf_token %}
 				<input class="btn btn-success" type="submit" name="approve" value="Approve Mentor" />
 				<input class="btn btn-warning" type="submit" name="reject" value="Reject Mentor" />
 			</form>
-			{% include "home/mentor_info.html" %}
+			{% include "home/snippet/mentor_info.html" %}
 		{% endfor %}
 	{% endif %}
 
@@ -98,12 +98,12 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 		<h3>Review Approved Mentors</h3>
 		{% for approval in approved_mentors %}
 			<p>{{ approval.mentor.public_name }} &lt;{{ approval.mentor.account.email }}&gt;</p>
-			{% include "home/mentor_approval_warnings.html" %}
+			{% include "home/snippet/mentor_approval_warnings.html" %}
 			<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=approval.mentor.pk %}" method="post">
 				{% csrf_token %}
 				<input class="btn btn-warning" type="submit" name="reject" value="Reject Mentor" />
 			</form>
-			{% include "home/mentor_info.html" %}
+			{% include "home/snippet/mentor_info.html" %}
 		{% endfor %}
 	{% endif %}
 
