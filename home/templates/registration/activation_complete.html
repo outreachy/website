@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}
+Verified
+{% endblock %}
+
+{% block content %}
+<div class="card border-success mb-3">
+    <div class="card-header text-white bg-success">
+        Verified
+    </div>
+    <div class="card-body">
+        <p class="card-text">
+        Thank you for verifying your email address! You can now log in
+        using your new account.
+        </p>
+        <a href="{% url 'login' %}?next={{ request.GET.next|default:"/" }}" class="btn btn-primary">Log in</a>
+    </div>
+</div>
+{% endblock %}
