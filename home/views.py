@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -12,9 +13,10 @@ from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.text import slugify
 from django.views.decorators.http import require_POST
+from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 
-from registration.backends.simple.views import RegistrationView
+from registration.backends.hmac import views as hmac_views
 from extra_views import UpdateWithInlinesView, InlineFormSet
 
 from .models import Community
@@ -27,7 +29,7 @@ from .models import Project
 from .models import ProjectSkill
 from .models import RoundPage
 
-class RegisterUser(RegistrationView):
+class RegisterUser(hmac_views.RegistrationView):
 
     # The RegistrationView that django-registration provides
     # doesn't respect the next query parameter, so we have to
@@ -37,11 +39,60 @@ class RegisterUser(RegistrationView):
         context['next'] = self.request.GET.get('next', '/')
         return context
 
-    def get_success_url(self, user):
-        return '{account_url}?{query_string}'.format(
-                account_url=reverse('account'),
-                query_string=urlencode({'next': self.request.POST.get('next', '/')}))
+    def get_activation_key(self, user):
+        # The superclass implementation of get_activation_key will
+        # serialize arbitrary data in JSON format, so we can save more
+        # data than just the username, which is good! Unfortunately it
+        # expects to get that data from the field named after whatever
+        # string is in USERNAME_FIELD, which only works for actual
+        # Django user models. So first we construct a fake user model
+        # for it to take apart, containing only the data we want.
+        self.USERNAME_FIELD = 'activation_data'
+        self.activation_data = {'u': user.username}
 
+        # Now, if we have someplace the user is supposed to go after
+        # registering, then we save that as well.
+        next_url = self.request.POST.get('next')
+        if next_url:
+            self.activation_data['n'] = next_url
+
+        return super(RegisterUser, self).get_activation_key(self)
+
+    def get_email_context(self, activation_key):
+        return {
+            'activation_key': activation_key,
+            'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS,
+            'request': self.request,
+        }
+
+class PendingRegisterUser(TemplateView):
+    template_name = 'registration/registration_complete.html'
+
+class ActivationView(hmac_views.ActivationView):
+    def get_user(self, data):
+        # In the above RegistrationView, we dumped extra data into the
+        # activation key, but the superclass implementation of get_user
+        # expects the key to contain only a username string. So we save
+        # our extra data and then pass the superclass the part it
+        # expected.
+        self.next_url = data.get('n')
+        return super(ActivationView, self).get_user(data['u'])
+
+    def get_success_url(self, user):
+        # Ugh, we need to chain together TWO next-page URLs so we can
+        # confirm that the person who posesses this activation token
+        # also knows the corresponding password, then make a stop at the
+        # ComradeUpdate form, before finally going where the user
+        # actually wanted to go. Sorry folks.
+        if self.next_url:
+            query = '?' + urlencode({'next': self.next_url})
+        else:
+            query = ''
+        query = '?' + urlencode({'next': reverse('account') + query})
+        return reverse('registration_activation_complete') + query
+
+class ActivationCompleteView(TemplateView):
+    template_name = 'registration/activation_complete.html'
 
 class ComradeUpdate(LoginRequiredMixin, UpdateView):
     model = Comrade
@@ -343,17 +394,28 @@ class ParticipationUpdate(ParticipationUpdateView):
         return participation_info
 
     def form_valid(self, form):
-        # render the email about this new community to a string
-        email_string = render_to_string('home/email-community-signup.txt', {
-            'community': self.object.community,
-            'current_round': self.object.participating_round,
-            'participation_info': self.object,
-            }, request=self.request)
-        send_mail(
-                from_email='Outreachy Organizers <organizers@outreachy.org>',
-                recipient_list=['organizers@outreachy.org'],
-                subject='Approve community participation - {name}'.format(name=self.object.community.name),
-                message=email_string)
+        # Look up the old value of this object, if it existed, before
+        # saving it, so we can tell when this is just an update to a
+        # participation that already exists and which was neither
+        # rejected nor withdrawn.
+        is_already_participating = Participation.objects.filter(
+                community=self.object.community,
+                participating_round=self.object.participating_round,
+                ).exclude(list_community=False).exists()
+
+        if not is_already_participating:
+            # render the email about this new community to a string
+            email_string = render_to_string('home/email-community-signup.txt', {
+                'community': self.object.community,
+                'current_round': self.object.participating_round,
+                'participation_info': self.object,
+                }, request=self.request)
+            send_mail(
+                    from_email='Outreachy Organizers <organizers@outreachy.org>',
+                    recipient_list=['organizers@outreachy.org'],
+                    subject='Approve community participation - {name}'.format(name=self.object.community.name),
+                    message=email_string)
+
         return super(ParticipationUpdate, self).form_valid(form)
 
 
