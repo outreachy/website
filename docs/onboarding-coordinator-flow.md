@@ -501,6 +501,11 @@ Emails
      - action -> link to project read-only page, sign up any co-mentors
      - action -> (if community approved) link to community or project landing page, spread the word to applicants
 
+- [ ] On project approval, check if approved mentors are subscribed to the mailing list, and if not:
+     - To: subscribe email address for mentors mailing list
+     - Subject: subscribe
+     - Body: subscribe "Name" <email>
+
 - [ ] Mentor approval
      - To: Coordinators
      - Subject: Approve Mentor - NAME
@@ -512,6 +517,11 @@ Emails
      - Subject: Mentor Approved - NAME
      - action -> create gmail filter for mentors mailing list RIGHT NOW
      - action -> link to project read-only page
+
+- [ ] On mentor approval for an approved project, check if new mentor is subscribed to the mailing list, and if not:
+     - To: subscribe email address for mentors mailing list
+     - Subject: subscribe
+     - Body: subscribe "Name" <email>
 
 - [ ] All Mentors resigned
      - To: Coordinator
