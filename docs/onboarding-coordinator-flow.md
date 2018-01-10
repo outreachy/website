@@ -293,7 +293,7 @@ Data to Gather
 2. Each Outreachy community will have at least one coordinator (who may also be a mentor).
    Coordinators need to approve mentors and volunteers for their community.
 
-   - [ ] Collaborator info
+   - [x] Collaborator info
 
 3. Coordinators need to provide information about their community:
 
@@ -304,9 +304,9 @@ Data to Gather
    - [x] How many regular contributors does your community have?
    - [x] What different organizations and companies participate in the project?
    - [x] Will all projects involve contributing to software with an [OSI-approved open source license](https://opensource.org/licenses/alphabetical), or creative works with a [Creative Commons license](https://creativecommons.org/share-your-work/licensing-types-examples/)?
-     - [ ] If no: Please detail your licenses, with links to license text.
+     - [x] If no: Please detail your licenses, with links to license text.
    - [x] I assert all Outreachy projects under my community will not rely or build upon proprietary software.
-     - [ ] If no: Please elaborate.
+     - [x] If no: Please elaborate.
    - [x] (Optional) Community governance description URL
    - [x] (Optional, shared with applicants) Code of Conduct URL
    - [x] (Optional, shared with applicants) CLA URL
