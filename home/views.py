@@ -297,7 +297,8 @@ class ComradeRequiredMixin(object):
 
 class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
     model = NewCommunity
-    fields = ['name', 'description', 'community_size', 'longevity', 'participating_orgs',
+    fields = ['name', 'description', 'long_description', 'website',
+            'community_size', 'longevity', 'participating_orgs',
             'approved_license', 'unapproved_license_description',
             'no_proprietary_software', 'proprietary_software_description',
             'goverance', 'code_of_conduct', 'cla', 'dco']
@@ -323,7 +324,7 @@ class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
 
 class CommunityUpdate(LoginRequiredMixin, UpdateView):
     model = Community
-    fields = ['name', 'description']
+    fields = ['name', 'description', 'long_description', 'website']
 
     def get_object(self):
         community = super(CommunityUpdate, self).get_object()

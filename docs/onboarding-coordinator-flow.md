@@ -312,8 +312,8 @@ Data to Gather
    - [x] (Optional, shared with applicants) CLA URL
    - [x] (Optional, shared with applicants) DCO URL - note that a DCO that requires contributors to use their full legal name can mean that trans contributors cannot participate, since it may be expensive or impossible to change their birth name
  - [ ] Static community info (enter once, probably never modify from round to round):
-   - [ ] Longer description of community
-   - [ ] Website URL
+   - [x] Longer description of community
+   - [x] Website URL
    - [ ] (Optional) Email to reach all coordinators and mentors
    - [ ] (Optional) Description or links to documentation/tutorials for how new contributors get started.
    - [ ] (Optional) Community blog or planet
@@ -393,7 +393,7 @@ Data to Gather
      - [x] level of expertise for applicants: we'll teach you, beginner, moderate, advanced
      - [ ] FIXME: Not sure how to handle sub-projects here - e.g. front-end/back-end -
        each subproject may have different skills
-   - [ ] How should applicants find a task to contribute to?
+   - [x] How should applicants find a task to contribute to?
    - [ ] Are you willing to work with ineligible interns? Some applicants may not be
      eligible due to school commitments. Selecting 'No' will hide your contact
      information from these applicants, so that you will only work with applicants
@@ -501,6 +501,11 @@ Emails
      - action -> link to project read-only page, sign up any co-mentors
      - action -> (if community approved) link to community or project landing page, spread the word to applicants
 
+- [ ] On project approval, check if approved mentors are subscribed to the mailing list, and if not:
+     - To: subscribe email address for mentors mailing list
+     - Subject: subscribe
+     - Body: subscribe "Name" <email>
+
 - [ ] Mentor approval
      - To: Coordinators
      - Subject: Approve Mentor - NAME
@@ -512,6 +517,11 @@ Emails
      - Subject: Mentor Approved - NAME
      - action -> create gmail filter for mentors mailing list RIGHT NOW
      - action -> link to project read-only page
+
+- [ ] On mentor approval for an approved project, check if new mentor is subscribed to the mailing list, and if not:
+     - To: subscribe email address for mentors mailing list
+     - Subject: subscribe
+     - Body: subscribe "Name" <email>
 
 - [ ] All Mentors resigned
      - To: Coordinator
@@ -531,20 +541,20 @@ Stretch Goal Emails
 TODO
 ---
 
-- [x] Make a unique_together for the combination of Project slug and Participation (shouldn't have the same Project short title in a round, but could have the same project participate in multiple rounds).
 - [ ] Make a unique_together for the combination of Community and Participation (shouldn't have a community participate in a round more than once)
 - [ ] NullBoolean for Community approved/rejected/pending by organizers
 - [ ] Use the URL template tag in various places to set links, e.g. {% url 'project-status' community_slug=community.slug project_slug=project.slug %}
-- [ ] Formatting on Project form looks odd - needs a custom template?
 - [ ] Outreachy organizer dashboard for community and project on-boarding status.
 - [ ] Switch from simple one-step sign up workflow to two-step email activation using registration.backends.hmac.urls
 - [ ] Add pronouns.is links to pronoun displays
-- [ ] Fix he/him pronouns
 - [ ] Add explanation of roles to community CFP page
 - [ ] Make community CFP text not required
 - [ ] Make sure organizers can approve coordinators
 - [ ] Remove coordinator request status if the coordinator request has been approved
 - [ ] Project communication channels that are IRC should have link to use Kiwi web IRC
+
+Community CFP:
+- [ ] Define a community and a project. Explain the difference for larger communities and smaller communities.
 
 Community sign up:
 - [ ] Hide community participation until someone is approved to be a coordinator
@@ -556,9 +566,7 @@ Project creation and display:
 - [ ] Project information should be visible to all approved mentors in that Participation (not just that project's approved mentors)
 
 Project requirements:
-- [ ] licenses - identified by the FSF as free *and* OSI approved (there are a few licenses that aren't on both lists). Only CC licenses that are "Approved for Free Cultural Works" (no non-derivs or non-commercial).
 - [ ] using a non-free license for a project requires Outreachy organizer approval
-- [ ] coordinators can override any other warnings
 - [ ] "Have accepted public contributions from new contributors for at least six months" - use "public" instead of "external"
 
 Mentor sign-up validation:

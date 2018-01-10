@@ -184,7 +184,7 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 			{% if project.repository %}
 				Applicants can contribute to this project through <a href="{{ project.repository }}">the project repository or contribution page</a>.
 			{% else %}
-				Applicants will need to contact project mentors to get information about how to contribute to this project.
+				Applicants will need to contact project mentors to get information about the project repositories.
 			{% endif %}
 			{% if project.issue_tracker %}
 				The project uses an <a href="{{ project.issue_tracker }}">issue tracker</a> to keep information about bugs to fix, project features to implement, documentation to write, and more.
@@ -196,6 +196,7 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 				{% endif %}
 			{% endif %}
 			</p>
+			{{ project.contribution_tasks|safe }}
 		</div>
 	</div>
 

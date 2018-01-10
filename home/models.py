@@ -196,25 +196,23 @@ class Comrade(models.Model):
     legal_name = models.CharField(max_length=LONG_LEGAL_NAME, verbose_name="Legal name (private)", help_text="Your name on your government identification. This is the name that you would use to sign a legal document. This will be used only by Outreachy organizers on any private legal contracts. Other applicants, coordinators, mentors, and volunteers will not see this name.")
 
     # Reference: https://uwm.edu/lgbtrc/support/gender-pronouns/
-    AE_PRONOUNS = ['ae', 'aer', 'aer', 'aers', 'aerself']
-    EY_PRONOUNS = ['ey', 'em', 'eir', 'eirs', 'eirself']
-    FAE_PRONOUNS = ['fae', 'faer', 'faer', 'faers', 'faerself']
-    HE_PRONOUNS = ['he', 'him', 'his', 'his', 'himself']
-    PER_PRONOUNS = ['per', 'per', 'pers', 'pers', 'perself']
-    SHE_PRONOUNS = ['she', 'her', 'her', 'hers', 'herself']
-    THEY_PRONOUNS = ['they', 'them', 'their', 'theirs', 'themself']
-    VE_PRONOUNS = ['ve', 'ver', 'vis', 'vis', 'verself']
-    XE_PRONOUNS = ['xe', 'xem', 'xyr', 'xyrs', 'xemself']
-    ZE_PRONOUNS = ['ze', 'hir', 'hir', 'hirs', 'hirself']
+    EY_PRONOUNS = ['ey', 'em', 'eir', 'eirs', 'eirself', 'http://pronoun.is/ey']
+    FAE_PRONOUNS = ['fae', 'faer', 'faer', 'faers', 'faerself', 'http://pronoun.is/fae']
+    HE_PRONOUNS = ['he', 'him', 'his', 'his', 'himself', 'http://pronoun.is/he']
+    PER_PRONOUNS = ['per', 'per', 'pers', 'pers', 'perself', 'http://pronoun.is/per']
+    SHE_PRONOUNS = ['she', 'her', 'her', 'hers', 'herself', 'http://pronoun.is/she']
+    THEY_PRONOUNS = ['they', 'them', 'their', 'theirs', 'themself', 'http://pronoun.is/they']
+    VE_PRONOUNS = ['ve', 'ver', 'vis', 'vis', 'verself', 'http://pronoun.is/ve']
+    XE_PRONOUNS = ['xe', 'xem', 'xyr', 'xyrs', 'xemself', 'http://pronoun.is/xe']
+    ZE_PRONOUNS = ['ze', 'hir', 'hir', 'hirs', 'hirself', 'http://pronoun.is/ze']
     PRONOUN_CHOICES = (
-            (SHE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=SHE_PRONOUNS[1], Object=SHE_PRONOUNS[2], possessive=SHE_PRONOUNS[3])),
-            (HE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=HE_PRONOUNS[1], Object=HE_PRONOUNS[2], possessive=HE_PRONOUNS[3])),
-            (THEY_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=THEY_PRONOUNS[1], Object=THEY_PRONOUNS[2], possessive=THEY_PRONOUNS[3])),
-            (AE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=AE_PRONOUNS[1], Object=AE_PRONOUNS[2], possessive=AE_PRONOUNS[3])),
-            (FAE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=FAE_PRONOUNS[1], Object=FAE_PRONOUNS[2], possessive=FAE_PRONOUNS[3])),
-            (EY_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=EY_PRONOUNS[1], Object=EY_PRONOUNS[2], possessive=EY_PRONOUNS[3])),
-            (PER_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=PER_PRONOUNS[1], Object=PER_PRONOUNS[2], possessive=PER_PRONOUNS[3])),
-            (VE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=VE_PRONOUNS[1], Object=VE_PRONOUNS[2], possessive=VE_PRONOUNS[3])),
+            (SHE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=SHE_PRONOUNS[0], Object=SHE_PRONOUNS[1], possessive=SHE_PRONOUNS[2])),
+            (HE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=HE_PRONOUNS[0], Object=HE_PRONOUNS[1], possessive=HE_PRONOUNS[1])),
+            (THEY_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=THEY_PRONOUNS[0], Object=THEY_PRONOUNS[1], possessive=THEY_PRONOUNS[2])),
+            (FAE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=FAE_PRONOUNS[0], Object=FAE_PRONOUNS[1], possessive=FAE_PRONOUNS[2])),
+            (EY_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=EY_PRONOUNS[0], Object=EY_PRONOUNS[1], possessive=EY_PRONOUNS[2])),
+            (PER_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=PER_PRONOUNS[0], Object=PER_PRONOUNS[1], possessive=PER_PRONOUNS[2])),
+            (VE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=VE_PRONOUNS[0], Object=VE_PRONOUNS[1], possessive=VE_PRONOUNS[2])),
             (XE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=XE_PRONOUNS[1], Object=XE_PRONOUNS[2], possessive=XE_PRONOUNS[3])),
             (ZE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=ZE_PRONOUNS[1], Object=ZE_PRONOUNS[2], possessive=ZE_PRONOUNS[3])),
             )
@@ -254,10 +252,20 @@ class Community(models.Model):
     slug = models.SlugField(
             max_length=50,
             unique=True,
-            verbose_name="Community URL slug: https://www.outreachy.org/communities/SLUG/")
+            help_text="Community URL slug: https://www.outreachy.org/communities/SLUG/")
+
     description = models.CharField(
             max_length=PARAGRAPH_LENGTH,
-            verbose_name="Short description of community (3 sentences for someone who has never heard of your community or the technologies involved)")
+            help_text="Short description of community. This should be three sentences for someone who has never heard of your community or the technologies involved. Do not put any links in the short description (use the long description instead).")
+
+    long_description = CKEditorField(
+            blank=True,
+            help_text="(Optional) Longer description of community.")
+
+    website = models.URLField(
+            blank=True,
+            help_text="(Optional) Please provide the URL for your FOSS community's website")
+
     rounds = models.ManyToManyField(RoundPage, through='Participation')
 
     def __str__(self):
@@ -317,7 +325,7 @@ class NewCommunity(Community):
     participating_orgs = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
             help_text="What different organizations and companies participate in the project?")
 
-    approved_license = models.BooleanField(help_text='I assert that all Outreachy projects under my community will be released under an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> or a <a href="https://creativecommons.org/share-your-work/licensing-types-examples/">Creative Commons license</a>')
+    approved_license = models.BooleanField(help_text='I assert that all Outreachy projects under my community will be released under either an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> that is also identified by the FSF as a <a href="https://www.gnu.org/licenses/license-list.html">free software license</a>, OR a <a href="https://creativecommons.org/share-your-work/public-domain/freeworks/">Creative Commons license approved for free cultural works</a>')
     unapproved_license_description = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
             blank=True,
             help_text="(Optional) If your community uses a license that is not an OSI-approved license or a Creative Commons license, please provide links to the licenses or a description.")
@@ -411,7 +419,7 @@ class Project(models.Model):
             max_length=PARAGRAPH_LENGTH,
             help_text='How will this project benefit the parent FOSS community?')
 
-    approved_license = models.BooleanField(help_text='I assert that my project is released under an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> or a <a href="https://creativecommons.org/share-your-work/licensing-types-examples/">Creative Commons license</a>')
+    approved_license = models.BooleanField(help_text='I assert that my project is released under either an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> that is also identified by the FSF as a <a href="https://www.gnu.org/licenses/license-list.html">free software license</a>, OR a <a href="https://creativecommons.org/share-your-work/public-domain/freeworks/">Creative Commons license approved for free cultural works</a>')
 
     short_title = models.CharField(
             max_length=SENTENCE_LENGTH,
@@ -442,6 +450,9 @@ class Project(models.Model):
             blank=True,
             max_length=SENTENCE_LENGTH,
             help_text="(Optional) What tag is used for newcomer-friendly issues for your project?")
+
+    contribution_tasks = CKEditorField(
+            help_text='Instructions for how applicants can make contributions during the Outreachy application period. Make sure to include links to getting started tutorials or documentation, how applicants can find contribution tasks on your project website or issue tracker, who they should ask for tasks, and everything they need to know to get started.')
 
     accepting_new_applicants = models.BooleanField(help_text='Is this project currently accepting new applicants? If you have an applicant in mind to accept as an intern (or several promising applicants) who have filled out the eligibility information and an application, you can uncheck this box to close the project to new applicants.', default=True)
 
