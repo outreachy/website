@@ -385,7 +385,7 @@ class Project(models.Model):
         max_length=2,
         choices=LONGEVITY_CHOICES,
         default=THREE_MONTHS,
-        help_text="How long has the project accepted contributions from external contributors?",
+        help_text="How long has the project accepted publicly submitted contributions?",
     )
 
     SMOL = '3'
