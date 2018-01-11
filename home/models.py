@@ -288,9 +288,9 @@ class NewCommunity(Community):
     LARGER = '100'
     GINORMOUS = '999'
     COMMUNITY_SIZE_CHOICES = (
-        (SMOL, '1-3 people'),
+        (SMOL, '1-2 people'),
         (TINY, '3-5 people'),
-        (MEDIUM, '5-10 people'),
+        (MEDIUM, '6-10 people'),
         (SIZABLE, '11-20 people'),
         (BIG, '21-50 people'),
         (LARGER, '50-100 people'),
@@ -309,9 +309,9 @@ class NewCommunity(Community):
     TWO_YEARS = '2Y'
     OLD_YEARS = 'OL'
     LONGEVITY_CHOICES = (
-        (THREE_MONTHS, '0-3 months'),
-        (SIX_MONTHS, '3-6 months'),
-        (ONE_YEAR, '6-12 months'),
+        (THREE_MONTHS, '0-2 months'),
+        (SIX_MONTHS, '3-5 months'),
+        (ONE_YEAR, '6-11 months'),
         (TWO_YEARS, '1-2 years'),
         (OLD_YEARS, 'More than 2 years'),
     )
@@ -398,9 +398,9 @@ class Project(models.Model):
     LARGER = '100'
     GINORMOUS = '999'
     COMMUNITY_SIZE_CHOICES = (
-        (SMOL, '1-3 people'),
+        (SMOL, '1-2 people'),
         (TINY, '3-5 people'),
-        (MEDIUM, '5-10 people'),
+        (MEDIUM, '6-10 people'),
         (SIZABLE, '11-20 people'),
         (BIG, '21-50 people'),
         (LARGER, '50-100 people'),
@@ -585,9 +585,9 @@ class MentorApproval(models.Model):
     TWO_YEARS = '2Y'
     OLD_YEARS = 'OL'
     LONGEVITY_CHOICES = (
-        (THREE_MONTHS, '0-3 months'),
-        (SIX_MONTHS, '3-6 months'),
-        (ONE_YEAR, '6-12 months'),
+        (THREE_MONTHS, '0-2 months'),
+        (SIX_MONTHS, '3-5 months'),
+        (ONE_YEAR, '6-11 months'),
         (TWO_YEARS, '1-2 years'),
         (OLD_YEARS, 'More than 2 years'),
     )
