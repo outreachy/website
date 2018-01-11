@@ -33,7 +33,7 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 {% if coordinator %}
 	<h2>Coordinator Actions</h2>
 	<h3>Project Approval</h3>
-	{% if not project.approved_license or project.longevity == project.THREE_MONTHS or project.longevity == project.SIX_MONTHS or project.longevity == project.ONE_YEAR or project.community_size == project.SMOL or project.community_size == project.TINY %}
+	{% if not project.approved_license or not project.no_proprietary_software or project.longevity == project.THREE_MONTHS or project.longevity == project.SIX_MONTHS or project.longevity == project.ONE_YEAR or project.community_size == project.SMOL or project.community_size == project.TINY %}
 		<p>Coordinators - please double check with the Outreachy organizers before approving this project!</p>
 	{% else %}
 		<p>Coordinators - this project meets Outreachy organizer standards for project community size, project license, and the length of time the project has been accepting contributions from external contributors. You may approve this project if it meets <a href="/mentor/mentor-faq/#define-a-project">other Outreachy project standards</a> and your community's long term goals.</a>
@@ -42,9 +42,26 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 	<div class="card border-warning mb-3">
 	    <div class="card-header text-white bg-warning">Warning!</div>
 	    <div class="card-body">
-		<h5 class="card-title">This project uses a license that is not
-		    an OSI-approved license or Creative Commons license.</h5>
+		<h5 class="card-title">This internship project will be released under a license that is not
+		    an OSI-approved and FSF-approved free software license OR Creative Commons license.</h5>
 		<p class="card-text">The Outreachy parent organization, Software Freedom Conservancy, requires that all Outreachy internships further the goals of free and open source communities. Projects that use proprietary licenses are not allowed.</p>
+		{% if project.unapproved_license_description %}
+			<p>The project mentor provided this description of their non-free licenses:</p>
+			{{ project.unapproved_license_description|safe }}
+		{% endif %}
+	    </div>
+	</div>
+	{% endif %}
+	{% if not project.no_proprietary_software %}
+	<div class="card border-warning mb-3">
+	    <div class="card-header text-white bg-warning">Warning!</div>
+	    <div class="card-body">
+		<h5 class="card-title">This project furthers the interests of proprietary software, rather than free software.</h5>
+		<p class="card-text">The Outreachy parent organization, Software Freedom Conservancy, requires that all Outreachy internships further the goals of free and open source communities. Projects that further the interests of proprietary software are not allowed.</p>
+		{% if project.proprietary_software_description %}
+			<p>The project mentor provided this description of the proprietary software related to this internship project:</p>
+			{{ project.proprietary_software_description|safe }}
+		{% endif %}
 	    </div>
 	</div>
 	{% endif %}
