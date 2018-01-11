@@ -132,6 +132,33 @@ Past community participation in Outreachy
 	{% if not participation_info.reason_for_not_participating %}
 		<p>Outreachy organizers should read over the information coordinators provided about participating in this round (including intern funding information) and information about new communities. Then decide whether the community should participate in this round and either accept or reject the community.</p>
 		{% if newcommunity %}
+			{% if not newcommunity.approved_license %}
+			<div class="card border-warning mb-3">
+			    <div class="card-header text-white bg-warning">Warning!</div>
+			    <div class="card-body">
+				<h5 class="card-title">This FOSS community uses licenses that are not
+				    an OSI-approved and FSF-approved free software license OR Creative Commons license.</h5>
+				<p class="card-text">The Outreachy parent organization, Software Freedom Conservancy, requires that all Outreachy internships further the goals of free and open source communities. FOSS communities that use proprietary licenses are not allowed.</p>
+				{% if newcommunity.unapproved_license_description %}
+					<p>The coordinator provided this description of their non-free licenses:</p>
+					{{ newcommunity.unapproved_license_description|safe }}
+				{% endif %}
+			    </div>
+			</div>
+			{% endif %}
+			{% if not newcommunity.no_proprietary_software %}
+			<div class="card border-warning mb-3">
+			    <div class="card-header text-white bg-warning">Warning!</div>
+			    <div class="card-body">
+				<h5 class="card-title">This FOSS community furthers the interests of proprietary software, rather than free software.</h5>
+				<p class="card-text">The Outreachy parent organization, Software Freedom Conservancy, requires that all Outreachy internships further the goals of free and open source communities. FOSS communities that further the interests of proprietary software are not allowed.</p>
+				{% if newcommunity.proprietary_software_description %}
+					<p>The coordinator provided this description of the proprietary software related to this FOSS community:</p>
+					{{ newcommunity.proprietary_software_description|safe }}
+				{% endif %}
+			    </div>
+			</div>
+			{% endif %}
 			{% if newcommunity.longevity == newcommunity.THREE_MONTHS or newcommunity.longevity == newcommunity.SIX_MONTHS %}
 			<div class="card border-warning mb-3">
 			    <div class="card-header text-white bg-warning">Warning!</div>
