@@ -22,11 +22,11 @@ Past community participation in Outreachy
 {% if coordinator %}
 	<h2>Coordinator Actions</h2>
 	<p>Once you are an approved coordinator for this community, you can sign the community up to participate in the current round.</p>
-	<a class="btn btn-block btn-success" href="/communities/cfp/{{ community.slug }}/participate/">Community will participate</a>
+	<a class="btn btn-block btn-success" href="{% url 'community-participate' slug=community.slug %}">Community will participate</a>
 	<p>If your community doesn't have funding or mentor bandwidth to participate in this round, please let us know so we can redirect mentors and volunteers to other participating Outreachy communities.</p>
-	<a class="btn btn-block btn-warning" href="/communities/cfp/{{ community.slug }}/dont-participate/">Community won't participate</a>
+	<a class="btn btn-block btn-warning" href="{% url 'community-not-participating' slug=community.slug %}">Community won't participate</a>
 	<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
-	<a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a>
+	<a class="btn btn-block btn-primary" href="{% url 'community-update' slug=community.slug %}">Update Community Info</a>
 {% endif %}
 
 <h2>Mentors and Volunteers</h2>

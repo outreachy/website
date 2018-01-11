@@ -501,7 +501,7 @@ class MentorApprovalUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView)
                 slug=self.kwargs['project_slug'])
 
         if project.is_mentor(self.request.user) or project.is_pending_mentor(self.request.user):
-            return project.mentorapproval_set.filter(mentor__account=self.request.user)
+            return get_object_or_404(project.mentorapproval_set, mentor__account=self.request.user)
 
         return MentorApproval(mentor=self.request.user.comrade, project=project, approved=False)
 
@@ -550,8 +550,7 @@ class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesV
                     project=self.object, approved=True)
             return redirect('project-mentor-create',
                 community_slug=self.object.project_round.community.slug,
-                project_slug=self.object.slug,
-                mentor_id=self.request.user)
+                project_slug=self.object.slug)
         return redirect('project-read-only',
                 project_slug=self.object.slug,
                 community_slug=self.object.project_round.community.slug)
