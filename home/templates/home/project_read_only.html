@@ -33,7 +33,7 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 {% if coordinator %}
 	<h2>Coordinator Actions</h2>
 	<h3>Project Approval</h3>
-	{% if not project.approved_license or not project.no_proprietary_software or project.longevity == project.THREE_MONTHS or project.longevity == project.SIX_MONTHS or project.longevity == project.ONE_YEAR or project.community_size == project.SMOL or project.community_size == project.TINY %}
+	{% if not project.approved_license or not project.no_proprietary_software or project.longevity == project.THREE_MONTHS or project.longevity == project.SIX_MONTHS or project.community_size == project.SMOL %}
 		<p>Coordinators - please double check with the Outreachy organizers before approving this project!</p>
 	{% else %}
 		<p>Coordinators - this project meets Outreachy organizer standards for project community size, project license, and the length of time the project has been accepting contributions from external contributors. You may approve this project if it meets <a href="/mentor/mentor-faq/#define-a-project">other Outreachy project standards</a> and your community's long term goals.</a>
@@ -66,22 +66,21 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 	</div>
 	{% endif %}
 
-	{% if project.longevity == project.THREE_MONTHS or project.longevity == project.SIX_MONTHS or project.longevity == project.ONE_YEAR %}
+	{% if project.longevity == project.THREE_MONTHS or project.longevity == project.SIX_MONTHS %}
 	<div class="card border-warning mb-3">
 	    <div class="card-header text-white bg-warning">Warning!</div>
 	    <div class="card-body">
-		<h5 class="card-title">This project is less than a year old.</h5>
-		<p class="card-text">Outreachy projects should be well-established projects. While GSoC allows students to create their own open source projects, we find Outreachy interns benefit the most from having a well-established community of project contributors to work with.</p>
+		<h5 class="card-title">This FOSS project has been accepting contributions for six months or less.</h5>
+		<p class="card-text">The mentor indicated the FOSS project has been accepting public contributions for {{ project.get_longevity_display }}. Outreachy projects should be well-established projects. While GSoC allows students to create their own open source projects, we find Outreachy interns benefit the most from having a well-established community of project contributors to work with.</p>
 	    </div>
 	</div>
 	{% endif %}
 
-	{% if project.community_size == project.SMOL or project.community_size == project.TINY %}
+	{% if project.community_size == project.SMOL %}
 	<div class="card border-warning mb-3">
 	    <div class="card-header text-white bg-warning">Warning!</div>
 	    <div class="card-body">
-		<h5 class="card-title">This project has five or less regular
-		    contributors.</h5>
+		<h5 class="card-title">This project has two or fewer regular contributors.</h5>
 		<p class="card-text">Outreachy projects should be well-established projects. While GSoC allows students to create their own open source projects, we find Outreachy interns benefit the most from having a well-established community of project contributors to work with.</p>
 	    </div>
 	</div>
