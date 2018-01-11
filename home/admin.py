@@ -3,6 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
 from .models import Community
+from .models import NewCommunity
 from .models import Comrade
 from .models import CoordinatorApproval
 from .models import MentorApproval
@@ -24,6 +25,7 @@ admin.site.register(User, ComradeAdmin)
 admin.site.register(Community)
 admin.site.register(CoordinatorApproval)
 admin.site.register(MentorApproval)
+admin.site.register(NewCommunity)
 admin.site.register(Participation)
 admin.site.register(RoundPage)
 admin.site.register(Project)
