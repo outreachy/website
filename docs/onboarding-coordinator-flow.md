@@ -546,29 +546,15 @@ TODO
 - [ ] Use the URL template tag in various places to set links, e.g. {% url 'project-status' community_slug=community.slug project_slug=project.slug %}
 - [ ] Outreachy organizer dashboard for community and project on-boarding status.
 - [ ] Switch from simple one-step sign up workflow to two-step email activation using registration.backends.hmac.urls
-- [ ] Add pronouns.is links to pronoun displays
-- [ ] Add explanation of roles to community CFP page
 - [ ] Make community CFP text not required
 - [ ] Make sure organizers can approve coordinators
 - [ ] Remove coordinator request status if the coordinator request has been approved
 - [ ] Project communication channels that are IRC should have link to use Kiwi web IRC
 
-Community CFP:
-- [ ] Define a community and a project. Explain the difference for larger communities and smaller communities.
-
 Community sign up:
 - [ ] Hide community participation until someone is approved to be a coordinator
 - [ ] Change the text 'once you're an approved coordinator' if the person is a coordinator
-- [ ] Proprietary software question should read "All projects will be free and open source software and will forward free and open source software, not proprietary software"
 
 Project creation and display:
-- [ ] Add CKEditorField for description of work to be done during the internship
 - [ ] Add CKEditorField for projects that have multiple repositories and issue trackers
 - [ ] Project information should be visible to all approved mentors in that Participation (not just that project's approved mentors)
-
-Project requirements:
-- [ ] using a non-free license for a project requires Outreachy organizer approval
-- [ ] "Have accepted public contributions from new contributors for at least six months" - use "public" instead of "external"
-
-Mentor sign-up validation:
-- [ ] Make sure mentors must click the "I have read the instructions" button
