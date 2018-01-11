@@ -325,15 +325,17 @@ class NewCommunity(Community):
     participating_orgs = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
             help_text="What different organizations and companies participate in the project?")
 
-    approved_license = models.BooleanField(help_text='I assert that all Outreachy projects under my community will be released under either an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> that is also identified by the FSF as a <a href="https://www.gnu.org/licenses/license-list.html">free software license</a>, OR a <a href="https://creativecommons.org/share-your-work/public-domain/freeworks/">Creative Commons license approved for free cultural works</a>')
-    unapproved_license_description = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
+    approved_license = models.BooleanField(
+            default=False,
+            help_text='I assert that all Outreachy internship projects under my community will be released under either an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> that is also identified by the FSF as a <a href="https://www.gnu.org/licenses/license-list.html">free software license</a>, OR a <a href="https://creativecommons.org/share-your-work/public-domain/freeworks/">Creative Commons license approved for free cultural works</a>')
+    unapproved_license_description = CKEditorField(
             blank=True,
-            help_text="(Optional) If your community uses a license that is not an OSI-approved license or a Creative Commons license, please provide links to the licenses or a description.")
+            help_text="(Optional) If your community uses a license that is not an OSI-approved and FSF-approved license OR a Creative Commons license, please provide a description and links to the non-free licenses.")
 
-    no_proprietary_software = models.BooleanField(help_text='I assert all Outreachy projects under my community will not rely or build upon proprietary software.')
-    proprietary_software_description = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
+    no_proprietary_software = models.BooleanField(help_text='I assert all Outreachy internship projects under my community will forward the interests of free and open source software, not proprietary software.')
+    proprietary_software_description = CKEditorField(
             blank=True,
-            help_text="(Optional) If your community relies or builds upon proprietary software, please provide description of what software is used.")
+            help_text="(Optional) If any internship project under your community furthers the interests of proprietary software, please explain.")
 
     goverance = models.URLField(blank=True, help_text="(Optional) Please provide a URL for a description of your community's governance model")
     code_of_conduct = models.URLField(blank=True, help_text="(Optional) Please provide a URL for to your community's Code of Conduct")
@@ -347,7 +349,7 @@ class Participation(models.Model):
     interns_funded = models.IntegerField(
             verbose_name="How many interns do you expect to fund for this round? (Include any Outreachy community credits to round up to an integer number.)")
     cfp_text = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
-            verbose_name="Additional information to provide on a call for mentors and volunteers page (e.g. what kinds of projects you're looking for, ways for volunteers to help Outreachy applicants)")
+            verbose_name="Additional information to provide on a call for mentors and volunteers page (e.g. what kinds of internship projects you're looking for, ways for volunteers to help Outreachy applicants)")
     reason_for_not_participating = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
             blank=True,
             verbose_name="Please let Outreachy organizers know why your community won't be participating in this Outreachy round, and if there's anything we can do to help. This private information is only used by the Outreachy organizers, and will not be displayed on your community page.")
@@ -419,7 +421,19 @@ class Project(models.Model):
             max_length=PARAGRAPH_LENGTH,
             help_text='How will this project benefit the parent FOSS community?')
 
-    approved_license = models.BooleanField(help_text='I assert that my project is released under either an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> that is also identified by the FSF as a <a href="https://www.gnu.org/licenses/license-list.html">free software license</a>, OR a <a href="https://creativecommons.org/share-your-work/public-domain/freeworks/">Creative Commons license approved for free cultural works</a>')
+    approved_license = models.BooleanField(
+            default=False,
+            help_text='I assert that this Outreachy internship projects will released under either an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> that is also identified by the FSF as a <a href="https://www.gnu.org/licenses/license-list.html">free software license</a>, OR a <a href="https://creativecommons.org/share-your-work/public-domain/freeworks/">Creative Commons license approved for free cultural works</a>')
+    unapproved_license_description = CKEditorField(
+            blank=True,
+            help_text="(Optional) If this Outreachy internship project will be released under a license that is not an OSI-approved and FSF-approved license OR a Creative Commons license, please provide a description and links to the non-free licenses.")
+
+    no_proprietary_software = models.BooleanField(
+            default=False,
+            help_text='I assert that this Outreachy internship project will forward the interests of free and open source software, not proprietary software.')
+    proprietary_software_description = CKEditorField(
+            blank=True,
+            help_text="(Optional) If this internship project furthers the interests of proprietary software, please explain.")
 
     short_title = models.CharField(
             max_length=SENTENCE_LENGTH,
