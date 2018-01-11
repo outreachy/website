@@ -72,7 +72,7 @@ Past community participation in Outreachy
 		<p>The {{ community.name }} coordinator is currently reviewing the following projects to see if they are a good fit for the Outreachy program and fit with long-term community goals.</p>
 		<ul>
 		{% for project in pending_projects %}
-			<li><a href="/communities/cfp/{{ community.slug }}/{{ project.slug }}">{{ project.short_title }}</a></li>
+			<li><a href="{% url 'project-read-only' community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></li>
 		{% endfor %}
 		</ul>
 	{% endif %}
@@ -81,11 +81,10 @@ Past community participation in Outreachy
 		<p>These projects have been approved to be listed on the community landing page. Mentors are encouraged to start promoting their projects as soon as the Outreachy round opens on {{ current_round.appsopen }}.</p>
 		<ul>
 		{% for project in approved_projects %}
-			{% if project.accepting_new_applicants %}
-				<li><a href="/communities/cfp/{{ community.slug }}/{{ project.slug }}">{{ project.short_title }}</a></li>
-			{% else %}
-				<li>(Closed to new applicants) <a href="/communities/cfp/{{ community.slug }}/{{ project.slug }}">{{ project.short_title }}</a></li>
-			{% endif %}
+			<li>
+				{% if not project.accepting_new_applicants %}(Closed to new applicants){% endif %}
+				<a href="{% url 'project-read-only' community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a>
+			</li>
 		{% endfor %}
 		</ul>
 	{% endif %}
@@ -94,7 +93,7 @@ Past community participation in Outreachy
 		<p>The {{ community.name }} coordinator(s) or Outreachy organizers do not think the following projects are suitable for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
 		<ul>
 		{% for project in rejected_projects %}
-			<li><a href="/communities/cfp/{{ community.slug }}/{{ project.slug }}">{{ project.short_title }}</a></li>
+			<li><a href="{% url 'project-read-only' community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></li>
 		{% endfor %}
 		</ul>
 	{% endif %}
@@ -195,7 +194,7 @@ Past community participation in Outreachy
 		<p>Coordinators will need to go to each pending project page, review the information, and approve the project. Projects pending coordinator approval:</p>
 		<ul>
 		{% for project in pending_projects %}
-			<li><a href="/communities/cfp/{{ community.slug }}/{{ project.slug }}">{{ project.short_title }}</a></li>
+			<li><a href="{% url 'project-read-only' community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></li>
 		{% endfor %}
 		</ul>
 	{% endif %}
@@ -203,28 +202,28 @@ Past community participation in Outreachy
 		<p><strong>Approve Mentors</strong></p>
 		<p>Coordinators will need to approve additional mentors for projects. Projects that need mentors approved:</p>
 		<ul>
-			{% for project in pending_mentored_projects %}
-				<li><a href="/communities/cfp/{{ community.slug }}/{{ project.slug }}">{{ project.short_title }}</a></li>
-			{% endfor %}
+		{% for project in pending_mentored_projects %}
+			<li><a href="{% url 'project-read-only' community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></li>
+		{% endfor %}
 		</ul>
 	{% endif %}
 	{% if participation_info.reason_for_not_participating %}
 		<p>Have you changed your mind and decided your community can participate in this round of Outreachy?</p>
-		<p><a class="btn btn-block btn-success" href="/communities/cfp/{{ community.slug }}/participate/">Community will participate</a></p>
+		<p><a class="btn btn-block btn-success" href="{% url 'community-participate' slug=community.slug %}">Community will participate</a></p>
 		<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
-		<p><a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a></p>
+		<p><a class="btn btn-block btn-primary" href="{% url 'community-update' slug=community.slug %}">Update Community Info</a></p>
 
 	{% elif participation_info.list_community is False %}
 		<p>Unfortunately, the Outreachy organizers have determined your community should not participate in this round. Please <a href="/contact/">contact us</a> for more details.</p>
 		<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
-		<p><a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a></p>
+		<p><a class="btn btn-block btn-primary" href="{% url 'community-update' slug=community.slug %}">Update Community Info</a></p>
 
 	{% else %}
 		<h3>Update Community Information</h3>
 		<p>Do you need to update information about your community's participation in this round (such as number of interns funded or call for volunteers text)?</p>
-		<p><a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/participate/">Update Round Info</a></p>
+		<p><a class="btn btn-block btn-primary" href="{% url 'community-participate' slug=community.slug %}">Update Round Info</a></p>
 		<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
-		<p><a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/edit/">Update Community Info</a></p>
+		<p><a class="btn btn-block btn-primary" href="{% url 'community-update' slug=community.slug %}">Update Community Info</a></p>
 		<div class="card">
 			<div class="card-header">Community Information for Applicants</div>
 			<div class="card-body">
@@ -234,7 +233,7 @@ Past community participation in Outreachy
 		<br>
 		<h3>Coordinator Actions Rarely Taken</h3>
 		<p>Do you need to withdraw this Outreachy community from this internship round?</p>
-		<a class="btn btn-block btn-danger" href="/communities/cfp/{{ community.slug }}/dont-participate/">Withdraw community</a>
+		<a class="btn btn-block btn-danger" href="{% url 'community-not-participating' slug=community.slug %}">Withdraw community</a>
 	{% endif %}
 	<p>Do you need to withdraw as a coordinator for {{ community.name }}?</p>
 	<form action="{% url 'community-coordinator-update' community_slug=community.slug coordinator_id=user.id %}" method="post">

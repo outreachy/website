@@ -112,7 +112,7 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 <h2>Project Information</h2>
 
 {% if mentor_request and mentor_request.approved is True %}
-	<p><a class="btn btn-primary" href="/communities/cfp/{{ community.slug }}/{{ project.slug }}/edit/">Edit Project Info</a></p>
+	<p><a class="btn btn-primary" href="{% url 'project-participate' community_slug=community.slug project_slug=project.slug %}">Edit Project Info</a></p>
 {% endif %}
 
 {% if coordinator or mentor_request and mentor_request.approved is True %}

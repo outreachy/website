@@ -543,9 +543,7 @@ TODO
 
 - [ ] Make a unique_together for the combination of Community and Participation (shouldn't have a community participate in a round more than once)
 - [ ] NullBoolean for Community approved/rejected/pending by organizers
-- [ ] Use the URL template tag in various places to set links, e.g. {% url 'project-status' community_slug=community.slug project_slug=project.slug %}
 - [ ] Outreachy organizer dashboard for community and project on-boarding status.
-- [ ] Switch from simple one-step sign up workflow to two-step email activation using registration.backends.hmac.urls
 - [ ] Make community CFP text not required
 - [ ] Make sure organizers can approve coordinators
 - [ ] Remove coordinator request status if the coordinator request has been approved
