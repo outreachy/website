@@ -175,7 +175,7 @@ def community_cfp_view(request):
             p.community_id: p
             for p in current_round.participation_set.all()
             }
-    all_communities = Community.objects.all()
+    all_communities = Community.objects.all().order_by('name')
     approved_communities = []
     pending_communities = []
     rejected_communities = []
