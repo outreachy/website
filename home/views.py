@@ -223,6 +223,12 @@ def community_read_only_view(request, slug):
         except CoordinatorApproval.DoesNotExist:
             pass
 
+    newcommunity = None
+    try:
+        newcommunity = community.newcommunity
+    except NewCommunity.DoesNotExist:
+        pass
+
     approved_coordinator_list = community.coordinatorapproval_set.filter(approved=True)
     pending_coordinator_list = community.coordinatorapproval_set.filter(approved=None)
     rejected_coordinator_list = community.coordinatorapproval_set.filter(approved=False)
@@ -230,6 +236,7 @@ def community_read_only_view(request, slug):
     context = {
             'current_round' : current_round,
             'community': community,
+            'newcommunity': newcommunity,
             'coordinator': coordinator,
             'approved_coordinator_list': approved_coordinator_list,
             'pending_coordinator_list': pending_coordinator_list,

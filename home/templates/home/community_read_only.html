@@ -131,6 +131,26 @@ Past community participation in Outreachy
 
 	{% if not participation_info.reason_for_not_participating %}
 		<p>Outreachy organizers should read over the information coordinators provided about participating in this round (including intern funding information) and information about new communities. Then decide whether the community should participate in this round and either accept or reject the community.</p>
+		{% if newcommunity %}
+			{% if newcommunity.longevity == newcommunity.THREE_MONTHS or newcommunity.longevity == newcommunity.SIX_MONTHS %}
+			<div class="card border-warning mb-3">
+			    <div class="card-header text-white bg-warning">Warning!</div>
+			    <div class="card-body">
+				<h5 class="card-title">This FOSS community has been accepting contributions for less than six months.</h5>
+				<p class="card-text">The coordinator indicated the FOSS community has been accepting public contributions for {{ newcommunity.get_longevity_display }}. Outreachy communities should be well-established communities.</p>
+			    </div>
+			</div>
+			{% endif %}
+			{% if newcommunity.community_size == newcommunity.SMOL or newcommunity.community_size == newcommunity.TINY %}
+			<div class="card border-warning mb-3">
+			    <div class="card-header text-white bg-warning">Warning!</div>
+			    <div class="card-body">
+				<h5 class="card-title">This community has six or fewer regular contributors.</h5>
+				<p class="card-text">The coordinator indicated this community has {{ newcommunity.get_community_size_display }} who are regular contributors. Outreachy communities should be well-established communities.</p>
+			    </div>
+			</div>
+			{% endif %}
+		{% endif %}
 		<p>Round participation information</p>
 		<ul>
 			<li>Number of interns funded: {{ participation_info.interns_funded }}</li>
