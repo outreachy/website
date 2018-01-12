@@ -380,13 +380,6 @@ class Participation(ApprovalStatus):
             verbose_name="How many interns do you expect to fund for this round? (Include any Outreachy community credits to round up to an integer number.)")
     cfp_text = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
             verbose_name="Additional information to provide on a call for mentors and volunteers page (e.g. what kinds of internship projects you're looking for, ways for volunteers to help Outreachy applicants)")
-    reason_for_not_participating = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
-            blank=True,
-            verbose_name="Please let Outreachy organizers know why your community won't be participating in this Outreachy round, and if there's anything we can do to help. This private information is only used by the Outreachy organizers, and will not be displayed on your community page.")
-    # FIXME: hide this for everyone except those in the organizer group (or perhaps admin for now)
-    list_community = models.NullBooleanField(
-            default=None,
-            verbose_name="Organizers: Check this box once you have reviewed the community information, confirmed funding, and collected billing information")
 
     def __str__(self):
         return '{start:%Y %B} to {end:%Y %B} round - {community}'.format(
@@ -500,17 +493,6 @@ class Project(ApprovalStatus):
 
     accepting_new_applicants = models.BooleanField(help_text='Is this project currently accepting new applicants? If you have an applicant in mind to accept as an intern (or several promising applicants) who have filled out the eligibility information and an application, you can uncheck this box to close the project to new applicants.', default=True)
 
-    # A NullBooleanField can be not set in the database (Null),
-    # or it can be set in the database to either True or False.
-    # Django maps a Null value in the database to the Python None value.
-    # Using a NullBooleanField instead of a BooleanField allows us to track three project states:
-    #  * Null/None - Project is pending approval from coordinator
-    #  * True - Project has been approved by coordinator
-    #  * False - Project has been rejected by coordinator
-    list_project = models.NullBooleanField(
-            default=None,
-            verbose_name="Coordinators: Check this box once you have reviewed the project information")
-
     class Meta:
         unique_together = (
                 ('slug', 'project_round'),
@@ -590,7 +572,6 @@ class MentorApproval(ApprovalStatus):
     mentor = models.ForeignKey(Comrade, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
-    approved = models.BooleanField(default=False)
     # TODO
     # Add information about how to contact the mentor for this project
     # e.g. I'm <username> on IRC
@@ -669,8 +650,6 @@ class CoordinatorApproval(ApprovalStatus):
     # If a Project or a Comrade gets deleted, delete this through table.
     coordinator = models.ForeignKey(Comrade, on_delete=models.CASCADE)
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
-
-    approved = models.NullBooleanField(default=None)
 
     def __str__(self):
         return '{coordinator} for {community}'.format(
