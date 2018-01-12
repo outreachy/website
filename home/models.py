@@ -246,6 +246,34 @@ class Comrade(models.Model):
     def __str__(self):
         return self.public_name
 
+class ApprovalStatus(models.Model):
+    PENDING = 'P'
+    WITHDRAWN = 'W'
+    REJECTED = 'R'
+    APPROVED = 'A'
+    APPROVAL_STATUS_CHOICES = (
+        (PENDING, 'Pending'),
+        (WITHDRAWN, 'Withdrawn'),
+        (REJECTED, 'Rejected'),
+        (APPROVED, 'Approved'),
+    )
+    approval_status = models.CharField(
+            max_length=1,
+            choices=APPROVAL_STATUS_CHOICES,
+            default=PENDING)
+
+    reason_denied = models.CharField(
+            max_length=THREE_PARAGRAPH_LENGTH,
+            blank=True,
+            help_text="""
+            Please explain why you are withdrawing this request. This
+            explanation will only be shown to Outreachy organizers and
+            approved people within this community.
+            """)
+
+    class Meta:
+        abstract = True
+
 class Community(models.Model):
     name = models.CharField(
             max_length=50, verbose_name="Community name")
@@ -275,7 +303,9 @@ class Community(models.Model):
         return reverse('community-read-only', kwargs={'slug': self.slug})
 
     def is_coordinator(self, user):
-        return self.coordinatorapproval_set.filter(approved=True, coordinator__account=user).exists()
+        return self.coordinatorapproval_set.filter(
+                approval_status=ApprovalStatus.APPROVED,
+                coordinator__account=user).exists()
 
 class NewCommunity(Community):
     community = models.OneToOneField(Community, primary_key=True, parent_link=True)
@@ -342,7 +372,7 @@ class NewCommunity(Community):
     cla = models.URLField(blank=True, help_text="(Optional) Please provide a URL for your community's Contributor License Agreement (CLA)")
     dco = models.URLField(blank=True, help_text="(Optional) Please provide a URL for your community's Developer Certificate of Origin (DCO) agreement")
 
-class Participation(models.Model):
+class Participation(ApprovalStatus):
     community = models.ForeignKey(Community)
     participating_round = models.ForeignKey(RoundPage)
 
@@ -367,7 +397,7 @@ class Participation(models.Model):
     def get_absolute_url(self):
         return reverse('community-landing', kwargs={'round_slug': self.participating_round, 'slug': self.community.slug})
 
-class Project(models.Model):
+class Project(ApprovalStatus):
     project_round = models.ForeignKey(Participation, verbose_name="Outreachy round and community")
     mentors = models.ManyToManyField(Comrade, through='MentorApproval')
 
@@ -495,9 +525,9 @@ class Project(models.Model):
                 )
 
     def is_mentor(self, user):
-        return self.mentorapproval_set.filter(approved=True, mentor__account=user).exists()
-    def is_pending_mentor(self, user):
-        return self.mentorapproval_set.filter(approved=False, mentor__account=user).exists()
+        return self.mentorapproval_set.filter(
+                approval_status=self.APPROVED,
+                mentor__account=user).exists()
 
 class ProjectSkill(models.Model):
     project = models.ForeignKey(Project, verbose_name="Project")
@@ -555,7 +585,7 @@ class ProjectSkill(models.Model):
 # If a co-mentor signs up to join a project, we set them as unapproved.
 # We want the coordinator to review any co-mentors to ensure
 # we don't have a random person signing up who can now see project applications.
-class MentorApproval(models.Model):
+class MentorApproval(ApprovalStatus):
     # If a Project or a Comrade gets deleted, delete this through table.
     mentor = models.ForeignKey(Comrade, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
@@ -635,7 +665,7 @@ class MentorApproval(models.Model):
 
 # This through table records whether a coordinator is approved for this community.
 # Both the current coordinators and organizers (staff) can approve new coordinators.
-class CoordinatorApproval(models.Model):
+class CoordinatorApproval(ApprovalStatus):
     # If a Project or a Comrade gets deleted, delete this through table.
     coordinator = models.ForeignKey(Comrade, on_delete=models.CASCADE)
     community = models.ForeignKey(Community, on_delete=models.CASCADE)

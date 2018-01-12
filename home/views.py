@@ -19,6 +19,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from registration.backends.hmac import views as hmac_views
 from extra_views import UpdateWithInlinesView, InlineFormSet
 
+from .models import ApprovalStatus
 from .models import Community
 from .models import Comrade
 from .models import CoordinatorApproval
@@ -183,11 +184,11 @@ def community_cfp_view(request):
     for c in all_communities:
         participation_info = participating_communities.get(c.id)
         if participation_info is not None:
-            if participation_info.list_community is None:
+            if participation_info.approval_status == ApprovalStatus.PENDING:
                 pending_communities.append(c)
-            elif participation_info.list_community is True:
+            elif participation_info.approval_status == ApprovalStatus.APPROVED:
                 approved_communities.append(c)
-            else:
+            else: # either withdrawn or rejected
                 rejected_communities.append(c)
         else:
             not_participating_communities.append(c)
@@ -229,9 +230,9 @@ def community_read_only_view(request, slug):
     except NewCommunity.DoesNotExist:
         pass
 
-    approved_coordinator_list = community.coordinatorapproval_set.filter(approved=True)
-    pending_coordinator_list = community.coordinatorapproval_set.filter(approved=None)
-    rejected_coordinator_list = community.coordinatorapproval_set.filter(approved=False)
+    approved_coordinator_list = community.coordinatorapproval_set.filter(approval_status=ApprovalStatus.APPROVED)
+    pending_coordinator_list = community.coordinatorapproval_set.filter(approval_status=ApprovalStatus.PENDING)
+    rejected_coordinator_list = community.coordinatorapproval_set.filter(approval_status__in=(ApprovalStatus.REJECTED, ApprovalStatus.WITHDRAWN))
 
     context = {
             'current_round' : current_round,
@@ -249,10 +250,11 @@ def community_read_only_view(request, slug):
     try:
         participation_info = Participation.objects.get(community=community, participating_round=current_round)
         context['participation_info'] = participation_info
-        context['approved_projects'] = participation_info.project_set.filter(list_project=True)
-        context['pending_projects'] = participation_info.project_set.filter(list_project=None)
-        context['rejected_projects'] = participation_info.project_set.filter(list_project=False)
-        context['pending_mentored_projects'] = participation_info.project_set.filter(mentorapproval__approved=False).distinct()
+        if participation_info.approval_status in (ApprovalStatus.PENDING, ApprovalStatus.APPROVED):
+            context['approved_projects'] = participation_info.project_set.filter(approval_status=ApprovalStatus.APPROVED)
+            context['pending_projects'] = participation_info.project_set.filter(approval_status=ApprovalStatus.PENDING)
+            context['rejected_projects'] = participation_info.project_set.filter(approval_status__in=(ApprovalStatus.REJECTED, ApprovalStatus.WITHDRAWN))
+            context['pending_mentored_projects'] = participation_info.project_set.filter(mentorapproval__approval_status=ApprovalStatus.PENDING).distinct()
         template = 'home/community_read_only.html'
     except Participation.DoesNotExist:
         pass
@@ -267,7 +269,7 @@ def community_landing_view(request, round_slug, slug):
             community__slug=slug,
             participating_round__slug=round_slug,
             )
-    projects = get_list_or_404(participation_info.project_set, list_project=True)
+    projects = get_list_or_404(participation_info.project_set, approval_status=ApprovalStatus.APPROVED)
     approved_projects = [p for p in projects if p.accepting_new_applicants]
     closed_projects = [p for p in projects if not p.accepting_new_applicants]
 
@@ -323,7 +325,7 @@ class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
         CoordinatorApproval.objects.create(
                 coordinator=self.request.user.comrade,
                 community=self.object,
-                approved=True)
+                approval_status=ApprovalStatus.APPROVED)
 
         # When a new community is created, immediately redirect the coordinator
         # to gather information about their participation in this round
@@ -353,10 +355,10 @@ def community_status_change(request, community_slug):
             participating_round=current_round)
 
     if 'approve' in request.POST:
-        participation_info.list_community = True
+        participation_info.approval_status = ApprovalStatus.APPROVED
         participation_info.save()
     if 'reject' in request.POST:
-        participation_info.list_community = False
+        participation_info.approval_status = ApprovalStatus.REJECTED
         participation_info.save()
 
     return redirect(participation_info.community)
@@ -380,6 +382,7 @@ class ParticipationUpdateView(LoginRequiredMixin, UpdateView):
                     participating_round=participating_round)
         except Participation.DoesNotExist:
             return Participation(
+                    approval_status=ApprovalStatus.WITHDRAWN,
                     community=community,
                     participating_round=participating_round)
 
@@ -390,27 +393,14 @@ class ParticipationUpdateView(LoginRequiredMixin, UpdateView):
 class ParticipationUpdate(ParticipationUpdateView):
     fields = ['interns_funded', 'cfp_text']
 
-    def get_object(self):
-        participation_info = super(ParticipationUpdate, self).get_object()
-        # If a community initially says they won't participate,
-        # but then changes their mind, we need to set the
-        # community approval status to pending.
-        participation_info.reason_for_not_participating = ""
-        if participation_info.list_community is False:
-            participation_info.list_community = None
-        return participation_info
-
     def form_valid(self, form):
-        # Look up the old value of this object, if it existed, before
-        # saving it, so we can tell when this is just an update to a
-        # participation that already exists and which was neither
-        # rejected nor withdrawn.
-        is_already_participating = Participation.objects.filter(
-                community=self.object.community,
-                participating_round=self.object.participating_round,
-                ).exclude(list_community=False).exists()
+        self.object = form.save(commit=False)
+        self.object.reason_denied = ""
 
-        if not is_already_participating:
+        if self.object.approval_status == ApprovalStatus.WITHDRAWN:
+            # only send email when newly entering the pending state
+            self.object.approval_status = ApprovalStatus.PENDING
+
             # render the email about this new community to a string
             email_string = render_to_string('home/email-community-signup.txt', {
                 'community': self.object.community,
@@ -423,16 +413,17 @@ class ParticipationUpdate(ParticipationUpdateView):
                     subject='Approve community participation - {name}'.format(name=self.object.community.name),
                     message=email_string)
 
-        return super(ParticipationUpdate, self).form_valid(form)
+        self.object.save()
+        return redirect(self.get_success_url())
 
 
 class NotParticipating(ParticipationUpdateView):
-    fields = ['reason_for_not_participating']
+    fields = ['reason_denied']
 
     def get_object(self):
         participation_info = super(NotParticipating, self).get_object()
         participation_info.interns_funded = 0
-        participation_info.list_community = False
+        participation_info.approval_status = ApprovalStatus.WITHDRAWN
         return participation_info
 
 # This view is for mentors and coordinators to review project information and approve it
@@ -447,10 +438,9 @@ def project_read_only_view(request, community_slug, project_slug):
     required_skills = project.projectskill_set.filter(required=ProjectSkill.STRONG)
     preferred_skills = project.projectskill_set.filter(required=ProjectSkill.OPTIONAL)
     bonus_skills = project.projectskill_set.filter(required=ProjectSkill.BONUS)
-    approved_mentors = [x for x in MentorApproval.objects.filter(project=project)
-            if x.approved is True]
-    unapproved_mentors = [x for x in MentorApproval.objects.filter(project=project)
-            if x.approved is False]
+
+    approved_mentors = project.mentorapproval_set.filter(approval_status=ApprovalStatus.APPROVED)
+    unapproved_mentors = project.mentorapproval_set.filter(approval_status__in=(ApprovalStatus.PENDING, ApprovalStatus.REJECTED))
 
     mentor_request = None
     coordinator = None
@@ -507,12 +497,20 @@ class MentorApprovalUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView)
                 project_round=participation,
                 slug=self.kwargs['project_slug'])
 
-        if project.is_mentor(self.request.user) or project.is_pending_mentor(self.request.user):
-            return get_object_or_404(project.mentorapproval_set, mentor__account=self.request.user)
+        try:
+            return MentorApproval.objects.get(
+                    mentor=self.request.user.comrade,
+                    project=project)
+        except MentorApproval.DoesNotExist:
+            return MentorApproval(
+                    mentor=self.request.user.comrade,
+                    project=project,
+                    approval_status=ApprovalStatus.WITHDRAWN)
 
-        return MentorApproval(mentor=self.request.user.comrade, project=project, approved=False)
-
-    def forms_valid(self, form):
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        if self.object.approval_status == ApprovalStatus.WITHDRAWN:
+            self.object.approval_status = ApprovalStatus.PENDING
         self.object.save()
         return redirect('project-read-only',
                 project_slug=self.object.project.slug,
@@ -554,7 +552,8 @@ class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesV
             # If this is a new Project, associate an approved mentor with it
             MentorApproval.objects.create(
                     mentor=self.request.user.comrade,
-                    project=self.object, approved=True)
+                    project=self.object,
+                    approval_status=ApprovalStatus.APPROVED)
             return redirect('project-mentor-create',
                 community_slug=self.object.project_round.community.slug,
                 project_slug=self.object.slug)
@@ -577,10 +576,10 @@ def project_status_change(request, community_slug, project_slug):
         raise PermissionDenied("You are not an approved coordinator for this community.")
 
     if 'approve' in request.POST:
-        project.list_project = True
+        project.approval_status = ApprovalStatus.APPROVED
         project.save()
     if 'reject' in request.POST:
-        project.list_project = False
+        project.approval_status = ApprovalStatus.REJECTED
         project.save()
 
     return redirect('project-read-only',
@@ -613,15 +612,20 @@ def project_mentor_update(request, community_slug, project_slug, mentor_id):
         if not project.project_round.community.is_coordinator(request.user):
             raise PermissionDenied("You are not an approved coordinator for this community.")
         mentor_status = get_object_or_404(MentorApproval, mentor=mentor, project=project)
-        mentor_status.approved = True
+        mentor_status.approval_status = ApprovalStatus.APPROVED
         mentor_status.save()
     if 'reject' in request.POST:
-        if not (is_self or project.project_round.community.is_coordinator(request.user)):
+        if not project.project_round.community.is_coordinator(request.user):
             raise PermissionDenied("You are not an approved coordinator for this community.")
         mentor_status = get_object_or_404(MentorApproval, mentor=mentor, project=project)
-        # Yeah, this could be a NullBooleanField and we could tell mentors
-        # that they have been rejected, but TBH I'm running out of time to fix this.
-        mentor_status.delete()
+        mentor_status.approval_status = ApprovalStatus.REJECTED
+        mentor_status.save()
+    if 'withdraw' in request.POST:
+        if not is_self:
+            raise PermissionDenied("You can only withdraw yourself, not other people.")
+        mentor_status = get_object_or_404(MentorApproval, mentor=mentor, project=project)
+        mentor_status.approval_status = ApprovalStatus.WITHDRAWN
+        mentor_status.save()
 
     return redirect('project-read-only',
             project_slug=project_slug,
@@ -641,24 +645,25 @@ def community_coordinator_update(request, community_slug, coordinator_id):
     if 'add' in request.POST:
         if not is_self:
             raise PermissionDenied("Hey, no fair volunteering other people without their consent!")
-        coordinator_status = CoordinatorApproval(coordinator=coordinator, community=community, approved=None)
+        coordinator_status = CoordinatorApproval(coordinator=coordinator, community=community, approval_status=ApprovalStatus.PENDING)
         coordinator_status.save()
     if 'approve' in request.POST:
         if not (request.user.is_staff or community.is_coordinator(request.user)):
             raise PermissionDenied("You are not an approved coordinator for this community.")
         coordinator_status = get_object_or_404(CoordinatorApproval, coordinator=coordinator, community=community)
-        coordinator_status.approved = True
+        coordinator_status.approval_status = ApprovalStatus.APPROVED
         coordinator_status.save()
     if 'reject' in request.POST:
         if not (request.user.is_staff or community.is_coordinator(request.user)):
             raise PermissionDenied("You are not an approved coordinator for this community.")
         coordinator_status = get_object_or_404(CoordinatorApproval, coordinator=coordinator, community=community)
-        coordinator_status.approved = False
+        coordinator_status.approval_status = ApprovalStatus.REJECTED
         coordinator_status.save()
     if 'withdraw' in request.POST:
         if not is_self:
             raise PermissionDenied("You can only withdraw yourself, not other people.")
         coordinator_status = get_object_or_404(CoordinatorApproval, coordinator=coordinator, community=community)
-        coordinator_status.delete()
+        coordinator_status.approval_status = ApprovalStatus.WITHDRAWN
+        coordinator_status.save()
 
     return redirect(community)

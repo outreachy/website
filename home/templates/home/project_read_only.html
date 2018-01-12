@@ -1,18 +1,12 @@
 {% extends "base.html" %}
 
 {% block title %}
-
-{% if project.list_project %}
-Approved {{ community.name }} Project - {{ project.short_title }}
-{% else %}
-Pending {{ community.name }} Project - {{ project.short_title }}
-{% endif %}
-
+{{ project.get_approval_status_display }} {{ community.name }} Project - {{ project.short_title }}
 {% endblock %}
 
 {% block content %}
 
-{% if project.list_project %}
+{% if project.approval_status == project.APPROVED %}
 	<h1>Approved {{ community.name }} Project</h1>
 	<p>This project has been approved by the {{ community.name }} coordinator(s) to participate in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
 	
@@ -22,7 +16,7 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 	Applicants will find detailed information on the landing page about the community and how to contribute to approved projects.</p>
 	<p>
 
-{% elif project.list_project is None %}
+{% elif project.approval_status == project.PENDING %}
 	<h1>Pending {{ community.name }} Project</h1>
 	<p>This project is waiting to be approved by the {{ community.name }} coordinator(s) for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
 {% else %}
@@ -89,10 +83,10 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 	{% comment %}When we name an input, the name and value get added to the POST dictionary.{% endcomment %}
 	<form action="{% url 'project-status' community_slug=community.slug project_slug=project.slug %}" method="post">
 	    {% csrf_token %}
-	    {% if project.list_project is not True %}
+	    {% if project.approval_status != project.APPROVED %}
 		    <input class="btn btn-block btn-success" type="submit" name="approve" value="Approve Project" />
 	    {% endif %}
-	    {% if project.list_project is not False %}
+	    {% if project.approval_status != project.REJECTED %}
 		    <input class="btn btn-block btn-warning" type="submit" name="reject" value="Reject Project" />
 	    {% endif %}
 	</form>
@@ -103,8 +97,12 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 			{% include "home/snippet/mentor_approval_warnings.html" %}
 			<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=approval.mentor.pk %}" method="post">
 				{% csrf_token %}
+				{% if approval.approval_status != approval.APPROVED %}
 				<input class="btn btn-success" type="submit" name="approve" value="Approve Mentor" />
+				{% endif %}
+				{% if approval.approval_status != approval.REJECTED %}
 				<input class="btn btn-warning" type="submit" name="reject" value="Reject Mentor" />
+				{% endif %}
 			</form>
 			{% include "home/snippet/mentor_info.html" %}
 		{% endfor %}
@@ -127,11 +125,11 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 
 <h2>Project Information</h2>
 
-{% if mentor_request and mentor_request.approved is True %}
+{% if mentor_request and mentor_request.approval_status == mentor_request.APPROVED %}
 	<p><a class="btn btn-primary" href="{% url 'project-participate' community_slug=community.slug project_slug=project.slug %}">Edit Project Info</a></p>
 {% endif %}
 
-{% if coordinator or mentor_request and mentor_request.approved is True %}
+{% if coordinator or mentor_request and mentor_request.approval_status == mentor_request.APPROVED %}
 	<div class="card">
 		<div class="card-header">Project Information for Applicants</div>
 		<div class="card-body">
@@ -252,15 +250,18 @@ Pending {{ community.name }} Project - {{ project.short_title }}
 
 <h3>Project Mentors</h3>
 {% if mentor_request %}
-	{% if mentor_request.approved is True %}
-	<p>You are an approved mentor for this project.</p>
-	{% else %}
-	<p>Your request to mentor this project is under review by the community coordinator.</p>
-	{% endif %}
+	<p>Your request to mentor this project is:
+	<strong>{{ mentor_request.get_approval_status_display }}</strong></p>
+
+	{% if mentor_request.approval_status == mentor_request.PENDING or mentor_request.approval_status == mentor_request.APPROVED %}
 	<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=mentor_request.mentor_id %}" method="post">
 		{% csrf_token %}
-		<input class="btn btn-warning" type="submit" name="reject" value="Withdraw From Mentoring" />
+		<input class="btn btn-warning" type="submit" name="withdraw" value="Withdraw From Mentoring" />
 	</form>
+	{% elif mentor_request.approval_status == mentor_request.WITHDRAWN %}
+	<a href="{% url 'project-mentor-create' community_slug=community.slug project_slug=project.slug %}" class="btn btn-success">Mentor This Project</a>
+	{% endif %}
+
 {% elif request.user.comrade %}
 	<a href="{% url 'project-mentor-create' community_slug=community.slug project_slug=project.slug %}" class="btn btn-success">Mentor This Project</a>
 {% else %}
