@@ -21,6 +21,10 @@ Past community participation in Outreachy
 	The Outreachy organizers have received confirmation for funding of {{ participation_info.interns_funded }} intern{{ participation_info.interns_funded|length|pluralize:",s" }}.
 	</p>
 
+	{% if coordinator %}
+		{% include 'home/snippet/community_read_only_coordinator_actions_reminder.html' %}
+	{% endif %}
+
 	<h2>Call for Outreachy Project Proposals</h2>
 	<p>{{ community.name }} welcomes experienced community contributors to help out as mentors and volunteers.</p>
 
@@ -36,6 +40,12 @@ Past community participation in Outreachy
 	<h2>{{ community.name }}</h2>
 	<p>Outreachy organizers are still reviewing this community and/or its funding status, so Outreachy applicants will not be shown the community landing page yet.</p>
 
+	{% if coordinator %}
+		{% include 'home/snippet/community_read_only_coordinator_actions_reminder.html' %}
+	{% endif %}
+
+	<h2>Call for Outreachy Project Proposals</h2>
+	<p>{{ community.name }} welcomes experienced community contributors to help out as mentors and volunteers.</p>
 	{% include "home/snippet/submit_project_proposals.html" %}
 
 {% else %}

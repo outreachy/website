@@ -1,0 +1,64 @@
+<div class="card border-info mb-3">
+    <div class="card-header text-white bg-info">Coordinator Action Needed</div>
+    <div class="card-body">
+	{% if not pending_projects and approved_projects and not pending_mentored_projects %}
+		<p class="card-text">No actions needed at this time. If you need to change approval status or withdraw as coordinator, go to your dashboard.</p>
+	{% endif %}
+	{% if pending_mentored_projects %}
+		<h5 class="card-text">Approve Mentors</h5>
+		<p class="card-text">
+		It looks like you have co-mentors that need to be approved.
+		</p>
+	{% endif %}
+	{% if pending_projects %}
+		<h5 class="card-text">Approve Project Proposals</h5>
+		<p class="card-text">
+		It looks like you have pending projects that need to be approved.
+		</p>
+	{% endif %}
+	{% if not approved_projects %}
+		<h5 class="card-text">Send out email to mentors to gather proposals</h5>
+		<p class="card-text">It looks like this community doesn't have any approved project proposals.
+		The next step is for you to send this page URL out to your community communication channels
+		and ask contributors to submit proposals. Mentors must submit their own
+		internship project proposal, and coordinators will approve project proposals.
+		</p>
+		<p class="card-text">This page will look very different to potential mentors who aren't logged in,
+		so you may want to open it in a private browser tab to see what it looks like.
+		To open a private browser tab, use <kbd><kbd>ctrl/command</kbd> + <kbd>shift</kbd> + <kbd>N</kbd></kbd> for Chrome or Opera,
+		or <kbd><kbd>ctrl/command</kbd> + <kbd>shift</kbd> + <kbd>P</kbd></kbd> for Firefox or Internet Explorer.
+		</p>
+		<h5 class="card-text">Sample email or post</h5>
+		<p class="card-text">Subject: Seeking Outreachy internship project proposals</p>
+		<p class="card-text">
+		{{ community.name }} is participating in the Outreachy
+		{{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} internships.
+		We are seeking mentors to propose projects that Outreachy interns can work on during their internship.
+		Project proposals will be reviewed by the {{ community.name }} coordinator{{ approved_coordinator_list|length|pluralize:",s " }} 
+		{% for approval in approved_coordinator_list %}
+			{{ approval.coordinator.public_name }}
+			{% if user.is_authenticated %}
+				&lt;{{ approval.coordinator.account.email }}&gt;
+			{% endif %}
+			{% if not forloop.last %}
+			, 
+			{% else %}
+			.
+			{% endif %}
+		{% endfor %}
+		</p>
+		<p class="card-text">
+		When the application period opens on {{ current_round.appsopen }}, applicants will start making
+		contributions to approved projects.
+		Mentors should submit projects as soon as possible, but no later than
+		two weeks before the Outreachy application period closes on {{ current_round.appsclose }}
+		</p>
+		<p class="card-text">
+		Full details about the Outreachy program, the internship timeline, and mentor duties and time commitments
+		can be found on our community's Call for Participation page on the Outreachy website:
+		</p>
+		<p class="card-text"><a href="{% url 'community-read-only' slug=community.slug %}">{{ request.scheme }}://{{ request.get_host }}{% url 'community-read-only' slug=community.slug %}</a></p>
+	{% endif %}
+    </div>
+</div>
+
