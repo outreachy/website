@@ -474,7 +474,7 @@ New pages to create
 
 Emails
 ------
-- [ ] Community approval by Outreachy organizers:
+- [x] Community approval by Outreachy organizers:
      - To: Organizers
      - Subject: Approve Community - NAME
      - data -> (for new community) licenses, longevity, size, etc. Billing info.
