@@ -248,19 +248,19 @@ class Comrade(models.Model):
 
 class ApprovalStatus(models.Model):
     PENDING = 'P'
+    APPROVED = 'A'
     WITHDRAWN = 'W'
     REJECTED = 'R'
-    APPROVED = 'A'
     APPROVAL_STATUS_CHOICES = (
         (PENDING, 'Pending'),
+        (APPROVED, 'Approved'),
         (WITHDRAWN, 'Withdrawn'),
         (REJECTED, 'Rejected'),
-        (APPROVED, 'Approved'),
     )
     approval_status = models.CharField(
             max_length=1,
             choices=APPROVAL_STATUS_CHOICES,
-            default=PENDING)
+            default=WITHDRAWN)
 
     reason_denied = models.CharField(
             max_length=THREE_PARAGRAPH_LENGTH,
