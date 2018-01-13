@@ -274,6 +274,21 @@ class ApprovalStatus(models.Model):
     class Meta:
         abstract = True
 
+    def is_approver(self, user):
+        """
+        Override in subclasses to return True if the given user has
+        permission to approve or reject this request, False otherwise.
+        """
+        raise NotImplemented
+
+    def is_submitter(self, user):
+        """
+        Override in subclasses to return True if the given user has
+        permission to withdraw or re-submit this request, False
+        otherwise.
+        """
+        raise NotImplemented
+
 class Community(models.Model):
     name = models.CharField(
             max_length=50, verbose_name="Community name")
@@ -389,6 +404,12 @@ class Participation(ApprovalStatus):
                 )
     def get_absolute_url(self):
         return reverse('community-landing', kwargs={'round_slug': self.participating_round, 'slug': self.community.slug})
+
+    def is_approver(self, user):
+        return user.is_staff
+
+    def is_submitter(self, user):
+        return self.community.is_coordinator(user)
 
 class Project(ApprovalStatus):
     project_round = models.ForeignKey(Participation, verbose_name="Outreachy round and community")
@@ -506,7 +527,14 @@ class Project(ApprovalStatus):
                 title = self.short_title,
                 )
 
-    def is_mentor(self, user):
+    def is_approver(self, user):
+        return self.project_round.community.is_coordinator(user)
+
+    def is_submitter(self, user):
+        # Everyone is allowed to propose new projects.
+        if self.id is None:
+            return True
+        # XXX: Should coordinators also be allowed to edit projects?
         return self.mentorapproval_set.filter(
                 approval_status=self.APPROVED,
                 mentor__account=user).exists()
@@ -644,6 +672,12 @@ class MentorApproval(ApprovalStatus):
                 title = self.project.short_title,
                 )
 
+    def is_approver(self, user):
+        return self.project.project_round.community.is_coordinator(user)
+
+    def is_submitter(self, user):
+        return self.mentor.account_id == user.id
+
 # This through table records whether a coordinator is approved for this community.
 # Both the current coordinators and organizers (staff) can approve new coordinators.
 class CoordinatorApproval(ApprovalStatus):
@@ -656,3 +690,9 @@ class CoordinatorApproval(ApprovalStatus):
                 coordinator = self.coordinator.public_name,
                 community = self.community,
                 )
+
+    def is_approver(self, user):
+        return user.is_staff or self.community.is_coordinator(user)
+
+    def is_submitter(self, user):
+        return self.coordinator.account_id == user.id
