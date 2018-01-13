@@ -12,7 +12,7 @@ Past community participation in Outreachy
 
 {% block content %}
 
-{% if participation_info.list_community is True %}
+{% if participation_info.approval_status == participation_info.APPROVED %}
 	<h1>Approved Outreachy Community</h1>
 	<h2>{{ community.name }}</h2>
 
@@ -35,7 +35,7 @@ Past community participation in Outreachy
 	<h2>Timeline for {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} internship round</h2>
 	{% include "home/snippet/mentor-timeline.html" %}
 
-{% elif participation_info.list_community is None %}
+{% elif participation_info.approval_status == participation_info.PENDING %}
 	<h1>Pending Outreachy Community</h1>
 	<h2>{{ community.name }}</h2>
 	<p>Outreachy organizers are still reviewing this community and/or its funding status, so Outreachy applicants will not be shown the community landing page yet.</p>
@@ -68,7 +68,7 @@ Past community participation in Outreachy
 	<p>This community currently has no approved coordinator.</p>
 {% endif %}
 
-{% if participation_info.list_community is not False %}
+{% if participation_info.approval_status == participation_info.PENDING or participation_info.approval_status == participation_info.APPROVED %}
 	<h2>Submit a Project</h2>
 	{% include "home/snippet/submit_project_proposals.html" %}
 	{% if participation_info.cfp_text %}
@@ -82,7 +82,7 @@ Past community participation in Outreachy
 		<p>The {{ community.name }} coordinator is currently reviewing the following projects to see if they are a good fit for the Outreachy program and fit with long-term community goals.</p>
 		<ul>
 		{% for project in pending_projects %}
-			<li><a href="{% url 'project-read-only' community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></li>
+			<li><a href="{{ project.get_preview_url }}">{{ project.short_title }}</a></li>
 		{% endfor %}
 		</ul>
 	{% endif %}
@@ -93,7 +93,7 @@ Past community participation in Outreachy
 		{% for project in approved_projects %}
 			<li>
 				{% if not project.accepting_new_applicants %}(Closed to new applicants){% endif %}
-				<a href="{% url 'project-read-only' community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a>
+				<a href="{{ project.get_preview_url }}">{{ project.short_title }}</a>
 			</li>
 		{% endfor %}
 		</ul>
@@ -103,7 +103,7 @@ Past community participation in Outreachy
 		<p>The {{ community.name }} coordinator(s) or Outreachy organizers do not think the following projects are suitable for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
 		<ul>
 		{% for project in rejected_projects %}
-			<li><a href="{% url 'project-read-only' community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></li>
+			<li><a href="{{ project.get_preview_url }}">{{ project.short_title }}</a></li>
 		{% endfor %}
 		</ul>
 	{% endif %}
@@ -131,15 +131,15 @@ Past community participation in Outreachy
 <hr />
 	<h2>Outreachy Organizer Actions</h2>
 
-	{% if participation_info.reason_for_not_participating %}
+	{% if participation_info.approval_status == participation_info.WITHDRAWN %}
 		<p>The coordinator has indicated that they will not be participating in this Outreachy internship round:</p>
 		<p>"{{ participation_info.reason_for_not_participating }}"</p>
 
-	{% elif participation_info.list_community is False %}
+	{% else %}
+		{% if participation_info.approval_status == participation_info.REJECTED %}
 		<p>An Outreachy organizer has rejected this community to participate in this round of Outreachy.</p>
-	{% endif %}
+		{% endif %}
 
-	{% if not participation_info.reason_for_not_participating %}
 		<p>Outreachy organizers should read over the information coordinators provided about participating in this round (including intern funding information) and information about new communities. Then decide whether the community should participate in this round and either accept or reject the community.</p>
 		{% if newcommunity %}
 			{% if not newcommunity.approved_license %}
@@ -195,17 +195,17 @@ Past community participation in Outreachy
 		</ul>
 		<form action="{% url 'community-status' community_slug=community.slug %}" method="post">
 		    {% csrf_token %}
-		    {% if participation_info.list_community is not True %}
+		    {% if participation_info.approval_status != participation_info.APPROVED %}
 			    <input class="btn btn-block btn-success" type="submit" name="approve" value="Approve Community" />
 		    {% endif %}
-		    {% if participation_info.list_community is not False %}
+		    {% if participation_info.approval_status != participation_info.REJECTED %}
 			    <input class="btn btn-block btn-warning" type="submit" name="reject" value="Reject Community" />
 		    {% endif %}
 		</form>
 	{% endif %}
 {% endif %}
 
-{% if coordinator %}
+{% if coordinator and coordinator.approval_status == coordinator.APPROVED %}
 <hr />
 	<h2>Coordinator Actions</h2>
 	{% if pending_coordinators %}
@@ -246,12 +246,12 @@ Past community participation in Outreachy
 		{% endfor %}
 	{% endif %}
 
-	{% if participation_info.list_community is not False and pending_projects %}
+	{% if pending_projects %}
 		<p><strong>Approve Projects</strong></p>
 		<p>Coordinators will need to go to each pending project page, review the information, and approve the project. Projects pending coordinator approval:</p>
 		<ul>
 		{% for project in pending_projects %}
-			<li><a href="{% url 'project-read-only' community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></li>
+			<li><a href="{{ project.get_preview_url }}">{{ project.short_title }}</a></li>
 		{% endfor %}
 		</ul>
 	{% endif %}
@@ -260,17 +260,17 @@ Past community participation in Outreachy
 		<p>Coordinators will need to approve additional mentors for projects. Projects that need mentors approved:</p>
 		<ul>
 		{% for project in pending_mentored_projects %}
-			<li><a href="{% url 'project-read-only' community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></li>
+			<li><a href="{{ project.get_preview_url }}">{{ project.short_title }}</a></li>
 		{% endfor %}
 		</ul>
 	{% endif %}
-	{% if participation_info.reason_for_not_participating %}
+	{% if participation_info.approval_status == participation_info.WITHDRAWN %}
 		<p>Have you changed your mind and decided your community can participate in this round of Outreachy?</p>
 		<p><a class="btn btn-block btn-success" href="{% url 'community-participate' slug=community.slug %}">Community will participate</a></p>
 		<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
 		<p><a class="btn btn-block btn-primary" href="{% url 'community-update' slug=community.slug %}">Update Community Info</a></p>
 
-	{% elif participation_info.list_community is False %}
+	{% elif participation_info.approval_status == participation_info.REJECTED %}
 		<p>Unfortunately, the Outreachy organizers have determined your community should not participate in this round. Please <a href="/contact/">contact us</a> for more details.</p>
 		<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
 		<p><a class="btn btn-block btn-primary" href="{% url 'community-update' slug=community.slug %}">Update Community Info</a></p>

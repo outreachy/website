@@ -1,0 +1,70 @@
+/* A participation request can at any time be in one of five states.
+ *
+ * Various submitters need to apply to participate at various levels,
+ * and are reviewed by a level of approvers above them.
+ *
+ * - Unknown: No request received yet.
+ * - Pending: Request received and awaiting review.
+ * - Withdrawn: Cancelled by submitter.
+ * - Rejected: Cancelled by approver.
+ * - Approved: Permitted by approver.
+ *
+ * For community coordinators, "submitter" is the coordinator applicant,
+ * and "approver" is either the Outreachy organizers or existing
+ * coordinators already approved for the community.
+ *
+ * For community participation in the current round, "submitter" is
+ * anyone who has been approved as a coordinator for this community, and
+ * "approver" is the Outreachy organizers. The user who created a
+ * community is automatically approved as a coordinator for that
+ * community so they can withdraw or edit it while waiting for review.
+ * Editing information about both the community and its participation in
+ * the current round is restricted to "submitter".
+ *
+ * For projects, "submitter" is any approved mentor for the project, and
+ * "approver" is any approved coordinator for the community. The user
+ * who created a project is automatically approved as a mentor for that
+ * project so they can withdraw or edit it while waiting for review.
+ * Editing information about the project is restricted to "submitter".
+ *
+ * For mentors, "submitter" is the mentor applicant, and "approver" is
+ * any approved coordinator for the community. We choose not to allow
+ * existing approved mentors to act as approver for mentor requests
+ * because we want community coordinators to impose consistent standards
+ * on all their mentors. Editing information about the mentor is
+ * restricted to "submitter".
+ *
+ * Under various circumstances, a person may be both a "submitter" and
+ * an "approver" for the same request, such as if a community
+ * coordinator is also a mentor. In that case we only offer them the
+ * higher-priviledge "approver" options.
+ */
+strict digraph {
+	/* If there are resources which are logically part of the thing
+	 * being applied to, such as projects within a community or
+	 * mentors within a project, those resources are not relevant if
+	 * participation has been rejected or withdrawn, or not applied
+	 * for in the first place.  We mark the states that can allow
+	 * nested resources with a different node shape in this graph.
+	 */
+	pending [shape=box];
+	approved [shape=box];
+
+	/* Approvers can't apply or withdraw on the applicant's behalf;
+	 * only the applicant can do that. Applicant can withdraw at any
+	 * time except if approver has explicitly rejected them, in
+	 * which case only approver can change their status.
+	 */
+	edge [label="submitter"];
+	{ unknown pending approved } -> withdrawn;
+	{ unknown withdrawn } -> pending;
+
+	/* Applicants can't reject or approve themselves; only approver
+	 * can do that. Approvers can't change from the "unknown" or
+	 * "withdrawn" states, because approver can't force anyone to
+	 * participate without their consent.
+	 */
+	edge [label="approver"];
+	{ pending approved } -> rejected;
+	{ pending rejected } -> approved;
+}

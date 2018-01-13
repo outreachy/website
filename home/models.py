@@ -246,6 +246,57 @@ class Comrade(models.Model):
     def __str__(self):
         return self.public_name
 
+class ApprovalStatus(models.Model):
+    PENDING = 'P'
+    WITHDRAWN = 'W'
+    REJECTED = 'R'
+    APPROVED = 'A'
+    APPROVAL_STATUS_CHOICES = (
+        (PENDING, 'Pending'),
+        (WITHDRAWN, 'Withdrawn'),
+        (REJECTED, 'Rejected'),
+        (APPROVED, 'Approved'),
+    )
+    approval_status = models.CharField(
+            max_length=1,
+            choices=APPROVAL_STATUS_CHOICES,
+            default=PENDING)
+
+    reason_denied = models.CharField(
+            max_length=THREE_PARAGRAPH_LENGTH,
+            blank=True,
+            help_text="""
+            Please explain why you are withdrawing this request. This
+            explanation will only be shown to Outreachy organizers and
+            approved people within this community.
+            """)
+
+    class Meta:
+        abstract = True
+
+    def is_approver(self, user):
+        """
+        Override in subclasses to return True if the given user has
+        permission to approve or reject this request, False otherwise.
+        """
+        raise NotImplemented
+
+    def is_submitter(self, user):
+        """
+        Override in subclasses to return True if the given user has
+        permission to withdraw or re-submit this request, False
+        otherwise.
+        """
+        raise NotImplemented
+
+    @classmethod
+    def objects_for_dashboard(cls, user):
+        """
+        Override in subclasses to return all instances of this model for
+        which the given user is either an approver or a submitter.
+        """
+        raise NotImplemented
+
 class Community(models.Model):
     name = models.CharField(
             max_length=50, verbose_name="Community name")
@@ -271,11 +322,13 @@ class Community(models.Model):
     def __str__(self):
         return self.name
 
-    def get_absolute_url(self):
+    def get_preview_url(self):
         return reverse('community-read-only', kwargs={'slug': self.slug})
 
     def is_coordinator(self, user):
-        return self.coordinatorapproval_set.filter(approved=True, coordinator__account=user).exists()
+        return self.coordinatorapproval_set.filter(
+                approval_status=ApprovalStatus.APPROVED,
+                coordinator__account=user).exists()
 
 class NewCommunity(Community):
     community = models.OneToOneField(Community, primary_key=True, parent_link=True)
@@ -342,7 +395,7 @@ class NewCommunity(Community):
     cla = models.URLField(blank=True, help_text="(Optional) Please provide a URL for your community's Contributor License Agreement (CLA)")
     dco = models.URLField(blank=True, help_text="(Optional) Please provide a URL for your community's Developer Certificate of Origin (DCO) agreement")
 
-class Participation(models.Model):
+class Participation(ApprovalStatus):
     community = models.ForeignKey(Community)
     participating_round = models.ForeignKey(RoundPage)
 
@@ -350,13 +403,6 @@ class Participation(models.Model):
             verbose_name="How many interns do you expect to fund for this round? (Include any Outreachy community credits to round up to an integer number.)")
     cfp_text = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
             verbose_name="Additional information to provide on a call for mentors and volunteers page (e.g. what kinds of internship projects you're looking for, ways for volunteers to help Outreachy applicants)")
-    reason_for_not_participating = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
-            blank=True,
-            verbose_name="Please let Outreachy organizers know why your community won't be participating in this Outreachy round, and if there's anything we can do to help. This private information is only used by the Outreachy organizers, and will not be displayed on your community page.")
-    # FIXME: hide this for everyone except those in the organizer group (or perhaps admin for now)
-    list_community = models.NullBooleanField(
-            default=None,
-            verbose_name="Organizers: Check this box once you have reviewed the community information, confirmed funding, and collected billing information")
 
     def __str__(self):
         return '{start:%Y %B} to {end:%Y %B} round - {community}'.format(
@@ -364,10 +410,29 @@ class Participation(models.Model):
                 start = self.participating_round.internstarts,
                 end = self.participating_round.internends,
                 )
+
     def get_absolute_url(self):
         return reverse('community-landing', kwargs={'round_slug': self.participating_round, 'slug': self.community.slug})
 
-class Project(models.Model):
+    def get_preview_url(self):
+        return self.community.get_preview_url()
+
+    def is_approver(self, user):
+        return user.is_staff
+
+    def is_submitter(self, user):
+        return self.community.is_coordinator(user)
+
+    @classmethod
+    def objects_for_dashboard(cls, user):
+        if user.is_staff:
+            return cls.objects.all()
+        return cls.objects.filter(
+                community__coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+                community__coordinatorapproval__coordinator__account=user,
+                )
+
+class Project(ApprovalStatus):
     project_round = models.ForeignKey(Participation, verbose_name="Outreachy round and community")
     mentors = models.ManyToManyField(Comrade, through='MentorApproval')
 
@@ -470,17 +535,6 @@ class Project(models.Model):
 
     accepting_new_applicants = models.BooleanField(help_text='Is this project currently accepting new applicants? If you have an applicant in mind to accept as an intern (or several promising applicants) who have filled out the eligibility information and an application, you can uncheck this box to close the project to new applicants.', default=True)
 
-    # A NullBooleanField can be not set in the database (Null),
-    # or it can be set in the database to either True or False.
-    # Django maps a Null value in the database to the Python None value.
-    # Using a NullBooleanField instead of a BooleanField allows us to track three project states:
-    #  * Null/None - Project is pending approval from coordinator
-    #  * True - Project has been approved by coordinator
-    #  * False - Project has been rejected by coordinator
-    list_project = models.NullBooleanField(
-            default=None,
-            verbose_name="Coordinators: Check this box once you have reviewed the project information")
-
     class Meta:
         unique_together = (
                 ('slug', 'project_round'),
@@ -494,10 +548,33 @@ class Project(models.Model):
                 title = self.short_title,
                 )
 
-    def is_mentor(self, user):
-        return self.mentorapproval_set.filter(approved=True, mentor__account=user).exists()
-    def is_pending_mentor(self, user):
-        return self.mentorapproval_set.filter(approved=False, mentor__account=user).exists()
+    def get_preview_url(self):
+        return reverse('project-read-only', kwargs={'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
+
+    def is_approver(self, user):
+        return self.project_round.community.is_coordinator(user)
+
+    def is_submitter(self, user):
+        # Everyone is allowed to propose new projects.
+        if self.id is None:
+            return True
+        # XXX: Should coordinators also be allowed to edit projects?
+        return self.mentorapproval_set.filter(
+                approval_status=self.APPROVED,
+                mentor__account=user).exists()
+
+    @classmethod
+    def objects_for_dashboard(cls, user):
+        return cls.objects.filter(
+                models.Q(
+                    project_round__community__coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+                    project_round__community__coordinatorapproval__coordinator__account=user,
+                    )
+                | models.Q(
+                    mentorapproval__approval_status=ApprovalStatus.APPROVED,
+                    mentorapproval__mentor__account=user,
+                    )
+                )
 
 class ProjectSkill(models.Model):
     project = models.ForeignKey(Project, verbose_name="Project")
@@ -555,12 +632,11 @@ class ProjectSkill(models.Model):
 # If a co-mentor signs up to join a project, we set them as unapproved.
 # We want the coordinator to review any co-mentors to ensure
 # we don't have a random person signing up who can now see project applications.
-class MentorApproval(models.Model):
+class MentorApproval(ApprovalStatus):
     # If a Project or a Comrade gets deleted, delete this through table.
     mentor = models.ForeignKey(Comrade, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
-    approved = models.BooleanField(default=False)
     # TODO
     # Add information about how to contact the mentor for this project
     # e.g. I'm <username> on IRC
@@ -621,9 +697,6 @@ class MentorApproval(models.Model):
         help_text="Have you been a mentor for Outreachy before? (Note that Outreachy welcomes first time mentors, but this information allows the coordinator and other mentors to provide extra help to new mentors.)",
     )
 
-    def get_absolute_url(self):
-        return reverse('project-read-only', kwargs={'community_slug': self.project.project_round.community.slug, 'project_slug': self.project.slug})
-
     def __str__(self):
         return '{mentor} - {start:%Y %B} to {end:%Y %B} round - {community} - {title}'.format(
                 mentor = self.mentor.public_name,
@@ -633,17 +706,49 @@ class MentorApproval(models.Model):
                 title = self.project.short_title,
                 )
 
+    def get_preview_url(self):
+        return self.project.get_preview_url()
+
+    def is_approver(self, user):
+        return self.project.project_round.community.is_coordinator(user)
+
+    def is_submitter(self, user):
+        return self.mentor.account_id == user.id
+
+    @classmethod
+    def objects_for_dashboard(cls, user):
+        return cls.objects.filter(
+                models.Q(
+                    project__project_round__community__coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+                    project__project_round__community__coordinatorapproval__coordinator__account=user,
+                    )
+                | models.Q(mentor__account=user)
+                )
+
 # This through table records whether a coordinator is approved for this community.
 # Both the current coordinators and organizers (staff) can approve new coordinators.
-class CoordinatorApproval(models.Model):
+class CoordinatorApproval(ApprovalStatus):
     # If a Project or a Comrade gets deleted, delete this through table.
     coordinator = models.ForeignKey(Comrade, on_delete=models.CASCADE)
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
-
-    approved = models.NullBooleanField(default=None)
 
     def __str__(self):
         return '{coordinator} for {community}'.format(
                 coordinator = self.coordinator.public_name,
                 community = self.community,
                 )
+
+    def get_preview_url(self):
+        return self.community.get_preview_url()
+
+    def is_approver(self, user):
+        return user.is_staff or self.community.is_coordinator(user)
+
+    def is_submitter(self, user):
+        return self.coordinator.account_id == user.id
+
+    @classmethod
+    def objects_for_dashboard(cls, user):
+        if user.is_staff:
+            return cls.objects.all()
+        return cls.objects.filter(coordinator__account=user)

@@ -47,7 +47,7 @@ Approve This Community
 
 You can approve this by going to the community page, looking under the "Coordinator Actions" section, and clicking 'Approve community':
 
-{{ request.scheme }}://{{ request.get_host }}{% url 'community-read-only' slug=community.slug %}
+{{ request.scheme }}://{{ request.get_host }}{{ community.get_preview_url }}
 
 Thank you!
 
