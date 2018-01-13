@@ -15,7 +15,7 @@ Dashboard
 	<div class="card-header">{{ obj.get_approval_status_display }}</div>
 	<div class="card-body">
 		<p class="card-text"><a href="{{ obj.get_preview_url }}">{{ obj }}</a></p>
-		<div class="mx-auto mr-sm-0 btn-group btn-group-sm" role="group" aria-label="Actions">
+		<div class="mx-auto mr-sm-0" role="group" aria-label="Actions">
 		{% if obj.approval_status == obj.APPROVED %}
 			{% if obj|is_submitter:request.user %}
 			<a href="#" class="btn btn-warning">Withdraw</a>
