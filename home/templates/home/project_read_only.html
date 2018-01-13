@@ -11,8 +11,8 @@
 	<p>This project has been approved by the {{ community.name }} coordinator(s) to participate in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
 	
 	<p>
-	Once the application period starts, the community will be listed on the <a href="/{{ current_round.slug }}/">round home page</a>, with a link to
-	the <a href="/{{ current_round.slug }}/communities/{{ community.slug }}">community landing page</a>.
+	Once the application period starts, the community will be listed on the <a href="{{ current_round.url }}">round home page</a>, with a link to
+	the <a href="{{ project.project_round.get_absolute_url }}">community landing page</a>.
 	Applicants will find detailed information on the landing page about the community and how to contribute to approved projects.</p>
 	<p>
 
