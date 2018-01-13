@@ -363,7 +363,7 @@ def community_status_change(request, community_slug):
         participation_info.approval_status = ApprovalStatus.REJECTED
         participation_info.save()
 
-    return redirect(participation_info.community)
+    return redirect(participation_info.community.get_preview_url())
 
 class ParticipationUpdateView(LoginRequiredMixin, UpdateView):
     model = Participation
@@ -390,7 +390,7 @@ class ParticipationUpdateView(LoginRequiredMixin, UpdateView):
         return participation
 
     def get_success_url(self):
-        return self.object.community.get_absolute_url()
+        return self.object.community.get_preview_url()
 
 # TODO - make sure people can't say they will fund 0 interns
 class ParticipationUpdate(ParticipationUpdateView):
@@ -515,9 +515,7 @@ class MentorApprovalUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView)
         if self.object.approval_status == ApprovalStatus.WITHDRAWN:
             self.object.approval_status = ApprovalStatus.PENDING
         self.object.save()
-        return redirect('project-read-only',
-                project_slug=self.object.project.slug,
-                community_slug=self.object.project.project_round.community.slug)
+        return redirect(self.object.get_preview_url())
 
 class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesView):
     model = Project
@@ -560,9 +558,7 @@ class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesV
             return redirect('project-mentor-create',
                 community_slug=self.object.project_round.community.slug,
                 project_slug=self.object.slug)
-        return redirect('project-read-only',
-                project_slug=self.object.slug,
-                community_slug=self.object.project_round.community.slug)
+        return redirect(self.object.get_preview_url())
 
 @require_POST
 @login_required
@@ -585,9 +581,7 @@ def project_status_change(request, community_slug, project_slug):
         project.approval_status = ApprovalStatus.REJECTED
         project.save()
 
-    return redirect('project-read-only',
-            project_slug=project_slug,
-            community_slug=community_slug)
+    return redirect(project.get_preview_url())
 
 # Each of add/approve/reject requires different permissions, so read
 # this carefully.
@@ -626,9 +620,7 @@ def project_mentor_update(request, community_slug, project_slug, mentor_id):
         mentor_status.approval_status = ApprovalStatus.WITHDRAWN
         mentor_status.save()
 
-    return redirect('project-read-only',
-            project_slug=project_slug,
-            community_slug=community_slug)
+    return redirect(mentor_status.get_preview_url())
 
 @require_POST
 @login_required
@@ -662,4 +654,4 @@ def community_coordinator_update(request, community_slug, coordinator_id):
             coordinator_status.approval_status = ApprovalStatus.WITHDRAWN
             coordinator_status.save()
 
-    return redirect(community)
+    return redirect(community.get_preview_url())

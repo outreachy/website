@@ -82,7 +82,7 @@ Past community participation in Outreachy
 		<p>The {{ community.name }} coordinator is currently reviewing the following projects to see if they are a good fit for the Outreachy program and fit with long-term community goals.</p>
 		<ul>
 		{% for project in pending_projects %}
-			<li><a href="{% url 'project-read-only' community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></li>
+			<li><a href="{{ project.get_preview_url }}">{{ project.short_title }}</a></li>
 		{% endfor %}
 		</ul>
 	{% endif %}
@@ -93,7 +93,7 @@ Past community participation in Outreachy
 		{% for project in approved_projects %}
 			<li>
 				{% if not project.accepting_new_applicants %}(Closed to new applicants){% endif %}
-				<a href="{% url 'project-read-only' community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a>
+				<a href="{{ project.get_preview_url }}">{{ project.short_title }}</a>
 			</li>
 		{% endfor %}
 		</ul>
@@ -103,7 +103,7 @@ Past community participation in Outreachy
 		<p>The {{ community.name }} coordinator(s) or Outreachy organizers do not think the following projects are suitable for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
 		<ul>
 		{% for project in rejected_projects %}
-			<li><a href="{% url 'project-read-only' community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></li>
+			<li><a href="{{ project.get_preview_url }}">{{ project.short_title }}</a></li>
 		{% endfor %}
 		</ul>
 	{% endif %}
@@ -251,7 +251,7 @@ Past community participation in Outreachy
 		<p>Coordinators will need to go to each pending project page, review the information, and approve the project. Projects pending coordinator approval:</p>
 		<ul>
 		{% for project in pending_projects %}
-			<li><a href="{% url 'project-read-only' community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></li>
+			<li><a href="{{ project.get_preview_url }}">{{ project.short_title }}</a></li>
 		{% endfor %}
 		</ul>
 	{% endif %}
@@ -260,7 +260,7 @@ Past community participation in Outreachy
 		<p>Coordinators will need to approve additional mentors for projects. Projects that need mentors approved:</p>
 		<ul>
 		{% for project in pending_mentored_projects %}
-			<li><a href="{% url 'project-read-only' community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></li>
+			<li><a href="{{ project.get_preview_url }}">{{ project.short_title }}</a></li>
 		{% endfor %}
 		</ul>
 	{% endif %}

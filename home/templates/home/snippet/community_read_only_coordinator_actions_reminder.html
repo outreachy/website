@@ -57,7 +57,7 @@
 		Full details about the Outreachy program, the internship timeline, and mentor duties and time commitments
 		can be found on our community's Call for Participation page on the Outreachy website:
 		</p>
-		<p class="card-text"><a href="{% url 'community-read-only' slug=community.slug %}">{{ request.scheme }}://{{ request.get_host }}{% url 'community-read-only' slug=community.slug %}</a></p>
+		<p class="card-text"><a href="{{ community.get_preview_url }}">{{ request.scheme }}://{{ request.get_host }}{{ community.get_preview_url }}</a></p>
 	{% endif %}
     </div>
 </div>

@@ -36,7 +36,7 @@ Call for Outreachy community coordinators, mentors, and volunteers
 	<p>The community coordinator has indicated these communities will participate in this Outreachy internship round, and the communities have been approved by the Outreachy organizers to participate.</p>
 	<ul>
 	{% for c in approved_communities %}
-		<li><a href="{% url 'community-read-only' slug=c.slug %}">{{ c.name }}</a></li>
+		<li><a href="{{ c.get_preview_url }}">{{ c.name }}</a></li>
 	{% endfor %}
 	</ul>
 {% endif %}
@@ -45,7 +45,7 @@ Call for Outreachy community coordinators, mentors, and volunteers
 	<p>The community coordinator has indicated these communities will participate in this Outreachy internship round, but Outreachy organizer approval is still pending. Mentors and volunteers are encouraged to sign up while the community is under review.  If you would like to volunteer or mentor with Outreachy, make sure to <a href="/mentor/#mentor">review the duties and expections</a> for mentors and volunteers before you sign up to help a community.</p>
 	<ul>
 	{% for c in pending_communities %}
-		<li><a href="{% url 'community-read-only' slug=c.slug %}">{{ c.name }}</a></li>
+		<li><a href="{{ c.get_preview_url }}">{{ c.name }}</a></li>
 	{% endfor %}
 	</ul>
 {% endif %}
@@ -57,7 +57,7 @@ Call for Outreachy community coordinators, mentors, and volunteers
 
 	<ul>
 	{% for c in rejected_communities %}
-		<li><a href="{% url 'community-read-only' slug=c.slug %}">{{ c.name }}</a></li>
+		<li><a href="{{ c.get_preview_url }}">{{ c.name }}</a></li>
 	{% endfor %}
 	</ul>
 {% endif %}
@@ -69,7 +69,7 @@ Call for Outreachy community coordinators, mentors, and volunteers
 
 <ul>
 {% for c in not_participating_communities %}
-	<li><a href="{% url 'community-read-only' slug=c.slug %}">{{ c.name }}</a></li>
+	<li><a href="{{ c.get_preview_url }}">{{ c.name }}</a></li>
 {% endfor %}
 </ul>
 

@@ -314,7 +314,7 @@ class Community(models.Model):
     def __str__(self):
         return self.name
 
-    def get_absolute_url(self):
+    def get_preview_url(self):
         return reverse('community-read-only', kwargs={'slug': self.slug})
 
     def is_coordinator(self, user):
@@ -402,8 +402,12 @@ class Participation(ApprovalStatus):
                 start = self.participating_round.internstarts,
                 end = self.participating_round.internends,
                 )
+
     def get_absolute_url(self):
         return reverse('community-landing', kwargs={'round_slug': self.participating_round, 'slug': self.community.slug})
+
+    def get_preview_url(self):
+        return self.community.get_preview_url()
 
     def is_approver(self, user):
         return user.is_staff
@@ -526,6 +530,9 @@ class Project(ApprovalStatus):
                 community = self.project_round.community,
                 title = self.short_title,
                 )
+
+    def get_preview_url(self):
+        return reverse('project-read-only', kwargs={'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
 
     def is_approver(self, user):
         return self.project_round.community.is_coordinator(user)
@@ -660,9 +667,6 @@ class MentorApproval(ApprovalStatus):
         help_text="Have you been a mentor for Outreachy before? (Note that Outreachy welcomes first time mentors, but this information allows the coordinator and other mentors to provide extra help to new mentors.)",
     )
 
-    def get_absolute_url(self):
-        return reverse('project-read-only', kwargs={'community_slug': self.project.project_round.community.slug, 'project_slug': self.project.slug})
-
     def __str__(self):
         return '{mentor} - {start:%Y %B} to {end:%Y %B} round - {community} - {title}'.format(
                 mentor = self.mentor.public_name,
@@ -671,6 +675,9 @@ class MentorApproval(ApprovalStatus):
                 community = self.project.project_round.community,
                 title = self.project.short_title,
                 )
+
+    def get_preview_url(self):
+        return self.project.get_preview_url()
 
     def is_approver(self, user):
         return self.project.project_round.community.is_coordinator(user)
@@ -690,6 +697,9 @@ class CoordinatorApproval(ApprovalStatus):
                 coordinator = self.coordinator.public_name,
                 community = self.community,
                 )
+
+    def get_preview_url(self):
+        return self.community.get_preview_url()
 
     def is_approver(self, user):
         return user.is_staff or self.community.is_coordinator(user)
