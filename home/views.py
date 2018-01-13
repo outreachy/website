@@ -405,7 +405,7 @@ class ParticipationUpdate(ParticipationUpdateView):
             self.object.approval_status = ApprovalStatus.PENDING
 
             # render the email about this new community to a string
-            email_string = render_to_string('home/email-community-signup.txt', {
+            email_string = render_to_string('home/email/community-signup.txt', {
                 'community': self.object.community,
                 'current_round': self.object.participating_round,
                 'participation_info': self.object,
