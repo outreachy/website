@@ -221,7 +221,7 @@ class Comrade(models.Model):
             choices=PRONOUN_CHOICES,
             default=THEY_PRONOUNS,
             verbose_name="Pronouns",
-            help_text="Your preferred pronoun. This will be used in emails from Outreachy organizers directly to you. The format is subject/object/possessive. Example: '__(subject)__ interned with Outreachy. The mentor liked working with __(object)__. __(possessive)__ project was challenging.",
+            help_text="Your preferred pronoun. This will be used in emails from Outreachy organizers directly to you. The format is subject/object/possessive. Example: '__(subject)__ interned with Outreachy. The mentor liked working with __(object)__. __(possessive)__ internship project was challenging.",
             )
 
     pronouns_to_participants = models.BooleanField(
@@ -353,7 +353,7 @@ class NewCommunity(Community):
         max_length=3,
         choices=COMMUNITY_SIZE_CHOICES,
         default=SMOL,
-        help_text="How many people are contributing to this community regularly?",
+        help_text="How many people are contributing to this FOSS community regularly?",
     )
 
     THREE_MONTHS = '3M'
@@ -372,18 +372,18 @@ class NewCommunity(Community):
         max_length=2,
         choices=LONGEVITY_CHOICES,
         default=THREE_MONTHS,
-        help_text="How long has the community been a free and open source software (FOSS) community?",
+        help_text="How long has this FOSS community accepted public contributions?",
     )
 
     participating_orgs = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
-            help_text="What different organizations and companies participate in the project?")
+            help_text="What different organizations and companies participate in this FOSS community?")
 
     approved_license = models.BooleanField(
             default=False,
             help_text='I assert that all Outreachy internship projects under my community will be released under either an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> that is also identified by the FSF as a <a href="https://www.gnu.org/licenses/license-list.html">free software license</a>, OR a <a href="https://creativecommons.org/share-your-work/public-domain/freeworks/">Creative Commons license approved for free cultural works</a>')
     unapproved_license_description = CKEditorField(
             blank=True,
-            help_text="(Optional) If your community uses a license that is not an OSI-approved and FSF-approved license OR a Creative Commons license, please provide a description and links to the non-free licenses.")
+            help_text="(Optional) If your FOSS community uses a license that is not an OSI-approved and FSF-approved license OR a Creative Commons license, please provide a description and links to the non-free licenses.")
 
     no_proprietary_software = models.BooleanField(help_text='I assert all Outreachy internship projects under my community will forward the interests of free and open source software, not proprietary software.')
     proprietary_software_description = CKEditorField(
@@ -452,7 +452,7 @@ class Project(ApprovalStatus):
         max_length=2,
         choices=LONGEVITY_CHOICES,
         default=THREE_MONTHS,
-        help_text="How long has the project accepted publicly submitted contributions?",
+        help_text="How long has the team accepted publicly submitted contributions? (See the 'Terms Used' section above for a definition of a team.",
     )
 
     SMOL = '3'
@@ -475,7 +475,7 @@ class Project(ApprovalStatus):
         max_length=3,
         choices=COMMUNITY_SIZE_CHOICES,
         default=SMOL,
-        help_text="How many people are contributing to this project regularly?",
+        help_text="How many regular contributors does this team have?",
     )
     intern_benefits = models.CharField(
             max_length=PARAGRAPH_LENGTH,
@@ -484,11 +484,11 @@ class Project(ApprovalStatus):
     community_benefits = models.CharField(
             blank=True,
             max_length=PARAGRAPH_LENGTH,
-            help_text='How will this project benefit the parent FOSS community?')
+            help_text='How will this internship project benefit the FOSS community that is funding it?')
 
     approved_license = models.BooleanField(
             default=False,
-            help_text='I assert that this Outreachy internship projects will released under either an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> that is also identified by the FSF as a <a href="https://www.gnu.org/licenses/license-list.html">free software license</a>, OR a <a href="https://creativecommons.org/share-your-work/public-domain/freeworks/">Creative Commons license approved for free cultural works</a>')
+            help_text='I assert that this Outreachy internship project will released under either an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> that is also identified by the FSF as a <a href="https://www.gnu.org/licenses/license-list.html">free software license</a>, OR a <a href="https://creativecommons.org/share-your-work/public-domain/freeworks/">Creative Commons license approved for free cultural works</a>')
     unapproved_license_description = CKEditorField(
             blank=True,
             help_text="(Optional) If this Outreachy internship project will be released under a license that is not an OSI-approved and FSF-approved license OR a Creative Commons license, please provide a description and links to the non-free licenses.")
@@ -502,13 +502,13 @@ class Project(ApprovalStatus):
 
     short_title = models.CharField(
             max_length=SENTENCE_LENGTH,
-            help_text='Short project title. This should be 100 characters or less, starting with a verb like "Create", "Improve", "Extend", "Survey", "Document", etc. Assume the applicant has never heard of your technology before and keep it simple.')
+            help_text='Short title for this internship project proposal. This should be 100 characters or less, starting with a verb like "Create", "Improve", "Extend", "Survey", "Document", etc. Assume the applicant has never heard of your technology before and keep it simple. The short title will be used in your project page URL, so keep it short.')
     slug = models.SlugField(
             max_length=50,
-            verbose_name="Community URL slug: https://www.outreachy.org/communities/SLUG/")
+            verbose_name="Project URL slug")
     long_description = CKEditorField(
             blank=True,
-            help_text='Description of the project, excluding applicant skills.')
+            help_text='Description of the internship project, excluding applicant skills.')
 
     communication_tool = models.CharField(
             blank=True,
@@ -517,23 +517,23 @@ class Project(ApprovalStatus):
     communication_url = models.CharField(blank=True,
             max_length=200,
             validators=[URLValidator(schemes=['http', 'https', 'irc'])],
-            help_text='(Optional) URL for your project`s communication channel. For IRC, use irc://<host>[:port]/[channel]. Since many applicants have issues with IRC port blocking at their universities, IRC communication links will use <a href="https://kiwiirc.com/">Kiwi IRC</a> to embed the IRC communications in the project page.')
+            help_text='(Optional) URL for the communication channel applicants will use to reach mentors and ask questions about this internship project. For IRC, use irc://<host>[:port]/[channel]. Since many applicants have issues with IRC port blocking at their universities, IRC communication links will use <a href="https://kiwiirc.com/">Kiwi IRC</a> to embed the IRC communications in the project page.')
     communication_norms = CKEditorField(
             blank=True,
-            help_text='(Optional) After following the project communication channel link, are there any special instructions? For example: "Join the #outreachy Zulip channel and make sure to introduce yourself.')
-    communication_help = models.URLField(blank=True, help_text='(Optional) URL for the user documentation for your communication protocol')
+            help_text='(Optional) After following the communication channel link, are there any special instructions? For example: "Join the #outreachy Zulip channel and make sure to introduce yourself.')
+    communication_help = models.URLField(blank=True, help_text='(Optional) URL for the documentation for your communication tool')
 
-    repository = models.URLField(blank=True, help_text="(Optional) URL for your project's repository or contribution mechanism")
-    issue_tracker = models.URLField(blank=True, help_text="(Optional) URL for your project's issue tracker")
+    repository = models.URLField(blank=True, help_text="(Optional) URL for your team's repository or contribution mechanism")
+    issue_tracker = models.URLField(blank=True, help_text="(Optional) URL for your team's issue tracker")
     newcomer_issue_tag = models.CharField(
             blank=True,
             max_length=SENTENCE_LENGTH,
-            help_text="(Optional) What tag is used for newcomer-friendly issues for your project?")
+            help_text="(Optional) What tag is used for newcomer-friendly issues for your team or for this internship project?")
 
     contribution_tasks = CKEditorField(
             help_text='Instructions for how applicants can make contributions during the Outreachy application period. Make sure to include links to getting started tutorials or documentation, how applicants can find contribution tasks on your project website or issue tracker, who they should ask for tasks, and everything they need to know to get started.')
 
-    accepting_new_applicants = models.BooleanField(help_text='Is this project currently accepting new applicants? If you have an applicant in mind to accept as an intern (or several promising applicants) who have filled out the eligibility information and an application, you can uncheck this box to close the project to new applicants.', default=True)
+    accepting_new_applicants = models.BooleanField(help_text='Is this internship project currently accepting contributions from new applicants? If you have an applicant in mind to accept as an intern (or several promising applicants) who have filled out the eligibility information and an application, you can uncheck this box to close the internship project to new applicants.', default=True)
 
     class Meta:
         unique_together = (
@@ -579,7 +579,7 @@ class Project(ApprovalStatus):
 class ProjectSkill(models.Model):
     project = models.ForeignKey(Project, verbose_name="Project")
 
-    skill = models.CharField(max_length=SENTENCE_LENGTH, verbose_name="Skill description", help_text="What is one skill an the applicant needs to have in order to apply to your project, or what skill will they need to be willing to learn?")
+    skill = models.CharField(max_length=SENTENCE_LENGTH, verbose_name="Skill description", help_text="What is one skill an the applicant needs to have in order to contribute to this internship project, or what skill will they need to be willing to learn?")
 
     TEACH_YOU = 'WTU'
     CONCEPTS = 'CON'
@@ -598,7 +598,7 @@ class ProjectSkill(models.Model):
             choices=EXPERIENCE_CHOICES,
             default=TEACH_YOU,
             verbose_name="Expected skill experience level",
-            help_text="Choose this carefully! Many Outreachy applicants choose not to apply to a project unless they meet 100% of the project skill criteria.",
+            help_text="Choose this carefully! Many Outreachy applicants choose not to apply for an internship project unless they meet 100% of the project skill criteria.",
             )
 
     BONUS = 'BON'
@@ -614,7 +614,7 @@ class ProjectSkill(models.Model):
             choices=REQUIRED_CHOICES,
             default=BONUS,
             verbose_name="Skill impact on intern selection",
-            help_text="Is this skill a hard requirement, a preference, or an optional bonus? Choose this carefully! Many Outreachy applicants choose not to apply to a project unless they meet 100% of the project skill criteria.",
+            help_text="Is this skill a hard requirement, a preference, or an optional bonus? Choose this carefully! Many Outreachy applicants choose not to apply for an internship project unless they meet 100% of the project skill criteria.",
             )
 
     def __str__(self):
@@ -650,7 +650,7 @@ class MentorApproval(ApprovalStatus):
             help_text='I understand that Outreachy mentors will spend a minimum of 5 hours a week mentoring their intern during the three month internship period')
     understands_applicant_time_commitment = models.BooleanField(
             default=False,
-            help_text='I understand that Outreachy mentors often find they must spend more time helping applicants during the application period than helping their intern during the intership period')
+            help_text='I understand that Outreachy mentors often find they must spend more time helping applicants during the application period than helping their intern during the internship period')
     understands_mentor_contract = models.BooleanField(
             default=False,
             help_text='I understand that Outreachy mentors will need to sign a <a href="/documents/1/Outreachy-Program--Mentorship-Terms-of-Participation-May-2017.pdf">mentor contract</a> after they accept an applicant as an intern')
@@ -671,12 +671,12 @@ class MentorApproval(ApprovalStatus):
         max_length=2,
         choices=LONGEVITY_CHOICES,
         default=THREE_MONTHS,
-        help_text="How long have you been contributing to this project?",
+        help_text="How long have you been a contributor on this team?",
     )
     communication_channel_username = models.CharField(
         max_length=SENTENCE_LENGTH,
         blank=True,
-        help_text="What is your username on the project communication channel? (This information will be shared with applicants.)",
+        help_text="What is your username on the team communication channel? (This information will be shared with applicants.)",
     )
     OUTREACHY = 'OUT'
     GOOGLE_SUMMER_OF_CODE = 'GSOC'
