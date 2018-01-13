@@ -412,7 +412,7 @@ class Participation(ApprovalStatus):
                 )
 
     def get_absolute_url(self):
-        return reverse('community-landing', kwargs={'round_slug': self.participating_round, 'slug': self.community.slug})
+        return reverse('community-landing', kwargs={'round_slug': self.participating_round.slug, 'slug': self.community.slug})
 
     def get_preview_url(self):
         return self.community.get_preview_url()
