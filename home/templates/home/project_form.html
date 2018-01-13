@@ -2,10 +2,17 @@
 
 {% block content %}
 
-<h1>Project Information</h1>
+<h1>Internship Project Proposal</h1>
 
-<p>Project information will be reviewed by Outreachy organizers and community coordinators. Approved projects will need to meet <a href="/mentor/mentor-faq/#define-a-project">Outreachy project guidelines</a>.</p>
+<p>Mentors submit internship project proposals, which will be reviewed by Outreachy organizers and your community coordinators.</p>
 
+<h2>Terms Used</h2>
+{% include "home/snippet/foss-terms.html" %}
+
+<h2>Internship Project Requirements</h2>
+{% include "home/snippet/license-requirements.html" %}
+
+<h2>Internship Project Information</h2>
 <form action="" method="post">
     {% csrf_token %}
     {{ form.media }}
