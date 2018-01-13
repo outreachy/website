@@ -633,7 +633,6 @@ def project_mentor_update(request, community_slug, project_slug, mentor_id):
 @require_POST
 @login_required
 def community_coordinator_update(request, community_slug, coordinator_id):
-    current_round = RoundPage.objects.latest('internstarts')
     community = get_object_or_404(Community, slug=community_slug)
 
     # See comment in project_mentor_update for why we just 404.
