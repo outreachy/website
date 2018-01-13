@@ -1,0 +1,43 @@
+Hi Outreachy organizers,
+
+A intern project proposal has been submitted for {{ community.name }} that uses a non-free license or furthers proprietary software. If necessary, ask your Django admin to put the project proposal in the 'Rejected' state. The intern project proposal can be seen here:
+
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_preview_url }}
+
+Please contact the community coordinators and project mentor to further investigate this issue. Here is a sample email:
+
+To: {% for c in coordinator_list %}"{{ c.public_name }}" <{{ c.account.email }}>,{% endfor %}
+Cc: "{{ mentor.public_name }}" <{{ mentor.account.email }}>
+Bcc: "Outreachy Organizers" <organizers@outreachy.org>
+Subject: URGENT - Question about Outreachy intern project proposal
+
+A intern project proposal has been submitted for {{ community.name }} that may not be appropriate for Outreachy.
+
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_preview_url }}
+
+{% if not project.approved_license %}Non-free Licenses Used
+----------------------
+
+Outreachy internship projects must be released under one of the following two licenses:
+
+ - An OSI-approved open source license [1] that is also identified by the FSF as a free software license[2], OR
+ - A Creative Commons license approved for free cultural works.
+
+[1] https://opensource.org/licenses/alphabetical
+[2] https://www.gnu.org/licenses/license-list.html
+[3] https://creativecommons.org/share-your-work/public-domain/freeworks/
+
+Mentors indicated this internship project may be released under non-free licenses.{% if project.unapproved_license_description %} Mentors provided this info about the non-free licenses:
+
+"{{ project.unapproved_license_description|striptags }}"
+{% endif %}{% else %}
+{% endif %}
+{% if not project.no_proprietary_software %}Proprietary Software Used
+-------------------------
+
+Outreachy internship projects must forward the interests of free and open source software, not proprietary software.
+
+Mentors indicated this project furthers the interests of proprietary software. {% if project.proprietary_software_description %}Mentors provided this info about how the project furthers proprietary software:
+
+"{{ project.proprietary_software_description|striptags }}"
+{% endif %}{% endif %}
