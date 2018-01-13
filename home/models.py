@@ -289,6 +289,14 @@ class ApprovalStatus(models.Model):
         """
         raise NotImplemented
 
+    @classmethod
+    def objects_for_dashboard(cls, user):
+        """
+        Override in subclasses to return all instances of this model for
+        which the given user is either an approver or a submitter.
+        """
+        raise NotImplemented
+
 class Community(models.Model):
     name = models.CharField(
             max_length=50, verbose_name="Community name")
@@ -414,6 +422,15 @@ class Participation(ApprovalStatus):
 
     def is_submitter(self, user):
         return self.community.is_coordinator(user)
+
+    @classmethod
+    def objects_for_dashboard(cls, user):
+        if user.is_staff:
+            return cls.objects.all()
+        return cls.objects.filter(
+                community__coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+                community__coordinatorapproval__coordinator__account=user,
+                )
 
 class Project(ApprovalStatus):
     project_round = models.ForeignKey(Participation, verbose_name="Outreachy round and community")
@@ -545,6 +562,19 @@ class Project(ApprovalStatus):
         return self.mentorapproval_set.filter(
                 approval_status=self.APPROVED,
                 mentor__account=user).exists()
+
+    @classmethod
+    def objects_for_dashboard(cls, user):
+        return cls.objects.filter(
+                models.Q(
+                    project_round__community__coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+                    project_round__community__coordinatorapproval__coordinator__account=user,
+                    )
+                | models.Q(
+                    mentorapproval__approval_status=ApprovalStatus.APPROVED,
+                    mentorapproval__mentor__account=user,
+                    )
+                )
 
 class ProjectSkill(models.Model):
     project = models.ForeignKey(Project, verbose_name="Project")
@@ -685,6 +715,16 @@ class MentorApproval(ApprovalStatus):
     def is_submitter(self, user):
         return self.mentor.account_id == user.id
 
+    @classmethod
+    def objects_for_dashboard(cls, user):
+        return cls.objects.filter(
+                models.Q(
+                    project__project_round__community__coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+                    project__project_round__community__coordinatorapproval__coordinator__account=user,
+                    )
+                | models.Q(mentor__account=user)
+                )
+
 # This through table records whether a coordinator is approved for this community.
 # Both the current coordinators and organizers (staff) can approve new coordinators.
 class CoordinatorApproval(ApprovalStatus):
@@ -706,3 +746,9 @@ class CoordinatorApproval(ApprovalStatus):
 
     def is_submitter(self, user):
         return self.coordinator.account_id == user.id
+
+    @classmethod
+    def objects_for_dashboard(cls, user):
+        if user.is_staff:
+            return cls.objects.all()
+        return cls.objects.filter(coordinator__account=user)

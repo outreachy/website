@@ -655,3 +655,22 @@ def community_coordinator_update(request, community_slug, coordinator_id):
             coordinator_status.save()
 
     return redirect(community.get_preview_url())
+
+@login_required
+def dashboard(request):
+    """
+    Find objects for which the current user is either an approver or a
+    submitter, and list them all on one page.
+    """
+    models = (
+            CoordinatorApproval,
+            Participation,
+            Project,
+            MentorApproval,
+            )
+
+    groups = [(label, group) for label, group in ((model._meta.verbose_name_plural, model.objects_for_dashboard(request.user)) for model in models) if group]
+
+    return render(request, 'home/dashboard.html', {
+        'groups': groups,
+        })

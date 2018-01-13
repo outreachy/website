@@ -4,6 +4,7 @@ from .views import community_landing_view
 from .views import CommunityCreate, CommunityUpdate
 from .views import community_coordinator_update
 from .views import community_status_change
+from .views import dashboard
 from .views import ComradeUpdate
 from .views import MentorApprovalUpdate
 from .views import ParticipationUpdate
@@ -35,6 +36,7 @@ urlpatterns = [
     url(r'^communities/cfp/(?P<slug>[^/]+)/$', community_read_only_view, name='community-read-only'),
     url(r'^(?P<round_slug>[^/]+)/communities/(?P<slug>[^/]+)/$', community_landing_view, name='community-landing'),
     url(r'^communities/cfp/$', community_cfp_view, name='community-cfp'),
+    url(r'^dashboard/$', dashboard, name='dashboard'),
     url(r'^account/$', ComradeUpdate.as_view(), name='account'),
     url(r'^register/$', RegisterUser.as_view(), name='register'),
     url(r'^register/sent/$', PendingRegisterUser.as_view(), name='registration_complete'),

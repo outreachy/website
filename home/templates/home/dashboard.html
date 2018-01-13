@@ -1,0 +1,47 @@
+{% extends "base.html" %} 
+{% load approval_status %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+<h1>Dashboard</h1>
+
+{% for group in groups %}
+<h2>{{ group.0|title }}</h2>
+	{% for obj in group.1 %}
+	<div class="card mb-3">
+	<div class="card-header">{{ obj.get_approval_status_display }}</div>
+	<div class="card-body">
+		<p class="card-text"><a href="{{ obj.get_preview_url }}">{{ obj }}</a></p>
+		<div class="mx-auto mr-sm-0 btn-group btn-group-sm" role="group" aria-label="Actions">
+		{% if obj.approval_status == obj.APPROVED %}
+			{% if obj|is_submitter:request.user %}
+			<a href="#" class="btn btn-warning">Withdraw</a>
+			{% endif %}
+			{% if obj|is_approver:request.user %}
+			<a href="#" class="btn btn-danger">Reject</a>
+			{% endif %}
+		{% elif obj.approval_status == obj.PENDING %}
+			{% if obj|is_approver:request.user %}
+			<a href="{{ obj.get_preview_url }}" class="btn btn-primary">Review</a>
+			{% endif %}
+			{% if obj|is_submitter:request.user %}
+			<a href="#" class="btn btn-warning">Withdraw</a>
+			{% endif %}
+		{% elif obj.approval_status == obj.WITHDRAWN %}
+			{% if obj|is_submitter:request.user %}
+			<a href="#" class="btn btn-success">Resubmit</a>
+			{% endif %}
+		{% elif obj.approval_status == obj.REJECTED %}
+			{% if obj|is_approver:request.user %}
+			<a href="#" class="btn btn-success">Approve</a>
+			{% endif %}
+		{% endif %}
+		</div>
+	</div>
+	</div>
+	{% endfor %}
+{% endfor %}
+{% endblock %}
