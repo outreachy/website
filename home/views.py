@@ -483,13 +483,15 @@ class ProjectSkillsInline(InlineFormSet):
 
 class MentorApprovalUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     model = MentorApproval
-    fields = ['instructions_read',
+    fields = [
+            'mentored_before',
+            'longevity',
+            'communication_channel_username',
+            'instructions_read',
             'understands_intern_time_commitment',
             'understands_applicant_time_commitment',
             'understands_mentor_contract',
-            'mentored_before',
-            'longevity',
-            'communication_channel_username']
+            ]
 
     def get_object(self):
         participating_round = RoundPage.objects.latest('internstarts')
