@@ -1,3 +1,4 @@
+from collections import defaultdict
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -671,7 +672,17 @@ def dashboard(request):
             MentorApproval,
             )
 
-    groups = [(label, group) for label, group in ((model._meta.verbose_name_plural, model.objects_for_dashboard(request.user)) for model in models) if group]
+    by_status = defaultdict(list)
+    for model in models:
+        objects = model.objects_for_dashboard(request.user)
+        for obj in objects:
+            by_status[obj.approval_status].append((model._meta.verbose_name, obj))
+
+    groups = []
+    for status, label in ApprovalStatus.APPROVAL_STATUS_CHOICES:
+        group = by_status.get(status)
+        if group:
+            groups.append((label, group))
 
     return render(request, 'home/dashboard.html', {
         'groups': groups,

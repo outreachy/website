@@ -248,19 +248,19 @@ class Comrade(models.Model):
 
 class ApprovalStatus(models.Model):
     PENDING = 'P'
+    APPROVED = 'A'
     WITHDRAWN = 'W'
     REJECTED = 'R'
-    APPROVED = 'A'
     APPROVAL_STATUS_CHOICES = (
         (PENDING, 'Pending'),
+        (APPROVED, 'Approved'),
         (WITHDRAWN, 'Withdrawn'),
         (REJECTED, 'Rejected'),
-        (APPROVED, 'Approved'),
     )
     approval_status = models.CharField(
             max_length=1,
             choices=APPROVAL_STATUS_CHOICES,
-            default=PENDING)
+            default=WITHDRAWN)
 
     reason_denied = models.CharField(
             max_length=THREE_PARAGRAPH_LENGTH,
@@ -412,7 +412,7 @@ class Participation(ApprovalStatus):
                 )
 
     def get_absolute_url(self):
-        return reverse('community-landing', kwargs={'round_slug': self.participating_round, 'slug': self.community.slug})
+        return reverse('community-landing', kwargs={'round_slug': self.participating_round.slug, 'slug': self.community.slug})
 
     def get_preview_url(self):
         return self.community.get_preview_url()
