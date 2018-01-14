@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^communities/cfp/(?P<community_slug>[^/]+)/status/$', views.community_status_change, name='community-status'),
     url(r'^communities/cfp/(?P<community_slug>[^/]+)/coordinator/(?P<username>[^/]+)/$', views.CoordinatorApprovalPreview.as_view(), name='coordinatorapproval-preview'),
     url(r'^communities/cfp/(?P<community_slug>[^/]+)/coordinator-update/(?P<coordinator_id>[^/]+)/$', views.community_coordinator_update, name='community-coordinator-update'),
+    url(r'^communities/cfp/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/mentor/(?P<username>[^/]+)/$', views.MentorApprovalPreview.as_view(), name='mentorapproval-preview'),
     url(r'^communities/cfp/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/mentor-status/(?P<mentor_id>[^/]+)/$', views.project_mentor_update, name='project-mentor-status'),
     url(r'^communities/cfp/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/mentor-create/$', views.MentorApprovalUpdate.as_view(), name='project-mentor-create'),
     url(r'^communities/cfp/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/edit/$', views.ProjectUpdate.as_view(), name='project-participate'),

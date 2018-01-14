@@ -596,6 +596,16 @@ def project_status_change(request, community_slug, project_slug):
 
     return redirect(project.get_preview_url())
 
+class MentorApprovalPreview(Preview):
+    def get_object(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        return get_object_or_404(
+                MentorApproval,
+                project__slug=self.kwargs['project_slug'],
+                project__project_round__participating_round=current_round,
+                project__project_round__community__slug=self.kwargs['community_slug'],
+                mentor__account__username=self.kwargs['username'])
+
 # Each of add/approve/reject requires different permissions, so read
 # this carefully.
 @require_POST
