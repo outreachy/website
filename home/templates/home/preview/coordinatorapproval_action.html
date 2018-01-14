@@ -2,26 +2,18 @@
 {% load approval_status %}
 
 {% block title %}
-{{ coordinatorapproval.get_approval_status_display }} Coordinator for {{ coordinatorapproval.community }}
+{{ view.kwargs.action|title }} Coordinator for {{ coordinatorapproval.community }}
 {% endblock %}
 
 {% block content %}
 <h1>
-	{{ coordinatorapproval.get_approval_status_display }}
-	Coordinator for
+	{{ view.kwargs.action|title }} Coordinator for
 	<a href="{{ coordinatorapproval.community.get_preview_url }}">{{ coordinatorapproval.community }}</a>
 </h1>
 
 {% with c=coordinatorapproval.coordinator community=coordinatorapproval.community %}
 
 <p>{{ c.public_name }} &lt;{{ c.account.email }}&gt;</p>
-
-{% if coordinatorapproval.approval_status == coordinatorapproval.PENDING %}
-{% if coordinatorapproval|is_approver:request.user %}
-<a href="{% url 'coordinatorapproval-action' action='approve' community_slug=community.slug username=c.account.username %}" class="btn btn-success">Approve Coordinator</a>
-<a href="{% url 'coordinatorapproval-action' action='reject' community_slug=community.slug username=c.account.username %}" class="btn btn-warning">Reject Coordinator</a>
-{% endif %}
-{% endif %}
 
 <ul>
 	{% if c.pronouns_to_participants %}<li>Pronouns: {{ c.get_pronouns_display }}</li>{% endif %}
@@ -31,6 +23,12 @@
 	{% if c.third_language %}<li>Third language: {{ c.get_third_language_display }}</li>{% endif %}
 	{% if c.fourth_language %}<li>Fourth language: {{ c.get_fourth_language_display }}</li>{% endif %}
 </ul>
+
+<form action="" method="post">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<input type="submit" class="btn btn-primary" value="{{ view.kwargs.action|title }}" />
+</form>
 
 {% endwith %}
 {% endblock %}

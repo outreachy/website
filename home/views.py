@@ -19,6 +19,9 @@ from django.views.generic.edit import CreateView, UpdateView
 from registration.backends.hmac import views as hmac_views
 from extra_views import UpdateWithInlinesView, InlineFormSet
 
+from .mixins import ApprovalStatusAction
+from .mixins import ComradeRequiredMixin
+
 from .models import ApprovalStatus
 from .models import CommunicationChannel
 from .models import Community
@@ -274,26 +277,6 @@ def community_landing_view(request, round_slug, slug):
             },
             )
 
-# If the logged-in user doesn't have a Comrade object, redirect them to
-# create one and then come back to the current page.
-#
-# Note that LoginRequiredMixin must be to the left of this class in the
-# view's list of parent classes, and the base View must be to the right.
-class ComradeRequiredMixin(object):
-    def dispatch(self, request, *args, **kwargs):
-        try:
-            # Check that the logged-in user has a Comrade instance too:
-            # even just trying to access the field will fail if not.
-            request.user.comrade
-        except Comrade.DoesNotExist:
-            # If not, redirect to create one and remember to come back
-            # here afterward.
-            return redirect(
-                    '{account_url}?{query_string}'.format(
-                        account_url=reverse('account'),
-                        query_string=urlencode({'next': request.path})))
-        return super(ComradeRequiredMixin, self).dispatch(request, *args, **kwargs)
-
 class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
     model = NewCommunity
     fields = ['name', 'description', 'long_description', 'website',
@@ -471,16 +454,26 @@ def project_read_only_view(request, community_slug, project_slug):
             },
             )
 
-class ProjectSkillsInline(InlineFormSet):
-    model = ProjectSkill
-    fields = '__all__'
+class CoordinatorApprovalAction(ApprovalStatusAction):
+    # We don't collect any information about coordinators beyond what's
+    # in the Comrade model already.
+    fields = []
 
-class CommunicationChannelsInline(InlineFormSet):
-    model = CommunicationChannel
-    fields = '__all__'
+    def get_object(self):
+        community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
 
-class MentorApprovalUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
-    model = MentorApproval
+        username = self.kwargs.get('username')
+        if username:
+            comrade = get_object_or_404(Comrade, account__username=username)
+        else:
+            comrade = self.request.user.comrade
+
+        try:
+            return CoordinatorApproval.objects.get(coordinator=comrade, community=community)
+        except CoordinatorApproval.DoesNotExist:
+            return CoordinatorApproval(coordinator=comrade, community=community)
+
+class MentorApprovalAction(ApprovalStatusAction):
     fields = [
             'mentored_before',
             'longevity',
@@ -493,32 +486,27 @@ class MentorApprovalUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView)
 
     def get_object(self):
         participating_round = RoundPage.objects.latest('internstarts')
-        participation = get_object_or_404(Participation,
-                    community__slug=self.kwargs['community_slug'],
-                    participating_round=participating_round)
         project = get_object_or_404(Project,
-                project_round=participation,
+                project_round__community__slug=self.kwargs['community_slug'],
+                project_round__participating_round=participating_round,
                 slug=self.kwargs['project_slug'])
 
-        try:
-            return MentorApproval.objects.get(
-                    mentor=self.request.user.comrade,
-                    project=project)
-        except MentorApproval.DoesNotExist:
-            return MentorApproval(
-                    mentor=self.request.user.comrade,
-                    project=project,
-                    approval_status=ApprovalStatus.WITHDRAWN)
-
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        if self.object.approval_status == ApprovalStatus.WITHDRAWN:
-            self.object.approval_status = ApprovalStatus.PENDING
-            send_email = True
+        username = self.kwargs.get('username')
+        if username:
+            mentor = get_object_or_404(Comrade, account__username=username)
         else:
-            send_email = False
-        self.object.save()
-        if send_email:
+            mentor = self.request.user.comrade
+
+        try:
+            return MentorApproval.objects.get(mentor=mentor, project=project)
+        except MentorApproval.DoesNotExist:
+            return MentorApproval(mentor=mentor, project=project)
+
+    def notify(self):
+        if self.prior_status == self.target_status:
+            return
+
+        if self.target_status == ApprovalStatus.PENDING:
             email_string = render_to_string('home/email/mentor-review.txt', {
                 'project': self.object.project,
                 'community': self.object.project.project_round.community,
@@ -529,7 +517,16 @@ class MentorApprovalUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView)
                     recipient_list=self.object.project.project_round.community.get_coordinator_email_list(),
                     subject='Approve Outreachy mentor for {name}'.format(name=self.object.project.project_round.community.name),
                     message=email_string)
-        return redirect(self.object.get_preview_url())
+        elif self.target_status == ApprovalStatus.APPROVED:
+            self.object.project.email_approved_mentor(request, self.object)
+
+class ProjectSkillsInline(InlineFormSet):
+    model = ProjectSkill
+    fields = '__all__'
+
+class CommunicationChannelsInline(InlineFormSet):
+    model = CommunicationChannel
+    fields = '__all__'
 
 class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesView):
     model = Project
@@ -581,9 +578,10 @@ class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesV
                     mentor=self.request.user.comrade,
                     project=self.object,
                     approval_status=ApprovalStatus.APPROVED)
-            response = redirect('project-mentor-create',
+            response = redirect('mentorapproval-action',
                 community_slug=self.object.project_round.community.slug,
-                project_slug=self.object.slug)
+                project_slug=self.object.slug,
+                action='submit')
         else:
             response = redirect(self.object.get_preview_url())
 
@@ -654,86 +652,12 @@ class MentorApprovalPreview(Preview):
                 project__project_round__community__slug=self.kwargs['community_slug'],
                 mentor__account__username=self.kwargs['username'])
 
-# Each of add/approve/reject requires different permissions, so read
-# this carefully.
-@require_POST
-@login_required
-def project_mentor_update(request, community_slug, project_slug, mentor_id):
-    current_round = RoundPage.objects.latest('internstarts')
-
-    # If this user doesn't have a Comrade object and wants to add
-    # themself as a mentor, we'd like to help them by redirecting to the
-    # ComradeUpdate form. (Approve and reject actions are guaranteed to
-    # have a Comrade already so they're fine, at least.) But because
-    # this is a POST request, we can't. This should be rare; just 404.
-    mentor = get_object_or_404(Comrade, pk=mentor_id)
-
-    mentor_status = get_object_or_404(
-            MentorApproval,
-            mentor=mentor,
-            project__slug=project_slug,
-            project__project_round__participating_round=current_round,
-            project__project_round__community__slug=community_slug)
-
-    if 'approve' in request.POST:
-        if not mentor_status.is_approver(request.user):
-            raise PermissionDenied("You are not an approved coordinator for this community.")
-        mentor_status.approval_status = ApprovalStatus.APPROVED
-        mentor_status.save()
-        mentor_status.project.email_approved_mentor(request, mentor_status)
-    if 'reject' in request.POST:
-        if not mentor_status.is_approver(request.user):
-            raise PermissionDenied("You are not an approved coordinator for this community.")
-        mentor_status.approval_status = ApprovalStatus.REJECTED
-        mentor_status.save()
-    if 'withdraw' in request.POST:
-        if not mentor_status.is_submitter(request.user):
-            raise PermissionDenied("You can only withdraw yourself, not other people.")
-        mentor_status.approval_status = ApprovalStatus.WITHDRAWN
-        mentor_status.save()
-
-    return redirect(mentor_status.get_preview_url())
-
 class CoordinatorApprovalPreview(Preview):
     def get_object(self):
         return get_object_or_404(
                 CoordinatorApproval,
                 community__slug=self.kwargs['community_slug'],
                 coordinator__account__username=self.kwargs['username'])
-
-@require_POST
-@login_required
-def community_coordinator_update(request, community_slug, coordinator_id):
-    community = get_object_or_404(Community, slug=community_slug)
-
-    # See comment in project_mentor_update for why we just 404.
-    coordinator = get_object_or_404(Comrade, account_id=coordinator_id)
-
-    if 'add' in request.POST:
-        coordinator_status = CoordinatorApproval(coordinator=coordinator, community=community, approval_status=ApprovalStatus.PENDING)
-        if not coordinator_status.is_submitter(request.user):
-            raise PermissionDenied("Hey, no fair volunteering other people without their consent!")
-        coordinator_status.save()
-    else:
-        coordinator_status = get_object_or_404(CoordinatorApproval, coordinator=coordinator, community=community)
-
-        if 'approve' in request.POST:
-            if not coordinator_status.is_approver(request.user):
-                raise PermissionDenied("You are not an approved coordinator for this community.")
-            coordinator_status.approval_status = ApprovalStatus.APPROVED
-            coordinator_status.save()
-        if 'reject' in request.POST:
-            if not coordinator_status.is_approver(request.user):
-                raise PermissionDenied("You are not an approved coordinator for this community.")
-            coordinator_status.approval_status = ApprovalStatus.REJECTED
-            coordinator_status.save()
-        if 'withdraw' in request.POST:
-            if not coordinator_status.is_submitter(request.user):
-                raise PermissionDenied("You can only withdraw yourself, not other people.")
-            coordinator_status.approval_status = ApprovalStatus.WITHDRAWN
-            coordinator_status.save()
-
-    return redirect(coordinator_status.get_preview_url())
 
 @login_required
 def dashboard(request):

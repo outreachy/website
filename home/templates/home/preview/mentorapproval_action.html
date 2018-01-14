@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load approval_status %}
+
+{% block title %}
+{{ view.kwargs.action|title }} Mentor for {{ mentorapproval.project.short_title }}
+{% endblock %}
+
+{% block content %}
+{% with mentor=mentorapproval.mentor project=mentorapproval.project community=mentorapproval.project.project_round.community %}
+
+<h1>
+	{{ view.kwargs.action|title }} Mentor for
+	<a href="{{ project.get_preview_url }}">{{ project.short_title }}</a>
+</h1>
+
+<p>{{ mentor.public_name }} &lt;{{ mentor.account.email }}&gt;</p>
+{% include "home/snippet/mentor_info.html" with approval=mentorapproval only %}
+
+<form action="" method="post">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<input type="submit" class="btn btn-primary" value="{{ view.kwargs.action|title }}" />
+</form>
+
+{% endwith %}
+{% endblock %}
