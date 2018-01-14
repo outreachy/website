@@ -13,7 +13,7 @@ from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.text import slugify
 from django.views.decorators.http import require_POST
-from django.views.generic import TemplateView
+from django.views.generic import DetailView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 
 from registration.backends.hmac import views as hmac_views
@@ -203,6 +203,16 @@ def community_cfp_view(request):
             'not_participating_communities': not_participating_communities,
             },
             )
+
+class Preview(DetailView):
+    template_name_suffix = ""
+
+    def get_template_names(self):
+        name = "{}/preview/{}{}.html".format(
+                self.object._meta.app_label,
+                self.object._meta.model_name,
+                self.template_name_suffix)
+        return [name]
 
 # This is the page for volunteers, mentors, and coordinators.
 # It's a read-only page that displays information about the community,
@@ -586,6 +596,16 @@ def project_status_change(request, community_slug, project_slug):
 
     return redirect(project.get_preview_url())
 
+class MentorApprovalPreview(Preview):
+    def get_object(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        return get_object_or_404(
+                MentorApproval,
+                project__slug=self.kwargs['project_slug'],
+                project__project_round__participating_round=current_round,
+                project__project_round__community__slug=self.kwargs['community_slug'],
+                mentor__account__username=self.kwargs['username'])
+
 # Each of add/approve/reject requires different permissions, so read
 # this carefully.
 @require_POST
@@ -625,6 +645,13 @@ def project_mentor_update(request, community_slug, project_slug, mentor_id):
 
     return redirect(mentor_status.get_preview_url())
 
+class CoordinatorApprovalPreview(Preview):
+    def get_object(self):
+        return get_object_or_404(
+                CoordinatorApproval,
+                community__slug=self.kwargs['community_slug'],
+                coordinator__account__username=self.kwargs['username'])
+
 @require_POST
 @login_required
 def community_coordinator_update(request, community_slug, coordinator_id):
@@ -657,7 +684,7 @@ def community_coordinator_update(request, community_slug, coordinator_id):
             coordinator_status.approval_status = ApprovalStatus.WITHDRAWN
             coordinator_status.save()
 
-    return redirect(community.get_preview_url())
+    return redirect(coordinator_status.get_preview_url())
 
 @login_required
 def dashboard(request):

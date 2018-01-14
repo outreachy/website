@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load approval_status %}
+
+{% block title %}
+{{ mentorapproval.get_approval_status_display }} Coordinator for {{ mentorapproval.project.short_title }}
+{% endblock %}
+
+{% block content %}
+{% with mentor=mentorapproval.mentor project=mentorapproval.project community=mentorapproval.project.project_round.community %}
+
+<h1>
+	{{ mentorapproval.get_approval_status_display }}
+	Coordinator for
+	<a href="{{ project.get_preview_url }}">{{ project.short_title }}</a>
+</h1>
+
+<p>{{ mentor.public_name }} &lt;{{ mentor.account.email }}&gt;</p>
+
+{% if mentorapproval.approval_status == mentorapproval.PENDING %}
+{% if mentorapproval|is_approver:request.user %}
+{% include "home/snippet/mentor_approval_warnings.html" with approval=mentorapproval only %}
+<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=mentor.pk %}" method="post">
+	{% csrf_token %}
+	<input class="btn btn-block btn-success" type="submit" name="approve" value="Approve Coordinator" />
+	<input class="btn btn-block btn-warning" type="submit" name="reject" value="Reject Coordinator" />
+</form>
+{% endif %}
+{% endif %}
+
+{% include "home/snippet/mentor_info.html" with approval=mentorapproval only %}
+
+{% if mentorapproval.approval_status != mentorapproval.REJECTED %}
+{% if mentorapproval|is_submitter:request.user %}
+<h2>Withdraw</h2>
+<p>Do you need to withdraw as a mentor for {{ project.short_title }}?</p>
+<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=mentor.pk %}" method="post">
+	{% csrf_token %}
+	<input class="btn btn-warning" type="submit" name="withdraw" value="Withdraw From Mentoring" />
+</form>
+{% endif %}
+{% endif %}
+
+{% endwith %}
+{% endblock %}

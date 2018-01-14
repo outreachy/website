@@ -56,14 +56,17 @@ Past community participation in Outreachy
 {% endif %}
 
 {% if approved_coordinator_list %}
-<p>Coordinators approve mentored projects, and communicate with both mentors and Outreachy organizers. The full list of coordinator duties can be found on <a href="/mentor/">here</a>. The {{ community.name }} coordinator{{ approved_coordinator_list|length|pluralize:" is,(s) are" }} 
+<p>Coordinators approve mentored projects, and communicate with both mentors and Outreachy organizers. The full list of coordinator duties can be found on <a href="/mentor/">here</a>. The {{ community.name }} coordinator{{ approved_coordinator_list|length|pluralize:" is,(s) are" }}:</p>
+<ul>
 	{% for approval in approved_coordinator_list %}
+	<a href="{{ approval.get_preview_url }}">
 		{{ approval.coordinator.public_name }}
 		{% if user.is_authenticated %}
 			&lt;{{ approval.coordinator.account.email }}&gt;
 		{% endif %}
+	</a>
 	{% endfor %}
-	</p>
+</ul>
 {% else %}
 	<p>This community currently has no approved coordinator.</p>
 {% endif %}

@@ -707,7 +707,11 @@ class MentorApproval(ApprovalStatus):
                 )
 
     def get_preview_url(self):
-        return self.project.get_preview_url()
+        return reverse('mentorapproval-preview', kwargs={
+            'community_slug': self.project.project_round.community.slug,
+            'project_slug': self.project.slug,
+            'username': self.mentor.account.username,
+            })
 
     def is_approver(self, user):
         return self.project.project_round.community.is_coordinator(user)
@@ -739,7 +743,10 @@ class CoordinatorApproval(ApprovalStatus):
                 )
 
     def get_preview_url(self):
-        return self.community.get_preview_url()
+        return reverse('coordinatorapproval-preview', kwargs={
+            'community_slug': self.community.slug,
+            'username': self.coordinator.account.username,
+            })
 
     def is_approver(self, user):
         return user.is_staff or self.community.is_coordinator(user)
