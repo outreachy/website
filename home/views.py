@@ -230,42 +230,25 @@ def community_read_only_view(request, slug):
         except CoordinatorApproval.DoesNotExist:
             pass
 
-    newcommunity = None
-    try:
-        newcommunity = community.newcommunity
-    except NewCommunity.DoesNotExist:
-        pass
-
     approved_coordinator_list = community.coordinatorapproval_set.filter(approval_status=ApprovalStatus.APPROVED)
-    pending_coordinator_list = community.coordinatorapproval_set.filter(approval_status=ApprovalStatus.PENDING)
-    rejected_coordinator_list = community.coordinatorapproval_set.filter(approval_status__in=(ApprovalStatus.REJECTED, ApprovalStatus.WITHDRAWN))
 
     context = {
             'current_round' : current_round,
             'community': community,
-            'newcommunity': newcommunity,
             'coordinator': coordinator,
             'approved_coordinator_list': approved_coordinator_list,
-            'pending_coordinator_list': pending_coordinator_list,
-            'rejected_coordinator_list': pending_coordinator_list,
             }
-    template = 'home/community_not_participating_read_only.html'
 
     # Try to see if this community is participating in the current round
     # and get the Participation object if so.
     try:
         participation_info = Participation.objects.get(community=community, participating_round=current_round)
         context['participation_info'] = participation_info
-        if participation_info.approval_status in (ApprovalStatus.PENDING, ApprovalStatus.APPROVED):
-            context['approved_projects'] = participation_info.project_set.filter(approval_status=ApprovalStatus.APPROVED)
-            context['pending_projects'] = participation_info.project_set.filter(approval_status=ApprovalStatus.PENDING)
-            context['rejected_projects'] = participation_info.project_set.filter(approval_status__in=(ApprovalStatus.REJECTED, ApprovalStatus.WITHDRAWN))
-            context['pending_mentored_projects'] = participation_info.project_set.filter(mentorapproval__approval_status=ApprovalStatus.PENDING).distinct()
-        template = 'home/community_read_only.html'
+        context['approved_projects'] = participation_info.project_set.filter(approval_status=ApprovalStatus.APPROVED)
     except Participation.DoesNotExist:
         pass
 
-    return render(request, template, context)
+    return render(request, 'home/community_read_only.html', context)
 
 def community_landing_view(request, round_slug, slug):
     # Try to see if this community is participating in that round
@@ -347,6 +330,9 @@ class CommunityUpdate(LoginRequiredMixin, UpdateView):
             raise PermissionDenied("You are not an approved coordinator for this community.")
         return community
 
+    def get_success_url(self):
+        return self.object.get_preview_url()
+
 # Only Outreachy organizers are allowed to approve communities.
 @require_POST
 @login_required
@@ -397,7 +383,7 @@ class ParticipationUpdateView(LoginRequiredMixin, UpdateView):
         return participation
 
     def get_success_url(self):
-        return self.object.community.get_preview_url()
+        return self.object.get_preview_url()
 
 # TODO - make sure people can't say they will fund 0 interns
 class ParticipationUpdate(ParticipationUpdateView):
