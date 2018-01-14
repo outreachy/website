@@ -331,7 +331,7 @@ class Community(models.Model):
                 coordinator__account=user).exists()
 
     def get_coordinator_email_list(self):
-        return ['"{name}" <{email}>, '.format(
+        return ['"{name}" <{email}>'.format(
                 name=ca.coordinator.public_name, email=ca.coordinator.account.email)
                 for ca in
             self.coordinatorapproval_set.filter(
