@@ -739,7 +739,10 @@ class CoordinatorApproval(ApprovalStatus):
                 )
 
     def get_preview_url(self):
-        return self.community.get_preview_url()
+        return reverse('coordinatorapproval-preview', kwargs={
+            'community_slug': self.community.slug,
+            'username': self.coordinator.account.username,
+            })
 
     def is_approver(self, user):
         return user.is_staff or self.community.is_coordinator(user)

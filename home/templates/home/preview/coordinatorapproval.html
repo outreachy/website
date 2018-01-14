@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load approval_status %}
+
+{% block title %}
+{{ coordinatorapproval.get_approval_status_display }} Coordinator for {{ coordinatorapproval.community }}
+{% endblock %}
+
+{% block content %}
+<h1>
+	{{ coordinatorapproval.get_approval_status_display }}
+	Coordinator for
+	<a href="{{ coordinatorapproval.community.get_preview_url }}">{{ coordinatorapproval.community }}</a>
+</h1>
+
+{% with c=coordinatorapproval.coordinator community=coordinatorapproval.community %}
+
+<p>{{ c.public_name }} &lt;{{ c.account.email }}&gt;</p>
+
+{% if coordinatorapproval.approval_status == coordinatorapproval.PENDING %}
+{% if coordinatorapproval|is_approver:request.user %}
+<form action="{% url 'community-coordinator-update' community_slug=community.slug coordinator_id=c.pk %}" method="post">
+	{% csrf_token %}
+	<input class="btn btn-block btn-success" type="submit" name="approve" value="Approve Coordinator" />
+	<input class="btn btn-block btn-warning" type="submit" name="reject" value="Reject Coordinator" />
+</form>
+{% endif %}
+{% endif %}
+
+<ul>
+	{% if c.pronouns_to_participants %}<li>Pronouns: {{ c.get_pronouns_display }}</li>{% endif %}
+	{% if c.timezone %}<li>Timezone: {{ c.get_timezone_display }}</li>{% endif %}
+	{% if c.primary_language %}<li>Primary language: {{ c.get_primary_language_display }}</li>{% endif %}
+	{% if c.second_language %}<li>Second language: {{ c.get_second_language_display }}</li>{% endif %}
+	{% if c.third_language %}<li>Third language: {{ c.get_third_language_display }}</li>{% endif %}
+	{% if c.fourth_language %}<li>Fourth language: {{ c.get_fourth_language_display }}</li>{% endif %}
+</ul>
+
+{% if coordinatorapproval.approval_status != coordinatorapproval.REJECTED %}
+{% if coordinatorapproval|is_submitter:request.user %}
+<h2>Withdraw</h2>
+<p>Do you need to withdraw as a coordinator for {{ community.name }}?</p>
+<form action="{% url 'community-coordinator-update' community_slug=community.slug coordinator_id=c.account_id %}" method="post">
+	{% csrf_token %}
+	<input class="btn btn-block btn-warning" type="submit" name="withdraw" value="Withdraw as Coordinator" />
+</form>
+{% endif %}
+{% endif %}
+
+{% endwith %}
+
+{% endblock %}
