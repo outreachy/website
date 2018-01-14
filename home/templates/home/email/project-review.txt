@@ -1,4 +1,4 @@
-Hi Outreachy coordinator,
+{% autoescape off %}Hi Outreachy coordinator,
 
 A intern project proposal has been submitted by a mentor for {{ community.name }}. A {{ community.name }} coordinator must approve this project proposal before it will be listed on the community landing page.
 
@@ -16,4 +16,4 @@ Thank you for coordinating for {{ community.name }}! We appreciate your help her
 
 Outreachy Organizers
 
-{% include 'home/email/footer-coordinator.txt' %}
+{% include 'home/email/footer-coordinator.txt' %}{% endautoescape %}
