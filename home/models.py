@@ -517,20 +517,7 @@ class Project(ApprovalStatus):
             verbose_name="Project URL slug")
     long_description = CKEditorField(
             blank=True,
-            help_text='Description of the internship project, excluding applicant skills.')
-
-    communication_tool = models.CharField(
-            blank=True,
-            max_length=SENTENCE_LENGTH,
-            help_text='(Optional) Name of the communication tool your project uses. E.g. "IRC", "Zulip", or "Discourse"')
-    communication_url = models.CharField(blank=True,
-            max_length=200,
-            validators=[URLValidator(schemes=['http', 'https', 'irc'])],
-            help_text='(Optional) URL for the communication channel applicants will use to reach mentors and ask questions about this internship project. For IRC, use irc://<host>[:port]/[channel]. Since many applicants have issues with IRC port blocking at their universities, IRC communication links will use <a href="https://kiwiirc.com/">Kiwi IRC</a> to embed the IRC communications in the project page.')
-    communication_norms = CKEditorField(
-            blank=True,
-            help_text='(Optional) After following the communication channel link, are there any special instructions? For example: "Join the #outreachy Zulip channel and make sure to introduce yourself.')
-    communication_help = models.URLField(blank=True, help_text='(Optional) URL for the documentation for your communication tool')
+            help_text='Description of the internship project, excluding applicant skills and communication channels. Those will be added in the next step.')
 
     repository = models.URLField(blank=True, help_text="(Optional) URL for your team's repository or contribution mechanism")
     issue_tracker = models.URLField(blank=True, help_text="(Optional) URL for your team's issue tracker")
@@ -781,6 +768,31 @@ class MentorApproval(ApprovalStatus):
                     )
                 | models.Q(mentor__account=user)
                 )
+
+class CommunicationChannel(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+    tool_name = models.CharField(
+            max_length=SENTENCE_LENGTH,
+            help_text='Name of the communication tool your project uses. E.g. "a mailing list", "IRC", "Zulip", "Mattermost", or "Discourse"')
+
+    url = models.CharField(
+            max_length=200,
+            validators=[URLValidator(schemes=['http', 'https', 'irc'])],
+            help_text='URL for the communication channel applicants will use to reach mentors and ask questions about this internship project. IRC URLs should be in the form irc://<host>[:port]/[channel]. Since many applicants have issues with IRC port blocking at their universities, IRC communication links will use <a href="https://kiwiirc.com/">Kiwi IRC</a> to direct applicants to a web-based IRC client. If this is a mailing list, the URL should be the mailing list subscription page.')
+
+    instructions = CKEditorField(
+            blank=True,
+            help_text='(Optional) After following the communication channel link, are there any special instructions? For example: "Join the #outreachy channel and make sure to introduce yourself.')
+
+    norms = CKEditorField(
+            blank=True,
+            help_text="(Optional) What communication norms would a newcomer need to know about this communication channel? Example: newcomers to open source don't know they should Cc their mentor or the software maintainer when asking a question to a large mailing list. Think about what a newcomer would find surprising when communicating on this channel.")
+
+    communication_help = models.URLField(
+            blank=True,
+            help_text='(Optional) URL for the documentation for your communication tool. This should be user-focused documentation that explains the basic mechanisms of logging in and features. Suggestions: IRC - https://wiki.gnome.org/Outreachy/IRC; Zulip - https://chat.zulip.org/help/; Mattersmost - https://docs.mattermost.com/guides/user.html')
+
 
 # This through table records whether a coordinator is approved for this community.
 # Both the current coordinators and organizers (staff) can approve new coordinators.
