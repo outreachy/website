@@ -1,8 +1,15 @@
+<h2>Mentor Experience</h2>
+<ol>
+	<li><p>Has the mentor participated in Outreachy before?</p><p><b>{{ approval.get_mentored_before_display }}</b></p></li>
+	<li><p>What is the contributor's mentorship style (how do they expect to interact with applicants)?</p><p><b>{{ approval.mentorship_style }}</b></p></li>
+	<li><p>How long has the mentor been a contributor to the team that the intern will be working with (e.g. the team of contributors for a particular subsystem, application, module, documentation team, user experince team, graphical design team, etc)?</p><p><b>This person has contributed to this team for {{ approval.get_longevity_display }}</p></b></li>
+	<li><p>What contributions has this mentor made to the team or other FOSS communities?</p><p><b>{{ approval.mentor_foss_contributions }}</b></p></li>
+</ol>
+<h2>Mentor Information</h2>
 <ul>
-	<li>Mentor has contributed to this project for: {{ approval.get_longevity_display }}</li>
-	<li>Has the mentor participated in Outreachy before? {{ approval.get_mentored_before_display }}</li>
 	{% if approval.mentor.pronouns_to_participants %}<li>Pronouns: {{ approval.mentor.get_pronouns_display }}</li>{% endif %}
 	{% if approval.mentor.timezone %}<li>Timezone: {{ approval.mentor.get_timezone_display }}</li>{% endif %}
+	{% if approval.communication_channel_username %}<li>Communication channel username: {{ approval.mentor.communication_channel_username }}</li>{% endif %}
 	{% if approval.mentor.primary_language %}<li>Primary language: {{ approval.mentor.get_primary_language_display }}</li>{% endif %}
 	{% if approval.mentor.second_language %}<li>Second language: {{ approval.mentor.get_second_language_display }}</li>{% endif %}
 	{% if approval.mentor.third_language %}<li>Third language: {{ approval.mentor.get_third_language_display }}</li>{% endif %}

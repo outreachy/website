@@ -476,7 +476,9 @@ class CoordinatorApprovalAction(ApprovalStatusAction):
 class MentorApprovalAction(ApprovalStatusAction):
     fields = [
             'mentored_before',
+            'mentorship_style',
             'longevity',
+            'mentor_foss_contributions',
             'communication_channel_username',
             'instructions_read',
             'understands_intern_time_commitment',
