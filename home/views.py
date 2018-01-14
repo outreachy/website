@@ -555,6 +555,11 @@ class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesV
         self.object = form.save(commit=False)
         if not self.object.slug:
             self.object.slug = slugify(self.object.short_title)[:self.object._meta.get_field('slug').max_length]
+
+        if self.object.approval_status == ApprovalStatus.WITHDRAWN:
+            # only send email when newly entering the pending state
+            self.object.approval_status = ApprovalStatus.PENDING
+
         self.object.save()
         for formset in inlines:
             formset.save()
