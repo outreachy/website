@@ -347,6 +347,9 @@ class CommunityUpdate(LoginRequiredMixin, UpdateView):
             raise PermissionDenied("You are not an approved coordinator for this community.")
         return community
 
+    def get_success_url(self):
+        return self.object.get_preview_url()
+
 # Only Outreachy organizers are allowed to approve communities.
 @require_POST
 @login_required
@@ -397,7 +400,7 @@ class ParticipationUpdateView(LoginRequiredMixin, UpdateView):
         return participation
 
     def get_success_url(self):
-        return self.object.community.get_preview_url()
+        return self.object.get_preview_url()
 
 # TODO - make sure people can't say they will fund 0 interns
 class ParticipationUpdate(ParticipationUpdateView):
