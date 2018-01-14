@@ -509,7 +509,21 @@ class MentorApprovalUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView)
         self.object = form.save(commit=False)
         if self.object.approval_status == ApprovalStatus.WITHDRAWN:
             self.object.approval_status = ApprovalStatus.PENDING
+            send_email = True
+        else:
+            send_email = False
         self.object.save()
+        if send_email:
+            email_string = render_to_string('home/email/mentor-review.txt', {
+                'project': self.object.project,
+                'community': self.object.project.project_round.community,
+                'mentorapproval': self.object,
+                }, request=self.request)
+            send_mail(
+                    from_email='Outreachy Organizers <organizers@outreachy.org>',
+                    recipient_list=self.object.project.project_round.community.get_coordinator_email_list(),
+                    subject='Approve Outreachy mentor for {name}'.format(name=self.object.project.project_round.community.name),
+                    message=email_string)
         return redirect(self.object.get_preview_url())
 
 class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesView):
