@@ -152,7 +152,7 @@
                 </button>
 		{% if request.user.comrade %}
 			<span class="navbar-text"><a href="{% url 'account' %}">Hi, {{ request.user.comrade.nick_name }}!</a></span>
-		{% elif request.user %}
+		{% elif request.user.is_authenticated %}
 			<span class="navbar-text"><a href="{% url 'account' %}">Hi, {{ request.user.username }}!</a></span>
 		{% else %}
 			<span class="navbar-text"><a href="{% url 'login' %}">Log In</a></span>
