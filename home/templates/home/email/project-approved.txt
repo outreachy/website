@@ -1,0 +1,11 @@
+Hi Outreachy mentor,
+
+A {{ community.name }} coordinator has approved this Outreachy internship project proposal:
+
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_preview_url }}
+{% comment %}FIXME - we need a template for how they promote their project and get applicants to contribute. But we need the project to have a landing page first.{% endcomment %}
+Thank you for mentoring for {{ community.name }}! We appreciate your help herding mentors.
+
+Outreachy Organizers
+
+{% include 'home/email/footer-coordinator.txt' %}
