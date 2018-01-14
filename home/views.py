@@ -601,6 +601,18 @@ class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesV
                     recipient_list=self.object.project_round.community.get_coordinator_email_list(),
                     subject='Approve Outreachy intern project proposal for {name}'.format(name=self.object.project_round.community.name),
                     message=email_string)
+            if not self.object.approved_license or not self.object.no_proprietary_software:
+                email_string = render_to_string('home/email/project-warning.txt', {
+                    'community': self.object.project_round.community,
+                    'project': self.object,
+                    'coordinator_list': self.object.project_round.community.get_coordinator_email_list(),
+                    'mentor': mentorapproval.mentor,
+                    }, request=self.request)
+                send_mail(
+                        from_email='Outreachy Organizers <organizers@outreachy.org>',
+                        recipient_list=['Outreachy Organizers <organizers@outreachy.org>'],
+                        subject='Approve Outreachy intern project proposal for {name}'.format(name=self.object.project_round.community.name),
+                        message=email_string)
 
         return response
 
