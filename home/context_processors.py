@@ -9,9 +9,12 @@ def header(request):
             models.MentorApproval,
             )
 
-    pending_approvals = sum(
-            model.objects_for_dashboard(request.user).filter(approval_status=models.ApprovalStatus.PENDING).count()
-            for model in dashboard_models)
+    if request.user.is_authenticated:
+        pending_approvals = sum(
+                model.objects_for_dashboard(request.user).filter(approval_status=models.ApprovalStatus.PENDING).count()
+                for model in dashboard_models)
+    else:
+        pending_approvals = 0
 
     return {
             'header_pages': Page.objects.live().in_menu(),
