@@ -675,16 +675,7 @@ def project_mentor_update(request, community_slug, project_slug, mentor_id):
             raise PermissionDenied("You are not an approved coordinator for this community.")
         mentor_status.approval_status = ApprovalStatus.APPROVED
         mentor_status.save()
-        email_string = render_to_string('home/email/mentor-approved.txt', {
-            'community': mentor_status.project.project_round.community,
-            'project': mentor_status.project,
-            }, request=request)
-        send_mail(
-                from_email='Outreachy Organizers <organizers@outreachy.org>',
-                recipient_list=['"{name}" <{email}>'.format(
-                    name=mentor.public_name, email=mentor.account.email)],
-                subject='Approved as Outreachy mentor for {name}'.format(name=mentor_status.project.project_round.community.name),
-                message=email_string)
+        mentor_status.project.email_approved_mentor(request, mentor_status)
     if 'reject' in request.POST:
         if not mentor_status.is_approver(request.user):
             raise PermissionDenied("You are not an approved coordinator for this community.")

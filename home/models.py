@@ -5,8 +5,10 @@ from base64 import urlsafe_b64encode
 from datetime import timedelta
 
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.core.validators import URLValidator
 from django.db import models
+from django.template.loader import render_to_string
 from django.urls import reverse
 
 from ckeditor.fields import RichTextField as CKEditorField
@@ -569,6 +571,32 @@ class Project(ApprovalStatus):
         return self.mentorapproval_set.filter(
                 approval_status=self.APPROVED,
                 mentor__account=user).exists()
+
+    # We should only send email to approved mentors if:
+    # - Their project is approved AND
+    # - Their community is approved
+    #
+    # Otherwise there's no point in telling them they can now advertise their project.
+    def email_approved_mentor(self, request, mentor_status):
+
+        mentor = mentor_status.mentor
+        project = mentor_status.project
+        communityapproval = mentor_status.project.project_round
+        community = communityapproval.community
+
+        if (communityapproval.approval_status == ApprovalStatus.APPROVED and
+                project.approval_status == ApprovalStatus.APPROVED):
+
+            email_string = render_to_string('home/email/mentor-approved.txt', {
+                'community': community,
+                'project': mentor_status.project,
+                }, request=request)
+            send_mail(
+                    from_email='Outreachy Organizers <organizers@outreachy.org>',
+                    recipient_list=['"{name}" <{email}>'.format(
+                        name=mentor.public_name, email=mentor.account.email)],
+                    subject='Approved as Outreachy mentor for {name}'.format(name=community.name),
+                    message=email_string)
 
     @classmethod
     def objects_for_dashboard(cls, user):
