@@ -1,0 +1,5 @@
+---
+
+This is an automated email sent via Django on {{ request.scheme }}://{{ request.get_host }}
+You are receiving this email because you signed up to be a coordinator for {{ community.name }}
+If you feel you have received this email in error, please contact "Outreachy Organizers" <organizers@outreachy.org>

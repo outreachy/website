@@ -1,0 +1,19 @@
+Hi Outreachy coordinator,
+
+A intern project proposal has been submitted by a mentor for {{ community.name }}. A {{ community.name }} coordinator must approve this project proposal before it will be listed on the community landing page.
+
+Please carefully review the project to ensure it is appropriate for Outreachy:
+
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_preview_url }}
+
+Approving the project will automatically approve the mentor who submitted this project. Please carefully review the mentor information to ensure the mentor has experience with the project they are proposing:
+
+{{ request.scheme }}://{{ request.get_host }}{{ mentorapproval.get_preview_url }}
+
+You may receive additional emails to approve co-mentors for the project.
+
+Thank you for coordinating for {{ community.name }}! We appreciate your help herding mentors.
+
+Outreachy Organizers
+
+{% include 'home/email/footer-coordinator.txt' %}
