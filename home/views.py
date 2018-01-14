@@ -108,10 +108,6 @@ class ComradeUpdate(LoginRequiredMixin, UpdateView):
             'pronouns_to_participants',
             'pronouns_public',
             'timezone',
-            'primary_language',
-            'second_language',
-            'third_language',
-            'fourth_language',
             ]
 
     # FIXME - we need to migrate any existing staff users who aren't a Comrade
