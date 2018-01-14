@@ -442,9 +442,9 @@ class Project(ApprovalStatus):
     TWO_YEARS = '2Y'
     OLD_YEARS = 'OL'
     LONGEVITY_CHOICES = (
-        (THREE_MONTHS, '0-3 months'),
-        (SIX_MONTHS, '3-6 months'),
-        (ONE_YEAR, '6-12 months'),
+        (THREE_MONTHS, '0-2 months'),
+        (SIX_MONTHS, '3-5 months'),
+        (ONE_YEAR, '6-11 months'),
         (TWO_YEARS, '1-2 years'),
         (OLD_YEARS, 'More than 2 years'),
     )
