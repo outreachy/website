@@ -2,7 +2,7 @@
 {% load approval_status %}
 
 {% block title %}
-{{ mentorapproval.get_approval_status_display }} Coordinator for {{ mentorapproval.project.short_title }}
+{{ mentorapproval.get_approval_status_display }} Mentor for {{ mentorapproval.project.short_title }}
 {% endblock %}
 
 {% block content %}
@@ -10,7 +10,7 @@
 
 <h1>
 	{{ mentorapproval.get_approval_status_display }}
-	Coordinator for
+	Mentor for
 	<a href="{{ project.get_preview_url }}">{{ project.short_title }}</a>
 </h1>
 
@@ -21,8 +21,8 @@
 {% include "home/snippet/mentor_approval_warnings.html" with approval=mentorapproval only %}
 <form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=mentor.pk %}" method="post">
 	{% csrf_token %}
-	<input class="btn btn-block btn-success" type="submit" name="approve" value="Approve Coordinator" />
-	<input class="btn btn-block btn-warning" type="submit" name="reject" value="Reject Coordinator" />
+	<input class="btn btn-block btn-success" type="submit" name="approve" value="Approve Mentor" />
+	<input class="btn btn-block btn-warning" type="submit" name="reject" value="Reject Mentor" />
 </form>
 {% endif %}
 {% endif %}
