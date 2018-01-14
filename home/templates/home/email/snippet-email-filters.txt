@@ -1,0 +1,8 @@
+Coordinator and Mentor mailing list
+-----------------------------------
+
+You will receive an email from "mentors-request@lists.outreachy.org" that will prompt you to subscribe to the mentors mailing list. Please find that email and follow the link to confirm your subscription. The mentors mailing list is used for important Outreachy organizer announcements, and is a private list open to any Outreachy applicant to ask questions of Outreachy mentors. It's important you receive these communications.
+
+*Please make sure to set a filter for your email*
+
+Setting a filter for the mentors mailing list ensure that all communication to this list goes into your inbox. If you use Gmail, it will often categorize mailing list emails under the 'Promotions' tab.  You will need to set a filter for 'lists.outreachy.org' to ensure it ends up in your Personal inbox.

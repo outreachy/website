@@ -23,6 +23,7 @@ from .mixins import ApprovalStatusAction
 from .mixins import ComradeRequiredMixin
 
 from .models import ApprovalStatus
+from .models import CommunicationChannel
 from .models import Community
 from .models import Comrade
 from .models import CoordinatorApproval
@@ -517,25 +518,20 @@ class MentorApprovalAction(ApprovalStatusAction):
                     subject='Approve Outreachy mentor for {name}'.format(name=self.object.project.project_round.community.name),
                     message=email_string)
         elif self.target_status == ApprovalStatus.APPROVED:
-            email_string = render_to_string('home/email/mentor-approved.txt', {
-                'community': self.object.project.project_round.community,
-                'project': self.object.project,
-                }, request=request)
-            send_mail(
-                    from_email='Outreachy Organizers <organizers@outreachy.org>',
-                    recipient_list=['"{name}" <{email}>'.format(
-                        name=self.object.mentor.public_name, email=self.object.mentor.account.email)],
-                    subject='Approved as Outreachy mentor for {name}'.format(name=self.object.project.project_round.community.name),
-                    message=email_string)
+            self.object.project.email_approved_mentor(request, self.object)
 
 class ProjectSkillsInline(InlineFormSet):
     model = ProjectSkill
     fields = '__all__'
 
+class CommunicationChannelsInline(InlineFormSet):
+    model = CommunicationChannel
+    fields = '__all__'
+
 class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesView):
     model = Project
-    fields = ['short_title', 'approved_license', 'unapproved_license_description', 'no_proprietary_software', 'proprietary_software_description', 'longevity', 'community_size', 'intern_benefits', 'community_benefits', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'communication_tool', 'communication_url', 'communication_norms', 'communication_help', 'long_description', 'accepting_new_applicants']
-    inlines = [ ProjectSkillsInline ]
+    fields = ['short_title', 'approved_license', 'unapproved_license_description', 'no_proprietary_software', 'proprietary_software_description', 'longevity', 'community_size', 'intern_benefits', 'community_benefits', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'long_description', 'accepting_new_applicants']
+    inlines = [ ProjectSkillsInline, CommunicationChannelsInline ]
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     # By overriding the get_object method, we reuse the URL for

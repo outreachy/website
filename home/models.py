@@ -5,8 +5,10 @@ from base64 import urlsafe_b64encode
 from datetime import timedelta
 
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.core.validators import URLValidator
 from django.db import models
+from django.template.loader import render_to_string
 from django.urls import reverse
 
 from ckeditor.fields import RichTextField as CKEditorField
@@ -515,20 +517,7 @@ class Project(ApprovalStatus):
             verbose_name="Project URL slug")
     long_description = CKEditorField(
             blank=True,
-            help_text='Description of the internship project, excluding applicant skills.')
-
-    communication_tool = models.CharField(
-            blank=True,
-            max_length=SENTENCE_LENGTH,
-            help_text='(Optional) Name of the communication tool your project uses. E.g. "IRC", "Zulip", or "Discourse"')
-    communication_url = models.CharField(blank=True,
-            max_length=200,
-            validators=[URLValidator(schemes=['http', 'https', 'irc'])],
-            help_text='(Optional) URL for the communication channel applicants will use to reach mentors and ask questions about this internship project. For IRC, use irc://<host>[:port]/[channel]. Since many applicants have issues with IRC port blocking at their universities, IRC communication links will use <a href="https://kiwiirc.com/">Kiwi IRC</a> to embed the IRC communications in the project page.')
-    communication_norms = CKEditorField(
-            blank=True,
-            help_text='(Optional) After following the communication channel link, are there any special instructions? For example: "Join the #outreachy Zulip channel and make sure to introduce yourself.')
-    communication_help = models.URLField(blank=True, help_text='(Optional) URL for the documentation for your communication tool')
+            help_text='Description of the internship project, excluding applicant skills and communication channels. Those will be added in the next step.')
 
     repository = models.URLField(blank=True, help_text="(Optional) URL for your team's repository or contribution mechanism")
     issue_tracker = models.URLField(blank=True, help_text="(Optional) URL for your team's issue tracker")
@@ -569,6 +558,50 @@ class Project(ApprovalStatus):
         return self.mentorapproval_set.filter(
                 approval_status=self.APPROVED,
                 mentor__account=user).exists()
+
+    # We should only send email to approved mentors if:
+    # - Their project is approved AND
+    # - Their community is approved
+    #
+    # Otherwise there's no point in telling them they can now advertise their project.
+    # We also don't want to subscribe mentors to the mentors mailing list until
+    # both their community, project, and mentor status is approved.
+    def email_approved_mentor(self, request, mentor_status):
+
+        mentor = mentor_status.mentor
+        project = mentor_status.project
+        communityapproval = mentor_status.project.project_round
+        community = communityapproval.community
+
+        if (communityapproval.approval_status == ApprovalStatus.APPROVED and
+                project.approval_status == ApprovalStatus.APPROVED):
+
+            email_string = render_to_string('home/email/mentor-approved.txt', {
+                'community': community,
+                'project': mentor_status.project,
+                }, request=request)
+            send_mail(
+                    from_email='Outreachy Organizers <organizers@outreachy.org>',
+                    recipient_list=['"{name}" <{email}>'.format(
+                        name=mentor.public_name, email=mentor.account.email)],
+                    subject='Approved as Outreachy mentor for {name}'.format(name=community.name),
+                    message=email_string)
+
+            # Subscribe the mentor to the mentor mailing list
+            # We need to spoof sending email from the email address we want to subscribe,
+            # since using 'subscribe address=email' in the body doesn't work.
+            # This is still a pain because organizers need to approve subscription requests.
+            # We really need mailman 3.
+            email_string = render_to_string('home/email/mentor-list-subscribe.txt', {
+                'comrade': mentor,
+                }, request=request)
+            send_mail(
+                    from_email='"{name} via {domain} mentor approval" <{email}>'.format(
+                        domain=request.scheme + '://' + request.get_host(),
+                        name=mentor.public_name, email=mentor.account.email),
+                    recipient_list=['mentors-join@lists.outreachy.org'],
+                    subject='Subscribe {name}'.format(name=mentor.public_name),
+                    message=email_string)
 
     @classmethod
     def objects_for_dashboard(cls, user):
@@ -735,6 +768,31 @@ class MentorApproval(ApprovalStatus):
                     )
                 | models.Q(mentor__account=user)
                 )
+
+class CommunicationChannel(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+    tool_name = models.CharField(
+            max_length=SENTENCE_LENGTH,
+            help_text='Name of the communication tool your project uses. E.g. "a mailing list", "IRC", "Zulip", "Mattermost", or "Discourse"')
+
+    url = models.CharField(
+            max_length=200,
+            validators=[URLValidator(schemes=['http', 'https', 'irc'])],
+            help_text='URL for the communication channel applicants will use to reach mentors and ask questions about this internship project. IRC URLs should be in the form irc://<host>[:port]/[channel]. Since many applicants have issues with IRC port blocking at their universities, IRC communication links will use <a href="https://kiwiirc.com/">Kiwi IRC</a> to direct applicants to a web-based IRC client. If this is a mailing list, the URL should be the mailing list subscription page.')
+
+    instructions = CKEditorField(
+            blank=True,
+            help_text='(Optional) After following the communication channel link, are there any special instructions? For example: "Join the #outreachy channel and make sure to introduce yourself.')
+
+    norms = CKEditorField(
+            blank=True,
+            help_text="(Optional) What communication norms would a newcomer need to know about this communication channel? Example: newcomers to open source don't know they should Cc their mentor or the software maintainer when asking a question to a large mailing list. Think about what a newcomer would find surprising when communicating on this channel.")
+
+    communication_help = models.URLField(
+            blank=True,
+            help_text='(Optional) URL for the documentation for your communication tool. This should be user-focused documentation that explains the basic mechanisms of logging in and features. Suggestions: IRC - https://wiki.gnome.org/Outreachy/IRC; Zulip - https://chat.zulip.org/help/; Mattersmost - https://docs.mattermost.com/guides/user.html')
+
 
 # This through table records whether a coordinator is approved for this community.
 # Both the current coordinators and organizers (staff) can approve new coordinators.

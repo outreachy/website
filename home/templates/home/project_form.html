@@ -17,14 +17,26 @@
     {% csrf_token %}
     {{ form.media }}
     {{ form.as_p }}
-    {% for formset in inlines %}
-        <h2>Add Project Skills</h2>
-	<p>Outreachy applicants often search for projects that fit the skills they have, or the skills they want to learn.
-	However, if mentors aren't specific about what skills applicants need in order to apply versus what skills are optional,
-	applicants may decide they "aren't qualified" when they are. Applicants with imposter syndrome will often believe they
-	need to be an "expert" in a particular skill in order to apply. Listing skills this way enourages people to apply.</p>
-	{{ formset.as_p }}
-    {% endfor %}
+
+    <h2>Add Project Skills</h2>
+    <p>Outreachy applicants often search for projects that fit the skills they have, or the skills they want to learn.
+    However, if mentors aren't specific about what skills applicants need in order to apply versus what skills are optional,
+    applicants may decide they "aren't qualified" when they are. Applicants with imposter syndrome will often believe they
+    need to be an "expert" in a particular skill in order to apply. Listing skills this way enourages people to apply.</p>
+
+    <p>You can fill out the optional fields below. If you need to add more skills than there are fields,
+    you should save this internship project proposal and then click 'Edit Project information'.</p>
+    {{ inlines.0.as_p }}
+
+    <h2>Add Project Communication Channels</h2>
+    <p>Most applicants won't be familiar with using open source communication channels. They may be familiar with a
+    communication tool (like a mailing list) but not be aware of common open source communication norms.
+    Applicants are especially confused by communication protocols like IRC, which usually require client-side software.
+    Adding communication channels in this special section will make it more likely for applicants to be able to contact mentors.</p>
+
+    <p>You can fill out the optional fields below. If you need to add more communication channels than there are fields,
+    you should save this internship project proposal and then click 'Edit Project information'.</p>
+    {{ inlines.1.as_p }}
     <input class="btn btn-primary" type="submit" value="Save project info" />
 </form>
 
