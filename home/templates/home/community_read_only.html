@@ -45,12 +45,14 @@ Past community participation in Outreachy
 <p>Coordinators approve mentored projects, and communicate with both mentors and Outreachy organizers. The full list of coordinator duties can be found on <a href="/mentor/">here</a>. The {{ community.name }} coordinator{{ approved_coordinator_list|length|pluralize:" is,(s) are" }}:</p>
 <ul>
 	{% for approval in approved_coordinator_list %}
+	<li>
 	<a href="{{ approval.get_preview_url }}">
 		{{ approval.coordinator.public_name }}
 		{% if user.is_authenticated %}
 			&lt;{{ approval.coordinator.account.email }}&gt;
 		{% endif %}
 	</a>
+	</li>
 	{% endfor %}
 </ul>
 {% else %}
@@ -212,15 +214,12 @@ Past community participation in Outreachy
 			<li>Number of interns funded: {{ participation_info.interns_funded }}</li>
 			<li>CFP text: {{ participation_info.cfp_text }}</li>
 		</ul>
-		<form action="{% url 'community-status' community_slug=community.slug %}" method="post">
-		    {% csrf_token %}
-		    {% if participation_info.approval_status != participation_info.APPROVED %}
-			    <input class="btn btn-block btn-success" type="submit" name="approve" value="Approve Community" />
-		    {% endif %}
-		    {% if participation_info.approval_status != participation_info.REJECTED %}
-			    <input class="btn btn-block btn-warning" type="submit" name="reject" value="Reject Community" />
-		    {% endif %}
-		</form>
+		{% if participation_info.approval_status != participation_info.APPROVED %}
+		<a href="{% url 'participation-action' action='approve' community_slug=community.slug %}" class="btn btn-success">Approve Community</a>
+		{% endif %}
+		{% if participation_info.approval_status != participation_info.REJECTED %}
+		<a href="{% url 'participation-action' action='reject' community_slug=community.slug %}" class="btn btn-warning">Reject Community</a>
+		{% endif %}
 	{% endif %}
 {% endif %}
 
@@ -228,18 +227,18 @@ Past community participation in Outreachy
 <hr />
 	<h2>Coordinator Actions</h2>
 	<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
-	<p><a class="btn btn-block btn-primary" href="{% url 'community-update' slug=community.slug %}">Update Community Info</a></p>
+	<p><a class="btn btn-primary" href="{% url 'community-update' slug=community.slug %}">Update Community Info</a></p>
 	{% if not participation_info %}
 		<p>You can sign the community up to participate in the current round.</p>
-		<p><a class="btn btn-block btn-success" href="{% url 'community-participate' slug=community.slug %}">Community will participate</a></p>
+		<p><a class="btn btn-success" href="{% url 'participation-action' action='submit' community_slug=community.slug %}">Community will participate</a></p>
 	{% elif participation_info.approval_status == participation_info.WITHDRAWN %}
 		<p>Have you changed your mind and decided your community can participate in this round of Outreachy?</p>
-		<p><a class="btn btn-block btn-success" href="{% url 'community-participate' slug=community.slug %}">Community will participate</a></p>
+		<p><a class="btn btn-success" href="{% url 'participation-action' action='submit' community_slug=community.slug %}">Community will participate</a></p>
 	{% elif participation_info.approval_status == participation_info.REJECTED %}
 		<p>Unfortunately, the Outreachy organizers have determined your community should not participate in this round. Please <a href="/contact/">contact us</a> for more details.</p>
 	{% else %}
 		<p>Do you need to update information about your community's participation in this round (such as number of interns funded or call for volunteers text)?</p>
-		<p><a class="btn btn-block btn-primary" href="{% url 'community-participate' slug=community.slug %}">Update Round Info</a></p>
+		<p><a class="btn btn-primary" href="{% url 'participation-action' action='submit' community_slug=community.slug %}">Update Round Info</a></p>
 		<div class="card">
 			<div class="card-header">Community Information for Applicants</div>
 			<div class="card-body">

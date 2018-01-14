@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load approval_status %}
+
+{% block title %}
+{{ view.kwargs.action|title }} Community Participation for {{ participation.community }}
+{% endblock %}
+
+{% block content %}
+<h1>
+	{{ view.kwargs.action|title }} Community Participation for
+	<a href="{{ participation.community.get_preview_url }}">{{ participation.community }}</a>
+</h1>
+
+{% if view.kwargs.action != 'submit' %}
+<ul>
+	<li>Number of interns funded: {{ participation.interns_funded }}</li>
+	<li>CFP text: {{ participation.cfp_text }}</li>
+</ul>
+{% endif %}
+
+<form action="" method="post">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<input type="submit" class="btn btn-primary" value="{{ view.kwargs.action|title }}" />
+</form>
+
+{% endblock %}

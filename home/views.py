@@ -302,7 +302,9 @@ class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
 
         # When a new community is created, immediately redirect the coordinator
         # to gather information about their participation in this round
-        return redirect('community-participate', slug=self.object.slug)
+        return redirect('participation-action',
+                action='submit',
+                community_slug=self.object.slug)
 
 class CommunityUpdate(LoginRequiredMixin, UpdateView):
     model = Community
@@ -317,70 +319,28 @@ class CommunityUpdate(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return self.object.get_preview_url()
 
-# Only Outreachy organizers are allowed to approve communities.
-@require_POST
-@login_required
-def community_status_change(request, community_slug):
-    current_round = RoundPage.objects.latest('internstarts')
-
-    # Try to see if this community is participating in that round
-    # and get the Participation object if so.
-    participation_info = get_object_or_404(
-            Participation.objects.select_related('community'),
-            community__slug=community_slug,
-            participating_round=current_round)
-
-    if not participation_info.is_approver(request.user):
-        raise PermissionDenied("You are not an Outreachy organizer.")
-
-    if 'approve' in request.POST:
-        participation_info.approval_status = ApprovalStatus.APPROVED
-        participation_info.save()
-    if 'reject' in request.POST:
-        participation_info.approval_status = ApprovalStatus.REJECTED
-        participation_info.save()
-
-    return redirect(participation_info.community.get_preview_url())
-
-class ParticipationUpdateView(LoginRequiredMixin, UpdateView):
-    model = Participation
+class ParticipationAction(ApprovalStatusAction):
+    # TODO - make sure people can't say they will fund 0 interns
+    fields = ['interns_funded', 'cfp_text']
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
-    # By overriding the get_object method, we reuse the URL for
-    # both creating and updating information about a
-    # community participating in the current round.
     def get_object(self):
-        community = get_object_or_404(Community, slug=self.kwargs['slug'])
+        community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
         participating_round = RoundPage.objects.latest('internstarts')
         try:
-            participation = Participation.objects.get(
+            return Participation.objects.get(
                     community=community,
                     participating_round=participating_round)
         except Participation.DoesNotExist:
-            participation = Participation(
-                    approval_status=ApprovalStatus.WITHDRAWN,
+            return Participation(
                     community=community,
                     participating_round=participating_round)
 
-        if not participation.is_submitter(self.request.user):
-            raise PermissionDenied("You are not an approved coordinator for this community.")
-        return participation
+    def notify(self):
+        if self.prior_status == self.target_status:
+            return
 
-    def get_success_url(self):
-        return self.object.get_preview_url()
-
-# TODO - make sure people can't say they will fund 0 interns
-class ParticipationUpdate(ParticipationUpdateView):
-    fields = ['interns_funded', 'cfp_text']
-
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.reason_denied = ""
-
-        if self.object.approval_status == ApprovalStatus.WITHDRAWN:
-            # only send email when newly entering the pending state
-            self.object.approval_status = ApprovalStatus.PENDING
-
+        if self.target_status == ApprovalStatus.PENDING:
             # render the email about this new community to a string
             email_string = render_to_string('home/email/community-signup.txt', {
                 'community': self.object.community,
@@ -392,19 +352,6 @@ class ParticipationUpdate(ParticipationUpdateView):
                     recipient_list=['organizers@outreachy.org'],
                     subject='Approve community participation - {name}'.format(name=self.object.community.name),
                     message=email_string)
-
-        self.object.save()
-        return redirect(self.get_success_url())
-
-
-class NotParticipating(ParticipationUpdateView):
-    fields = ['reason_denied']
-
-    def get_object(self):
-        participation_info = super(NotParticipating, self).get_object()
-        participation_info.interns_funded = 0
-        participation_info.approval_status = ApprovalStatus.WITHDRAWN
-        return participation_info
 
 # This view is for mentors and coordinators to review project information and approve it
 def project_read_only_view(request, community_slug, project_slug):
