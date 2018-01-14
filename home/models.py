@@ -391,7 +391,7 @@ class NewCommunity(Community):
     )
 
     participating_orgs = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
-            help_text="What different organizations and companies participate in this FOSS community?")
+            help_text="What different organizations and companies participate in this FOSS community? If there are many organizations, list the top five organizations who make large contributions.")
 
     approved_license = models.BooleanField(
             default=False,
