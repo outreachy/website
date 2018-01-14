@@ -518,7 +518,7 @@ class MentorApprovalAction(ApprovalStatusAction):
                     subject='Approve Outreachy mentor for {name}'.format(name=self.object.project.project_round.community.name),
                     message=email_string)
         elif self.target_status == ApprovalStatus.APPROVED:
-            self.object.project.email_approved_mentor(self.request, self.object)
+            self.object.email_approved_mentor(self.request)
 
 class ProjectSkillsInline(InlineFormSet):
     model = ProjectSkill

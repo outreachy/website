@@ -559,50 +559,6 @@ class Project(ApprovalStatus):
                 approval_status=self.APPROVED,
                 mentor__account=user).exists()
 
-    # We should only send email to approved mentors if:
-    # - Their project is approved AND
-    # - Their community is approved
-    #
-    # Otherwise there's no point in telling them they can now advertise their project.
-    # We also don't want to subscribe mentors to the mentors mailing list until
-    # both their community, project, and mentor status is approved.
-    def email_approved_mentor(self, request, mentor_status):
-
-        mentor = mentor_status.mentor
-        project = mentor_status.project
-        communityapproval = mentor_status.project.project_round
-        community = communityapproval.community
-
-        if (communityapproval.approval_status == ApprovalStatus.APPROVED and
-                project.approval_status == ApprovalStatus.APPROVED):
-
-            email_string = render_to_string('home/email/mentor-approved.txt', {
-                'community': community,
-                'project': mentor_status.project,
-                }, request=request)
-            send_mail(
-                    from_email='Outreachy Organizers <organizers@outreachy.org>',
-                    recipient_list=['"{name}" <{email}>'.format(
-                        name=mentor.public_name, email=mentor.account.email)],
-                    subject='Approved as Outreachy mentor for {name}'.format(name=community.name),
-                    message=email_string)
-
-            # Subscribe the mentor to the mentor mailing list
-            # We need to spoof sending email from the email address we want to subscribe,
-            # since using 'subscribe address=email' in the body doesn't work.
-            # This is still a pain because organizers need to approve subscription requests.
-            # We really need mailman 3.
-            email_string = render_to_string('home/email/mentor-list-subscribe.txt', {
-                'comrade': mentor,
-                }, request=request)
-            send_mail(
-                    from_email='"{name} via {domain} mentor approval" <{email}>'.format(
-                        domain=request.scheme + '://' + request.get_host(),
-                        name=mentor.public_name, email=mentor.account.email),
-                    recipient_list=['mentors-join@lists.outreachy.org'],
-                    subject='Subscribe {name}'.format(name=mentor.public_name),
-                    message=email_string)
-
     @classmethod
     def objects_for_dashboard(cls, user):
         return cls.objects.filter(
@@ -768,6 +724,50 @@ class MentorApproval(ApprovalStatus):
                     )
                 | models.Q(mentor__account=user)
                 )
+
+    # We should only send email to approved mentors if:
+    # - Their project is approved AND
+    # - Their community is approved
+    #
+    # Otherwise there's no point in telling them they can now advertise their project.
+    # We also don't want to subscribe mentors to the mentors mailing list until
+    # both their community, project, and mentor status is approved.
+    def email_approved_mentor(self, request):
+
+        mentor = self.mentor
+        project = self.project
+        communityapproval = self.project.project_round
+        community = communityapproval.community
+
+        if (communityapproval.approval_status == ApprovalStatus.APPROVED and
+                project.approval_status == ApprovalStatus.APPROVED):
+
+            email_string = render_to_string('home/email/mentor-approved.txt', {
+                'community': community,
+                'project': self.project,
+                }, request=request)
+            send_mail(
+                    from_email='Outreachy Organizers <organizers@outreachy.org>',
+                    recipient_list=['"{name}" <{email}>'.format(
+                        name=mentor.public_name, email=mentor.account.email)],
+                    subject='Approved as Outreachy mentor for {name}'.format(name=community.name),
+                    message=email_string)
+
+            # Subscribe the mentor to the mentor mailing list
+            # We need to spoof sending email from the email address we want to subscribe,
+            # since using 'subscribe address=email' in the body doesn't work.
+            # This is still a pain because organizers need to approve subscription requests.
+            # We really need mailman 3.
+            email_string = render_to_string('home/email/mentor-list-subscribe.txt', {
+                'comrade': mentor,
+                }, request=request)
+            send_mail(
+                    from_email='"{name} via {domain} mentor approval" <{email}>'.format(
+                        domain=request.scheme + '://' + request.get_host(),
+                        name=mentor.public_name, email=mentor.account.email),
+                    recipient_list=['mentors-join@lists.outreachy.org'],
+                    subject='Subscribe {name}'.format(name=mentor.public_name),
+                    message=email_string)
 
 class CommunicationChannel(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
