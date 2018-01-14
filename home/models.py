@@ -330,6 +330,13 @@ class Community(models.Model):
                 approval_status=ApprovalStatus.APPROVED,
                 coordinator__account=user).exists()
 
+    def get_coordinator_email_list(self):
+        return ['"{name}" <{email}>'.format(
+                name=ca.coordinator.public_name, email=ca.coordinator.account.email)
+                for ca in
+            self.coordinatorapproval_set.filter(
+                approval_status=ApprovalStatus.APPROVED)]
+
 class NewCommunity(Community):
     community = models.OneToOneField(Community, primary_key=True, parent_link=True)
 
@@ -442,9 +449,9 @@ class Project(ApprovalStatus):
     TWO_YEARS = '2Y'
     OLD_YEARS = 'OL'
     LONGEVITY_CHOICES = (
-        (THREE_MONTHS, '0-3 months'),
-        (SIX_MONTHS, '3-6 months'),
-        (ONE_YEAR, '6-12 months'),
+        (THREE_MONTHS, '0-2 months'),
+        (SIX_MONTHS, '3-5 months'),
+        (ONE_YEAR, '6-11 months'),
         (TWO_YEARS, '1-2 years'),
         (OLD_YEARS, 'More than 2 years'),
     )
