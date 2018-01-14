@@ -20,6 +20,7 @@ from registration.backends.hmac import views as hmac_views
 from extra_views import UpdateWithInlinesView, InlineFormSet
 
 from .models import ApprovalStatus
+from .models import CommunicationChannel
 from .models import Community
 from .models import Comrade
 from .models import CoordinatorApproval
@@ -474,6 +475,10 @@ class ProjectSkillsInline(InlineFormSet):
     model = ProjectSkill
     fields = '__all__'
 
+class CommunicationChannelsInline(InlineFormSet):
+    model = CommunicationChannel
+    fields = '__all__'
+
 class MentorApprovalUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     model = MentorApproval
     fields = [
@@ -528,8 +533,8 @@ class MentorApprovalUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView)
 
 class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesView):
     model = Project
-    fields = ['short_title', 'approved_license', 'unapproved_license_description', 'no_proprietary_software', 'proprietary_software_description', 'longevity', 'community_size', 'intern_benefits', 'community_benefits', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'communication_tool', 'communication_url', 'communication_norms', 'communication_help', 'long_description', 'accepting_new_applicants']
-    inlines = [ ProjectSkillsInline ]
+    fields = ['short_title', 'approved_license', 'unapproved_license_description', 'no_proprietary_software', 'proprietary_software_description', 'longevity', 'community_size', 'intern_benefits', 'community_benefits', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'long_description', 'accepting_new_applicants']
+    inlines = [ ProjectSkillsInline, CommunicationChannelsInline ]
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     # By overriding the get_object method, we reuse the URL for
