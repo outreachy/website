@@ -453,6 +453,25 @@ def project_read_only_view(request, community_slug, project_slug):
             },
             )
 
+class CoordinatorApprovalAction(ApprovalStatusAction):
+    # We don't collect any information about coordinators beyond what's
+    # in the Comrade model already.
+    fields = []
+
+    def get_object(self):
+        community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
+
+        username = self.kwargs.get('username')
+        if username:
+            comrade = get_object_or_404(Comrade, account__username=username)
+        else:
+            comrade = self.request.user.comrade
+
+        try:
+            return CoordinatorApproval.objects.get(coordinator=comrade, community=community)
+        except CoordinatorApproval.DoesNotExist:
+            return CoordinatorApproval(coordinator=comrade, community=community)
+
 class MentorApprovalAction(ApprovalStatusAction):
     fields = [
             'mentored_before',
@@ -643,40 +662,6 @@ class CoordinatorApprovalPreview(Preview):
                 CoordinatorApproval,
                 community__slug=self.kwargs['community_slug'],
                 coordinator__account__username=self.kwargs['username'])
-
-@require_POST
-@login_required
-def community_coordinator_update(request, community_slug, coordinator_id):
-    community = get_object_or_404(Community, slug=community_slug)
-
-    # See comment in project_mentor_update for why we just 404.
-    coordinator = get_object_or_404(Comrade, account_id=coordinator_id)
-
-    if 'add' in request.POST:
-        coordinator_status = CoordinatorApproval(coordinator=coordinator, community=community, approval_status=ApprovalStatus.PENDING)
-        if not coordinator_status.is_submitter(request.user):
-            raise PermissionDenied("Hey, no fair volunteering other people without their consent!")
-        coordinator_status.save()
-    else:
-        coordinator_status = get_object_or_404(CoordinatorApproval, coordinator=coordinator, community=community)
-
-        if 'approve' in request.POST:
-            if not coordinator_status.is_approver(request.user):
-                raise PermissionDenied("You are not an approved coordinator for this community.")
-            coordinator_status.approval_status = ApprovalStatus.APPROVED
-            coordinator_status.save()
-        if 'reject' in request.POST:
-            if not coordinator_status.is_approver(request.user):
-                raise PermissionDenied("You are not an approved coordinator for this community.")
-            coordinator_status.approval_status = ApprovalStatus.REJECTED
-            coordinator_status.save()
-        if 'withdraw' in request.POST:
-            if not coordinator_status.is_submitter(request.user):
-                raise PermissionDenied("You can only withdraw yourself, not other people.")
-            coordinator_status.approval_status = ApprovalStatus.WITHDRAWN
-            coordinator_status.save()
-
-    return redirect(coordinator_status.get_preview_url())
 
 @login_required
 def dashboard(request):

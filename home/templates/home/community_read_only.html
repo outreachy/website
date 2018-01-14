@@ -136,10 +136,7 @@ Past community participation in Outreachy
 {% if not coordinator %}
 	<h2>New Coordinators or Co-coordinators</h2>
 	<p>If you have been a community coordinator in the past but have not yet created an account on this site, or you would like to volunteer to be a new coordinator and you understand the <a href="/mentor/">coordinator duties</a>, you can sign up to be a community coordinator.</p>
-	<form action="{% url 'community-coordinator-update' community_slug=community.slug coordinator_id=user.id %}" method="post">
-	    {% csrf_token %}
-	    <input class="btn btn-block btn-success" type="submit" name="add" value="Coordinate for This Community" />
-	</form>
+	<a href="{% url 'coordinatorapproval-action' action='submit' community_slug=community.slug %}" class="btn btn-success">Coordinate for This Community</a>
 {% else %}
 	<h2>Coordinator Request Status</h2>
 	<p>Your request to coordinate for this community is:
