@@ -248,6 +248,12 @@ class Comrade(models.Model):
     def __str__(self):
         return self.public_name
 
+    def get_pronouns_html(self):
+        return "<a href=http://pronoun.is/{short_name}>{pronouns}</a>".format(
+                short_name=self.pronouns,
+                pronouns=self.get_pronouns_display(),
+                )
+
 class ApprovalStatus(models.Model):
     PENDING = 'P'
     APPROVED = 'A'
