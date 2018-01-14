@@ -553,12 +553,19 @@ class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesV
 
     def forms_valid(self, form, inlines):
         self.object = form.save(commit=False)
+
         if not self.object.slug:
             self.object.slug = slugify(self.object.short_title)[:self.object._meta.get_field('slug').max_length]
 
         if self.object.approval_status == ApprovalStatus.WITHDRAWN:
             # only send email when newly entering the pending state
             self.object.approval_status = ApprovalStatus.PENDING
+            # Only send email if this is a new project,
+            # or someone withdrew a project and then resubmitted it.
+            send_email = True
+        else:
+            # Don't send email if someone is editing a pending or approved project.
+            send_email = False
 
         self.object.save()
         for formset in inlines:
@@ -569,10 +576,33 @@ class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesV
                     mentor=self.request.user.comrade,
                     project=self.object,
                     approval_status=ApprovalStatus.APPROVED)
-            return redirect('project-mentor-create',
+            response = redirect('project-mentor-create',
                 community_slug=self.object.project_round.community.slug,
                 project_slug=self.object.slug)
-        return redirect(self.object.get_preview_url())
+        else:
+            response = redirect(self.object.get_preview_url())
+
+        if send_email:
+            try:
+                mentorapproval = MentorApproval.objects.get(
+                        mentor=self.request.user.comrade,
+                        project=self.object,
+                        approval_status=ApprovalStatus.APPROVED)
+            except MentorApproval.DoesNotExist:
+                mentorapproval = None
+
+            email_string = render_to_string('home/email/project-review.txt', {
+                'community': self.object.project_round.community,
+                'project': self.object,
+                'mentorapproval': mentorapproval,
+                }, request=self.request)
+            send_mail(
+                    from_email='Outreachy Organizers <organizers@outreachy.org>',
+                    recipient_list=self.object.project_round.community.get_coordinator_email_list(),
+                    subject='Approve Outreachy intern project proposal for {name}'.format(name=self.object.project_round.community.name),
+                    message=email_string)
+
+        return response
 
 @require_POST
 @login_required

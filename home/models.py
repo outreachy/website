@@ -330,6 +330,13 @@ class Community(models.Model):
                 approval_status=ApprovalStatus.APPROVED,
                 coordinator__account=user).exists()
 
+    def get_coordinator_email_list(self):
+        return ['"{name}" <{email}>, '.format(
+                name=ca.coordinator.public_name, email=ca.coordinator.account.email)
+                for ca in
+            self.coordinatorapproval_set.filter(
+                approval_status=ApprovalStatus.APPROVED)]
+
 class NewCommunity(Community):
     community = models.OneToOneField(Community, primary_key=True, parent_link=True)
 
