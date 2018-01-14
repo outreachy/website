@@ -327,6 +327,10 @@ class Community(models.Model):
 
     rounds = models.ManyToManyField(RoundPage, through='Participation')
 
+    # Add a relationship to the many Comrades who want to be notified
+    # when this community is participating in a round
+    notify_me = models.ManyToManyField(Comrade)
+
     def __str__(self):
         return self.name
 
