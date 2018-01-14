@@ -669,6 +669,12 @@ class MentorApproval(ApprovalStatus):
         default=THREE_MONTHS,
         help_text="How long have you been a contributor on this team?",
     )
+
+    mentor_foss_contributions = models.CharField(
+        max_length=PARAGRAPH_LENGTH,
+        help_text="What contributions have you made to this team and the FOSS community who is funding this internship? If none, what contributions have you made to other FOSS communities?",
+    )
+
     communication_channel_username = models.CharField(
         max_length=SENTENCE_LENGTH,
         blank=True,
@@ -691,6 +697,11 @@ class MentorApproval(ApprovalStatus):
         choices=MENTOR_CHOICES,
         default=NOT_MENTORED,
         help_text="Have you been a mentor for Outreachy before? (Note that Outreachy welcomes first time mentors, but this information allows the coordinator and other mentors to provide extra help to new mentors.)",
+    )
+
+    mentorship_style = models.CharField(
+        max_length=PARAGRAPH_LENGTH,
+        help_text="What is your mentorship style? Do you prefer short daily standups, longer weekly reports, or informal progress reports? Are you willing to try pair programming when your intern gets stuck? Do you like talking over video chat or answering questions via email? Give the applicants a sense of what it will be like to work with you during the internship.",
     )
 
     def __str__(self):
