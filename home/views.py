@@ -453,10 +453,6 @@ def project_read_only_view(request, community_slug, project_slug):
             },
             )
 
-class ProjectSkillsInline(InlineFormSet):
-    model = ProjectSkill
-    fields = '__all__'
-
 class MentorApprovalAction(ApprovalStatusAction):
     fields = [
             'mentored_before',
@@ -512,6 +508,10 @@ class MentorApprovalAction(ApprovalStatusAction):
                         name=self.object.mentor.public_name, email=self.object.mentor.account.email)],
                     subject='Approved as Outreachy mentor for {name}'.format(name=self.object.project.project_round.community.name),
                     message=email_string)
+
+class ProjectSkillsInline(InlineFormSet):
+    model = ProjectSkill
+    fields = '__all__'
 
 class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesView):
     model = Project
