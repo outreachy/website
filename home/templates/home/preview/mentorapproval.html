@@ -19,26 +19,12 @@
 {% if mentorapproval.approval_status == mentorapproval.PENDING %}
 {% if mentorapproval|is_approver:request.user %}
 {% include "home/snippet/mentor_approval_warnings.html" with approval=mentorapproval only %}
-<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=mentor.pk %}" method="post">
-	{% csrf_token %}
-	<input class="btn btn-block btn-success" type="submit" name="approve" value="Approve Mentor" />
-	<input class="btn btn-block btn-warning" type="submit" name="reject" value="Reject Mentor" />
-</form>
+<a href="{% url 'mentorapproval-action' action='approve' community_slug=community.slug project_slug=project.slug username=mentor.account.username %}" class="btn btn-success">Approve Mentor</a>
+<a href="{% url 'mentorapproval-action' action='reject' community_slug=community.slug project_slug=project.slug username=mentor.account.username %}" class="btn btn-warning">Reject Mentor</a>
 {% endif %}
 {% endif %}
 
 {% include "home/snippet/mentor_info.html" with approval=mentorapproval only %}
-
-{% if mentorapproval.approval_status != mentorapproval.REJECTED %}
-{% if mentorapproval|is_submitter:request.user %}
-<h2>Withdraw</h2>
-<p>Do you need to withdraw as a mentor for {{ project.short_title }}?</p>
-<form action="{% url 'project-mentor-status' community_slug=community.slug project_slug=project.slug mentor_id=mentor.pk %}" method="post">
-	{% csrf_token %}
-	<input class="btn btn-warning" type="submit" name="withdraw" value="Withdraw From Mentoring" />
-</form>
-{% endif %}
-{% endif %}
 
 {% endwith %}
 {% endblock %}

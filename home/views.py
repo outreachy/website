@@ -19,6 +19,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from registration.backends.hmac import views as hmac_views
 from extra_views import UpdateWithInlinesView, InlineFormSet
 
+from .mixins import ApprovalStatusAction
 from .mixins import ComradeRequiredMixin
 
 from .models import ApprovalStatus
@@ -456,8 +457,7 @@ class ProjectSkillsInline(InlineFormSet):
     model = ProjectSkill
     fields = '__all__'
 
-class MentorApprovalUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
-    model = MentorApproval
+class MentorApprovalAction(ApprovalStatusAction):
     fields = [
             'mentored_before',
             'longevity',
@@ -470,29 +470,21 @@ class MentorApprovalUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView)
 
     def get_object(self):
         participating_round = RoundPage.objects.latest('internstarts')
-        participation = get_object_or_404(Participation,
-                    community__slug=self.kwargs['community_slug'],
-                    participating_round=participating_round)
         project = get_object_or_404(Project,
-                project_round=participation,
+                project_round__community__slug=self.kwargs['community_slug'],
+                project_round__participating_round=participating_round,
                 slug=self.kwargs['project_slug'])
 
-        try:
-            return MentorApproval.objects.get(
-                    mentor=self.request.user.comrade,
-                    project=project)
-        except MentorApproval.DoesNotExist:
-            return MentorApproval(
-                    mentor=self.request.user.comrade,
-                    project=project,
-                    approval_status=ApprovalStatus.WITHDRAWN)
+        username = self.kwargs.get('username')
+        if username:
+            mentor = get_object_or_404(Comrade, account__username=username)
+        else:
+            mentor = self.request.user.comrade
 
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        if self.object.approval_status == ApprovalStatus.WITHDRAWN:
-            self.object.approval_status = ApprovalStatus.PENDING
-        self.object.save()
-        return redirect(self.object.get_preview_url())
+        try:
+            return MentorApproval.objects.get(mentor=mentor, project=project)
+        except MentorApproval.DoesNotExist:
+            return MentorApproval(mentor=mentor, project=project)
 
 class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesView):
     model = Project
@@ -537,9 +529,10 @@ class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesV
                     mentor=self.request.user.comrade,
                     project=self.object,
                     approval_status=ApprovalStatus.APPROVED)
-            return redirect('project-mentor-create',
+            return redirect('mentorapproval-action',
                 community_slug=self.object.project_round.community.slug,
-                project_slug=self.object.slug)
+                project_slug=self.object.slug,
+                action='submit')
         return redirect(self.object.get_preview_url())
 
 @require_POST
@@ -574,45 +567,6 @@ class MentorApprovalPreview(Preview):
                 project__project_round__participating_round=current_round,
                 project__project_round__community__slug=self.kwargs['community_slug'],
                 mentor__account__username=self.kwargs['username'])
-
-# Each of add/approve/reject requires different permissions, so read
-# this carefully.
-@require_POST
-@login_required
-def project_mentor_update(request, community_slug, project_slug, mentor_id):
-    current_round = RoundPage.objects.latest('internstarts')
-
-    # If this user doesn't have a Comrade object and wants to add
-    # themself as a mentor, we'd like to help them by redirecting to the
-    # ComradeUpdate form. (Approve and reject actions are guaranteed to
-    # have a Comrade already so they're fine, at least.) But because
-    # this is a POST request, we can't. This should be rare; just 404.
-    mentor = get_object_or_404(Comrade, pk=mentor_id)
-
-    mentor_status = get_object_or_404(
-            MentorApproval,
-            mentor=mentor,
-            project__slug=project_slug,
-            project__project_round__participating_round=current_round,
-            project__project_round__community__slug=community_slug)
-
-    if 'approve' in request.POST:
-        if not mentor_status.is_approver(request.user):
-            raise PermissionDenied("You are not an approved coordinator for this community.")
-        mentor_status.approval_status = ApprovalStatus.APPROVED
-        mentor_status.save()
-    if 'reject' in request.POST:
-        if not mentor_status.is_approver(request.user):
-            raise PermissionDenied("You are not an approved coordinator for this community.")
-        mentor_status.approval_status = ApprovalStatus.REJECTED
-        mentor_status.save()
-    if 'withdraw' in request.POST:
-        if not mentor_status.is_submitter(request.user):
-            raise PermissionDenied("You can only withdraw yourself, not other people.")
-        mentor_status.approval_status = ApprovalStatus.WITHDRAWN
-        mentor_status.save()
-
-    return redirect(mentor_status.get_preview_url())
 
 class CoordinatorApprovalPreview(Preview):
     def get_object(self):
