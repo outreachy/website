@@ -1,0 +1,17 @@
+{% autoescape off %}Greetings,
+
+On {{ notification.date_of_signup }} you indicated you want to be notified when {{ community.name }} was participating in an Outreachy internship round.
+
+The {{ community.name }} coordinator has signed the community up to participate in the {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} internship round. You can now submit internship project proposals for the coordinator to review on this page:
+
+{{ request.scheme }}://{{ request.get_host }}{{ community.get_preview_url }}
+
+If you don't want to participate as a mentor in this round, you'll need to sign up again to be notified again here:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'notify-me' community_slug=community.slug %}
+
+Thank you for your interest in mentoring for {{ community.name }}! We appreciate the help you give Outreachy applicants and interns.
+
+Outreachy Organizers
+
+{% include 'home/email/footer-mentor.txt' %}{% endautoescape %}

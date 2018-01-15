@@ -15,8 +15,12 @@ Past community participation in Outreachy
 
 {% if not participation_info %}
 	<p>The coordinator(s) for {{ community.name }} have not yet indicated whether the community will be participating in {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} internship round.</p>
-	<p>Sign up to be notified when the coordinator finds funding and opens the call for volunteers and mentors.</p>
-	<a class="btn btn-block btn-primary" href="/communities/cfp/{{ community.slug }}/notify-me/">Notify me</a>
+	{% if notification %}
+		<p>You are currently signed up to be notified when the coordinator indicates this community will participate in an Outreachy internship round. You signed up on {{ notification.date_of_signup }}.</p>
+	{% else %}
+		<p>Sign up to be notified when the coordinator finds funding and opens the call for volunteers and mentors.</p>
+		<a class="btn btn-success" href="{% url 'notify-me' community_slug=community.slug %}">Notify me</a>
+	{% endif %}
 
 {% elif participation_info.approval_status == participation_info.APPROVED %}
 	<p>{{ community.name }} is participating in {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.

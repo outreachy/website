@@ -29,6 +29,7 @@ from .models import Comrade
 from .models import CoordinatorApproval
 from .models import MentorApproval
 from .models import NewCommunity
+from .models import Notification
 from .models import Participation
 from .models import Project
 from .models import ProjectSkill
@@ -224,6 +225,7 @@ def community_read_only_view(request, slug):
     community = get_object_or_404(Community, slug=slug)
 
     coordinator = None
+    notification = None
     if request.user.is_authenticated:
         try:
             # Although the current user is authenticated, don't assume
@@ -233,6 +235,10 @@ def community_read_only_view(request, slug):
             coordinator = community.coordinatorapproval_set.get(coordinator__account=request.user)
         except CoordinatorApproval.DoesNotExist:
             pass
+        try:
+            notification = Notification.objects.get(comrade=request.user.comrade, community=community)
+        except Notification.DoesNotExist:
+            pass
 
     approved_coordinator_list = community.coordinatorapproval_set.filter(approval_status=ApprovalStatus.APPROVED)
 
@@ -240,6 +246,7 @@ def community_read_only_view(request, slug):
             'current_round' : current_round,
             'community': community,
             'coordinator': coordinator,
+            'notification': notification,
             'approved_coordinator_list': approved_coordinator_list,
             }
 
@@ -253,6 +260,22 @@ def community_read_only_view(request, slug):
         pass
 
     return render(request, 'home/community_read_only.html', context)
+
+# A Comrade wants to sign up to be notified when a community coordinator
+# says this community is participating in a new round
+# FIXME we need to deal with deleting these once a community signs up.
+class CommunityNotificationUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
+    fields = []
+
+    def get_object(self):
+        community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
+        try:
+            return Notification.objects.get(comrade=self.request.user.comrade, community=community)
+        except Notification.DoesNotExist:
+            return Notification(comrade=self.request.user.comrade, community=community)
+
+    def get_success_url(self):
+        return self.object.community.get_preview_url()
 
 def community_landing_view(request, round_slug, slug):
     # Try to see if this community is participating in that round
@@ -352,6 +375,20 @@ class ParticipationAction(ApprovalStatusAction):
                     recipient_list=['organizers@outreachy.org'],
                     subject='Approve community participation - {name}'.format(name=self.object.community.name),
                     message=email_string)
+            for notification in Notification.objects.filter(community=self.object.community):
+                email_string = render_to_string('home/email/notify-mentors.txt', {
+                    'community': self.object.community,
+                    'notification': notification,
+                    'current_round': self.object.participating_round,
+                    }, request=self.request)
+                send_mail(
+                        from_email='Outreachy Organizers <organizers@outreachy.org>',
+                        recipient_list=['"{name}" <{email}>'.format(
+                            name=notification.comrade.public_name,
+                            email=notification.comrade.account.email)],
+                        subject='Mentor for {name} in Outreachy'.format(name=self.object.community.name),
+                        message=email_string)
+                notification.delete()
 
 # This view is for mentors and coordinators to review project information and approve it
 def project_read_only_view(request, community_slug, project_slug):
@@ -486,7 +523,7 @@ class MentorApprovalAction(ApprovalStatusAction):
             self.object.email_approved_mentor(self.request)
 
 class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
-    fields = ['short_title', 'approved_license', 'unapproved_license_description', 'no_proprietary_software', 'proprietary_software_description', 'longevity', 'community_size', 'intern_benefits', 'community_benefits', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'long_description', 'accepting_new_applicants']
+    fields = ['short_title', 'approved_license', 'unapproved_license_description', 'no_proprietary_software', 'proprietary_software_description', 'longevity', 'community_size', 'community_benefits', 'intern_tasks', 'intern_benefits', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'long_description', 'accepting_new_applicants']
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     # By overriding the get_object method, we reuse the URL for

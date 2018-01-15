@@ -1,0 +1,25 @@
+<h4>{{ approval.mentor.public_name }}</h4>
+<ul>
+	<li>Personal email: {{ approval.mentor.public_name }} &lt;{{ approval.mentor.account.email }}&gt;</li>
+	{% if approval.mentor.pronouns_to_participants %}<li>Pronouns: {{ approval.mentor.get_pronouns_html|safe }}</li>{% endif %}
+	{% if approval.mentor.timezone %}<li>Timezone: {{ approval.mentor.get_timezone_display }}</li>{% endif %}
+	{% if approval.mentor.primary_language %}<li>Primary language: {{ approval.mentor.get_primary_language_display }}</li>{% endif %}
+	{% if approval.mentor.second_language %}<li>Second language: {{ approval.mentor.get_second_language_display }}</li>{% endif %}
+	{% if approval.mentor.third_language %}<li>Third language: {{ approval.mentor.get_third_language_display }}</li>{% endif %}
+	{% if approval.mentor.fourth_language %}<li>Fourth language: {{ approval.mentor.get_fourth_language_display }}</li>{% endif %}
+</ul>
+<p>Each Outreachy mentor will have a different mentorship style, a preferred way to contact them, and different ways of working with interns. {{ approval.mentor.public_name}}'s mentorship style is: {{ approval.mentorship_style }}</p>
+<p>
+{% if approval.mentored_before is approval.OUTREACHY %}{{ approval.mentor.public_name}} has mentored for Outreachy in past rounds.
+{% elif approval.mentored_before is approval.GOOGLE_SUMMER_OF_CODE %}{{ approval.mentor.public_name}} has mentored for Google Summer of Code before.
+{% elif approval.mentored_before is approval.RAILS_GIRLS %}{{ approval.mentor.public_name}} has mentored for Rails Girls Summer of Code before.
+{% elif approval.mentored_before is approval.OTHER_MENTOR_PROGRAM %}{{ approval.mentor.public_name}} has volunteered as a mentor for a program other than Outreachy.
+{% elif approval.mentored_before is approval.NOT_MENTORED %}{{ approval.mentor.public_name}} is a first-time mentor for Outreachy.
+{% endif %}
+</p>
+<p>Outreachy mentors are required to be experienced contributors to free and open source software (FOSS).
+{{ approval.mentor.public_name }} has contributed to this team for {{ approval.get_longevity_display }}.
+This mentor has made the following contributions to this team or other FOSS communities: {{ approval.mentor_foss_contributions }}
+</p>
+<p>{% if approval.communication_channel_username %}You'll be able to find this mentor on the FOSS community communication channel under the username: {{ approval.communication_channel_username }}{% else %}The mentor has not provided their username on the FOSS community communication channel.{% endif %}
+</ul>

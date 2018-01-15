@@ -7,6 +7,7 @@ from .models import NewCommunity
 from .models import Comrade
 from .models import CoordinatorApproval
 from .models import MentorApproval
+from .models import Notification
 from .models import Participation
 from .models import RoundPage
 from .models import Project
@@ -26,6 +27,7 @@ admin.site.register(Community)
 admin.site.register(CoordinatorApproval)
 admin.site.register(MentorApproval)
 admin.site.register(NewCommunity)
+admin.site.register(Notification)
 admin.site.register(Participation)
 admin.site.register(RoundPage)
 admin.site.register(Project)

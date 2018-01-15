@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.core.validators import URLValidator
 from django.db import models
+from django.forms import ValidationError
 from django.template.loader import render_to_string
 from django.urls import reverse
 
@@ -345,6 +346,17 @@ class Community(models.Model):
             self.coordinatorapproval_set.filter(
                 approval_status=ApprovalStatus.APPROVED)]
 
+class Notification(models.Model):
+    community = models.ForeignKey(Community)
+    comrade = models.ForeignKey(Comrade)
+    # Ok, look, this is silly, and we don't actually need the date,
+    # but I don't know what view to use to modify a through field on a model.
+    date_of_signup = models.DateField("Date user signed up for notifications", auto_now_add=True)
+    class Meta:
+        unique_together = (
+                ('community', 'comrade'),
+                )
+
 class NewCommunity(Community):
     community = models.OneToOneField(Community, primary_key=True, parent_link=True)
 
@@ -417,6 +429,7 @@ class Participation(ApprovalStatus):
     interns_funded = models.IntegerField(
             verbose_name="How many interns do you expect to fund for this round? (Include any Outreachy community credits to round up to an integer number.)")
     cfp_text = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
+            blank=True,
             verbose_name="Additional information to provide on a call for mentors and volunteers page (e.g. what kinds of internship projects you're looking for, ways for volunteers to help Outreachy applicants)")
 
     def __str__(self):
@@ -492,14 +505,21 @@ class Project(ApprovalStatus):
         default=SMOL,
         help_text="How many regular contributors does this team have?",
     )
+
+    intern_tasks = models.CharField(
+            max_length=PARAGRAPH_LENGTH,
+            blank=True,
+            help_text='(Optional) Description of possible internship tasks.')
+
     intern_benefits = models.CharField(
             max_length=PARAGRAPH_LENGTH,
             blank=True,
-            help_text='What will the intern learn from working on this project?')
+            help_text="(Optional) How will the intern benefit from working with your team on this project? Imagine you're pitching this internship to a promising candidate. What would you say to convince them to apply? For example, what technical and non-technical skills will they learn from working on this project? How will this help them further their career in open source?")
+
     community_benefits = models.CharField(
             blank=True,
             max_length=PARAGRAPH_LENGTH,
-            help_text='How will this internship project benefit the FOSS community that is funding it?')
+            help_text='(Optional) How will this internship project benefit the FOSS community that is funding it?')
 
     approved_license = models.BooleanField(
             default=False,
@@ -628,6 +648,13 @@ class ProjectSkill(models.Model):
                 skill = self.skill,
                 )
 
+def mentor_read_instructions(value):
+    if value is False:
+        raise ValidationError('Please read this to understand your duties as mentor.')
+
+def mentor_read_contract(value):
+    if value is False:
+        raise ValidationError('Please read the mentor contract to ensure you will be comfortable signing this legal document.')
 
 # This through table records whether a mentor is approved for this project.
 # If a mentor creates a project, we set them as approved. The coordinator then reviews the Project.
@@ -646,15 +673,22 @@ class MentorApproval(ApprovalStatus):
     # FIXME add a validator for this field that requires it to be checked
     instructions_read = models.BooleanField(
             default=False,
+            validators=[mentor_read_instructions],
             help_text='I have read the <a href="/mentor/#mentor">mentor duties</a> and <a href="/mentor/mentor-faq/">mentor FAQ</a>.')
+
     understands_intern_time_commitment = models.BooleanField(
             default=False,
+            validators=[mentor_read_instructions],
             help_text='I understand that Outreachy mentors will spend a minimum of 5 hours a week mentoring their intern during the three month internship period')
+
     understands_applicant_time_commitment = models.BooleanField(
             default=False,
+            validators=[mentor_read_instructions],
             help_text='I understand that Outreachy mentors often find they must spend more time helping applicants during the application period than helping their intern during the internship period')
+
     understands_mentor_contract = models.BooleanField(
             default=False,
+            validators=[mentor_read_contract],
             help_text='I understand that Outreachy mentors will need to sign a <a href="/documents/1/Outreachy-Program--Mentorship-Terms-of-Participation-May-2017.pdf">mentor contract</a> after they accept an applicant as an intern')
 
     THREE_MONTHS = '3M'
