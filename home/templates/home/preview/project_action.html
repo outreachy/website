@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 
+{% block title %}
+{{ view.kwargs.action|title }} Project for {{ project.project_round.community }}
+{% endblock %}
+
 {% block content %}
 
-<h1>Internship Project Proposal</h1>
+<h1>{{ view.kwargs.action|title }} Internship Project Proposal</h1>
 
 <p>Mentors submit internship project proposals, which will be reviewed by Outreachy organizers and your community coordinators.</p>
 
@@ -17,7 +21,7 @@
     {% csrf_token %}
     {{ form.media }}
     {{ form.as_p }}
-    <input class="btn btn-primary" type="submit" value="Save project info" />
+    <input class="btn btn-primary" type="submit" value="{{ view.kwargs.action|title }} project" />
 </form>
 
 {% endblock %}

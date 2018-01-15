@@ -77,7 +77,7 @@ Past community participation in Outreachy
 	{% endif %}
 
 	<p>Each mentor will need to submit their own project. The project will then be reviewed and approved by the FOSS community coordinator(s). Additional co-mentors will be able to sign up for the project after it is submitted for review.</p>
-	<p><a class='btn btn-block btn-primary' href="{% url 'project-participate' community.slug %}">Submit a New Project</a></p>
+	<p><a class='btn btn-primary' href="{% url 'project-action' action='submit' community_slug=community.slug %}">Submit a New Project</a></p>
 
 	{% if approved_projects %}
 		<h2>Approved projects</h2>
@@ -231,7 +231,7 @@ Past community participation in Outreachy
 <hr />
 	<h2>Coordinator Actions</h2>
 	<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
-	<p><a class="btn btn-primary" href="{% url 'community-update' slug=community.slug %}">Update Community Info</a></p>
+	<p><a class="btn btn-primary" href="{% url 'community-update' community_slug=community.slug %}">Update Community Info</a></p>
 	{% if not participation_info %}
 		<p>You can sign the community up to participate in the current round.</p>
 		<p><a class="btn btn-success" href="{% url 'participation-action' action='submit' community_slug=community.slug %}">Community will participate</a></p>

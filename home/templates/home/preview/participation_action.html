@@ -11,7 +11,9 @@
 	<a href="{{ participation.community.get_preview_url }}">{{ participation.community }}</a>
 </h1>
 
-{% if view.kwargs.action != 'submit' %}
+{% if view.kwargs.action == 'submit' %}
+	<p>Communities that want to participate in the current round of Outreachy internships will need to provide information such as the number of interns they have funding for. Outreachy organizers will then review and approve community participation in this round.</p>
+{% else %}
 <ul>
 	<li>Number of interns funded: {{ participation.interns_funded }}</li>
 	<li>CFP text: {{ participation.cfp_text }}</li>
@@ -20,6 +22,7 @@
 
 <form action="" method="post">
 	{% csrf_token %}
+	{{ form.media }}
 	{{ form.as_p }}
 	<input type="submit" class="btn btn-primary" value="{{ view.kwargs.action|title }}" />
 </form>

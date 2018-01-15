@@ -11,7 +11,7 @@ def header(request):
 
     if request.user.is_authenticated:
         pending_approvals = sum(
-                model.objects_for_dashboard(request.user).filter(approval_status=models.ApprovalStatus.PENDING).count()
+                model.objects_for_dashboard(request.user).filter(approval_status=models.ApprovalStatus.PENDING).distinct().count()
                 for model in dashboard_models)
     else:
         pending_approvals = 0

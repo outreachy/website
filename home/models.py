@@ -332,7 +332,7 @@ class Community(models.Model):
         return self.name
 
     def get_preview_url(self):
-        return reverse('community-read-only', kwargs={'slug': self.slug})
+        return reverse('community-read-only', kwargs={'community_slug': self.slug})
 
     def is_coordinator(self, user):
         return self.coordinatorapproval_set.filter(
