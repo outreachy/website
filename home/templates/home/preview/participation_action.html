@@ -11,8 +11,18 @@
 </h1>
 
 {% if view.kwargs.action == 'submit' %}
+	<div class="card border-info mb-3">
+		<div class="card-header text-white bg-info">Outreachy internship funding is required.</div>
+		<div class="card-body">
+			<p class="card-title">Each FOSS community that participates in Outreachy must <strong>provide funding for at least one intern ($6,500).</strong></p>
+
+			<p>The $6,500 intern sponsorship covers: the three-month internship stipend ($5,500),
+			a travel stipend for the intern to speak or network at conferences or events ($500),
+			and an accounting fee ($500) for the Outreachy parent non-profit, Software Freedom Conservancy, to handle intern payment and sponsor invoicing.
+			</p>
+		</div>
+	</div>	
 	<h2>Intern Funding</h2>
-	<p><strong>Each FOSS community that participates in Outreachy must provide funding for at least one intern ($6,500).</strong></p>
 	<p>Funding for {{ participation.community.name }} interns may come from a number of different sources.</p>
 
 	<h3>Community funds</h3>

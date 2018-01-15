@@ -28,6 +28,7 @@ from .models import CommunicationChannel
 from .models import Community
 from .models import Comrade
 from .models import CoordinatorApproval
+from .models import LoggedSponsorChange
 from .models import MentorApproval
 from .models import NewCommunity
 from .models import Notification
@@ -336,22 +337,44 @@ class CommunityUpdate(LoginRequiredMixin, UpdateView):
 
 class ParticipationAction(ApprovalStatusAction):
     # TODO - make sure people can't say they will fund 0 interns
-    fields = ['interns_funded']
+    fields = ['interns_funded', 'intern_funding_sources']
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     def get_object(self):
         community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
         participating_round = RoundPage.objects.latest('internstarts')
         try:
-            return Participation.objects.get(
+            participation = Participation.objects.get(
                     community=community,
                     participating_round=participating_round)
         except Participation.DoesNotExist:
-            return Participation(
+            participation = Participation(
                     community=community,
                     participating_round=participating_round)
+        return participation
 
     def notify(self):
+        # Double check to see if there was a sponsorship change
+        # and if so, record it.
+        try:
+            logs = LoggedSponsorChange.objects.filter(participation=self.object).order_by('-log_date')
+            if not logs:
+                log_this = True
+            else:
+                last_log = logs[0]
+                if (last_log.interns_funded != self.object.interns_funded) or (last_log.intern_funding_sources != self.object.intern_funding_sources):
+                    log_this = True
+        except LoggedSponsorChange.DoesNotExist:
+            log_this = True
+        
+        if log_this:
+            LoggedSponsorChange.objects.create(
+                    participation=self.object,
+                    interns_funded=self.object.interns_funded,
+                    intern_funding_sources=self.object.intern_funding_sources,
+                    modifier=self.request.user.comrade)
+
+        # See if we need to notify folks if a community is newly participating
         if self.prior_status == self.target_status:
             return
 
