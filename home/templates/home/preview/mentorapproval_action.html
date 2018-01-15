@@ -13,13 +13,23 @@
 	<a href="{{ project.get_preview_url }}">{{ project.short_title }}</a>
 </h1>
 
-{% if view.kwargs.action != 'submit' %}
+{% if view.kwargs.action == 'submit' %}
+	<p>Mentors provide need to provide some information to be reviewed by the FOSS community coordinators. Additionally, your project communication channel username will be shown to applicants on the project page.</p>
+
+	<p><strong>Please read these questions carefully.</strong></p>
+
+	<h2>Terms Used</h2>
+	{% include "home/snippet/foss-terms.html" %}
+
+	<h2>Mentor Information</h2>
+{% else %}
 	<p>{{ mentor.public_name }} &lt;{{ mentor.account.email }}&gt;</p>
 	{% include "home/snippet/mentor_info.html" with approval=mentorapproval only %}
 {% endif %}
 
 <form action="" method="post">
 	{% csrf_token %}
+	{{ form.media }}
 	{{ form.as_p }}
 	<input type="submit" class="btn btn-primary" value="{{ view.kwargs.action|title }}" />
 </form>
