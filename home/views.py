@@ -654,7 +654,7 @@ def dashboard(request):
 
     by_status = defaultdict(list)
     for model in models:
-        objects = model.objects_for_dashboard(request.user)
+        objects = model.objects_for_dashboard(request.user).distinct()
         for obj in objects:
             by_status[obj.approval_status].append((model._meta.verbose_name, obj))
 
