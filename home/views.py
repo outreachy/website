@@ -14,13 +14,14 @@ from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.text import slugify
 from django.views.decorators.http import require_POST
-from django.views.generic import DetailView, TemplateView
+from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 
 from registration.backends.hmac import views as hmac_views
 
 from .mixins import ApprovalStatusAction
 from .mixins import ComradeRequiredMixin
+from .mixins import Preview
 
 from .models import ApprovalStatus
 from .models import CommunicationChannel
@@ -204,16 +205,6 @@ def community_cfp_view(request):
             'not_participating_communities': not_participating_communities,
             },
             )
-
-class Preview(DetailView):
-    template_name_suffix = ""
-
-    def get_template_names(self):
-        name = "{}/preview/{}{}.html".format(
-                self.object._meta.app_label,
-                self.object._meta.model_name,
-                self.template_name_suffix)
-        return [name]
 
 # This is the page for volunteers, mentors, and coordinators.
 # It's a read-only page that displays information about the community,
