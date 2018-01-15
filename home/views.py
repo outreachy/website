@@ -211,9 +211,9 @@ def community_cfp_view(request):
 # what projects are accepted, and how volunteers can help.
 # If the community isn't participating in this round, the page displays
 # instructions for being notified or signing the community up to participate.
-def community_read_only_view(request, slug):
+def community_read_only_view(request, community_slug):
     current_round = RoundPage.objects.latest('internstarts')
-    community = get_object_or_404(Community, slug=slug)
+    community = get_object_or_404(Community, slug=community_slug)
 
     coordinator = None
     notification = None
@@ -322,6 +322,7 @@ class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
 
 class CommunityUpdate(LoginRequiredMixin, UpdateView):
     model = Community
+    slug_url_kwarg = 'community_slug'
     fields = ['name', 'description', 'long_description', 'website']
 
     def get_object(self):
