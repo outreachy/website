@@ -513,64 +513,59 @@ class MentorApprovalAction(ApprovalStatusAction):
         elif self.target_status == ApprovalStatus.APPROVED:
             self.object.email_approved_mentor(self.request)
 
-class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
+class ProjectAction(ApprovalStatusAction):
     fields = ['short_title', 'approved_license', 'unapproved_license_description', 'no_proprietary_software', 'proprietary_software_description', 'longevity', 'community_size', 'community_benefits', 'intern_tasks', 'intern_benefits', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'long_description', 'accepting_new_applicants']
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
-    # By overriding the get_object method, we reuse the URL for
-    # both creating and updating information about a
-    # community participating in the current round.
     def get_object(self):
         participating_round = RoundPage.objects.latest('internstarts')
         participation = get_object_or_404(Participation,
                     community__slug=self.kwargs['community_slug'],
                     participating_round=participating_round)
-        if 'project_slug' in self.kwargs:
-            project = get_object_or_404(Project,
-                    project_round=participation,
-                    slug=self.kwargs['project_slug'])
-        else:
-            project = Project(project_round=participation)
 
-        if not project.is_submitter(self.request.user):
-            raise PermissionDenied("You are not an approved mentor for this project.")
+        project_slug = self.kwargs.get('project_slug')
+        if project_slug:
+            return get_object_or_404(Project,
+                    project_round=participation,
+                    slug=project_slug)
+        else:
+            return Project(project_round=participation)
+
+    def save_form(self, form):
+        project = form.save(commit=False)
+
+        if not project.slug:
+            project.slug = slugify(project.short_title)[:project._meta.get_field('slug').max_length]
+
+        project.save()
         return project
 
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-
-        if not self.object.slug:
-            self.object.slug = slugify(self.object.short_title)[:self.object._meta.get_field('slug').max_length]
-
-        if self.object.approval_status == ApprovalStatus.WITHDRAWN:
-            # only send email when newly entering the pending state
-            self.object.approval_status = ApprovalStatus.PENDING
-            # Only send email if this is a new project,
-            # or someone withdrew a project and then resubmitted it.
-            send_email = True
-        else:
-            # Don't send email if someone is editing a pending or approved project.
-            send_email = False
-
-        self.object.save()
-
-        if 'project_slug' not in self.kwargs:
+    def get_success_url(self):
+        if not self.kwargs.get('project_slug'):
             # If this is a new Project, associate an approved mentor with it
             MentorApproval.objects.create(
                     mentor=self.request.user.comrade,
                     project=self.object,
                     approval_status=ApprovalStatus.APPROVED)
-            response = redirect('mentorapproval-action',
-                community_slug=self.object.project_round.community.slug,
-                project_slug=self.object.slug,
-                action='submit')
-        else:
-            response = redirect('project-skills-edit',
-                    community_slug=self.object.project_round.community.slug,
-                    project_slug=self.object.slug,
-                    )
+            return reverse('mentorapproval-action', kwargs={
+                'community_slug': self.object.project_round.community.slug,
+                'project_slug': self.object.slug,
+                'action': 'submit',
+                })
+        elif self.kwargs['action'] == 'submit':
+            return reverse('project-skills-edit', kwargs={
+                'community_slug': self.object.project_round.community.slug,
+                'project_slug': self.object.slug,
+                })
+        return self.object.get_preview_url()
 
-        if send_email:
+    def notify(self):
+        if self.prior_status == self.target_status:
+            return
+
+        if self.target_status == ApprovalStatus.PENDING:
+            # Only send email if this is a new project,
+            # or someone withdrew a project and then resubmitted it.
             try:
                 mentorapproval = MentorApproval.objects.get(
                         mentor=self.request.user.comrade,
@@ -601,31 +596,6 @@ class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
                         recipient_list=['Outreachy Organizers <organizers@outreachy.org>'],
                         subject='Approve Outreachy intern project proposal for {name}'.format(name=self.object.project_round.community.name),
                         message=email_string)
-
-        return response
-
-@require_POST
-@login_required
-def project_status_change(request, community_slug, project_slug):
-    current_round = RoundPage.objects.latest('internstarts')
-    project = get_object_or_404(
-            Project.objects.select_related('project_round__community'),
-            slug=project_slug,
-            project_round__participating_round=current_round,
-            project_round__community__slug=community_slug,
-            )
-
-    if not project.is_approver(request.user):
-        raise PermissionDenied("You are not an approved coordinator for this community.")
-
-    if 'approve' in request.POST:
-        project.approval_status = ApprovalStatus.APPROVED
-        project.save()
-    if 'reject' in request.POST:
-        project.approval_status = ApprovalStatus.REJECTED
-        project.save()
-
-    return redirect(project.get_preview_url())
 
 class BaseProjectEditPage(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     def get_object(self):

@@ -121,8 +121,11 @@ class ApprovalStatusAction(LoginRequiredMixin, ComradeRequiredMixin, UpdateView)
                 self.template_name_suffix)
         return [name]
 
+    def save_form(self, form):
+        return form.save()
+
     def form_valid(self, form):
-        self.object = form.save()
+        self.object = self.save_form(form)
 
         # Delay calling notify() until the database transaction is fully
         # written to disk.

@@ -80,15 +80,12 @@
 	</div>
 	{% endif %}
 
-	{% comment %}When we name an input, the name and value get added to the POST dictionary.{% endcomment %}
-	<form action="{% url 'project-status' community_slug=community.slug project_slug=project.slug %}" method="post">
-	    {% csrf_token %}
-	    {% if project.approval_status != project.APPROVED %}
-		    <input class="btn btn-block btn-success" type="submit" name="approve" value="Approve Project" />
-	    {% endif %}
-	    {% if project.approval_status != project.REJECTED %}
-		    <input class="btn btn-block btn-warning" type="submit" name="reject" value="Reject Project" />
-	    {% endif %}
+	{% if project.approval_status != project.APPROVED %}
+	<a href="{% url 'project-action' action='approve' community_slug=community.slug project_slug=project.slug %}" class="btn btn-success">Approve Project</a>
+	{% endif %}
+	{% if project.approval_status != project.REJECTED %}
+	<a href="{% url 'project-action' action='reject' community_slug=community.slug project_slug=project.slug %}" class="btn btn-warning">Reject Project</a>
+	{% endif %}
 	</form>
 	{% if unapproved_mentors %}
 		<h3>Approve Mentors</h3>
@@ -120,7 +117,7 @@
 <h2>Project Information</h2>
 
 {% if mentor_request and mentor_request.approval_status == mentor_request.APPROVED %}
-	<p><a class="btn btn-primary" href="{% url 'project-participate' community_slug=community.slug project_slug=project.slug %}">Edit Project Info</a></p>
+	<p><a class="btn btn-primary" href="{% url 'project-action' action='submit' community_slug=community.slug project_slug=project.slug %}">Edit Project Info</a></p>
 {% endif %}
 
 {% if coordinator or mentor_request and mentor_request.approval_status == mentor_request.APPROVED %}
