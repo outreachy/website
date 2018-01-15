@@ -132,6 +132,10 @@
 			<p>{{ project.short_title }}</p>
 			{{ project.long_description|safe }}
 
+			{{ project.intern_tasks|safe }}
+
+			{{ project.intern_benefits|safe }}
+
 			<h3>Applicant Status</h3>
 			{% if project.accepting_new_applicants %}
 				<p>This project is open to new Outreachy applicants.</p>
@@ -171,27 +175,42 @@
 				{% endfor %}
 				</table>
 			{% endif %}
-			<h3>Project Contact Information</h3>
+
+			<h3>Who will I work with?</h3>
+			<p>Each Outreachy intern works remotely with one or more mentors. Outreachy mentors typically only are a mentor for only one intern per round. Mentors are your guides in learning more about free and open source software, technical and non-technical skills, and will always be there when you get stuck.</p>
+
+			{% if approved_mentors %}
+				<p>You'll be working with the following mentor{{ approved_mentors|length|pluralize }}:</p>
+				{% for approval in approved_mentors %}
+					{% include "home/snippet/mentor_info_for_landing.html" with approval=approval only %}
+				{% endfor %}
+			{% endif %}
+			<p>Please contact the mentors of this project to get information on how you can make a contribution during the application process. Only applicants who make a contribution will be accepted as interns.</p>
+
+			<h3>Interacting with the {{ community.name }} Community</h3>
+			<p>Contributions applicants and interns make are often reviewed by community members other than your mentor. Community members are there to answer your questions, give you feedback, and help you grow your skills.
+			<p>During this internship project, you'll be interacting with a team of {{ project.get_community_size_display }}. The community has been accepting contributions from people from around the world for {{ project.get_longevity_display }}.</p>
+
 			<p>Contributors to Free and Open Source Software (FOSS) projects discuss issues, documentation, user experience, and feature design in public communication channels.
 			Mentors are available to help applicants both on public project channels, and via private message or email.
 			Mentors understand that applicants may be hesitant to participate and ask questions in public,
 			but we hope you'll introduce yourself on the public project channels and ask for help when you get stuck.
 			</p>
-			<p>
-			{% if project.communication_tool %}
-				This project uses the communication tool called {{ project.communication_tool }}.
-			{% endif %}
-			{% if project.communication_help %}
-				If you've never used that tool before, <a href="{{ project.communication_help }}">you can read the documentation</a>.
-			{% endif %}
-			{% if project.communication_norms %}
-				Once you join the project's communication channel,
-				the mentors have some additional instructions for you to follow. {{ project.communication_norms|safe }}
-			{% endif %}
-			{% if project.communication_url %}
-				You can join this project's communication channel by <a href="{{ project.communication_url }}">following this link</a>.
-			{% endif %}
-			<p>
+			{% for channel in project.communicationchannel_set.all %}
+				<p>
+				This team uses {{ channel.tool_name }} to communicate.
+				{% if channel.communication_help %}
+					You can find helpful documentation about this communication tool <a href="{{ channel.communication_help }}">here</a>. 
+				{% endif %}
+				{% if channel.communication_norms %}
+					Once you join the project's communication channel,
+					the mentors have some additional instructions for you to follow. {{ channel.communication_norms|safe }}
+				{% endif %}
+				{% if channel.communication_url %}
+					You can join this project's communication channel by <a href="{{ project.communication_url }}">following this link</a>.
+				{% endif %}
+				<p>
+			{% endfor %}
 
 			<h3>Project Contribution Information</h3>
 			<p>As part of the application process, all applicants must make at least one contribution to be accepted as an intern for this project.</p>
