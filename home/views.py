@@ -336,7 +336,7 @@ class CommunityUpdate(LoginRequiredMixin, UpdateView):
 
 class ParticipationAction(ApprovalStatusAction):
     # TODO - make sure people can't say they will fund 0 interns
-    fields = ['interns_funded', 'cfp_text']
+    fields = ['interns_funded']
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     def get_object(self):
