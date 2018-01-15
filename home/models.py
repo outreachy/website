@@ -470,12 +470,21 @@ class LoggedSponsorChange(models.Model):
     participation = models.ForeignKey(Participation)
     modifier = models.ForeignKey(Comrade)
 
-    log_date = models.DateField("Date coordinator made sponsorship change", auto_now_add=True)
+    log_date = models.DateTimeField("Date coordinator made sponsorship change", auto_now_add=True)
     interns_funded = models.IntegerField(
             verbose_name="New intern amount")
 
     intern_funding_sources = CKEditorField(
             help_text="New funding sources text")
+
+    def __str__(self):
+        return '{date:%Y-%m-%d %H:%M:%S} - {start:%M %Y} to {end:%M %Y} - {community} - {modifier} - sponsorship change'.format(
+                date = self.log_date,
+                start = self.participation.participating_round.internstarts,
+                end = self.participation.participating_round.internends,
+                community = self.participation.community,
+                modifier = self.modifier,
+                )
 
 class Project(ApprovalStatus):
     project_round = models.ForeignKey(Participation, verbose_name="Outreachy round and community")
