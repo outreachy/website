@@ -13,8 +13,10 @@
 	<a href="{{ project.get_preview_url }}">{{ project.short_title }}</a>
 </h1>
 
-<p>{{ mentor.public_name }} &lt;{{ mentor.account.email }}&gt;</p>
-{% include "home/snippet/mentor_info.html" with approval=mentorapproval only %}
+{% if view.kwargs.action != 'submit' %}
+	<p>{{ mentor.public_name }} &lt;{{ mentor.account.email }}&gt;</p>
+	{% include "home/snippet/mentor_info.html" with approval=mentorapproval only %}
+{% endif %}
 
 <form action="" method="post">
 	{% csrf_token %}

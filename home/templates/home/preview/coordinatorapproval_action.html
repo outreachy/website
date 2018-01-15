@@ -13,16 +13,18 @@
 
 {% with c=coordinatorapproval.coordinator community=coordinatorapproval.community %}
 
-<p>{{ c.public_name }} &lt;{{ c.account.email }}&gt;</p>
+{% if view.kwargs.action != 'submit' %}
+	<p>{{ c.public_name }} &lt;{{ c.account.email }}&gt;</p>
 
-<ul>
-	{% if c.pronouns_to_participants %}<li>Pronouns: {{ c.get_pronouns_display }}</li>{% endif %}
-	{% if c.timezone %}<li>Timezone: {{ c.get_timezone_display }}</li>{% endif %}
-	{% if c.primary_language %}<li>Primary language: {{ c.get_primary_language_display }}</li>{% endif %}
-	{% if c.second_language %}<li>Second language: {{ c.get_second_language_display }}</li>{% endif %}
-	{% if c.third_language %}<li>Third language: {{ c.get_third_language_display }}</li>{% endif %}
-	{% if c.fourth_language %}<li>Fourth language: {{ c.get_fourth_language_display }}</li>{% endif %}
-</ul>
+	<ul>
+		{% if c.pronouns_to_participants %}<li>Pronouns: {{ c.get_pronouns_display }}</li>{% endif %}
+		{% if c.timezone %}<li>Timezone: {{ c.get_timezone_display }}</li>{% endif %}
+		{% if c.primary_language %}<li>Primary language: {{ c.get_primary_language_display }}</li>{% endif %}
+		{% if c.second_language %}<li>Second language: {{ c.get_second_language_display }}</li>{% endif %}
+		{% if c.third_language %}<li>Third language: {{ c.get_third_language_display }}</li>{% endif %}
+		{% if c.fourth_language %}<li>Fourth language: {{ c.get_fourth_language_display }}</li>{% endif %}
+	</ul>
+{% endif %}
 
 <form action="" method="post">
 	{% csrf_token %}
