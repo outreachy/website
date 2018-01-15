@@ -327,10 +327,6 @@ class Community(models.Model):
 
     rounds = models.ManyToManyField(RoundPage, through='Participation')
 
-    # Add a relationship to the many Comrades who want to be notified
-    # when this community is participating in a round
-    notify_me = models.ManyToManyField(Comrade)
-
     def __str__(self):
         return self.name
 
@@ -348,6 +344,17 @@ class Community(models.Model):
                 for ca in
             self.coordinatorapproval_set.filter(
                 approval_status=ApprovalStatus.APPROVED)]
+
+class Notification(models.Model):
+    community = models.ForeignKey(Community)
+    comrade = models.ForeignKey(Comrade)
+    # Ok, look, this is silly, and we don't actually need the date,
+    # but I don't know what view to use to modify a through field on a model.
+    date_of_signup = models.DateField("Date user signed up for notifications", auto_now_add=True)
+    class Meta:
+        unique_together = (
+                ('community', 'comrade'),
+                )
 
 class NewCommunity(Community):
     community = models.OneToOneField(Community, primary_key=True, parent_link=True)
