@@ -7,12 +7,24 @@
 
 {% block content %}
 <h1>
-	{{ view.kwargs.action|title }} Community Participation for
-	<a href="{{ participation.community.get_preview_url }}">{{ participation.community }}</a>
+	{{ view.kwargs.action|title }} Community Participation for {{ participation.community }}</a>
 </h1>
 
 {% if view.kwargs.action == 'submit' %}
-	<p>Communities that want to participate in the current round of Outreachy internships will need to provide information such as the number of interns they have funding for. Outreachy organizers will then review and approve community participation in this round.</p>
+	<h2>Intern Funding</h2>
+	<p><strong>Each FOSS community that participates in Outreachy must provide funding for at least one intern ($6,500).</strong></p>
+	<p>Funding for {{ participation.community.name }} interns may come from a number of different sources.</p>
+
+	<h3>Community funds</h3>
+	<p>FOSS communities often fund Outreachy interns directly from their own community funds, or by using funds from the foundation or non-profit who is their fiscal sponsor.</p>
+	{% comment %}Show past community funders for this community{% endcomment %}
+
+	<h3>Corporate Sponsors</h3>
+	<p>Many FOSS communities find funding from corporate sponsors who use their FOSS project. If your community has participated in Outreachy in the past, Outreachy organizers may have been able to find your community additional corporate sponsors and arrange funding for you. FOSS coordinators should notify Outreachy organizers if they are able to secure additional funding from corporate sponsors.</p>
+	{% comment %}Show tentative and confirmed corporate sponsors Outreachy organizers have been working with.{% endcomment %}
+
+	<h2>Funding Sources for {{ participation.community.name }} interns</h2>
+	<p>Given the various options above, and taking into account any credits or additional corporate sponsors listed above, please indicate the total number of interns that can be funded to work with {{ participation.community.name }} in this round.</p>
 {% else %}
 <ul>
 	<li>Number of interns funded: {{ participation.interns_funded }}</li>
@@ -20,11 +32,22 @@
 </ul>
 {% endif %}
 
-<form action="" method="post">
+<p><form action="" method="post">
 	{% csrf_token %}
 	{{ form.media }}
 	{{ form.as_p }}
 	<input type="submit" class="btn btn-primary" value="{{ view.kwargs.action|title }}" />
-</form>
+</form></p>
+
+{% if view.kwargs.action == 'submit' %}
+	<h2>Funding for Additional Outreachy Interns</h2>
+
+	<p>Once communities have secured funding for at least one intern, the Outreachy program may be able to provide funding for additional interns from our general fund. During the intern selection process, Outreachy organizers review the funding requests across all participating communities, and fund the most promising applicants. The evaluation criteria we use for general funding is:</p>
+	<ol>
+		<li><p>Is the applicant eligible? It's important to have applicants check their eligibility section of their application early so mentors don't work with ineligible applicants</p></li>
+		<li><p>Does the applicant have additional time constraints? If they barely meet the time criteria, they may not be a good candidate.</p></li>
+		<li><p>Has the candidate made multiple contributions? Are those contributions more than just a documentation fix or whitespace change? Candidates that show skills specific to the project and are consistently contributing are more likely to be accepted for general funding.</p></li>
+	</ol>
+{% endif %}
 
 {% endblock %}
