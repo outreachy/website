@@ -2,6 +2,7 @@ from __future__ import absolute_import, unicode_literals
 
 from os import urandom
 from base64 import urlsafe_b64encode
+from datetime import date
 from datetime import timedelta
 
 from django.contrib.auth.models import User
@@ -485,6 +486,27 @@ class LoggedSponsorChange(models.Model):
                 community = self.participation.community,
                 modifier = self.modifier,
                 )
+
+class SponsorInfo(models.Model):
+    participation = models.ForeignKey(Participation)
+
+    name = models.CharField(
+            max_length=SENTENCE_LENGTH,
+            help_text='The full sponsor name to be used on invoices.')
+
+    amount = models.IntegerField()
+
+    funding_secured = models.BooleanField(
+            default=False,
+            help_text='Is this funding confirmed by the sponsoring organization?')
+
+    funding_decision_date = models.DateField(
+            default=date.today,
+            help_text="Date by which you will know if your funding will be confirmed.")
+
+    additional_information = CKEditorField(
+            blank=True,
+            help_text="Additional information about this sponsorship.")
 
 class Project(ApprovalStatus):
     project_round = models.ForeignKey(Participation, verbose_name="Outreachy round and community")
