@@ -505,14 +505,21 @@ class Project(ApprovalStatus):
         default=SMOL,
         help_text="How many regular contributors does this team have?",
     )
+
+    intern_tasks = models.CharField(
+            max_length=PARAGRAPH_LENGTH,
+            blank=True,
+            help_text='(Optional) Description of possible internship tasks.')
+
     intern_benefits = models.CharField(
             max_length=PARAGRAPH_LENGTH,
             blank=True,
-            help_text='What will the intern learn from working on this project?')
+            help_text="(Optional) How will the intern benefit from working with your team on this project? Imagine you're pitching this internship to a promising candidate. What would you say to convince them to apply? For example, what technical and non-technical skills will they learn from working on this project? How will this help them further their career in open source?")
+
     community_benefits = models.CharField(
             blank=True,
             max_length=PARAGRAPH_LENGTH,
-            help_text='How will this internship project benefit the FOSS community that is funding it?')
+            help_text='(Optional) How will this internship project benefit the FOSS community that is funding it?')
 
     approved_license = models.BooleanField(
             default=False,
