@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.core.validators import URLValidator
 from django.db import models
+from django.forms import ValidationError
 from django.template.loader import render_to_string
 from django.urls import reverse
 
@@ -640,6 +641,13 @@ class ProjectSkill(models.Model):
                 skill = self.skill,
                 )
 
+def mentor_read_instructions(value):
+    if value is False:
+        raise ValidationError('Please read this to understand your duties as mentor.')
+
+def mentor_read_contract(value):
+    if value is False:
+        raise ValidationError('Please read the mentor contract to ensure you will be comfortable signing this legal document.')
 
 # This through table records whether a mentor is approved for this project.
 # If a mentor creates a project, we set them as approved. The coordinator then reviews the Project.
@@ -658,15 +666,22 @@ class MentorApproval(ApprovalStatus):
     # FIXME add a validator for this field that requires it to be checked
     instructions_read = models.BooleanField(
             default=False,
+            validators=[mentor_read_instructions],
             help_text='I have read the <a href="/mentor/#mentor">mentor duties</a> and <a href="/mentor/mentor-faq/">mentor FAQ</a>.')
+
     understands_intern_time_commitment = models.BooleanField(
             default=False,
+            validators=[mentor_read_instructions],
             help_text='I understand that Outreachy mentors will spend a minimum of 5 hours a week mentoring their intern during the three month internship period')
+
     understands_applicant_time_commitment = models.BooleanField(
             default=False,
+            validators=[mentor_read_instructions],
             help_text='I understand that Outreachy mentors often find they must spend more time helping applicants during the application period than helping their intern during the internship period')
+
     understands_mentor_contract = models.BooleanField(
             default=False,
+            validators=[mentor_read_contract],
             help_text='I understand that Outreachy mentors will need to sign a <a href="/documents/1/Outreachy-Program--Mentorship-Terms-of-Participation-May-2017.pdf">mentor contract</a> after they accept an applicant as an intern')
 
     THREE_MONTHS = '3M'
