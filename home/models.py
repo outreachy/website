@@ -427,7 +427,13 @@ class Participation(ApprovalStatus):
     participating_round = models.ForeignKey(RoundPage)
 
     interns_funded = models.IntegerField(
-            verbose_name="How many interns do you expect to fund for this round? (Include any Outreachy community credits to round up to an integer number.)")
+            default=0,
+            verbose_name="How many interns do you expect to fund for this round?")
+
+    intern_funding_sources = CKEditorField(
+            default="",
+            help_text="<p>For each source of funding for interns:<ol><li>What is the sponsor name?</li><li>What is the sponsorship dollar amount?</li><li>Is the funding is secured or tentative?</li><li>If the funding is tentative, please provide a date by which you will have a decision on your funding. Funding must be secured by intern selection time for this round.</li><li>Any additional information you need Outreachy organizers to know about this sponsorship.</li></ol><p>Outreachy organizers will be in touch with coordinators later to gather invoicing information.</p>")
+    
     cfp_text = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
             blank=True,
             verbose_name="Additional information to provide on a call for mentors and volunteers page (e.g. what kinds of internship projects you're looking for, ways for volunteers to help Outreachy applicants)")
@@ -459,6 +465,17 @@ class Participation(ApprovalStatus):
                 community__coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
                 community__coordinatorapproval__coordinator__account=user,
                 )
+
+class LoggedSponsorChange(models.Model):
+    participation = models.ForeignKey(Participation)
+    modifier = models.ForeignKey(Comrade)
+
+    log_date = models.DateField("Date coordinator made sponsorship change", auto_now_add=True)
+    interns_funded = models.IntegerField(
+            verbose_name="New intern amount")
+
+    intern_funding_sources = CKEditorField(
+            help_text="New funding sources text")
 
 class Project(ApprovalStatus):
     project_round = models.ForeignKey(Participation, verbose_name="Outreachy round and community")
