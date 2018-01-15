@@ -18,8 +18,8 @@
 {% if mentorapproval.approval_status == mentorapproval.PENDING %}
 {% if mentorapproval|is_approver:request.user %}
 {% include "home/snippet/mentor_approval_warnings.html" with approval=mentorapproval only %}
-<a href="{% url 'mentorapproval-action' action='approve' community_slug=community.slug project_slug=project.slug username=mentor.account.username %}" class="btn btn-success">Approve Mentor</a>
-<a href="{% url 'mentorapproval-action' action='reject' community_slug=community.slug project_slug=project.slug username=mentor.account.username %}" class="btn btn-warning">Reject Mentor</a>
+<a href="{{ mentorapproval.get_approve_url }}" class="btn btn-success">Approve Mentor</a>
+<a href="{{ mentorapproval.get_reject_url }}" class="btn btn-warning">Reject Mentor</a>
 {% endif %}
 {% endif %}
 

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load approval_status %}
 
 {% block title %}
 {{ project.get_approval_status_display }} {{ community.name }} Project - {{ project.short_title }}
@@ -81,10 +82,10 @@
 	{% endif %}
 
 	{% if project.approval_status != project.APPROVED %}
-	<a href="{% url 'project-action' action='approve' community_slug=community.slug project_slug=project.slug %}" class="btn btn-success">Approve Project</a>
+	<a href="{{ project.get_approve_url }}" class="btn btn-success">Approve Project</a>
 	{% endif %}
 	{% if project.approval_status != project.REJECTED %}
-	<a href="{% url 'project-action' action='reject' community_slug=community.slug project_slug=project.slug %}" class="btn btn-warning">Reject Project</a>
+	<a href="{{ project.get_reject_url }}" class="btn btn-warning">Reject Project</a>
 	{% endif %}
 	</form>
 	{% if unapproved_mentors %}
@@ -93,10 +94,10 @@
 			<p>{{ approval.mentor.public_name }} &lt;{{ approval.mentor.account.email }}&gt;</p>
 			{% include "home/snippet/mentor_approval_warnings.html" %}
 			{% if approval.approval_status != approval.APPROVED %}
-			<a href="{% url 'mentorapproval-action' action='approve' community_slug=community.slug project_slug=project.slug username=approval.mentor.account.username %}" class="btn btn-success">Approve Mentor</a>
+			<a href="{{ approval.get_approve_url }}" class="btn btn-success">Approve Mentor</a>
 			{% endif %}
 			{% if approval.approval_status != approval.REJECTED %}
-			<a href="{% url 'mentorapproval-action' action='reject' community_slug=community.slug project_slug=project.slug username=approval.mentor.account.username %}" class="btn btn-warning">Reject Mentor</a>
+			<a href="{{ approval.get_reject_url }}" class="btn btn-warning">Reject Mentor</a>
 			{% endif %}
 			{% include "home/snippet/mentor_info.html" %}
 		{% endfor %}
@@ -107,7 +108,7 @@
 		{% for approval in approved_mentors %}
 			<p>{{ approval.mentor.public_name }} &lt;{{ approval.mentor.account.email }}&gt;</p>
 			{% include "home/snippet/mentor_approval_warnings.html" %}
-			<a href="{% url 'mentorapproval-action' action='reject' community_slug=community.slug project_slug=project.slug username=approval.mentor.account.username %}" class="btn btn-warning">Reject Mentor</a>
+			<a href="{{ approval.get_reject_url }}" class="btn btn-warning">Reject Mentor</a>
 			{% include "home/snippet/mentor_info.html" %}
 		{% endfor %}
 	{% endif %}
@@ -116,8 +117,8 @@
 
 <h2>Project Information</h2>
 
-{% if mentor_request and mentor_request.approval_status == mentor_request.APPROVED %}
-	<p><a class="btn btn-primary" href="{% url 'project-action' action='submit' community_slug=community.slug project_slug=project.slug %}">Edit Project Info</a></p>
+{% if project|is_submitter:request.user %}
+	<p><a class="btn btn-primary" href="{{ project.get_submit_url }}">Edit Project Info</a></p>
 {% endif %}
 
 {% if coordinator or mentor_request and mentor_request.approval_status == mentor_request.APPROVED %}
@@ -264,9 +265,9 @@
 	<strong>{{ mentor_request.get_approval_status_display }}</strong></p>
 
 	{% if mentor_request.approval_status == mentor_request.PENDING or mentor_request.approval_status == mentor_request.APPROVED %}
-	<a href="{% url 'mentorapproval-action' action='withdraw' community_slug=community.slug project_slug=project.slug %}" class="btn btn-warning">Withdraw From Mentoring</a>
+	<a href="{{ mentor_request.get_withdraw_url }}" class="btn btn-warning">Withdraw From Mentoring</a>
 	{% elif mentor_request.approval_status == mentor_request.WITHDRAWN %}
-	<a href="{% url 'mentorapproval-action' action='submit' community_slug=community.slug project_slug=project.slug %}" class="btn btn-success">Mentor This Project</a>
+	<a href="{{ mentor_request.get_submit_url }}" class="btn btn-success">Mentor This Project</a>
 	{% endif %}
 
 {% else %}

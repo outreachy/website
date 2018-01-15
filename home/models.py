@@ -306,6 +306,27 @@ class ApprovalStatus(models.Model):
         """
         raise NotImplemented
 
+    def get_action_url(self, action, **kwargs):
+        """
+        Override in subclasses to return the URL for the view which
+        performs the specified action. In some subclasses, there may be
+        optional extra parameters which control how the URL is
+        constructed.
+        """
+        raise NotImplemented
+
+    def get_submit_url(self, **kwargs):
+        return self.get_action_url('submit', **kwargs)
+
+    def get_withdraw_url(self, **kwargs):
+        return self.get_action_url('withdraw', **kwargs)
+
+    def get_approve_url(self, **kwargs):
+        return self.get_action_url('approve', **kwargs)
+
+    def get_reject_url(self, **kwargs):
+        return self.get_action_url('reject', **kwargs)
+
 class Community(models.Model):
     name = models.CharField(
             max_length=50, verbose_name="Community name")
