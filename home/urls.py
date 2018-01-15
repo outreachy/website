@@ -6,6 +6,7 @@ urlpatterns = [
     url(r'^communities/cfp/add/$', views.CommunityCreate.as_view(), name='community-add'),
     url(r'^communities/cfp/(?P<slug>[^/]+)/edit/$', views.CommunityUpdate.as_view(), name='community-update'),
     url(r'^communities/cfp/(?P<community_slug>[^/]+)/add/$', views.ProjectUpdate.as_view(), name='project-participate'),
+    url(r'^communities/cfp/(?P<community_slug>[^/]+)/notify/$', views.CommunityNotificationUpdate.as_view(), name='notify-me'),
     url(r'^communities/cfp/(?P<community_slug>[^/]+)/coordinator/preview/(?P<username>[^/]+)/$', views.CoordinatorApprovalPreview.as_view(), name='coordinatorapproval-preview'),
     url(r'^communities/cfp/(?P<community_slug>[^/]+)/coordinator/(?P<action>[^/]+)/(?:(?P<username>[^/]+)/)?$', views.CoordinatorApprovalAction.as_view(), name='coordinatorapproval-action'),
     url(r'^communities/cfp/(?P<community_slug>[^/]+)/project/(?P<project_slug>[^/]+)/mentor/preview/(?P<username>[^/]+)/$', views.MentorApprovalPreview.as_view(), name='mentorapproval-preview'),

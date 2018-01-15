@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Sign up for Notifications</h1>
+
+<p>Please confirm you want to be notified via email when a {{ community.name }} coordinator indicates this community will participate in an Outreachy internship round.</p>
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}{% comment %}This should expand to nothing because we didn't pass it any fields.{% endcomment %}
+    <input class="btn btn-success" type="submit" value="Confirm" />
+</form>
+{% endblock %}
