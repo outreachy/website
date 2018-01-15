@@ -428,6 +428,7 @@ class Participation(ApprovalStatus):
     interns_funded = models.IntegerField(
             verbose_name="How many interns do you expect to fund for this round? (Include any Outreachy community credits to round up to an integer number.)")
     cfp_text = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
+            blank=True,
             verbose_name="Additional information to provide on a call for mentors and volunteers page (e.g. what kinds of internship projects you're looking for, ways for volunteers to help Outreachy applicants)")
 
     def __str__(self):
