@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
+from django.forms import inlineformset_factory
 from django.shortcuts import get_list_or_404
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -17,7 +18,6 @@ from django.views.generic import DetailView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 
 from registration.backends.hmac import views as hmac_views
-from extra_views import UpdateWithInlinesView, InlineFormSet
 
 from .mixins import ApprovalStatusAction
 from .mixins import ComradeRequiredMixin
@@ -447,9 +447,25 @@ class MentorApprovalAction(ApprovalStatusAction):
             mentor = self.request.user.comrade
 
         try:
-            return MentorApproval.objects.get(mentor=mentor, project=project)
+            approval = MentorApproval.objects.get(mentor=mentor, project=project)
         except MentorApproval.DoesNotExist:
-            return MentorApproval(mentor=mentor, project=project)
+            approval = MentorApproval(mentor=mentor, project=project)
+
+        # Capture the old instructions_read before saving the form.
+        self.instructions_already_read = approval.instructions_read
+        return approval
+
+    def get_success_url(self):
+        if not self.instructions_already_read and self.object.project.is_submitter(self.request.user):
+            # This is the first time this mentor has submitted this
+            # form, but they're already approved, so we must be in the
+            # middle of the "propose a new project" workflow.
+            return reverse('project-skills-edit', kwargs={
+                'community_slug': self.object.project.project_round.community.slug,
+                'project_slug': self.object.project.slug,
+                })
+
+        return self.object.get_preview_url()
 
     def notify(self):
         if self.prior_status == self.target_status:
@@ -469,18 +485,8 @@ class MentorApprovalAction(ApprovalStatusAction):
         elif self.target_status == ApprovalStatus.APPROVED:
             self.object.email_approved_mentor(self.request)
 
-class ProjectSkillsInline(InlineFormSet):
-    model = ProjectSkill
-    fields = '__all__'
-
-class CommunicationChannelsInline(InlineFormSet):
-    model = CommunicationChannel
-    fields = '__all__'
-
-class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesView):
-    model = Project
+class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     fields = ['short_title', 'approved_license', 'unapproved_license_description', 'no_proprietary_software', 'proprietary_software_description', 'longevity', 'community_size', 'intern_benefits', 'community_benefits', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'long_description', 'accepting_new_applicants']
-    inlines = [ ProjectSkillsInline, CommunicationChannelsInline ]
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     # By overriding the get_object method, we reuse the URL for
@@ -502,7 +508,7 @@ class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesV
             raise PermissionDenied("You are not an approved mentor for this project.")
         return project
 
-    def forms_valid(self, form, inlines):
+    def form_valid(self, form):
         self.object = form.save(commit=False)
 
         if not self.object.slug:
@@ -519,8 +525,7 @@ class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesV
             send_email = False
 
         self.object.save()
-        for formset in inlines:
-            formset.save()
+
         if 'project_slug' not in self.kwargs:
             # If this is a new Project, associate an approved mentor with it
             MentorApproval.objects.create(
@@ -532,7 +537,10 @@ class ProjectUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateWithInlinesV
                 project_slug=self.object.slug,
                 action='submit')
         else:
-            response = redirect(self.object.get_preview_url())
+            response = redirect('project-skills-edit',
+                    community_slug=self.object.project_round.community.slug,
+                    project_slug=self.object.slug,
+                    )
 
         if send_email:
             try:
@@ -590,6 +598,30 @@ def project_status_change(request, community_slug, project_slug):
         project.save()
 
     return redirect(project.get_preview_url())
+
+class BaseProjectEditPage(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
+    def get_object(self):
+        participating_round = RoundPage.objects.latest('internstarts')
+        project = get_object_or_404(Project,
+                slug=self.kwargs['project_slug'],
+                project_round__community__slug=self.kwargs['community_slug'],
+                project_round__participating_round=participating_round)
+        if not project.is_submitter(self.request.user):
+            raise PermissionDenied("You are not an approved mentor for this project.")
+        return project
+
+    def get_success_url(self):
+        return reverse(self.next_view, kwargs=self.kwargs)
+
+class ProjectSkillsEditPage(BaseProjectEditPage):
+    template_name_suffix = '_skills_form'
+    form_class = inlineformset_factory(Project, ProjectSkill, fields='__all__')
+    next_view = 'communication-channels-edit'
+
+class CommunicationChannelsEditPage(BaseProjectEditPage):
+    template_name_suffix = '_channels_form'
+    form_class = inlineformset_factory(Project, CommunicationChannel, fields='__all__')
+    next_view = 'project-read-only'
 
 class MentorApprovalPreview(Preview):
     def get_object(self):

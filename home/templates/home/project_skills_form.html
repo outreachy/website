@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add Project Skills
+{% endblock %}
+
+{% block content %}
+<h1>Add Project Skills</h1>
+
+<p>Outreachy applicants often search for projects that fit the skills
+they have, or the skills they want to learn.  However, if mentors aren't
+specific about what skills applicants need in order to apply versus what
+skills are optional, applicants may decide they "aren't qualified" when
+they are. Applicants with imposter syndrome will often believe they need
+to be an "expert" in a particular skill in order to apply. Listing
+skills this way enourages people to apply.</p>
+
+<p>You can fill out the optional fields below. If you need to add more
+skills than there are fields, you should save this internship project
+proposal and then click 'Edit Project information'.</p>
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.media }}
+    {{ form.as_p }}
+    <input class="btn btn-primary" type="submit" value="Save project skills" />
+</form>
+
+{% endblock %}
