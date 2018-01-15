@@ -4,6 +4,7 @@ from django.db import transaction
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse
 from django.utils.http import urlencode
+from django.views.generic import DetailView
 from django.views.generic.edit import UpdateView
 
 from .models import ApprovalStatus
@@ -28,6 +29,16 @@ class ComradeRequiredMixin(object):
                         account_url=reverse('account'),
                         query_string=urlencode({'next': request.path})))
         return super(ComradeRequiredMixin, self).dispatch(request, *args, **kwargs)
+
+class Preview(DetailView):
+    template_name_suffix = ""
+
+    def get_template_names(self):
+        name = "{}/preview/{}{}.html".format(
+                self.object._meta.app_label,
+                self.object._meta.model_name,
+                self.template_name_suffix)
+        return [name]
 
 class ApprovalStatusAction(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     template_name_suffix = "_action"
