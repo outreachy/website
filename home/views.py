@@ -314,11 +314,12 @@ class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
                 community=self.object,
                 approval_status=ApprovalStatus.APPROVED)
 
-        # When a new community is created, immediately redirect the coordinator
-        # to gather information about their participation in this round
-        return redirect('participation-action',
-                action='submit',
-                community_slug=self.object.slug)
+        # When a new community is created, immediately redirect the
+        # coordinator to gather information about their participation in
+        # this round. The Participation object doesn't have to be saved
+        # to the database yet; that'll happen when they submit it in the
+        # next step.
+        return Participation(community=self.object).get_action_url('submit')
 
 class CommunityUpdate(LoginRequiredMixin, UpdateView):
     model = Community
@@ -544,15 +545,11 @@ class ProjectAction(ApprovalStatusAction):
     def get_success_url(self):
         if not self.kwargs.get('project_slug'):
             # If this is a new Project, associate an approved mentor with it
-            MentorApproval.objects.create(
+            mentor = MentorApproval.objects.create(
                     mentor=self.request.user.comrade,
                     project=self.object,
                     approval_status=ApprovalStatus.APPROVED)
-            return reverse('mentorapproval-action', kwargs={
-                'community_slug': self.object.project_round.community.slug,
-                'project_slug': self.object.slug,
-                'action': 'submit',
-                })
+            return mentor.get_action_url('submit', self.request.user)
         elif self.kwargs['action'] == 'submit':
             return reverse('project-skills-edit', kwargs={
                 'community_slug': self.object.project_round.community.slug,
