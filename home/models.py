@@ -306,6 +306,27 @@ class ApprovalStatus(models.Model):
         """
         raise NotImplemented
 
+    def get_action_url(self, action, **kwargs):
+        """
+        Override in subclasses to return the URL for the view which
+        performs the specified action. In some subclasses, there may be
+        optional extra parameters which control how the URL is
+        constructed.
+        """
+        raise NotImplemented
+
+    def get_submit_url(self, **kwargs):
+        return self.get_action_url('submit', **kwargs)
+
+    def get_withdraw_url(self, **kwargs):
+        return self.get_action_url('withdraw', **kwargs)
+
+    def get_approve_url(self, **kwargs):
+        return self.get_action_url('approve', **kwargs)
+
+    def get_reject_url(self, **kwargs):
+        return self.get_action_url('reject', **kwargs)
+
 class Community(models.Model):
     name = models.CharField(
             max_length=50, verbose_name="Community name")
@@ -445,6 +466,12 @@ class Participation(ApprovalStatus):
     def get_preview_url(self):
         return self.community.get_preview_url()
 
+    def get_action_url(self, action):
+        return reverse('participation-action', kwargs={
+            'community_slug': self.community.slug,
+            'action': action,
+            })
+
     def is_approver(self, user):
         return user.is_staff
 
@@ -572,6 +599,13 @@ class Project(ApprovalStatus):
 
     def get_preview_url(self):
         return reverse('project-read-only', kwargs={'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
+
+    def get_action_url(self, action):
+        return reverse('project-action', kwargs={
+            'community_slug': self.project_round.community.slug,
+            'project_slug': self.slug,
+            'action': action,
+            })
 
     def is_approver(self, user):
         return self.project_round.community.is_coordinator(user)
@@ -760,6 +794,16 @@ class MentorApproval(ApprovalStatus):
             'username': self.mentor.account.username,
             })
 
+    def get_action_url(self, action, current_user=None):
+        kwargs = {
+                'community_slug': self.project.project_round.community.slug,
+                'project_slug': self.project.slug,
+                'action': action,
+                }
+        if self.mentor.account != current_user:
+            kwargs['username'] = self.mentor.account.username
+        return reverse('mentorapproval-action', kwargs=kwargs)
+
     def is_approver(self, user):
         return self.project.project_round.community.is_coordinator(user)
 
@@ -863,6 +907,15 @@ class CoordinatorApproval(ApprovalStatus):
             'community_slug': self.community.slug,
             'username': self.coordinator.account.username,
             })
+
+    def get_action_url(self, action, current_user=None):
+        kwargs = {
+                'community_slug': self.community.slug,
+                'action': action,
+                }
+        if self.coordinator.account != current_user:
+            kwargs['username'] = self.coordinator.account.username
+        return reverse('coordinatorapproval-action', kwargs=kwargs)
 
     def is_approver(self, user):
         return user.is_staff or self.community.is_coordinator(user)

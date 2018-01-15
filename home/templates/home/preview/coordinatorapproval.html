@@ -18,8 +18,8 @@
 
 {% if coordinatorapproval.approval_status == coordinatorapproval.PENDING %}
 {% if coordinatorapproval|is_approver:request.user %}
-<a href="{% url 'coordinatorapproval-action' action='approve' community_slug=community.slug username=c.account.username %}" class="btn btn-success">Approve Coordinator</a>
-<a href="{% url 'coordinatorapproval-action' action='reject' community_slug=community.slug username=c.account.username %}" class="btn btn-warning">Reject Coordinator</a>
+<a href="{{ coordinatorapproval.get_approve_url }}" class="btn btn-success">Approve Coordinator</a>
+<a href="{{ coordinatorapproval.get_reject_url }}" class="btn btn-warning">Reject Coordinator</a>
 {% endif %}
 {% endif %}
 
