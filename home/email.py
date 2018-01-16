@@ -4,11 +4,13 @@ from email.headerregistry import Address
 
 organizers = Address("Outreachy Organizers", "organizers", "outreachy.org")
 
-def send_template_mail(template, context, request=None, **kwargs):
-    message = render_to_string(template, context, request=request, using='plaintext')
-    subject, body = message.split('\n', 1)
-    kwargs.setdefault('from_email', organizers)
-    send_mail(message=body.strip(), subject=subject.strip(), **kwargs)
+def send_template_mail(template, context, recipient_list, request=None, **kwargs):
+    for recipient in recipient_list:
+        context['recipient'] = recipient
+        message = render_to_string(template, context, request=request, using='plaintext')
+        subject, body = message.split('\n', 1)
+        kwargs.setdefault('from_email', organizers)
+        send_mail(message=body.strip(), subject=subject.strip(), recipient_list=[recipient], **kwargs)
 
 def participation_pending(participation, request):
     send_template_mail('home/email/community-signup.txt', {
@@ -105,4 +107,4 @@ def mentor_list_subscribe(mentor, request):
                 domain=request.get_host()),
             addr_spec=mentor.account.email
             ),
-        recipient_list=['mentors-join@lists.outreachy.org'])
+        recipient_list=[Address('', 'mentors-join', 'lists.outreachy.org')])

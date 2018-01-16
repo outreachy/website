@@ -1,6 +1,6 @@
 Approve Outreachy mentor for {{ community.name }}
 
-Hi Outreachy coordinator,
+Hi {{ recipient.display_name }},
 
 A contributor has applied to be a mentor for an intern project under {{ community.name }}. A {{ community.name }} coordinator must approve this mentor before they will have access to applicant data or the ability to edit the project information.
 

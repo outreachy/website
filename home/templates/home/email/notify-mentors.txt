@@ -1,6 +1,6 @@
 Mentor for {{ community.name }} in Outreachy
 
-Greetings,
+Greetings {{ recipient.display_name }},
 
 On {{ notification.date_of_signup }} you indicated you want to be notified when {{ community.name }} was participating in an Outreachy internship round.
 

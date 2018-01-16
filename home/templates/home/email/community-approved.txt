@@ -1,6 +1,6 @@
 {{ community.name }} is participating in Outreachy!
 
-Hi Outreachy coordinator,
+Hi {{ recipient.display_name }},
 
 The Outreachy organizers have approved {{ community.name }} to participate in the upcoming round of Outreachy! You'll find your next steps here:
 

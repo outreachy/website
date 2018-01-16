@@ -1,6 +1,6 @@
 Approved as Outreachy coordinator for {{ community.name }}
 
-Hi coordinator,
+Hi {{ recipient.display_name }},
 
 An Outreachy organizer has approved you as a coordinator for {{ community.name }}:
 

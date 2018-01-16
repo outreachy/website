@@ -1,6 +1,6 @@
 Accepted Outreachy intern project: {{ project.short_title }}
 
-Hi Outreachy mentor,
+Hi {{ recipient.display_name }},
 
 A {{ community.name }} coordinator has approved this Outreachy internship project proposal:
 

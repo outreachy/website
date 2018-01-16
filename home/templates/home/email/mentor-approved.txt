@@ -1,6 +1,6 @@
 Approved as Outreachy mentor for {{ community.name }}
 
-Hi Outreachy mentor,
+Hi {{ recipient.display_name }},
 
 A {{ community.name }} coordinator has approved you as a mentor for this project:
 
