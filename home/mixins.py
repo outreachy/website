@@ -60,11 +60,9 @@ class ApprovalStatusAction(LoginRequiredMixin, ComradeRequiredMixin, reversion.v
             'withdraw': ApprovalStatus.WITHDRAWN,
             }
     allowed_transitions = frozenset((
-            (ApprovalStatus.PENDING, ApprovalStatus.PENDING),
             (ApprovalStatus.WITHDRAWN, ApprovalStatus.PENDING),
 
             (ApprovalStatus.PENDING, ApprovalStatus.APPROVED),
-            (ApprovalStatus.APPROVED, ApprovalStatus.APPROVED),
             (ApprovalStatus.REJECTED, ApprovalStatus.APPROVED),
 
             (ApprovalStatus.PENDING, ApprovalStatus.WITHDRAWN),
@@ -72,7 +70,12 @@ class ApprovalStatusAction(LoginRequiredMixin, ComradeRequiredMixin, reversion.v
 
             (ApprovalStatus.PENDING, ApprovalStatus.REJECTED),
             (ApprovalStatus.APPROVED, ApprovalStatus.REJECTED),
-            ))
+            )).union(
+                    # Also allow all self-transitions. If we're already
+                    # in that state, it's surely okay to stay there.
+                    (status, status)
+                    for status, label
+                    in ApprovalStatus.APPROVAL_STATUS_CHOICES)
 
     def get_form_class(self):
         model = self.object.__class__
