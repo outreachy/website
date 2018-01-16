@@ -64,7 +64,7 @@ def project_approved(project, request):
         'project': project,
         },
         request=request,
-        recipient_list=community.get_mentor_email_list())
+        recipient_list=project.get_mentor_email_list())
 
 def mentorapproval_pending(mentorapproval, request):
     community = mentorapproval.project.project_round.community
