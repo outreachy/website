@@ -256,6 +256,10 @@ class Comrade(models.Model):
                 pronouns=self.get_pronouns_display(),
                 )
 
+class ApprovalStatusQuerySet(models.QuerySet):
+    def approved(self):
+        return self.filter(approval_status=ApprovalStatus.APPROVED)
+
 class ApprovalStatus(models.Model):
     PENDING = 'P'
     APPROVED = 'A'
@@ -280,6 +284,8 @@ class ApprovalStatus(models.Model):
             explanation will only be shown to Outreachy organizers and
             approved people within this community.
             """)
+
+    objects = ApprovalStatusQuerySet.as_manager()
 
     class Meta:
         abstract = True
@@ -357,16 +363,14 @@ class Community(models.Model):
         return reverse('community-read-only', kwargs={'community_slug': self.slug})
 
     def is_coordinator(self, user):
-        return self.coordinatorapproval_set.filter(
-                approval_status=ApprovalStatus.APPROVED,
+        return self.coordinatorapproval_set.approved().filter(
                 coordinator__account=user).exists()
 
     def get_coordinator_email_list(self):
         return ['"{name}" <{email}>'.format(
                 name=ca.coordinator.public_name, email=ca.coordinator.account.email)
                 for ca in
-            self.coordinatorapproval_set.filter(
-                approval_status=ApprovalStatus.APPROVED)]
+            self.coordinatorapproval_set.approved()]
 
 class Notification(models.Model):
     community = models.ForeignKey(Community)
@@ -653,8 +657,7 @@ class Project(ApprovalStatus):
         if self.id is None:
             return True
         # XXX: Should coordinators also be allowed to edit projects?
-        return self.mentorapproval_set.filter(
-                approval_status=self.APPROVED,
+        return self.mentorapproval_set.approved().filter(
                 mentor__account=user).exists()
 
     @classmethod

@@ -233,7 +233,7 @@ def community_read_only_view(request, community_slug):
         except Notification.DoesNotExist:
             pass
 
-    approved_coordinator_list = community.coordinatorapproval_set.filter(approval_status=ApprovalStatus.APPROVED)
+    approved_coordinator_list = community.coordinatorapproval_set.approved()
 
     context = {
             'current_round' : current_round,
@@ -248,7 +248,7 @@ def community_read_only_view(request, community_slug):
     try:
         participation_info = Participation.objects.get(community=community, participating_round=current_round)
         context['participation_info'] = participation_info
-        context['approved_projects'] = participation_info.project_set.filter(approval_status=ApprovalStatus.APPROVED)
+        context['approved_projects'] = participation_info.project_set.approved()
     except Participation.DoesNotExist:
         pass
 
@@ -278,7 +278,7 @@ def community_landing_view(request, round_slug, slug):
             community__slug=slug,
             participating_round__slug=round_slug,
             )
-    projects = get_list_or_404(participation_info.project_set, approval_status=ApprovalStatus.APPROVED)
+    projects = get_list_or_404(participation_info.project_set.approved())
     approved_projects = [p for p in projects if p.accepting_new_applicants]
     closed_projects = [p for p in projects if not p.accepting_new_applicants]
 
@@ -429,7 +429,7 @@ def project_read_only_view(request, community_slug, project_slug):
     preferred_skills = project.projectskill_set.filter(required=ProjectSkill.OPTIONAL)
     bonus_skills = project.projectskill_set.filter(required=ProjectSkill.BONUS)
 
-    approved_mentors = project.mentorapproval_set.filter(approval_status=ApprovalStatus.APPROVED)
+    approved_mentors = project.mentorapproval_set.approved()
     unapproved_mentors = project.mentorapproval_set.filter(approval_status__in=(ApprovalStatus.PENDING, ApprovalStatus.REJECTED))
 
     mentor_request = None
@@ -598,10 +598,8 @@ class ProjectAction(ApprovalStatusAction):
             # Only send email if this is a new project,
             # or someone withdrew a project and then resubmitted it.
             try:
-                mentorapproval = MentorApproval.objects.get(
-                        mentor=self.request.user.comrade,
-                        project=self.object,
-                        approval_status=ApprovalStatus.APPROVED)
+                mentorapproval = self.object.mentorapproval_set.approved().get(
+                        mentor=self.request.user.comrade)
             except MentorApproval.DoesNotExist:
                 mentorapproval = None
 
