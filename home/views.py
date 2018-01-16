@@ -3,14 +3,12 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.core.mail import send_mail
 from django.forms import inlineformset_factory
 from django.forms.models import BaseInlineFormSet
 from django.shortcuts import get_list_or_404
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
-from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.text import slugify
@@ -19,6 +17,8 @@ from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 
 from registration.backends.hmac import views as hmac_views
+
+from . import email
 
 from .mixins import ApprovalStatusAction
 from .mixins import ComradeRequiredMixin
@@ -390,28 +390,24 @@ class ParticipationAction(ApprovalStatusAction):
             return
 
         if self.target_status == ApprovalStatus.PENDING:
-            # render the email about this new community to a string
-            email_string = render_to_string('home/email/community-signup.txt', {
+            email.send_template_mail('home/email/community-signup.txt', {
                 'community': self.object.community,
                 'current_round': self.object.participating_round,
                 'participation_info': self.object,
-                }, request=self.request)
-            send_mail(
-                    from_email='Outreachy Organizers <organizers@outreachy.org>',
-                    recipient_list=['organizers@outreachy.org'],
-                    subject='Approve community participation - {name}'.format(name=self.object.community.name),
-                    message=email_string)
-            for notification in Notification.objects.filter(community=self.object.community):
-                email_string = render_to_string('home/email/notify-mentors.txt', {
+                },
+                request=self.request,
+                subject='Approve community participation - {name}'.format(name=self.object.community.name),
+                recipient_list=[email.organizers])
+
+            for notification in self.object.community.notification_set.all():
+                email.send_template_mail('home/email/notify-mentors.txt', {
                     'community': self.object.community,
                     'notification': notification,
                     'current_round': self.object.participating_round,
-                    }, request=self.request)
-                send_mail(
-                        from_email='Outreachy Organizers <organizers@outreachy.org>',
-                        recipient_list=[notification.comrade.email_address()],
-                        subject='Mentor for {name} in Outreachy'.format(name=self.object.community.name),
-                        message=email_string)
+                    },
+                    request=self.request,
+                    subject='Mentor for {name} in Outreachy'.format(name=self.object.community.name),
+                    recipient_list=[notification.comrade.email_address()])
                 notification.delete()
 
 # This view is for mentors and coordinators to review project information and approve it
@@ -533,16 +529,14 @@ class MentorApprovalAction(ApprovalStatusAction):
             return
 
         if self.target_status == ApprovalStatus.PENDING:
-            email_string = render_to_string('home/email/mentor-review.txt', {
+            email.send_template_mail('home/email/mentor-review.txt', {
                 'project': self.object.project,
                 'community': self.object.project.project_round.community,
                 'mentorapproval': self.object,
-                }, request=self.request)
-            send_mail(
-                    from_email='Outreachy Organizers <organizers@outreachy.org>',
-                    recipient_list=self.object.project.project_round.community.get_coordinator_email_list(),
-                    subject='Approve Outreachy mentor for {name}'.format(name=self.object.project.project_round.community.name),
-                    message=email_string)
+                },
+                request=self.request,
+                subject='Approve Outreachy mentor for {name}'.format(name=self.object.project.project_round.community.name),
+                recipient_list=self.object.project.project_round.community.get_coordinator_email_list())
         elif self.target_status == ApprovalStatus.APPROVED:
             self.object.email_approved_mentor(self.request)
 
@@ -601,28 +595,25 @@ class ProjectAction(ApprovalStatusAction):
             except MentorApproval.DoesNotExist:
                 mentorapproval = None
 
-            email_string = render_to_string('home/email/project-review.txt', {
+            email.send_template_mail('home/email/project-review.txt', {
                 'community': self.object.project_round.community,
                 'project': self.object,
                 'mentorapproval': mentorapproval,
-                }, request=self.request)
-            send_mail(
-                    from_email='Outreachy Organizers <organizers@outreachy.org>',
-                    recipient_list=self.object.project_round.community.get_coordinator_email_list(),
-                    subject='Approve Outreachy intern project proposal for {name}'.format(name=self.object.project_round.community.name),
-                    message=email_string)
+                },
+                request=self.request,
+                subject='Approve Outreachy intern project proposal for {name}'.format(name=self.object.project_round.community.name),
+                recipient_list=self.object.project_round.community.get_coordinator_email_list())
+
             if not self.object.approved_license or not self.object.no_proprietary_software:
-                email_string = render_to_string('home/email/project-warning.txt', {
+                email.send_template_mail('home/email/project-warning.txt', {
                     'community': self.object.project_round.community,
                     'project': self.object,
                     'coordinator_list': self.object.project_round.community.get_coordinator_email_list(),
                     'mentor': mentorapproval.mentor,
-                    }, request=self.request)
-                send_mail(
-                        from_email='Outreachy Organizers <organizers@outreachy.org>',
-                        recipient_list=['Outreachy Organizers <organizers@outreachy.org>'],
-                        subject='Approve Outreachy intern project proposal for {name}'.format(name=self.object.project_round.community.name),
-                        message=email_string)
+                    },
+                    request=self.request,
+                    subject='Approve Outreachy intern project proposal for {name}'.format(name=self.object.project_round.community.name),
+                    recipient_list=[email.organizers])
 
 class BaseProjectEditPage(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     def get_object(self):

@@ -7,11 +7,9 @@ from datetime import timedelta
 from email.headerregistry import Address
 
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
 from django.core.validators import URLValidator
 from django.db import models
 from django.forms import ValidationError
-from django.template.loader import render_to_string
 from django.urls import reverse
 
 from ckeditor.fields import RichTextField as CKEditorField
@@ -34,6 +32,8 @@ from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.wagtailembeds.blocks import EmbedBlock
+
+from . import email
 
 class HomePage(Page):
     body = StreamField([
@@ -880,34 +880,31 @@ class MentorApproval(ApprovalStatus):
         if (communityapproval.approval_status == ApprovalStatus.APPROVED and
                 project.approval_status == ApprovalStatus.APPROVED):
 
-            email_string = render_to_string('home/email/mentor-approved.txt', {
+            email.send_template_mail('home/email/mentor-approved.txt', {
                 'community': community,
                 'project': self.project,
-                }, request=request)
-            send_mail(
-                    from_email='Outreachy Organizers <organizers@outreachy.org>',
-                    recipient_list=[mentor.email_address()],
-                    subject='Approved as Outreachy mentor for {name}'.format(name=community.name),
-                    message=email_string)
+                },
+                request=request,
+                subject='Approved as Outreachy mentor for {name}'.format(name=community.name),
+                recipient_list=[mentor.email_address()])
 
             # Subscribe the mentor to the mentor mailing list
             # We need to spoof sending email from the email address we want to subscribe,
             # since using 'subscribe address=email' in the body doesn't work.
             # This is still a pain because organizers need to approve subscription requests.
             # We really need mailman 3.
-            email_string = render_to_string('home/email/mentor-list-subscribe.txt', {
+            email.send_template_mail('home/email/mentor-list-subscribe.txt', {
                 'comrade': mentor,
-                }, request=request)
-            send_mail(
-                    from_email=Address(
-                        "{name} via {domain} mentor approval".format(
-                            name=mentor.public_name,
-                            domain=request.get_host()),
-                        addr_spec=mentor.account.email
+                },
+                request=request,
+                from_email=Address(
+                    "{name} via {domain} mentor approval".format(
+                        name=mentor.public_name,
+                        domain=request.get_host()),
+                    addr_spec=mentor.account.email
                     ),
-                    recipient_list=['mentors-join@lists.outreachy.org'],
-                    subject='Subscribe {name}'.format(name=mentor.public_name),
-                    message=email_string)
+                subject='Subscribe {name}'.format(name=mentor.public_name),
+                recipient_list=['mentors-join@lists.outreachy.org'])
 
 class CommunicationChannel(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
