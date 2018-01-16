@@ -15,7 +15,30 @@ Past community participation in Outreachy
 <h1>{{ community.name }} in Outreachy</h1>
 
 {% if not participation_info %}
-	<p>The coordinator(s) for {{ community.name }} have not yet indicated whether the community will be participating in {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} internship round.</p>
+	<p>The coordinator{{ approved_coordinator_list|length|pluralize }} for {{ community.name }} have not yet indicated whether the community will be participating in {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} internship round.</p>
+{% elif participation_info.approval_status == participation_info.APPROVED %}
+	<p>{{ community.name }} is participating in {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.
+	Outreachy provides internships to people from <a href="/apply/eligibility/">groups traditionally underrepresented in tech</a>.
+	The Outreachy organizers have received confirmation for funding of {{ participation_info.interns_funded }} intern{{ participation_info.interns_funded|length|pluralize }}.</p>
+{% elif participation_info.approval_status == participation_info.PENDING %}
+	<p>Outreachy organizers are still reviewing this community and/or its funding status, so Outreachy applicants will not be shown the community landing page yet.</p>
+{% else %}
+	<p>Unfortunately, either the community coordinator{{ approved_coordinator_list|length|pluralize }} or the Outreachy organizers have determined that the community will not participate in this round of Outreachy internships.</p>
+{% endif %}
+{% if approved_coordinator_list %}
+	<p>The {{ community.name }} coordinator{{ approved_coordinator_list|length|pluralize:" is,s are" }}
+	{% for approval in approved_coordinator_list %}
+	<a href="{{ approval.get_preview_url }}">
+		{{ approval.coordinator.public_name }}
+	</a>
+		{% if user.is_authenticated %} &lt;{{ approval.coordinator.account.email }}&gt;{% endif %}{% if not forloop.last %}, {% else %}</p>{% endif %}
+	{% endfor %}
+{% else %}
+	<p>This community currently has no approved coordinator. Coordinators approve mentored projects, and communicate with both mentors and Outreachy organizers. The full list of coordinator duties can be found on <a href="/mentor/">here</a>.
+{% endif %}
+
+
+{% if not participation_info %}
 	{% if notification %}
 		<p>You are currently signed up to be notified when the coordinator indicates this community will participate in an Outreachy internship round. You signed up on {{ notification.date_of_signup }}.</p>
 	{% else %}
@@ -23,62 +46,21 @@ Past community participation in Outreachy
 		<a class="btn btn-success" href="{% url 'notify-me' community_slug=community.slug %}">Notify me</a>
 	{% endif %}
 
-{% elif participation_info.approval_status == participation_info.APPROVED %}
-	<p>{{ community.name }} is participating in {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.
-	Outreachy provides internships to people from <a href="/apply/eligibility/">groups traditionally underrepresented in tech</a>.
-	The Outreachy organizers have received confirmation for funding of {{ participation_info.interns_funded }} intern{{ participation_info.interns_funded|length|pluralize }}.
-	</p>
-
-	<h2>Call for Outreachy Project Proposals</h2>
-	<p>{{ community.name }} welcomes experienced community contributors to help out as mentors and volunteers.</p>
-
-	<h2>Timeline for {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} internship round</h2>
-	{% include "home/snippet/mentor-timeline.html" %}
-
-{% elif participation_info.approval_status == participation_info.PENDING %}
-	<p>Outreachy organizers are still reviewing this community and/or its funding status, so Outreachy applicants will not be shown the community landing page yet.</p>
-
-	<h2>Call for Outreachy Project Proposals</h2>
-	<p>{{ community.name }} welcomes experienced community contributors to help out as mentors and volunteers.</p>
-
 {% else %}
-	<p>Unfortunately, either the community coordinator(s) or the Outreachy organizers have determined that the community will not participate in this round of Outreachy internships.</p>
-
-{% endif %}
-
-{% if approved_coordinator_list %}
-<p>Coordinators approve mentored projects, and communicate with both mentors and Outreachy organizers. The full list of coordinator duties can be found on <a href="/mentor/">here</a>. The {{ community.name }} coordinator{{ approved_coordinator_list|length|pluralize:" is,(s) are" }}:</p>
-<ul>
-	{% for approval in approved_coordinator_list %}
-	<li>
-	<a href="{{ approval.get_preview_url }}">
-		{{ approval.coordinator.public_name }}
-		{% if user.is_authenticated %}
-			&lt;{{ approval.coordinator.account.email }}&gt;
-		{% endif %}
-	</a>
-	</li>
-	{% endfor %}
-</ul>
-{% else %}
-	<p>This community currently has no approved coordinator.</p>
-{% endif %}
-
-{% if participation_info %}
 {% if participation_info.approval_status == participation_info.PENDING or participation_info.approval_status == participation_info.APPROVED %}
-	<h2>Submit a Project</h2>
+	<h2>Submit an Outreachy Intern Project Proposal</h2>
 
-	<p>All proposed projects need to be released under licenses that are either an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> that is also identified by the FSF as a <a href="https://www.gnu.org/licenses/license-list.html">free software license</a>, OR a <a href="https://creativecommons.org/share-your-work/public-domain/freeworks/">Creative Commons license approved for free cultural works</a>.
+	<p>{{ community.name }} welcomes experienced community contributors to help out as mentors. Each mentor will need to submit their an intern project proposal. The project proposal will then be reviewed and approved by the FOSS community coordinator{{ approved_coordinator_list|length|pluralize }}. Additional co-mentors for the intern project will be able to sign up for the project after it is submitted for review.</p>
+	<p>All proposed intern projects need to be released under licenses that are either an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> that is also identified by the FSF as a <a href="https://www.gnu.org/licenses/license-list.html">free software license</a>, OR a <a href="https://creativecommons.org/share-your-work/public-domain/freeworks/">Creative Commons license approved for free cultural works</a>.
 	</p>
 
-	<p>Please read the additional Outreachy <a href="/mentor/mentor-faq/#define-a-project">project requirements</a>.</p>
+	<p>Please read the additional <a href="/mentor/mentor-faq/#define-a-project">Outreachy project requirements</a> before submitting an intern project proposal.</p>
 
-	<p>Each mentor will need to submit their own project. The project will then be reviewed and approved by the FOSS community coordinator(s). Additional co-mentors will be able to sign up for the project after it is submitted for review.</p>
-	<p><a class='btn btn-primary' href="{% url 'project-action' action='submit' community_slug=community.slug %}">Submit a New Project</a></p>
+	<p><a class='btn btn-primary' href="{% url 'project-action' action='submit' community_slug=community.slug %}">Submit a Project Proposal</a></p>
 
 	{% if approved_projects %}
-		<h2>Approved projects</h2>
-		<p>These projects have been approved to be listed on the community landing page. Mentors are encouraged to start promoting their projects as soon as the Outreachy round opens on {{ current_round.appsopen }}.</p>
+		<h2>Approved Intern Project Proposals</h2>
+		<p>These intern project proposals have been approved to be listed on the community landing page. Mentors are encouraged to start promoting their project proposals as soon as the Outreachy round opens on {{ current_round.appsopen }}.</p>
 		<ul>
 		{% for project in approved_projects %}
 			<li>
@@ -93,7 +75,7 @@ Past community participation in Outreachy
 	<h2>Need more projects?</h2>
 	<p>Send this page URL out to your community communication channels
 	and ask contributors to submit proposals. Mentors must submit their own
-	internship project proposal, and coordinators will approve project proposals.
+	project proposal, and coordinators will approve project proposals.
 	</p>
 	<p>This page will look very different to potential mentors who aren't logged in,
 	so you may want to open it in a private browser tab to see what it looks like.
