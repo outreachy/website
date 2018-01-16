@@ -14,7 +14,7 @@ Verified
         Thank you for verifying your email address! You can now log in
         using your new account.
         </p>
-        <a href="{% url 'login' %}?next={{ request.GET.next|default:"/" }}" class="btn btn-primary">Log in</a>
+        <a href="{% url 'login' %}?next={{ request.GET.next|default:"/" }}" class="btn btn-success">Log in</a>
     </div>
 </div>
 {% endblock %}

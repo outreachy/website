@@ -14,7 +14,7 @@
 <form method="post" action="">
 {% csrf_token %}
 {{ form.as_p }}
-<input type="submit" class="btn btn-block btn-primary" value="Login" />
+<input type="submit" class="btn btn-block btn-success" value="Login" />
 
 <p>Don't have an account? <a href="{% url 'register' %}?next={{ next|urlencode }}" class="btn btn-secondary">Create one.</a></p>
 </form>

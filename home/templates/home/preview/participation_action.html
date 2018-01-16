@@ -71,6 +71,7 @@
 	{% csrf_token %}
 	{{ form.media }}
 	{{ form.as_p }}
+	{% comment %}@jameysharp - FIXME - this should be different colors for the different actions.{% endcomment %}
 	<input type="submit" class="btn btn-primary" value="{{ view.kwargs.action|title }}" />
 </form></p>
 
