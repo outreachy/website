@@ -1,3 +1,4 @@
+{% with community=participation.community current_round=participation.participating_round %}
 {{ community.name }} is participating in Outreachy!
 
 Hi {{ recipient.display_name }},
@@ -14,3 +15,4 @@ Thank you for coordinating for {{ community.name }}! We appreciate your help her
 Outreachy Organizers
 
 {% include 'home/email/footer-coordinator.txt' %}
+{% endwith %}

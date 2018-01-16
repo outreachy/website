@@ -1,3 +1,4 @@
+{% with community=project.project_round.community %}
 Approve Outreachy intern project proposal for {{ community.name }}
 
 Hi {{ recipient.display_name }},
@@ -43,3 +44,4 @@ Mentors indicated this project furthers the interests of proprietary software. {
 
 "{{ project.proprietary_software_description|striptags }}"
 {% endif %}{% endif %}
+{% endwith %}

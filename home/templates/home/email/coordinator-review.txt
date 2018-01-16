@@ -1,3 +1,4 @@
+{% with community=coordinatorapproval.community %}
 Approve Outreachy coordinator for {{ community.name }}
 
 Hi {{ recipient.display_name }},
@@ -13,3 +14,4 @@ Thank you for reviewing coordinators for {{ community.name }}! We appreciate you
 Outreachy Organizers
 
 {% include 'home/email/footer-coordinator.txt' %}
+{% endwith %}

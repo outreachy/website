@@ -1,3 +1,5 @@
+{% with project=mentorapproval.project %}
+{% with community=project.project_round.community %}
 Approved as Outreachy mentor for {{ community.name }}
 
 Hi {{ recipient.display_name }},
@@ -15,3 +17,5 @@ Thank you for mentoring for {{ community.name }}! We appreciate the help you giv
 Outreachy Organizers
 
 {% include 'home/email/footer-coordinator.txt' %}
+{% endwith %}
+{% endwith %}

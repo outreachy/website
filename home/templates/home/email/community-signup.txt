@@ -1,3 +1,4 @@
+{% with community=participation.community current_round=participation.participating_round %}
 Approve community participation - {{ community.name }}
 
 Hi {{ recipient.display_name }},
@@ -42,7 +43,7 @@ Organizations that participate in this community:
 {{ community.newcommunity.participating_orgs }}
 
 {% endif %}
-Number of interns funded: {{ participation_info.interns_funded }}
+Number of interns funded: {{ participation.interns_funded }}
 
 Approve This Community
 ----------------------
@@ -54,3 +55,4 @@ You can approve this by going to the community page, looking under the "Coordina
 Thank you!
 
 This mail is an automated email sent from the Outreachy Django website
+{% endwith %}

@@ -8,95 +8,78 @@ organizers = Address("Outreachy Organizers", "organizers", "outreachy.org")
 def send_template_mail(template, context, recipient_list, request=None, **kwargs):
     for recipient in recipient_list:
         context['recipient'] = recipient
-        message = render_to_string(template, context, request=request, using='plaintext')
+        message = render_to_string(template, context, request=request, using='plaintext').strip()
         subject, body = message.split('\n', 1)
         kwargs.setdefault('from_email', organizers)
         send_mail(message=body.strip(), subject=subject.strip(), recipient_list=[recipient], **kwargs)
 
 def participation_pending(participation, request):
     send_template_mail('home/email/community-signup.txt', {
-        'community': participation.community,
-        'current_round': participation.participating_round,
-        'participation_info': participation,
+        'participation': participation,
         },
         request=request,
         recipient_list=[organizers])
 
 def participation_approved(participation, request):
     send_template_mail('home/email/community-approved.txt', {
-        'community': participation.community,
-        'current_round': participation.participating_round,
-        'participation_info': participation,
+        'participation': participation,
         },
         request=request,
         recipient_list=participation.community.get_coordinator_email_list())
 
 def notify_mentor(participation, notification, request):
     send_template_mail('home/email/notify-mentors.txt', {
-        'community': participation.community,
         'notification': notification,
-        'current_round': participation.participating_round,
+        'participation': participation,
         },
         request=request,
         recipient_list=[notification.comrade.email_address()])
 
 def project_pending(project, request):
-    community = project.project_round.community
     send_template_mail('home/email/project-review.txt', {
-        'community': community,
         'project': project,
         },
         request=request,
-        recipient_list=community.get_coordinator_email_list())
+        recipient_list=project.project_round.community.get_coordinator_email_list())
 
 def project_nonfree_warning(project, request):
-    community = project.project_round.community
     send_template_mail('home/email/project-warning.txt', {
-        'community': community,
         'project': project,
         },
         request=request,
         recipient_list=[organizers])
 
 def project_approved(project, request):
-    community = project.project_round.community
     send_template_mail('home/email/project-approved.txt', {
-        'community': community,
         'project': project,
         },
         request=request,
         recipient_list=project.get_mentor_email_list())
 
 def mentorapproval_pending(mentorapproval, request):
-    community = mentorapproval.project.project_round.community
     send_template_mail('home/email/mentor-review.txt', {
-        'project': mentorapproval.project,
-        'community': community,
         'mentorapproval': mentorapproval,
         },
         request=request,
-        recipient_list=community.get_coordinator_email_list())
+        recipient_list=mentorapproval.project.project_round.community.get_coordinator_email_list())
 
 def coordinatorapproval_pending(coordinatorapproval, request):
-    community = coordinatorapproval.community
     send_template_mail('home/email/coordinator-review.txt', {
-        'community': community,
         'coordinatorapproval': coordinatorapproval,
         },
         request=request,
-        recipient_list=community.get_coordinator_email_list() + [organizers])
+        recipient_list=coordinatorapproval.community.get_coordinator_email_list() + [organizers])
 
 def coordinatorapproval_approved(coordinatorapproval, request):
     send_template_mail('home/email/coordinator-approved.txt', {
-        'community': coordinatorapproval.community,
+        'coordinatorapproval': coordinatorapproval,
         },
         request=request,
         recipient_list=[coordinatorapproval.coordinator.email_address()])
 
 def mentorapproval_approved(mentorapproval, request):
     send_template_mail('home/email/mentor-approved.txt', {
-        'community': mentorapproval.project.project_round.community,
-        'project': mentorapproval.project,
+        'mentorapproval': mentorapproval,
         },
         request=request,
         recipient_list=[mentorapproval.mentor.email_address()])
@@ -134,6 +117,7 @@ def message_samples():
     request = RequestFactory().get('/', HTTP_HOST='www.outreachy.org')
 
     coordinatorapproval = models.CoordinatorApproval.objects.all()[0]
+    coordinatorapproval_pending(coordinatorapproval, request)
     coordinatorapproval_approved(coordinatorapproval, request)
 
     participation = models.Participation.objects.all()[0]
