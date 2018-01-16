@@ -1,0 +1,17 @@
+Coordinator Actions
+-------------------
+
+You now have access to the following coordinator actions:
+
+ - Edit your FOSS community information
+ - Set whether your community is participating or not in an Outreachy internship round
+ - Approve intern project proposals that mentors submit
+ - Approve co-mentors
+
+We'll send you email when you need to review project proposals or co-mentors, but you can always check on the status of everything you need to review at your dashboard:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}
+
+The next steps you should take as an approved coordinator are here:
+
+{{ request.scheme }}://{{ request.get_host }}{{ community.get_preview_url }}

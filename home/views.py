@@ -465,6 +465,8 @@ class CoordinatorApprovalAction(ApprovalStatusAction):
         if self.prior_status == self.target_status:
             return
 
+        if self.target_status == ApprovalStatus.PENDING:
+            email.coordinatorapproval_pending(self.object, self.request)
         if self.target_status == ApprovalStatus.APPROVED:
             email.coordinatorapproval_approved(self.object, self.request)
 

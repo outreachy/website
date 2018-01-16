@@ -2,13 +2,13 @@
 
 Hi {{ recipient.display_name }},
 
-The Outreachy organizers have approved {{ community.name }} to participate in the upcoming round of Outreachy! You'll find your next steps here:
+The Outreachy organizers have approved {{ community.name }} to participate in the current round of Outreachy!
 
 {{ request.scheme }}://{{ request.get_host }}{{ community.get_preview_url }}
 
-We'll send you email when you need to review project proposals from your community, but you can always check on the status of everything you need to review at your dashboard:
+{% include 'home/email/snippet-email-filters.txt' %}
 
-{{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}
+{% include 'home/email/snippet-coordinator-actions.txt' %}
 
 Thank you for coordinating for {{ community.name }}! We appreciate your help herding mentors.
 

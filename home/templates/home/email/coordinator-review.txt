@@ -1,0 +1,15 @@
+Approve Outreachy coordinator for {{ community.name }}
+
+Hi {{ recipient.display_name }},
+
+A person has applied to be a coordinator for {{ community.name }}. A {{ community.name }} coordinator (or an Outreachy organizer, if the community has no coordinator) must approve this coordinator before they will have access to coordinate the community.
+
+Please carefully review the information to ensure the person has enough experience to be a coordinator:
+
+{{ request.scheme }}://{{ request.get_host }}{{ coordinatorapproval.get_preview_url }}
+
+Thank you for reviewing coordinators for {{ community.name }}! We appreciate your help.
+
+Outreachy Organizers
+
+{% include 'home/email/footer-coordinator.txt' %}

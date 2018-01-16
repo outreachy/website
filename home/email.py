@@ -77,6 +77,15 @@ def mentorapproval_pending(mentorapproval, request):
         request=request,
         recipient_list=community.get_coordinator_email_list())
 
+def coordinatorapproval_pending(coordinatorapproval, request):
+    community = coordinatorapproval.community
+    send_template_mail('home/email/coordinator-review.txt', {
+        'community': community,
+        'coordinatorapproval': coordinatorapproval,
+        },
+        request=request,
+        recipient_list=community.get_coordinator_email_list() + [organizers])
+
 def coordinatorapproval_approved(coordinatorapproval, request):
     send_template_mail('home/email/coordinator-approved.txt', {
         'community': coordinatorapproval.community,
