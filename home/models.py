@@ -805,7 +805,7 @@ class MentorApproval(ApprovalStatus):
         (NOT_MENTORED, 'No, I have never mentored before'),
     )
     mentored_before = models.CharField(
-        max_length=4,
+        max_length=5,
         choices=MENTOR_CHOICES,
         default=NOT_MENTORED,
         help_text="Have you been a mentor for Outreachy before? (Note that Outreachy welcomes first time mentors, but this information allows the coordinator and other mentors to provide extra help to new mentors.)",
