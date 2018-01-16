@@ -4,6 +4,7 @@ from os import urandom
 from base64 import urlsafe_b64encode
 from datetime import date
 from datetime import timedelta
+from email.headerregistry import Address
 
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
@@ -250,6 +251,9 @@ class Comrade(models.Model):
     def __str__(self):
         return self.public_name
 
+    def email_address(self):
+        return Address(self.public_name, addr_spec=self.account.email)
+
     def get_pronouns_html(self):
         return "<a href=http://pronoun.is/{short_name}>{pronouns}</a>".format(
                 short_name=self.pronouns,
@@ -367,10 +371,8 @@ class Community(models.Model):
                 coordinator__account=user).exists()
 
     def get_coordinator_email_list(self):
-        return ['"{name}" <{email}>'.format(
-                name=ca.coordinator.public_name, email=ca.coordinator.account.email)
-                for ca in
-            self.coordinatorapproval_set.approved()]
+        return [ca.coordinator.email_address()
+                for ca in self.coordinatorapproval_set.approved()]
 
 class Notification(models.Model):
     community = models.ForeignKey(Community)
@@ -884,8 +886,7 @@ class MentorApproval(ApprovalStatus):
                 }, request=request)
             send_mail(
                     from_email='Outreachy Organizers <organizers@outreachy.org>',
-                    recipient_list=['"{name}" <{email}>'.format(
-                        name=mentor.public_name, email=mentor.account.email)],
+                    recipient_list=[mentor.email_address()],
                     subject='Approved as Outreachy mentor for {name}'.format(name=community.name),
                     message=email_string)
 
@@ -898,9 +899,12 @@ class MentorApproval(ApprovalStatus):
                 'comrade': mentor,
                 }, request=request)
             send_mail(
-                    from_email='"{name} via {domain} mentor approval" <{email}>'.format(
-                        domain=request.scheme + '://' + request.get_host(),
-                        name=mentor.public_name, email=mentor.account.email),
+                    from_email=Address(
+                        "{name} via {domain} mentor approval".format(
+                            name=mentor.public_name,
+                            domain=request.get_host()),
+                        addr_spec=mentor.account.email
+                    ),
                     recipient_list=['mentors-join@lists.outreachy.org'],
                     subject='Subscribe {name}'.format(name=mentor.public_name),
                     message=email_string)

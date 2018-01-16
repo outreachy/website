@@ -409,9 +409,7 @@ class ParticipationAction(ApprovalStatusAction):
                     }, request=self.request)
                 send_mail(
                         from_email='Outreachy Organizers <organizers@outreachy.org>',
-                        recipient_list=['"{name}" <{email}>'.format(
-                            name=notification.comrade.public_name,
-                            email=notification.comrade.account.email)],
+                        recipient_list=[notification.comrade.email_address()],
                         subject='Mentor for {name} in Outreachy'.format(name=self.object.community.name),
                         message=email_string)
                 notification.delete()
