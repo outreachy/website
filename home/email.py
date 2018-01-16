@@ -1,5 +1,6 @@
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from django.test import override_settings, RequestFactory
 from email.headerregistry import Address
 
 organizers = Address("Outreachy Organizers", "organizers", "outreachy.org")
@@ -108,3 +109,39 @@ def mentor_list_subscribe(mentor, request):
             addr_spec=mentor.account.email
             ),
         recipient_list=[Address('', 'mentors-join', 'lists.outreachy.org')])
+
+@override_settings(ALLOWED_HOSTS=['www.outreachy.org'], EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend')
+def message_samples():
+    """
+    This function is meant for testing: It fakes sending every type of
+    email using an arbitary object from your current database, so make
+    sure you have created some test data first. Run it using this
+    command:
+
+    ./manage.py shell -c 'import home.email; home.email.message_samples()'
+    """
+
+    from . import models
+    request = RequestFactory().get('/', HTTP_HOST='www.outreachy.org')
+
+    coordinatorapproval = models.CoordinatorApproval.objects.all()[0]
+    coordinatorapproval_approved(coordinatorapproval, request)
+
+    participation = models.Participation.objects.all()[0]
+    participation_pending(participation, request)
+    participation_approved(participation, request)
+
+    notification = models.Notification.objects.all()[0]
+    notify_mentor(participation, notification, request)
+
+    project = models.Project.objects.all()[0]
+    project_pending(project, request)
+    project_nonfree_warning(project, request)
+    project_approved(project, request)
+
+    mentorapproval = models.MentorApproval.objects.all()[0]
+    mentorapproval_pending(mentorapproval, request)
+    mentorapproval_approved(mentorapproval, request)
+
+    comrade = models.Comrade.objects.all()[0]
+    mentor_list_subscribe(comrade, request)
