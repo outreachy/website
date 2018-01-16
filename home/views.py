@@ -390,24 +390,10 @@ class ParticipationAction(ApprovalStatusAction):
             return
 
         if self.target_status == ApprovalStatus.PENDING:
-            email.send_template_mail('home/email/community-signup.txt', {
-                'community': self.object.community,
-                'current_round': self.object.participating_round,
-                'participation_info': self.object,
-                },
-                request=self.request,
-                subject='Approve community participation - {name}'.format(name=self.object.community.name),
-                recipient_list=[email.organizers])
+            email.participation_pending(self.object, self.request)
 
             for notification in self.object.community.notification_set.all():
-                email.send_template_mail('home/email/notify-mentors.txt', {
-                    'community': self.object.community,
-                    'notification': notification,
-                    'current_round': self.object.participating_round,
-                    },
-                    request=self.request,
-                    subject='Mentor for {name} in Outreachy'.format(name=self.object.community.name),
-                    recipient_list=[notification.comrade.email_address()])
+                email.notify_mentor(self.object, notification, self.request)
                 notification.delete()
 
 # This view is for mentors and coordinators to review project information and approve it
@@ -529,16 +515,17 @@ class MentorApprovalAction(ApprovalStatusAction):
             return
 
         if self.target_status == ApprovalStatus.PENDING:
-            email.send_template_mail('home/email/mentor-review.txt', {
-                'project': self.object.project,
-                'community': self.object.project.project_round.community,
-                'mentorapproval': self.object,
-                },
-                request=self.request,
-                subject='Approve Outreachy mentor for {name}'.format(name=self.object.project.project_round.community.name),
-                recipient_list=self.object.project.project_round.community.get_coordinator_email_list())
-        elif self.target_status == ApprovalStatus.APPROVED:
-            self.object.email_approved_mentor(self.request)
+            email.mentorapproval_pending(self.object, self.request)
+        elif self.object.fully_approved():
+            # We should only send email to approved mentors if:
+            # - Their project is approved AND
+            # - Their community is approved
+            #
+            # Otherwise there's no point in telling them they can now advertise their project.
+            # We also don't want to subscribe mentors to the mentors mailing list until
+            # both their community, project, and mentor status is approved.
+            email.mentorapproval_approved(self.object, self.request)
+            email.mentor_list_subscribe(self.object.mentor, self.request)
 
 class ProjectAction(ApprovalStatusAction):
     fields = ['short_title', 'approved_license', 'unapproved_license_description', 'no_proprietary_software', 'proprietary_software_description', 'longevity', 'community_size', 'community_benefits', 'intern_tasks', 'intern_benefits', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'long_description', 'accepting_new_applicants']
@@ -589,22 +576,10 @@ class ProjectAction(ApprovalStatusAction):
         if self.target_status == ApprovalStatus.PENDING:
             # Only send email if this is a new project,
             # or someone withdrew a project and then resubmitted it.
-            email.send_template_mail('home/email/project-review.txt', {
-                'community': self.object.project_round.community,
-                'project': self.object,
-                },
-                request=self.request,
-                subject='Approve Outreachy intern project proposal for {name}'.format(name=self.object.project_round.community.name),
-                recipient_list=self.object.project_round.community.get_coordinator_email_list())
+            email.project_pending(self.object, self.request)
 
             if not self.object.approved_license or not self.object.no_proprietary_software:
-                email.send_template_mail('home/email/project-warning.txt', {
-                    'community': self.object.project_round.community,
-                    'project': self.object,
-                    },
-                    request=self.request,
-                    subject='Approve Outreachy intern project proposal for {name}'.format(name=self.object.project_round.community.name),
-                    recipient_list=[email.organizers])
+                email.project_nonfree_warning(self.object, self.request)
 
 class BaseProjectEditPage(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     def get_object(self):
