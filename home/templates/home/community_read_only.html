@@ -155,7 +155,7 @@ Past community participation in Outreachy
 
 	{% if participation_info.approval_status == participation_info.WITHDRAWN %}
 		<p>The coordinator has indicated that they will not be participating in this Outreachy internship round:</p>
-		<p>"{{ participation_info.reason_for_not_participating }}"</p>
+		<p>"{{ participation_info.reason_denied }}"</p>
 
 	{% else %}
 		{% if participation_info.approval_status == participation_info.REJECTED %}
