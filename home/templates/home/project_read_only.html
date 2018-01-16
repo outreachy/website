@@ -68,7 +68,7 @@
 	    <div class="card-header text-white bg-warning">Warning!</div>
 	    <div class="card-body">
 		<h5 class="card-title">This FOSS project has been accepting contributions for less than six months.</h5>
-		<p class="card-text">The mentor indicated the FOSS project has been accepting public contributions for {{ project.get_longevity_display }}. Outreachy projects should be well-established projects. While GSoC allows students to create their own open source projects, we find Outreachy interns benefit the most from having a well-established community of project contributors to work with.</p>
+		<p class="card-text">The mentor indicated the FOSS project has been accepting public contributions for {{ project.get_longevity_display|lower }}. Outreachy projects should be well-established projects. While GSoC allows students to create their own open source projects, we find Outreachy interns benefit the most from having a well-established community of project contributors to work with.</p>
 	    </div>
 	</div>
 	{% endif %}
@@ -200,7 +200,7 @@
 
 			<h3>Interacting with the {{ community.name }} Community</h3>
 			<p>Applicants and interns' contributions are often reviewed by community members other than your mentor. Community members are there to answer your questions, give you feedback, and help you grow your skills.
-			<p>During this internship project, you'll be interacting with a team of {{ project.get_community_size_display }}. The community has been accepting contributions from people from around the world for {{ project.get_longevity_display }}.</p>
+			<p>During this internship project, you'll be interacting with a team of {{ project.get_community_size_display|lower }}. The community has been accepting contributions from people from around the world for {{ project.get_longevity_display|lower }}.</p>
 
 			<p>Contributors to Free and Open Source Software (FOSS) projects discuss issues, documentation, user experience, and feature design in public communication channels.
 			Mentors are available to help applicants both on public project channels, and via private message or email.
@@ -249,8 +249,8 @@
 	<h3>Project Information for Coordinators</h3>
 	<p>This project information is used by coordinators to determine if the project is appropriate for Outreachy. The information will not be displayed to applicants.</p>
 	<ul>
-		<li>Project has been accepting external contributions for: {{ project.get_longevity_display }}</li>
-		<li>Number of people contributing to this project regularly: {{ project.get_community_size_display }}</li>
+		<li>Project has been accepting external contributions for: {{ project.get_longevity_display|lower }}</li>
+		<li>Number of people contributing to this project regularly: {{ project.get_community_size_display|lower }}</li>
 		{% if project.intern_benefits %}
 			<li>Interns will learn about: {{ project.intern_benefits }}</li>
 		{% else %}

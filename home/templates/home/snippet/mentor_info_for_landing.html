@@ -18,7 +18,7 @@
 {% endif %}
 </p>
 <p>Outreachy mentors are required to be experienced contributors to free and open source software (FOSS).
-{{ approval.mentor.public_name }} has contributed to this team for {{ approval.get_longevity_display }}.
+{{ approval.mentor.public_name }} has contributed to this team for {{ approval.get_longevity_display|lower }}.
 This mentor has made the following contributions to this team or other FOSS communities: {{ approval.mentor_foss_contributions }}
 </p>
 <p>{% if approval.communication_channel_username %}You'll be able to find this mentor on the FOSS community communication channel under the username: {{ approval.communication_channel_username }}{% else %}The mentor has not provided their username on the FOSS community communication channel.{% endif %}

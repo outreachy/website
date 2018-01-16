@@ -3,7 +3,7 @@
 	    <div class="card-header text-white bg-warning">Warning!</div>
 	    <div class="card-body">
 		<h5 class="card-title">This mentor may be inexperienced</h5>
-		<p class="card-text">This mentor has been contributing to this project for {{ approval.get_longevity_display }}. Mentors should be experienced and be able to guide interns and applicants on complex tasks. If this is a new project, Outreachy organizers generally discourage such projects, because we want interns to work with an established FOSS community.</p>
+		<p class="card-text">This mentor has been contributing to this project for {{ approval.get_longevity_display|lower }}. Mentors should be experienced and be able to guide interns and applicants on complex tasks. If this is a new project, Outreachy organizers generally discourage such projects, because we want interns to work with an established FOSS community.</p>
 	    </div>
 	</div>
 {% endif %}

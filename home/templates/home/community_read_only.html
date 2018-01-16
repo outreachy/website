@@ -178,7 +178,7 @@ Past community participation in Outreachy
 			    <div class="card-header text-white bg-warning">Warning!</div>
 			    <div class="card-body">
 				<h5 class="card-title">This FOSS community has been accepting contributions for less than six months.</h5>
-				<p class="card-text">The coordinator indicated the FOSS community has been accepting public contributions for {{ community.newcommunity.get_longevity_display }}. Outreachy communities should be well-established communities.</p>
+				<p class="card-text">The coordinator indicated the FOSS community has been accepting public contributions for {{ community.newcommunity.get_longevity_display|lower }}. Outreachy communities should be well-established communities.</p>
 			    </div>
 			</div>
 			{% endif %}
@@ -187,7 +187,7 @@ Past community participation in Outreachy
 			    <div class="card-header text-white bg-warning">Warning!</div>
 			    <div class="card-body">
 				<h5 class="card-title">This community has six or fewer regular contributors.</h5>
-				<p class="card-text">The coordinator indicated this community has {{ community.newcommunity.get_community_size_display }} who are regular contributors. Outreachy communities should be well-established communities.</p>
+				<p class="card-text">The coordinator indicated this community has {{ community.newcommunity.get_community_size_display|lower }} who are regular contributors. Outreachy communities should be well-established communities.</p>
 			    </div>
 			</div>
 			{% endif %}
