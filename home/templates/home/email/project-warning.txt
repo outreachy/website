@@ -1,3 +1,5 @@
+Approve Outreachy intern project proposal for {{ community.name }}
+
 Hi Outreachy organizers,
 
 A intern project proposal has been submitted for {{ community.name }} that uses a non-free license or furthers proprietary software. If necessary, ask your Django admin to put the project proposal in the 'Rejected' state. The intern project proposal can be seen here:

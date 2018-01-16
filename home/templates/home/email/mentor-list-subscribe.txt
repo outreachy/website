@@ -1,1 +1,3 @@
+Subscribe {{ comrade.public_name }}
+
 subscribe nodigest address={{ comrade.account.email }}

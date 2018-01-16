@@ -1,3 +1,5 @@
+Approve community participation - {{ community.name }}
+
 Hi Outreachy organizers,
 
 Please review and approve {{ community.name }} to participate in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.

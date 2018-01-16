@@ -1,3 +1,5 @@
+Mentor for {{ community.name }} in Outreachy
+
 Greetings,
 
 On {{ notification.date_of_signup }} you indicated you want to be notified when {{ community.name }} was participating in an Outreachy internship round.

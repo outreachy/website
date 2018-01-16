@@ -1,3 +1,5 @@
+Approve Outreachy intern project proposal for {{ community.name }}
+
 Hi Outreachy coordinator,
 
 A intern project proposal has been submitted by a mentor for {{ community.name }}. A {{ community.name }} coordinator must approve this project proposal before it will be listed on the community landing page.
