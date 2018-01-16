@@ -384,15 +384,12 @@ class ParticipationAction(ApprovalStatusAction):
         if self.prior_status == self.target_status:
             return
 
-        if self.target_status == ApprovalStatus.PENDING:
-            email.participation_pending(self.object, self.request)
+        email.approval_status_changed(self.object, self.request)
 
+        if self.target_status == ApprovalStatus.PENDING:
             for notification in self.object.community.notification_set.all():
                 email.notify_mentor(self.object, notification, self.request)
                 notification.delete()
-
-        elif self.target_status == ApprovalStatus.APPROVED:
-            email.participation_approved(self.object, self.request)
 
 # This view is for mentors and coordinators to review project information and approve it
 def project_read_only_view(request, community_slug, project_slug):
@@ -462,13 +459,8 @@ class CoordinatorApprovalAction(ApprovalStatusAction):
             return CoordinatorApproval(coordinator=comrade, community=community)
 
     def notify(self):
-        if self.prior_status == self.target_status:
-            return
-
-        if self.target_status == ApprovalStatus.PENDING:
-            email.coordinatorapproval_pending(self.object, self.request)
-        if self.target_status == ApprovalStatus.APPROVED:
-            email.coordinatorapproval_approved(self.object, self.request)
+        if self.prior_status != self.target_status:
+            email.approval_status_changed(self.object, self.request)
 
 class MentorApprovalAction(ApprovalStatusAction):
     fields = [
@@ -521,17 +513,11 @@ class MentorApprovalAction(ApprovalStatusAction):
         if self.prior_status == self.target_status:
             return
 
-        if self.target_status == ApprovalStatus.PENDING:
-            email.mentorapproval_pending(self.object, self.request)
-        elif self.object.fully_approved():
-            # We should only send email to approved mentors if:
-            # - Their project is approved AND
-            # - Their community is approved
-            #
-            # Otherwise there's no point in telling them they can now advertise their project.
-            # We also don't want to subscribe mentors to the mentors mailing list until
+        email.approval_status_changed(self.object, self.request)
+
+        if self.object.fully_approved():
+            # We don't want to subscribe mentors to the mentors mailing list until
             # both their community, project, and mentor status is approved.
-            email.mentorapproval_approved(self.object, self.request)
             email.mentor_list_subscribe(self.object.mentor, self.request)
 
 class ProjectAction(ApprovalStatusAction):
@@ -580,15 +566,11 @@ class ProjectAction(ApprovalStatusAction):
         if self.prior_status == self.target_status:
             return
 
-        if self.target_status == ApprovalStatus.PENDING:
-            # Only send email if this is a new project,
-            # or someone withdrew a project and then resubmitted it.
-            email.project_pending(self.object, self.request)
+        email.approval_status_changed(self.object, self.request)
 
+        if self.target_status == ApprovalStatus.PENDING:
             if not self.object.approved_license or not self.object.no_proprietary_software:
                 email.project_nonfree_warning(self.object, self.request)
-        elif self.target_status == ApprovalStatus.APPROVED:
-            email.project_approved(self.object, self.request)
 
 class BaseProjectEditPage(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     def get_object(self):

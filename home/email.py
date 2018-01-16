@@ -13,19 +13,22 @@ def send_template_mail(template, context, recipient_list, request=None, **kwargs
         kwargs.setdefault('from_email', organizers)
         send_mail(message=body.strip(), subject=subject.strip(), recipient_list=[recipient], **kwargs)
 
-def participation_pending(participation, request):
-    send_template_mail('home/email/community-signup.txt', {
-        'participation': participation,
-        },
-        request=request,
-        recipient_list=[organizers])
+def approval_status_changed(obj, request):
+    if obj.approval_status == obj.PENDING:
+        recipients = obj.get_approver_email_list()
+    elif obj.approval_status == obj.APPROVED:
+        recipients = obj.get_submitter_email_list()
+    else:
+        # FIXME: write emails for other states
+        return
 
-def participation_approved(participation, request):
-    send_template_mail('home/email/community-approved.txt', {
-        'participation': participation,
-        },
-        request=request,
-        recipient_list=participation.community.get_coordinator_email_list())
+    # produces template names like "home/email/project-pending.txt"
+    template = "{}/email/{}-{}.txt".format(
+            obj._meta.app_label,
+            obj._meta.model_name,
+            obj.get_approval_status_display().lower())
+    context = { obj._meta.model_name: obj }
+    send_template_mail(template, context, request=request, recipient_list=recipients)
 
 def notify_mentor(participation, notification, request):
     send_template_mail('home/email/notify-mentors.txt', {
@@ -35,54 +38,12 @@ def notify_mentor(participation, notification, request):
         request=request,
         recipient_list=[notification.comrade.email_address()])
 
-def project_pending(project, request):
-    send_template_mail('home/email/project-review.txt', {
-        'project': project,
-        },
-        request=request,
-        recipient_list=project.project_round.community.get_coordinator_email_list())
-
 def project_nonfree_warning(project, request):
     send_template_mail('home/email/project-warning.txt', {
         'project': project,
         },
         request=request,
         recipient_list=[organizers])
-
-def project_approved(project, request):
-    send_template_mail('home/email/project-approved.txt', {
-        'project': project,
-        },
-        request=request,
-        recipient_list=project.get_mentor_email_list())
-
-def mentorapproval_pending(mentorapproval, request):
-    send_template_mail('home/email/mentor-review.txt', {
-        'mentorapproval': mentorapproval,
-        },
-        request=request,
-        recipient_list=mentorapproval.project.project_round.community.get_coordinator_email_list())
-
-def coordinatorapproval_pending(coordinatorapproval, request):
-    send_template_mail('home/email/coordinator-review.txt', {
-        'coordinatorapproval': coordinatorapproval,
-        },
-        request=request,
-        recipient_list=coordinatorapproval.community.get_coordinator_email_list() + [organizers])
-
-def coordinatorapproval_approved(coordinatorapproval, request):
-    send_template_mail('home/email/coordinator-approved.txt', {
-        'coordinatorapproval': coordinatorapproval,
-        },
-        request=request,
-        recipient_list=[coordinatorapproval.coordinator.email_address()])
-
-def mentorapproval_approved(mentorapproval, request):
-    send_template_mail('home/email/mentor-approved.txt', {
-        'mentorapproval': mentorapproval,
-        },
-        request=request,
-        recipient_list=[mentorapproval.mentor.email_address()])
 
 def mentor_list_subscribe(mentor, request):
     # Subscribe the mentor to the mentor mailing list
@@ -117,24 +78,26 @@ def message_samples():
     request = RequestFactory().get('/', HTTP_HOST='www.outreachy.org')
 
     coordinatorapproval = models.CoordinatorApproval.objects.all()[0]
-    coordinatorapproval_pending(coordinatorapproval, request)
-    coordinatorapproval_approved(coordinatorapproval, request)
-
     participation = models.Participation.objects.all()[0]
-    participation_pending(participation, request)
-    participation_approved(participation, request)
+    project = models.Project.objects.all()[0]
+    mentorapproval = models.MentorApproval.objects.all()[0]
+
+    objects = (
+            coordinatorapproval,
+            participation,
+            project,
+            mentorapproval,
+            )
+
+    for obj in objects:
+        for status, label in models.ApprovalStatus.APPROVAL_STATUS_CHOICES:
+            obj.approval_status = status
+            approval_status_changed(obj, request)
+
+    project_nonfree_warning(project, request)
 
     notification = models.Notification.objects.all()[0]
     notify_mentor(participation, notification, request)
-
-    project = models.Project.objects.all()[0]
-    project_pending(project, request)
-    project_nonfree_warning(project, request)
-    project_approved(project, request)
-
-    mentorapproval = models.MentorApproval.objects.all()[0]
-    mentorapproval_pending(mentorapproval, request)
-    mentorapproval_approved(mentorapproval, request)
 
     comrade = models.Comrade.objects.all()[0]
     mentor_list_subscribe(comrade, request)

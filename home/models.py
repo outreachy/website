@@ -481,8 +481,14 @@ class Participation(ApprovalStatus):
     def is_approver(self, user):
         return user.is_staff
 
+    def get_approver_email_list(self):
+        return [email.organizers]
+
     def is_submitter(self, user):
         return self.community.is_coordinator(user)
+
+    def get_submitter_email_list(self):
+        return self.community.get_coordinator_email_list()
 
     @classmethod
     def objects_for_dashboard(cls, user):
@@ -657,6 +663,9 @@ class Project(ApprovalStatus):
     def is_approver(self, user):
         return self.project_round.community.is_coordinator(user)
 
+    def get_approver_email_list(self):
+        return self.project_round.community.get_coordinator_email_list()
+
     def is_submitter(self, user):
         # Everyone is allowed to propose new projects.
         if self.id is None:
@@ -664,6 +673,9 @@ class Project(ApprovalStatus):
         # XXX: Should coordinators also be allowed to edit projects?
         return self.mentorapproval_set.approved().filter(
                 mentor__account=user).exists()
+
+    def get_submitter_email_list(self):
+        return self.get_mentor_email_list()
 
     @classmethod
     def objects_for_dashboard(cls, user):
@@ -860,8 +872,14 @@ class MentorApproval(ApprovalStatus):
     def is_approver(self, user):
         return self.project.project_round.community.is_coordinator(user)
 
+    def get_approver_email_list(self):
+        return self.project.project_round.community.get_coordinator_email_list()
+
     def is_submitter(self, user):
         return self.mentor.account_id == user.id
+
+    def get_submitter_email_list(self):
+        return [self.mentor.email_address()]
 
     @classmethod
     def objects_for_dashboard(cls, user):
@@ -932,8 +950,14 @@ class CoordinatorApproval(ApprovalStatus):
     def is_approver(self, user):
         return user.is_staff or self.community.is_coordinator(user)
 
+    def get_approver_email_list(self):
+        return self.community.get_coordinator_email_list() + [email.organizers]
+
     def is_submitter(self, user):
         return self.coordinator.account_id == user.id
+
+    def get_submitter_email_list(self):
+        return [self.coordinator.email_address()]
 
     @classmethod
     def objects_for_dashboard(cls, user):
