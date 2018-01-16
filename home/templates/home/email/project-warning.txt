@@ -6,8 +6,8 @@ A intern project proposal has been submitted for {{ community.name }} that uses 
 
 Please contact the community coordinators and project mentor to further investigate this issue. Here is a sample email:
 
-To: {% for email in coordinator_list %}{{ email }}{% endfor %}
-Cc: "{{ mentor.public_name }}" <{{ mentor.account.email }}>
+To: {% for email in community.get_coordinator_email_list %}{{ email }}{% if not forloop.last %}, {% endif %}{% endfor %}
+Cc: {% for ma in project.mentorapproval_set.approved %}{{ ma.mentor.email_address }}{% if not forloop.last %}, {% endif %}{% endfor %}
 Bcc: "Outreachy Organizers" <organizers@outreachy.org>
 Subject: URGENT - Question about Outreachy intern project proposal
 

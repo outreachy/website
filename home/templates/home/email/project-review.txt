@@ -7,8 +7,8 @@ Please carefully review the project to ensure it is appropriate for Outreachy:
 {{ request.scheme }}://{{ request.get_host }}{{ project.get_preview_url }}
 
 Approving the project will automatically approve the mentor who submitted this project. Please carefully review the mentor information to ensure the mentor has experience with the project they are proposing:
-
-{{ request.scheme }}://{{ request.get_host }}{{ mentorapproval.get_preview_url }}
+{% for mentorapproval in project.mentorapproval_set.approved %}
+{{ request.scheme }}://{{ request.get_host }}{{ mentorapproval.get_preview_url }}{% endfor %}
 
 You may receive additional emails to approve co-mentors for the project.
 

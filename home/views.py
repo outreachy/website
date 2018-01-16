@@ -589,16 +589,9 @@ class ProjectAction(ApprovalStatusAction):
         if self.target_status == ApprovalStatus.PENDING:
             # Only send email if this is a new project,
             # or someone withdrew a project and then resubmitted it.
-            try:
-                mentorapproval = self.object.mentorapproval_set.approved().get(
-                        mentor=self.request.user.comrade)
-            except MentorApproval.DoesNotExist:
-                mentorapproval = None
-
             email.send_template_mail('home/email/project-review.txt', {
                 'community': self.object.project_round.community,
                 'project': self.object,
-                'mentorapproval': mentorapproval,
                 },
                 request=self.request,
                 subject='Approve Outreachy intern project proposal for {name}'.format(name=self.object.project_round.community.name),
@@ -608,8 +601,6 @@ class ProjectAction(ApprovalStatusAction):
                 email.send_template_mail('home/email/project-warning.txt', {
                     'community': self.object.project_round.community,
                     'project': self.object,
-                    'coordinator_list': self.object.project_round.community.get_coordinator_email_list(),
-                    'mentor': mentorapproval.mentor,
                     },
                     request=self.request,
                     subject='Approve Outreachy intern project proposal for {name}'.format(name=self.object.project_round.community.name),
