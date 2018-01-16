@@ -7,6 +7,8 @@
 
 {% block content %}
 
+<a href="{% url 'community-cfp' %}">Timeline, FAQ, & Participating Communities</a> &gt; <a href="{{ community.get_preview_url }}">{{ community.name }}</a> &gt; {{ project.get_approval_status_display }} Project
+
 {% if project.approval_status == project.APPROVED %}
 	<h1>Approved {{ community.name }} Project</h1>
 	<p>This project has been approved by the {{ community.name }} coordinator(s) to participate in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>

@@ -11,6 +11,7 @@ Past community participation in Outreachy
 {% endblock %}
 
 {% block content %}
+<a href="{% url 'community-cfp' %}">Timeline, FAQ, & Participating Communities</a> &gt; {{ community.name }}
 <h1>{{ community.name }} in Outreachy</h1>
 
 {% if not participation_info %}
