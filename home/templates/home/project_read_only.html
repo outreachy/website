@@ -7,6 +7,8 @@
 
 {% block content %}
 
+<a href="{% url 'community-cfp' %}">Timeline, FAQ, & Participating Communities</a> &gt; <a href="{{ community.get_preview_url }}">{{ community.name }}</a> &gt; {{ project.get_approval_status_display }} Project
+
 {% if project.approval_status == project.APPROVED %}
 	<h1>Approved {{ community.name }} Project</h1>
 	<p>This project has been approved by the {{ community.name }} coordinator(s) to participate in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
@@ -115,15 +117,26 @@
 
 {% endif %}
 
-<h2>Project Information</h2>
+<h2>Preview of Project Proposal</h2>
 
 {% if project|is_submitter:request.user %}
+	<p>Does the project information look correct? If not, you can edit it.</p>
 	<p><a class="btn btn-primary" href="{{ project.get_submit_url }}">Edit Project Info</a></p>
+{% endif %}
+
+{% if mentor_request|is_submitter:request.user %}
+	<p>Does your mentor information (e.g. your mentorship style and mentor experience) look correct? If not, you can edit it.</p>
+	<p><a class="btn btn-primary" href="{{ mentor_request.get_submit_url }}">Edit Mentor Info</a></p>
+{% endif %}
+
+{% if mentor_request|is_submitter:request.user %}
+	<p>Does your person information (e.g. your public name, pronouns, or timezone) look correct? If not, you can edit it.</p>
+	<p><a class="btn btn-primary" href="{% url 'account' %}">Edit Personal Info</a></p>
 {% endif %}
 
 {% if coordinator or mentor_request and mentor_request.approval_status == mentor_request.APPROVED %}
 	<div class="card">
-		<div class="card-header">Preview - Project Information for Applicants</div>
+		<div class="card-header">Preview - Project Proposal Information Shown to Applicants</div>
 		<div class="card-body">
 			<p>This information will be displayed to the applicants on the project landing page.</p>
 			<h3>Project Description</h3>
