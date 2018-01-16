@@ -32,6 +32,7 @@ class ParticipationAdmin(reversion.admin.VersionAdmin):
 
 class CommunityAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
+    save_on_top = True
 
 admin.site.unregister(User)
 admin.site.register(User, ComradeAdmin)
