@@ -7,7 +7,6 @@ The Outreachy organizers have approved {{ community.name }} to participate in th
 {{ request.scheme }}://{{ request.get_host }}{{ community.get_preview_url }}
 
 {% include 'home/email/snippet-email-filters.txt' %}
-
 {% include 'home/email/snippet-coordinator-actions.txt' %}
 
 Thank you for coordinating for {{ community.name }}! We appreciate your help herding mentors.

@@ -5,7 +5,6 @@ Hi {{ recipient.display_name }},
 An Outreachy organizer has approved you as a coordinator for {{ community.name }}.
 
 {% include 'home/email/snippet-email-filters.txt' %}
-
 {% include 'home/email/snippet-coordinator-actions.txt' %}
 
 Thank you for coordinating for {{ community.name }}! We appreciate your help herding mentors.
