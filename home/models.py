@@ -675,7 +675,8 @@ class Project(ApprovalStatus):
                 mentor__account=user).exists()
 
     def get_submitter_email_list(self):
-        return self.get_mentor_email_list()
+        return [ma.mentor.email_address()
+                for ma in self.mentorapproval_set.approved()]
 
     @classmethod
     def objects_for_dashboard(cls, user):
@@ -692,10 +693,6 @@ class Project(ApprovalStatus):
 
     def fully_approved(self):
         return self.approval_status == self.APPROVED and self.project_round.fully_approved()
-
-    def get_mentor_email_list(self):
-        return [ma.mentor.email_address()
-                for ma in self.mentorapproval_set.approved()]
 
 class ProjectSkill(models.Model):
     project = models.ForeignKey(Project, verbose_name="Project")
