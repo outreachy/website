@@ -1,4 +1,4 @@
-{% autoescape off %}Hi Outreachy organizers,
+Hi Outreachy organizers,
 
 Please review and approve {{ community.name }} to participate in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.
 
@@ -51,4 +51,4 @@ You can approve this by going to the community page, looking under the "Coordina
 
 Thank you!
 
-This mail is an automated email sent from the Outreachy Django website{% endautoescape %}
+This mail is an automated email sent from the Outreachy Django website

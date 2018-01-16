@@ -1,4 +1,4 @@
-{% autoescape off %}Hi coordinator,
+Hi coordinator,
 
 An Outreachy organizer has approved you as a coordinator for {{ community.name }}:
 
@@ -13,5 +13,5 @@ Thank you for mentoring for {{ community.name }}! We appreciate the help you giv
 
 Outreachy Organizers
 
-{% include 'home/email/footer-coordinator.txt' %}{% endautoescape %}
+{% include 'home/email/footer-coordinator.txt' %}
 

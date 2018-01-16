@@ -1,4 +1,4 @@
-{% autoescape off %}Hi Outreachy mentor,
+Hi Outreachy mentor,
 
 A {{ community.name }} coordinator has approved this Outreachy internship project proposal:
 
@@ -8,4 +8,4 @@ Thank you for mentoring for {{ community.name }}! We appreciate your help herdin
 
 Outreachy Organizers
 
-{% include 'home/email/footer-coordinator.txt' %}{% endautoescape %}
+{% include 'home/email/footer-coordinator.txt' %}

@@ -1,4 +1,4 @@
-{% autoescape off %}Hi Outreachy organizers,
+Hi Outreachy organizers,
 
 A intern project proposal has been submitted for {{ community.name }} that uses a non-free license or furthers proprietary software. If necessary, ask your Django admin to put the project proposal in the 'Rejected' state. The intern project proposal can be seen here:
 
@@ -40,4 +40,4 @@ Outreachy internship projects must forward the interests of free and open source
 Mentors indicated this project furthers the interests of proprietary software. {% if project.proprietary_software_description %}Mentors provided this info about how the project furthers proprietary software:
 
 "{{ project.proprietary_software_description|striptags }}"
-{% endif %}{% endif %}{% endautoescape %}
+{% endif %}{% endif %}

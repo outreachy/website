@@ -5,7 +5,7 @@ from email.headerregistry import Address
 organizers = Address("Outreachy Organizers", "organizers", "outreachy.org")
 
 def send_template_mail(template, context, request=None, **kwargs):
-    message = render_to_string(template, context, request=request)
+    message = render_to_string(template, context, request=request, using='plaintext')
     kwargs.setdefault('from_email', organizers)
     send_mail(message=message.strip(), **kwargs)
 

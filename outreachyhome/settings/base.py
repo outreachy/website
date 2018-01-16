@@ -95,6 +95,17 @@ TEMPLATES = [
             ],
         },
     },
+    {
+        'NAME': 'plaintext',
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'autoescape': False,
+            'context_processors': [
+                'django.template.context_processors.request',
+            ],
+        },
+    },
 ]
 
 WSGI_APPLICATION = 'outreachyhome.wsgi.application'

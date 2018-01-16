@@ -1,4 +1,4 @@
-{% autoescape off %}Hi Outreachy coordinator,
+Hi Outreachy coordinator,
 
 A contributor has applied to be a mentor for an intern project under {{ community.name }}. A {{ community.name }} coordinator must approve this mentor before they will have access to applicant data or the ability to edit the project information.
 
@@ -14,4 +14,4 @@ Thank you for coordinating for {{ community.name }}! We appreciate your help her
 
 Outreachy Organizers
 
-{% include 'home/email/footer-coordinator.txt' %}{% endautoescape %}
+{% include 'home/email/footer-coordinator.txt' %}
