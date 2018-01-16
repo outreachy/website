@@ -571,17 +571,17 @@ class Project(ApprovalStatus):
         help_text="How many regular contributors does this team have?",
     )
 
-    intern_tasks = models.CharField(
+    intern_tasks = CKEditorField(
             max_length=PARAGRAPH_LENGTH,
             blank=True,
             help_text='(Optional) Description of possible internship tasks.')
 
-    intern_benefits = models.CharField(
+    intern_benefits = CKEditorField(
             max_length=PARAGRAPH_LENGTH,
             blank=True,
             help_text="(Optional) How will the intern benefit from working with your team on this project? Imagine you're pitching this internship to a promising candidate. What would you say to convince them to apply? For example, what technical and non-technical skills will they learn from working on this project? How will this help them further their career in open source?")
 
-    community_benefits = models.CharField(
+    community_benefits = CKEditorField(
             blank=True,
             max_length=PARAGRAPH_LENGTH,
             help_text='(Optional) How will this internship project benefit the FOSS community that is funding it?')
@@ -912,7 +912,7 @@ class CommunicationChannel(models.Model):
     url = models.CharField(
             max_length=200,
             validators=[URLValidator(schemes=['http', 'https', 'irc'])],
-            help_text='URL for the communication channel applicants will use to reach mentors and ask questions about this internship project. IRC URLs should be in the form irc://<host>[:port]/[channel]. Since many applicants have issues with IRC port blocking at their universities, IRC communication links will use <a href="https://kiwiirc.com/">Kiwi IRC</a> to direct applicants to a web-based IRC client. If this is a mailing list, the URL should be the mailing list subscription page.')
+            help_text='URL for the communication channel applicants will use to reach mentors and ask questions about this internship project. IRC URLs should be in the form irc://&lt;host&gt;[:port]/[channel]. Since many applicants have issues with IRC port blocking at their universities, IRC communication links will use <a href="https://kiwiirc.com/">Kiwi IRC</a> to direct applicants to a web-based IRC client. If this is a mailing list, the URL should be the mailing list subscription page.')
 
     instructions = CKEditorField(
             blank=True,
