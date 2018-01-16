@@ -30,10 +30,13 @@ class SponsorshipInline(admin.StackedInline):
 class ParticipationAdmin(reversion.admin.VersionAdmin):
     inlines = (SponsorshipInline,)
 
+class CommunityAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("name",)}
+
 admin.site.unregister(User)
 admin.site.register(User, ComradeAdmin)
 
-admin.site.register(Community)
+admin.site.register(Community, CommunityAdmin)
 admin.site.register(CoordinatorApproval, reversion.admin.VersionAdmin)
 admin.site.register(MentorApproval, reversion.admin.VersionAdmin)
 admin.site.register(NewCommunity)
