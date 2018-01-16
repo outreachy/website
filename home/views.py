@@ -321,7 +321,7 @@ class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
         # this round. The Participation object doesn't have to be saved
         # to the database yet; that'll happen when they submit it in the
         # next step.
-        return Participation(community=self.object).get_action_url('submit')
+        return redirect(Participation(community=self.object).get_action_url('submit'))
 
 class CommunityUpdate(LoginRequiredMixin, UpdateView):
     model = Community
