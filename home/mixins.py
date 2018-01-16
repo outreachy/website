@@ -103,14 +103,24 @@ class ApprovalStatusAction(LoginRequiredMixin, ComradeRequiredMixin, reversion.v
             if not self.object.is_approver(self.request.user):
                 raise PermissionDenied("You are not an authorized approver for this request.")
 
-        if self.target_status in (ApprovalStatus.REJECTED, ApprovalStatus.WITHDRAWN):
-            self.fields = ['reason_denied']
-        else:
-            self.object.reason_denied = ""
-            if action != 'submit':
-                self.fields = []
-        # Otherwise this is a (re-)submit and the subclass should
-        # specify which fields need to be edited.
+        # reason_denied is always either not relevant (so it should be
+        # blank) or about to get set by a reject or withdraw action (so
+        # we don't care what it was before anyway).
+        self.object.reason_denied = ""
+
+        # If this is a (re-)submit, let the subclass specify which
+        # fields need to be edited and with what form_class.
+        if action != 'submit':
+            # Otherwise, let UpdateView construct an appropriate
+            # ModelForm for the current object, which must be a subclass
+            # of ApprovalStatus...
+            self.form_class = None
+
+            # ...and only use fields of ApprovalStatus that are relevant
+            # to the current action.
+            self.fields = []
+            if self.target_status in (ApprovalStatus.REJECTED, ApprovalStatus.WITHDRAWN):
+                self.fields = ['reason_denied']
 
         self.object.approval_status = self.target_status
 
