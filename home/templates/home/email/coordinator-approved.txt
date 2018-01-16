@@ -1,0 +1,17 @@
+{% autoescape off %}Hi coordinator,
+
+An Outreachy organizer has approved you as a coordinator for {{ community.name }}:
+
+{{ request.scheme }}://{{ request.get_host }}{{ community.get_preview_url }}
+
+You now have access to edit community information and to sign the community up to participate in the Outreachy round. If your community cannot participate in this round, either due to lack of funds or lack of mentor interest, you can mark it as not participating.
+
+{% comment %}FIXME - we need a template for how they promote their project and get applicants to contribute. But we need the project to have a landing page first.{% endcomment %}
+{% include 'home/email/snippet-email-filters.txt' %}
+
+Thank you for mentoring for {{ community.name }}! We appreciate the help you give Outreachy applicants and interns.
+
+Outreachy Organizers
+
+{% include 'home/email/footer-coordinator.txt' %}{% endautoescape %}
+
