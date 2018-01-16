@@ -391,6 +391,9 @@ class ParticipationAction(ApprovalStatusAction):
                 email.notify_mentor(self.object, notification, self.request)
                 notification.delete()
 
+        elif self.target_status == ApprovalStatus.APPROVED:
+            email.participation_approved(self.object, self.request)
+
 # This view is for mentors and coordinators to review project information and approve it
 def project_read_only_view(request, community_slug, project_slug):
     current_round = RoundPage.objects.latest('internstarts')
@@ -457,6 +460,13 @@ class CoordinatorApprovalAction(ApprovalStatusAction):
             return CoordinatorApproval.objects.get(coordinator=comrade, community=community)
         except CoordinatorApproval.DoesNotExist:
             return CoordinatorApproval(coordinator=comrade, community=community)
+
+    def notify(self):
+        if self.prior_status == self.target_status:
+            return
+
+        if self.target_status == ApprovalStatus.APPROVED:
+            email.coordinatorapproval_approved(self.object, self.request)
 
 class MentorApprovalAction(ApprovalStatusAction):
     fields = [
@@ -575,6 +585,8 @@ class ProjectAction(ApprovalStatusAction):
 
             if not self.object.approved_license or not self.object.no_proprietary_software:
                 email.project_nonfree_warning(self.object, self.request)
+        elif self.target_status == ApprovalStatus.APPROVED:
+            email.project_approved(self.object, self.request)
 
 class BaseProjectEditPage(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     def get_object(self):

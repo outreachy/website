@@ -19,6 +19,15 @@ def participation_pending(participation, request):
         request=request,
         recipient_list=[organizers])
 
+def participation_approved(participation, request):
+    send_template_mail('home/email/community-approved.txt', {
+        'community': participation.community,
+        'current_round': participation.participating_round,
+        'participation_info': participation,
+        },
+        request=request,
+        recipient_list=participation.community.get_coordinator_email_list())
+
 def notify_mentor(participation, notification, request):
     send_template_mail('home/email/notify-mentors.txt', {
         'community': participation.community,
@@ -46,6 +55,15 @@ def project_nonfree_warning(project, request):
         request=request,
         recipient_list=[organizers])
 
+def project_approved(project, request):
+    community = project.project_round.community
+    send_template_mail('home/email/project-approved.txt', {
+        'community': community,
+        'project': project,
+        },
+        request=request,
+        recipient_list=community.get_mentor_email_list())
+
 def mentorapproval_pending(mentorapproval, request):
     community = mentorapproval.project.project_round.community
     send_template_mail('home/email/mentor-review.txt', {
@@ -55,6 +73,13 @@ def mentorapproval_pending(mentorapproval, request):
         },
         request=request,
         recipient_list=community.get_coordinator_email_list())
+
+def coordinatorapproval_approved(coordinatorapproval, request):
+    send_template_mail('home/email/coordinator-approved.txt', {
+        'community': coordinatorapproval.community,
+        },
+        request=request,
+        recipient_list=[coordinatorapproval.coordinator.email_address()])
 
 def mentorapproval_approved(mentorapproval, request):
     send_template_mail('home/email/mentor-approved.txt', {

@@ -681,6 +681,10 @@ class Project(ApprovalStatus):
     def fully_approved(self):
         return self.approval_status == self.APPROVED and self.project_round.fully_approved()
 
+    def get_mentor_email_list(self):
+        return [ma.mentor.email_address()
+                for ma in self.mentorapproval_set.approved()]
+
 class ProjectSkill(models.Model):
     project = models.ForeignKey(Project, verbose_name="Project")
 

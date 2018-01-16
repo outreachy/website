@@ -1,0 +1,17 @@
+{{ community.name }} is participating in Outreachy!
+
+Hi Outreachy coordinator,
+
+The Outreachy organizers have approved {{ community.name }} to participate in the upcoming round of Outreachy! You'll find your next steps here:
+
+{{ request.scheme }}://{{ request.get_host }}{{ community.get_preview_url }}
+
+We'll send you email when you need to review project proposals from your community, but you can always check on the status of everything you need to review at your dashboard:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}
+
+Thank you for coordinating for {{ community.name }}! We appreciate your help herding mentors.
+
+Outreachy Organizers
+
+{% include 'home/email/footer-coordinator.txt' %}
