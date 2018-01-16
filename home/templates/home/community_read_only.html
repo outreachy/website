@@ -14,6 +14,8 @@ Past community participation in Outreachy
 <a href="{% url 'community-cfp' %}">Timeline, FAQ, & Participating Communities</a> &gt; {{ community.name }}
 <h1>{{ community.name }} in Outreachy</h1>
 
+{% with approved_coordinator_list=community.coordinatorapproval_set.approved approved_projects=participation_info.project_set.approved %}
+
 {% if not participation_info %}
 	<p>The coordinator{{ approved_coordinator_list|length|pluralize }} for {{ community.name }} have not yet indicated whether the community will be participating in {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} internship round.</p>
 {% elif participation_info.approval_status == participation_info.APPROVED %}
@@ -233,4 +235,5 @@ Past community participation in Outreachy
 	{% endif %}
 {% endif %}
 
+{% endwith %}
 {% endblock %}

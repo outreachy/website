@@ -233,22 +233,17 @@ def community_read_only_view(request, community_slug):
         except Notification.DoesNotExist:
             pass
 
-    approved_coordinator_list = community.coordinatorapproval_set.approved()
-
     context = {
             'current_round' : current_round,
             'community': community,
             'coordinator': coordinator,
             'notification': notification,
-            'approved_coordinator_list': approved_coordinator_list,
             }
 
     # Try to see if this community is participating in the current round
     # and get the Participation object if so.
     try:
-        participation_info = Participation.objects.get(community=community, participating_round=current_round)
-        context['participation_info'] = participation_info
-        context['approved_projects'] = participation_info.project_set.approved()
+        context['participation_info'] = Participation.objects.get(community=community, participating_round=current_round)
     except Participation.DoesNotExist:
         pass
 
