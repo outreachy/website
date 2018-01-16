@@ -366,6 +366,11 @@ class ParticipationAction(ApprovalStatusAction):
                     community=community,
                     participating_round=participating_round)
 
+    def get_context_data(self, **kwargs):
+        context = super(ParticipationAction, self).get_context_data(**kwargs)
+        context['readonly_sponsorships'] = self.object.sponsorship_set.filter(coordinator_can_update=False)
+        return context
+
     def save_form(self, form):
         # We might be newly-creating the Participation or changing its
         # approval_status even though the form the user sees has no

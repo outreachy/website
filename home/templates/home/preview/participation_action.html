@@ -31,10 +31,36 @@
 
 	<h3>Corporate Sponsors</h3>
 	<p>Many FOSS communities find funding from corporate sponsors who use their FOSS project. If your community has participated in Outreachy in the past, Outreachy organizers may have been able to find your community additional corporate sponsors and arrange funding for you. FOSS coordinators should notify Outreachy organizers if they are able to secure additional funding from corporate sponsors.</p>
-	{% comment %}Show tentative and confirmed corporate sponsors Outreachy organizers have been working with.{% endcomment %}
+
+	<h3>Credits</h3>
+	<p>If this community has participated in past Outreachy rounds,
+	the community may have a credit from past sponsors, or from
+	partially completed internships.</p>
 
 	<h2>Funding Sources for {{ participation.community.name }} interns</h2>
-	<p>Given the various options above, and taking into account any credits or additional corporate sponsors listed above, please indicate the total number of interns that can be funded to work with {{ participation.community.name }} in this round.</p>
+
+	{% if readonly_sponsorships %}
+	<p>The Outreachy organizers have indicated that you have the
+	following community funds, sponsorships, or credits
+	available:</p>
+	<ul>
+	{% for sponsorship in readonly_sponsorships %}
+	<li>
+		<p><strong>{{ sponsorship.funding_secured|yesno:"Confirmed,Tentative" }}</strong>:
+		${{ sponsorship.amount }} from {{ sponsorship.name }}
+		{% if not sponsorship.funding_secured %}
+		(decision by {{ sponsorship.funding_decision_date|date }})
+		{% endif %}
+		</p>
+		{{ sponsorship.additional_information|safe }}
+	</li>
+	{% endfor %}
+	</ul>
+	{% endif %}
+
+	<p>Given the various options above, and taking into account any
+	credits or additional corporate sponsors listed above, please
+	give us information about your additional sponsors.</p>
 {% else %}
 <ul>
 	<li>Number of interns funded: {{ participation.interns_funded }}</li>
