@@ -7,6 +7,8 @@ from django.utils.http import urlencode
 from django.views.generic import DetailView
 from django.views.generic.edit import UpdateView
 
+import reversion
+
 from .models import ApprovalStatus
 from .models import Comrade
 
@@ -40,7 +42,7 @@ class Preview(DetailView):
                 self.template_name_suffix)
         return [name]
 
-class ApprovalStatusAction(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
+class ApprovalStatusAction(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     template_name_suffix = "_action"
 
     def notify(self):
@@ -125,6 +127,7 @@ class ApprovalStatusAction(LoginRequiredMixin, ComradeRequiredMixin, UpdateView)
         return form.save()
 
     def form_valid(self, form):
+        reversion.set_comment(self.kwargs['action'].title() + ".")
         self.object = self.save_form(form)
 
         # Delay calling notify() until the database transaction is fully

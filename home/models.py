@@ -2,6 +2,7 @@ from __future__ import absolute_import, unicode_literals
 
 from os import urandom
 from base64 import urlsafe_b64encode
+from datetime import date
 from datetime import timedelta
 
 from django.contrib.auth.models import User
@@ -447,18 +448,17 @@ class Participation(ApprovalStatus):
     community = models.ForeignKey(Community)
     participating_round = models.ForeignKey(RoundPage)
 
-    interns_funded = models.IntegerField(
-            verbose_name="How many interns do you expect to fund for this round? (Include any Outreachy community credits to round up to an integer number.)")
-    cfp_text = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
-            blank=True,
-            verbose_name="Additional information to provide on a call for mentors and volunteers page (e.g. what kinds of internship projects you're looking for, ways for volunteers to help Outreachy applicants)")
-
     def __str__(self):
         return '{start:%Y %B} to {end:%Y %B} round - {community}'.format(
                 community = self.community.name,
                 start = self.participating_round.internstarts,
                 end = self.participating_round.internends,
                 )
+
+    def interns_funded(self):
+        total_funding = self.sponsorship_set.aggregate(total=models.Sum('amount'))['total'] or 0
+        # Use integer division so it rounds down.
+        return total_funding // 6500
 
     def get_absolute_url(self):
         return reverse('community-landing', kwargs={'round_slug': self.participating_round.slug, 'slug': self.community.slug})
@@ -486,6 +486,44 @@ class Participation(ApprovalStatus):
                 community__coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
                 community__coordinatorapproval__coordinator__account=user,
                 )
+
+class Sponsorship(models.Model):
+    participation = models.ForeignKey(Participation, on_delete=models.CASCADE)
+
+    coordinator_can_update = models.BooleanField(
+            help_text="""
+            Can a community coordinator update this information, or is
+            it provided by the Outreachy organizers?
+            """)
+
+    name = models.CharField(
+            max_length=SENTENCE_LENGTH,
+            help_text='The full sponsor name to be used on invoices.')
+
+    amount = models.PositiveIntegerField()
+
+    funding_secured = models.BooleanField(
+            default=False,
+            help_text="""
+            Is this funding confirmed by the sponsoring organization, or
+            is it currently only tentative?
+            """)
+
+    funding_decision_date = models.DateField(
+            default=date.today,
+            help_text='Date by which you will know if this funding is confirmed.')
+
+    additional_information = CKEditorField(
+            blank=True,
+            help_text="""
+            Anything else the Outreachy organizers should know about
+            this sponsorship.
+            """)
+
+    def __str__(self):
+        return "{name} sponsorship for {community}".format(
+                name=self.name,
+                community=self.participation.community)
 
 class Project(ApprovalStatus):
     project_round = models.ForeignKey(Participation, verbose_name="Outreachy round and community")

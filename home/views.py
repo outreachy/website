@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.forms import inlineformset_factory
+from django.forms.models import BaseInlineFormSet
 from django.shortcuts import get_list_or_404
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -31,6 +32,7 @@ from .models import CoordinatorApproval
 from .models import MentorApproval
 from .models import NewCommunity
 from .models import Notification
+from .models import Sponsorship
 from .models import Participation
 from .models import Project
 from .models import ProjectSkill
@@ -335,9 +337,21 @@ class CommunityUpdate(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return self.object.get_preview_url()
 
+class SponsorshipInlineFormSet(BaseInlineFormSet):
+    def get_queryset(self):
+        qs = super(SponsorshipInlineFormSet, self).get_queryset()
+        return qs.filter(coordinator_can_update=True)
+
+    def save_new(self, form, commit=True):
+        # Ensure that new objects created by this form will still be
+        # editable with it later.
+        form.instance.coordinator_can_update = True
+        return super(SponsorshipInlineFormSet, self).save_new(form, commit)
+
 class ParticipationAction(ApprovalStatusAction):
-    # TODO - make sure people can't say they will fund 0 interns
-    fields = ['interns_funded']
+    form_class = inlineformset_factory(Participation, Sponsorship,
+            formset=SponsorshipInlineFormSet,
+            fields='__all__', exclude=['coordinator_can_update'])
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     def get_object(self):
@@ -351,6 +365,20 @@ class ParticipationAction(ApprovalStatusAction):
             return Participation(
                     community=community,
                     participating_round=participating_round)
+
+    def save_form(self, form):
+        # We might be newly-creating the Participation or changing its
+        # approval_status even though the form the user sees has no
+        # fields off this object itself, so make sure to save it first
+        # so it gets assigned a primary key.
+        self.object.save()
+
+        # InlineFormSet's save method returns the list of created or
+        # changed Sponsorship objects, not the parent Participation.
+        form.save()
+
+        # Saving this form doesn't change which object is current.
+        return self.object
 
     def notify(self):
         if self.prior_status == self.target_status:

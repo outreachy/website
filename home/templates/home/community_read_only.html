@@ -72,10 +72,6 @@ Past community participation in Outreachy
 
 	<p>Please read the additional Outreachy <a href="/mentor/mentor-faq/#define-a-project">project requirements</a>.</p>
 
-	{% if participation_info.cfp_text %}
-		<p>{{ participation_info.cfp_text }}</p>
-	{% endif %}
-
 	<p>Each mentor will need to submit their own project. The project will then be reviewed and approved by the FOSS community coordinator(s). Additional co-mentors will be able to sign up for the project after it is submitted for review.</p>
 	<p><a class='btn btn-primary' href="{% url 'project-action' action='submit' community_slug=community.slug %}">Submit a New Project</a></p>
 
@@ -216,7 +212,6 @@ Past community participation in Outreachy
 		<p>Round participation information</p>
 		<ul>
 			<li>Number of interns funded: {{ participation_info.interns_funded }}</li>
-			<li>CFP text: {{ participation_info.cfp_text }}</li>
 		</ul>
 		{% if participation_info.approval_status != participation_info.APPROVED %}
 		<a href="{{ participation_info.get_approve_url }}" class="btn btn-success">Approve Community</a>
