@@ -231,6 +231,9 @@ Past community participation in Outreachy
 	{% if not participation_info %}
 		<p>You can sign the community up to participate in the current round.</p>
 		<p><a class="btn btn-success" href="{% url 'participation-action' action='submit' community_slug=community.slug %}">Community will participate</a></p>
+		<p>If you don't have sponsorship funds or you can't find mentors for this round, you can indicate your community won't participate.
+		This will help direct mentors to communities that are participating.</p>
+		<p><a class="btn btn-warning" href="{% url 'participation-action' action='withdraw' community_slug=community.slug %}">Community will not participate</a></p>
 	{% elif participation_info.approval_status == participation_info.WITHDRAWN %}
 		<p>Have you changed your mind and decided your community can participate in this round of Outreachy?</p>
 		<p><a class="btn btn-success" href="{{ participation_info.get_submit_url }}">Community will participate</a></p>
