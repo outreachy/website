@@ -83,13 +83,17 @@
 	</div>
 	{% endif %}
 
+	{% if project.approval_status != project.WITHDRAWN %}
+	<p>
 	{% if project.approval_status != project.APPROVED %}
 	<a href="{{ project.get_approve_url }}" class="btn btn-success">Approve Project</a>
 	{% endif %}
 	{% if project.approval_status != project.REJECTED %}
 	<a href="{{ project.get_reject_url }}" class="btn btn-warning">Reject Project</a>
 	{% endif %}
-	</form>
+	</p>
+	{% endif %}
+
 	{% if unapproved_mentors %}
 		<h3>Approve Mentors</h3>
 		{% for approval in unapproved_mentors %}
