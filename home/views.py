@@ -1,8 +1,9 @@
 from collections import defaultdict
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
+from django.db import models
 from django.forms import inlineformset_factory
 from django.forms.models import BaseInlineFormSet
 from django.shortcuts import get_list_or_404
@@ -13,7 +14,7 @@ from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.text import slugify
 from django.views.decorators.http import require_POST
-from django.views.generic import TemplateView
+from django.views.generic import ListView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 
 from registration.backends.hmac import views as hmac_views
@@ -641,3 +642,18 @@ def dashboard(request):
     return render(request, 'home/dashboard.html', {
         'groups': groups,
         })
+
+class TrustedVolunteersListView(UserPassesTestMixin, ListView):
+    template_name = 'home/trusted_volunteers.html'
+    queryset = Comrade.objects.filter(
+            models.Q(
+                mentorapproval__approval_status=ApprovalStatus.APPROVED,
+                mentorapproval__project__approval_status=ApprovalStatus.APPROVED,
+                mentorapproval__project__project_round__approval_status=ApprovalStatus.APPROVED,
+            ) | models.Q(
+                coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+            )
+        ).order_by('public_name').distinct()
+
+    def test_func(self):
+        return self.request.user.is_staff

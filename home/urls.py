@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^(?P<round_slug>[^/]+)/communities/(?P<slug>[^/]+)/$', views.community_landing_view, name='community-landing'),
     url(r'^communities/cfp/$', views.community_cfp_view, name='community-cfp'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
+    url(r'^dashboard/trusted-volunteers/$', views.TrustedVolunteersListView.as_view(), name='trusted-volunteers-list'),
     url(r'^account/$', views.ComradeUpdate.as_view(), name='account'),
     url(r'^register/$', views.RegisterUser.as_view(), name='register'),
     url(r'^register/sent/$', views.PendingRegisterUser.as_view(), name='registration_complete'),
