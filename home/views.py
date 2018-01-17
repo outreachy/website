@@ -652,6 +652,7 @@ class TrustedVolunteersListView(UserPassesTestMixin, ListView):
                 mentorapproval__project__project_round__approval_status=ApprovalStatus.APPROVED,
             ) | models.Q(
                 coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+                coordinatorapproval__community__participation__approval_status=ApprovalStatus.APPROVED,
             )
         ).order_by('public_name').distinct()
 
