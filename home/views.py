@@ -511,15 +511,8 @@ class MentorApprovalAction(ApprovalStatusAction):
         return self.object.get_preview_url()
 
     def notify(self):
-        if self.prior_status == self.target_status:
-            return
-
-        email.approval_status_changed(self.object, self.request)
-
-        if self.object.fully_approved():
-            # We don't want to subscribe mentors to the mentors mailing list until
-            # both their community, project, and mentor status is approved.
-            email.mentor_list_subscribe(self.object.mentor, self.request)
+        if self.prior_status != self.target_status:
+            email.approval_status_changed(self.object, self.request)
 
 class ProjectAction(ApprovalStatusAction):
     fields = ['short_title', 'approved_license', 'unapproved_license_description', 'no_proprietary_software', 'proprietary_software_description', 'longevity', 'community_size', 'community_benefits', 'intern_tasks', 'intern_benefits', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'long_description', 'accepting_new_applicants']

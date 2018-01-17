@@ -5,19 +5,28 @@ This document describes how the email notifications for the Outreachy website
 work for Outreachy organizers, coordinators, and mentors.
 
 Each section describes how a particular role experiences email notifications.
-Each section has a list of emails that will be sent. Email sending is triggered
-when a Django object that inherits from the ApprovalStatusAction class changes
-approval status.
+Each section has a list of emails that will be sent.
 
-The actions that trigger an email to subscribe a mentor to the mailing list are
-tricky. Outreachy organizers have to say they trust the coordinator (the
-coordinator is approved) before the coordinator is subscribed to the mentors
-mailing list. Once a coordinator is approved, any mentors the coordinator
-approves should be subscribed to the mailing list.
+Email sending is triggered when a Django object that inherits from the
+ApprovalStatus class changes approval status. See participation.dot for a
+description of the submitter and approver roles and the allowed state changes
+for approval status.
 
-Since mentors start out as approved for new Projects (so that they can edit
-them), mentors shouldn't be added to the mailing list until their Project and
-Coordinator is approved.
+We also want to ensure that coordinators and mentors are subscribed to the
+mentors and announcements mailing lists. But since mentors start out as approved
+for new Projects (so that they can edit them), mentors shouldn't be added to the
+mailing list until both their Project and their community's Participation are
+approved. Similarly, Coordinators start out as approved if they create a new
+Community, so they should not be added to the mailing list until their Community
+has at least one approved Participation in a round.
+
+We don't currently have an automated way to manage list subscriptions, because
+the rules for incrementally adding people to the list at the right time really
+complicated the following description of email workflow. Instead we've adopted
+the approach of generating a list of everyone who should be subscribed, feeding
+that list to Mailman all at once, and letting Mailman skip anyone who was
+already subscribed. Someday perhaps we'll automate feeding the list from one
+place to the other, but for the moment that step is still manual.
 
 
 Mentor Workflow
@@ -27,7 +36,7 @@ Emails:
 
  EM1. Project changes status to PENDING
       - Send email to Project approvers (the community coordinators) to review
-      - Use email template home/templates/home/email/project-review.txt
+      - Use email template home/templates/home/email/project-pending.txt
 
  EM2. Project changes status to APPROVED
       - Send email to Project submitters (the approved mentors) for next steps
@@ -35,15 +44,11 @@ Emails:
 
  EM3. MentorApproval changes status to PENDING
       - Send email to mentor approvers (the community coordinators) to review
-      - Use email template home/templates/home/email/mentor-review.txt
+      - Use email template home/templates/home/email/mentorapproval-pending.txt
 
  EM4. MentorApproval changes status to APPROVED
       - Send email to MentorApproval submitters (the approved mentors) for next steps
-      - Use email template home/templates/home/email/mentor-approval.txt
-
- EM5. Project and Participation status is APPROVED:
-      - Subscribe all approved mentors to the mentors mailing list
-      - Use email template home/templates/home/email/mentor-list-subscribe.txt
+      - Use email template home/templates/home/email/mentorapproval-approval.txt
 
 New Project, New Mentor
 ===
@@ -57,7 +62,6 @@ New Project, New Mentor
 2. Coordinators approve the project proposal.
    - Project approval status is set to APPROVED
    - EM2 is sent
-   - EM5 is sent if the Participation status is APPROVED for this community.
 
 Pending Project, New Co-Mentor
 ===
@@ -73,7 +77,6 @@ Pending Project, New Co-Mentor
 3. Coordinator approves Project.
    - Project status set to APPROVED.
    - EM2 is sent to all approved mentors.
-   - EM5 is sent if the Participation status is APPROVED for this community.
 
 Approved Project, New Co-Mentor
 ===
@@ -85,7 +88,6 @@ Approved Project, New Co-Mentor
 2. Coordinator approves the co-mentor.
    - MentorApproval status is set to APPROVED
    - EM4 is sent
-   - EM5 is sent if the Participation status is APPROVED for this community.
 
 
 Coordinator Workflow
@@ -99,7 +101,7 @@ Emails:
 
  EC1. Participation changes status to PENDING
       - Send email to Participation approvers (the Outreachy organizers) to review
-      - Use email template home/templates/home/email/community-signup.txt
+      - Use email template home/templates/home/email/community-pending.txt
 
  EC2. Participation changes status to APPROVED
       - Send email to Participation submitters (the approved coordinator) for next steps
@@ -107,16 +109,11 @@ Emails:
 
  EC3. CoordinatorApproval changes status to PENDING
       - Send email to coordinator approvers (the Outreachy organizers) to review
-      - Use email template home/templates/home/email/coordinator-review.txt
+      - Use email template home/templates/home/email/coordinatorapproval-pending.txt
 
  EC4. CoordinatorApproval changes status to APPROVED
       - Send email to CoordinatorApproval submitters (the Outreachy organizers) for next steps
-      - Use email template home/templates/home/email/coordinator-approved.txt
-
- EC5. CoordinatorApproval and Participation status is APPROVED:
-      - Subscribe all approved coordinators and approved mentors for the
-        community under this round to the mentors mailing list
-      - Use email template home/templates/home/email/mentor-list-subscribe.txt
+      - Use email template home/templates/home/email/coordinatorapproval-approved.txt
 
 New Community, New Coordinator
 ===
@@ -131,9 +128,6 @@ New Community, New Coordinator
 2. Coordinators approve the new community.
    - Participation status is set to APPROVED
    - EC2 is sent
-   - EC5 is sent to all approved coordinators
-   - EM5 is sent to all approved mentors with approved projects in this
-     commmunity.
 
 Pending Community, New Co-Mentor
 ===
@@ -149,9 +143,6 @@ Pending Community, New Co-Mentor
 3. Organizer approves the community.
    - Participation status set to APPROVED.
    - EC2 is sent to all approved mentors.
-   - EC5 is sent to all approved coordinators
-   - EM5 is sent to all approved mentors with approved projects in this
-     commmunity.
 
 Approved Community, New Co-coordinator
 ===
@@ -163,7 +154,6 @@ Approved Community, New Co-coordinator
 2. Coordinator or organizer approves the co-mentor.
    - CoordinatorApproval status is set to APPROVED
    - EC4 is sent
-   - EC5 is sent
 
 Past Community, New Coordinator
 ===
@@ -175,7 +165,6 @@ Past Community, New Coordinator
 2. Coordinator or organizer approves the co-mentor.
    - CoordinatorApproval status is set to APPROVED
    - EC4 is sent
-   - EC5 is sent
 
 Proceed to the "Past Community, Approved Coordinator" section
 
@@ -189,6 +178,3 @@ Past Community, Approved Coordinator
 2. Organizers approves the community to participate.
    - Participation status is set to APPROVED
    - EC2 is sent
-   - EC5 is sent
-   - EM5 is sent to all approved mentors with approved projects in this
-     commmunity.

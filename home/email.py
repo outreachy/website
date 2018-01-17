@@ -45,24 +45,6 @@ def project_nonfree_warning(project, request):
         request=request,
         recipient_list=[organizers])
 
-def mentor_list_subscribe(mentor, request):
-    # Subscribe the mentor to the mentor mailing list
-    # We need to spoof sending email from the email address we want to subscribe,
-    # since using 'subscribe address=email' in the body doesn't work.
-    # This is still a pain because organizers need to approve subscription requests.
-    # We really need mailman 3.
-    send_template_mail('home/email/mentor-list-subscribe.txt', {
-        'comrade': mentor,
-        },
-        request=request,
-        from_email=Address(
-            "{name} via {domain} mentor approval".format(
-                name=mentor.public_name,
-                domain=request.get_host()),
-            addr_spec=mentor.account.email
-            ),
-        recipient_list=[Address('', 'mentors-join', 'lists.outreachy.org')])
-
 @override_settings(ALLOWED_HOSTS=['www.outreachy.org'], EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend')
 def message_samples():
     """
@@ -98,6 +80,3 @@ def message_samples():
 
     notification = models.Notification.objects.all()[0]
     notify_mentor(participation, notification, request)
-
-    comrade = models.Comrade.objects.all()[0]
-    mentor_list_subscribe(comrade, request)

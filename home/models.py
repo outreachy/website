@@ -499,9 +499,6 @@ class Participation(ApprovalStatus):
                 community__coordinatorapproval__coordinator__account=user,
                 )
 
-    def fully_approved(self):
-        return self.approval_status == self.APPROVED
-
 class Sponsorship(models.Model):
     participation = models.ForeignKey(Participation, on_delete=models.CASCADE)
 
@@ -690,9 +687,6 @@ class Project(ApprovalStatus):
                     mentorapproval__mentor__account=user,
                     )
                 )
-
-    def fully_approved(self):
-        return self.approval_status == self.APPROVED and self.project_round.fully_approved()
 
 class ProjectSkill(models.Model):
     project = models.ForeignKey(Project, verbose_name="Project")
@@ -887,9 +881,6 @@ class MentorApproval(ApprovalStatus):
                     )
                 | models.Q(mentor__account=user)
                 )
-
-    def fully_approved(self):
-        return self.approval_status == self.APPROVED and self.project.fully_approved()
 
 class CommunicationChannel(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
