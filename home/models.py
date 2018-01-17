@@ -951,4 +951,10 @@ class CoordinatorApproval(ApprovalStatus):
     def objects_for_dashboard(cls, user):
         if user.is_staff:
             return cls.objects.all()
-        return cls.objects.filter(coordinator__account=user)
+        return cls.objects.filter(
+                models.Q(
+                    community__coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+                    community__coordinatorapproval__coordinator__account=user,
+                    )
+                | models.Q(coordinator__account=user)
+                )
