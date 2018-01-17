@@ -107,7 +107,9 @@ Once you've run the above setup commands, you should be all set to start testing
 PATH="$PWD/node_modules/.bin:$PATH" ./manage.py runserver
 ```
 
-In your web browser, go to `http://localhost:8000/admin/` to get to the Wagtail administrative interface.
+In your web browser, go to `http://localhost:8000/admin/` to get to the Wagtail administrative interface. `http://localhost:8000/django-admin/` takes you to the regular Django administrative interface. You can log in into both with the account you created with `./manage.py createsuperuser`. 
+
+If you want to create participating communities, project proposals etc. you first need to set up a `RoundPage`. An easy way to do so is from the *Django administrative interface*. To do this navigate to `http://127.0.0.1:8000/django-admin/home/roundpage/add/`, login with the `superuser` account and fill out the necessary fields: `path`,`depth`,`title`,`slug`,`content-type` (should be `round page`), `owner`, `page title` and `Roundnumber`. All other fields can be run with the defaults. Afterwards you can navigate to `http://127.0.0.1:8000/communities/cfp/` to see the current round. 
 
 # Tour of the code base
 Django breaks up functionality into a project (a Django web application) and apps (smaller a set of Python code that implements a specific feature). There is only one project deployed on a site at a time, but there could be many apps deployed. You can read more about what an application is in [the Django documentation](https://docs.djangoproject.com/en/2.0/ref/applications/).  
