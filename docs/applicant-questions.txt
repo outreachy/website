@@ -21,8 +21,9 @@ your eligibility. This information will not be shared with anyone
 outside of the [Outreachy
 organizers](https://www.outreachy.org/contact/)."
 
-Age and Past Internships
+General Questions
 ===
+
 
 1. Will you be 18 years of age or older by {internship start date}?
    D: Y/N
@@ -34,8 +35,20 @@ Age and Past Internships
    If you were accepted as an intern but did not complete the internship
    for any reason other than medical issues, please select yes.
 
-3. Will be enrolled in a university or college from {internship start
+3a. Will you be enrolled in a university or college from {internship start
    date} to {internship end date}?
+   D: Y/N
+
+3b. Will you be employed as a part-time or full-time employee full-time employee,
+    from {internship start date} to {internship end date}?
+   D: Y/N
+
+3c. Will be a self-employed contractor from {internship start date} to
+    {internship end date}?
+   D: Y/N
+
+3d. Will you have other time commitments that require more than 10 hours a week
+for longer than a week from {internship start date} to {internship end date}?
    D: Y/N
 
 If 1 is No, or 2 is Yes, then the applicant is not eligible. Stop the
@@ -172,17 +185,24 @@ Student Information Section
 University Information:
 
 12. University website
+    D: URLField
 
 13a. University name
+     D: CharField
 
 13b. What degree are you pursuing?
+     D: CharField
 
 13c. What is your major or field of specialty?
-
-13d. What semester number or year and term are you currently in?
-
+     D: CharField
 
 Questions about your current term/semester:
+
+13d. (Optional) If your university uses term numbers (e.g. 7th term), enter your current term number.
+     D: IntegerField
+
+13e. (Optional) If your university uses term names (e.g. Winter term of Sophomore year), enter your current term name and year.
+     D: CharField
 
 14. What is the first possible day of classes for all students?
     D: Date
@@ -227,6 +247,12 @@ Questions about your current term/semester:
 
 Questions about your next term/semester:
 
+13d. (Optional) If your university uses term numbers (e.g. 7th term), enter your next term number.
+     D: IntegerField
+
+13e. (Optional) If your university uses term names (e.g. Winter term of Sophomore year), enter your next term name and year.
+     D: CharField
+
 14/20. What is the first possible day of classes for all students?
     D: Date
 
@@ -270,10 +296,8 @@ Questions about your next term/semester:
 
 Student eligibility is a complex algorithm:
 
-
-If (#20 - #15) >= 7 weeks exactly, they are eligible. Otherwise it gets much
-more complex:
-
+#FIXME - does this work if there's only one term that begins after the
+internship starts and ends before the internship ends?
 
 calculate number of full-time weeks free
 ----------------------------------------
@@ -289,7 +313,6 @@ else:
 	full-time end date = internship end date
 
 full-time days free between terms = (full-time end date - full-time start date)
-
 
 
 calculate number of eligible half-time weeks free
@@ -334,3 +357,80 @@ If not eligible, display the following information:
    accept letters of exception for skipping classes, even if that is part of
    the standard university process for students with internships. We cannot
    accept proof of late enrollment in classes.
+
+If eligible, and person is employed as a part-time or full-time employee, take them to the "Employment Information" section.
+
+Employment Information
+===
+
+During the internship period, from {internstart} to {internend}, if you will be an employee of a company for any number of hours, please fill out the following forms.
+
+26. What is the start date of your employment contract, or the first day you
+    will be working during the internship period from {internstart} to {internend}?
+    D: Date
+
+27. What is the end date of your employment contract, or the last day you will
+    be working during the internship period from {internstart} to {internend}?
+    If you don't have an end date, use {internend}
+    D: Date
+
+28. (Optional) If your contract stipulates a break in work during the
+    internship period (e.g. a teacher's contract specifying dates for a winter,
+    summer, or spring break), what is the start date of that break?
+    D: Date
+
+29. (Optional) If your contract stipulates a break in work during the
+    internship period (e.g. a teacher's contract specifying dates for a winter,
+    summer, or spring break), what is the end date of that break?
+    D: Date
+
+30. What is the required number of hours per week in your employment contract?
+    Note that we cannot accept verbal or written confirmation from your manager or
+    boss that you will be working less hours than your employment contract
+    requires.
+    D: Integer
+
+Calculating employment eligible is exactly like calculating the student
+eligibility, only there's one "term", not two.  Part-time employment weeks are
+eligible if the hours/week <= 20 hours.
+
+
+Contractor Information
+===
+
+31. During the past three months, what is the average number of hours/week you
+    have spent on contracted work and unpaid business development or business
+    marketing for your consulting business?
+    D: Integer
+
+32. Will you be taking contracting work during the Outreachy internship period,
+    from {internstart} to {internend}?
+    D: Y/N
+
+33. During the Outreachy internship period from {internstart} to {internend},
+    what is the expected number of hours/week you will spend on contracted work and
+    unpaid business development or business marketing for your consulting business?
+    D: Integer
+
+If #33 > 20 hours/week, they are not eligible.
+If #31 > 20 hours/week, flag them as borderline.
+If they are a student and also a contractor, flag them as borderline.
+
+Other Time Commitment Information
+===
+
+34. Please describe what your time commitment is.
+    D: 3 paragraph CharField
+
+35. What is the start date of time commitment?
+    D: Date
+
+36. What is the end date of time commitment?
+    D: Date
+
+37. What is the average number of hours per week your time commitment take?
+    D: Integer
+
+Calculating time commitment eligibility is exactly like calculating the student
+eligibility, only there's one "term", not two.  Part-time time commitment weeks are
+eligible if the hours/week <= 20 hours.
