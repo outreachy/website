@@ -411,17 +411,24 @@ def project_read_only_view(request, community_slug, project_slug):
     mentor_request = None
     coordinator = None
     if request.user.is_authenticated:
+        # For both of the following queries, although the current user
+        # is authenticated, don't assume that they have a Comrade
+        # instance. Instead check that the approval is attached to a
+        # User that matches this one.
+
         try:
-            # Although the current user is authenticated, don't assume
-            # that they have a Comrade instance. Instead check that the
-            # approval's mentor is attached to a User that matches
-            # this one.
+            # Grab the current user's mentor request regardless of its
+            # status so we can tell them what their status is.
             mentor_request = project.mentorapproval_set.get(mentor__account=request.user)
         except MentorApproval.DoesNotExist:
             pass
 
         try:
-            coordinator = project.project_round.community.coordinatorapproval_set.get(coordinator__account=request.user)
+            # Grab the current user's coordinator request for the
+            # community this project is part of, but only if they've
+            # been approved, because otherwise we don't treat them any
+            # differently than anyone else.
+            coordinator = project.project_round.community.coordinatorapproval_set.approved().get(coordinator__account=request.user)
         except CoordinatorApproval.DoesNotExist:
             pass
 
