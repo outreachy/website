@@ -17,12 +17,6 @@
 {% include "home/snippet/license-requirements.html" %}
 
 <h2>Internship Project Information</h2>
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form.media }}
-    {{ form.as_p }}
-    {% comment %}@jameysharp - FIXME - this should be different colors for the different actions.{% endcomment %}
-    <input class="btn btn-primary" type="submit" value="{{ view.kwargs.action|title }} project" />
-</form>
+{% include "home/snippet/action_form.html" %}
 
 {% endblock %}

@@ -67,13 +67,7 @@
 </ul>
 {% endif %}
 
-<p><form action="" method="post">
-	{% csrf_token %}
-	{{ form.media }}
-	{{ form.as_p }}
-	{% comment %}@jameysharp - FIXME - this should be different colors for the different actions.{% endcomment %}
-	<input type="submit" class="btn btn-primary" value="{{ view.kwargs.action|title }}" />
-</form></p>
+{% include "home/snippet/action_form.html" %}
 
 {% if view.kwargs.action == 'submit' %}
 	<h2>Funding for Additional Outreachy Interns</h2>
