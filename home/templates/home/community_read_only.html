@@ -198,6 +198,12 @@ Past community participation in Outreachy
 		<ul>
 			<li>Number of interns funded: {{ participation_info.interns_funded }}</li>
 		</ul>
+		<div class="card">
+			<div class="card-header">Preview - Community Information for Applicants</div>
+			<div class="card-body">
+			{% include "home/snippet/community_landing_snippet.html" %}
+			</div>
+		</div>
 		{% if participation_info.approval_status != participation_info.APPROVED %}
 		<a href="{{ participation_info.get_approve_url }}" class="btn btn-success">Approve Community</a>
 		{% endif %}
