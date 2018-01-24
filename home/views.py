@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from django.db import models
-from django.forms import inlineformset_factory
+from django.forms import inlineformset_factory, modelform_factory
 from django.forms.models import BaseInlineFormSet
 from django.shortcuts import get_list_or_404
 from django.shortcuts import get_object_or_404
@@ -16,7 +16,7 @@ from django.utils.text import slugify
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView
-
+from formtools.wizard.views import SessionWizardView
 from registration.backends.hmac import views as hmac_views
 
 from . import email
@@ -138,6 +138,56 @@ class ComradeUpdate(LoginRequiredMixin, UpdateView):
     # Take them back to the home page right now.
     def get_success_url(self):
         return self.request.POST.get('next', '/')
+
+class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
+    # TODO: For the moment, this view allows editing Comrade, because we
+    # haven't finished the eligibility models yet.
+    template_name = 'home/wizard_form.html'
+    form_list = [
+            ('names', modelform_factory(Comrade, fields=(
+                'public_name',
+                'nick_name',
+                'legal_name',
+                ))),
+            ('pronouns', modelform_factory(Comrade, fields=(
+                'pronouns',
+                'pronouns_to_participants',
+                'pronouns_public',
+                ))),
+            ('locales', modelform_factory(Comrade, fields=(
+                'timezone',
+                ))),
+            ]
+
+    def get_form_instance(self, step):
+        # This implementation ignores `step` which is fine as long as
+        # all of the forms are supposed to edit the same base object and
+        # are either ModelForm or InlineModelForm.
+
+        # Make sure to use the same Python object for all steps, rather
+        # than constructing a different empty object for each step, by
+        # caching it on this view instance.
+        if not getattr(self, 'object', None):
+            try:
+                self.object = self.request.user.comrade
+            except Comrade.DoesNotExist:
+                self.object = Comrade(
+                        account=self.request.user)
+        return self.object
+
+    def done(self, form_list, **kwargs):
+        # We have multiple forms editing the same object, but we want to
+        # batch up the database writes so the object is only actually
+        # updated once.
+
+        # TODO: InlineFormSets will be more complex than this.
+        for form in form_list:
+            result = form.save(commit=False)
+            assert result == self.object
+        self.object.save()
+
+        # FIXME: This should redirect somewhere appropriate.
+        return redirect('/')
 
 # Call for communities, mentors, and volunteers page
 #

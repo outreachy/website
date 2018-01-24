@@ -9,6 +9,7 @@ django-ckeditor==5.4.0
 django-compressor==2.2
 django-compressor-postcss==0.8.2
 django-contact-form==1.4.2
+django-formtools==2.1
 django-js-asset==0.1.1
 django-language-field==0.0.3
 django-libsass==0.7
