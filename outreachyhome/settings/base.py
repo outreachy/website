@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.forms',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'compressor',
@@ -77,6 +78,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'outreachyhome.urls'
+
+# https://docs.djangoproject.com/en/1.11/ref/forms/renderers/#templatessetting
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
 TEMPLATES = [
     {
