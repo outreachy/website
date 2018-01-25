@@ -142,8 +142,84 @@ class ComradeUpdate(LoginRequiredMixin, UpdateView):
 
 BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
 
+def check_general_info(wizard):
+    cleaned_data = wizard.get_cleaned_data_for_step('General Info')
+    if not cleaned_data:
+        return True
+    if not cleaned_data['over_18']:
+        return False
+    if cleaned_data['gsoc_or_outreachy_internship']:
+        return False
+    if not cleaned_data['eligible_to_work']:
+        return False
+    if cleaned_data['under_export_control']:
+        return False
+    # Collect the rest of the information on the forms
+    # FIXME: then ask them to contact the organizers
+    if cleaned_data['us_santioned_country']:
+        return True
+    return True
+
+def show_us_demographics(wizard):
+    if not check_general_info(wizard):
+        return False
+    cleaned_data = wizard.get_cleaned_data_for_step('General Info') or {}
+    if not cleaned_data:
+        return True
+    us_resident = cleaned_data.get('us_national_or_permanent_resident', True)
+    living_in_us = cleaned_data.get('living_in_us', True)
+    return us_resident or living_in_us
+
+def check_gender_and_demographics(wizard):
+    if not check_general_info(wizard):
+        return False
+    demo_data = wizard.get_cleaned_data_for_step('USA demographics')
+    if demo_data and demo_data['us_resident_demographics'] is True:
+        return True
+
+    gender_data = wizard.get_cleaned_data_for_step('Gender Identity')
+    if not gender_data:
+        return True
+
+    gender_minority_list = [
+            'transgender',
+            'genderqueer',
+            'woman',
+            'demi_boy'
+            'demi_girl'
+            'non_binary'
+            'demi_non_binary'
+            'genderqueer'
+            'genderflux'
+            'genderfluid'
+            'demi_genderfluid'
+            'demi_gender'
+            'bi_gender'
+            'tri_gender'
+            'multigender'
+            'pangender'
+            'maxigender'
+            'aporagender'
+            'intergender'
+            'mavrique'
+            'gender_confusion'
+            'gender_indifferent'
+            'graygender'
+            'agender'
+            'genderless'
+            'gender_neutral'
+            'neutrois'
+            'androgynous'
+            'androgyne']
+    return any(gender_data[x] for x in gender_minority_list)
+
 class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
     template_name = 'home/wizard_form.html'
+    condition_dict = {
+            'USA demographics': show_us_demographics,
+            'Gender Identity': check_general_info,
+            'Time Commitments': check_gender_and_demographics,
+            }
     form_list = [
             ('General Info', modelform_factory(ApplicantApproval, fields=(
                 'over_18',
@@ -159,14 +235,13 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
                 widgets = {
                     'over_18': widgets.RadioSelect(choices=BOOL_CHOICES),
                     'gsoc_or_outreachy_internship': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'eligible_to_work': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'us_national_or_permanent_resident': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'living_in_us': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'under_export_control': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'us_sanctioned_country': widgets.RadioSelect(choices=BOOL_CHOICES),
                     },
                 )),
-            ('Time Commitments', modelform_factory(ApplicantApproval, fields=(
-                'enrolled_as_student',
-                'employed',
-                'contractor',
-                'time_commitments',
-                ))),
             ('USA demographics', modelform_factory(ApplicantApproval, fields=(
                 'us_resident_demographics',
                 ))),
@@ -204,6 +279,12 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
                 'androgyne',
                 'prefer_not_to_say',
                 'self_identify',
+                ))),
+            ('Time Commitments', modelform_factory(ApplicantApproval, fields=(
+                'enrolled_as_student',
+                'employed',
+                'contractor',
+                'time_commitments',
                 ))),
             ]
 
