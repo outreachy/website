@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 import reversion.admin
 
+from .models import ApplicantApproval
 from .models import Community
 from .models import Comrade
 from .models import CoordinatorApproval
@@ -37,6 +38,7 @@ class CommunityAdmin(admin.ModelAdmin):
 admin.site.unregister(User)
 admin.site.register(User, ComradeAdmin)
 
+admin.site.register(ApplicantApproval)
 admin.site.register(Community, CommunityAdmin)
 admin.site.register(CoordinatorApproval, reversion.admin.VersionAdmin)
 admin.site.register(MentorApproval, reversion.admin.VersionAdmin)

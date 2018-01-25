@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from django.db import models
-from django.forms import inlineformset_factory, modelform_factory
+from django.forms import inlineformset_factory, modelform_factory, widgets
 from django.forms.models import BaseInlineFormSet
 from django.shortcuts import get_list_or_404
 from django.shortcuts import get_object_or_404
@@ -26,6 +26,7 @@ from .mixins import ComradeRequiredMixin
 from .mixins import Preview
 
 from .models import ApprovalStatus
+from .models import ApplicantApproval
 from .models import CommunicationChannel
 from .models import Community
 from .models import Comrade
@@ -139,23 +140,70 @@ class ComradeUpdate(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return self.request.POST.get('next', '/')
 
+BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
+
 class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
-    # TODO: For the moment, this view allows editing Comrade, because we
-    # haven't finished the eligibility models yet.
     template_name = 'home/wizard_form.html'
     form_list = [
-            ('names', modelform_factory(Comrade, fields=(
-                'public_name',
-                'nick_name',
-                'legal_name',
+            ('General Info', modelform_factory(ApplicantApproval, fields=(
+                'over_18',
+                'gsoc_or_outreachy_internship',
+                'eligible_to_work',
+                'us_national_or_permanent_resident',
+                'living_in_us',
+                'under_export_control',
+                'us_santioned_country',
+                ),
+                # FIXME: this allows people to submit a partial form
+                # without validating either 'yes' or 'no' is selected
+                widgets = {
+                    'over_18': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'gsoc_or_outreachy_internship': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    },
+                )),
+            ('Time Commitments', modelform_factory(ApplicantApproval, fields=(
+                'enrolled_as_student',
+                'employed',
+                'contractor',
+                'time_commitments',
                 ))),
-            ('pronouns', modelform_factory(Comrade, fields=(
-                'pronouns',
-                'pronouns_to_participants',
-                'pronouns_public',
+            ('USA demographics', modelform_factory(ApplicantApproval, fields=(
+                'us_resident_demographics',
                 ))),
-            ('locales', modelform_factory(Comrade, fields=(
-                'timezone',
+            ('Gender Identity', modelform_factory(ApplicantApproval, fields=(
+                'us_resident_demographics',
+                'transgender',
+                'genderqueer',
+                'man',
+                'woman',
+                'demi_boy',
+                'demi_girl',
+                'non_binary',
+                'demi_non_binary',
+                'genderqueer',
+                'genderflux',
+                'genderfluid',
+                'demi_genderfluid',
+                'demi_gender',
+                'bi_gender',
+                'tri_gender',
+                'multigender',
+                'pangender',
+                'maxigender',
+                'aporagender',
+                'intergender',
+                'mavrique',
+                'gender_confusion',
+                'gender_indifferent',
+                'graygender',
+                'agender',
+                'genderless',
+                'gender_neutral',
+                'neutrois',
+                'androgynous',
+                'androgyne',
+                'prefer_not_to_say',
+                'self_identify',
                 ))),
             ]
 
@@ -169,10 +217,14 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
         # caching it on this view instance.
         if not getattr(self, 'object', None):
             try:
-                self.object = self.request.user.comrade
-            except Comrade.DoesNotExist:
-                self.object = Comrade(
-                        account=self.request.user)
+                current_round = RoundPage.objects.latest('internstarts')
+                self.object = ApplicantApproval.objects.get(
+                        applicant=self.request.user.comrade,
+                        application_round=current_round)
+            except ApplicantApproval.DoesNotExist:
+                self.object = ApplicantApproval(
+                        application_round=RoundPage.objects.latest('internstarts'),
+                        applicant=self.request.user.comrade)
         return self.object
 
     def done(self, form_list, **kwargs):

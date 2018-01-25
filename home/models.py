@@ -958,3 +958,218 @@ class CoordinatorApproval(ApprovalStatus):
                     )
                 | models.Q(coordinator__account=user)
                 )
+
+# This class stores information about whether an applicant is eligible to
+# participate in this round Automated checking will set the applicant to
+# Approved or Rejected, but the Outreachy organizers can move the applicant to
+# either state manually.  They start out in the Withdrawn state. We can set
+# them to 'Pending' if they need to send us an email (say because of being a
+# citizen of a U.S. export-regulated countries).
+# Once the tool sets them to rejected, they won't be able to edit the information,
+# which is fine.
+class ApplicantApproval(ApprovalStatus):
+    applicant = models.ForeignKey(Comrade, on_delete=models.CASCADE)
+    application_round = models.ForeignKey(RoundPage, on_delete=models.CASCADE)
+
+    # Control which widget gets used on boolean fields in the template
+    # Use nullboolean select widget to ensure all questions are answered.
+    over_18 = models.BooleanField(
+            help_text='Will you be 18 years or older when the Outreachy internship period starts?')
+    gsoc_or_outreachy_internship = models.BooleanField(
+            default=True,
+            help_text='Have you been accepted as a Google Summer of Code intern or an Outreachy intern before? Please say yes even if you did not complete the internship.')
+
+    enrolled_as_student = models.BooleanField(
+            default=True,
+            help_text='Will you be enrolled in a university or college during the Outreachy internship period?')
+
+    employed = models.BooleanField(
+            default=True,
+            help_text='Will you be a part-time or full-time employee during the Outreachy internship period?')
+
+    contractor = models.BooleanField(
+            default=True,
+            help_text='Will you be a contractor during the Outreachy internship period?')
+
+    time_commitments = models.BooleanField(
+            default=True,
+            help_text='Will you have other time commitments that require more than 10 hours a week during the Outreachy internship period?')
+
+    us_national_or_permanent_resident = models.BooleanField(
+            default=False,
+            help_text='Are you a national or permanent resident of the United States of America?')
+
+    living_in_us = models.BooleanField(
+            default=False,
+            help_text='Will you be living in the United States of America during the Outreachy internship period? Please answer yes if you are living in the USA, even if you are a citizen of a country other than USA.')
+
+    under_export_control = models.BooleanField(
+            default=True,
+            help_text='Are you a person or entity restricted by US export controls or sanctions programs?')
+
+    us_santioned_country = models.BooleanField(
+            default=True,
+            help_text='Are you a resident or national of Crimea, Cuba, Iran, North Korea, or Syria? If you have citizenship with of one of these counties, please answer yes, even if you are not currently living in those countries.')
+
+    eligible_to_work = models.BooleanField(
+            default=False,
+            help_text='Are you eligible to work for 40 hours a week in the country you will be living in during the Outreachy internship period?<br>Please note that in some countries, students studying abroad on a student visa may not be eligible to work full-time (40 hours a week). If you are on a student visa, please double check with your school counselors before applying.<br>Additionally, in some countries, spousal visas may not allow spouses to work. Please contact your immigration officer if you have any questions about whether your visa will be impacted by full-time work (40 hours a week).')
+
+    # Race/Ethnicity Information
+    us_resident_demographics = models.BooleanField(
+            default=False,
+            help_text='Are you Black/African American, Hispanic/Latin@, Native American, Alaska Native, Native Hawaiian, or Pacific Islander?')
+
+    # Gender Information
+    transgender = models.BooleanField(
+            help_text='Do you identify as transgender, or are you questioning whether you are transgender?')
+
+    genderqueer = models.BooleanField(
+            help_text='Do you identify as genderqueer, gender non-conforming, gender diverse, gender varient, or gender expansive, or are you questioning whether you identify with any of those terms?')
+
+    man = models.BooleanField(help_text='Man')
+
+    woman = models.BooleanField(help_text='Woman')
+
+    demi_boy = models.BooleanField(help_text='Demi-boy')
+
+    demi_girl = models.BooleanField(help_text='Demi-girl')
+
+    non_binary = models.BooleanField(help_text='Non-binary')
+
+    demi_non_binary = models.BooleanField(help_text='Demi-non-binary')
+
+    genderqueer = models.BooleanField(help_text='Genderqueer')
+
+    genderflux = models.BooleanField(help_text='Genderflux')
+
+    genderfluid = models.BooleanField(help_text='Genderfluid')
+
+    demi_genderfluid = models.BooleanField(help_text='Demi-genderfluid')
+
+    demi_gender = models.BooleanField(help_text='Demi-gender')
+
+    bi_gender = models.BooleanField(help_text='Bi-gender')
+
+    tri_gender = models.BooleanField(help_text='Tri-gender')
+
+    multigender = models.BooleanField(help_text='Multigender/polygender')
+
+    pangender = models.BooleanField(help_text='Pangender/omnigender')
+
+    maxigender = models.BooleanField(help_text='Maxigender')
+
+    aporagender = models.BooleanField(help_text='Aporagender')
+
+    intergender = models.BooleanField(help_text='Intergender')
+
+    mavrique = models.BooleanField(help_text='Mavrique')
+
+    gender_confusion = models.BooleanField(help_text='Gender confusion/Gender f*ck')
+
+    gender_indifferent = models.BooleanField(help_text='Gender indifferent')
+
+    graygender = models.BooleanField(help_text='Graygender')
+
+    agender = models.BooleanField(help_text='Demi-agender')
+
+    genderless = models.BooleanField(help_text='Genderless')
+
+    gender_neutral = models.BooleanField(help_text='Gender neutral')
+
+    neutrois = models.BooleanField(help_text='Neutrois')
+
+    androgynous = models.BooleanField(help_text='Androgynous')
+
+    androgyne = models.BooleanField(help_text='Androgyne')
+
+    prefer_not_to_say = models.BooleanField()
+
+    self_identify = models.CharField(max_length=SENTENCE_LENGTH,
+            blank=True,
+            help_text="If your gender identity is not listed above, please let us know how you identify so we can add it to the list.")
+
+    def is_approver(self, user):
+        return user.is_staff
+
+    def get_approver_email_list(self):
+        return [email.organizers]
+
+class TimeCommitment(models.Model):
+    applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
+    start_date = models.DateField(help_text="Date your time commitment starts")
+    end_date = models.DateField(help_text="Date your time commitment ends")
+    hours_per_week = models.IntegerField(help_text="Maximum hours per week spent on this time commitment.")
+
+    def hours(__self__):
+        return self.hours_per_week
+
+class EmploymentTimeCommitment(models.Model):
+    applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
+    start_date = models.DateField(help_text="Start date of employment period")
+    end_date = models.DateField(help_text="End date of employment period")
+    hours_per_week = models.IntegerField(help_text="Number of hours per week required by your employment contract")
+
+    def hours(__self__):
+        return self.hours_per_week
+
+class SchoolTimeCommitment(models.Model):
+    applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
+
+    term_number = models.IntegerField(
+            blank=True,
+            help_text="(Optional) If your university uses term numbers (e.g. 7th term), enter your current term number.")
+    
+    term_name = models.CharField(
+            max_length=SENTENCE_LENGTH,
+            blank=True,
+            help_text="(Optional) If your university uses term names (e.g. Winter term of Sophomore year), enter your current term name and year.")
+    
+    start_date = models.DateField(
+            verbose_name="Date classes start",
+            help_text="What is the first possible day of classes for all students?<br>If you started this term late (or will start this term late), use the date that classes start for all students, not the late registration date.<br>If students who are in different school years or different semester numbers start classes on different dates, use the first possible date that students in your year or semester start classes.<br>If you do not know when the term will start, use the start date of that term from last year.")
+    
+    end_date = models.DateField(
+            verbose_name="Date all exams end",
+            help_text="This is the date your university advertises for the last possible date of any exam for any student in your semester. Use the last possible exam date, even if your personal exams end sooner.")
+    
+    typical_credits = models.IntegerField(
+            verbose_name="Number of credits for a typical student",
+            help_text="How many credits does a typical student register for?<br> If your university has different credit requirements for each semester for students in your major, use the number of credits that are listed on your syllabus or class schedule.")
+
+    registered_credits = models.IntegerField(
+            verbose_name="Number of credits you're registered for",
+            help_text="What is the total number of credits you are enrolled for this term?<br>If you aren't registered yet, please provide an approximate number of credits?")
+
+    outreachy_credits = models.IntegerField(
+            verbose_name="Number of internship or project credits",
+            help_text="If you are going to seek university credit for your Outreachy internship, how many credits will you earn?")
+
+    thesis_credits = models.IntegerField(
+            verbose_name="Number of thesis or research credits",
+            help_text="If you are a graduate student, how many credits will you earn for working on your thesis or research?")
+
+    def hours(__self__):
+        return 40 * ((self.registered_credits - self.outreachy_credits - self.thesis_credits) / self.typical_credits)
+
+class SchoolInformation(models.Model):
+    applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
+
+    university_name = models.CharField(
+            max_length=SENTENCE_LENGTH,
+            help_text='University or college name')
+
+    university_website = models.URLField(help_text="University or college website")
+
+    degree_name = models.CharField(
+            max_length=SENTENCE_LENGTH,
+            help_text='What degree(s) are you pursuing?')
+
+class ContractorInformation(models.Model):
+    applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
+
+    typical_hours = models.IntegerField(
+            help_text="During the past three months, what is the average number of hours/week you have spent on contracted work and unpaid business development or business marketing?")
+
+    continuing_contract_work = models.BooleanField(
+            help_text="Will you be doing contract work during the Outreachy internship period?")
