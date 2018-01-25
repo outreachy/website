@@ -974,6 +974,7 @@ class ApplicantApproval(ApprovalStatus):
     # Control which widget gets used on boolean fields in the template
     # Use nullboolean select widget to ensure all questions are answered.
     over_18 = models.BooleanField(
+            default=False,
             help_text='Will you be 18 years or older when the Outreachy internship period starts?')
     gsoc_or_outreachy_internship = models.BooleanField(
             default=True,
@@ -1007,7 +1008,7 @@ class ApplicantApproval(ApprovalStatus):
             default=True,
             help_text='Are you a person or entity restricted by US export controls or sanctions programs?')
 
-    us_santioned_country = models.BooleanField(
+    us_sanctioned_country = models.BooleanField(
             default=True,
             help_text='Are you a resident or national of Crimea, Cuba, Iran, North Korea, or Syria? If you have citizenship with of one of these counties, please answer yes, even if you are not currently living in those countries.')
 
