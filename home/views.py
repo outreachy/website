@@ -156,7 +156,7 @@ def check_general_info(wizard):
         return False
     # Collect the rest of the information on the forms
     # FIXME: then ask them to contact the organizers
-    if cleaned_data['us_santioned_country']:
+    if cleaned_data['us_sanctioned_country']:
         return True
     return True
 
@@ -185,33 +185,34 @@ def check_gender_and_demographics(wizard):
             'transgender',
             'genderqueer',
             'woman',
-            'demi_boy'
-            'demi_girl'
-            'non_binary'
-            'demi_non_binary'
-            'genderqueer'
-            'genderflux'
-            'genderfluid'
-            'demi_genderfluid'
-            'demi_gender'
-            'bi_gender'
-            'tri_gender'
-            'multigender'
-            'pangender'
-            'maxigender'
-            'aporagender'
-            'intergender'
-            'mavrique'
-            'gender_confusion'
-            'gender_indifferent'
-            'graygender'
-            'agender'
-            'genderless'
-            'gender_neutral'
-            'neutrois'
-            'androgynous'
-            'androgyne']
-    return any(gender_data[x] for x in gender_minority_list)
+            'demi_boy',
+            'demi_girl',
+            'non_binary',
+            'demi_non_binary',
+            'genderqueer',
+            'genderflux',
+            'genderfluid',
+            'demi_genderfluid',
+            'demi_gender',
+            'bi_gender',
+            'tri_gender',
+            'multigender',
+            'pangender',
+            'maxigender',
+            'aporagender',
+            'intergender',
+            'mavrique',
+            'gender_confusion',
+            'gender_indifferent',
+            'graygender',
+            'agender',
+            'genderless',
+            'gender_neutral',
+            'neutrois',
+            'androgynous',
+            'androgyne',
+            ]
+    return any(gender_data[x] for x in gender_minority_list) or gender_data['self_identify'] != ''
 
 class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
     template_name = 'home/wizard_form.html'
@@ -244,9 +245,12 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
                 )),
             ('USA demographics', modelform_factory(ApplicantApproval, fields=(
                 'us_resident_demographics',
-                ))),
+                ),
+                widgets = {
+                    'us_resident_demographics': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    },
+                )),
             ('Gender Identity', modelform_factory(ApplicantApproval, fields=(
-                'us_resident_demographics',
                 'transgender',
                 'genderqueer',
                 'man',
@@ -279,13 +283,55 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
                 'androgyne',
                 'prefer_not_to_say',
                 'self_identify',
-                ))),
+                ),
+                widgets = {
+                    'us_resident_demographics': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'transgender': widgets.CheckboxInput(),
+                    'genderqueer': widgets.CheckboxInput(),
+                    'man': widgets.CheckboxInput(),
+                    'woman': widgets.CheckboxInput(),
+                    'demi_boy': widgets.CheckboxInput(),
+                    'demi_girl': widgets.CheckboxInput(),
+                    'non_binary': widgets.CheckboxInput(),
+                    'demi_non_binary': widgets.CheckboxInput(),
+                    'genderqueer': widgets.CheckboxInput(),
+                    'genderflux': widgets.CheckboxInput(),
+                    'genderfluid': widgets.CheckboxInput(),
+                    'demi_genderfluid': widgets.CheckboxInput(),
+                    'demi_gender': widgets.CheckboxInput(),
+                    'bi_gender': widgets.CheckboxInput(),
+                    'tri_gender': widgets.CheckboxInput(),
+                    'multigender': widgets.CheckboxInput(),
+                    'pangender': widgets.CheckboxInput(),
+                    'maxigender': widgets.CheckboxInput(),
+                    'aporagender': widgets.CheckboxInput(),
+                    'intergender': widgets.CheckboxInput(),
+                    'mavrique': widgets.CheckboxInput(),
+                    'gender_confusion': widgets.CheckboxInput(),
+                    'gender_indifferent': widgets.CheckboxInput(),
+                    'graygender': widgets.CheckboxInput(),
+                    'agender': widgets.CheckboxInput(),
+                    'genderless': widgets.CheckboxInput(),
+                    'gender_neutral': widgets.CheckboxInput(),
+                    'neutrois': widgets.CheckboxInput(),
+                    'androgynous': widgets.CheckboxInput(),
+                    'androgyne': widgets.CheckboxInput(),
+                    'prefer_not_to_say': widgets.CheckboxInput(),
+                    },
+                )),
             ('Time Commitments', modelform_factory(ApplicantApproval, fields=(
                 'enrolled_as_student',
                 'employed',
                 'contractor',
                 'time_commitments',
-                ))),
+                ),
+                widgets = {
+                    'enrolled_as_student': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'employed': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'contractor': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'time_commitments': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    },
+                )),
             ]
 
     def get_form_instance(self, step):
