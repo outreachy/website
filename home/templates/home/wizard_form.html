@@ -8,17 +8,15 @@ Wizard
 <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
 <form action="" method="post">{% csrf_token %}
 {{ wizard.form.media }}
-<table>
 {{ wizard.management_form }}
 {% if wizard.form.forms %}
     {{ wizard.form.management_form }}
     {% for form in wizard.form.forms %}
-        {{ form }}
+        {% include "bootstrap_form.html" with form=form only %}
     {% endfor %}
 {% else %}
-    {{ wizard.form }}
+    {% include "bootstrap_form.html" with form=wizard.form only %}
 {% endif %}
-</table>
 {% if wizard.steps.prev %}
 <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}">First step</button>
 <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.prev }}">Previous step</button>
