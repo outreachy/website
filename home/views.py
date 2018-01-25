@@ -152,7 +152,7 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
                 'us_national_or_permanent_resident',
                 'living_in_us',
                 'under_export_control',
-                'us_santioned_country',
+                'us_sanctioned_country',
                 ),
                 # FIXME: this allows people to submit a partial form
                 # without validating either 'yes' or 'no' is selected
