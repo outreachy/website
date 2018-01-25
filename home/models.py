@@ -974,51 +974,39 @@ class ApplicantApproval(ApprovalStatus):
     # Control which widget gets used on boolean fields in the template
     # Use nullboolean select widget to ensure all questions are answered.
     over_18 = models.BooleanField(
-            default=False,
             help_text='Will you be 18 years or older when the Outreachy internship period starts?')
     gsoc_or_outreachy_internship = models.BooleanField(
-            default=True,
             help_text='Have you been accepted as a Google Summer of Code intern or an Outreachy intern before? Please say yes even if you did not complete the internship.')
 
     enrolled_as_student = models.BooleanField(
-            default=True,
             help_text='Will you be enrolled in a university or college during the Outreachy internship period?')
 
     employed = models.BooleanField(
-            default=True,
             help_text='Will you be a part-time or full-time employee during the Outreachy internship period?')
 
     contractor = models.BooleanField(
-            default=True,
             help_text='Will you be a contractor during the Outreachy internship period?')
 
     time_commitments = models.BooleanField(
-            default=True,
             help_text='Will you have other time commitments that require more than 10 hours a week during the Outreachy internship period?')
 
     us_national_or_permanent_resident = models.BooleanField(
-            default=False,
             help_text='Are you a national or permanent resident of the United States of America?')
 
     living_in_us = models.BooleanField(
-            default=False,
             help_text='Will you be living in the United States of America during the Outreachy internship period? Please answer yes if you are living in the USA, even if you are a citizen of a country other than USA.')
 
     under_export_control = models.BooleanField(
-            default=True,
             help_text='Are you a person or entity restricted by US export controls or sanctions programs?')
 
     us_sanctioned_country = models.BooleanField(
-            default=True,
             help_text='Are you a resident or national of Crimea, Cuba, Iran, North Korea, or Syria? If you have citizenship with of one of these counties, please answer yes, even if you are not currently living in those countries.')
 
     eligible_to_work = models.BooleanField(
-            default=False,
             help_text='Are you eligible to work for 40 hours a week in the country you will be living in during the Outreachy internship period?<br>Please note that in some countries, students studying abroad on a student visa may not be eligible to work full-time (40 hours a week). If you are on a student visa, please double check with your school counselors before applying.<br>Additionally, in some countries, spousal visas may not allow spouses to work. Please contact your immigration officer if you have any questions about whether your visa will be impacted by full-time work (40 hours a week).')
 
     # Race/Ethnicity Information
     us_resident_demographics = models.BooleanField(
-            default=False,
             help_text='Are you Black/African American, Hispanic/Latin@, Native American, Alaska Native, Native Hawaiian, or Pacific Islander?')
 
     # Gender Information
