@@ -371,7 +371,7 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
         # Do they meet our general requirements and demographics requirements?
         if check_general_info(self) and check_gender_and_demographics(self):
             self.object.approval_status = ApprovalStatus.ACCEPTED
-            if self.object.us_sanctioned_country or self.object.prefer_not_to_say or self.object['self_identify'] != '':
+            if self.object.us_sanctioned_country or self.object.prefer_not_to_say or self.object.self_identify != '':
                 self.object.approval_status = ApprovalStatus.PENDING
 
         # FIXME: This should redirect somewhere appropriate.
