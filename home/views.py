@@ -285,7 +285,6 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
                 'self_identify',
                 ),
                 widgets = {
-                    'us_resident_demographics': widgets.RadioSelect(choices=BOOL_CHOICES),
                     'transgender': widgets.CheckboxInput(),
                     'genderqueer': widgets.CheckboxInput(),
                     'man': widgets.CheckboxInput(),
