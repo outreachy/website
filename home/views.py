@@ -34,6 +34,7 @@ from .models import CoordinatorApproval
 from .models import MentorApproval
 from .models import NewCommunity
 from .models import Notification
+from .models import SchoolInformation
 from .models import Sponsorship
 from .models import Participation
 from .models import Project
@@ -217,12 +218,19 @@ def check_gender_and_demographics(wizard):
             ]
     return any(gender_data[x] for x in gender_minority_list) or gender_data['self_identify'] != ''
 
+def show_school_info(wizard):
+    if not check_general_info(wizard):
+        return False
+    cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
+    return cleaned_data.get('enrolled_as_student', True)
+
 class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
     template_name = 'home/wizard_form.html'
     condition_dict = {
             'USA demographics': show_us_demographics,
             'Gender Identity': check_general_info,
             'Time Commitments': check_gender_and_demographics,
+            'School Info': show_school_info,
             }
     form_list = [
             ('General Info', modelform_factory(ApplicantApproval, fields=(
@@ -334,6 +342,15 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
                     'time_commitments': widgets.RadioSelect(choices=BOOL_CHOICES),
                     },
                 )),
+            ('School Info', inlineformset_factory(ApplicantApproval,
+                SchoolInformation,
+                max_num=1,
+                can_delete=False,
+                fields=(
+                    'university_name',
+                    'university_website',
+                    'degree_name',
+                ))),
             ]
 
     def get_form_instance(self, step):
@@ -361,18 +378,34 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
         # batch up the database writes so the object is only actually
         # updated once.
 
-        # TODO: InlineFormSets will be more complex than this.
+        inlines = []
         for form in form_list:
-            result = form.save(commit=False)
-            assert result == self.object
-        self.object.save()
+            if isinstance(form, BaseInlineFormSet):
+                inlines.append(form)
+            else:
+                # Assume (and assert) that any form which is not an
+                # InlineFormSet must be a ModelForm that edits
+                # self.object.
+                result = form.save(commit=False)
+                assert result == self.object
+
+        # At this point we've saved (but not committed) all the forms
+        # that edit self.object.
 
         self.object.approval_status = ApprovalStatus.REJECTED
         # Do they meet our general requirements and demographics requirements?
         if check_general_info(self) and check_gender_and_demographics(self):
-            self.object.approval_status = ApprovalStatus.ACCEPTED
+            self.object.approval_status = ApprovalStatus.APPROVED
             if self.object.us_sanctioned_country or self.object.prefer_not_to_say or self.object.self_identify != '':
                 self.object.approval_status = ApprovalStatus.PENDING
+
+        # Make sure to commit the object to the database before saving
+        # any of the InlineFormSets, so they can set their foreign keys
+        # to point to this object.
+        self.object.save()
+
+        for inlineformset in inlines:
+            inlineformset.save()
 
         # FIXME: This should redirect somewhere appropriate.
         return redirect('/')
