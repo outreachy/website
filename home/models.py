@@ -1016,61 +1016,59 @@ class ApplicantApproval(ApprovalStatus):
     genderqueer = models.NullBooleanField(
             help_text='Do you identify as genderqueer, gender non-conforming, gender diverse, gender varient, or gender expansive, or are you questioning whether you identify with any of those terms?')
 
-    man = models.NullBooleanField(help_text='Man')
+    man = models.NullBooleanField(help_text='I am a man')
 
-    woman = models.NullBooleanField(help_text='Woman')
+    woman = models.NullBooleanField(help_text='I am a woman')
 
-    demi_boy = models.NullBooleanField(help_text='Demi-boy')
+    demi_boy = models.NullBooleanField(help_text='I am a demi-boy')
 
-    demi_girl = models.NullBooleanField(help_text='Demi-girl')
+    demi_girl = models.NullBooleanField(help_text='I am a demi-girl')
 
-    non_binary = models.NullBooleanField(help_text='Non-binary')
+    non_binary = models.NullBooleanField(help_text='I am non-binary')
 
-    demi_non_binary = models.NullBooleanField(help_text='Demi-non-binary')
+    demi_non_binary = models.NullBooleanField(help_text='I am demi-non-binary')
 
-    genderqueer = models.NullBooleanField(help_text='Genderqueer')
+    genderflux = models.NullBooleanField(help_text='I am genderflux')
 
-    genderflux = models.NullBooleanField(help_text='Genderflux')
+    genderfluid = models.NullBooleanField(help_text='I am genderfluid')
 
-    genderfluid = models.NullBooleanField(help_text='Genderfluid')
+    demi_genderfluid = models.NullBooleanField(help_text='I am demi-genderfluid')
 
-    demi_genderfluid = models.NullBooleanField(help_text='Demi-genderfluid')
+    demi_gender = models.NullBooleanField(help_text='I am demi-gender')
 
-    demi_gender = models.NullBooleanField(help_text='Demi-gender')
+    bi_gender = models.NullBooleanField(help_text='I am bi-gender')
 
-    bi_gender = models.NullBooleanField(help_text='Bi-gender')
+    tri_gender = models.NullBooleanField(help_text='I am tri-gender')
 
-    tri_gender = models.NullBooleanField(help_text='Tri-gender')
+    multigender = models.NullBooleanField(help_text='I am multigender or polygender')
 
-    multigender = models.NullBooleanField(help_text='Multigender/polygender')
+    pangender = models.NullBooleanField(help_text='I am pangender or omnigender')
 
-    pangender = models.NullBooleanField(help_text='Pangender/omnigender')
+    maxigender = models.NullBooleanField(help_text='I am maxigender')
 
-    maxigender = models.NullBooleanField(help_text='Maxigender')
+    aporagender = models.NullBooleanField(help_text='I am aporagender')
 
-    aporagender = models.NullBooleanField(help_text='Aporagender')
+    intergender = models.NullBooleanField(help_text='I am intergender')
 
-    intergender = models.NullBooleanField(help_text='Intergender')
+    mavrique = models.NullBooleanField(help_text='I am a mavrique')
 
-    mavrique = models.NullBooleanField(help_text='Mavrique')
+    gender_confusion = models.NullBooleanField(help_text='I am a gender confusion/Gender f*ck')
 
-    gender_confusion = models.NullBooleanField(help_text='Gender confusion/Gender f*ck')
+    gender_indifferent = models.NullBooleanField(help_text='I am gender indifferent')
 
-    gender_indifferent = models.NullBooleanField(help_text='Gender indifferent')
+    graygender = models.NullBooleanField(help_text='I am graygender')
 
-    graygender = models.NullBooleanField(help_text='Graygender')
+    agender = models.NullBooleanField(help_text='I am demi-agender')
 
-    agender = models.NullBooleanField(help_text='Demi-agender')
+    genderless = models.NullBooleanField(help_text='I am genderless')
 
-    genderless = models.NullBooleanField(help_text='Genderless')
+    gender_neutral = models.NullBooleanField(help_text='I am gender neutral')
 
-    gender_neutral = models.NullBooleanField(help_text='Gender neutral')
+    neutrois = models.NullBooleanField(help_text='I am a neutrois')
 
-    neutrois = models.NullBooleanField(help_text='Neutrois')
+    androgynous = models.NullBooleanField(help_text='I am androgynous')
 
-    androgynous = models.NullBooleanField(help_text='Androgynous')
-
-    androgyne = models.NullBooleanField(help_text='Androgyne')
+    androgyne = models.NullBooleanField(help_text='I am androgyne')
 
     prefer_not_to_say = models.NullBooleanField()
 
