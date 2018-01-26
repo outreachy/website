@@ -467,13 +467,6 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
         # At this point we've saved (but not committed) all the forms
         # that edit self.object.
 
-        self.object.approval_status = ApprovalStatus.REJECTED
-        # Do they meet our general requirements and demographics requirements?
-        if check_general_info(self) and check_gender_and_demographics(self):
-            self.object.approval_status = ApprovalStatus.APPROVED
-            if self.object.us_sanctioned_country or self.object.prefer_not_to_say or self.object.self_identify != '':
-                self.object.approval_status = ApprovalStatus.PENDING
-
         # Make sure to commit the object to the database before saving
         # any of the InlineFormSets, so they can set their foreign keys
         # to point to this object.
@@ -481,6 +474,19 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
 
         for inlineformset in inlines:
             inlineformset.save()
+
+        self.object.approval_status = ApprovalStatus.REJECTED
+        # Do they meet our general requirements,
+        # demographics requirements, and time requirements?
+        if general_info_is_approved(self) and gender_and_demographics_is_approved(self) and self.time_commitments_are_approved():
+            self.object.approval_status = ApprovalStatus.APPROVED
+            if self.object.us_sanctioned_country or self.object.prefer_not_to_say or self.object.self_identify != '':
+                self.object.approval_status = ApprovalStatus.PENDING
+
+        # Make sure to save the application status
+        # We have to do this twice because we have to save the inlines
+        # before searching for them in the database (which the call to is_eligible will do)
+        self.object.save()
 
         # FIXME: This should redirect somewhere appropriate.
         return redirect('/')
