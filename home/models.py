@@ -1089,16 +1089,16 @@ class ApplicantApproval(ApprovalStatus):
         return [email.organizers]
 
     def time_commitments_are_approved(self):
-        tcs = TimeCommitment.objects.filter(applicant=self.object)
-        etcs = EmploymentTimeCommitment.objects.filter(applicant=self.object)
-        stcs = SchoolTimeCommitment.objects.filter(applicant=self.object)
+        tcs = TimeCommitment.objects.filter(applicant=self)
+        etcs = EmploymentTimeCommitment.objects.filter(applicant=self)
+        stcs = SchoolTimeCommitment.objects.filter(applicant=self)
 
         application_period_length = (self.application_round.internends - self.application_round.internstarts).days + 1
         required_free_days = 7*7
         calendar = [0]*(application_period_length)
 
         for tc in chain(tcs, etcs, stcs):
-            date = application_round.internstarts
+            date = self.application_round.internstarts
             for i in range(application_period_length):
                 if date >= tc.start_date and date <= tc.end_date:
                     calendar[i] = calendar[i] + tc.hours()
@@ -1115,7 +1115,7 @@ class TimeCommitment(models.Model):
     end_date = models.DateField(help_text="Date your time commitment ends")
     hours_per_week = models.IntegerField(help_text="Maximum hours per week spent on this time commitment.")
 
-    def hours(__self__):
+    def hours(self):
         return self.hours_per_week
 
 class EmploymentTimeCommitment(models.Model):
@@ -1158,7 +1158,7 @@ class SchoolTimeCommitment(models.Model):
             verbose_name="Number of thesis or research credits",
             help_text="If you are a graduate student, how many credits will you earn for working on your thesis or research?")
 
-    def hours(__self__):
+    def hours(self):
         return 40 * ((self.registered_credits - self.outreachy_credits - self.thesis_credits) / self.typical_credits)
 
 class SchoolInformation(models.Model):

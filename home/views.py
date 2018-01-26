@@ -485,7 +485,7 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
         self.object.approval_status = ApprovalStatus.REJECTED
         # Do they meet our general requirements,
         # demographics requirements, and time requirements?
-        if general_info_is_approved(self) and gender_and_demographics_is_approved(self) and self.time_commitments_are_approved():
+        if general_info_is_approved(self) and gender_and_demographics_is_approved(self) and self.object.time_commitments_are_approved():
             self.object.approval_status = ApprovalStatus.APPROVED
             if self.object.us_sanctioned_country or self.object.prefer_not_to_say or self.object.self_identify != '':
                 self.object.approval_status = ApprovalStatus.PENDING
