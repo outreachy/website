@@ -451,6 +451,11 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
                         applicant=self.request.user.comrade)
         return self.object
 
+    def get_context_data(self, **kwargs):
+        context = super(EligibilityUpdateView, self).get_context_data(**kwargs)
+        context['current_round'] = self.object.application_round
+        return context
+
     def done(self, form_list, **kwargs):
         # We have multiple forms editing the same object, but we want to
         # batch up the database writes so the object is only actually
