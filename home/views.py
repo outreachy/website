@@ -345,7 +345,10 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
                 )),
             ('School Info', inlineformset_factory(ApplicantApproval,
                 SchoolInformation,
+                min_num=1,
                 max_num=1,
+                validate_min=True,
+                validate_max=True,
                 can_delete=False,
                 fields=(
                     'university_name',
