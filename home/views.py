@@ -441,15 +441,15 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
         # than constructing a different empty object for each step, by
         # caching it on this view instance.
         if not getattr(self, 'object', None):
+            current_round = RoundPage.objects.latest('internstarts')
             try:
-                current_round = RoundPage.objects.latest('internstarts')
                 self.object = ApplicantApproval.objects.get(
                         applicant=self.request.user.comrade,
                         application_round=current_round)
             except ApplicantApproval.DoesNotExist:
                 self.object = ApplicantApproval(
-                        application_round=RoundPage.objects.latest('internstarts'),
-                        applicant=self.request.user.comrade)
+                        applicant=self.request.user.comrade,
+                        application_round=current_round)
         return self.object
 
     def done(self, form_list, **kwargs):
