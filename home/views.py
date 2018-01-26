@@ -411,7 +411,11 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
                 fields=(
                     'typical_hours',
                     'continuing_contract_work',
-                ))),
+                ),
+                widgets = {
+                    'continuing_contract_work': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    },
+                )),
             ('Employment Info', inlineformset_factory(ApplicantApproval,
                 EmploymentTimeCommitment,
                 min_num=1,
