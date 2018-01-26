@@ -1124,20 +1124,15 @@ class EmploymentTimeCommitment(models.Model):
     end_date = models.DateField(help_text="End date of employment period")
     hours_per_week = models.IntegerField(help_text="Number of hours per week required by your employment contract")
 
-    def hours(__self__):
+    def hours(self):
         return self.hours_per_week
 
 class SchoolTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
 
-    term_number = models.IntegerField(
-            blank=True,
-            help_text="(Optional) If your university uses term numbers (e.g. 7th term), enter your current term number.")
-    
     term_name = models.CharField(
             max_length=SENTENCE_LENGTH,
-            blank=True,
-            help_text="(Optional) If your university uses term names (e.g. Winter term of Sophomore year), enter your current term name and year.")
+            help_text="If your university uses term names (e.g. Winter 2018 term of your Sophomore year), enter your current term name, year in college, and term year. If your university uses term numbers (e.g. 7th semester), enter the term number.")
     
     start_date = models.DateField(
             verbose_name="Date classes start",

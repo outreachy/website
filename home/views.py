@@ -387,7 +387,6 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
                 extra=3,
                 can_delete=False,
                 fields=(
-                    'term_number',
                     'term_name',
                     'start_date',
                     'end_date',
