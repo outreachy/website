@@ -1181,7 +1181,7 @@ class ContractorInformation(models.Model):
             help_text="During the past three months, what is the average number of hours/week you have spent on contracted work and unpaid business development or business marketing?")
 
     continuing_contract_work = models.NullBooleanField(
-            help_text="Will you be doing contract work during the Outreachy internship period?")
+            verbose_name="Will you be doing contract work during the Outreachy internship period?")
 
 # Please keep this at the end of this file; it has to come after the
 # models it mentions, so just keep it after all other definitions.
