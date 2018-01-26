@@ -299,7 +299,7 @@ class ApprovalStatus(models.Model):
         Override in subclasses to return True if the given user has
         permission to approve or reject this request, False otherwise.
         """
-        raise NotImplemented
+        raise NotImplementedError
 
     def is_submitter(self, user):
         """
@@ -307,7 +307,7 @@ class ApprovalStatus(models.Model):
         permission to withdraw or re-submit this request, False
         otherwise.
         """
-        raise NotImplemented
+        raise NotImplementedError
 
     @classmethod
     def objects_for_dashboard(cls, user):
@@ -315,7 +315,7 @@ class ApprovalStatus(models.Model):
         Override in subclasses to return all instances of this model for
         which the given user is either an approver or a submitter.
         """
-        raise NotImplemented
+        raise NotImplementedError
 
     def get_action_url(self, action, **kwargs):
         """
@@ -324,7 +324,7 @@ class ApprovalStatus(models.Model):
         optional extra parameters which control how the URL is
         constructed.
         """
-        raise NotImplemented
+        raise NotImplementedError
 
     def get_submit_url(self, **kwargs):
         return self.get_action_url('submit', **kwargs)
