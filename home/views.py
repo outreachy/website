@@ -225,6 +225,24 @@ def show_school_info(wizard):
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
     return cleaned_data.get('enrolled_as_student', True)
 
+def show_contractor_info(wizard):
+    if not gender_and_demographics_is_approved(wizard):
+        return False
+    cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
+    return cleaned_data.get('contractor', True)
+
+def show_employment_info(wizard):
+    if not gender_and_demographics_is_approved(wizard):
+        return False
+    cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
+    return cleaned_data.get('contractor', True) or cleaned_data.get('employed', True)
+
+def show_time_commitment_info(wizard):
+    if not gender_and_demographics_is_approved(wizard):
+        return False
+    cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
+    return cleaned_data.get('time_commitments', True)
+
 class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
     template_name = 'home/wizard_form.html'
     condition_dict = {
@@ -232,6 +250,10 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
             'Gender Identity': general_info_is_approved,
             'Time Commitments': gender_and_demographics_is_approved,
             'School Info': show_school_info,
+            'School Term Info': show_school_info,
+            'Contractor Info': show_contractor_info,
+            'Employment Info': show_employment_info,
+            'Time Commitment Info': show_time_commitment_info,
             }
     form_list = [
             ('General Info', modelform_factory(ApplicantApproval, fields=(
@@ -354,6 +376,55 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
                     'university_name',
                     'university_website',
                     'degree_name',
+                ))),
+            ('School Term Info', inlineformset_factory(ApplicantApproval,
+                SchoolTimeCommitment,
+                min_num=1,
+                validate_min=True,
+                extra=3,
+                can_delete=False,
+                fields=(
+                    'term_number',
+                    'term_name',
+                    'start_date',
+                    'end_date',
+                    'typical_credits',
+                    'registered_credits',
+                    'outreachy_credits',
+                    'thesis_credits',
+                ))),
+            ('Contractor Info', inlineformset_factory(ApplicantApproval,
+                ContractorInformation,
+                min_num=1,
+                max_num=1,
+                validate_min=True,
+                validate_max=True,
+                can_delete=False,
+                fields=(
+                    'typical_hours',
+                    'continuing_contract_work',
+                ))),
+            ('Employment Info', inlineformset_factory(ApplicantApproval,
+                EmploymentTimeCommitment,
+                min_num=1,
+                validate_min=True,
+                extra=3,
+                can_delete=False,
+                fields=(
+                    'start_date',
+                    'end_date',
+                    'hours_per_week',
+                ))),
+            ('Time Commitment Info', inlineformset_factory(ApplicantApproval,
+                TimeCommitment,
+                min_num=1,
+                validate_min=True,
+                extra=3,
+                can_delete=False,
+                fields=(
+                    'start_date',
+                    'end_date',
+                    'hours_per_week',
                 ))),
             ]
 
