@@ -144,7 +144,7 @@ class ComradeUpdate(LoginRequiredMixin, UpdateView):
 
 BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
 
-def check_general_info(wizard):
+def general_info_is_approved(wizard):
     cleaned_data = wizard.get_cleaned_data_for_step('General Info')
     if not cleaned_data:
         return True
@@ -163,7 +163,7 @@ def check_general_info(wizard):
     return True
 
 def show_us_demographics(wizard):
-    if not check_general_info(wizard):
+    if not general_info_is_approved(wizard):
         return False
     cleaned_data = wizard.get_cleaned_data_for_step('General Info') or {}
     if not cleaned_data:
@@ -172,8 +172,8 @@ def show_us_demographics(wizard):
     living_in_us = cleaned_data.get('living_in_us', True)
     return us_resident or living_in_us
 
-def check_gender_and_demographics(wizard):
-    if not check_general_info(wizard):
+def gender_and_demographics_is_approved(wizard):
+    if not general_info_is_approved(wizard):
         return False
     demo_data = wizard.get_cleaned_data_for_step('USA demographics')
     if demo_data and demo_data['us_resident_demographics'] is True:
@@ -220,7 +220,7 @@ def check_gender_and_demographics(wizard):
     return any(gender_data[x] for x in gender_minority_list) or gender_data['self_identify'] != ''
 
 def show_school_info(wizard):
-    if not check_general_info(wizard):
+    if not gender_and_demographics_is_approved(wizard):
         return False
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
     return cleaned_data.get('enrolled_as_student', True)
@@ -229,8 +229,8 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
     template_name = 'home/wizard_form.html'
     condition_dict = {
             'USA demographics': show_us_demographics,
-            'Gender Identity': check_general_info,
-            'Time Commitments': check_gender_and_demographics,
+            'Gender Identity': general_info_is_approved,
+            'Time Commitments': gender_and_demographics_is_approved,
             'School Info': show_school_info,
             }
     form_list = [
