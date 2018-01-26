@@ -36,6 +36,17 @@ The following questions are used to determine eligibility for the Outreachy inte
 This private data will only be seen by the <a href="/contact/">Outreachy organizers</a>.
 It will not be shared with mentors, coordinators, or other applicants.
 </p>
+{% elif wizard.steps.step1 == 6 %}
+{% comment %}School term info.{% endcomment %}
+<p>
+A school term lasts from the first possible day of classes for ALL students until the last possible exam date for ALL students.
+</p>
+<p>
+Please enter information for each school term that overlaps with the Outreachy internship period. If less than three terms overlap with the Outreachy internship period, leave those terms blank.
+</p>
+<p>
+The Outreachy internship period is from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
+</p>
 {% endif %}
 
 <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
@@ -47,6 +58,7 @@ It will not be shared with mentors, coordinators, or other applicants.
     {{ wizard.form.management_form }}
     {% for form in wizard.form.forms %}
         {% include "bootstrap_form.html" with form=form only %}
+	<hr>
     {% endfor %}
 {% else %}
     {% include "bootstrap_form.html" with form=wizard.form only %}
