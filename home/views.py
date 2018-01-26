@@ -239,7 +239,13 @@ def show_employment_info(wizard):
     if not gender_and_demographics_is_approved(wizard):
         return False
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
-    return cleaned_data.get('contractor', True) or cleaned_data.get('employed', True)
+    if cleaned_data.get('employed', True):
+        return True
+    if cleaned_data.get('contractor', True):
+        cleaned_data = wizard.get_cleaned_data_for_step('Contractor Info')
+        if cleaned_data and cleaned_data[0].get('continuing_contract_work', True):
+            return True
+    return False
 
 def show_time_commitment_info(wizard):
     if not gender_and_demographics_is_approved(wizard):
