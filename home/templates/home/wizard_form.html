@@ -5,6 +5,23 @@ Are you eligible to apply to Outreachy?
 {% endblock %}
 
 {% block content %}
+<h1>Outreachy Eligibility Checking</h1>
+{% if wizard.steps.step1 == 1 %}
+<img src="https://www.outreachy.org/media/images/bot-eligibility.original.png" class="float-right">
+<p>
+Welcome to Outreachy! We're excited to have you apply for our internships.
+Before you get started, we need to double check whether you are eligible to apply for this internship round.
+</p>
+<p>
+Please fill out the following forms to check your eligibility for the Outreachy internships.
+You'll need to fill out this form for each round you apply for.
+</p>
+<p>
+University and college students who are applying will need to provide information about their school calendar for their current and next terms.
+Please have that information before starting this process.
+</p>
+{% endif %}
+
 <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
 <form action="" method="post">{% csrf_token %}
 {{ wizard.form.media }}
