@@ -975,8 +975,10 @@ class ApplicantApproval(ApprovalStatus):
     # Control which widget gets used on boolean fields in the template
     # Use nullboolean select widget to ensure all questions are answered.
     over_18 = models.NullBooleanField(
-            help_text='Will you be 18 years or older when the Outreachy internship period starts?')
+            verbose_name='Are you over 18 years of age?',
+            help_text='Will you be 18 years or older when the Outreachy internship starts?')
     gsoc_or_outreachy_internship = models.NullBooleanField(
+            verbose_name='Previous Google Summer of Code or Outreachy internship?',
             help_text='Have you been accepted as a Google Summer of Code intern or an Outreachy intern before? Please say yes even if you did not complete the internship.')
 
     enrolled_as_student = models.NullBooleanField(
@@ -992,30 +994,33 @@ class ApplicantApproval(ApprovalStatus):
             help_text='Will you have other time commitments that require more than 10 hours a week during the Outreachy internship period?')
 
     us_national_or_permanent_resident = models.NullBooleanField(
-            help_text='Are you a national or permanent resident of the United States of America?')
+            help_text='Are you a national or permanent resident of the United States of America? Outreachy in open to people around the world, but we need to ask additional questions for U.S. residents.')
 
     living_in_us = models.NullBooleanField(
             help_text='Will you be living in the United States of America during the Outreachy internship period? Please answer yes if you are living in the USA, even if you are a citizen of a country other than USA.')
 
     under_export_control = models.NullBooleanField(
-            help_text='Are you a person or entity restricted by US export controls or sanctions programs?')
+            help_text='Are you a person or entity restricted by US export controls or sanctions programs? If you are unsure what those terms mean, answer no.')
 
     us_sanctioned_country = models.NullBooleanField(
-            help_text='Are you a resident or national of Crimea, Cuba, Iran, North Korea, or Syria? If you have citizenship with of one of these counties, please answer yes, even if you are not currently living in those countries.')
+            verbose_name='Are you a citizen, resident, or national of Crimea, Cuba, Iran, North Korea, or Syria?',
+            help_text='If you have citizenship with of one of these counties, please answer yes, even if you are not currently living in those countries.')
 
     eligible_to_work = models.NullBooleanField(
-            help_text='Are you eligible to work for 40 hours a week in the country you will be living in during the Outreachy internship period?<br>Please note that in some countries, students studying abroad on a student visa may not be eligible to work full-time (40 hours a week). If you are on a student visa, please double check with your school counselors before applying.<br>Additionally, in some countries, spousal visas may not allow spouses to work. Please contact your immigration officer if you have any questions about whether your visa will be impacted by full-time work (40 hours a week).')
+            help_text='Are you eligible to work for 40 hours a week in the country you will be living in during the Outreachy internship period?</p><p>Student visas: Please note that in some countries, students studying abroad on a student visa may not be eligible to work full-time (40 hours a week). If you are on a student visa, please double check with your school counselors before applying.</p><p>Spouse visas: In some countries, spousal visas may not allow spouses to work. Please contact your immigration officer if you have any questions about whether your visa will be impacted by full-time work (40 hours a week).')
 
     # Race/Ethnicity Information
     us_resident_demographics = models.NullBooleanField(
-            help_text='Are you Black/African American, Hispanic/Latin@, Native American, Alaska Native, Native Hawaiian, or Pacific Islander?')
+            verbose_name='Are you Black/African American, Hispanic/Latin@, Native American, Alaska Native, Native Hawaiian, or Pacific Islander?')
 
     # Gender Information
     transgender = models.NullBooleanField(
-            help_text='Do you identify as transgender, or are you questioning whether you are transgender?')
+            verbose_name='Do you identify as transgender?',
+            help_text='If you are questioning whether you are transgender, please say yes.')
 
     genderqueer = models.NullBooleanField(
-            help_text='Do you identify as genderqueer, gender non-conforming, gender diverse, gender varient, or gender expansive, or are you questioning whether you identify with any of those terms?')
+            verbose_name='Do you identify as genderqueer?',
+            help_text='Do you identify as genderqueer, gender non-conforming, gender diverse, gender varient, or gender expansive? If you are questioning whether you identify with any of those terms, please say yes.')
 
     man = models.NullBooleanField(help_text='I am a man')
 
