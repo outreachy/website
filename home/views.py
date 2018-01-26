@@ -30,8 +30,10 @@ from .models import ApprovalStatus
 from .models import CommunicationChannel
 from .models import Community
 from .models import Comrade
+from .models import ContractorInformation
 from .models import CoordinatorApproval
 from .models import DASHBOARD_MODELS
+from .models import EmploymentTimeCommitment
 from .models import MentorApproval
 from .models import NewCommunity
 from .models import Notification
@@ -40,7 +42,9 @@ from .models import Project
 from .models import ProjectSkill
 from .models import RoundPage
 from .models import SchoolInformation
+from .models import SchoolTimeCommitment
 from .models import Sponsorship
+from .models import TimeCommitment
 
 class RegisterUser(hmac_views.RegistrationView):
 
