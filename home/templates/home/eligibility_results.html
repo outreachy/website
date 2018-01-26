@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}
+Outreachy eligibility results
+{% endblock %}
+
+{% block content %}
+{% if application.approval_status == application.APPROVED %}
+
+	<h1>Eligible for Outreachy</h1>
+
+	<p>Congratuations! You're eligible to apply for the
+	Outreachy {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} internships.
+	</p>
+
+	<p>Your next step in the application process is to pick out one or two projects to apply for.
+	</p>
+	<p>
+	You will need to make a contribution to the project in order to be accepted as an intern.
+	Some projects will have instructions for how to make your first contributions.
+	For other projects, you will need to contact the mentor to get directions on how to make your first contributions.
+	</p>
+	<p>
+	If you get stuck at any time, please reach out to the mentors or <a href="/contact/">Outreachy organizers</a>.
+	</p>
+	<p><a class='btn btn-success' href="{{ request.scheme }}://{{ request.get_host }}/{{ current_round.slug }}">View Internship Projects</a></p>
+
+{% elif application.approval_status == application.REJECTED %}
+
+{% elif application.approval_status == application.PENDING %}
+
+{% endif %}
+
+{% endblock %}

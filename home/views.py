@@ -400,7 +400,10 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
                     'registered_credits',
                     'outreachy_credits',
                     'thesis_credits',
-                ))),
+                ),
+                widgets = {
+                    },
+                )),
             ('Contractor Info', inlineformset_factory(ApplicantApproval,
                 ContractorInformation,
                 min_num=1,
@@ -439,6 +442,8 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
                     'hours_per_week',
                 ))),
             ]
+    # TODO: override get method to redirect to results page if the person
+    # has filled out an application
 
     def get_form_instance(self, step):
         # This implementation ignores `step` which is fine as long as
@@ -506,7 +511,20 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
         self.object.save()
 
         # FIXME: This should redirect somewhere appropriate.
-        return redirect('/')
+        return redirect('eligibility-results')
+
+@login_required
+def eligibility_results(request):
+    current_round = RoundPage.objects.latest('internstarts')
+    application = get_object_or_404(ApplicantApproval,
+                applicant=request.user.comrade,
+                application_round=current_round)
+    return render(request, 'home/eligibility_results.html',
+            {
+            'application': application,
+            'current_round' : current_round,
+            },
+            )
 
 # Call for communities, mentors, and volunteers page
 #
