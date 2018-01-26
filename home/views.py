@@ -25,21 +25,22 @@ from .mixins import ApprovalStatusAction
 from .mixins import ComradeRequiredMixin
 from .mixins import Preview
 
-from .models import ApprovalStatus
 from .models import ApplicantApproval
+from .models import ApprovalStatus
 from .models import CommunicationChannel
 from .models import Community
 from .models import Comrade
 from .models import CoordinatorApproval
+from .models import DASHBOARD_MODELS
 from .models import MentorApproval
 from .models import NewCommunity
 from .models import Notification
-from .models import SchoolInformation
-from .models import Sponsorship
 from .models import Participation
 from .models import Project
 from .models import ProjectSkill
 from .models import RoundPage
+from .models import SchoolInformation
+from .models import Sponsorship
 
 class RegisterUser(hmac_views.RegistrationView):
 
@@ -891,15 +892,8 @@ def dashboard(request):
     Find objects for which the current user is either an approver or a
     submitter, and list them all on one page.
     """
-    models = (
-            CoordinatorApproval,
-            Participation,
-            Project,
-            MentorApproval,
-            )
-
     by_status = defaultdict(list)
-    for model in models:
+    for model in DASHBOARD_MODELS:
         objects = model.objects_for_dashboard(request.user).distinct()
         for obj in objects:
             by_status[obj.approval_status].append((model._meta.verbose_name, obj))

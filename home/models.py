@@ -1160,3 +1160,12 @@ class ContractorInformation(models.Model):
 
     continuing_contract_work = models.NullBooleanField(
             help_text="Will you be doing contract work during the Outreachy internship period?")
+
+# Please keep this at the end of this file; it has to come after the
+# models it mentions, so just keep it after all other definitions.
+DASHBOARD_MODELS = (
+        CoordinatorApproval,
+        Participation,
+        Project,
+        MentorApproval,
+        )
