@@ -429,7 +429,12 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
                     'start_date',
                     'end_date',
                     'hours_per_week',
-                ))),
+                    'quit_on_acceptance',
+                ),
+                widgets = {
+                    'quit_on_acceptance': widgets.CheckboxInput(),
+                    },
+                )),
             ('Time Commitment Info', inlineformset_factory(ApplicantApproval,
                 TimeCommitment,
                 min_num=1,

@@ -1111,8 +1111,8 @@ class ApplicantApproval(ApprovalStatus):
 
 class TimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
-    start_date = models.DateField(help_text="Date your time commitment starts")
-    end_date = models.DateField(help_text="Date your time commitment ends")
+    start_date = models.DateField(help_text="Date your time commitment starts. Use YYYY-MM-DD format.")
+    end_date = models.DateField(help_text="Date your time commitment ends. Use YYYY-MM-DD format.")
     hours_per_week = models.IntegerField(help_text="Maximum hours per week spent on this time commitment.")
 
     def hours(self):
@@ -1120,8 +1120,8 @@ class TimeCommitment(models.Model):
 
 class EmploymentTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
-    start_date = models.DateField(help_text="Start date of employment period")
-    end_date = models.DateField(help_text="End date of employment period")
+    start_date = models.DateField(help_text="Start date of employment period. Use YYYY-MM-DD format.")
+    end_date = models.DateField(help_text="End date of employment period. Use YYYY-MM-DD format.")
     hours_per_week = models.IntegerField(help_text="Number of hours per week required by your employment contract")
     quit_on_acceptance = models.NullBooleanField(
             help_text="I will quit this job or contract if I am accepted as an Outreachy intern.")
@@ -1139,11 +1139,11 @@ class SchoolTimeCommitment(models.Model):
             help_text="If your university uses term names (e.g. Winter 2018 term of your Sophomore year), enter your current term name, year in college, and term year. If your university uses term numbers (e.g. 7th semester), enter the term number.")
     
     start_date = models.DateField(
-            verbose_name="Date classes start",
+            verbose_name="Date classes start. Use YYYY-MM-DD format.",
             help_text="What is the first possible day of classes for all students?<br>If you started this term late (or will start this term late), use the date that classes start for all students, not the late registration date.<br>If students who are in different school years or different semester numbers start classes on different dates, use the first possible date that students in your year or semester start classes.<br>If you do not know when the term will start, use the start date of that term from last year.")
     
     end_date = models.DateField(
-            verbose_name="Date all exams end",
+            verbose_name="Date all exams end. Use YYYY-MM-DD format.",
             help_text="This is the date your university advertises for the last possible date of any exam for any student in your semester. Use the last possible exam date, even if your personal exams end sooner.")
     
     typical_credits = models.IntegerField(
