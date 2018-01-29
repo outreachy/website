@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}
+Are you eligible to apply to Outreachy?
+{% endblock %}
+
+{% block content %}
+<h1>Outreachy Eligibility Checking</h1>
+<p>
+The following question applies to U.S. citizens and permanent residents, and people living in the United States who are citizens of another country.
+</p>
+<p>
+The question is used to determine eligibility for the Outreachy internships.
+This private data will only be seen by the <a href="/contact/">Outreachy organizers</a>.
+It will not be shared with mentors, coordinators, or other applicants.
+</p>
+<p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+<hr>
+
+<form action="" method="post">{% csrf_token %}
+{{ wizard.form.media }}
+{{ wizard.management_form }}
+{% if wizard.form.forms %}
+    {{ wizard.form.management_form }}
+    {% for form in wizard.form.forms %}
+        {% include "bootstrap_form.html" with form=form only %}
+	<hr>
+    {% endfor %}
+{% else %}
+    {% include "bootstrap_form.html" with form=wizard.form only %}
+{% endif %}
+{% if wizard.steps.prev %}
+<button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}">First step</button>
+<button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.prev }}">Previous step</button>
+{% endif %}
+<input type="submit" class="btn btn-primary" value="Next step"/>
+</form>
+
+{% endblock %}

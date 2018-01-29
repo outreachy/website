@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}
+Are you eligible to apply to Outreachy?
+{% endblock %}
+
+{% block content %}
+<h1>Outreachy Eligibility Checking</h1>
+<p>
+If you are a self-employed contractor who owns their own business, hours spent on business development and marketing count for the number of hours spent on your contracting business in the equestion below.
+</p>
+<p>
+If you work for a company that contracts out your hours and you don't need to do marketing or business development in order to find contracts, only count the number of hours you spend working on contracts.
+</p>
+<p>
+The Outreachy internship period is from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
+</p>
+<p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+<hr>
+
+<form action="" method="post">{% csrf_token %}
+{{ wizard.form.media }}
+{{ wizard.management_form }}
+{% if wizard.form.forms %}
+    {{ wizard.form.management_form }}
+    {% for form in wizard.form.forms %}
+        {% include "bootstrap_form.html" with form=form only %}
+	<hr>
+    {% endfor %}
+{% else %}
+    {% include "bootstrap_form.html" with form=wizard.form only %}
+{% endif %}
+{% if wizard.steps.prev %}
+<button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}">First step</button>
+<button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.prev }}">Previous step</button>
+{% endif %}
+<input type="submit" class="btn btn-primary" value="Next step"/>
+</form>
+
+{% endblock %}

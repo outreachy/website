@@ -6,7 +6,6 @@ Are you eligible to apply to Outreachy?
 
 {% block content %}
 <h1>Outreachy Eligibility Checking</h1>
-{% if wizard.steps.step1 == 1 %}
 <img src="https://www.outreachy.org/media/images/bot-eligibility.original.png" class="float-right">
 <p>
 Welcome to Outreachy! We're excited to have you apply for our internships.
@@ -21,36 +20,9 @@ University and college students who are applying will need to provide informatio
 Please have that information before starting this process.
 </p>
 <p>The Outreachy internships will run from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
-{% elif wizard.steps.step1 == 2 %}
-<p>
-The following question applies to U.S. citizens and permanent residents, and people living in the United States who are citizens of another country.
-</p>
-<p>
-The question is used to determine eligibility for the Outreachy internships.
-This private data will only be seen by the <a href="/contact/">Outreachy organizers</a>.
-It will not be shared with mentors, coordinators, or other applicants.
-</p>
-{% elif wizard.steps.step1 == 3 %}
-<p>
-The following questions are used to determine eligibility for the Outreachy internships.
-This private data will only be seen by the <a href="/contact/">Outreachy organizers</a>.
-It will not be shared with mentors, coordinators, or other applicants.
-</p>
-{% elif wizard.steps.step1 == 6 %}
-{% comment %}School term info.{% endcomment %}
-<p>
-A school term lasts from the first possible day of classes for ALL students until the last possible exam date for ALL students.
-</p>
-<p>
-Please enter information for each school term that overlaps with the Outreachy internship period. If less than three terms overlap with the Outreachy internship period, leave those terms blank.
-</p>
-<p>
-The Outreachy internship period is from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
-</p>
-{% endif %}
-
 <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
 <hr>
+
 <form action="" method="post">{% csrf_token %}
 {{ wizard.form.media }}
 {{ wizard.management_form }}
@@ -69,4 +41,5 @@ The Outreachy internship period is from {{ current_round.internstarts|date:"F d,
 {% endif %}
 <input type="submit" class="btn btn-primary" value="Next step"/>
 </form>
+
 {% endblock %}

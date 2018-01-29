@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}
+Are you eligible to apply to Outreachy?
+{% endblock %}
+
+{% block content %}
+<h1>Outreachy Eligibility Checking</h1>
+<p>
+The following questions apply to employment contracts, including full-time or part-time employment and contract work.
+Only fill out employment information for contracts that are valid during the Outreachy internships period,
+from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
+</p>
+
+<p>
+<strong>The following questions ask how many hours are in your employment contract, not how many hours you expect to work.</strong>
+We cannot accept verbal or written confirmation that your employer or manager will let you work less hours during the intership period.
+</p>
+
+<p>
+If you commonly work overtime, use your average weekly overtime hours for these questions.
+</p>
+
+<p>
+If you have less than three employment periods during the Outreachy internship period, leave the additional employment time commitments blank.
+<p>
+
+<p>
+If you are a teacher who has a break between terms, enter your employment period as two employment time commitments. The first time commitment end date should be the last day of exams (or your last day of work before the break). The second time commitment start date should be the first day you go back to teach.
+</p>
+<p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+<hr>
+
+<form action="" method="post">{% csrf_token %}
+{{ wizard.form.media }}
+{{ wizard.management_form }}
+{% if wizard.form.forms %}
+    {{ wizard.form.management_form }}
+    {% for form in wizard.form.forms %}
+        {% include "bootstrap_form.html" with form=form only %}
+	<hr>
+    {% endfor %}
+{% else %}
+    {% include "bootstrap_form.html" with form=wizard.form only %}
+{% endif %}
+{% if wizard.steps.prev %}
+<button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}">First step</button>
+<button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.prev }}">Previous step</button>
+{% endif %}
+<input type="submit" class="btn btn-primary" value="Next step"/>
+</form>
+
+{% endblock %}

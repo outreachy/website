@@ -444,6 +444,20 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
             ]
     # TODO: override get method to redirect to results page if the person
     # has filled out an application
+    TEMPLATES = {
+            'General Info': 'home/eligibility_wizard_general.html',
+            'USA demographics': 'home/eligibility_wizard_us_demographics.html',
+            'Gender Identity': 'home/eligibility_wizard_gender.html',
+            'Time Commitments': 'home/eligibility_wizard_time_commitments.html',
+            'School Info': 'home/eligibility_wizard_school_info.html',
+            'School Term Info': 'home/eligibility_wizard_school_terms.html',
+            'Contractor Info': 'home/eligibility_wizard_contractor_info.html',
+            'Employment Info': 'home/eligibility_wizard_employment_info.html',
+            'Time Commitment Info': 'home/eligibility_time_commitments.html',
+            }
+
+    def get_template_names(self):
+        return [self.TEMPLATES[self.steps.current]]
 
     def get_form_instance(self, step):
         # This implementation ignores `step` which is fine as long as
