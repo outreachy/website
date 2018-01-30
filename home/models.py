@@ -1123,7 +1123,7 @@ class EmploymentTimeCommitment(models.Model):
     start_date = models.DateField(help_text="Start date of employment period. Use YYYY-MM-DD format.")
     end_date = models.DateField(help_text="End date of employment period. Use YYYY-MM-DD format.")
     hours_per_week = models.IntegerField(help_text="Number of hours per week required by your employment contract")
-    quit_on_acceptance = models.NullBooleanField(
+    quit_on_acceptance = models.BooleanField(
             help_text="I will quit this job or contract if I am accepted as an Outreachy intern.")
 
     def hours(self):
