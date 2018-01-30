@@ -25,9 +25,120 @@ Outreachy eligibility results
 	</p>
 	<p><a class='btn btn-success' href="{{ request.scheme }}://{{ request.get_host }}/{{ current_round.slug }}">View Internship Projects</a></p>
 
-{% elif application.approval_status == application.REJECTED %}
+{% elif application.approval_status == application.REJECTED and application.reason_denied == 'DEMOGRAPHICS' %}
+
+	<h1>Ineligible for Outreachy</h1>
+
+	<p>
+	We're sorry, but based on the demographic information your supplied on your application,
+	you're not eligible to apply for Outreachy internships. Outreachy internships are open 
+	internationally to women (cis and trans), trans men, and genderqueer
+	people. Internships are also open to residents and nationals of the
+	United States of any gender who are Black/African American,
+	Hispanic/Latin@, Native American/American Indian, Alaska Native, Native
+	Hawaiian, or Pacific Islander.
+	</p>
+	{% if current_round.gsoc_round %}
+	<p>
+	If you are a college or university student, you should consider applying for
+	<a href="https://summerofcode.withgoogle.com/">Google Summer of Code.</a>
+	</p>
+	{% endif %}
+	<p>
+	Please consider seeking <a href="/opportunities">other internship opportunities</a> through Outreachy sponsors.
+	</p>
+
+{% elif application.approval_status == application.REJECTED and application.reason_denied == 'TIME' %}
+
+	<h1>Ineligible for Outreachy</h1>
+
+	<p>
+	We're sorry, but based on the time commitment information your supplied on your application,
+	you don't have 7 consecutive weeks free from full-time commitments.
+	</p>
+	<p>
+	Outreachy has had applicants who have failed the program in the past due to
+	full-time commitments, so the Outreachy organizers are very firm about
+	the eligibility rules around time commitment requirements.
+	We cannot accept letters to excuse students from class work or late class enrollment letters.
+	We cannot accept manager approval for an employee to work for less than the hours in their employment contract.
+	</p>
+	<p>
+	We hope your time commitments change in the future such that you
+	are eligible to apply for Outreachy.
+	</p>
+	<p>
+	Please sign up for the
+	<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">Outreachy announcement mailing list</a>,
+	so you can be notified when the next application period opens.
+	</p>
 
 {% elif application.approval_status == application.PENDING %}
+
+	<h1>Outreachy Application Pending</h1>
+
+	<p>Your Outreachy application is pending review by the Outreachy organizers.
+	We have received a notification about your application and will follow up with
+	additional questions for you via email.
+	</p>
+	<p>
+	If you have not received a follow up email within a week,
+	please <a href="/contact">contact the Outreachy organizers</a>.
+	</p>
+	{% if user.is_staff %}
+		<h2>Outreachy Organizer Actions</h2>
+		<p>
+		This applicant may not be eligible for Outreachy.
+		Here is a sample email that can help clarify the situation:
+		</p>
+		<pre>
+To: {{ application.applicant.public_name }} &lt{{ application.applicant.account.email }}&gt
+Bcc: Outreachy Organizers &ltorganizers@outreachy.org&gt
+Subject: Outreachy eligibility question for {{ application.applicant.public_name }}
+
+Hi {{ application.applicant.public_name }},
+
+You recently submitted an eligibility form for the Outreachy internship
+program.
+{% if application.us_sanctioned_country %}
+You indicated you were a citizen, resident, or national Crimea, Cuba,
+Iran, North Korea, or Syria.
+
+In order for Outreachy's parent non-profit, Software Freedom Conservancy,
+to retain its 503c6 status, it must abide by U.S. law with respect to
+countries under U.S. sanctions. Please answer the following questions:
+
+1. Which of these countries are you a citizen or national of?
+2. Do you currently live in one of the listed countries?
+3. Are you planning on sending any portion of your Outreachy internship
+   stipend back to family members or friends living in the listed countries?
+{% endif %}
+{% if application.prefer_not_to_say %}
+When asked which gender identities you have, you checked that
+you would prefer not to specify your gender. Unfortunately,
+we do need this information in order to approve you to apply
+for Outreachy internships.
+
+Would you be comfortable supplying this information via email?
+I'm also happy to chat via video conference if you feel more
+comfortable with that.
+
+https://calendly.com/sagesharp/outreachy-organizer-meeting
+{% endif %}
+{% if application.self_identify != '' %}
+You marked that your gender identity is {{ application.self_identify }}.
+Could you tell me a bit more about what pronouns you use?
+If they're listed on pronouns.is, I would love to add
+your gender identity and pronouns to our application system.
+{% endif %}
+Thanks,
+Outreachy Organizers
+		</pre>
+
+		<p>
+		Sage can mark this application as approved in the Django admin interface. Ask them to do so.
+		</p>
+	{% endif %}
 
 {% endif %}
 

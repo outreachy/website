@@ -129,6 +129,12 @@ class RoundPage(Page):
     def InternConfirmationDeadline(self):
         return(self.appsclose + timedelta(days=24))
 
+    def gsoc_round(self):
+        # The internships would start before August
+        # for rounds aligned with GSoC
+        # GSoC traditionally starts either in May or June
+        return(self.internstarts.month < 8)
+
 class CohortPage(Page):
     round_start = models.DateField("Round start date")
     round_end = models.DateField("Round end date")
@@ -1098,7 +1104,7 @@ class EmploymentTimeCommitment(models.Model):
     start_date = models.DateField(help_text="Start date of employment period. Use YYYY-MM-DD format.")
     end_date = models.DateField(help_text="End date of employment period. Use YYYY-MM-DD format.")
     hours_per_week = models.IntegerField(help_text="Number of hours per week required by your employment contract")
-    quit_on_acceptance = models.NullBooleanField(
+    quit_on_acceptance = models.BooleanField(
             help_text="I will quit this job or contract if I am accepted as an Outreachy intern.")
 
 class SchoolTimeCommitment(models.Model):

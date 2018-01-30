@@ -571,6 +571,9 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
         for inlineformset in inlines:
             inlineformset.save()
 
+        if self.object.approval_status == ApprovalStatus.PENDING:
+            email.approval_status_changed(self.object, self.request)
+
         return redirect('eligibility-results')
 
 @login_required
@@ -583,6 +586,7 @@ def eligibility_results(request):
             {
             'application': application,
             'current_round' : current_round,
+            'user': request.user,
             },
             )
 

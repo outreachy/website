@@ -1,0 +1,50 @@
+{% with application=applicantapproval %}
+Approve Outreachy applicant
+
+The applicant {{ application.applicant.public_name }}
+may not be eligible for Outreachy.
+
+Here is a sample email that can help clarify the situation:
+
+To: {{ application.applicant.public_name }} <{{ application.applicant.account.email }}>
+Bcc: Outreachy Organizers <organizers@outreachy.org>
+Subject: Outreachy eligibility question for {{ application.applicant.public_name }}
+
+Hi {{ application.applicant.public_name }},
+
+You recently submitted an eligibility form for the Outreachy internship
+program.
+{% if application.us_sanctioned_country %}
+You indicated you were a citizen, resident, or national Crimea, Cuba,
+Iran, North Korea, or Syria.
+
+In order for Outreachy's parent non-profit, Software Freedom Conservancy,
+to retain its 503c6 status, it must abide by U.S. law with respect to
+countries under U.S. sanctions. Please answer the following questions:
+
+1. Which of these countries are you a citizen or national of?
+2. Do you currently live in one of the listed countries?
+3. Are you planning on sending any portion of your Outreachy internship
+   stipend back to family members or friends living in the listed countries?
+{% endif %}
+{% if application.prefer_not_to_say %}
+When asked which gender identities you have, you checked that
+you would prefer not to specify your gender. Unfortunately,
+we do need this information in order to approve you to apply
+for Outreachy internships.
+
+Would you be comfortable supplying this information via email?
+I'm also happy to chat via video conference if you feel more
+comfortable with that.
+
+https://calendly.com/sagesharp/outreachy-organizer-meeting
+{% endif %}
+{% if application.self_identify != '' %}
+You marked that your gender identity is {{ application.self_identify }}.
+Could you tell me a bit more about what pronouns you use?
+If they're listed on pronouns.is, I would love to add
+your gender identity and pronouns to our application system.
+{% endif %}
+Thanks,
+Outreachy Organizers
+{% endwith %}
