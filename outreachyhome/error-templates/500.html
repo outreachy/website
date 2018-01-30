@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Internal server error</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+    </head>
+    <body>
+        <h1>Internal server error</h1>
+
+        <p>Sorry, there seems to be an error. Please try again soon.</p>
+
+        {% if request.sentry.id %}
+        <p>We've already been notified about this error, with reference
+        number <strong>{{ request.sentry.id }}</strong>. If you contact
+        us about this error, please include that reference number.</p>
+        {% endif %}
+
+        <p>If you'd like to give us additional information about what
+        you were trying to do when this error occurred, you can
+        <a href="https://github.com/sagesharp/outreachy-django-wagtail/issues">file
+        a bug report</a> or <a href="/contact/">contact the Outreachy
+        organizers</a>.</p>
+    </body>
+</html>

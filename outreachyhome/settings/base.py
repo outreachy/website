@@ -62,6 +62,9 @@ INSTALLED_APPS = [
     'compressor',
 ]
 
+if 'SENTRY_DSN' in os.environ:
+    INSTALLED_APPS.append('raven.contrib.django.raven_compat')
+
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -96,6 +99,24 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'home.context_processors.header',
+            ],
+        },
+    },
+    {
+        # A minimal template configuration for serving "500 Internal
+        # Server Error" pages. When things have already gone wrong,
+        # try to do as little as possible reporting the problem.
+        'NAME': 'errorsafe',
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(PROJECT_DIR, 'error-templates'),
+        ],
+        'APP_DIRS': False,
+        'OPTIONS': {
+            'context_processors': [
+                # We need access to the request to get Sentry info for
+                # this error.
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -206,3 +227,11 @@ LOGIN_URL='/login/'
 ACCOUNT_ACTIVATION_DAYS = 7
 
 DEFAULT_FROM_EMAIL = 'organizers@outreachy.org'
+
+# Get optional settings for Raven/Sentry error logging. The Sentry DSN
+# should be given by the environment variable SENTRY_DSN, which is the
+# only environment variable that Raven automatically checks so we don't
+# have to pick it up here.
+RAVEN_CONFIG = {
+    'release': os.getenv('GIT_VER'),
+}

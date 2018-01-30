@@ -28,6 +28,7 @@ olefile==0.44
 Pillow==4.3.0
 psycopg2==2.7.3.2
 pytz==2017.3
+raven==6.5.0
 rcssmin==1.0.6
 requests==2.18.4
 rjsmin==1.0.12
