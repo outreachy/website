@@ -524,6 +524,7 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
                 self.object.approval_status = ApprovalStatus.APPROVED
                 if self.object.us_sanctioned_country or self.object.prefer_not_to_say or self.object.self_identify != '':
                     self.object.approval_status = ApprovalStatus.PENDING
+                    email.approval_status_changed(self.object, self.request)
             else:
                 self.object.reason_denied = 'TIME'
         else:
