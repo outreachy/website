@@ -11,6 +11,7 @@ from wagtail.wagtailcore import urls as wagtail_urls
 from wagtail.wagtaildocs import urls as wagtaildocs_urls
 from contacts import urls as contacts_urls
 
+from . import views as project_views
 from search import views as search_views
 from home import views as home_views
 
@@ -34,6 +35,8 @@ urlpatterns = [
     # of your site, rather than the site root:
     #    url(r'^pages/', include(wagtail_urls)),
 ]
+
+handler500 = project_views.ServerErrorView.as_view()
 
 
 if settings.DEBUG:
