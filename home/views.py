@@ -547,6 +547,7 @@ def eligibility_results(request):
             {
             'application': application,
             'current_round' : current_round,
+            'user': request.user,
             },
             )
 

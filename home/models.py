@@ -130,6 +130,12 @@ class RoundPage(Page):
     def InternConfirmationDeadline(self):
         return(self.appsclose + timedelta(days=24))
 
+    def gsoc_round(self):
+        # The internships would start before August
+        # for rounds aligned with GSoC
+        # GSoC traditionally starts either in May or June
+        return(self.internstarts.month < 8)
+
 class CohortPage(Page):
     round_start = models.DateField("Round start date")
     round_end = models.DateField("Round end date")
