@@ -37,8 +37,10 @@ If you are a teacher who has a break between terms, enter your employment period
 {% if wizard.form.forms %}
     {{ wizard.form.management_form }}
     {% for form in wizard.form.forms %}
+	<div class="card border-info mb-3">
+		<div class="card-header text-white bg-info">Employment Period #{{ forloop.counter }}</div>
+	</div>
         {% include "bootstrap_form.html" with form=form only %}
-	<hr>
     {% endfor %}
 {% else %}
     {% include "bootstrap_form.html" with form=wizard.form only %}

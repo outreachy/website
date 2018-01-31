@@ -25,8 +25,10 @@ If less than three terms overlap with the Outreachy internship period, leave tho
 {% if wizard.form.forms %}
     {{ wizard.form.management_form }}
     {% for form in wizard.form.forms %}
+	<div class="card border-info mb-3">
+		<div class="card-header text-white bg-info">Term #{{ forloop.counter }}</div>
+	</div>
         {% include "bootstrap_form.html" with form=form only %}
-	<hr>
     {% endfor %}
 {% else %}
     {% include "bootstrap_form.html" with form=wizard.form only %}
