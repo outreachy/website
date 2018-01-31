@@ -1,4 +1,5 @@
 from collections import defaultdict
+from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -17,6 +18,7 @@ from django.views.decorators.http import require_POST
 from django.views.generic import ListView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 from formtools.wizard.views import SessionWizardView
+from itertools import chain, groupby
 from registration.backends.hmac import views as hmac_views
 
 from . import email
@@ -252,6 +254,57 @@ def show_time_commitment_info(wizard):
         return False
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
     return cleaned_data.get('time_commitments', True)
+
+def time_commitment(cleaned_data, hours):
+    return {
+            'start_date': cleaned_data['start_date'],
+            'end_date': cleaned_data['end_date'],
+            'hours': hours,
+            }
+
+def time_commitments_are_approved(wizard, application_round):
+    tcs = [ time_commitment(d, d['hours_per_week'])
+            for d in wizard.get_cleaned_data_for_step('Time Commitment Info') or []
+            if d ]
+
+    etcs = [ time_commitment(d, 0 if d['quit_on_acceptance'] else d['hours_per_week'])
+            for d in wizard.get_cleaned_data_for_step('Employment Info') or []
+            if d ]
+
+    stcs = [ time_commitment(d, 40 * ((d['registered_credits'] - d['outreachy_credits'] - d['thesis_credits']) / d['typical_credits']))
+            for d in wizard.get_cleaned_data_for_step('School Term Info') or []
+            if d ]
+
+    application_period_length = (application_round.internends - application_round.internstarts).days + 1
+    required_free_days = 7*7
+    calendar = [0]*(application_period_length)
+
+    for tc in chain(tcs, etcs, stcs):
+        date = application_round.internstarts
+        for i in range(application_period_length):
+            if date >= tc['start_date'] and date <= tc['end_date']:
+                calendar[i] = calendar[i] + tc['hours']
+            date = date + timedelta(days=1)
+
+    for key, group in groupby(calendar, lambda hours: hours <= 20):
+        if key is True and len(list(group)) >= required_free_days:
+            return True
+    return False
+
+def determine_eligibility(wizard, application_round):
+    if not (general_info_is_approved(wizard) and gender_and_demographics_is_approved(wizard)):
+        return (ApprovalStatus.REJECTED, 'DEMOGRAPHICS')
+
+    if not time_commitments_are_approved(wizard, application_round):
+        return (ApprovalStatus.REJECTED, 'TIME')
+
+    general_data = wizard.get_cleaned_data_for_step('General Info')
+    gender_data = wizard.get_cleaned_data_for_step('Gender Identity')
+
+    if general_data['us_sanctioned_country'] or gender_data['prefer_not_to_say'] or gender_data['self_identify']:
+        return (ApprovalStatus.PENDING, '')
+
+    return (ApprovalStatus.APPROVED, '')
 
 class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
     template_name = 'home/wizard_form.html'
@@ -508,6 +561,8 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
         # At this point we've saved (but not committed) all the forms
         # that edit self.object.
 
+        self.object.approval_status, self.object.reason_denied = determine_eligibility(self, self.object.application_round)
+
         # Make sure to commit the object to the database before saving
         # any of the InlineFormSets, so they can set their foreign keys
         # to point to this object.
@@ -516,26 +571,9 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
         for inlineformset in inlines:
             inlineformset.save()
 
-        self.object.approval_status = ApprovalStatus.REJECTED
-        # Do they meet our general requirements,
-        # demographics requirements, and time requirements?
-        if general_info_is_approved(self) and gender_and_demographics_is_approved(self):
-            if self.object.time_commitments_are_approved():
-                self.object.approval_status = ApprovalStatus.APPROVED
-                if self.object.us_sanctioned_country or self.object.prefer_not_to_say or self.object.self_identify != '':
-                    self.object.approval_status = ApprovalStatus.PENDING
-                    email.approval_status_changed(self.object, self.request)
-            else:
-                self.object.reason_denied = 'TIME'
-        else:
-            self.object.reason_denied = 'DEMOGRAPHICS'
+        if self.object.approval_status == ApprovalStatus.PENDING:
+            email.approval_status_changed(self.object, self.request)
 
-        # Make sure to save the application status
-        # We have to do this twice because we have to save the inlines
-        # before searching for them in the database (which the call to is_eligible will do)
-        self.object.save()
-
-        # FIXME: This should redirect somewhere appropriate.
         return redirect('eligibility-results')
 
 @login_required

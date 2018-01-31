@@ -5,7 +5,6 @@ from base64 import urlsafe_b64encode
 from datetime import date
 from datetime import timedelta
 from email.headerregistry import Address
-from itertools import chain, groupby
 
 from django.contrib.auth.models import User
 from django.core.validators import URLValidator
@@ -1164,35 +1163,11 @@ class ApplicantApproval(ApprovalStatus):
     def get_approver_email_list(self):
         return [email.organizers]
 
-    def time_commitments_are_approved(self):
-        tcs = TimeCommitment.objects.filter(applicant=self)
-        etcs = EmploymentTimeCommitment.objects.filter(applicant=self)
-        stcs = SchoolTimeCommitment.objects.filter(applicant=self)
-
-        application_period_length = (self.application_round.internends - self.application_round.internstarts).days + 1
-        required_free_days = 7*7
-        calendar = [0]*(application_period_length)
-
-        for tc in chain(tcs, etcs, stcs):
-            date = self.application_round.internstarts
-            for i in range(application_period_length):
-                if date >= tc.start_date and date <= tc.end_date:
-                    calendar[i] = calendar[i] + tc.hours()
-                date = date + timedelta(days=1)
-
-        for key, group in groupby(calendar, lambda hours: hours <= 20):
-            if key is True and len(list(group)) >= required_free_days:
-                return True
-        return False
-
 class TimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
     start_date = models.DateField(help_text="Date your time commitment starts. Use YYYY-MM-DD format.")
     end_date = models.DateField(help_text="Date your time commitment ends. Use YYYY-MM-DD format.")
     hours_per_week = models.IntegerField(help_text="Maximum hours per week spent on this time commitment.")
-
-    def hours(self):
-        return self.hours_per_week
 
 class EmploymentTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
@@ -1201,11 +1176,6 @@ class EmploymentTimeCommitment(models.Model):
     hours_per_week = models.IntegerField(help_text="Number of hours per week required by your employment contract")
     quit_on_acceptance = models.BooleanField(
             help_text="I will quit this job or contract if I am accepted as an Outreachy intern.")
-
-    def hours(self):
-        if self.quit_on_acceptance:
-            return 0
-        return self.hours_per_week
 
 class SchoolTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
@@ -1237,9 +1207,6 @@ class SchoolTimeCommitment(models.Model):
     thesis_credits = models.IntegerField(
             verbose_name="Number of thesis or research credits",
             help_text="If you are a graduate student, how many credits will you earn for working on your thesis or research?")
-
-    def hours(self):
-        return 40 * ((self.registered_credits - self.outreachy_credits - self.thesis_credits) / self.typical_credits)
 
 class SchoolInformation(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
