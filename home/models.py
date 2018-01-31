@@ -317,13 +317,16 @@ class Comrade(models.Model):
         return False
 
     def approved_mentor_or_coordinator(self):
+        if self.account.is_staff:
+            return True
+        current_round = RoundPage.objects.latest('internstarts')
         mentors = MentorApproval.objects.filter(
                 mentor=self,
                 project__project_round__participating_round=current_round,
                 ).approved()
         for m in mentors:
             # Is both the project and the community participation approved
-            if m.project.approvalstatus == ApprovalStatus.APPROVED and m.project.project_round.approvalstatus == ApprovalStatus.APPROVED:
+            if m.project.approval_status == ApprovalStatus.APPROVED and m.project.project_round.approval_status == ApprovalStatus.APPROVED:
                 return True
 
         coordinators = CoordinatorApproval.objects.filter(
@@ -332,7 +335,7 @@ class Comrade(models.Model):
             participation = Participation.objects.get(
                     participating_round=current_round,
                     community=c.community)
-            if participation.approvalstatus == ApprovalStatus.APPROVED:
+            if participation.approval_status == ApprovalStatus.APPROVED:
                 return True
         return False
 
