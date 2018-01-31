@@ -660,7 +660,7 @@ class Project(ApprovalStatus):
     )
 
     intern_tasks = CKEditorField(
-            max_length=PARAGRAPH_LENGTH,
+            max_length=THREE_PARAGRAPH_LENGTH,
             blank=True,
             help_text='(Optional) Description of possible internship tasks.')
 
