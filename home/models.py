@@ -267,6 +267,76 @@ class Comrade(models.Model):
                 pronouns=self.get_pronouns_display(),
                 )
 
+    # We want to prompt the Comrade to fill out an ApplicantApproval
+    # if they haven't already.
+    # Don't advertise this for mentors or coordinators (pending or approved) in this current round
+    def needs_application(self):
+        # Does this Comrade have an ApplicantApproval for this round?
+        current_round = RoundPage.objects.latest('internstarts')
+        applications = ApplicantApproval.objects.filter(
+                applicant=self, application_round=current_round)
+        if len(applications) > 1:
+            return False
+
+        # Is this Comrade an approved mentor or coordinator?
+        if approved_mentor_or_coordinator(self):
+            return False
+        return True
+
+
+    def ineligible_application(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        try:
+            application = ApplicantApproval.objects.get(
+                    applicant=self, application_round=current_round)
+        except ApplicantApproval.DoesNotExist:
+            return False
+        if application.approval_status == ApprovalStatus.REJECTED:
+            return True
+        return False
+
+    def pending_application(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        try:
+            application = ApplicantApproval.objects.get(
+                    applicant=self, application_round=current_round)
+        except ApplicantApproval.DoesNotExist:
+            return False
+        if application.approval_status == ApprovalStatus.PENDING:
+            return True
+        return False
+
+    def eligible_application(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        try:
+            application = ApplicantApproval.objects.get(
+                    applicant=self, application_round=current_round)
+        except ApplicantApproval.DoesNotExist:
+            return False
+        if application.approval_status == ApprovalStatus.APPROVED:
+            return True
+        return False
+
+    def approved_mentor_or_coordinator(self):
+        mentors = MentorApproval.objects.filter(
+                mentor=self,
+                project__project_round__participating_round=current_round,
+                ).approved()
+        for m in mentors:
+            # Is both the project and the community participation approved
+            if m.project.approvalstatus == ApprovalStatus.APPROVED and m.project.project_round.approvalstatus == ApprovalStatus.APPROVED:
+                return True
+
+        coordinators = CoordinatorApproval.objects.filter(
+                coordinator=self).approved()
+        for c in coordinators:
+            participation = Participation.objects.get(
+                    participating_round=current_round,
+                    community=c.community)
+            if participation.approvalstatus == ApprovalStatus.APPROVED:
+                return True
+        return False
+
 class ApprovalStatusQuerySet(models.QuerySet):
     def approved(self):
         return self.filter(approval_status=ApprovalStatus.APPROVED)

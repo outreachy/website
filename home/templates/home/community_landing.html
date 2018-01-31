@@ -6,6 +6,14 @@ Outreachy internships working with {{ community.name }}
 
 {% block content %}
 
+{% if not request.user.comrade or request.user.comrade.needs_application %}
+{% include "home/snippet/eligibility_prompt.html" %}
+{% elif request.user.comrade.ineligible_application %}
+{% include "home/snippet/ineligible_prompt.html" %}
+{% elif request.user.comrade.pending_application %}
+{% include "home/snippet/pending_prompt.html" %}
+{% endif %}
+
 {% include "home/snippet/community_landing_snippet.html" %}
 
 {% if approved_projects %}
