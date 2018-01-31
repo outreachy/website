@@ -301,8 +301,13 @@ def determine_eligibility(wizard, application_round):
     general_data = wizard.get_cleaned_data_for_step('General Info')
     gender_data = wizard.get_cleaned_data_for_step('Gender Identity')
 
-    if general_data['us_sanctioned_country'] or gender_data['prefer_not_to_say'] or gender_data['self_identify']:
+    if general_data['us_sanctioned_country']:
         return (ApprovalStatus.PENDING, '')
+
+    demo_data = wizard.get_cleaned_data_for_step('USA demographics')
+    if not (demo_data and demo_data['us_resident_demographics']):
+        if gender_data['prefer_not_to_say'] or gender_data['self_identify']:
+            return (ApprovalStatus.PENDING, '')
 
     return (ApprovalStatus.APPROVED, '')
 
