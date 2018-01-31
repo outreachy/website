@@ -515,7 +515,7 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
             'School Term Info': 'home/eligibility_wizard_school_terms.html',
             'Contractor Info': 'home/eligibility_wizard_contractor_info.html',
             'Employment Info': 'home/eligibility_wizard_employment_info.html',
-            'Time Commitment Info': 'home/eligibility_time_commitments.html',
+            'Time Commitment Info': 'home/eligibility_wizard_time_commitment_info.html',
             }
 
     def get_template_names(self):
