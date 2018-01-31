@@ -14,6 +14,8 @@ Outreachy internships working with {{ community.name }}
 {% include "home/snippet/pending_prompt.html" %}
 {% endif %}
 
+<p><a href="{{ request.scheme }}://{{ request.get_host }}/{{ current_round.slug }}">Outreachy Internships for {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }}</a> &gt; {{ community.name }}</p>
+
 {% include "home/snippet/community_landing_snippet.html" %}
 
 {% if approved_projects %}
@@ -21,6 +23,30 @@ Outreachy internships working with {{ community.name }}
 	<p>Mentors for these projects are willing to work with new Outreachy applicants. Please note that as the round goes on, mentors may close their project to new applicants because they are already working with many applicants. Make sure to contact a mentor and start your contribution as soon as possible!</p>
 	{% for project in approved_projects %}
 		<h2>{{ project.short_title }}</h2>
+		{% if project.required_skills %}
+		<p>Skills used or learned in this project:<p>
+			{% for skill in project.required_skills %}
+				<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
+			{% endfor %}
+		{% endif %}
+		{% comment %}Not sure why I can't chain two function calls in an if statement?{% endcomment %}
+		{% if request.user.comrade.approved_mentor_or_coordinator %}
+			<p><button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#project{{ forloop.counter }}" aria-expanded="false" aria-controls="project{{ forloop.counter }}">
+				Show Project Info
+			</button></p>
+			<div class="collapse" id="project{{ forloop.counter }}">
+				{% include "home/snippet/project_landing_snippet.html" %}
+			</div>
+		{% elif request.user.comrade.eligible_application %}
+			<p><button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#project{{ forloop.counter }}" aria-expanded="false" aria-controls="project{{ forloop.counter }}">
+				Show Project Info
+			</button></p>
+			<div class="collapse" id="project{{ forloop.counter }}">
+				{% include "home/snippet/project_landing_snippet.html" %}
+			</div>
+		{% else %}
+			<p>Project details are hidden, see message above.</p>
+		{% endif %}
 	{% endfor %}
 {% endif %}
 

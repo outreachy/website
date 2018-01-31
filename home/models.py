@@ -754,6 +754,15 @@ class Project(ApprovalStatus):
         return [ma.mentor.email_address()
                 for ma in self.mentorapproval_set.approved()]
 
+    def required_skills(self):
+        return ProjectSkill.objects.filter(project=self, required=ProjectSkill.STRONG)
+
+    def preferred_skills(self):
+        return ProjectSkill.objects.filter(project=self, required=ProjectSkill.OPTIONAL)
+
+    def bonus_skills(self):
+        return ProjectSkill.objects.filter(project=self, required=ProjectSkill.BONUS)
+
     @classmethod
     def objects_for_dashboard(cls, user):
         return cls.objects.filter(

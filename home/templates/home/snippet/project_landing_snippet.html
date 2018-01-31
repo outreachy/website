@@ -1,0 +1,107 @@
+<h3>Project Description</h3>
+<p>{{ project.short_title }}</p>
+{{ project.long_description|safe }}
+
+{% if project.intern_tasks %}
+<h4>Internship Tasks</h4>
+{{ project.intern_tasks|safe }}
+{% endif %}
+
+{% if project.intern_benefits %}
+<h4>Intern Benefits</h4>
+{{ project.intern_benefits|safe }}
+{% endif %}
+
+{% if project.required_skills or project.preferred_skills or project.bonus_skills %}
+<h4>Internship skills</h4>
+{% endif %}
+{% if project.required_skills %}
+	<h3>Required Skills</h3>
+	<p>{{ project.required_skills.0.get_required_display }}</p>
+	<table class='table table-bordered'>
+		<tr><th>Skill description</th><th>Experience Level</th></tr>
+	{% for skill in project.required_skills %}
+		<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
+	{% endfor %}
+	</table>
+{% endif %}
+
+{% if project.preferred_skills %}
+	<h3>Preferred Skills</h3>
+	<p>{{ project.preferred_skills.0.get_required_display }}</p>
+	<table class='table table-bordered'>
+		<tr><th>Skill description</th><th>Experience Level</th></tr>
+	{% for skill in project.preferred_skills %}
+		<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
+	{% endfor %}
+	</table>
+{% endif %}
+
+{% if project.bonus_skills %}
+	<h3>Bonus Skills</h3>
+	<p>{{ project.bonus_skills.0.get_required_display }}</p>
+	<table class='table table-bordered'>
+		<tr><th>Skill description</th><th>Experience Level</th></tr>
+	{% for skill in project.bonus_skills %}
+		<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
+	{% endfor %}
+	</table>
+{% endif %}
+
+<h3>Who will I work with?</h3>
+<p>Each Outreachy intern works remotely with one or more mentors. Most Outreachy mentors only work with one intern per round. Mentors are your guides in learning more about free and open source software, technical and non-technical skills, and will always be there when you get stuck.</p>
+
+{% if approved_mentors %}
+	<p>You'll be working with the following mentor{{ approved_mentors|length|pluralize }}:</p>
+	{% for approval in approved_mentors %}
+		{% include "home/snippet/mentor_info_for_landing.html" with approval=approval only %}
+	{% endfor %}
+{% endif %}
+<p>Please contact the mentors for this internship project to get information on how you can make a contribution during the application process. Only applicants who make a contribution will be accepted as interns.</p>
+
+<h3>Interacting with the {{ community.name }} Community</h3>
+<p>Community members are there to answer your questions, give you feedback, and help you grow your skills.
+During this internship project, you'll be interacting with a team of {{ project.get_community_size_display|lower }}.
+The community has been accepting contributions from people from around the world for {{ project.get_longevity_display|lower }}.
+</p>
+
+<p>Community members (and Outreachy applicants) discuss contributions in public communication channels.
+It can be intimidating to work in the public, but mentors are always available to encourage you via private message or email.
+We hope you'll introduce yourself on the public project channels and ask for help when you get stuck.
+</p>
+{% for channel in project.communicationchannel_set.all %}
+	<p>
+	This team uses {{ channel.tool_name }} to communicate.
+	{% if channel.communication_help %}
+		You can find helpful documentation about this communication tool <a href="{{ channel.communication_help }}">here</a>. 
+	{% endif %}
+	{% if channel.communication_norms %}
+		Once you join the project's communication channel,
+		the mentors have some additional instructions for you to follow. {{ channel.communication_norms|safe }}
+	{% endif %}
+	{% if channel.communication_url %}
+		You can join this project's communication channel by <a href="{{ project.communication_url }}">following this link</a>.
+	{% endif %}
+	<p>
+{% endfor %}
+
+<h3>Project Contribution Information</h3>
+<p>As part of the application process, all applicants must make at least one contribution to be accepted as an intern for this project.</p>
+<p>
+{% if project.repository %}
+	Applicants can contribute to this project through <a href="{{ project.repository }}">the project repository or contribution page</a>.
+{% else %}
+	Applicants will need to contact project mentors to get information about the project repositories.
+{% endif %}
+{% if project.issue_tracker %}
+	The project uses an <a href="{{ project.issue_tracker }}">issue tracker</a> to keep information about bugs to fix, project features to implement, documentation to write, and more.
+	{% if project.newcomer_issue_tag %}
+		Applicants can look for newcomer-friendly issues to use for their first contributions by looking for the following issue tags in the <a href="">project issue tracker</a>:
+		{{ project.newcomer_issue_tag }}
+	{% else %}
+		Applicants will need to contact a mentor to find out how they can make their first contributions to the project.
+	{% endif %}
+{% endif %}
+</p>
+{{ project.contribution_tasks|safe }}
+

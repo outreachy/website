@@ -856,9 +856,6 @@ def project_read_only_view(request, community_slug, project_slug):
             project_round__participating_round=current_round,
             project_round__community__slug=community_slug,
             )
-    required_skills = project.projectskill_set.filter(required=ProjectSkill.STRONG)
-    preferred_skills = project.projectskill_set.filter(required=ProjectSkill.OPTIONAL)
-    bonus_skills = project.projectskill_set.filter(required=ProjectSkill.BONUS)
 
     approved_mentors = project.mentorapproval_set.approved()
     unapproved_mentors = project.mentorapproval_set.filter(approval_status__in=(ApprovalStatus.PENDING, ApprovalStatus.REJECTED))
@@ -896,9 +893,6 @@ def project_read_only_view(request, community_slug, project_slug):
             'unapproved_mentors': unapproved_mentors,
             'mentor_request': mentor_request,
             'coordinator': coordinator,
-            'required_skills': required_skills,
-            'preferred_skills': preferred_skills,
-            'bonus_skills': bonus_skills,
             },
             )
 
