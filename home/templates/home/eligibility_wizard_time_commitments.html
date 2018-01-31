@@ -7,11 +7,8 @@ Are you eligible to apply to Outreachy?
 {% block content %}
 <h1>Outreachy Eligibility Checking</h1>
 <p>
-{# FIXME These questions are just the checkboxes, not the hours-per-week inputs. #}
 Please enter information about your time commitments during the Outreachy internship period,
 from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
-Only enter time commitments that will require more than 10 hours a week.
-If you have less than three time commitments, leave additional ones blank.
 </p>
 <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
 <hr>
