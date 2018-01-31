@@ -162,10 +162,9 @@ def general_info_is_approved(wizard):
         return False
     if cleaned_data['under_export_control']:
         return False
-    # Collect the rest of the information on the forms
-    # FIXME: then ask them to contact the organizers
-    if cleaned_data['us_sanctioned_country']:
-        return True
+    # If they're in a us_sanctioned_country, go ahead and collect the
+    # rest of the information on the forms, but we'll mark them as
+    # PENDING later.
     return True
 
 def show_us_demographics(wizard):
