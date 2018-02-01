@@ -291,7 +291,9 @@ def time_commitments_are_approved(wizard, application_round):
     return False
 
 def determine_eligibility(wizard, application_round):
-    if not (general_info_is_approved(wizard) and gender_and_demographics_is_approved(wizard)):
+    if not (general_info_is_approved(wizard)):
+        return (ApprovalStatus.REJECTED, 'GENERAL')
+    if not (gender_and_demographics_is_approved(wizard)):
         return (ApprovalStatus.REJECTED, 'DEMOGRAPHICS')
 
     if not time_commitments_are_approved(wizard, application_round):

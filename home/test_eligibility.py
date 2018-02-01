@@ -162,7 +162,7 @@ class EligibilityTests(SimpleTestCase):
                 with self.subTest(fields=fields):
                     self.assertEligible(
                         ApprovalStatus.REJECTED,
-                        'DEMOGRAPHICS',
+                        'GENERAL',
                         self.approved_general_info(**fields),
                     )
 
