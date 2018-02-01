@@ -7,6 +7,6 @@ Trusted Volunteers
 {% block content %}
 <h1>Trusted Volunteers</h1>
 
-<textarea rows="{{ comrade_list|length }}" readonly>{% for comrade in comrade_list %}
+<textarea rows="{{ comrade_list|length }}" class="form-control" readonly>{% for comrade in comrade_list %}
 {{ comrade.email_address }}{% endfor %}</textarea>
 {% endblock %}

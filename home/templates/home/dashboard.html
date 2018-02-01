@@ -7,8 +7,30 @@ Dashboard
 
 {% block content %}
 <a href="{% url 'community-cfp' %}">Timeline, FAQ, & Participating Communities</a> &gt; Dashboard
-<h1>Dashboard</h1>
 
+{% if request.user.is_staff %}
+<h1>Email Subscriptions</h1>
+
+<p>
+Unfortunately, because Outreachy is running Mailman 2.0, we can't automatically
+subscribe coordinators and mentors to the mailing lists with Django.
+It's a manual process to subscribe approved mentors and approved coordinators
+for communities that are approved to participate in a round.
+</p>
+
+<p>
+Outreachy organizers can see the <a href="{% url 'trusted-volunteers-list' %}">full list of email addresses</a>
+for all approved community coordinators and mentors with approved projects.
+Then subscribe them using the following links (anyone already subscribed won't be subscribed again):
+</p>
+<ul>
+	<li><a href="https://lists.outreachy.org/cgi-bin/mailman/admin/mentors/members/add">mentors mailing list</a></li>
+	<li><a href="https://lists.outreachy.org/cgi-bin/mailman/admin/announce/members/add">announce mailing list</a></li>
+</ul>
+
+{% endif %}
+
+<h1>Dashboard</h1>
 {% for status, group in groups %}
 <h2>{{ status|title }}</h2>
 	{% for label, obj in group %}
