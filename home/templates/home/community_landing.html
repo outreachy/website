@@ -29,15 +29,7 @@ Outreachy internships working with {{ community.name }}
 				<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
 			{% endfor %}
 		{% endif %}
-		{% comment %}Not sure why I can't chain two function calls in an if statement?{% endcomment %}
-		{% if request.user.comrade.approved_mentor_or_coordinator %}
-			<p><button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#project{{ forloop.counter }}" aria-expanded="false" aria-controls="project{{ forloop.counter }}">
-				Show Project Info
-			</button></p>
-			<div class="collapse" id="project{{ forloop.counter }}">
-				{% include "home/snippet/project_landing_snippet.html" %}
-			</div>
-		{% elif request.user.comrade.eligible_application %}
+		{% if request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator %}
 			<p><button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#project{{ forloop.counter }}" aria-expanded="false" aria-controls="project{{ forloop.counter }}">
 				Show Project Info
 			</button></p>
