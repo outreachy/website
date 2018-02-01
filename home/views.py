@@ -1001,10 +1001,7 @@ class MentorApprovalAction(ApprovalStatusAction):
         return approval
 
     def get_success_url(self):
-        if not self.instructions_already_read and self.object.project.is_submitter(self.request.user):
-            # This is the first time this mentor has submitted this
-            # form, but they're already approved, so we must be in the
-            # middle of the "propose a new project" workflow.
+        if self.kwargs['action'] == 'submit':
             return reverse('project-skills-edit', kwargs={
                 'community_slug': self.object.project.project_round.community.slug,
                 'project_slug': self.object.project.slug,
