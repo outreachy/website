@@ -31,11 +31,12 @@ Then subscribe them using the following links (anyone already subscribed won't b
 {% endif %}
 
 <h1>Dashboard</h1>
-{% for status, group in groups %}
+{% for status, status_group in groups %}
 <h2>{{ status|title }}</h2>
-	{% for label, obj in group %}
+{% for label, group in status_group %}
+<h3>{{ label|title }}</h3>
+	{% for obj in group %}
 	<div class="card mb-3">
-	<div class="card-header">{{ label|title }}</div>
 	<div class="card-body">
 		<p class="card-text"><a href="{{ obj.get_preview_url }}">{{ obj }}</a></p>
 		<div class="mx-auto mr-sm-0" role="group" aria-label="Actions">
@@ -66,5 +67,6 @@ Then subscribe them using the following links (anyone already subscribed won't b
 	</div>
 	</div>
 	{% endfor %}
+{% endfor %}
 {% endfor %}
 {% endblock %}
