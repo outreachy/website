@@ -25,13 +25,88 @@ Outreachy eligibility results
 	</p>
 	<p><a class='btn btn-success' href="{{ request.scheme }}://{{ request.get_host }}/{{ current_round.slug }}">View Internship Projects</a></p>
 
+{% elif application.approval_status == application.REJECTED and application.reason_denied == 'GENERAL' %}
+
+	<h1>Ineligible for Outreachy</h1>
+	<p>
+	We're sorry, but based on the general information your supplied on your eligibility information form,
+	you're not eligible to apply for Outreachy internships.
+	</p>
+	<p><strong>Your Eligibility Information:</strong></p>
+	<ul>
+	{% if application.over_18 == False %}
+			<li>Will you be 18 years or older when the Outreachy internship starts? <strong>No.</strong>
+				<ul><li>Outreachy internships are open to people who are 18 years or older as of {{ current_round.internstarts|date:"F d, Y" }}.</li></ul>
+			</li>
+	{% endif %}
+	{% if application.gsoc_or_outreachy_internship == True %}
+			<li>Have you been accepted as a Google Summer of Code intern or an Outreachy intern before? <strong>Yes.</strong>
+				<ul><li>Outreachy internships are open to people who haven't been accepted for either Google Summer of Code or Outreachy internships before.</li></ul>
+			</li>
+	{% endif %}
+	{% if application.eligible_to_work == False %}
+			<li>Are you eligible to work for 40 hours a week in the country (or countries) you will be living in during the Outreachy internship period? <strong>No.</strong>
+				<ul>
+					<li>Outreachy interns must be eligible to work in the countries they will be living in
+						during the Outreachy internship period from
+						{{ current_round.internstarts|date:"F d, Y" }} to
+						{{ current_round.internends|date:"F d, Y" }}.</li>
+					<li>Student visas: Please note that in some countries, students studying abroad
+						on a student visa may not be eligible to work full-time (40 hours a week).
+						If you are on a student visa, please double check with your school counselors before applying.</li>
+					<li>Spouse visas: In some countries, spousal visas may not allow spouses to work.
+						Please contact your immigration officer if you have any questions about
+						whether your visa allows you to work full-time (40 hours a week).</li>
+				</ul>
+			</li>
+	{% endif %}
+	{% if application.under_export_control == True %}
+		<li>Are you a person or entity restricted by <a href="https://www.treasury.gov/resource-center/sanctions/Programs/Pages/Programs.aspx">United States of America export controls or sanctions programs</a>? <strong>Yes.</strong>
+				<ul><li>The Outreachy fiscal sponsor, Software Freedom Conservancy, is a United States of America non-profit. In order to retain their 503c6 non-profit status, they cannot provide internship opportunities to people or entities that are restricted by United States of America export controls or sanctions programs.</li></ul>
+			</li>
+	{% endif %}
+	</ul>
+	<p><strong>Incorrect information?</strong></p>
+	<p>
+	If any of the above information was filled out incorrectly,
+	please contact the Outreachy organizers at organizers@outreachy.org
+	and we can reset your eligibility information form.
+	Please provide the following information:
+	</p>
+	<ul>
+		<li>User name: {{ request.user.username }}</li>
+		<li>Email address: {{ request.user.email }}</li>
+		<li>Which question was filled out incorrectly?</li>
+	</ul>
+
 {% elif application.approval_status == application.REJECTED and application.reason_denied == 'DEMOGRAPHICS' %}
 
 	<h1>Ineligible for Outreachy</h1>
 
 	<p>
-	We're sorry, but based on the demographic information your supplied on your application,
-	you're not eligible to apply for Outreachy internships. Outreachy internships are open 
+	We're sorry, but based on the demographic information your supplied on your eligibility information form,
+	you're not eligible to apply for Outreachy internships.
+	</p>
+	<p><strong>Your Eligibility Information:</strong></p>
+	<ul>
+	{% if application.us_resident_demographics == False %}
+			<li>Are you a resident, permanent resident, or national of the United States of America who is
+				Black/African American, Hispanic/Latin@, Native American, Alaska Native, Native Hawaiian, or Pacific Islander?
+				<strong>No.</strong>
+			</li>
+	{% endif %}
+	{% if application.transgender == False %}
+			<li>Do you identify as transgender? <strong>No.</strong></li>
+	{% endif %}
+	{% if application.genderqueer == False %}
+			<li>Do you identify as genderqueer? <strong>No.</strong></li>
+	{% endif %}
+	{% if application.man == True %}
+		<li>Do you identify as a Man?<strong>Yes.</strong></li>
+	{% endif %}
+	</ul>
+	<p>
+	Outreachy internships are open 
 	internationally to women (cis and trans), trans men, and genderqueer
 	people. Internships are also open to residents and nationals of the
 	United States of any gender who are Black/African American,
@@ -53,13 +128,89 @@ Outreachy eligibility results
 	<h1>Ineligible for Outreachy</h1>
 
 	<p>
-	We're sorry, but based on the time commitment information your supplied on your application,
+	We're sorry, but based on the time commitment information your supplied on your eligibility information form,
 	you don't have 7 consecutive weeks free from full-time commitments.
 	</p>
+	<h2><strong>Your Eligibility Information:</strong></h2>
+
+	{% if school_time_commitments %}
+		<h3>School Term Information</h3>
+	{% endif %}
+	{% for term in school_time_commitments %}
+		<p>{{ term.term_name }}</p>
+		<ul>
+			<li>Date classes start for all students: <strong>{{ term.start_date|date:"F d, Y" }}</strong></li>
+			<li>Date exams end for all students: <strong>{{ term.end_date|date:"F d, Y" }}</strong></li>
+			<li>Number of credits for a typical student: <strong>{{ term.typical_credits }}</strong></li>
+			<li>Number of credits you're registered for: <strong>{{ term.registered_credits }}</strong></li>
+			<li>Number of internship or project credits for Outreachy: <strong>{{ term.outreachy_credits }}</strong></li>
+			<li>Number of graduate thesis or research credits: <strong>{{ term.thesis_credits }}</strong></li>
+		</ul>
+	{% endfor %}
+
+	{% if employment_time_commitments %}
+		<h3>Employment or Contract Information</h3>
+	{% endif %}
+	{% for contract in employment_time_commitments %}
+		<p>Employment Period #{{ forloop.counter }}</p>
+		<ul>
+			<li>Date employment starts: <strong>{{ contract.start_date|date:"F d, Y" }}</strong></li>
+			<li>Date employment ends: <strong>{{ contract.end_date|date:"F d, Y" }}</strong></li>
+			<li>Number of hours per week required by your employment contract: <strong>{{ contract.hours_per_week }}</strong></li>
+			<li>Will you quit this employment or contract work if you are accepted for Outreachy?
+				{% if contract.quit_on_acceptance %}<strong>Yes.</strong>{% else %}<strong>No.</strong>{% endif %}</li>
+		</ul>
+	{% endfor %}
+
+	{% if volunteer_time_commitments %}
+		<h3>Volunteer Information</h3>
+	{% endif %}
+	{% for position in volunteer_time_commitments %}
+		<p>Employment Period #{{ forloop.counter }}</p>
+		<ul>
+			<li>Date your volunteer time commitments start: <strong>{{ position.start_date|date:"F d, Y" }}</strong></li>
+			<li>Date your volunteer time commitments end: <strong>{{ position.end_date|date:"F d, Y" }}</strong></li>
+			<li>Maximum hours per week spent volunteering: <strong>{{ position.hours_per_week }}</strong></li>
+			<li>Description of volunteer position and duties: <strong>{{ position.description }}</strong></li>
+		</ul>
+	{% endfor %}
+	<h2>Weeks Free From Full-Time Commitments</h2>
+	<p>Based on the information you provided, you have the
+	following consecutive days free from full-time commitments:
+	<strong>{{ free_period_start_date|date:"F d, Y" }} to {{ free_period_end_date|date:"F d, Y" }}</strong>.</p>
+	<p>Outreachy interns must have a minimum number of 49 consecutive days free from full-time commitments
+	from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
+	</p>
+	<p>You have {{ longest_period_free }} consecutive days free from full-time commitments.
+	We cannot lower the minimum number of days for any applicant.</p>
+
+	<h2>Can I contest this result?</h2>
 	<p>
-	Outreachy has had applicants who have failed the program in the past due to
-	full-time commitments, so the Outreachy organizers are very firm about
-	the eligibility rules around time commitment requirements.
+	The Outreachy program put full-time commitment checking place
+	in order to ensure that both interns and mentors have a good experience.
+	Based on our past experience, interns with full-time commitments,
+	especially school time commitments, are less likely to have successful internships.
+	</p>
+	<p>
+	In the December 2014 - March 2015 Outreachy internship round, we had 19
+	interns who had classes during the majority of the internship time.
+	Two interns failed, two interns had to extend their internship by 2 weeks,
+	five interns had to extend their internships by 2 to 5 weeks.
+	</p>
+	<p>
+	Consequently, there was a 37% chance that the organization, mentor, and
+	intern will have a poor experience if an applicant who is full-time in
+	school is accepted. A poor internship experience typically means that
+	the Outreachy mentor chooses not to participate in the program again.
+	</p>
+	<p>
+	Outreachy has had a significant drop in the number of failures and
+	internship extensions since we implemented the full-time commitment
+	policies.
+	</p>
+	<p>
+	<strong>The Outreachy organizers are very firm about
+		the eligibility rules around time commitment requirements.</strong>
 	We cannot accept letters to excuse students from class work or late class enrollment letters.
 	We cannot accept manager approval for an employee to work for less than the hours in their employment contract.
 	</p>
@@ -72,13 +223,45 @@ Outreachy eligibility results
 	<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">Outreachy announcement mailing list</a>,
 	so you can be notified when the next application period opens.
 	</p>
+	<h2>What if the information is incorrect?</h2>
+	<p>
+	If any of the above information was filled out incorrectly
+	or your school term information changed,
+	please contact the Outreachy organizers at organizers@outreachy.org
+	<p>
+	</p>
+	Please provide the following information:
+	</p>
+	<ul>
+		<li>User name: {{ request.user.username }}</li>
+		<li>Email address: {{ request.user.email }}</li>
+		<li>Which question was filled out incorrectly?
+		{% if school_time_commitments %}
+			If the question was about your school term information, please include in the email:
+			<ul>
+				<li>The term name or number you need information changed for.</li>
+				<li>What information should change?</li>
+				<li>A school website URL or attached document showing your <strong>school term calendar</strong>
+					for all terms overlapping with
+					{{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
+					If a school term calendar is not yet released, send us the school term calendar from the year before.
+				</li>
+				<li>The <strong>suggested curriculum for your degree</strong>,
+					which includes the number of credits a student takes each term.</li>
+				<li>(If applicable) A school website URL, student handbook, or other
+					<strong>documentation says students are allowed to register
+					for less than the suggested amount of credits in their curriculum</strong>.</li>
+			</ul>
+		{% endif %}
+		</li>
+	</ul>
 
 {% elif application.approval_status == application.PENDING %}
 
 	<h1>Outreachy Application Pending</h1>
 
-	<p>Your Outreachy application is pending review by the Outreachy organizers.
-	We have received a notification about your application and will follow up with
+	<p>Your Outreachy eligibility information is pending review by the Outreachy organizers.
+	We have received a notification about your submitted eligibility information and will follow up with
 	additional questions for you via email.
 	</p>
 	<p>
@@ -129,14 +312,14 @@ https://calendly.com/sagesharp/outreachy-organizer-meeting
 You marked that your gender identity is {{ application.self_identify }}.
 Could you tell me a bit more about what pronouns you use?
 If they're listed on pronouns.is, I would love to add
-your gender identity and pronouns to our application system.
+your gender identity and pronouns to our eligibility checking form.
 {% endif %}
 Thanks,
 Outreachy Organizers
 		</pre>
 
 		<p>
-		Sage can mark this application as approved in the Django admin interface. Ask them to do so.
+		Sage can mark this eligibility information form as approved in the Django admin interface. Ask them to do so.
 		</p>
 	{% endif %}
 
