@@ -14,7 +14,7 @@ Outreachy internships working with {{ community.name }}
 {% include "home/snippet/pending_prompt.html" %}
 {% endif %}
 
-<p><a href="{{ request.scheme }}://{{ request.get_host }}/{{ current_round.slug }}">Outreachy Internships for {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }}</a> &gt; {{ community.name }}</p>
+<p><a href="{{ current_round.url }}">Outreachy Internships for {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }}</a> &gt; {{ community.name }}</p>
 
 {% include "home/snippet/community_landing_snippet.html" %}
 
