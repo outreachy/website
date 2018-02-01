@@ -1061,6 +1061,8 @@ class ApplicantApproval(ApprovalStatus):
 
     # Control which widget gets used on boolean fields in the template
     # Use nullboolean select widget to ensure all questions are answered.
+    # XXX: Make sure to update the text in the eligibility results template
+    # if you update the verbose name of any of these fields.
     over_18 = models.NullBooleanField(
             verbose_name='Will you be 18 years or older when the Outreachy internship starts?')
     gsoc_or_outreachy_internship = models.NullBooleanField(
@@ -1092,7 +1094,8 @@ class ApplicantApproval(ApprovalStatus):
             help_text='Please answer yes even if you are a citizen of a country other than USA.')
 
     under_export_control = models.NullBooleanField(
-            verbose_name='Are you a person or entity restricted by <a href="https://www.treasury.gov/resource-center/sanctions/Programs/Pages/Programs.aspx">US export controls or sanctions programs</a>?')
+            verbose_name='Are you a person or entity restricted by United States of America export controls or sanctions programs?',
+            help_text='See the <a href="https://www.treasury.gov/resource-center/sanctions/Programs/Pages/Programs.aspx">US export control and sanctions list</a> for more information')
 
     us_sanctioned_country = models.NullBooleanField(
             verbose_name='Are you a citizen, resident, or national of Crimea, Cuba, Iran, North Korea, or Syria?',
@@ -1182,9 +1185,13 @@ class ApplicantApproval(ApprovalStatus):
 
 class VolunteerTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
-    start_date = models.DateField(help_text="Date your time commitment starts. Use YYYY-MM-DD format.")
-    end_date = models.DateField(help_text="Date your time commitment ends. Use YYYY-MM-DD format.")
-    hours_per_week = models.IntegerField(help_text="Maximum hours per week spent on this time commitment.")
+    start_date = models.DateField(help_text="Date your volunteer time commitments start. Use YYYY-MM-DD format.")
+    end_date = models.DateField(help_text="Date your volunteer time commitments end. Use YYYY-MM-DD format.")
+    hours_per_week = models.IntegerField(help_text="Maximum hours per week spent volunteering.")
+    description = models.TextField(
+            max_length=THREE_PARAGRAPH_LENGTH,
+            blank=True,
+            help_text="Please describe what kind of volunteer position and duties you have.")
 
 class EmploymentTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
