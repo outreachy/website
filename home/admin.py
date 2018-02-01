@@ -54,6 +54,21 @@ class TimeCommitmentsInline(admin.StackedInline):
     verbose_name_plural = 'Time commitment'
 
 class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
+    list_display = (
+            'applicant',
+            'get_approval_status_display',
+            'reason_denied',
+            'application_round',
+            )
+    list_filter = (
+            'approval_status',
+            'application_round',
+            )
+    search_fields = (
+            'applicant__public_name',
+            '=applicant__account__username',
+            '=applicant__account__email',
+            )
     inlines = (SchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, TimeCommitmentsInline)
 
 admin.site.unregister(User)
