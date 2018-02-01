@@ -32,11 +32,111 @@ class SponsorshipInline(admin.StackedInline):
     can_delete = False
 
 class ParticipationAdmin(reversion.admin.VersionAdmin):
+    list_display = (
+            'community',
+            'approval_status',
+            'reason_denied',
+            'round',
+            )
+    list_filter = (
+            'approval_status',
+            'participating_round',
+            )
+    search_fields = (
+            'community__name',
+            )
     inlines = (SponsorshipInline,)
+
+    def round(self, obj):
+        return obj.participating_round
+    round.admin_order_field = '-participating_round__roundnumber'
 
 class CommunityAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
     save_on_top = True
+
+    list_display = (
+            'name',
+            'website',
+            )
+    search_fields = (
+            'name',
+            'website',
+            )
+
+class ProjectAdmin(reversion.admin.VersionAdmin):
+    list_display = (
+            'short_title',
+            'community',
+            'approval_status',
+            'reason_denied',
+            'round',
+            )
+    list_filter = (
+            'approval_status',
+            'project_round__participating_round',
+            )
+    search_fields = (
+            'short_title',
+            'project_round__community__name',
+            )
+
+    def community(self, obj):
+        return obj.project_round.community.name
+    community.admin_order_field = 'project_round__community__name'
+
+    def round(self, obj):
+        return obj.project_round.participating_round
+    round.admin_order_field = '-project_round__participating_round__roundnumber'
+
+class MentorApprovalAdmin(reversion.admin.VersionAdmin):
+    list_display = (
+            'mentor',
+            'project_name',
+            'community',
+            'approval_status',
+            'reason_denied',
+            'round',
+            )
+    list_filter = (
+            'approval_status',
+            'project__project_round__participating_round',
+            )
+    search_fields = (
+            'project__short_title',
+            'project__project_round__community__name',
+            'mentor__public_name',
+            '=mentor__account__username',
+            '=mentor__account__email',
+            )
+
+    def project_name(self, obj):
+        return obj.project.short_title
+
+    def community(self, obj):
+        return obj.project.project_round.community.name
+    community.admin_order_field = 'project__project_round__community__name'
+
+    def round(self, obj):
+        return obj.project.project_round.participating_round
+    round.admin_order_field = '-project__project_round__participating_round__roundnumber'
+
+class CoordinatorApprovalAdmin(reversion.admin.VersionAdmin):
+    list_display = (
+            'coordinator',
+            'community',
+            'approval_status',
+            'reason_denied',
+            )
+    list_filter = (
+            'approval_status',
+            )
+    search_fields = (
+            'community__name',
+            'coordinator__public_name',
+            '=coordinator__account__username',
+            '=coordinator__account__email',
+            )
 
 class SchoolTimeCommitmentsInline(admin.StackedInline):
     model = SchoolTimeCommitment
@@ -56,9 +156,9 @@ class TimeCommitmentsInline(admin.StackedInline):
 class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
     list_display = (
             'applicant',
-            'get_approval_status_display',
+            'approval_status',
             'reason_denied',
-            'application_round',
+            'round',
             )
     list_filter = (
             'approval_status',
@@ -71,15 +171,19 @@ class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
             )
     inlines = (SchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, TimeCommitmentsInline)
 
+    def round(self, obj):
+        return obj.application_round
+    round.admin_order_field = '-application_round__roundnumber'
+
 admin.site.unregister(User)
 admin.site.register(User, ComradeAdmin)
 
 admin.site.register(ApplicantApproval, ApplicantApprovalAdmin)
 admin.site.register(Community, CommunityAdmin)
-admin.site.register(CoordinatorApproval, reversion.admin.VersionAdmin)
-admin.site.register(MentorApproval, reversion.admin.VersionAdmin)
-admin.site.register(NewCommunity)
+admin.site.register(CoordinatorApproval, CoordinatorApprovalAdmin)
+admin.site.register(MentorApproval, MentorApprovalAdmin)
+admin.site.register(NewCommunity, CommunityAdmin)
 admin.site.register(Notification)
 admin.site.register(Participation, ParticipationAdmin)
 admin.site.register(RoundPage)
-admin.site.register(Project, reversion.admin.VersionAdmin)
+admin.site.register(Project, ProjectAdmin)

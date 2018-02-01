@@ -424,6 +424,9 @@ class Community(models.Model):
 
     rounds = models.ManyToManyField(RoundPage, through='Participation')
 
+    class Meta:
+        verbose_name_plural = "communities"
+
     def __str__(self):
         return self.name
 
@@ -513,6 +516,9 @@ class NewCommunity(Community):
     code_of_conduct = models.URLField(blank=True, help_text="(Optional) Please provide a URL for to your community's Code of Conduct")
     cla = models.URLField(blank=True, help_text="(Optional) Please provide a URL for your community's Contributor License Agreement (CLA)")
     dco = models.URLField(blank=True, help_text="(Optional) Please provide a URL for your community's Developer Certificate of Origin (DCO) agreement")
+
+    class Meta:
+        verbose_name_plural = 'new communities'
 
 class Participation(ApprovalStatus):
     community = models.ForeignKey(Community)
