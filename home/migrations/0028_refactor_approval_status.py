@@ -54,7 +54,7 @@ def infer_approval(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0027_auto_20180112_2120'),
+        ('home', '0023_auto_20180111_0200_squashed_0027_auto_20180112_2120'),
     ]
 
     operations = [

@@ -12,8 +12,6 @@ import home.models
 
 class Migration(migrations.Migration):
 
-    replaces = [('home', '0029_auto_20180112_2334'), ('home', '0030_auto_20180113_2154'), ('home', '0031_auto_20180113_2202'), ('home', '0032_auto_20180114_0423'), ('home', '0033_auto_20180114_1919'), ('home', '0034_auto_20180114_2026'), ('home', '0035_auto_20180114_2313'), ('home', '0036_community_notify_me'), ('home', '0037_auto_20180115_0223'), ('home', '0038_auto_20180115_0242'), ('home', '0039_auto_20180115_0320'), ('home', '0040_auto_20180115_0355'), ('home', '0041_auto_20180115_0406'), ('home', '0042_auto_20180116_0148'), ('home', '0043_auto_20180116_0244'), ('home', '0044_auto_20180116_0251')]
-
     dependencies = [
         ('home', '0028_refactor_approval_status'),
     ]

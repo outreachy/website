@@ -266,77 +266,62 @@ class Comrade(models.Model):
                 pronouns=self.get_pronouns_display(),
                 )
 
+
+    def has_application(self, **filters):
+        # Does this Comrade have an ApplicantApproval for this round?
+        current_round = RoundPage.objects.latest('internstarts')
+        applications = ApplicantApproval.objects.filter(
+                applicant=self, application_round=current_round, 
+                **filters)
+        return applications.exists()
+
+
     # We want to prompt the Comrade to fill out an ApplicantApproval
     # if they haven't already.
     # Don't advertise this for mentors or coordinators (pending or approved) in this current round
     def needs_application(self):
-        # Does this Comrade have an ApplicantApproval for this round?
-        current_round = RoundPage.objects.latest('internstarts')
-        applications = ApplicantApproval.objects.filter(
-                applicant=self, application_round=current_round)
-        if len(applications) > 1:
+        if self.has_application():
             return False
 
         # Is this Comrade an approved mentor or coordinator?
-        if approved_mentor_or_coordinator(self):
+        if self.approved_mentor_or_coordinator():
             return False
         return True
 
 
     def ineligible_application(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        try:
-            application = ApplicantApproval.objects.get(
-                    applicant=self, application_round=current_round)
-        except ApplicantApproval.DoesNotExist:
-            return False
-        if application.approval_status == ApprovalStatus.REJECTED:
-            return True
-        return False
+        return self.has_application(approval_status=ApprovalStatus.REJECTED)
 
     def pending_application(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        try:
-            application = ApplicantApproval.objects.get(
-                    applicant=self, application_round=current_round)
-        except ApplicantApproval.DoesNotExist:
-            return False
-        if application.approval_status == ApprovalStatus.PENDING:
-            return True
-        return False
+        return self.has_application(approval_status=ApprovalStatus.PENDING)
 
     def eligible_application(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        try:
-            application = ApplicantApproval.objects.get(
-                    applicant=self, application_round=current_round)
-        except ApplicantApproval.DoesNotExist:
-            return False
-        if application.approval_status == ApprovalStatus.APPROVED:
-            return True
-        return False
+        return self.has_application(approval_status=ApprovalStatus.APPROVED)
 
     def approved_mentor_or_coordinator(self):
         if self.account.is_staff:
             return True
+
         current_round = RoundPage.objects.latest('internstarts')
         mentors = MentorApproval.objects.filter(
                 mentor=self,
+                approval_status=ApprovalStatus.APPROVED,
+                project__approval_status=ApprovalStatus.APPROVED,
+                project__project_round__approval_status=ApprovalStatus.APPROVED,
                 project__project_round__participating_round=current_round,
-                ).approved()
-        for m in mentors:
-            # Is both the project and the community participation approved
-            if m.project.approval_status == ApprovalStatus.APPROVED and m.project.project_round.approval_status == ApprovalStatus.APPROVED:
-                return True
+                )
+        if mentors.exists():
+            return True
 
         coordinators = CoordinatorApproval.objects.filter(
-                coordinator=self).approved()
-        for c in coordinators:
-            participation = Participation.objects.get(
-                    participating_round=current_round,
-                    community=c.community)
-            if participation.approval_status == ApprovalStatus.APPROVED:
-                return True
+                coordinator=self,
+                approval_status=ApprovalStatus.APPROVED,
+                community__participation__approval_status=ApprovalStatus.APPROVED,
+                community__participation__participating_round=current_round,
+                )
+        if coordinators.exists():
+            return True
+
         return False
 
 class ApprovalStatusQuerySet(models.QuerySet):
@@ -439,6 +424,9 @@ class Community(models.Model):
 
     rounds = models.ManyToManyField(RoundPage, through='Participation')
 
+    class Meta:
+        verbose_name_plural = "communities"
+
     def __str__(self):
         return self.name
 
@@ -528,6 +516,9 @@ class NewCommunity(Community):
     code_of_conduct = models.URLField(blank=True, help_text="(Optional) Please provide a URL for to your community's Code of Conduct")
     cla = models.URLField(blank=True, help_text="(Optional) Please provide a URL for your community's Contributor License Agreement (CLA)")
     dco = models.URLField(blank=True, help_text="(Optional) Please provide a URL for your community's Developer Certificate of Origin (DCO) agreement")
+
+    class Meta:
+        verbose_name_plural = 'new communities'
 
 class Participation(ApprovalStatus):
     community = models.ForeignKey(Community)

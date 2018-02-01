@@ -8,8 +8,6 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    replaces = [('home', '0023_auto_20180111_0200'), ('home', '0024_auto_20180111_1930'), ('home', '0025_auto_20180111_1945'), ('home', '0026_auto_20180111_2146'), ('home', '0027_auto_20180112_2120')]
-
     dependencies = [
         ('home', '0022_auto_20171219_2252_squashed_0065_auto_20180110_0646'),
     ]

@@ -23,7 +23,7 @@ Outreachy eligibility results
 	<p>
 	If you get stuck at any time, please reach out to the mentors or <a href="/contact/">Outreachy organizers</a>.
 	</p>
-	<p><a class='btn btn-success' href="{{ request.scheme }}://{{ request.get_host }}/{{ current_round.slug }}">View Internship Projects</a></p>
+	<p><a class='btn btn-success' href="{{ current_round.url }}">View Internship Projects</a></p>
 
 {% elif application.approval_status == application.REJECTED and application.reason_denied == 'GENERAL' %}
 
