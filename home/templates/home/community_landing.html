@@ -25,9 +25,11 @@ Outreachy internships working with {{ community.name }}
 		<h2>{{ project.short_title }}</h2>
 		{% if project.required_skills %}
 		<p>Skills used or learned in this project:<p>
+		<ul>
 			{% for skill in project.required_skills %}
-				<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
+				<li>{{ skill.skill }}: {{ skill.get_experience_level_display }}</li>
 			{% endfor %}
+		</ul>
 		{% endif %}
 		{% if request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator %}
 			<p><button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#project{{ forloop.counter }}" aria-expanded="false" aria-controls="project{{ forloop.counter }}">
