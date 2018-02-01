@@ -117,7 +117,7 @@ class EligibilityTests(SimpleTestCase):
             'enrolled_as_student': False,
             'employed': False,
             'contractor': False,
-            'time_commitments': False,
+            'volunteer_time_commitments': False,
         }
         for arg in args:
             defaults[arg] = True
@@ -253,8 +253,8 @@ class EligibilityTests(SimpleTestCase):
                 kinds.append('employed')
             data.append(('Employment Info', list(employment) + [None]))
         if time:
-            kinds.append('time_commitments')
-            data.append(('Time Commitment Info', list(time) + [None]))
+            kinds.append('volunteer_time_commitments')
+            data.append(('Volunteer Time Commitment Info', list(time) + [None]))
 
         data.append(self.time_commitments(*kinds))
 

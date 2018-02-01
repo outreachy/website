@@ -1062,8 +1062,7 @@ class ApplicantApproval(ApprovalStatus):
     # Control which widget gets used on boolean fields in the template
     # Use nullboolean select widget to ensure all questions are answered.
     over_18 = models.NullBooleanField(
-            verbose_name='Are you over 18 years of age?',
-            help_text='Will you be 18 years or older when the Outreachy internship starts?')
+            verbose_name='Will you be 18 years or older when the Outreachy internship starts?')
     gsoc_or_outreachy_internship = models.NullBooleanField(
             verbose_name='Previous Google Summer of Code or Outreachy internship?',
             help_text='Have you been accepted as a Google Summer of Code intern or an Outreachy intern before? Please say yes even if you did not complete the internship.')
@@ -1072,29 +1071,35 @@ class ApplicantApproval(ApprovalStatus):
             help_text='Will you be enrolled in a university or college during the Outreachy internship period?')
 
     employed = models.NullBooleanField(
-            help_text='Will you be a part-time or full-time employee during the Outreachy internship period?')
+            help_text='Will you be an employee (for any number of hours) during the Outreachy internship period?')
 
     contractor = models.NullBooleanField(
             help_text='Will you be a contractor during the Outreachy internship period?')
 
-    time_commitments = models.NullBooleanField(
-            help_text='Will you have other time commitments that require more than 10 hours a week during the Outreachy internship period?')
+    volunteer_time_commitments = models.NullBooleanField(
+            help_text='Will you have volunteer time commitments that require more than 10 hours a week during the Outreachy internship period?')
+
+    other_time_commitments = models.TextField(
+            max_length=THREE_PARAGRAPH_LENGTH,
+            blank=True,
+            help_text="(Optional) If you have other time commitments outside of school, work, or volunteer hours, please use this field to let your mentor know. Examples of other time commitments include vacation that lasts longer than a week, coding school time commitments, community or online classes, etc.")
 
     us_national_or_permanent_resident = models.NullBooleanField(
-            help_text='Are you a national or permanent resident of the United States of America? Outreachy in open to people around the world, but we need to ask additional questions for U.S. residents.')
+            help_text='Are you a national or permanent resident of the United States of America? Outreachy is open to some people around the world, and additional grpous of people in the U.S.A.')
 
     living_in_us = models.NullBooleanField(
-            help_text='Will you be living in the United States of America during the Outreachy internship period? Please answer yes if you are living in the USA, even if you are a citizen of a country other than USA.')
+            verbose_name='Will you be living for the majority of the Outreachy internship period in the United States of America and be eligible to work in the U.S.A?',
+            help_text='Please answer yes even if you are a citizen of a country other than USA.')
 
     under_export_control = models.NullBooleanField(
-            help_text='Are you a person or entity restricted by US export controls or sanctions programs? If you are unsure what those terms mean, answer no.')
+            verbose_name='Are you a person or entity restricted by <a href="https://www.treasury.gov/resource-center/sanctions/Programs/Pages/Programs.aspx">US export controls or sanctions programs</a>?')
 
     us_sanctioned_country = models.NullBooleanField(
             verbose_name='Are you a citizen, resident, or national of Crimea, Cuba, Iran, North Korea, or Syria?',
-            help_text='If you have citizenship with of one of these counties, please answer yes, even if you are not currently living in those countries.')
+            help_text='If you have citizenship with Cuba, Iran, North Korea, or Syria, please answer yes, even if you are not currently living in those countries.')
 
     eligible_to_work = models.NullBooleanField(
-            help_text='Are you eligible to work for 40 hours a week in the country you will be living in during the Outreachy internship period?</p><p>Student visas: Please note that in some countries, students studying abroad on a student visa may not be eligible to work full-time (40 hours a week). If you are on a student visa, please double check with your school counselors before applying.</p><p>Spouse visas: In some countries, spousal visas may not allow spouses to work. Please contact your immigration officer if you have any questions about whether your visa will be impacted by full-time work (40 hours a week).')
+            help_text='Are you eligible to work for 40 hours a week in the country (or countries) you will be living in during the Outreachy internship period?</p><p>Student visas: Please note that in some countries, students studying abroad on a student visa may not be eligible to work full-time (40 hours a week). If you are on a student visa, please double check with your school counselors before applying.</p><p>Spouse visas: In some countries, spousal visas may not allow spouses to work. Please contact your immigration officer if you have any questions about whether your visa allows you to work full-time (40 hours a week).')
 
     # Race/Ethnicity Information
     us_resident_demographics = models.NullBooleanField(
@@ -1175,7 +1180,7 @@ class ApplicantApproval(ApprovalStatus):
     def get_approver_email_list(self):
         return [email.organizers]
 
-class TimeCommitment(models.Model):
+class VolunteerTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
     start_date = models.DateField(help_text="Date your time commitment starts. Use YYYY-MM-DD format.")
     end_date = models.DateField(help_text="Date your time commitment ends. Use YYYY-MM-DD format.")
@@ -1194,6 +1199,7 @@ class SchoolTimeCommitment(models.Model):
 
     term_name = models.CharField(
             max_length=SENTENCE_LENGTH,
+            verbose_name="Term name or term number",
             help_text="If your university uses term names (e.g. Winter 2018 term of your Sophomore year), enter your current term name, year in college, and term year. If your university uses term numbers (e.g. 7th semester), enter the term number.")
     
     start_date = models.DateField(
@@ -1213,12 +1219,12 @@ class SchoolTimeCommitment(models.Model):
             help_text="What is the total number of credits you are enrolled for this term?<br>If you aren't registered yet, please provide an approximate number of credits?")
 
     outreachy_credits = models.IntegerField(
-            verbose_name="Number of internship or project credits",
+            verbose_name="Number of internship or project credits for Outreachy",
             help_text="If you are going to seek university credit for your Outreachy internship, how many credits will you earn?")
 
     thesis_credits = models.IntegerField(
-            verbose_name="Number of thesis or research credits",
-            help_text="If you are a graduate student, how many credits will you earn for working on your thesis or research?")
+            verbose_name="Number of graduate thesis or research credits",
+            help_text="If you are a graduate student, how many credits will you earn for working on your thesis or research (not including the credits earned for the Outreachy internship)?")
 
 class SchoolInformation(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
@@ -1237,7 +1243,8 @@ class ContractorInformation(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
 
     typical_hours = models.IntegerField(
-            help_text="During the past three months, what is the average number of hours/week you have spent on contracted work and unpaid business development or business marketing?")
+            verbose_name="Average number of hours spent on contractor business",
+            help_text="During the past three months, what is the average number of hours/week you have spent on contracted work and unpaid business development or business marketing? You will be able to enter your known contract hours for the Outreachy internship period on the next page.")
 
     continuing_contract_work = models.NullBooleanField(
             verbose_name="Will you be doing contract work during the Outreachy internship period?")

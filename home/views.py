@@ -46,7 +46,7 @@ from .models import RoundPage
 from .models import SchoolInformation
 from .models import SchoolTimeCommitment
 from .models import Sponsorship
-from .models import TimeCommitment
+from .models import VolunteerTimeCommitment
 
 class RegisterUser(hmac_views.RegistrationView):
 
@@ -252,7 +252,7 @@ def show_time_commitment_info(wizard):
     if not gender_and_demographics_is_approved(wizard):
         return False
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
-    return cleaned_data.get('time_commitments', True)
+    return cleaned_data.get('volunteer_time_commitments', True)
 
 def time_commitment(cleaned_data, hours):
     return {
@@ -263,7 +263,7 @@ def time_commitment(cleaned_data, hours):
 
 def time_commitments_are_approved(wizard, application_round):
     tcs = [ time_commitment(d, d['hours_per_week'])
-            for d in wizard.get_cleaned_data_for_step('Time Commitment Info') or []
+            for d in wizard.get_cleaned_data_for_step('Volunteer Time Commitment Info') or []
             if d ]
 
     etcs = [ time_commitment(d, 0 if d['quit_on_acceptance'] else d['hours_per_week'])
@@ -320,7 +320,7 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
             'School Term Info': show_school_info,
             'Contractor Info': show_contractor_info,
             'Employment Info': show_employment_info,
-            'Time Commitment Info': show_time_commitment_info,
+            'Volunteer Time Commitment Info': show_time_commitment_info,
             }
     form_list = [
             ('General Info', modelform_factory(ApplicantApproval, fields=(
@@ -422,13 +422,13 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
                 'enrolled_as_student',
                 'employed',
                 'contractor',
-                'time_commitments',
+                'volunteer_time_commitments',
                 ),
                 widgets = {
                     'enrolled_as_student': widgets.RadioSelect(choices=BOOL_CHOICES),
                     'employed': widgets.RadioSelect(choices=BOOL_CHOICES),
                     'contractor': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'time_commitments': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'volunteer_time_commitments': widgets.RadioSelect(choices=BOOL_CHOICES),
                     },
                 )),
             ('School Info', inlineformset_factory(ApplicantApproval,
@@ -447,7 +447,7 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
                 SchoolTimeCommitment,
                 min_num=1,
                 validate_min=True,
-                extra=3,
+                extra=2,
                 can_delete=False,
                 fields=(
                     'term_name',
@@ -480,7 +480,7 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
                 EmploymentTimeCommitment,
                 min_num=1,
                 validate_min=True,
-                extra=3,
+                extra=2,
                 can_delete=False,
                 fields=(
                     'start_date',
@@ -492,11 +492,11 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
                     'quit_on_acceptance': widgets.CheckboxInput(),
                     },
                 )),
-            ('Time Commitment Info', inlineformset_factory(ApplicantApproval,
-                TimeCommitment,
+            ('Volunteer Time Commitment Info', inlineformset_factory(ApplicantApproval,
+                VolunteerTimeCommitment,
                 min_num=1,
                 validate_min=True,
-                extra=3,
+                extra=2,
                 can_delete=False,
                 fields=(
                     'start_date',
@@ -515,7 +515,7 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
             'School Term Info': 'home/eligibility_wizard_school_terms.html',
             'Contractor Info': 'home/eligibility_wizard_contractor_info.html',
             'Employment Info': 'home/eligibility_wizard_employment_info.html',
-            'Time Commitment Info': 'home/eligibility_wizard_time_commitment_info.html',
+            'Volunteer Time Commitment Info': 'home/eligibility_wizard_time_commitment_info.html',
             }
 
     def get_template_names(self):

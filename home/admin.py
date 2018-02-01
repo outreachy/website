@@ -17,7 +17,7 @@ from .models import Project
 from .models import RoundPage
 from .models import SchoolTimeCommitment
 from .models import Sponsorship
-from .models import TimeCommitment
+from .models import VolunteerTimeCommitment
 
 class ComradeInline(admin.StackedInline):
     model = Comrade
@@ -48,13 +48,13 @@ class EmploymentTimeCommitmentsInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Employment period'
 
-class TimeCommitmentsInline(admin.StackedInline):
-    model = TimeCommitment
+class VolunteerTimeCommitmentsInline(admin.StackedInline):
+    model = VolunteerTimeCommitment
     can_delete = False
     verbose_name_plural = 'Time commitment'
 
 class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
-    inlines = (SchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, TimeCommitmentsInline)
+    inlines = (SchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, VolunteerTimeCommitmentsInline)
 
 admin.site.unregister(User)
 admin.site.register(User, ComradeAdmin)
