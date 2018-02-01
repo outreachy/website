@@ -1114,9 +1114,13 @@ def dashboard(request):
     """
     by_status = defaultdict(list)
     for model in DASHBOARD_MODELS:
-        objects = model.objects_for_dashboard(request.user).distinct()
-        for obj in objects:
-            by_status[obj.approval_status].append((model._meta.verbose_name, obj))
+        by_model = defaultdict(list)
+        for obj in model.objects_for_dashboard(request.user).distinct():
+            by_model[obj.approval_status].append(obj)
+
+        label = model._meta.verbose_name
+        for status, objects in by_model.items():
+            by_status[status].append((label, objects))
 
     groups = []
     for status, label in ApprovalStatus.APPROVAL_STATUS_CHOICES:
