@@ -126,6 +126,13 @@ class ComradeUpdate(LoginRequiredMixin, UpdateView):
             'pronouns_to_participants',
             'pronouns_public',
             'timezone',
+            'location',
+            'nick',
+            'github_url',
+            'gitlab_url',
+            'blog_url',
+            'blog_rss_url',
+            'twitter_url',
             ]
 
     # FIXME - we need to migrate any existing staff users who aren't a Comrade
