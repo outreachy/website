@@ -640,6 +640,28 @@ def eligibility_results(request):
             },
             )
 
+def current_round_page(request):
+    current_round = RoundPage.objects.latest('internstarts')
+    approved_participations = current_round.participation_set.approved()
+
+    open_approved_projects = []
+    closed_approved_projects = []
+    for p in approved_participations:
+        projects = p.project_set.approved().filter(accepting_new_applicants=True)
+        if projects:
+            open_approved_projects.append((p.community, projects))
+        projects = p.project_set.approved().filter(accepting_new_applicants=False)
+        if projects:
+            closed_approved_projects.append((p.community, projects))
+
+    return render(request, 'home/round_page_with_communities.html',
+            {
+            'current_round' : current_round,
+            'open_projects': open_approved_projects,
+            'closed_projects': closed_approved_projects,
+            },
+            )
+
 # Call for communities, mentors, and volunteers page
 #
 # This is complex, so class-based views don't help us here.

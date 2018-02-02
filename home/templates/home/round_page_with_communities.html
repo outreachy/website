@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Outreachy Internships | Apply | Pick a Project
+{% endblock %}
+
+{% block content %}
+
+	{% include "home/snippet/eligibility_prompts.html" %}
+<p><a href="/apply/">Why apply to Outreachy?</a> &gt;
+{% if not request.user.comrade or request.user.comrade.needs_application %}
+	<a href="{% url 'eligibility' %}">Check Eligibility</a>
+{% elif request.user.comrade.ineligible_application or request.user.comrade.pending_application %}
+	<a href="{% url 'eligibility-results' %}">Review Your Eligibility</a>
+{% else %}
+	<a href="/apply/eligibility/">Outreachy Eligibility Rules</a>
+{% endif %}
+	 &gt; Find a Mentor and Internship Project</p>
+
+	<h1>Outreachy {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} Internships</h1>
+	<p>The timeline for Outreachy round {{ current_round.roundnumber }} is:</p>
+	<table class=table>
+		<tr><td>{{ current_round.landingdue }}</td><td>Most Outreachy mentoring communities and internship projects will be listed</td></tr>
+		<tr><td>{{ current_round.appsopen }}</td><td>Applicants start making contributions to internship projects</td></tr>
+		<tr><td>{{ current_round.lateorgs }}</td><td>Last date for new mentoring community listings</td></tr>
+		<tr><td>{{ current_round.ProjectsDeadline }}</td><td>Last date for new internship project listings</td></tr>
+		<tr><td>{{ current_round.appsclose }}</td><td>Application deadline. Last day to finish any contributions to internship projects. Applications who made a contribution must submit the rest of their project application by this date.</td></tr>
+		<tr><td>{{ current_round.appslate }}</td><td>Late application deadline for specific projects (see below for which projects are accepting late applications)</td></tr>
+		<tr><td>{{ current_round.appsclose }} to {{ current_round.internannounce }}</td><td>Applicants are encouraged to continue making contributions</td></tr>
+		<tr><td>{{ current_round.internannounce }}</td><td>Accepted interns announced on <a href"/alums/">the alums page</a> at 4pm UTC</td></tr>
+		<tr><td>{{ current_round.internstarts }} to {{ current_round.internends }}</td><td>Internships period</td></tr>
+	</table>
+	{{ current_round.sponsordetails|safe }}
+
+	{% if request.user.comrade.eligible_application %}
+		<h2>Finding a Mentor and an Internship Project</h2>
+		<p><img src="{% static 'bot-find-a-mentor.png' %}"></p>
+		<p>
+		The next step
+		in the Outreachy application process is to look through the list of
+		participating communities and internship projects, and pick one
+		or two projects that looks interesting to you.  Then you'll
+		contact a mentor and start working on a contribution for the
+		project.
+		</p>
+		<p>
+		Only applicants that make a contribution to a project
+		will be accepted as an intern, so it's good to not pick too
+		many projects to apply to. At the same time, certain
+		communities like Mozilla, Wikimedia, and the Linux kernel are
+		highly competitive, so if you choose to apply to those
+		projects, make sure to apply to another project as well. We
+		don't recommend applying to more than two projects.
+		</p>
+		<p>
+		Many people get overwhelmed with the list of projects and don't
+		know how to choose a project! Our advice is to pick a project
+		whose mission resonates with you.
+		</p>
+		<p>
+		Once you've narrowed down you list of projects,
+		you can decide whether the project is right for you by:
+		</p>
+		<ul>
+			<li>
+			Introduce yourself to the project's mentor and discuss
+			what your tasks during the internship program would be.
+			Outreachy mentors are friendly and welcome your questions!
+			</li>
+			<li>
+			Reading the project's wiki page
+			</li>
+			<li>
+			Lurking on the project's chat, forum, or IRC
+			channel (if your project uses IRC and you've
+			never used it before, you can read more <a
+			href="https://wiki.gnome.org/Outreachy/IRC">here</a>)
+			</li>
+			<li>
+			Building any software projects
+			and running them to check out its latest capabilities (the
+			project website usually has the instructions for doing
+			this, but don't hesitate twice to ask the project's
+			mentor or people on the project's chat forums for help
+			if you encounter any problems)
+			</li>
+			<li>
+			Looking at the open issues or feature requests for the project
+			</li>
+			<li>
+			Looking at the recent changes in the project's repository
+			or recent contributions pages.
+			</li>
+			<li>
+			Reading the recent discussion on the project's mailing list or forum.
+			</li>
+			<li>
+			Reading the blogs of the project's mentor and other project contributors.
+			</li>
+			<li>
+			Introduce yourself to the project's mentors. (Yes, we know this is listed
+			twice. It's very important that you communicate with mentors and
+			get to know them.)
+			</li>
+		</ul>
+		<p>
+		If you don't see a project that looks interesting to you, check
+		back once a week. Outreachy often adds projects after the
+		application period opens. If you
+		<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">sign up for the announcements mailing list</a>,
+		you'll get an email mid-application period when
+		new projects are added.
+		</p>
+		<h2>Making Contributions</h2>
+		<p><img src="https://www.outreachy.org/media/images/bot-contribution.original.png"></p>
+		<p>
+		Once you've picked a project that looks interesting to you,
+		proceed to the next application process step, which is to start
+		your contribution to the project.  You should record your
+		in-progress contributions by logging them from the Outreachy
+		community landing pages linked from this page.  Only applicants with
+		recorded contributions will be eligible to be accepted as
+		interns.
+		</p>
+		<p>
+		Make your contributions early! Many applicants under-estimate
+		the time it will take to complete a contribution.
+		If a mentor with a popular project is working with several
+		promising applicants, they may close the project to new applicants.
+		</p>
+	{% endif %}
+	{% if open_projects %}
+		<h2>Open Outreachy Internship Projects</h2>
+
+		<p> The following projects are accepting contributions from new
+		applicants. Please note that as the round goes on, mentors may close
+		their project to new applicants because they are already working with
+		many applicants. Make sure to contact a mentor and start your
+		contribution as soon as possible!
+		</p>
+
+		{% for community, projects in open_projects %}
+			<h3>{{ community.name }}</h3>
+			<p>{{ community.description }}</p>
+			{% if request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator %}
+				<p>Learn how to make a contribution to these internship projects on the
+				<a href="{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}">{{ community.name }} community landing page</a>.</p>
+			{% endif %}
+			<ul>
+			{% for project in projects %}
+				<li>{{ project.short_title }}
+				{% if project.required_skills %}
+					<ul>
+					<li>Skills used or learned in this project: 
+						{% for skill in project.required_skills %}
+							{{ skill.skill }}
+							{% if not forloop.last %}, {% endif %}
+						{% endfor %}
+					</ul>
+				{% endif %}
+				</li>
+			{% endfor %}
+			</ul>
+		{% endfor %}
+	{% endif %}
+	{% if closed_projects %}
+		<h2>Closed Outreachy Internship Projects</h2>
+
+		<p>
+		The projects in this section already have many strong
+		candidates they have worked with. If you are just starting out
+		with the Outreachy application process, we don't suggest you
+		apply for these projects. If you have been working with the
+		project mentors, please continue to work with them. Make sure
+		to submit your in-progress contributions through the community
+		landing page, and complete your final project application.
+		</p>
+
+		{% for community, projects in closed_projects %}
+			<h3>{{ community.name }}</h3>
+			<p>{{ community.description }}</p>
+			{% if request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator %}
+				<p>Document your contributions to these internship projects on the
+				<a href="{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}">{{ community.name }} community landing page</a>.</p>
+			{% endif %}
+			<ul>
+			{% for project in projects %}
+				<li>{{ project.short_title }}
+				{% if project.required_skills %}
+					<ul>
+					<li>Skills used or learned in this project: 
+						{% for skill in project.required_skills %}
+							{{ skill.skill }}
+							{% if not forloop.last %}, {% endif %}
+						{% endfor %}
+					</ul>
+				{% endif %}
+				</li>
+			{% endfor %}
+			</ul>
+		{% endfor %}
+	{% endif %}
+{% endblock %}

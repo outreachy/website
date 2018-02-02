@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^eligibility/$', views.EligibilityUpdateView.as_view(), name='eligibility'),
     url(r'^eligibility-results/$', views.eligibility_results, name='eligibility-results'),
     url(r'^account/$', views.ComradeUpdate.as_view(), name='account'),
+    url(r'^apply/project-selection/$', views.current_round_page, name='project-selection'),
     url(r'^register/$', views.RegisterUser.as_view(), name='register'),
     url(r'^register/sent/$', views.PendingRegisterUser.as_view(), name='registration_complete'),
     url(r'^register/activate/(?P<activation_key>[-.:\w]+)/$', views.ActivationView.as_view(), name='registration_activate'),
