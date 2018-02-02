@@ -249,12 +249,12 @@ class Comrade(models.Model):
 
     timezone = TimeZoneField(blank=True, verbose_name="(Optional) Your timezone", help_text="The timezone in your current location. Shared with other Outreachy participants to help facilitate communication.")
 
-    location = models.TextField(
+    location = models.CharField(
             max_length=SENTENCE_LENGTH,
             blank=True,
             help_text="(Optional) Location - city, state/province, and country.<br>This field is unused for mentors and coordinators. Applicant's location will be shared with their mentors. If selected as an intern, this location will be publicly displayed on the Outreachy website.<br>If you are concerned about keeping your location private, you can share less information, such as just the country, or a larger town nearby.")
 
-    nick = models.TextField(
+    nick = models.CharField(
             max_length=SENTENCE_LENGTH,
             blank=True,
             verbose_name="Forum, chat, or IRC username",
