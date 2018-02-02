@@ -983,6 +983,14 @@ class CoordinatorApprovalAction(ApprovalStatusAction):
         except CoordinatorApproval.DoesNotExist:
             return CoordinatorApproval(coordinator=comrade, community=community)
 
+    def get_success_url(self):
+        if self.kwargs['action'] == 'submit':
+            # There's nothing useful to see on the coordinator preview
+            # page, so go to the community preview after submit instead.
+            return self.object.community.get_preview_url()
+
+        return self.object.get_preview_url()
+
     def notify(self):
         if self.prior_status != self.target_status:
             email.approval_status_changed(self.object, self.request)
