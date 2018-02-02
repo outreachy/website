@@ -624,7 +624,7 @@ def eligibility_results(request):
             free_period_start_day = counter
         counter = counter + group_len
     free_period_start_date = current_round.internstarts + timedelta(days=free_period_start_day)
-    free_period_end_date = current_round.internstarts + timedelta(days=free_period_start_day + longest_period_free)
+    free_period_end_date = current_round.internstarts + timedelta(days=free_period_start_day + longest_period_free - 1)
 
     return render(request, 'home/eligibility_results.html',
             {
