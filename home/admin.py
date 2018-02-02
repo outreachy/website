@@ -69,6 +69,7 @@ class ProjectAdmin(reversion.admin.VersionAdmin):
             'short_title',
             'community',
             'approval_status',
+            'accepting_new_applicants',
             'reason_denied',
             'round',
             )
