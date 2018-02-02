@@ -6,13 +6,7 @@ Outreachy internships working with {{ community.name }}
 
 {% block content %}
 
-{% if not request.user.comrade or request.user.comrade.needs_application %}
-{% include "home/snippet/eligibility_prompt.html" %}
-{% elif request.user.comrade.ineligible_application %}
-{% include "home/snippet/ineligible_prompt.html" %}
-{% elif request.user.comrade.pending_application %}
-{% include "home/snippet/pending_prompt.html" %}
-{% endif %}
+{% include "home/snippet/eligibility_prompts.html" %}
 
 <p><a href="{{ current_round.url }}">Outreachy Internships for {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }}</a> &gt; {{ community.name }}</p>
 
