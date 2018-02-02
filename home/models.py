@@ -1082,8 +1082,6 @@ class ApplicantApproval(ApprovalStatus):
     applicant = models.ForeignKey(Comrade, on_delete=models.CASCADE)
     application_round = models.ForeignKey(RoundPage, on_delete=models.CASCADE)
 
-    # Control which widget gets used on boolean fields in the template
-    # Use nullboolean select widget to ensure all questions are answered.
     # XXX: Make sure to update the text in the eligibility results template
     # if you update the verbose name of any of these fields.
     over_18 = models.NullBooleanField(
