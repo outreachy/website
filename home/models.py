@@ -708,6 +708,7 @@ class Project(ApprovalStatus):
         unique_together = (
                 ('slug', 'project_round'),
                 )
+        ordering = ['slug']
 
     def __str__(self):
         return '{start:%Y %B} to {end:%Y %B} round - {community} - {title}'.format(
