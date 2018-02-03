@@ -1081,6 +1081,7 @@ class CoordinatorApproval(ApprovalStatus):
 class ApplicantApproval(ApprovalStatus):
     applicant = models.ForeignKey(Comrade, on_delete=models.CASCADE)
     application_round = models.ForeignKey(RoundPage, on_delete=models.CASCADE)
+    project_contributions = models.ManyToManyField(Project, through='Contribution')
 
     # XXX: Make sure to update the text in the eligibility results template
     # if you update the verbose name of any of these fields.
@@ -1285,3 +1286,15 @@ DASHBOARD_MODELS = (
         Project,
         MentorApproval,
         )
+
+class Contribution(models.Model):
+    applicant = models.ForeignKey(ApplicantApproval)
+    project = models.ForeignKey(Project)
+
+    url = models.URLField(
+            verbose_name="Contribution URL",
+            help_text="A link to the publicly submitted contribution. The contribution can be work in progress. The URL could a link to a GitHub/GitLab issue or pull request, a link to the mailing list archives for a patch, a Gerrit pull request or issue, a contribution change log on a wiki, a review of graphical design work, a posted case study or user experience study, etc. If you're unsure what URL to put here, ask your mentor.")
+
+    description = models.TextField(
+            max_length=THREE_PARAGRAPH_LENGTH,
+            help_text="Description of this contribution for review by the Outreachy coordinators and organizers during intern selection. If you used advanced tools to create this contribution, mention them here.")
