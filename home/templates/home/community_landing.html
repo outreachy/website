@@ -26,10 +26,10 @@ Outreachy internships working with {{ community.name }}
 		</ul>
 		{% endif %}
 		{% if request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator %}
-			<p><button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#project{{ forloop.counter }}" aria-expanded="false" aria-controls="project{{ forloop.counter }}">
+			<p><button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#project-open-{{ forloop.counter }}" aria-expanded="false" aria-controls="project{{ forloop.counter }}">
 				Show Project Info
 			</button></p>
-			<div class="collapse" id="project{{ forloop.counter }}">
+			<div class="collapse" id="project-open-{{ forloop.counter }}">
 				{% include "home/snippet/project_landing_snippet.html" %}
 			</div>
 		{% else %}
@@ -43,6 +43,24 @@ Outreachy internships working with {{ community.name }}
 	<p>These projects are closed to new applicants because the mentors are already working with many applicants. Applicants who are already working with a mentor are encouraged to complete their contributions and submit an application for the project.</p>
 	{% for project in closed_projects %}
 		<h2>{{ project.short_title }}</h2>
+		{% if project.required_skills %}
+		<p>Skills used or learned in this project:<p>
+		<ul>
+			{% for skill in project.required_skills %}
+				<li>{{ skill.skill }}: {{ skill.get_experience_level_display }}</li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+		{% if request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator %}
+			<p><button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#project-closed-{{ forloop.counter }}" aria-expanded="false" aria-controls="project{{ forloop.counter }}">
+				Show Project Info
+			</button></p>
+			<div class="collapse" id="project-closed-{{ forloop.counter }}">
+				{% include "home/snippet/project_landing_snippet.html" %}
+			</div>
+		{% else %}
+			<p>Project details are hidden, see message above.</p>
+		{% endif %}
 	{% endfor %}
 {% endif %}
 
