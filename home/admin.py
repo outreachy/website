@@ -7,6 +7,7 @@ import reversion.admin
 from .models import ApplicantApproval
 from .models import Community
 from .models import Comrade
+from .models import Contribution
 from .models import CoordinatorApproval
 from .models import EmploymentTimeCommitment
 from .models import MentorApproval
@@ -154,6 +155,11 @@ class VolunteerTimeCommitmentsInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Time commitment'
 
+class ContributionsInline(admin.StackedInline):
+    model = Contribution
+    can_delete = True
+    verbose_name_plural = 'Project contributions'
+
 class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
     list_display = (
             'applicant',
@@ -170,7 +176,7 @@ class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
             '=applicant__account__username',
             '=applicant__account__email',
             )
-    inlines = (SchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, VolunteerTimeCommitmentsInline)
+    inlines = (SchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, VolunteerTimeCommitmentsInline, ContributionsInline)
 
     def round(self, obj):
         return obj.application_round
@@ -182,6 +188,7 @@ admin.site.register(User, ComradeAdmin)
 admin.site.register(ApplicantApproval, ApplicantApprovalAdmin)
 admin.site.register(Community, CommunityAdmin)
 admin.site.register(CoordinatorApproval, CoordinatorApprovalAdmin)
+admin.site.register(Contribution)
 admin.site.register(MentorApproval, MentorApprovalAdmin)
 admin.site.register(NewCommunity, CommunityAdmin)
 admin.site.register(Notification)

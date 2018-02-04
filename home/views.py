@@ -33,6 +33,7 @@ from .models import CommunicationChannel
 from .models import Community
 from .models import Comrade
 from .models import ContractorInformation
+from .models import Contribution
 from .models import CoordinatorApproval
 from .models import DASHBOARD_MODELS
 from .models import EmploymentTimeCommitment
@@ -1142,6 +1143,78 @@ class CoordinatorApprovalPreview(Preview):
                 CoordinatorApproval,
                 community__slug=self.kwargs['community_slug'],
                 coordinator__account__username=self.kwargs['username'])
+
+def project_contributions(request, round_slug, community_slug, project_slug):
+    if not request.user.comrade.eligible_application():
+        raise PermissionDenied("You are not an eligible applicant or you have not filled out the eligibility check.")
+
+    current_round = RoundPage.objects.latest('internstarts')
+
+    # Make sure both the Community and Project are approved
+    community = get_object_or_404(Community, slug=community_slug)
+    participation = get_object_or_404(Participation, community=community,
+            approval_status=ApprovalStatus.APPROVED)
+    project = get_object_or_404(Project,
+            slug=project_slug,
+            project_round__community=community,
+            project_round__participating_round=current_round,
+            project_round__approval_status=ApprovalStatus.APPROVED)
+    applicant = get_object_or_404(ApplicantApproval,
+            applicant=request.user.comrade,
+            application_round=current_round)
+    contributions = applicant.contribution_set.filter(
+            project=project)
+    return render(request, 'home/project_contributions.html',
+            {
+            'current_round' : current_round,
+            'community': community,
+            'project': project,
+            'applicant': applicant,
+            'contributions': contributions,
+            },
+            )
+
+# FIXME: change this to use the primary key as an ID (or create a new one if None)
+# Only submit one contribution at a time
+class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
+    model = Contribution
+    fields = [
+            'url',
+            'description',
+            ]
+
+    def get_object(self):
+        # Only allow eligible applicants to add contributions
+        if not self.request.user.comrade.eligible_application():
+            raise PermissionDenied("You are not an eligible applicant or you have not filled out the eligibility check.")
+
+        current_round = RoundPage.objects.latest('internstarts')
+
+        # Make sure both the Community and Project are approved
+        community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
+        participation = get_object_or_404(Participation, community=community,
+                approval_status=ApprovalStatus.APPROVED)
+        project = get_object_or_404(Project,
+                slug=self.kwargs['project_slug'],
+                project_round__community=community,
+                project_round__participating_round=current_round,
+                project_round__approval_status=ApprovalStatus.APPROVED)
+        applicant = get_object_or_404(ApplicantApproval,
+                applicant=self.request.user.comrade,
+                application_round=current_round)
+        if 'contribution_slug' not in self.kwargs:
+            return Contribution(applicant=applicant, project=project)
+        contribution = get_object_or_404(Contribution, pk=self.kwargs['contribution_slug'])
+        if contribution.project != project:
+            raise PermissionDenied("Invalid URL - no contribution with that ID under this project.")
+        return contribution
+
+    def get_success_url(self):
+        return reverse('contributions', kwargs={
+            'round_slug': self.object.project.project_round.participating_round.slug,
+            'community_slug': self.object.project.project_round.community.slug,
+            'project_slug': self.object.project.slug,
+            })
 
 @login_required
 def dashboard(request):

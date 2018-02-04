@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}
+Record Contributions and Apply to {{ community.name }}
+{% endblock %}
+
+{% block content %}
+<p><a href="/apply/">Why apply to Outreachy?</a> &gt;
+{% if not request.user.comrade or request.user.comrade.needs_application %}
+	<a href="{% url 'eligibility' %}">Check Eligibility</a>
+{% elif request.user.comrade.ineligible_application or request.user.comrade.pending_application %}
+	<a href="{% url 'eligibility-results' %}">Review Your Eligibility</a>
+{% else %}
+	<a href="/apply/eligibility/">Outreachy Eligibility Rules</a>
+{% endif %}
+&gt; <a href="/apply/project-selection/">Find a Mentor and Internship Project</a>
+&gt; <a href="{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}">{{ community.name }}</a>
+&gt; Record a Contribution and Apply</p>
+
+<h1>Record Contributions and Apply to {{ community.name }}</h1>
+<p>
+All applicants must work with a mentor to make a contribution to a project.
+Details on how to make a contribution are listed below.
+<p>
+</p>
+Once you've started a contribution, use this page to record your in-progress and completed contributions.
+Once you've recorded at least one contribution, you can start your application for the project.
+</p>
+<p>
+You're recording contributions for the following {{ community.name }} project:
+<br><strong>{{ project.short_title }}</strong>
+</p>
+{% if contributions %}
+<h2>Apply for this project</h2>
+<p>Now that you've made contribution(s) to the project, you can submit an application to be an intern! You can come back and edit your application at any time. However, mentors often choose applicants right after the application period ends on {{ current_round.appsclose }}. Make sure your application is done before that date.</p>
+<p>FIXME: Add Application model!</p>
+<h2>Your Contributions</h2>
+{% endif %}
+<p><a class='btn btn-success' href="{% url 'contributions-add' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Record a Contribution</a></p>
+<hr>
+{% for c in contributions %}
+	<p><i>Contribution #{{ forloop.counter }}</i></p>
+	<p><a class='btn btn-primary' href="{% url 'contributions-edit' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug contribution_slug=c.pk %}">Edit Contribution</a></p>
+	<p><a href="{{ c.url }}">{{ c.url }}</a></p>
+	<p>{{ c.description }}</p>
+	{% if not forloop.last %}
+		<hr>
+	{% endif %}
+{% endfor %}
+
+{% endblock %}
