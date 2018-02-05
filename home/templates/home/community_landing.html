@@ -6,6 +6,8 @@ Outreachy internships working with {{ community.name }}
 
 {% block content %}
 
+{% with contributions=request.user.comrade.get_projects_contributed_to %}
+
 {% include "home/snippet/eligibility_prompts.html" %}
 
 <p><a href="/apply/">Why apply to Outreachy?</a> &gt;
@@ -35,7 +37,11 @@ Outreachy internships working with {{ community.name }}
 		</ul>
 		{% endif %}
 		{% if request.user.comrade.eligible_application %}
-			<p><a class='btn btn-success' href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Record Contibutions and Apply to This Project</a></p>
+			{% if project in contributions %}
+				<p><a class='btn btn-success' href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Update Contibutions and Apply to This Project</a></p>
+			{% else %}
+				<p><a class='btn btn-success' href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Record Contibutions and Apply to This Project</a></p>
+			{% endif %}
 		{% endif %}
 		{% if request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator %}
 			<p><button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#project-open-{{ forloop.counter }}" aria-expanded="false" aria-controls="project{{ forloop.counter }}">
@@ -78,5 +84,6 @@ Outreachy internships working with {{ community.name }}
 		{% endif %}
 	{% endfor %}
 {% endif %}
+{% endwith %}
 
 {% endblock %}
