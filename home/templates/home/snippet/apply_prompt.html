@@ -1,0 +1,26 @@
+{% with project_contributions=request.user.comrade.get_projects_contributed_to %}
+<div class="card border-info mb-3">
+    <div class="card-header text-white bg-warning">Complete Your Application</div>
+    <div class="card-body">
+	<p class="card-text">
+	Thank you for recording your contributions!
+	</p>
+	<p class="card-text">
+	Only applicants that have completed their application for a project
+	are eligible to be selected as an Outreachy intern.
+	Please work with your mentor to complete your application for the following projects:
+	</p>
+	<ul class="card-text">
+		{% for p in project_contributions %}
+			<li><a href="{{ p.get_contributions_url }}">{{ p.short_title }}</a></li>
+		{% endfor %}
+	</ul>
+	<p class="card-text">
+	All applications will be reviewed once the Outreachy application period closes on
+	{{ current_round.appsclose|date:"F d, Y" }}.
+	This message will be displayed even if an application is saved,
+	so that you can easily get back and edit your application{{ project_contributions|length|pluralize }} at any time.
+	<p>
+    </div>
+</div>
+{% endwith %}

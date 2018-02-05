@@ -5,6 +5,11 @@ Record Contributions and Apply to {{ community.name }}
 {% endblock %}
 
 {% block content %}
+
+{% if request.user.comrade.eligible_application and request.user.comrade.get_projects_contributed_to %}
+{% include "home/snippet/apply_prompt.html" %}
+{% endif %}
+
 <p><a href="/apply/">Why apply to Outreachy?</a> &gt;
 {% if not request.user.comrade or request.user.comrade.needs_application %}
 	<a href="{% url 'eligibility' %}">Check Eligibility</a>
@@ -31,15 +36,12 @@ You're recording contributions for the following {{ community.name }} project:
 <br><strong>{{ project.short_title }}</strong>
 </p>
 {% if contributions %}
-<h2>Apply for this project</h2>
-<p>Now that you've made contribution(s) to the project, you can submit an application to be an intern! You can come back and edit your application at any time. However, mentors often choose applicants right after the application period ends on {{ current_round.appsclose }}. Make sure your application is done before that date.</p>
-<p>FIXME: Add Application model!</p>
 <h2>Your Contributions</h2>
 {% endif %}
 <p><a class='btn btn-success' href="{% url 'contributions-add' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Record a Contribution</a></p>
 <hr>
 {% for c in contributions %}
-	<p><i>Contribution #{{ forloop.counter }}</i></p>
+<p><i>Contribution #{{ forloop.counter }}: started {{ c.date_started }}{% if c.date_merged %}, merged {{ c.date_merged }}{% else %}. <strong>Not accepted or merged.</strong> Update accepted date by editing this contribution.{% endif %}</i></p>
 	<p><a class='btn btn-primary' href="{% url 'contributions-edit' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug contribution_slug=c.pk %}">Edit Contribution</a></p>
 	<p><a href="{{ c.url }}">{{ c.url }}</a></p>
 	<p>{{ c.description }}</p>

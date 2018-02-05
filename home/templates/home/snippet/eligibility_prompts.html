@@ -4,4 +4,8 @@
 {% include "home/snippet/ineligible_prompt.html" %}
 {% elif request.user.comrade.pending_application %}
 {% include "home/snippet/pending_prompt.html" %}
+{% elif request.user.comrade.eligible_application and not request.user.comrade.get_projects_contributed_to %}
+{% include "home/snippet/contribute_prompt.html" %}
+{% elif request.user.comrade.eligible_application and request.user.comrade.get_projects_contributed_to %}
+{% include "home/snippet/apply_prompt.html" %}
 {% endif %}
