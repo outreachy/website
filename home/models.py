@@ -355,6 +355,21 @@ class Comrade(models.Model):
 
         return False
 
+    def get_projects_contributed_to(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        try:
+            applicant = ApplicantApproval.objects.get(applicant = self,
+                    application_round = current_round)
+        except ApplicantApproval.DoesNotExist:
+            return None
+        contributions = Contribution.objects.filter(applicant=applicant)
+        projects = []
+        for c in contributions:
+            if not c.project in projects:
+                projects.append(c.project)
+        return projects
+
+
 class ApprovalStatusQuerySet(models.QuerySet):
     def approved(self):
         return self.filter(approval_status=ApprovalStatus.APPROVED)
@@ -751,6 +766,9 @@ class Project(ApprovalStatus):
 
     def get_preview_url(self):
         return reverse('project-read-only', kwargs={'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
+
+    def get_contributions_url(self):
+        return reverse('contributions', kwargs={'round_slug': self.project_round.participating_round, 'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
 
     def get_action_url(self, action):
         return reverse('project-action', kwargs={
@@ -1290,6 +1308,12 @@ DASHBOARD_MODELS = (
 class Contribution(models.Model):
     applicant = models.ForeignKey(ApplicantApproval)
     project = models.ForeignKey(Project)
+
+    date_started = models.DateField(verbose_name="Date contribution was started (in YYYY-MM-DD format)")
+    date_merged = models.DateField(verbose_name="Date contribution was accepted or merged (in YYYY-MM-DD format)",
+            help_text="If this contribution is still in progress, you can leave this field blank and edit it later.",
+            blank=True,
+            null=True)
 
     url = models.URLField(
             verbose_name="Contribution URL",
