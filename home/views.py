@@ -1179,6 +1179,8 @@ def project_contributions(request, round_slug, community_slug, project_slug):
 class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     model = Contribution
     fields = [
+            'date_started',
+            'date_merged',
             'url',
             'description',
             ]
