@@ -4,6 +4,17 @@ Add a Contribution model:
  - URL to WIP or completed contribution
  - text box description of contribution
 
+Create a separate page that lists all contributors to a community:
+ - Mentors need:
+   - how many days the applicant has free during the internship
+     (also start dates and end dates of time commitments)
+   - easily see whether their applicants recorded contributions
+   - see what applicants have submitted their finalized application
+ - Coordinators and Organizers need:
+   - insight into which projects don't have many contributors (do they need
+     more advertisement or is the mentor not responsive?)
+   - insight into the time commitments and contributions of applicants
+
 Add an Application model:
  - through table between an ApplicantApproval and a Project
  - unique together - only one application for one Project
@@ -13,5 +24,3 @@ Add an Application model:
  - RichText box - Please describe the details and the timeline of the work you plan to accomplish on the project you are most interested in (discuss these first with the mentor of the project)
 
 Once the applicant has entered at least one Contribution, they can submit an Application to a Project.
-
-Add prompts to rounds and community pages to get people to add contributions and then applications.
