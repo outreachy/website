@@ -5,35 +5,36 @@
 		<div class="card-header" role="tab">
 			<h4 class="mb-0"><a data-toggle="collapse" data-parent="outreachy-information-parent" href="#outreachy-information">+ Outreachy Internship Information</a></h4>
 		</div>
-	<div class="collapse" id="outreachy-information">
-		<h2>What is Outreachy?</h2>
+		<div class="collapse card-body" id="outreachy-information">
+			<h2>What is Outreachy?</h2>
 
-		<p>Outreachy is a program that provides internships for people from groups traditionally underrepresented in tech.
-		Interns are paid a stipend of $5,500 for a three month internship.
-		The internship is completely remote, and interns come from around the world.
-		</p>
-		<p>
-		Interns work one-on-one with a mentor from Free and Open Source Software (FOSS) communities.
-		The internship projects range from programming, user experience, documentation, illustration and graphical design, to data science.
-		</p>
-		<p>
-		Interns have $500 travel stipend available to use to attend tech events.
-		Many interns use the travel stipend to network and find a job.
-		Interns often find employment after their internship with <a href="/opportunities/">Outreachy sponsors</a> or in jobs that use the skills they learned during their internship.
-		</p>
+			<p>Outreachy is a program that provides internships for people from groups traditionally underrepresented in tech.
+			Interns are paid a stipend of $5,500 for a three month internship.
+			The internship is completely remote, and interns come from around the world.
+			</p>
+			<p>
+			Interns work one-on-one with a mentor from Free and Open Source Software (FOSS) communities.
+			The internship projects range from programming, user experience, documentation, illustration and graphical design, to data science.
+			</p>
+			<p>
+			Interns have $500 travel stipend available to use to attend tech events.
+			Many interns use the travel stipend to network and find a job.
+			Interns often find employment after their internship with <a href="/opportunities/">Outreachy sponsors</a> or in jobs that use the skills they learned during their internship.
+			</p>
 
-		<p>For more information on who is eligible for Outreachy internships, see the <a href="/apply/eligibility/">eligibility page</a>.
-		A description of the application process can be found on the <a href="/apply/">application instructions page</a>
-		</p>
+			<p>For more information on who is eligible for Outreachy internships, see the <a href="/apply/eligibility/">eligibility page</a>.
+			A description of the application process can be found on the <a href="/apply/">application instructions page</a>
+			</p>
 
-		<h2>Outreachy Timeline</h2>
-		<table class=table>
-			<tr><td>{{ current_round.appsopen }}</td><td>Outreachy application period opens and applicants make their required contributions to projects</td></tr>
-			{% comment %}FIXME: special case this for communities with an extended application deadline{% endcomment %}
-			<tr><td>{{ current_round.appsclose }}</td><td>Outreachy applications due for {{ community.name }} </td></tr>
-			<tr><td>{{ current_round.internannounce }}</td><td>Interns are publicly announced at 4pm UTC on <a href="/alums/">the alums page</a></td></tr>
-			<tr><td>{{ current_round.internstarts }} to {{ current_round.internends }}</td><td>Internships period</td></tr>
-		</table>
+			<h2>Outreachy Timeline</h2>
+			<table class=table>
+				<tr><td>{{ current_round.appsopen }}</td><td>Outreachy application period opens and applicants make their required contributions to projects</td></tr>
+				{% comment %}FIXME: special case this for communities with an extended application deadline{% endcomment %}
+				<tr><td>{{ current_round.appsclose }}</td><td>Outreachy applications due for {{ community.name }} </td></tr>
+				<tr><td>{{ current_round.internannounce }}</td><td>Interns are publicly announced at 4pm UTC on <a href="/alums/">the alums page</a></td></tr>
+				<tr><td>{{ current_round.internstarts }} to {{ current_round.internends }}</td><td>Internships period</td></tr>
+			</table>
+		</div>
 	</div>
 </div>
 <br>
