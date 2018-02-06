@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}
+Review {{ community.name }} Applicants
+{% endblock %}
+
+{% block content %}
+{% include "home/snippet/eligibility_prompts.html" %}
+<h1>Review {{ community.name }} Applicants</h1>
+
+{% with projects=community.get_approved_mentored_projects %}
+	{% if not projects %}
+		<p>Your community has no approved projects for the current round.</p>
+	{% else %}
+		<p>
+		In order for mentors to accept an applicant as an intern,
+		that applicant must record at least one contribution to the project
+		through the Outreachy website, and submit a final application.
+		</p>
+
+		<p>The list of applicants who have recorded a contribution for each project is listed below.
+		If a project has no applicants, it means no applicant has recorded a contribution.
+		</p>
+
+		<p>
+		Each applicant filled out information about their time commitments. The application system
+		has automatically calculated the longest consective time period they have free
+		from full-time commitments during the internship period.
+		The number of days they have free from full-time commitments
+		is marked under the "Num days available" column.
+		</p>
+
+		<table class="table table-striped table-bordered">
+			<thread class="thread-dark">
+			<tr>
+				<th scope="col">Project</th>
+				<th scope="col">Applicant Name</th>
+				<th scope="col">Num days available</th>
+				<th scope="col">Num contributions</th>
+			</tr>
+			</thread>
+		{% for project in projects %}
+			{% with applicants=project.get_applicants_and_contributions_list %}
+				{% if not applicants %}
+				<tr>
+					<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></td>
+					<td>No applicants</td>
+					<td> - </td>
+					<td> - </td>
+				</tr>
+				{% endif %}
+				{% for application in applicants %}
+					{% with tcs=application.get_time_commitments applicant=application.applicant %}
+						<tr>
+							<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></td>
+							<td>{{ applicant.public_name }}</td>
+							<td>{{ tcs.longest_period_free }} days</td>
+							<td>{{ application.contribution__count }}</td>
+						</tr>
+					{% endwith %}
+				{% endfor %}
+			{% endwith %}
+		{% endfor %}
+		</table>
+	{% endif %}
+
+{% endwith %}
+
+{% endblock %}

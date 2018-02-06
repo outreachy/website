@@ -1211,6 +1211,30 @@ def project_applicants(request, round_slug, community_slug, project_slug):
         'internship_total_days': internship_total_days,
         })
 
+def community_applicants(request, round_slug, community_slug):
+    current_round = RoundPage.objects.latest('internstarts')
+
+    # Make sure both the Community, Project, and mentor are approved
+    community = get_object_or_404(Community, slug=community_slug)
+    participation = get_object_or_404(Participation,
+            community=community,
+            participating_round=current_round,
+            approval_status=ApprovalStatus.APPROVED)
+    # Let organizers, the approved coordinators for this community,
+    # and any approved mentor for the community for this round
+    # see applicant information
+    if not request.user.is_staff and not project.project_round.community.is_coordinator(request.user):
+        if not MentorApproval.objects.filter(
+                mentor=request.user.comrade,
+                project__project_round__community=community,
+                project__project_round__participating_round=current_round,
+                approval_status=ApprovalStatus.APPROVED).exists():
+            raise PermissionDenied("You are not an approved mentor for this community.")
+    return render(request, 'home/community_applicants.html', {
+        'current_round': current_round,
+        'community': community,
+        })
+
 @login_required
 def dashboard(request):
     """

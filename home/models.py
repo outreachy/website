@@ -358,19 +358,27 @@ class Comrade(models.Model):
 
     def get_approved_mentored_projects(self):
         current_round = RoundPage.objects.latest('internstarts')
-        try:
-            # Get all projects where they're an approved mentor
-            # where the project is approved,
-            # and the community is approved to participate in the current round.
-            mentor_approvals = MentorApproval.objects.filter(mentor = self,
-                    approval_status = ApprovalStatus.APPROVED,
-                    project__approval_status = ApprovalStatus.APPROVED,
-                    project__project_round__participating_round = current_round,
-                    project__project_round__approval_status = ApprovalStatus.APPROVED,
-                    )
-        except MentorApproval.DoesNotExist:
-            return None
+        # Get all projects where they're an approved mentor
+        # where the project is approved,
+        # and the community is approved to participate in the current round.
+        mentor_approvals = MentorApproval.objects.filter(mentor = self,
+                approval_status = ApprovalStatus.APPROVED,
+                project__approval_status = ApprovalStatus.APPROVED,
+                project__project_round__participating_round = current_round,
+                project__project_round__approval_status = ApprovalStatus.APPROVED,
+                )
         return [m.project for m in mentor_approvals]
+
+    def get_approved_coordinator_communities(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        # Get all communities where they're an approved community
+        # and the community is approved to participate in the current round.
+        return Community.objects.filter(
+                participation__participating_round = current_round,
+                participation__approval_status = ApprovalStatus.APPROVED,
+                coordinatorapproval__coordinator = self,
+                coordinatorapproval__approval_status = ApprovalStatus.APPROVED,
+                )
 
     def get_projects_contributed_to(self):
         current_round = RoundPage.objects.latest('internstarts')
@@ -503,6 +511,19 @@ class Community(models.Model):
     def get_coordinator_email_list(self):
         return [ca.coordinator.email_address()
                 for ca in self.coordinatorapproval_set.approved()]
+
+    def get_approved_mentored_projects(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        # Get all projects for this community
+        # where the project is approved,
+        # and the community is approved to participate in the current round.
+        projects = Project.objects.filter(
+                project_round__community = self,
+                approval_status = ApprovalStatus.APPROVED,
+                project_round__participating_round = current_round,
+                project_round__approval_status = ApprovalStatus.APPROVED,
+                )
+        return projects
 
 class Notification(models.Model):
     community = models.ForeignKey(Community)
@@ -820,6 +841,13 @@ class Project(ApprovalStatus):
 
     def bonus_skills(self):
         return ProjectSkill.objects.filter(project=self, required=ProjectSkill.BONUS)
+
+    def get_applicants_and_contributions_list(self):
+        applicants = ApplicantApproval.objects.filter(
+                contribution__project = self,
+                approval_status=ApprovalStatus.APPROVED).annotate(
+                        models.Count('contribution'))
+        return applicants
 
     @classmethod
     def objects_for_dashboard(cls, user):

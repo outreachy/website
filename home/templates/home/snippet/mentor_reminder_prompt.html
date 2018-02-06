@@ -1,45 +1,25 @@
 <div class="card border-info mb-3">
-    <div class="card-header text-white bg-info">Review Your Applicants</div>
+    <div class="card-header text-white bg-info">Review Your Project's Applicants</div>
     <div class="card-body">
-	<p class="card-text">
-	In order for mentors to accept an applicant as an intern,
-	that applicant must record at least one contribution to your project
-	through the Outreachy website, and submit a final application.
-	</p>
-
-	<p class="card-text">
-	The final application will include a timeline of the work to be done during the
-	internship, and it's expected that applicants will work with mentors to define
-	that timeline, taking into account any time commitments the applicant has.
-	</p>
 	<p class="card-text">
 	Below is a list of all projects you are approved to be a mentor for,
 	where the community is also approved to participate in this round.
+	The link will lead to a page listing applicants to your project,
+	the contributions they've recorded, and their final application.
 	</p>
 
+	<ul>
 	{% for project in request.user.comrade.get_approved_mentored_projects %}
-		<h5 class="card-header">
-		Applicants for {{ project.short_title }}
-		</h5>
-
-		<p class="card-text">
-		If you have been working with an applicant and you don't see them in the list below,
-		remind them to record their contributions at this URL:
-		<br>
-		<a href="{{ project.get_contributions_url }}">{{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}</a>
-		</p>
-
-		<ul>
-		{% regroup project.contribution_set.all by applicant as applicants %}
-		{% if not applicants %}
-			<li>No applicants have recorded a contribution to this project.</li>
-		{% endif %}
-		{% for application, applicant_contributions in applicants %}
-			{% with tcs=application.get_time_commitments applicant=application.applicant %}
-			<li>{{ applicant.public_name }} - {{ tcs.longest_period_free }} days out of {{ tcs.internship_total_days.days }} days available during the internship - {{ applicant_contributions|length }} contributions recorded</li>
-			{% endwith %}
-		{% endfor %}
-		</ul>
+		<li><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a> - {{ project.applicantapproval_set.all.count }} applicants</li>
+	{% endfor %}
+	</ul>
+	<p class="card-text">
+	You can also see the list of all applicants to the communities you're mentoring for:
+	</p>
+	<ul>
+	{% regroup request.user.comrade.get_approved_mentored_projects by project_round.community as communities %}
+	{% for c, projects_list in communities %}
+		<li><a href="{% url 'community-applicants' round_slug=current_round.slug community_slug=c.slug %}">{{ c.name }} applicants</a></li>
 	{% endfor %}
 	<ul>
     </div>
