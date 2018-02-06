@@ -35,6 +35,7 @@ from .models import Comrade
 from .models import ContractorInformation
 from .models import Contribution
 from .models import CoordinatorApproval
+from .models import create_time_commitment_calendar
 from .models import DASHBOARD_MODELS
 from .models import EmploymentTimeCommitment
 from .models import MentorApproval
@@ -268,17 +269,6 @@ def time_commitment(cleaned_data, hours):
             'end_date': cleaned_data['end_date'],
             'hours': hours,
             }
-
-def create_time_commitment_calendar(tcs, application_round):
-    application_period_length = (application_round.internends - application_round.internstarts).days + 1
-    calendar = [0]*(application_period_length)
-    for tc in tcs:
-        date = application_round.internstarts
-        for i in range(application_period_length):
-            if date >= tc['start_date'] and date <= tc['end_date']:
-                calendar[i] = calendar[i] + tc['hours']
-            date = date + timedelta(days=1)
-    return calendar
 
 def time_commitments_are_approved(wizard, application_round):
     tcs = [ time_commitment(d, d['hours_per_week'])
@@ -593,56 +583,23 @@ class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
 
         return redirect('eligibility-results')
 
-def time_commitment_from_model(tc, hours):
-    return {
-            'start_date': tc.start_date,
-            'end_date': tc.end_date,
-            'hours': hours,
-            }
-
 @login_required
 def eligibility_results(request):
     current_round = RoundPage.objects.latest('internstarts')
     application = get_object_or_404(ApplicantApproval,
                 applicant=request.user.comrade,
                 application_round=current_round)
-    school_time_commitments = SchoolTimeCommitment.objects.filter(applicant=application)
-    volunteer_time_commitments = VolunteerTimeCommitment.objects.filter(applicant=application)
-    employment_time_commitments = EmploymentTimeCommitment.objects.filter(applicant=application)
-    tcs = [ time_commitment_from_model(d, d.hours_per_week)
-            for d in volunteer_time_commitments or []
-            if d ]
-
-    etcs = [ time_commitment_from_model(d, 0 if d.quit_on_acceptance else d.hours_per_week)
-            for d in employment_time_commitments or []
-            if d ]
-
-    stcs = [ time_commitment_from_model(d, 40 * ((d.registered_credits - d.outreachy_credits - d.thesis_credits) / d.typical_credits))
-            for d in school_time_commitments or []
-            if d ]
-    calendar = create_time_commitment_calendar(chain(tcs, etcs, stcs), current_round)
-
-    longest_period_free = 0
-    free_period_start_day = 0
-    counter = 0
-    for key, group in groupby(calendar, lambda hours: hours <= 20):
-        group_len = len(list(group))
-        if key is True and group_len > longest_period_free:
-            longest_period_free = group_len
-            free_period_start_day = counter
-        counter = counter + group_len
-    free_period_start_date = current_round.internstarts + timedelta(days=free_period_start_day)
-    free_period_end_date = current_round.internstarts + timedelta(days=free_period_start_day + longest_period_free - 1)
+    tc_dict = application.get_time_commitments()
 
     return render(request, 'home/eligibility_results.html',
             {
             'application': application,
-            'school_time_commitments': school_time_commitments,
-            'volunteer_time_commitments': volunteer_time_commitments,
-            'employment_time_commitments': employment_time_commitments,
-            'free_period_start_date': free_period_start_date,
-            'free_period_end_date': free_period_end_date,
-            'longest_period_free': longest_period_free,
+            'school_time_commitments': tc_dict['school_time_commitments'],
+            'volunteer_time_commitments': tc_dict['volunteer_time_commitments'],
+            'employment_time_commitments': tc_dict['employment_time_commitments'],
+            'free_period_start_date': tc_dict['free_period_start_date'],
+            'free_period_end_date': tc_dict['free_period_end_date'],
+            'longest_period_free': tc_dict['longest_period_free'],
             'current_round' : current_round,
             'user': request.user,
             },
@@ -1195,6 +1152,7 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
         # Make sure both the Community and Project are approved
         community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
         participation = get_object_or_404(Participation, community=community,
+                participating_round=current_round,
                 approval_status=ApprovalStatus.APPROVED)
         project = get_object_or_404(Project,
                 slug=self.kwargs['project_slug'],
@@ -1217,6 +1175,41 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
             'community_slug': self.object.project.project_round.community.slug,
             'project_slug': self.object.project.slug,
             })
+
+def project_applicants(request, round_slug, community_slug, project_slug):
+    current_round = RoundPage.objects.latest('internstarts')
+
+    # Make sure both the Community, Project, and mentor are approved
+    community = get_object_or_404(Community, slug=community_slug)
+    participation = get_object_or_404(Participation,
+            community=community,
+            participating_round=current_round,
+            approval_status=ApprovalStatus.APPROVED)
+    project = get_object_or_404(Project,
+            slug=project_slug,
+            project_round__community=community,
+            project_round__participating_round=current_round,
+            project_round__approval_status=ApprovalStatus.APPROVED)
+    # Let organizers, the approved coordinators for this community,
+    # and any approved mentor for the community for this round
+    # see applicant information
+    if not request.user.is_staff and not project.project_round.community.is_coordinator(request.user):
+        if not MentorApproval.objects.filter(
+                mentor=request.user.comrade,
+                project__project_round__community=community,
+                project__project_round__participating_round=current_round,
+                approval_status=ApprovalStatus.APPROVED).exists():
+            raise PermissionDenied("You are not an approved mentor for this project.")
+    contributions = project.contribution_set.order_by(
+            "applicant__applicant__public_name", "date_started")
+    internship_total_days = current_round.internends - current_round.internstarts
+    return render(request, 'home/project_applicants.html', {
+        'current_round': current_round,
+        'community': community,
+        'project': project,
+        'contributions': contributions,
+        'internship_total_days': internship_total_days,
+        })
 
 @login_required
 def dashboard(request):

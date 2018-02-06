@@ -11,6 +11,7 @@ from django.core.validators import URLValidator
 from django.db import models
 from django.forms import ValidationError
 from django.urls import reverse
+from itertools import chain, groupby
 
 from ckeditor.fields import RichTextField as CKEditorField
 
@@ -354,6 +355,22 @@ class Comrade(models.Model):
             return True
 
         return False
+
+    def get_approved_mentored_projects(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        try:
+            # Get all projects where they're an approved mentor
+            # where the project is approved,
+            # and the community is approved to participate in the current round.
+            mentor_approvals = MentorApproval.objects.filter(mentor = self,
+                    approval_status = ApprovalStatus.APPROVED,
+                    project__approval_status = ApprovalStatus.APPROVED,
+                    project__project_round__participating_round = current_round,
+                    project__project_round__approval_status = ApprovalStatus.APPROVED,
+                    )
+        except MentorApproval.DoesNotExist:
+            return None
+        return [m.project for m in mentor_approvals]
 
     def get_projects_contributed_to(self):
         current_round = RoundPage.objects.latest('internstarts')
@@ -768,7 +785,7 @@ class Project(ApprovalStatus):
         return reverse('project-read-only', kwargs={'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
 
     def get_contributions_url(self):
-        return reverse('contributions', kwargs={'round_slug': self.project_round.participating_round, 'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
+        return reverse('contributions', kwargs={'round_slug': self.project_round.participating_round.slug, 'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
 
     def get_action_url(self, action):
         return reverse('project-action', kwargs={
@@ -1088,6 +1105,17 @@ class CoordinatorApproval(ApprovalStatus):
                 | models.Q(coordinator__account=user)
                 )
 
+def create_time_commitment_calendar(tcs, application_round):
+    application_period_length = (application_round.internends - application_round.internstarts).days + 1
+    calendar = [0]*(application_period_length)
+    for tc in tcs:
+        date = application_round.internstarts
+        for i in range(application_period_length):
+            if date >= tc['start_date'] and date <= tc['end_date']:
+                calendar[i] = calendar[i] + tc['hours']
+            date = date + timedelta(days=1)
+    return calendar
+
 # This class stores information about whether an applicant is eligible to
 # participate in this round Automated checking will set the applicant to
 # Approved or Rejected, but the Outreachy organizers can move the applicant to
@@ -1222,6 +1250,54 @@ class ApplicantApproval(ApprovalStatus):
 
     def get_approver_email_list(self):
         return [email.organizers]
+
+    def time_commitment_from_model(self, tc, hours):
+        return {
+                'start_date': tc.start_date,
+                'end_date': tc.end_date,
+                'hours': hours,
+                }
+
+    def get_time_commitments(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        school_time_commitments = SchoolTimeCommitment.objects.filter(applicant=self)
+        volunteer_time_commitments = VolunteerTimeCommitment.objects.filter(applicant=self)
+        employment_time_commitments = EmploymentTimeCommitment.objects.filter(applicant=self)
+        tcs = [ self.time_commitment_from_model(d, d.hours_per_week)
+                for d in volunteer_time_commitments or []
+                if d ]
+
+        etcs = [ self.time_commitment_from_model(d, 0 if d.quit_on_acceptance else d.hours_per_week)
+                for d in employment_time_commitments or []
+                if d ]
+
+        stcs = [ self.time_commitment_from_model(d, 40 * ((d.registered_credits - d.outreachy_credits - d.thesis_credits) / d.typical_credits))
+                for d in school_time_commitments or []
+                if d ]
+        calendar = create_time_commitment_calendar(chain(tcs, etcs, stcs), current_round)
+
+        longest_period_free = 0
+        free_period_start_day = 0
+        counter = 0
+        for key, group in groupby(calendar, lambda hours: hours <= 20):
+            group_len = len(list(group))
+            if key is True and group_len > longest_period_free:
+                longest_period_free = group_len
+                free_period_start_day = counter
+            counter = counter + group_len
+        free_period_start_date = current_round.internstarts + timedelta(days=free_period_start_day)
+        free_period_end_date = current_round.internstarts + timedelta(days=free_period_start_day + longest_period_free - 1)
+        internship_total_days = current_round.internends - current_round.internstarts
+
+        return {
+                'longest_period_free': longest_period_free,
+                'free_period_start_date': free_period_start_date,
+                'free_period_end_date': free_period_end_date,
+                'internship_total_days': internship_total_days,
+                'school_time_commitments': school_time_commitments,
+                'volunteer_time_commitments': volunteer_time_commitments,
+                'employment_time_commitments': employment_time_commitments,
+                }
 
 class VolunteerTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
