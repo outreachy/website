@@ -1235,6 +1235,12 @@ def community_applicants(request, round_slug, community_slug):
         'community': community,
         })
 
+def contribution_tips(request):
+    current_round = RoundPage.objects.latest('internstarts')
+    return render(request, 'home/contribution_tips.html', {
+        'current_round': current_round,
+        })
+
 @login_required
 def dashboard(request):
     """
