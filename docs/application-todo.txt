@@ -1,9 +1,3 @@
-Create a separate page that lists all contributors to a community:
- - Coordinators and Organizers need:
-   - insight into which projects don't have many contributors (do they need
-     more advertisement or is the mentor not responsive?)
-   - insight into the time commitments and contributions of applicants
-
 Add an Application model:
  - through table between an ApplicantApproval and a Project
  - unique together - only one application for one Project
