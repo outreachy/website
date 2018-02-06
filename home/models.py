@@ -12,6 +12,7 @@ from django.db import models
 from django.forms import ValidationError
 from django.urls import reverse
 from itertools import chain, groupby
+from urllib.parse import urlsplit
 
 from ckeditor.fields import RichTextField as CKEditorField
 
@@ -1079,6 +1080,9 @@ class CommunicationChannel(models.Model):
     communication_help = models.URLField(
             blank=True,
             help_text='(Optional) URL for the documentation for your communication tool. This should be user-focused documentation that explains the basic mechanisms of logging in and features. Suggestions: IRC - https://wiki.gnome.org/Outreachy/IRC; Zulip - https://chat.zulip.org/help/; Mattersmost - https://docs.mattermost.com/guides/user.html')
+
+    def url_parsed(self):
+        return urlsplit(self.url)
 
 
 # This through table records whether a coordinator is approved for this community.

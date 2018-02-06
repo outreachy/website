@@ -152,12 +152,12 @@
 		<li>Project has been accepting external contributions for: {{ project.get_longevity_display|lower }}</li>
 		<li>Number of people contributing to this project regularly: {{ project.get_community_size_display|lower }}</li>
 		{% if project.intern_benefits %}
-			<li>Interns will learn about: {{ project.intern_benefits }}</li>
+			<li>Interns will learn about: {{ project.intern_benefits|safe }}</li>
 		{% else %}
 			<li>Mentor did not provide information about what the interns will learn from this project.</li>
 		{% endif %}
 		{% if project.community_benefits %}
-			<li>The FOSS community will benefit from this project because: {{ project.intern_benefits }}</li>
+			<li>The FOSS community will benefit from this project because: {{ project.community_benefits|safe }}</li>
 		{% else %}
 			<li>Mentor did not provide information about how the FOSS community will benefit from this project.</li>
 		{% endif %}
