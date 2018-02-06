@@ -193,6 +193,9 @@ SENTENCE_LENGTH=100
 # Current maximum description paragraph on round 15 page is 684.
 PARAGRAPH_LENGTH=800
 THREE_PARAGRAPH_LENGTH=3000
+EIGHT_PARAGRAPH_LENGTH=8000
+# Longest application last round was 28,949 characters
+TIMELINE_LENGTH=30000
 LONG_LEGAL_NAME=800
 SHORT_NAME=100
 
@@ -1430,3 +1433,33 @@ class Contribution(models.Model):
     description = models.TextField(
             max_length=THREE_PARAGRAPH_LENGTH,
             help_text="Description of this contribution for review by the Outreachy coordinators and organizers during intern selection. If you used advanced tools to create this contribution, mention them here.")
+
+class FinalApplication(models.Model):
+    applicant = models.ForeignKey(ApplicantApproval)
+    project = models.ForeignKey(Project)
+
+    experience = models.TextField(
+            max_length=EIGHT_PARAGRAPH_LENGTH,
+            verbose_name="Experience with this community",
+            help_text="Please describe your experience with this free software community and project as a user and as a contributor.")
+
+    foss_experience = models.TextField(
+            max_length=EIGHT_PARAGRAPH_LENGTH,
+            verbose_name="Experience with other communities",
+            help_text="Please describe your experience with any other free software projects as a user and as a contributor.")
+
+    relevant_projects = models.TextField(
+            max_length=EIGHT_PARAGRAPH_LENGTH,
+            verbose_name="Relevant Projects",
+            help_text="Please describe any relevant projects (either personal, work, or school projects) that helped you gain skills you will use in this project. Talk about what knowledge you gained from working on them. Include links where possible.")
+
+    timeline = models.TextField(
+            max_length=EIGHT_PARAGRAPH_LENGTH,
+            blank=True,
+            verbose_name="Outreachy internship project timeline",
+            help_text="Please work with your mentor to provide a timeline of the work you plan to accomplish on the project and what tasks you will finish at each step. Make sure take into account any time commitments you have during the Outreachy internship round. If you are still working on your contributions and need more time, you can leave this blank and edit your application later.")
+
+    class Meta:
+        unique_together = (
+                ('applicant', 'project'),
+                )
