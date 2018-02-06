@@ -28,6 +28,48 @@ Then subscribe them using the following links (anyone already subscribed won't b
 	<li><a href="https://lists.outreachy.org/cgi-bin/mailman/admin/announce/members/add">announce mailing list</a></li>
 </ul>
 
+<h2>Community progress</h2>
+{% if pending_participations or approved_participations %}
+	<table class="table table-striped table-bordered">
+		<thread class="thread-dark">
+		<tr>
+			<th scope="col">Community</th>
+			<th scope="col">Community Approved?</th>
+			<th scope="col">Project</th>
+			<th scope="col">Project Approved?</th>
+			<th scope="col">Num Applicants With Contribution</th>
+		</tr>
+		</thread>
+	{% for p in participations %}
+		{% if not p.project_set.all %}
+				<tr>
+					<td><a href="{% url 'community-applicants' round_slug=current_round.slug community_slug=p.community.slug %}">{{ p.community.name }}</a></td>
+					<td>{% if p in approved_participations %}Approved{% else %}Pending{% endif %}</td>
+					<td>No Projects</td>
+					<td> - </td>
+					<td> - </td>
+				</tr>
+		{% endif %}
+		{% for project in p.project_set.all %}
+			{% with applicants=project.get_applicants_and_contributions_list %}
+				<tr>
+					<td><a href="{% url 'community-applicants' round_slug=current_round.slug community_slug=p.community.slug %}">{{ p.community.name }}</a></td>
+					<td>{% if p in approved_participations %}Approved{% else %}Pending{% endif %}</td>
+					<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=p.community.slug project_slug=project.slug %}">{{ project.short_title }}</a></td>
+					<td>{% if project.approval_status == project.APPROVED %}Approved{% else %}Pending{% endif %}</td>
+				{% if not applicants %}
+					<td>No applicants</td>
+				{% else %}
+					<td>{{ applicants|length }}</td>
+				{% endif %}
+				</tr>
+			{% endwith %}
+		{% endfor %}
+	{% endfor %}
+	</table>
+<br>
+{% endif %}
+
 {% endif %}
 
 <h1>Dashboard</h1>

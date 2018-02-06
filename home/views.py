@@ -1263,8 +1263,21 @@ def dashboard(request):
         if group:
             groups.append((label, group))
 
+    current_round = RoundPage.objects.latest('internstarts')
+    pending_participations = Participation.objects.filter(
+            participating_round = current_round,
+            approval_status = ApprovalStatus.PENDING)
+    approved_participations = Participation.objects.filter(
+            participating_round = current_round,
+            approval_status = ApprovalStatus.APPROVED)
+    participations = list(chain(pending_participations, approved_participations))
+
     return render(request, 'home/dashboard.html', {
         'groups': groups,
+        'current_round': current_round,
+        'pending_participations': pending_participations,
+        'approved_participations': approved_participations,
+        'participations': participations,
         })
 
 class TrustedVolunteersListView(UserPassesTestMixin, ListView):
