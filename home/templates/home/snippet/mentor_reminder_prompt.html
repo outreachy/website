@@ -10,7 +10,7 @@
 
 	<ul>
 	{% for project in request.user.comrade.get_approved_mentored_projects %}
-		<li><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a> - {{ project.applicantapproval_set.all.count }} applicants</li>
+		<li><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}">{{ project.short_title }}</a> - {{ project.applicantapproval_set.all.count }} applicants</li>
 	{% endfor %}
 	</ul>
 	<p class="card-text">
