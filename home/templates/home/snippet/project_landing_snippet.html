@@ -75,14 +75,26 @@ We hope you'll introduce yourself on the public project channels and ask for hel
 	{% if channel.communication_help %}
 		You can find helpful documentation about this communication tool <a href="{{ channel.communication_help }}">here</a>. 
 	{% endif %}
-	{% if channel.communication_norms %}
-		Once you join the project's communication channel,
-		the mentors have some additional instructions for you to follow. {{ channel.communication_norms|safe }}
+	</p>
+	{% if channel.norms %}
+		<p>Once you join the project's communication channel,
+		the mentors have some additional instructions for you to follow:</p> {{ channel.norms|safe }}
 	{% endif %}
-	{% if channel.communication_url %}
-		You can join this project's communication channel by <a href="{{ project.communication_url }}">following this link</a>.
+	{% if channel.url %}
+		<p>
+		{% with url_parsed=channel.url_parsed %}
+		You can join this project's communication channel by
+		{% if url_parsed.scheme == 'irc' %}
+		joining the <a href="https://kiwiirc.com/client/{{ url_parsed.netloc }}{{ url_parsed.path }}" target="_blank">#{{ url_parsed.path|slice:"1:" }} IRC channel on {{ url_parsed.netloc }}</a>.
+		{% else %}
+		<a href="{{ channel.url }}" target="_blank">following this link</a>.
+		{% endif %}
+		{% endwith %}
+		</p>
 	{% endif %}
-	<p>
+	{% if channel.instructions %}
+		{{ channel.instructions|safe }}
+	{% endif %}
 {% endfor %}
 
 <h3>Project Contribution Information</h3>
