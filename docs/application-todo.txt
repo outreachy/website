@@ -1,15 +1,4 @@
-Add a Contribution model:
- - through table between an ApplicantApproval and a Project
- - not unique together - can be many contributions to one Project
- - URL to WIP or completed contribution
- - text box description of contribution
-
 Create a separate page that lists all contributors to a community:
- - Mentors need:
-   - how many days the applicant has free during the internship
-     (also start dates and end dates of time commitments)
-   - easily see whether their applicants recorded contributions
-   - see what applicants have submitted their finalized application
  - Coordinators and Organizers need:
    - insight into which projects don't have many contributors (do they need
      more advertisement or is the mentor not responsive?)
@@ -18,9 +7,11 @@ Create a separate page that lists all contributors to a community:
 Add an Application model:
  - through table between an ApplicantApproval and a Project
  - unique together - only one application for one Project
- - RichText box - Please describe your experience with the FOSS community and project as a user and as a contributor
- - RichText box - Please describe your experience with any other FOSS projects as a user and as a contributor
- - RichText box - Please describe any relevant projects that you have worked on previously and what knowledge you gained from working on them (include links)
- - RichText box - Please describe the details and the timeline of the work you plan to accomplish on the project you are most interested in (discuss these first with the mentor of the project)
+ - TextField box - Please describe your experience with the FOSS community and project as a user and as a contributor
+ - TextField box - Please describe your experience with any other FOSS projects as a user and as a contributor
+ - Past projects - Add/edit/delete
+   - URL
+   - TextField box - Please describe any relevant projects that you have worked on previously and what knowledge you gained from working on them (include links)
+ - TextField box - Please describe the details and the timeline of the work you plan to accomplish on the project you are most interested in (discuss these first with the mentor of the project)
 
 Once the applicant has entered at least one Contribution, they can submit an Application to a Project.
