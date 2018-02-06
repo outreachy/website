@@ -13,7 +13,7 @@ WARNING! This community may be using non-free licenses. Please follow up with th
 
 		{% if community.newcommunity.unapproved_license_description %}
 Coordinators provided this info about non-approved licenses:
-{{ community.newcommunity.unapproved_license_description }}
+{{ community.newcommunity.unapproved_license_description|striptags }}
 		{% else %}
 Coordinators provided no info about the non-approved licenses.
 		{% endif %}
@@ -27,7 +27,7 @@ WARNING! This community may be using or building upon proprietary software. Plea
 
 		{% if community.newcommunity.proprietary_software_description %}
 Coordinators provided this info about the proprietary software they use or build upon:
-{{ community.newcommunity.proprietary_software_description }}
+{{ community.newcommunity.proprietary_software_description|striptags }}
 		{% else %}
 Coordinators provided no info about the proprietary software they use or build upon.
 		{% endif %}
