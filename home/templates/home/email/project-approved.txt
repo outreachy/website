@@ -1,4 +1,5 @@
 {% with community=project.project_round.community %}
+{% with current_round=project.project_round.participating_round %}
 Accepted Outreachy intern project: {{ project.short_title }}
 
 Hi {{ recipient.display_name }},
@@ -6,10 +7,43 @@ Hi {{ recipient.display_name }},
 A {{ community.name }} coordinator has approved this Outreachy internship project proposal:
 
 {{ request.scheme }}://{{ request.get_host }}{{ project.get_preview_url }}
-{% comment %}FIXME - we need a template for how they promote their project and get applicants to contribute. But we need the project to have a landing page first.{% endcomment %}
-Thank you for mentoring for {{ community.name }}! We appreciate your help herding mentors.
+
+{% include 'home/email/snippet-email-filters.txt' %}
+
+Promoting Your Project
+----------------------
+
+Your project is now listed on the page for the Outreachy {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internstarts|date:"F Y" }} internships:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
+
+Your project details are listed on your community landing page:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}
+
+Please use those two links to advertise your projects.
+
+Applicants, Contributions, and Applications
+-------------------------------------------
+
+You will not be able to select an intern unless they record a contribution and submit an application through the Outreachy website.
+
+When an applicant has finished working with you on their first contribution, remind them to record it at:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}
+
+You can see information about the applicants for your project:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'project-applicants' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}
+
+You can also see an overview of all the applicants to your community's projects:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'community-applicants' round_slug=current_round.slug community_slug=community.slug %}
+
+Thank you for mentoring for {{ community.name }}! We appreciate the help you give Outreachy applicants and interns.
 
 Outreachy Organizers
 
 {% include 'home/email/footer-coordinator.txt' %}
+{% endwith %}
 {% endwith %}
