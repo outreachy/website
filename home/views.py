@@ -38,6 +38,7 @@ from .models import CoordinatorApproval
 from .models import create_time_commitment_calendar
 from .models import DASHBOARD_MODELS
 from .models import EmploymentTimeCommitment
+from .models import FinalApplication
 from .models import MentorApproval
 from .models import NewCommunity
 from .models import Notification
@@ -1121,6 +1122,10 @@ def project_contributions(request, round_slug, community_slug, project_slug):
             application_round=current_round)
     contributions = applicant.contribution_set.filter(
             project=project)
+    final_application = applicant.finalapplication_set.filter(
+            project=project)
+    if final_application:
+        final_application = final_application[0]
     return render(request, 'home/project_contributions.html',
             {
             'current_round' : current_round,
@@ -1128,6 +1133,7 @@ def project_contributions(request, round_slug, community_slug, project_slug):
             'project': project,
             'applicant': applicant,
             'contributions': contributions,
+            'final_application': final_application,
             },
             )
 
@@ -1174,6 +1180,51 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
             'round_slug': self.object.project.project_round.participating_round.slug,
             'community_slug': self.object.project.project_round.community.slug,
             'project_slug': self.object.project.slug,
+            })
+
+class FinalApplicationUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
+    model = FinalApplication
+    fields = [
+            'experience',
+            'foss_experience',
+            'relevant_projects',
+            'timeline',
+            ]
+
+    def get_object(self):
+        # Only allow eligible applicants to add contributions
+        if not self.request.user.comrade.eligible_application():
+            raise PermissionDenied("You are not an eligible applicant or you have not filled out the eligibility check.")
+
+        current_round = RoundPage.objects.latest('internstarts')
+
+        # Make sure both the Community and Project are approved
+        community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
+        participation = get_object_or_404(Participation, community=community,
+                participating_round=current_round,
+                approval_status=ApprovalStatus.APPROVED)
+        project = get_object_or_404(Project,
+                slug=self.kwargs['project_slug'],
+                project_round__community=community,
+                project_round__participating_round=current_round,
+                project_round__approval_status=ApprovalStatus.APPROVED)
+        applicant = get_object_or_404(ApplicantApproval,
+                applicant=self.request.user.comrade,
+                application_round=current_round)
+        if 'application_slug' not in self.kwargs:
+            return FinalApplication(applicant=applicant, project=project)
+        final_application = get_object_or_404(FinalApplication, pk=self.kwargs['application_slug'])
+        if final_application.project != project:
+            raise PermissionDenied("Invalid URL - no contribution with that ID under this project.")
+        return final_application
+
+    def get_success_url(self):
+        self.object.save()
+        return reverse('contributions', kwargs={
+            'round_slug': self.object.project.project_round.participating_round.slug,
+            'community_slug': self.object.project.project_round.community.slug,
+            'project_slug': self.object.project.slug,
+            'final_application': self.object,
             })
 
 def project_applicants(request, round_slug, community_slug, project_slug):

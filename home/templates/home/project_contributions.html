@@ -39,6 +39,22 @@ You're recording contributions for the following {{ community.name }} project:
 <br><strong>{{ project.short_title }}</strong>
 </p>
 {% if contributions %}
+<h2>Your Final Application</h2>
+	{% if not final_application %}
+		<p><a class='btn btn-success' href="{% url 'final-application-add' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Apply for This Project</a></p>
+	{% else %}
+		<p><a class='btn btn-primary' href="{% url 'final-application-edit' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug application_slug=final_application.pk %}">Update Your Application</a></p>
+		<p><i>Your experience with this free software community and project:</i></p>
+		<p>{{ final_application.experience }}</p>
+		<p><i>Your experience with other free software communities:</i></p>
+		<p>{{ final_application.foss_experience }}</p>
+		<p><i>Your relevant personal or class projects that relate to this project:</i></p>
+		<p>{{ final_application.foss_experience }}</p>
+		<p><i>Timeline of tasks for the internship period:</i></p>
+		<p>{% if final_application.timeline %}{{ final_application.timeline }}{% else %}TBD{% endif %}</p>
+	{% endif %}
+{% endif %}
+{% if contributions %}
 <h2>Your Contributions</h2>
 {% endif %}
 <p><a class='btn btn-success' href="{% url 'contributions-add' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Record a Contribution</a></p>
