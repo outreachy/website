@@ -1459,6 +1459,13 @@ class FinalApplication(models.Model):
             verbose_name="Outreachy internship project timeline",
             help_text="Please work with your mentor to provide a timeline of the work you plan to accomplish on the project and what tasks you will finish at each step. Make sure take into account any time commitments you have during the Outreachy internship round. If you are still working on your contributions and need more time, you can leave this blank and edit your application later.")
 
+    def __str__(self):
+        return '{applicant} application for {community} - {project} - {id}'.format(
+                applicant = self.applicant.applicant.public_name,
+                community = self.project.project_round.community,
+                project = self.project.short_title,
+                id = self.pk,
+                )
     class Meta:
         unique_together = (
                 ('applicant', 'project'),
