@@ -35,8 +35,9 @@ Review {{ community.name }} Applicants
 			<tr>
 				<th scope="col">Project</th>
 				<th scope="col">Applicant Name</th>
-				<th scope="col">Num days available</th>
-				<th scope="col">Num contributions</th>
+				<th scope="col">Number of days available</th>
+				<th scope="col">Number of contributions</th>
+				<th scope="col">Application submitted?</th>
 			</tr>
 			</thread>
 		{% for project in projects %}
@@ -54,8 +55,9 @@ Review {{ community.name }} Applicants
 						<tr>
 							<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></td>
 							<td>{{ applicant.public_name }}</td>
-							<td>{{ tcs.longest_period_free }} days</td>
-							<td>{{ application.contribution__count }}</td>
+							<td>{{ tcs.longest_period_free }} / {{ tcs.internship_total_days.days }} days</td>
+							<td>{{ application.number_contributions }}</td>
+							<td>{% if application.submitted_application %}Yes{% else %}No{% endif %}</td>
 						</tr>
 					{% endwith %}
 				{% endfor %}

@@ -850,8 +850,18 @@ class Project(ApprovalStatus):
         applicants = ApplicantApproval.objects.filter(
                 contribution__project = self,
                 approval_status=ApprovalStatus.APPROVED).annotate(
-                        models.Count('contribution'))
+                        number_contributions=models.Count('contribution'))
+
+        for a in applicants:
+            if a.finalapplication_set.filter(project=self):
+                a.submitted_application = True
+            else:
+                a.submitted_application = False
+
         return applicants
+
+    def get_applications(self):
+        return FinalApplication.objects.filter(project = self)
 
     @classmethod
     def objects_for_dashboard(cls, user):
