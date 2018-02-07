@@ -141,7 +141,7 @@ Outreachy Internships | Apply | Pick a Project
 		</p>
 
 		{% for community, projects in open_projects %}
-			<h3>{{ community.name }}</h3>
+			<h3>{{ community.name }} - {{ community.get_number_of_funded_interns }} intern{{ community.get_number_of_funded_interns|pluralize }}</h3>
 			<p>{{ community.description }}</p>
 			{% if request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator %}
 				<p>Learn how to make a contribution to these internship projects on the
