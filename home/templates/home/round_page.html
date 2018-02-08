@@ -5,11 +5,25 @@
 {% block body_class %}template-roundindexpage{% endblock %}
 
 {% block content %}
-    <h1>Outreachy Round {{ page.specific.roundnumber }}</h1>
 
-    <p>This page contains information specific to the {{ page.specific.internshipstartdate }} to {{ page.specific.internshipenddate }}
-       round of {# FIXME how do I reference the root URL #}Outreachy internships. The timeline for this round is:
-    </p>
+<p><a href="/apply/">Why apply to Outreachy?</a> &gt;
+{% if not request.user.comrade or request.user.comrade.needs_application %}
+	<a href="{% url 'eligibility' %}">Check Eligibility</a>
+{% elif request.user.comrade.ineligible_application or request.user.comrade.pending_application %}
+	<a href="{% url 'eligibility-results' %}">Review Your Eligibility</a>
+{% else %}
+	<a href="/apply/eligibility/">Outreachy Eligibility Rules</a>
+{% endif %}
+&gt; <a href="/apply/project-selection/">Find a Mentor and Internship Project</a>
+&gt; Past Outreachy Rounds</a>
+</p>
+
+	<h1>Outreachy {{ page.specific.internstarts|date:"F Y" }} to {{ page.specific.internends|date:"F Y" }} Internships</h1>
+
+	<p>For the current list of internships, <a href="/apply/project-selection">see the current round page</a></p>
+       
+       <p>The timeline for this round is:</p>
+
     <table class=table>
         <tr><td>{{ page.specific.landingdue }}</td><td>Most FOSS communities will be listed</td></tr>
         <tr><td>{{ page.specific.appsopen }}</td><td>Applications open</td></tr>
