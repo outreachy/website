@@ -1,26 +1,70 @@
 {% with project_contributions=request.user.comrade.get_projects_contributed_to %}
+{% with project_applications=request.user.comrade.get_projects_applied_to %}
+
+{% if project_applications %}
 <div class="card border-info mb-3">
-    <div class="card-header text-white bg-warning">Complete Your Application</div>
+    <div class="card-header text-white bg-info">Review Your Contributions and Applications</div>
     <div class="card-body">
 	<p class="card-text">
-	Thank you for recording your contributions!
+	Thank you for recording your contributions and submitting {{ project_applications|pluralize:"a project application, project applications" }}.
 	</p>
+{% else %}
+<div class="card border-warning mb-3">
+    <div class="card-header text-white bg-warning">Submit a Project Application</div>
+    <div class="card-body">
 	<p class="card-text">
-	Only applicants that have completed their application for a project
-	are eligible to be selected as an Outreachy intern.
-	Please work with your mentor to complete your application for the following projects:
+	Thank you for recording your contributions! Your next step is to submit an application.
+	Only applicants that have completed their application for a project are eligible to be selected as an Outreachy intern.
+	</p>
+{% endif %}
+	<h5 class="card-text">Contributions</h5>
+	<p class="card-text">
+	You've submitted contributions to the following projects:
 	</p>
 	<ul class="card-text">
 		{% for p in project_contributions %}
 			<li><a href="{{ p.get_contributions_url }}">{{ p.short_title }}</a></li>
 		{% endfor %}
 	</ul>
-	<p class="card-text">
-	All applications will be reviewed once the Outreachy application period closes on
-	{{ current_round.appsclose|date:"F d, Y" }}.
-	This message will be displayed even if an application is saved,
-	so that you can easily get back and edit your application{{ project_contributions|length|pluralize }} at any time.
-	<p>
+
+	<h5 class="card-text">Applications</h5>
+
+	{% if not project_applications %}
+		<p class="card-text">
+		After you've made a contribution, you will need to start an application to the project.
+		Your application needs to be complete when the application period closes on
+		{{ current_round.appsclose|date:"F d, Y" }} (or {{ current_round.lateappsclose|date:"F d, Y" }}
+		if the community has a late application deadline).
+		</p>
+
+		<p class="card-text">
+		Please work with your mentor to create an application for the projects you've contributed to.
+		</p>
+	{% else %}
+		<p class="card-text">
+		You've submitted applications to the following projects:
+		</p>
+
+		<ul class="card-text">
+			{% for p in project_applications %}
+				<li><a href="{{ p.get_contributions_url }}">{{ p.short_title }}</a></li>
+			{% endfor %}
+		</ul>
+
+		<p class="card-text">
+		Once you've created an application, you can update it at any time.
+		However, your application needs to be complete when the application period closes on
+		{{ current_round.appsclose|date:"F d, Y" }} (or {{ current_round.lateappsclose|date:"F d, Y" }}
+		if the community has a late application deadline).
+		</p>
+
+		<p class="card-text">
+		There is no 'submit' button to submit your application.
+		All applications that have been created and saved will be reviewed by mentors after
+		the application period closes.
+		</p>
+	{% endif %}
     </div>
 </div>
+{% endwith %}
 {% endwith %}

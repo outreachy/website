@@ -398,6 +398,20 @@ class Comrade(models.Model):
                 projects.append(c.project)
         return projects
 
+    def get_projects_applied_to(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        try:
+            applicant = ApplicantApproval.objects.get(applicant = self,
+                    application_round = current_round)
+        except ApplicantApproval.DoesNotExist:
+            return None
+        applications = FinalApplication.objects.filter(applicant=applicant)
+        projects = []
+        for a in applications:
+            if not a.project in projects:
+                projects.append(a.project)
+        return projects
+
 
 class ApprovalStatusQuerySet(models.QuerySet):
     def approved(self):
