@@ -212,32 +212,26 @@ class Comrade(models.Model):
     legal_name = models.CharField(max_length=LONG_LEGAL_NAME, verbose_name="Legal name (private)", help_text="Your name on your government identification. This is the name that you would use to sign a legal document. This will be used only by Outreachy organizers on any private legal contracts. Other applicants, coordinators, mentors, and volunteers will not see this name.")
 
     # Reference: https://uwm.edu/lgbtrc/support/gender-pronouns/
-    EY_PRONOUNS = ['ey', 'em', 'eir', 'eirs', 'eirself', 'http://pronoun.is/ey']
-    FAE_PRONOUNS = ['fae', 'faer', 'faer', 'faers', 'faerself', 'http://pronoun.is/fae']
-    HE_PRONOUNS = ['he', 'him', 'his', 'his', 'himself', 'http://pronoun.is/he']
-    PER_PRONOUNS = ['per', 'per', 'pers', 'pers', 'perself', 'http://pronoun.is/per']
-    SHE_PRONOUNS = ['she', 'her', 'her', 'hers', 'herself', 'http://pronoun.is/she']
-    THEY_PRONOUNS = ['they', 'them', 'their', 'theirs', 'themself', 'http://pronoun.is/they']
-    VE_PRONOUNS = ['ve', 'ver', 'vis', 'vis', 'verself', 'http://pronoun.is/ve']
-    XE_PRONOUNS = ['xe', 'xem', 'xyr', 'xyrs', 'xemself', 'http://pronoun.is/xe']
-    ZE_PRONOUNS = ['ze', 'hir', 'hir', 'hirs', 'hirself', 'http://pronoun.is/ze']
-    PRONOUN_CHOICES = (
-            (SHE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=SHE_PRONOUNS[0], Object=SHE_PRONOUNS[1], possessive=SHE_PRONOUNS[2])),
-            (HE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=HE_PRONOUNS[0], Object=HE_PRONOUNS[1], possessive=HE_PRONOUNS[1])),
-            (THEY_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=THEY_PRONOUNS[0], Object=THEY_PRONOUNS[1], possessive=THEY_PRONOUNS[2])),
-            (FAE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=FAE_PRONOUNS[0], Object=FAE_PRONOUNS[1], possessive=FAE_PRONOUNS[2])),
-            (EY_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=EY_PRONOUNS[0], Object=EY_PRONOUNS[1], possessive=EY_PRONOUNS[2])),
-            (PER_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=PER_PRONOUNS[0], Object=PER_PRONOUNS[1], possessive=PER_PRONOUNS[2])),
-            (VE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=VE_PRONOUNS[0], Object=VE_PRONOUNS[1], possessive=VE_PRONOUNS[2])),
-            (XE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=XE_PRONOUNS[1], Object=XE_PRONOUNS[2], possessive=XE_PRONOUNS[3])),
-            (ZE_PRONOUNS[0], '{subject}/{Object}/{possessive}'.format(subject=ZE_PRONOUNS[1], Object=ZE_PRONOUNS[2], possessive=ZE_PRONOUNS[3])),
+    PRONOUN_RAW = (
+            ['she', 'her', 'her', 'hers', 'herself', 'http://pronoun.is/she'],
+            ['he', 'him', 'his', 'his', 'himself', 'http://pronoun.is/he'],
+            ['they', 'them', 'their', 'theirs', 'themself', 'http://pronoun.is/they'],
+            ['fae', 'faer', 'faer', 'faers', 'faerself', 'http://pronoun.is/fae'],
+            ['ey', 'em', 'eir', 'eirs', 'eirself', 'http://pronoun.is/ey'],
+            ['per', 'per', 'pers', 'pers', 'perself', 'http://pronoun.is/per'],
+            ['ve', 'ver', 'vis', 'vis', 'verself', 'http://pronoun.is/ve'],
+            ['xe', 'xem', 'xyr', 'xyrs', 'xemself', 'http://pronoun.is/xe'],
+            ['ze', 'hir', 'hir', 'hirs', 'hirself', 'http://pronoun.is/ze'],
             )
+    PRONOUN_CHOICES = [
+            (raw[0], '{subject}/{Object}/{possessive_pronoun}'.format(subject=raw[0], Object=raw[1], possessive_pronoun=raw[3]))
+            for raw in PRONOUN_RAW
+            ]
     pronouns = models.CharField(
             max_length=4,
             choices=PRONOUN_CHOICES,
-            default=THEY_PRONOUNS,
-            verbose_name="Pronouns",
-            help_text="Your preferred pronoun. This will be used in emails from Outreachy organizers directly to you. The format is subject/object/possessive. Example: '__(subject)__ interned with Outreachy. The mentor liked working with __(object)__. __(possessive)__ internship project was challenging.",
+            default='they',
+            help_text="Your preferred pronoun. This will be used in emails from Outreachy organizers directly to you. The format is subject/object/possessive pronoun. Example: '__(subject)__ interned with Outreachy. The mentor liked working with __(object)__. The opportunity was __(possessive pronoun)__ to grab.",
             )
 
     pronouns_to_participants = models.BooleanField(
