@@ -19,7 +19,7 @@ Outreachy Internships | Apply | Pick a Project
 	 &gt; Find a Mentor and Internship Project</p>
 
 	<h1>Outreachy {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} Internships</h1>
-	<p>The timeline for Outreachy round {{ current_round.roundnumber }} is:</p>
+	<h2>Timeline</h2>
 	<table class=table>
 		<tr><td>{{ current_round.landingdue }}</td><td>Most Outreachy mentoring communities and internship projects will be listed</td></tr>
 		<tr><td>{{ current_round.appsopen }}</td><td>Applicants start making contributions to internship projects</td></tr>
@@ -30,6 +30,16 @@ Outreachy Internships | Apply | Pick a Project
 		<tr><td>{{ current_round.appsclose }} to {{ current_round.internannounce }}</td><td>Applicants are encouraged to continue making contributions</td></tr>
 		<tr><td>{{ current_round.internannounce }}</td><td>Accepted interns announced on <a href"/alums/">the alums page</a> at 4pm UTC</td></tr>
 		<tr><td>{{ current_round.internstarts }} to {{ current_round.internends }}</td><td>Internships period</td></tr>
+	</table>
+	<h2>Payment schedule</h2>
+	<table class=table>
+		<tr><td>{{ current_round.internstarts }}</td><td>Internships starts</td></tr>
+		<tr><td>{{ current_round.initial_stipend_dates.0 }} to {{ current_round.initial_stipend_dates.1 }}</td><td>Interns who have started their internship will receive the $500 initial stipend during this period</td></tr>
+		<tr><td>{{ current_round.midfeedback }} </td><td>Mid-point feedback due</td></tr>
+		<tr><td>{{ current_round.midpoint_stipend_dates.0 }} to {{ current_round.midpoint_stipend_dates.1 }}</td><td>Interns with successful mid-point feedback will receive the $2,250 midpoint stipend during this period</td></tr>
+		<tr><td>{{ current_round.internends }}</td><td>Internships end</td></tr>
+		<tr><td>{{ current_round.finalfeedback }} </td><td>Final feedback due</td></tr>
+		<tr><td>{{ current_round.final_stipend_dates.0 }} to {{ current_round.final_stipend_dates.1 }}</td><td>Interns with successful final feedback will receive the $2,750 midpoint stipend during this period</td></tr>
 	</table>
 	{{ current_round.sponsordetails|safe }}
 

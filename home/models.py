@@ -132,6 +132,15 @@ class RoundPage(Page):
     def InternConfirmationDeadline(self):
         return(self.appsclose + timedelta(days=24))
 
+    def initial_stipend_dates(self):
+        return (self.internstarts + timedelta(days=10), self.internstarts + timedelta(days=24))
+
+    def midpoint_stipend_dates(self):
+        return (self.midfeedback + timedelta(days=10), self.midfeedback + timedelta(days=24))
+
+    def final_stipend_dates(self):
+        return (self.finalfeedback + timedelta(days=10), self.finalfeedback + timedelta(days=24))
+
     def gsoc_round(self):
         # The internships would start before August
         # for rounds aligned with GSoC
