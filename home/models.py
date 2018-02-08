@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.core.validators import URLValidator
 from django.db import models
 from django.forms import ValidationError
+from django.shortcuts import redirect
 from django.urls import reverse
 from itertools import chain, groupby
 from urllib.parse import urlsplit
@@ -136,6 +137,13 @@ class RoundPage(Page):
         # for rounds aligned with GSoC
         # GSoC traditionally starts either in May or June
         return(self.internstarts.month < 8)
+
+    def serve(self, request, *args, **kwargs):
+        # Only show this page if newer rounds exist.
+        if RoundPage.objects.filter(internstarts__gt=self.internstarts).exists():
+            return super(RoundPage, self).serve(request, *args, **kwargs)
+        # Otherwise, this is the newest, so temporary-redirect to project selection view.
+        return redirect('project-selection')
 
 class CohortPage(Page):
     round_start = models.DateField("Round start date")
