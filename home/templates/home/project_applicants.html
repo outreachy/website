@@ -102,7 +102,7 @@ that timeline, taking into account any time commitments the applicant has.
 				{% endif %}
 			{% endif %}
 		</ul>
-		<p>Contributions</p>
+		<h2>Contributions</h2>
 		{% for c in applicant_contributions %}
 			<p><i>Contribution #{{ forloop.counter }}: started {{ c.date_started }}{% if c.date_merged %}, merged {{ c.date_merged }}{% else %}. Not accepted or merged.{% endif %}</i></p>
 			<p><a href="{{ c.url }}">{{ c.url }}</a></p>
@@ -111,6 +111,27 @@ that timeline, taking into account any time commitments the applicant has.
 				<hr>
 			{% endif %}
 		{% endfor %}
+		<h2>Application</h2>
+
+		{% with final_application=applicant_contributions.0.get_application %}
+			{% if final_application %}
+				<p><i>Their experience with this free software community and project:</i></p>
+				<p>{{ final_application.experience }}</p>
+				<p><i>Their experience with other free software communities:</i></p>
+				<p>{{ final_application.foss_experience }}</p>
+				<p><i>Their relevant personal or class projects that relate to this project:</i></p>
+				<p>{{ final_application.foss_experience }}</p>
+				<p><i>Timeline of tasks for the internship period:</i></p>
+				<p>{% if final_application.timeline %}{{ final_application.timeline }}{% else %}TBD{% endif %}</p>
+			{% else %}
+				<p>This applicant has not submitted an application for your project. You cannot select them as an intern unless they submit an application.
+				Please remind this applicant to submit an application at this URL:</p>
+				<p><a href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">
+				{{ request.scheme }}://{{ request.get_host }}{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}
+				</a></p>
+			{% endif %}
+		{% endwith %}
+
 		{% endwith %}
 	{% endfor %}
 {% else %}
@@ -118,7 +139,8 @@ that timeline, taking into account any time commitments the applicant has.
 	If applicants have in-progress contributions, remind them to
 	record their contributions at this URL:
 	<br>
-	<a href="{{ project.get_contributions_url }}">{{ project.get_contributions_url }}</a>
-	</p>
+	<p><a href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">
+		{{ request.scheme }}://{{ request.get_host }}{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}
+	</a></p>
 {% endif %}
 {% endblock %}

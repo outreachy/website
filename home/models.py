@@ -1464,6 +1464,14 @@ class Contribution(models.Model):
             max_length=THREE_PARAGRAPH_LENGTH,
             help_text="Description of this contribution for review by the Outreachy coordinators and organizers during intern selection. If you used advanced tools to create this contribution, mention them here.")
 
+    def get_application(self):
+        try:
+            return FinalApplication.objects.get(
+                    project=self.project,
+                    applicant=self.applicant)
+        except FinalApplication.DoesNotExist:
+            return None
+
 class FinalApplication(models.Model):
     applicant = models.ForeignKey(ApplicantApproval)
     project = models.ForeignKey(Project)
