@@ -220,8 +220,9 @@ WAGTAIL_SITE_NAME = "outreachyhome"
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 BASE_URL = 'https://www.outreachy.org'
 REGISTRATION_OPEN = True
-LOGIN_REDIRECT_URL='/'
-LOGIN_URL='/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'
 
 # If a new account isn't verified in this many days, don't activate it.
 ACCOUNT_ACTIVATION_DAYS = 7

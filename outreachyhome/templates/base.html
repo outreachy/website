@@ -143,12 +143,10 @@
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#sitenavbar" aria-controls="sitenavbar" aria-expanded="false" aria-label="Toggle navigation" >
                     <span class="navbar-toggler-icon"></span>
                 </button>
-		{% if request.user.comrade %}
-			<span class="navbar-text"><a href="{% url 'account' %}">Hi, {{ request.user.comrade.nick_name }}!</a></span>
-		{% elif request.user.is_authenticated %}
-			<span class="navbar-text"><a href="{% url 'account' %}">Hi, {{ request.user.username }}!</a></span>
+		{% if request.user.is_authenticated %}
+			<span class="navbar-text"><a href="{% url 'account' %}">Hi, {{ request.user.comrade.nick_name|default:request.user.username }}!</a> (<a href="{% url 'logout' %}">log out</a>)</span>
 		{% else %}
-			<span class="navbar-text"><a href="{% url 'login' %}">Log In</a></span>
+			<span class="navbar-text"><a href="{% url 'login' %}?next={{ request.path|urlencode }}">Log In</a></span>
 		{% endif %}
                 <div id="sitenavbar" class="navbar-collapse collapse">
                     <ul class="navbar-nav ml-auto">
