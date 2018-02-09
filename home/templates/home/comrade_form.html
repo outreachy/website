@@ -2,10 +2,30 @@
 
 {% block content %}
 
-<h1>Personal Information</h1>
 <form method="post" action="">
 {% csrf_token %}
-    {{ form.as_p }}
+    <h1>Outreachy Community Member Information</h1>
+    <h2>Required Information</h2>
+    {% for field in form.visible_fields %}
+    <div class="form-group">
+	{{ field.errors }}
+	{% if '(Optional) Your timezone:' in field.label_tag %}
+	<h2>Optional Information</h2>
+	{% elif 'Code of Conduct' in field.label_tag %}
+	{{ codeofconduct|safe }}
+	<hr>
+	<h2>Agree to the Outreachy Code of Conduct</h2>
+	{% endif %}
+	{{ field.label_tag }}
+	{{ field }}
+	{% if field.help_text %}
+	<div class="text-muted">{{ field.help_text|safe }}</div>
+	{% endif %}
+    </div>
+    {% endfor %}
+    {% for hidden in form.hidden_fields %}
+	{{ hidden }}
+    {% endfor %}
 <input type="submit" class="btn btn-block btn-primary" value="Save" />
 <input type="hidden" name="next" value="{{ next }}" />
 </form>

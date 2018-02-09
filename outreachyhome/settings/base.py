@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'languages',
     'reversion',
     'ckeditor',
+    'markdownx',
 
     'django.contrib.admin',
     'django.contrib.auth',

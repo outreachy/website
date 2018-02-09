@@ -19,6 +19,7 @@ from django.views.generic import ListView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 from formtools.wizard.views import SessionWizardView
 from itertools import chain, groupby
+from markdownx.utils import markdownify
 from registration.backends.hmac import views as hmac_views
 
 from . import email
@@ -50,6 +51,8 @@ from .models import SchoolInformation
 from .models import SchoolTimeCommitment
 from .models import Sponsorship
 from .models import VolunteerTimeCommitment
+
+from os import path
 
 class RegisterUser(hmac_views.RegistrationView):
 
@@ -136,6 +139,7 @@ class ComradeUpdate(LoginRequiredMixin, UpdateView):
             'blog_url',
             'blog_rss_url',
             'twitter_url',
+            'agreed_to_code_of_conduct',
             ]
 
     # FIXME - we need to migrate any existing staff users who aren't a Comrade
@@ -145,12 +149,13 @@ class ComradeUpdate(LoginRequiredMixin, UpdateView):
         try:
             return self.request.user.comrade
         except Comrade.DoesNotExist:
-            return Comrade(
-                    account=self.request.user)
+            return Comrade(account=self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super(ComradeUpdate, self).get_context_data(**kwargs)
         context['next'] = self.request.GET.get('next', '/')
+        with open(path.join(settings.BASE_DIR, 'CODE-OF-CONDUCT.md')) as coc_file:
+            context['codeofconduct'] = markdownify(coc_file.read())
         return context
 
     # FIXME - not sure where we should redirect people back to?
