@@ -1,3 +1,7 @@
+{% if request.user.comrade and request.user.comrade.agreed_to_code_of_conduct == "0" %}
+{% include "home/snippet/coc_prompt.html" %}
+{% endif %}
+
 {% if not request.user.comrade or request.user.comrade.needs_application %}
 {% include "home/snippet/eligibility_prompt.html" %}
 {% elif request.user.comrade.ineligible_application %}
