@@ -1,4 +1,4 @@
-# Contributor Covenant Code of Conduct
+# Outreachy Community Code of Conduct
   
 ## Our Pledge
 
@@ -58,6 +58,7 @@ When Outreachy community members make contributions and participate in public di
 * Private communication between Outreachy community members related to an Outreachy application or internship
 
 This Code of Conduct also applies to official Outreachy communication, such as:
+
 * Using an official outreachy.org e-mail address
 * Acting as an appointed representative at an online or offline event, including all cases when you have Outreachy travel funding allocated for that event
 * Posting via an official Outreachy social media account:
@@ -74,6 +75,7 @@ Instances of abusive, harassing, or otherwise unacceptable behavior may be repor
 
 The contact form reaches the five Outreachy organizers, who can be emailed
 individually with an incident report:
+
 * Sage Sharp <sage@outreachy.org>
 * Marina Zhurakhinskaya <marinaz@outreachy.org>
 * Karen Sandler <karen@outreachy.org>
