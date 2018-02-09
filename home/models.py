@@ -301,6 +301,10 @@ class Comrade(models.Model):
     third_language = LanguageField(blank=True, verbose_name="(Optional) Third language", help_text="The next language you are most fluent in.")
     fourth_language = LanguageField(blank=True, verbose_name="(Optional) Fourth language", help_text="The next language you are most fluent in.")
 
+    agreed_to_code_of_conduct = models.CharField(
+            max_length=LONG_LEGAL_NAME,
+            verbose_name = "Type your legal name to indicate you agree to the Code of Conduct")
+
     def __str__(self):
         return self.public_name
 
