@@ -18,7 +18,8 @@ include:
 Examples of unacceptable behavior by Outreachy community members include:
 
 * The use of sexualized language or imagery and unwelcome sexual attention or advances
-* Trolling, insulting/derogatory comments, and personal or political attacks * Public or private harassment
+* Trolling, insulting/derogatory comments, and personal or political attacks
+* Public or private harassment
 * Publishing others' private information, such as a physical or electronic address, without explicit permission
 * Other conduct which could reasonably be considered inappropriate in a professional setting
 * Providing false information on the Outreachy mentor or intern agreement, the internship application, W-9 form, third-party payment authorization, or payment authorization request
