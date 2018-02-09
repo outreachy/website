@@ -11,12 +11,16 @@
     {% endif %}
 {% endif %}
 
+<h2>New Account</h2>
+<p>Don't have an account?</p>
+<p><a href="{% url 'register' %}?next={{ next|urlencode }}" class="btn btn-success">Create Account</a></p>
+
+<h2>Existing Account</h2>
 <form method="post" action="">
 {% csrf_token %}
 {{ form.as_p }}
-<input type="submit" class="btn btn-block btn-success" value="Login" />
+<input type="submit" class="btn btn-success" value="Login" />
 
-<p>Don't have an account? <a href="{% url 'register' %}?next={{ next|urlencode }}" class="btn btn-secondary">Create one.</a></p>
 </form>
 
 {% endblock %}
