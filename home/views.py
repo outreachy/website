@@ -816,7 +816,7 @@ class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
 class CommunityUpdate(LoginRequiredMixin, UpdateView):
     model = Community
     slug_url_kwarg = 'community_slug'
-    fields = ['name', 'description', 'long_description', 'website']
+    fields = ['name', 'description', 'long_description', 'website', 'tutorial']
 
     def get_object(self):
         community = super(CommunityUpdate, self).get_object()

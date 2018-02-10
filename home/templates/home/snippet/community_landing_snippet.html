@@ -80,3 +80,9 @@ different ways to make a contribution. The project mentor is your guide to
 introduce you to the project community and contribution norms. Mentors
 are here to help answer your questions, encourage you, and help you when you get stuck.
 </p>
+
+{% if community.tutorial %}
+<h2>How do I make a contribution?</h2>
+<p>This community requires applicants to complete a tutorial before they can make their contributions.</p>
+{{ community.tutorial|safe }}
+{% endif %}

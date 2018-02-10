@@ -98,7 +98,13 @@ We hope you'll introduce yourself on the public project channels and ask for hel
 {% endfor %}
 
 <h3>Project Contribution Information</h3>
-<p>As part of the application process, all applicants must make at least one contribution to be accepted as an intern for this project.</p>
+<p>As part of the application process, all applicants must make at least one contribution to be accepted as an intern for this project.
+{% if community.tutorial %}
+This community requires applicants to complete a tutorial before they can make their contributions.
+{{ community.tutorial|safe }}
+{% endif %}
+</p>
+
 <p>
 {% if project.repository %}
 	Applicants can contribute to this project through <a href="{{ project.repository }}">the project repository or contribution page</a>.
@@ -115,5 +121,6 @@ We hope you'll introduce yourself on the public project channels and ask for hel
 	{% endif %}
 {% endif %}
 </p>
+
 {{ project.contribution_tasks|safe }}
 
