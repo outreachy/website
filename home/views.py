@@ -1193,6 +1193,7 @@ class FinalApplicationUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateVie
             'experience',
             'foss_experience',
             'relevant_projects',
+            'community_specific_questions',
             'timeline',
             ]
 

@@ -121,6 +121,12 @@ that timeline, taking into account any time commitments the applicant has.
 				<p>{{ final_application.foss_experience }}</p>
 				<p><i>Their relevant personal or class projects that relate to this project:</i></p>
 				<p>{{ final_application.foss_experience }}</p>
+				{% if final_application.community_specific_questions %}
+				<p><i>Answers to community-specific questions:</i></p>
+				<p>{{ final_application.community_specific_questions }}</p>
+				{% else %}
+				<p><i>Applicant has not provided answers to community-specific questions.</i></p>
+				{% endif %}
 				<p><i>Timeline of tasks for the internship period:</i></p>
 				<p>{% if final_application.timeline %}{{ final_application.timeline }}{% else %}TBD{% endif %}</p>
 			{% else %}
