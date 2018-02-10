@@ -1015,7 +1015,7 @@ class MentorApprovalAction(ApprovalStatusAction):
             email.approval_status_changed(self.object, self.request)
 
 class ProjectAction(ApprovalStatusAction):
-    fields = ['short_title', 'approved_license', 'unapproved_license_description', 'no_proprietary_software', 'proprietary_software_description', 'longevity', 'community_size', 'community_benefits', 'intern_tasks', 'intern_benefits', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'long_description', 'accepting_new_applicants']
+    fields = ['short_title', 'approved_license', 'unapproved_license_description', 'no_proprietary_software', 'proprietary_software_description', 'longevity', 'community_size', 'community_benefits', 'intern_tasks', 'intern_benefits', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'contribution_tasks', 'long_description', 'accepting_new_applicants']
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     def get_object(self):
