@@ -1491,7 +1491,7 @@ class Contribution(models.Model):
         except FinalApplication.DoesNotExist:
             return None
 
-class FinalApplication(models.Model):
+class FinalApplication(ApprovalStatus):
     applicant = models.ForeignKey(ApplicantApproval)
     project = models.ForeignKey(Project)
 
@@ -1521,6 +1521,29 @@ class FinalApplication(models.Model):
             blank=True,
             verbose_name="Outreachy internship project timeline",
             help_text="Please work with your mentor to provide a timeline of the work you plan to accomplish on the project and what tasks you will finish at each step. Make sure take into account any time commitments you have during the Outreachy internship round. If you are still working on your contributions and need more time, you can leave this blank and edit your application later.")
+
+    def is_approver(self, user):
+        approved_mentor = self.project.mentors_set.filter(approval_status=ApprovalStatus.APPROVED, mentor=user.comrade)
+        if approved_mentor:
+            return True
+        return False
+
+    def is_submitter(self, user):
+        if user.comrade == self.applicant.applicant:
+            return True
+        return False
+
+    # We have a separate view for mentors to see applicants
+    def objects_for_dashboard(cls, user):
+        return None
+
+    def get_action_url(self, action, **kwargs):
+        return reverse('application-action', kwargs={
+            'community_slug': self.project.project_round.community.slug,
+            'project_slug': self.project.slug,
+            'application_slug': self.slug,
+            'action': action,
+            })
 
     def __str__(self):
         return '{applicant} application for {community} - {project} - {id}'.format(
