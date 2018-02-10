@@ -50,19 +50,6 @@
 				<li>{% if p.withdrawn %}(Withdrawn application) {% endif %}<a href="{{ p.get_contributions_url }}">{{ p.short_title }}</a></li>
 			{% endfor %}
 		</ul>
-
-		<p class="card-text">
-		Once you've created an application, you can update it at any time.
-		However, your application needs to be complete when the application period closes on
-		{{ current_round.appsclose|date:"F d, Y" }} (or {{ current_round.lateappsclose|date:"F d, Y" }}
-		if the community has a late application deadline).
-		</p>
-
-		<p class="card-text">
-		There is no 'submit' button to submit your application.
-		All applications that have been created and saved will be reviewed by mentors after
-		the application period closes.
-		</p>
 	{% endif %}
     </div>
 </div>
