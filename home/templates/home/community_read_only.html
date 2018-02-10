@@ -11,6 +11,8 @@ Past community participation in Outreachy
 {% endblock %}
 
 {% block content %}
+{% include "home/snippet/eligibility_prompts.html" %}
+
 <a href="{% url 'community-cfp' %}">Timeline, FAQ, & Participating Communities</a> &gt; {{ community.name }}
 <h1>{{ community.name }} in Outreachy</h1>
 
