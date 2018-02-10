@@ -42,12 +42,12 @@
 		</p>
 	{% else %}
 		<p class="card-text">
-		You've submitted applications to the following projects:
+		You've created applications for the following projects:
 		</p>
 
 		<ul class="card-text">
 			{% for p in project_applications %}
-				<li><a href="{{ p.get_contributions_url }}">{{ p.short_title }}</a></li>
+				<li>{% if p.withdrawn %}(Withdrawn application) {% endif %}<a href="{{ p.get_contributions_url }}">{{ p.short_title }}</a></li>
 			{% endfor %}
 		</ul>
 

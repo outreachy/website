@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load approval_status %}
+
+{% block title %}
+{{ view.kwargs.action|title }} Application for {{ finalapplication.project.project_round.community.short_title }}
+{% endblock %}
+
+{% block content %}
+{% with applicant=finalapplication.applicant.comrade project=finalapplication.project community=finalapplication.project.project_round.community %}
+
+<h1>
+	Application for Internship with {{ community.name }}</a>
+</h1>
+<p>Project: <strong>{{ finalapplication.project.short_title }}</strong></p>
+
+{% if view.kwargs.action == 'submit' %}
+	<h2>Application Information</h2>
+{% elif view.kwargs.action == 'withdraw' %}
+	<p>We're sorry to hear you want to withdraw your application. We hope that working with Outreachy mentors and coordinators has been a good experience for you, and please <a href="/contact/">contact the Outreachy organizers</a> if you have any concerns.</p>
+{% else %}
+	<p>{{ applicant.public_name }} &lt;{{ applicant.account.email }}&gt;</p>
+	{% include "home/snippet/mentor_info.html" with approval=mentorapproval only %}
+{% endif %}
+
+<p><form action="" method="post">
+    {% csrf_token %}
+    {{ form.media }}
+    {% for field in form.visible_fields %}
+    <div class="form-group">
+	{{ field.errors }}
+	{% if 'Reason denied' in field.label_tag %}
+		<p>Please let us know why you're withdrawing your application (e.g. time commitments changed, you want to focus on applying for another Outreachy project, you've accepted a full-time job, etc). This reason will be shared with your mentor, the community coordinator, and the Outreachy organizers.</p>
+	{% else %}
+		{{ field.label_tag }}
+	{% endif %}
+	{{ field }}
+	{% if field.help_text %}
+	<div class="text-muted">{{ field.help_text|safe }}</div>
+	{% endif %}
+    </div>
+    {% endfor %}
+    {% for hidden in form.hidden_fields %}
+	{{ hidden }}
+    {% endfor %}
+    <input type="submit" class="btn btn-{% if view.kwargs.action == 'withdraw' %}warning{% elif view.kwargs.action == 'reject' %}danger{% else %}success{% endif %}" value="{{ view.kwargs.action|title }}" />
+</form></p>
+
+{% endwith %}
+{% endblock %}

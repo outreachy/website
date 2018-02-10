@@ -27,8 +27,22 @@ that timeline, taking into account any time commitments the applicant has.
 {% if contributions %}
 	{% regroup contributions by applicant as applicants %}
 	{% for application, applicant_contributions in applicants %}
-		{% with tcs=application.get_time_commitments applicant=application.applicant %}
+		{% with tcs=application.get_time_commitments applicant=application.applicant final_application=applicant_contributions.0.get_application %}
 		<h3>{{ applicant.public_name }}</h3>
+		{% if final_application.approval_status == final_application.WITHDRAWN %}
+			<div class="card border-warning mb-3">
+				<div class="card-header text-white bg-warning">Withdrawn Application</div>
+				<div class="card-body">
+					<p class="card-text">
+					This application is withdrawn. Mentors will not be able to accept this applicant as an intern for this project.
+					{% if final_application.reason_denied %}
+					The reason the applicant gave for withdrawing their application was:
+					</p>
+					<p>{{ final_application.reason_denied }}</p>
+					{% endif %}
+				</div>
+			</div>
+		{% endif %}
 		<p>Time commitment information:</p>
 		<ul>
 			<li><strong>{{ tcs.longest_period_free }} days out of {{ tcs.internship_total_days.days }} days free</strong> from full-time commitments during the internship.

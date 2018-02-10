@@ -41,9 +41,22 @@ You're recording contributions for the following {{ community.name }} project:
 {% if contributions %}
 <h2>Your Final Application</h2>
 	{% if not final_application %}
-		<p><a class='btn btn-success' href="{% url 'final-application-add' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Apply for This Project</a></p>
+		<p><a class='btn btn-success' href="{% url 'application-actions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' username=request.user.username %}">Apply for This Project</a></p>
 	{% else %}
-		<p><a class='btn btn-primary' href="{% url 'final-application-edit' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug application_slug=final_application.pk %}">Update Your Application</a></p>
+		{% if final_application.approval_status == final_application.WITHDRAWN %}
+			<div class="card border-warning mb-3">
+				<div class="card-header text-white bg-warning">Withdrawn Application</div>
+				<div class="card-body">
+					<p class="card-text">
+					This application is withdrawn. You will not be eligible to be accepted as an intern for this project. The reason you gave for withdrawing your application was:
+					</p>
+					<p>{{ final_application.reason_denied }}</p>
+					<p><a class='btn btn-success' href="{{ final_application.get_submit_url }}">Re-submit Application</a></p>
+				</div>
+			</div>
+		{% else %}
+			<p><a class='btn btn-primary' href="{{ final_application.get_submit_url }}">Update Your Application</a></p>
+		{% endif %}
 		<p><i>Your experience with this free software community and project:</i></p>
 		<p>{{ final_application.experience }}</p>
 		<p><i>Your experience with other free software communities:</i></p>
@@ -58,6 +71,9 @@ You're recording contributions for the following {{ community.name }} project:
 		{% endif %}
 		<p><i>Timeline of tasks for the internship period:</i></p>
 		<p>{% if final_application.timeline %}{{ final_application.timeline }}{% else %}TBD{% endif %}</p>
+		{% if final_application.approval_status != final_application.WITHDRAWN %}
+		<p><a class='btn btn-warning' href="{{ final_application.get_withdraw_url }}">Withdraw Your Application</a></p>
+		{% endif %}
 	{% endif %}
 {% endif %}
 {% if contributions %}

@@ -1187,7 +1187,7 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
             'project_slug': self.object.project.slug,
             })
 
-class FinalApplicationUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
+class FinalApplicationAction(ApprovalStatusAction):
     model = FinalApplication
     fields = [
             'experience',
@@ -1322,10 +1322,10 @@ def dashboard(request):
     current_round = RoundPage.objects.latest('internstarts')
     pending_participations = Participation.objects.filter(
             participating_round = current_round,
-            approval_status = ApprovalStatus.PENDING)
+            approval_status = ApprovalStatus.PENDING).order_by('community')
     approved_participations = Participation.objects.filter(
             participating_round = current_round,
-            approval_status = ApprovalStatus.APPROVED)
+            approval_status = ApprovalStatus.APPROVED).order_by('community')
     participations = list(chain(pending_participations, approved_participations))
 
     return render(request, 'home/dashboard.html', {

@@ -424,6 +424,10 @@ class Comrade(models.Model):
         projects = []
         for a in applications:
             if not a.project in projects:
+                if a.approval_status == ApprovalStatus.WITHDRAWN:
+                    a.project.withdrawn = True
+                else:
+                    a.project.withdrawn = False
                 projects.append(a.project)
         return projects
 
@@ -896,11 +900,18 @@ class Project(ApprovalStatus):
                 a.submitted_application = True
             else:
                 a.submitted_application = False
+            if a.finalapplication_set.filter(project=self, approval_status = ApprovalStatus.WITHDRAWN):
+                a.withdrew_application = True
+            else:
+                a.withdrew_application = False
 
         return applicants
 
     def get_applications(self):
         return FinalApplication.objects.filter(project = self)
+
+    def get_withdrawn_applications(self):
+        return FinalApplication.objects.filter(project = self, approval_status=ApprovalStatus.WITHDRAWN)
 
     @classmethod
     def objects_for_dashboard(cls, user):
@@ -1539,9 +1550,10 @@ class FinalApplication(ApprovalStatus):
 
     def get_action_url(self, action, **kwargs):
         return reverse('application-action', kwargs={
+            'round_slug': self.project.project_round.participating_round.slug,
             'community_slug': self.project.project_round.community.slug,
             'project_slug': self.project.slug,
-            'application_slug': self.slug,
+            'application_slug': self.pk,
             'action': action,
             })
 
