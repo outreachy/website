@@ -526,6 +526,10 @@ class Community(models.Model):
             blank=True,
             help_text="(Optional) Please provide the URL for your FOSS community's website")
 
+    tutorial = CKEditorField(
+            blank=True,
+            help_text="(Optional) If your applicants need to complete a tutorial before working on their contributions, please provide a description and the URL for the tutorial")
+
     rounds = models.ManyToManyField(RoundPage, through='Participation')
 
     class Meta:
