@@ -1229,7 +1229,6 @@ class FinalApplicationUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateVie
             'round_slug': self.object.project.project_round.participating_round.slug,
             'community_slug': self.object.project.project_round.community.slug,
             'project_slug': self.object.project.slug,
-            'final_application': self.object,
             })
 
 def project_applicants(request, round_slug, community_slug, project_slug):
