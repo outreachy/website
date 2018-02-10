@@ -29,6 +29,23 @@
 	<p>The {{ community.name }} coordinator(s) or Outreachy organizers do not think this project is suitable for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
 {% endif %}
 
+<h3>Project Mentors</h3>
+{% if mentor_request %}
+	<p>Your request to mentor this project is:
+	<strong>{{ mentor_request.get_approval_status_display }}</strong></p>
+
+	{% if mentor_request.approval_status == mentor_request.PENDING or mentor_request.approval_status == mentor_request.APPROVED %}
+	<p><a href="{{ mentor_request.get_withdraw_url }}" class="btn btn-warning">Withdraw From Mentoring</a></p>
+	{% elif mentor_request.approval_status == mentor_request.WITHDRAWN %}
+	<p><a href="{{ mentor_request.get_submit_url }}" class="btn btn-success">Mentor This Project</a></p>
+	{% endif %}
+	<p>Each co-mentor for your project will need to sign up, so that they can view applicant's recorded contributions and application. You can send them this link to sign up as a co-mentor: <a href="{% url 'mentorapproval-action' community_slug=community.slug project_slug=project.slug action='submit' %}">{{ request.scheme }}://{{ request.get_host }}{% url 'mentorapproval-action' community_slug=community.slug project_slug=project.slug action='submit' %}</a>
+
+{% else %}
+	<a href="{% url 'mentorapproval-action' action='submit' community_slug=community.slug project_slug=project.slug %}" class="btn btn-success">Mentor This Project</a>
+{% endif %}
+
+
 {% if coordinator %}
 	<h2>Coordinator Actions</h2>
 	<h3>Project Approval</h3>
@@ -172,21 +189,6 @@
 {% else %}
 	<p>{{ project.short_title }}</p>
 	<p>Full project details are only available for coordinators and approved project mentors, in order to ensure applicants don't contact mentors until the project is approved and the Outreachy application period opens. If you're an applicant, please wait for projects to appear on the <a href="{{ current_round.url }}">current internship round page</a>!</p>
-{% endif %}
-
-<h3>Project Mentors</h3>
-{% if mentor_request %}
-	<p>Your request to mentor this project is:
-	<strong>{{ mentor_request.get_approval_status_display }}</strong></p>
-
-	{% if mentor_request.approval_status == mentor_request.PENDING or mentor_request.approval_status == mentor_request.APPROVED %}
-	<a href="{{ mentor_request.get_withdraw_url }}" class="btn btn-warning">Withdraw From Mentoring</a>
-	{% elif mentor_request.approval_status == mentor_request.WITHDRAWN %}
-	<a href="{{ mentor_request.get_submit_url }}" class="btn btn-success">Mentor This Project</a>
-	{% endif %}
-
-{% else %}
-	<a href="{% url 'mentorapproval-action' action='submit' community_slug=community.slug project_slug=project.slug %}" class="btn btn-success">Mentor This Project</a>
 {% endif %}
 
 {% endblock %}
