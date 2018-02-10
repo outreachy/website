@@ -1510,6 +1510,12 @@ class FinalApplication(models.Model):
             verbose_name="Relevant Projects",
             help_text="Please describe any relevant projects (either personal, work, or school projects) that helped you gain skills you will use in this project. Talk about what knowledge you gained from working on them. Include links where possible.")
 
+    community_specific_questions = models.TextField(
+            max_length=EIGHT_PARAGRAPH_LENGTH,
+            blank=True,
+            verbose_name="(Optional) Community-specific Questions",
+            help_text="Some communities or projects may want you to answer additional questions. Please check with your mentor and community coordinator to see if you need to provide any additional information after you save your project application.")
+
     timeline = models.TextField(
             max_length=EIGHT_PARAGRAPH_LENGTH,
             blank=True,
