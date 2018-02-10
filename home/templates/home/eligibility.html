@@ -6,8 +6,14 @@
 {% block body_class %}template-homepage{% endblock %}
 
 {% block content %}
+<p><a href="/apply/">Why apply to Outreachy?</a>
+&gt; Check Eligibility
+&gt; <a href="/apply/project-selection/">Find a Mentor and Internship Project</a></p>
+</p>
+
 <p>All accepted interns must sign an <a href="/documents/5/Outreachy-Program--Internship-Terms-of-Participation-December-2017.pdf">intern agreement</a>. This is a legal document that certifies you are eligible to apply for Outreachy, and that all the eligibility information you supply in your application is truthful. It is fraud if you sign this legal document after supplying incorrect information.</p>
 
+<h2>Outreachy Eligibility Rules</h2>
 <p>Outreachy is open internationally to people who meet the following requirements:<p>
 <ul>
 	<li>You are or will be 18 years of age or older by {{ current_round.internstarts }}</li>
@@ -16,10 +22,15 @@
 	<li>You must meet one of the following criteria:</li>
 	<ul>
 		<li>You live any where in the world and you identify as a woman (cis or trans), trans man, or genderqueer person (including genderfluid or genderfree).</li>
-		<li>You live in the United States or you are a US national or permanent resident living aboard, AND you are a person of any gender who is Black/African American, Hispanic/Latin@, Native American/American Indian, Alaska Native, Native Hawaiian, or Pacific Islander</li>
+		<li>You live in the United States or you are a U.S. national or permanent resident living aboard, AND you are a person of any gender who is Black/African American, Hispanic/Latin@, Native American/American Indian, Alaska Native, Native Hawaiian, or Pacific Islander</li>
 	</ul>
 	<li>Outreachy is open to both students and people who are not students. However, applicants who are students must meet additional requirements.</li>
-	<li>Outreachy internships are full-time 40-hour a week internships. Applicants who have part-time or contracting jobs are welcome to apply, but they must meet additional requirements.</li>
+	<li>Outreachy internships are full-time 40-hour a week internships. Applicants who have part-time or contracting jobs are welcome to apply, but they must meet additional requirements.
+</ul>
 
+<h2>Check Your Eligibility</h2>
+<p>All Outreachy applicants will need to fill out an eligibility form to determine if they are eligible for the program. If you're unsure if you meet the above eligibility rules, it's better to fill out the eligibility form and remove any doubts. Once you've submitted your eligibility form, if you have any questions, <a href="/contact/">you can contact the Outreachy organizers.</a></p>
+
+<p class="card-text"><a href="{% url 'eligibility' %}" class="btn btn-success">Check Your Eligibility</a></p>
 
 {% endblock %}

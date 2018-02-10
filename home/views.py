@@ -1297,6 +1297,12 @@ def contribution_tips(request):
         'current_round': current_round,
         })
 
+def eligibility_information(request):
+    current_round = RoundPage.objects.latest('internstarts')
+    return render(request, 'home/eligibility.html', {
+        'current_round': current_round,
+        })
+
 @login_required
 def dashboard(request):
     """
