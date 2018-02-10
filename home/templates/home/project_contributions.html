@@ -34,15 +34,48 @@ If you're having trouble figuring out how to contribute,
 Once you've started a contribution, use this page to record your in-progress and completed contributions.
 Once you've recorded at least one contribution, you can start your application for the project.
 </p>
-<p>
-You're recording contributions for the following {{ community.name }} project:
-<br><strong>{{ project.short_title }}</strong>
-</p>
 {% if contributions %}
-<h2>Your Final Application</h2>
 	{% if not final_application %}
+		<h2>Project Application</h2>
 		<p><a class='btn btn-success' href="{% url 'application-actions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' username=request.user.username %}">Apply for This Project</a></p>
 	{% else %}
+		<h2>{{ community.name }} Internship Project Application</h2>
+
+		<p>You'll be able to edit your application until the application deadline has passed.
+		The "Save" button makes the latest version of your application visible to Outreachy mentors and coordinators.
+		Saving your application effectively submits it. There is no specific "Submit" option.
+		If you wish to withdraw your application, there is a button at the bottom of your application to do so.<p>
+
+		<p>After the application deadline ({{ current_round.appsclose }})
+		or the late application deadline ({{ current_round.appslate }}),
+		project mentors will take a couple weeks to decide who they want to accept as an intern.
+		They will review all applications in the application system,
+		and communicate their intern selection to Outreachy organizers.
+		The Outreachy organizers may also need time to seek out additional funding to have organizations accept more interns.
+		</p>
+		<p>
+		Applicants typically don't get any email from organizers after the application deadline has passed.
+		Some applicants may get email to clarify their time commitments.
+		Even if you don't receive an email, all applications in the system after the deadline will be reviewed.
+		</p>
+
+		<p>
+		After the application deadline and before the interns are announced,
+		you are welcome to continue making contributions to the projects you applied for.
+		We find that applicants often become passionate about their project, and get hooked on making contributions.
+		Many applicants who are selected for internships continue working past the application deadline, although it is not required.
+		</p>
+
+		<p>
+		Intern selections will be posted on the <a href="/alums/">Alums</a> page on {{ current_round.internannounce }} at 4pm UTC.
+		We'll also send the full list to the <a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">announcements mailing list</a>.
+		</p>
+
+		<h2>Your Project Application</h2>
+		<p>
+		You're viewing your application for the following {{ community.name }} project:
+		<br><strong>{{ project.short_title }}</strong>
+		</p>
 		{% if final_application.approval_status == final_application.WITHDRAWN %}
 			<div class="card border-warning mb-3">
 				<div class="card-header text-white bg-warning">Withdrawn Application</div>
@@ -77,7 +110,11 @@ You're recording contributions for the following {{ community.name }} project:
 	{% endif %}
 {% endif %}
 {% if contributions %}
-<h2>Your Contributions</h2>
+	<h2>Your Contributions</h2>
+	<p>
+	You're viewing your contributions for the following {{ community.name }} project:
+	<br><strong>{{ project.short_title }}</strong>
+	</p>
 {% endif %}
 <p><a class='btn btn-success' href="{% url 'contributions-add' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Record a Contribution</a></p>
 <hr>
