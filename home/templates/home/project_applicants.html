@@ -29,7 +29,7 @@ that timeline, taking into account any time commitments the applicant has.
 	{% for application, applicant_contributions in applicants %}
 		{% with tcs=application.get_time_commitments applicant=application.applicant final_application=applicant_contributions.0.get_application %}
 		<h3>{{ applicant.public_name }}</h3>
-		{% if final_application.approval_status == final_application.WITHDRAWN %}
+		{% if final_application and final_application.approval_status == final_application.WITHDRAWN %}
 			<div class="card border-warning mb-3">
 				<div class="card-header text-white bg-warning">Withdrawn Application</div>
 				<div class="card-body">
