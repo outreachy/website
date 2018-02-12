@@ -7,7 +7,7 @@ from datetime import timedelta
 from email.headerregistry import Address
 
 from django.contrib.auth.models import User
-from django.core.validators import URLValidator
+from django.core import validators
 from django.db import models
 from django.forms import ValidationError
 from django.shortcuts import redirect
@@ -1134,7 +1134,7 @@ class CommunicationChannel(models.Model):
 
     url = models.CharField(
             max_length=200,
-            validators=[URLValidator(schemes=['http', 'https', 'irc'])],
+            validators=[validators.URLValidator(schemes=['http', 'https', 'irc'])],
             help_text='URL for the communication channel applicants will use to reach mentors and ask questions about this internship project. IRC URLs should be in the form irc://&lt;host&gt;[:port]/[channel]. Since many applicants have issues with IRC port blocking at their universities, IRC communication links will use <a href="https://kiwiirc.com/">Kiwi IRC</a> to direct applicants to a web-based IRC client. If this is a mailing list, the URL should be the mailing list subscription page.')
 
     instructions = CKEditorField(
@@ -1403,7 +1403,10 @@ class VolunteerTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
     start_date = models.DateField(help_text="Date your volunteer time commitments start. Use YYYY-MM-DD format.")
     end_date = models.DateField(help_text="Date your volunteer time commitments end. Use YYYY-MM-DD format.")
-    hours_per_week = models.IntegerField(help_text="Maximum hours per week spent volunteering.")
+    hours_per_week = models.IntegerField(
+            help_text="Maximum hours per week spent volunteering.",
+            validators=[validators.MinValueValidator(1)],
+            )
     description = models.TextField(
             max_length=THREE_PARAGRAPH_LENGTH,
             blank=True,
@@ -1413,7 +1416,10 @@ class EmploymentTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
     start_date = models.DateField(help_text="Start date of employment period. Use YYYY-MM-DD format.")
     end_date = models.DateField(help_text="End date of employment period. Use YYYY-MM-DD format.")
-    hours_per_week = models.IntegerField(help_text="Number of hours per week required by your employment contract")
+    hours_per_week = models.IntegerField(
+            help_text="Number of hours per week required by your employment contract",
+            validators=[validators.MinValueValidator(1)],
+            )
     quit_on_acceptance = models.BooleanField(
             help_text="I will quit this job or contract if I am accepted as an Outreachy intern.")
 
@@ -1434,18 +1440,20 @@ class SchoolTimeCommitment(models.Model):
             help_text="This is the date your university advertises for the last possible date of any exam for any student in your semester. Use the last possible exam date, even if your personal exams end sooner.")
     
     typical_credits = models.IntegerField(
+            validators=[validators.MinValueValidator(1)],
             verbose_name="Number of credits for a typical student",
             help_text="How many credits does a typical student register for?<br> If your university has different credit requirements for each semester for students in your major, use the number of credits that are listed on your syllabus or class schedule.")
 
     registered_credits = models.IntegerField(
+            validators=[validators.MinValueValidator(1)],
             verbose_name="Number of credits you're registered for",
             help_text="What is the total number of credits you are enrolled for this term?<br>If you aren't registered yet, please provide an approximate number of credits?")
 
-    outreachy_credits = models.IntegerField(
+    outreachy_credits = models.PositiveIntegerField(
             verbose_name="Number of internship or project credits for Outreachy",
             help_text="If you are going to seek university credit for your Outreachy internship, how many credits will you earn?")
 
-    thesis_credits = models.IntegerField(
+    thesis_credits = models.PositiveIntegerField(
             verbose_name="Number of graduate thesis or research credits",
             help_text="If you are a graduate student, how many credits will you earn for working on your thesis or research (not including the credits earned for the Outreachy internship)?")
 
@@ -1466,6 +1474,7 @@ class ContractorInformation(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
 
     typical_hours = models.IntegerField(
+            validators=[validators.MinValueValidator(1)],
             verbose_name="Average number of hours spent on contractor business",
             help_text="During the past three months, what is the average number of hours/week you have spent on contracted work and unpaid business development or business marketing? You will be able to enter your known contract hours for the Outreachy internship period on the next page.")
 

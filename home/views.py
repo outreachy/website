@@ -591,6 +591,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWiz
 
 @login_required
 def eligibility_results(request):
+    # FIXME: needs ComradeRequiredMixin, switch to a class-based view
     current_round = RoundPage.objects.latest('internstarts')
     application = get_object_or_404(ApplicantApproval,
                 applicant=request.user.comrade,
@@ -726,7 +727,7 @@ def community_read_only_view(request, community_slug):
         except CoordinatorApproval.DoesNotExist:
             pass
         try:
-            notification = Notification.objects.get(comrade=request.user.comrade, community=community)
+            notification = Notification.objects.get(comrade__account=request.user, community=community)
         except Notification.DoesNotExist:
             pass
 
@@ -1118,7 +1119,9 @@ class CoordinatorApprovalPreview(Preview):
                 community__slug=self.kwargs['community_slug'],
                 coordinator__account__username=self.kwargs['username'])
 
+@login_required
 def project_contributions(request, round_slug, community_slug, project_slug):
+    # FIXME: needs ComradeRequiredMixin, switch to a class-based view
     if not request.user.comrade.eligible_application():
         raise PermissionDenied("You are not an eligible applicant or you have not filled out the eligibility check.")
 
