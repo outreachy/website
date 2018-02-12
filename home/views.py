@@ -618,10 +618,12 @@ def current_round_page(request):
     open_approved_projects = []
     closed_approved_projects = []
     for p in approved_participations:
-        projects = p.project_set.approved().filter(accepting_new_applicants=True)
+        projects = p.project_set.approved().filter(accepting_new_applicants=True,
+                approval_status=ApprovalStatus.APPROVED)
         if projects:
             open_approved_projects.append((p.community, projects))
-        projects = p.project_set.approved().filter(accepting_new_applicants=False)
+        projects = p.project_set.approved().filter(accepting_new_applicants=False,
+                approval_status=ApprovalStatus.APPROVED)
         if projects:
             closed_approved_projects.append((p.community, projects))
 
