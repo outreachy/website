@@ -1,4 +1,4 @@
-{% if request.user.comrade and request.user.comrade.agreed_to_code_of_conduct == "0" %}
+{% if request.user.comrade and not request.user.comrade.agreed_to_code_of_conduct %}
 {% include "home/snippet/coc_prompt.html" %}
 {% endif %}
 
