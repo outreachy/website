@@ -553,19 +553,6 @@ class Community(models.Model):
         return [ca.coordinator.email_address()
                 for ca in self.coordinatorapproval_set.approved()]
 
-    def get_approved_mentored_projects(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        # Get all projects for this community
-        # where the project is approved,
-        # and the community is approved to participate in the current round.
-        projects = Project.objects.filter(
-                project_round__community = self,
-                approval_status = ApprovalStatus.APPROVED,
-                project_round__participating_round = current_round,
-                project_round__approval_status = ApprovalStatus.APPROVED,
-                )
-        return projects
-
     def get_number_of_funded_interns(self):
         current_round = RoundPage.objects.latest('internstarts')
         return Participation.objects.get(

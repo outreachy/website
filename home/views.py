@@ -1261,6 +1261,7 @@ def community_applicants(request, round_slug, community_slug):
     return render(request, 'home/community_applicants.html', {
         'current_round': current_round,
         'community': participation.community,
+        'participation': participation,
         })
 
 def contribution_tips(request):

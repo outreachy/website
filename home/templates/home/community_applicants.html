@@ -8,7 +8,7 @@ Review {{ community.name }} Applicants
 {% include "home/snippet/eligibility_prompts.html" %}
 <h1>Review {{ community.name }} Applicants</h1>
 
-{% with projects=community.get_approved_mentored_projects %}
+{% with projects=participation.project_set.approved %}
 	{% if not projects %}
 		<p>Your community has no approved projects for the current round.</p>
 	{% else %}
