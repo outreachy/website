@@ -1553,7 +1553,7 @@ class FinalApplication(ApprovalStatus):
             'round_slug': self.project.project_round.participating_round.slug,
             'community_slug': self.project.project_round.community.slug,
             'project_slug': self.project.slug,
-            'application_slug': self.pk,
+            'username': self.applicant.applicant.account.username,
             'action': action,
             })
 
