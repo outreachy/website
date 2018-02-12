@@ -5,12 +5,19 @@ Hi {{ recipient.display_name }},
 
 The Outreachy organizers have approved {{ community.name }} to participate in the current round of Outreachy!
 
+The community coordinator can edit community information (description, funding, etc) here:
+
 {{ request.scheme }}://{{ request.get_host }}{{ community.get_preview_url }}
 
-{% include 'home/email/snippet-email-filters.txt' %}
-{% include 'home/email/snippet-coordinator-actions.txt' %}
+Each mentor will need to submit their project proposals through the Outreachy website. You cannot list projects on an external page.
 
-Thank you for coordinating for {{ community.name }}! We appreciate your help herding mentors.
+{% include 'home/email/snippet-email-filters.txt' %}
+
+{% include 'home/email/snippet-community-promotion.txt' %}
+
+{% include 'home/email/snippet-application-process.txt' %}
+
+Thank you for volunteering to help {{ community.name }} participate in Outreachy!
 
 Outreachy Organizers
 
