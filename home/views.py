@@ -1188,7 +1188,6 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
             })
 
 class FinalApplicationAction(ApprovalStatusAction):
-    model = FinalApplication
     fields = [
             'experience',
             'foss_experience',
@@ -1198,34 +1197,34 @@ class FinalApplicationAction(ApprovalStatusAction):
             ]
 
     def get_object(self):
+        username = self.kwargs.get('username')
+        if username:
+            comrade = get_object_or_404(Comrade, account__username=username)
+        else:
+            comrade = self.request.user.comrade
+
         # Only allow eligible applicants to add contributions
-        if not self.request.user.comrade.eligible_application():
+        if not comrade.eligible_application():
             raise PermissionDenied("You are not an eligible applicant or you have not filled out the eligibility check.")
 
         current_round = RoundPage.objects.latest('internstarts')
 
         # Make sure both the Community and Project are approved
-        community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
-        participation = get_object_or_404(Participation, community=community,
-                participating_round=current_round,
-                approval_status=ApprovalStatus.APPROVED)
         project = get_object_or_404(Project,
                 slug=self.kwargs['project_slug'],
-                project_round__community=community,
+                approval_status=ApprovalStatus.APPROVED,
+                project_round__community__slug=self.kwargs['community_slug'],
                 project_round__participating_round=current_round,
                 project_round__approval_status=ApprovalStatus.APPROVED)
         applicant = get_object_or_404(ApplicantApproval,
-                applicant=self.request.user.comrade,
+                applicant=comrade,
                 application_round=current_round)
-        if 'application_slug' not in self.kwargs:
+        try:
+            return FinalApplication.objects.get(applicant=applicant, project=project)
+        except FinalApplication.DoesNotExist:
             return FinalApplication(applicant=applicant, project=project)
-        final_application = get_object_or_404(FinalApplication, pk=self.kwargs['application_slug'])
-        if final_application.project != project:
-            raise PermissionDenied("Invalid URL - no contribution with that ID under this project.")
-        return final_application
 
     def get_success_url(self):
-        self.object.save()
         return reverse('contributions', kwargs={
             'round_slug': self.object.project.project_round.participating_round.slug,
             'community_slug': self.object.project.project_round.community.slug,
