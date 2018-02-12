@@ -9,7 +9,6 @@ django-ckeditor==5.4.0
 django-compressor==2.2
 django-compressor-postcss==0.8.2
 django-contact-form==1.4.2
-django-extra-views==0.9.0
 django-formtools==2.1
 django-js-asset==0.1.1
 django-language-field==0.0.3
@@ -31,6 +30,7 @@ olefile==0.44
 Pillow==4.3.0
 psycopg2==2.7.3.2
 pytz==2017.3
+raven==6.5.0
 rcssmin==1.0.6
 requests==2.18.4
 rjsmin==1.0.12
