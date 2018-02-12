@@ -12,9 +12,7 @@ A {{ community.name }} coordinator has approved you as a mentor for this project
 You now have access to applicant data and the ability to edit the project information. This email describes the next steps you need to take as a mentor.
 
 {% include 'home/email/snippet-email-filters.txt' %}
-
 {% include 'home/email/snippet-community-promotion.txt' %}
-
 {% include 'home/email/snippet-application-process.txt' %}
 
 Thank you for mentoring for {{ community.name }}! We appreciate the help you give Outreachy applicants and interns.
