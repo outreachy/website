@@ -773,6 +773,16 @@ def community_landing_view(request, round_slug, slug):
     projects = get_list_or_404(participation_info.project_set.approved())
     approved_projects = [p for p in projects if p.accepting_new_applicants]
     closed_projects = [p for p in projects if not p.accepting_new_applicants]
+    if request.user.is_authenticated:
+        try:
+            # Although the current user is authenticated, don't assume
+            # that they have a Comrade instance. Instead check that the
+            # approval's coordinator is attached to a User that matches
+            # this one.
+            approved_coordinator_list = participation_info.community.coordinatorapproval_set.filter(
+                    approval_status=ApprovalStatus.APPROVED)
+        except CoordinatorApproval.DoesNotExist:
+            pass
 
     return render(request, 'home/community_landing.html',
             {
@@ -782,6 +792,7 @@ def community_landing_view(request, round_slug, slug):
             # TODO: make the template get these off the participation_info instead of passing them in the context
             'current_round' : participation_info.participating_round,
             'community': participation_info.community,
+            'approved_coordinator_list': approved_coordinator_list,
             },
             )
 
