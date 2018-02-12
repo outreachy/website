@@ -1200,6 +1200,7 @@ class FinalApplicationAction(ApprovalStatusAction):
             'experience',
             'foss_experience',
             'relevant_projects',
+            'applying_to_gsoc',
             'community_specific_questions',
             'timeline',
             ]

@@ -40,6 +40,7 @@ Then subscribe them using the following links (anyone already subscribed won't b
 			<th scope="col">Number Applicants With Contribution</th>
 			<th scope="col">Number Final Applications</th>
 			<th scope="col">Number Withdrawn Final Applications</th>
+			<th scope="col">Number Applicants For GSoC</th>
 		</tr>
 		</thread>
 	{% for p in participations %}
@@ -48,6 +49,7 @@ Then subscribe them using the following links (anyone already subscribed won't b
 					<td>{% if p not in approved_participations %}{{ p.community.name }}{% else %}<a href="{% url 'community-applicants' round_slug=current_round.slug community_slug=p.community.slug %}">{{ p.community.name }}{% endif %}</a></td>
 					<td>{% if p in approved_participations %}Approved{% else %}Pending{% endif %}</td>
 					<td>No Projects</td>
+					<td> - </td>
 					<td> - </td>
 					<td> - </td>
 					<td> - </td>
@@ -65,10 +67,12 @@ Then subscribe them using the following links (anyone already subscribed won't b
 					<td> - </td>
 					<td> - </td>
 					<td> - </td>
+					<td> - </td>
 				{% else %}
 					<td>{% if project.approval_status == project.APPROVED %}{{ applicants|length }}{% else %} - {% endif %}</td>
 					<td>{% if project.approval_status == project.APPROVED %}{{ project.get_applications|length }}{% else %} - {% endif %}</td>
 					<td>{% if project.approval_status == project.APPROVED %}{{ project.get_withdrawn_applications|length }}{% else %} - {% endif %}</td>
+					<td>{% if project.approval_status == project.APPROVED %}{{ project.get_gsoc_applications|length }}{% else %} - {% endif %}</td>
 				{% endif %}
 				</tr>
 			{% endwith %}

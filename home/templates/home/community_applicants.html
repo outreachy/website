@@ -39,6 +39,7 @@ Review {{ community.name }} Applicants
 				<th scope="col">Number of days available</th>
 				<th scope="col">Number of contributions</th>
 				<th scope="col">Application status</th>
+				<th scope="col">Applying to GSoC?</th>
 			</tr>
 			</thread>
 		{% for project in projects %}
@@ -48,6 +49,7 @@ Review {{ community.name }} Applicants
 					<td>{% if project.approval_status == project.APPROVED %}<a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">{% endif %}{{ project.short_title }}{% if project.approval_status == project.APPROVED %}</a>{% endif %}</td>
 					<td>{{ project.get_approval_status_display }}</td>
 					<td>{% if project.approval_status == project.APPROVED %}No applicants{% else %} - {% endif %}</td>
+					<td> - </td>
 					<td> - </td>
 					<td> - </td>
 					<td> - </td>
@@ -64,6 +66,7 @@ Review {{ community.name }} Applicants
 							<td>{% if application.submitted_application and not application.withdrew_application %}Submitted
 								{% elif application.submitted_application and application.withdrew_application %}Withdrawn
 								{% else %} - {% endif %}</td>
+							<td>{% if application.applying_to_gsoc %}Yes{% else %} - {% endif %}</td>
 						</tr>
 					{% endwith %}
 				{% endfor %}

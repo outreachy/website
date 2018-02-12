@@ -910,10 +910,18 @@ class Project(ApprovalStatus):
             else:
                 a.withdrew_application = False
 
+            if a.finalapplication_set.filter(project=self).exclude(applying_to_gsoc=""):
+                a.applying_to_gsoc = True
+            else:
+                a.applying_to_gsoc = False
+
         return applicants
 
     def get_applications(self):
         return FinalApplication.objects.filter(project = self)
+
+    def get_gsoc_applications(self):
+        return FinalApplication.objects.filter(project = self).exclude(applying_to_gsoc="")
 
     def get_withdrawn_applications(self):
         return FinalApplication.objects.filter(project = self, approval_status=ApprovalStatus.WITHDRAWN)
