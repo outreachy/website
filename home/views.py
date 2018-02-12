@@ -511,6 +511,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWiz
                     'start_date',
                     'end_date',
                     'hours_per_week',
+                    'description',
                 ))),
             ]
     # TODO: override get method to redirect to results page if the person
