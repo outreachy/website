@@ -1,0 +1,8 @@
+Promoting To Outreachy Applicants
+---------------------------------
+
+Once the Outreachy round opens on {{ current_round.appsopen }}, you can promote your community to Outreachy applicants by sending them the link to either the project round page, or your community's landing page:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}

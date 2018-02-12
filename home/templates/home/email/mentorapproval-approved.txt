@@ -12,36 +12,8 @@ A {{ community.name }} coordinator has approved you as a mentor for this project
 You now have access to applicant data and the ability to edit the project information. This email describes the next steps you need to take as a mentor.
 
 {% include 'home/email/snippet-email-filters.txt' %}
-
-Promoting Your Project
-----------------------
-
-Your project is now listed on the page for the Outreachy {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internstarts|date:"F Y" }} internships:
-
-{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
-
-Your project details are listed on your community landing page:
-
-{{ request.scheme }}://{{ request.get_host }}{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}
-
-Please use those two links to advertise your projects.
-
-Applicants, Contributions, and Applications
--------------------------------------------
-
-You will not be able to select an intern unless they record a contribution and submit an application through the Outreachy website.
-
-When an applicant has finished working with you on their first contribution, remind them to record it at:
-
-{{ request.scheme }}://{{ request.get_host }}{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}
-
-You can see information about the applicants for your project:
-
-{{ request.scheme }}://{{ request.get_host }}{% url 'project-applicants' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}
-
-You can also see an overview of all the applicants to your community's projects:
-
-{{ request.scheme }}://{{ request.get_host }}{% url 'community-applicants' round_slug=current_round.slug community_slug=community.slug %}
+{% include 'home/email/snippet-community-promotion.txt' %}
+{% include 'home/email/snippet-application-process.txt' %}
 
 Thank you for mentoring for {{ community.name }}! We appreciate the help you give Outreachy applicants and interns.
 

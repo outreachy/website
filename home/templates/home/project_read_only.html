@@ -14,12 +14,10 @@
 {% if project.approval_status == project.APPROVED %}
 	<h1>Approved {{ community.name }} Project</h1>
 	<p>This project has been approved by the {{ community.name }} coordinator(s) to participate in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
-	
-	<p>
-	Once the application period starts, the community will be listed on the <a href="{{ current_round.url }}">round home page</a>, with a link to
-	the <a href="{{ project.project_round.get_absolute_url }}">community landing page</a>.
-	Applicants will find detailed information on the landing page about the community and how to contribute to approved projects.</p>
-	<p>
+
+	<h2>Promoting To Outreachy Applicants</h2>
+
+	{% include 'home/snippet/project_promotion.html' %}
 
 {% elif project.approval_status == project.PENDING %}
 	<h1>Pending {{ community.name }} Project</h1>
