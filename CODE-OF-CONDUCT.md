@@ -52,9 +52,10 @@ This Code of Conduct applies within Outreachy project spaces:
   * [https://gitlab.com/sagesharp/outreachy-notes](https://gitlab.com/sagesharp/outreachy-notes)
 * Any additional Outreachy project spaces added in the future
 
-When Outreachy community members make contributions and participate in public discussion during the application period and the internship period, they represent the Outreachy project and its reputation. Therefore, this Code of Conduct applies to:
+When Outreachy community members make contributions and participate in public discussion during the application period, during the internship period, and at other times when their affiliation with Outreachy is relevant, they represent the Outreachy project and its reputation. Therefore, this Code of Conduct applies to:
 
-* Public communication between Outreachy community members during the application period or internship period in community spaces of free software projects or non-profits who are participating as Outreachy mentoring communities
+* Public communication between Outreachy community members in community spaces of free software projects or non-profits who are participating as Outreachy mentoring communities
+* Public communication between Outreachy community members at gatherings related to Outreachy and at free software events
 * Public Outreachy intern blog posts and comments by Outreachy community members on those blog posts
 * Private communication between Outreachy community members related to an Outreachy application or internship
 
