@@ -45,7 +45,7 @@ Review {{ community.name }} Applicants
 			{% with applicants=project.get_applicants_and_contributions_list %}
 				{% if not applicants %}
 				<tr>
-					<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></td>
+					<td>{% if project.approval_status == project.APPROVED %}<a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">{% endif %}{{ project.short_title }}{% if project.approval_status == project.APPROVED %}</a>{% endif %}</td>
 					<td>{{ project.get_approval_status_display }}</td>
 					<td>{% if project.approval_status == project.APPROVED %}No applicants{% else %} - {% endif %}</td>
 					<td> - </td>

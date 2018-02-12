@@ -45,7 +45,7 @@ Then subscribe them using the following links (anyone already subscribed won't b
 	{% for p in participations %}
 		{% if not p.project_set.all %}
 				<tr>
-					<td><a href="{% url 'community-applicants' round_slug=current_round.slug community_slug=p.community.slug %}">{{ p.community.name }}</a></td>
+					<td>{% if p not in approved_participations %}{{ p.community.name }}{% else %}<a href="{% url 'community-applicants' round_slug=current_round.slug community_slug=p.community.slug %}">{{ p.community.name }}{% endif %}</a></td>
 					<td>{% if p in approved_participations %}Approved{% else %}Pending{% endif %}</td>
 					<td>No Projects</td>
 					<td> - </td>
@@ -57,9 +57,9 @@ Then subscribe them using the following links (anyone already subscribed won't b
 		{% for project in p.project_set.all %}
 			{% with applicants=project.get_applicants_and_contributions_list %}
 				<tr>
-					<td><a href="{% url 'community-applicants' round_slug=current_round.slug community_slug=p.community.slug %}">{{ p.community.name }}</a></td>
+					<td>{% if p not in approved_participations %}{{ p.community.name }}{% else %}<a href="{% url 'community-applicants' round_slug=current_round.slug community_slug=p.community.slug %}">{{ p.community.name }}{% endif %}</a></td>
 					<td>{% if p in approved_participations %}Approved{% else %}Pending{% endif %}</td>
-					<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=p.community.slug project_slug=project.slug %}">{{ project.short_title }}</a></td>
+					<td>{% if p not in approved_participations %}{{ project.short_title }}{% else %}<a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=p.community.slug project_slug=project.slug %}">{{ project.short_title }}{% endif %}</a></td>
 					<td>{% if project.approval_status == project.APPROVED %}Approved{% else %}Pending{% endif %}</td>
 				{% if not applicants %}
 					<td> - </td>
