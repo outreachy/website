@@ -8,7 +8,7 @@ Review {{ community.name }} Applicants
 {% include "home/snippet/eligibility_prompts.html" %}
 <h1>Review {{ community.name }} Applicants</h1>
 
-{% with projects=participation.project_set.approved %}
+{% with projects=participation.project_set.all %}
 	{% if not projects %}
 		<p>Your community has no approved projects for the current round.</p>
 	{% else %}
@@ -34,6 +34,7 @@ Review {{ community.name }} Applicants
 			<thread class="thread-dark">
 			<tr>
 				<th scope="col">Project</th>
+				<th scope="col">Project Approval Status</th>
 				<th scope="col">Applicant Name</th>
 				<th scope="col">Number of days available</th>
 				<th scope="col">Number of contributions</th>
@@ -45,7 +46,8 @@ Review {{ community.name }} Applicants
 				{% if not applicants %}
 				<tr>
 					<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></td>
-					<td>No applicants</td>
+					<td>{{ project.get_approval_status_display }}</td>
+					<td>{% if project.approval_status == project.APPROVED %}No applicants{% else %} - {% endif %}</td>
 					<td> - </td>
 					<td> - </td>
 					<td> - </td>
@@ -55,6 +57,7 @@ Review {{ community.name }} Applicants
 					{% with tcs=application.get_time_commitments applicant=application.applicant %}
 						<tr>
 							<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></td>
+							<td>{{ project.get_approval_status_display }}</td>
 							<td>{{ applicant.public_name }}</td>
 							<td>{{ tcs.longest_period_free }} / {{ tcs.internship_total_days.days }} days</td>
 							<td>{{ application.number_contributions }}</td>
