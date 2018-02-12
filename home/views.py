@@ -1110,12 +1110,10 @@ def project_contributions(request, round_slug, community_slug, project_slug):
     current_round = RoundPage.objects.latest('internstarts')
 
     # Make sure both the Community and Project are approved
-    community = get_object_or_404(Community, slug=community_slug)
-    participation = get_object_or_404(Participation, community=community,
-            approval_status=ApprovalStatus.APPROVED)
     project = get_object_or_404(Project,
             slug=project_slug,
-            project_round__community=community,
+            approval_status=ApprovalStatus.APPROVED,
+            project_round__community__slug=community_slug,
             project_round__participating_round=current_round,
             project_round__approval_status=ApprovalStatus.APPROVED)
     applicant = get_object_or_404(ApplicantApproval,
@@ -1123,14 +1121,15 @@ def project_contributions(request, round_slug, community_slug, project_slug):
             application_round=current_round)
     contributions = applicant.contribution_set.filter(
             project=project)
-    final_application = applicant.finalapplication_set.filter(
-            project=project)
-    if final_application:
-        final_application = final_application[0]
+    try:
+        final_application = applicant.finalapplication_set.get(
+                project=project)
+    except FinalApplication.DoesNotExist:
+        final_application = None
     return render(request, 'home/project_contributions.html',
             {
             'current_round' : current_round,
-            'community': community,
+            'community': project.project_round.community,
             'project': project,
             'applicant': applicant,
             'contributions': contributions,
@@ -1138,10 +1137,8 @@ def project_contributions(request, round_slug, community_slug, project_slug):
             },
             )
 
-# FIXME: change this to use the primary key as an ID (or create a new one if None)
 # Only submit one contribution at a time
 class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
-    model = Contribution
     fields = [
             'date_started',
             'date_merged',
@@ -1157,13 +1154,10 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
         current_round = RoundPage.objects.latest('internstarts')
 
         # Make sure both the Community and Project are approved
-        community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
-        participation = get_object_or_404(Participation, community=community,
-                participating_round=current_round,
-                approval_status=ApprovalStatus.APPROVED)
         project = get_object_or_404(Project,
                 slug=self.kwargs['project_slug'],
-                project_round__community=community,
+                approval_status=ApprovalStatus.APPROVED,
+                project_round__community__slug=self.kwargs['community_slug'],
                 project_round__participating_round=current_round,
                 project_round__approval_status=ApprovalStatus.APPROVED)
         applicant = get_object_or_404(ApplicantApproval,
@@ -1171,10 +1165,10 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
                 application_round=current_round)
         if 'contribution_slug' not in self.kwargs:
             return Contribution(applicant=applicant, project=project)
-        contribution = get_object_or_404(Contribution, pk=self.kwargs['contribution_slug'])
-        if contribution.project != project:
-            raise PermissionDenied("Invalid URL - no contribution with that ID under this project.")
-        return contribution
+        return get_object_or_404(Contribution,
+                applicant=applicant,
+                project=project,
+                pk=self.kwargs['contribution_slug'])
 
     def get_success_url(self):
         return reverse('contributions', kwargs={
@@ -1232,12 +1226,9 @@ def project_applicants(request, round_slug, community_slug, project_slug):
 
     # Make sure both the Community, Project, and mentor are approved
     community = get_object_or_404(Community, slug=community_slug)
-    participation = get_object_or_404(Participation,
-            community=community,
-            participating_round=current_round,
-            approval_status=ApprovalStatus.APPROVED)
     project = get_object_or_404(Project,
             slug=project_slug,
+            approval_status=ApprovalStatus.APPROVED,
             project_round__community=community,
             project_round__participating_round=current_round,
             project_round__approval_status=ApprovalStatus.APPROVED)
