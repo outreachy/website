@@ -688,8 +688,19 @@ class Participation(ApprovalStatus):
     def is_submitter(self, user):
         return self.community.is_coordinator(user)
 
+    # Note that is is more than just the submitter!
+    # We want to notify mentors as well as coordinators
     def get_submitter_email_list(self):
-        return self.community.get_coordinator_email_list()
+        emails = self.community.get_coordinator_email_list()
+        mentors = Comrade.objects.filter(
+                mentorapproval__project__project_round=self,
+                mentorapproval__project__approval_status=ApprovalStatus.APPROVED,
+                mentorapproval__approval_status=ApprovalStatus.APPROVED).distinct()
+        for m in mentors:
+            emails.append(m.email_address())
+        # Coordinators might get duplicate emails if they're mentors,
+        # but Address isn't hashable, so we can't make a set and then a list.
+        return emails
 
     @classmethod
     def objects_for_dashboard(cls, user):
