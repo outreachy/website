@@ -782,7 +782,9 @@ def community_landing_view(request, round_slug, slug):
             approved_coordinator_list = participation_info.community.coordinatorapproval_set.filter(
                     approval_status=ApprovalStatus.APPROVED)
         except CoordinatorApproval.DoesNotExist:
-            pass
+            approved_coordinator_list = None
+    else:
+            approved_coordinator_list = None
 
     return render(request, 'home/community_landing.html',
             {

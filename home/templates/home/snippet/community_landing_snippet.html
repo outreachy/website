@@ -66,7 +66,7 @@ The {{ community.name }} coordinator{{ approved_coordinator_list|length|pluraliz
 	{% endfor %}
 	</p>
 {% else %}
-	This community currently has no approved coordinator.</p>
+	This community currently has no approved coordinator, or you have not filled out the <a href="{% url 'eligibility' %}">eligibility check</a> and contact information is hidden from you.</p>
 {% endif %}
 
 <p>Each project will have one or more mentors. Outreachy applicants work one-on-one with mentors
