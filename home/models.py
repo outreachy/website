@@ -700,6 +700,13 @@ class Participation(ApprovalStatus):
                 community__coordinatorapproval__coordinator__account=user,
                 )
 
+    def is_mentor(self, user):
+        return MentorApproval.objects.filter(
+                mentor=user.comrade,
+                project__project_round=self,
+                project__approval_status=ApprovalStatus.APPROVED,
+                approval_status=ApprovalStatus.APPROVED).exists()
+
 class Sponsorship(models.Model):
     participation = models.ForeignKey(Participation, on_delete=models.CASCADE)
 
