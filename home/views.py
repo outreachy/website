@@ -993,13 +993,9 @@ class MentorApprovalAction(ApprovalStatusAction):
             mentor = self.request.user.comrade
 
         try:
-            approval = MentorApproval.objects.get(mentor=mentor, project=project)
+            return MentorApproval.objects.get(mentor=mentor, project=project)
         except MentorApproval.DoesNotExist:
-            approval = MentorApproval(mentor=mentor, project=project)
-
-        # Capture the old instructions_read before saving the form.
-        self.instructions_already_read = approval.instructions_read
-        return approval
+            return MentorApproval(mentor=mentor, project=project)
 
     def get_success_url(self):
         if self.kwargs['action'] == 'submit':
