@@ -1535,6 +1535,12 @@ class FinalApplication(ApprovalStatus):
             verbose_name="Relevant Projects",
             help_text="Please describe any relevant projects (either personal, work, or school projects) that helped you gain skills you will use in this project. Talk about what knowledge you gained from working on them. Include links where possible.")
 
+    applying_to_gsoc = models.TextField(
+            max_length=EIGHT_PARAGRAPH_LENGTH,
+            blank=True,
+            verbose_name="(Optional) Please describe which Google Summer of Code communities and projects you are applying for, and provide mentor contact information",
+            help_text='If you are a student at an accredited university or college, we highly encourage you to also apply to <a href="https://summerofcode.withgoogle.com/">Google Summer of Code</a> during the May to August internship round. Many Outreachy communities participate in both programs, and applying to Google Summer of Code increases your chances of being accepted as an intern. Please note that <a href="https://developers.google.com/open-source/gsoc/help/student-stipends">Google Summer of Code has stipend amounts that vary per country</a>.<br><br>Please keep the list of communities and projects you are applying to under Google Summer of Code up-to-date, since we often try to coordinate with Google Summer of Code mentors during the intern selection period.<br><br>If this application is for the December to March internship period, or you are not applying to Google Summer of Code, please leave this question blank.')
+
     community_specific_questions = models.TextField(
             max_length=EIGHT_PARAGRAPH_LENGTH,
             blank=True,
