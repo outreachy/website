@@ -166,7 +166,7 @@ Outreachy eligibility results
 		<h3>Volunteer Information</h3>
 	{% endif %}
 	{% for position in volunteer_time_commitments %}
-		<p>Employment Period #{{ forloop.counter }}</p>
+		<p>Volunteer Period #{{ forloop.counter }}</p>
 		<ul>
 			<li>Date your volunteer time commitments start: <strong>{{ position.start_date|date:"F d, Y" }}</strong></li>
 			<li>Date your volunteer time commitments end: <strong>{{ position.end_date|date:"F d, Y" }}</strong></li>
