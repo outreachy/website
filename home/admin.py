@@ -31,7 +31,6 @@ class ComradeAdmin(UserAdmin):
 
 class SponsorshipInline(admin.StackedInline):
     model = Sponsorship
-    can_delete = False
 
 class ParticipationAdmin(reversion.admin.VersionAdmin):
     list_display = (
