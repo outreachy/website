@@ -257,7 +257,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='comrade',
             name='agreed_to_code_of_conduct',
-            field=models.CharField(max_length=800, verbose_name='Type your legal name to indicate you agree to the Code of Conduct'),
+            field=models.CharField(default='', max_length=800, verbose_name='Type your legal name to indicate you agree to the Code of Conduct'),
+            preserve_default=False,
         ),
         migrations.AddField(
             model_name='community',
