@@ -613,7 +613,7 @@ def eligibility_results(request):
 
 def current_round_page(request):
     current_round = RoundPage.objects.latest('internstarts')
-    approved_participations = current_round.participation_set.approved()
+    approved_participations = current_round.participation_set.approved().order_by('community__name')
 
     open_approved_projects = []
     closed_approved_projects = []
