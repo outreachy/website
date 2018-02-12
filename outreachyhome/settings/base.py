@@ -235,5 +235,5 @@ DEFAULT_FROM_EMAIL = 'organizers@outreachy.org'
 # only environment variable that Raven automatically checks so we don't
 # have to pick it up here.
 RAVEN_CONFIG = {
-    'release': os.getenv('GIT_VER'),
+    'release': os.getenv('GIT_REV'),
 }
