@@ -319,7 +319,7 @@ def determine_eligibility(wizard, application_round):
 
     return (ApprovalStatus.APPROVED, '')
 
-class EligibilityUpdateView(LoginRequiredMixin, SessionWizardView):
+class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWizardView):
     template_name = 'home/wizard_form.html'
     condition_dict = {
             'USA demographics': show_us_demographics,
