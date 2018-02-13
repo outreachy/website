@@ -1248,6 +1248,9 @@ class ApplicantApproval(ApprovalStatus):
     enrolled_as_student = models.NullBooleanField(
             help_text='Will you be enrolled in a university or college during the Outreachy internship period?')
 
+    enrolled_as_noncollege_student = models.NullBooleanField(
+            help_text='Will you be enrolled in a coding school or self-paced online classes during the Outreachy internship period?')
+
     employed = models.NullBooleanField(
             help_text='Will you be an employee (for any number of hours) during the Outreachy internship period?')
 
@@ -1255,7 +1258,7 @@ class ApplicantApproval(ApprovalStatus):
             help_text='Will you be a contractor during the Outreachy internship period?')
 
     volunteer_time_commitments = models.NullBooleanField(
-            help_text='Will you have volunteer time commitments that require more than 10 hours a week during the Outreachy internship period?')
+            help_text='Will you have any volunteer positions (such as volunteering with a non-profit or community center, participating in a community band, or volunteering to organize an event) that require more than 10 hours a week during the Outreachy internship period? Do not count your Outreachy internship time as a volunteer position.')
 
     other_time_commitments = models.TextField(
             max_length=THREE_PARAGRAPH_LENGTH,
@@ -1368,11 +1371,15 @@ class ApplicantApproval(ApprovalStatus):
 
     def get_time_commitments(self):
         current_round = RoundPage.objects.latest('internstarts')
+        noncollege_school_time_commitments = NonCollegeSchoolTimeCommitment.objects.filter(applicant=self)
         school_time_commitments = SchoolTimeCommitment.objects.filter(applicant=self)
         volunteer_time_commitments = VolunteerTimeCommitment.objects.filter(applicant=self)
         employment_time_commitments = EmploymentTimeCommitment.objects.filter(applicant=self)
         tcs = [ self.time_commitment_from_model(d, d.hours_per_week)
                 for d in volunteer_time_commitments or []
+                if d ]
+        ctcs = [ self.time_commitment_from_model(d, d.hours_per_week)
+                for d in school_time_commitments or []
                 if d ]
 
         etcs = [ self.time_commitment_from_model(d, 0 if d.quit_on_acceptance else d.hours_per_week)
@@ -1382,7 +1389,7 @@ class ApplicantApproval(ApprovalStatus):
         stcs = [ self.time_commitment_from_model(d, 40 * ((d.registered_credits - d.outreachy_credits - d.thesis_credits) / d.typical_credits))
                 for d in school_time_commitments or []
                 if d ]
-        calendar = create_time_commitment_calendar(chain(tcs, etcs, stcs), current_round)
+        calendar = create_time_commitment_calendar(chain(tcs, ctcs, etcs, stcs), current_round)
 
         longest_period_free = 0
         free_period_start_day = 0
@@ -1403,6 +1410,7 @@ class ApplicantApproval(ApprovalStatus):
                 'free_period_end_date': free_period_end_date,
                 'internship_total_days': internship_total_days,
                 'school_time_commitments': school_time_commitments,
+                'noncollege_school_time_commitments': noncollege_school_time_commitments,
                 'volunteer_time_commitments': volunteer_time_commitments,
                 'employment_time_commitments': employment_time_commitments,
                 }
@@ -1430,6 +1438,19 @@ class EmploymentTimeCommitment(models.Model):
             )
     quit_on_acceptance = models.BooleanField(
             help_text="I will quit this job or contract if I am accepted as an Outreachy intern.")
+
+class NonCollegeSchoolTimeCommitment(models.Model):
+    applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
+    start_date = models.DateField(help_text="Date your coding school or online course starts. Use YYYY-MM-DD format.")
+    end_date = models.DateField(help_text="Date your coding school or online course ends. Use YYYY-MM-DD format.")
+    hours_per_week = models.IntegerField(
+            help_text="Maximum hours per week spent on coursework, homework, and studying for this course.",
+            validators=[validators.MinValueValidator(1)],
+            )
+    description = models.TextField(
+            max_length=THREE_PARAGRAPH_LENGTH,
+            blank=True,
+            help_text="Please describe the course (name, short description of course work, and link to the coding school or online coursework website).")
 
 class SchoolTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
