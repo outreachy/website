@@ -13,6 +13,7 @@ from .models import EmploymentTimeCommitment
 from .models import FinalApplication
 from .models import MentorApproval
 from .models import NewCommunity
+from .models import NonCollegeSchoolTimeCommitment
 from .models import Notification
 from .models import Participation
 from .models import Project
@@ -145,6 +146,11 @@ class SchoolTimeCommitmentsInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'School term'
 
+class NonCollegeSchoolTimeCommitmentsInline(admin.StackedInline):
+    model = NonCollegeSchoolTimeCommitment
+    can_delete = False
+    verbose_name_plural = 'Coding school or online courses'
+
 class EmploymentTimeCommitmentsInline(admin.StackedInline):
     model = EmploymentTimeCommitment
     can_delete = False
@@ -181,7 +187,7 @@ class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
             '=applicant__account__username',
             '=applicant__account__email',
             )
-    inlines = (SchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline)
+    inlines = (SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline)
 
     def round(self, obj):
         return obj.application_round

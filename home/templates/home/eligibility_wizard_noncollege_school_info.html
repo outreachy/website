@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}
+Are you eligible to apply to Outreachy?
+{% endblock %}
+
+{% block content %}
+<h1>Outreachy Eligibility Checking</h1>
+<p>
+Please enter information about your coding school or online courses during the Outreachy internship period,
+from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
+If you have less than five courses, leave additional ones blank.
+If your coding school doesn't have courses, fill out your time commitments in one "course".
+</p>
+<p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+<hr>
+
+<form action="" method="post">{% csrf_token %}
+{{ wizard.form.media }}
+{{ wizard.management_form }}
+{% if wizard.form.forms %}
+    {{ wizard.form.management_form }}
+    {% for form in wizard.form.forms %}
+	<div class="card border-info mb-3">
+		<div class="card-header text-white bg-info">Course #{{ forloop.counter }}</div>
+	</div>
+        {% include "bootstrap_form.html" with form=form only %}
+    {% endfor %}
+{% else %}
+    {% include "bootstrap_form.html" with form=wizard.form only %}
+{% endif %}
+{% if wizard.steps.prev %}
+<button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}">First step</button>
+<button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.prev }}">Previous step</button>
+{% endif %}
+<input type="submit" class="btn btn-primary" value="Next step"/>
+</form>
+
+{% endblock %}

@@ -61,8 +61,8 @@ that timeline, taking into account any time commitments the applicant has.
 				</ul>
 			</li>
 		</ul>
-		{% if not tcs.school_time_commitments and not tcs.volunteer_time_commitments and not tcs.employment_time_commitments %}
-			<p>Applicant has not listed any school, work, or volunteer time commitments.</p>
+		{% if not tcs.school_time_commitments and not tcs.volunteer_time_commitments and not tcs.employment_time_commitments and not tcs.noncollege_school_time_commitments %}
+			<p>Applicant has not listed any university/college, coding school/online courses, work, or volunteer time commitments.</p>
 		{% endif %}
 		{% if tcs.school_time_commitments %}
 			<p>School time commitments:</p>
@@ -78,6 +78,18 @@ that timeline, taking into account any time commitments the applicant has.
 					{% if term.thesis_credits %}<li>Applicant is registered for {{ term.thesis_credits }} graduate thesis or research credits during this term</li>{% endif %}
 				</ul>
 				{% endfor %}
+			</ul>
+		{% endif %}
+		{% if tcs.noncollege_school_time_commitments %}
+			<p>Coding school or online courses time commitments:</p>
+			<ul>
+			{% for course in tcs.noncollege_school_time_commitments %}
+				<li>Course #{{ forloop.counter }}</li>
+				<ul>
+					<li>{{ course.hours_per_week }} hours per week from {{ course.start_date }} to {{ course.end_date }}.</li>
+					<li>Description of course work and organization offering courses: {{ course.description }}</li>
+				</ul>
+			{% endfor %}
 			</ul>
 		{% endif %}
 		{% if tcs.employment_time_commitments %}

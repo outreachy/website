@@ -1381,7 +1381,7 @@ class ApplicantApproval(ApprovalStatus):
                 for d in volunteer_time_commitments or []
                 if d ]
         ctcs = [ self.time_commitment_from_model(d, d.hours_per_week)
-                for d in school_time_commitments or []
+                for d in noncollege_school_time_commitments or []
                 if d ]
 
         etcs = [ self.time_commitment_from_model(d, 0 if d.quit_on_acceptance else d.hours_per_week)
@@ -1402,8 +1402,14 @@ class ApplicantApproval(ApprovalStatus):
                 longest_period_free = group_len
                 free_period_start_day = counter
             counter = counter + group_len
-        free_period_start_date = current_round.internstarts + timedelta(days=free_period_start_day)
-        free_period_end_date = current_round.internstarts + timedelta(days=free_period_start_day + longest_period_free - 1)
+        # Catch the case where the person is never free during the internship period
+        if longest_period_free == 0 and free_period_start_day == 0 and counter != 0:
+            longest_period_free = None
+            free_period_start_date = None
+            free_period_end_date = None
+        else:
+            free_period_start_date = current_round.internstarts + timedelta(days=free_period_start_day)
+            free_period_end_date = current_round.internstarts + timedelta(days=free_period_start_day + longest_period_free - 1)
         internship_total_days = current_round.internends - current_round.internstarts
 
         return {

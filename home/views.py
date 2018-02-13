@@ -42,6 +42,7 @@ from .models import EmploymentTimeCommitment
 from .models import FinalApplication
 from .models import MentorApproval
 from .models import NewCommunity
+from .models import NonCollegeSchoolTimeCommitment
 from .models import Notification
 from .models import Participation
 from .models import Project
@@ -239,6 +240,12 @@ def gender_and_demographics_is_approved(wizard):
             ]
     return any(gender_data[x] for x in gender_minority_list) or gender_data['self_identify'] != ''
 
+def show_noncollege_school_info(wizard):
+    if not gender_and_demographics_is_approved(wizard):
+        return False
+    cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
+    return cleaned_data.get('enrolled_as_noncollege_student', True)
+
 def show_school_info(wizard):
     if not gender_and_demographics_is_approved(wizard):
         return False
@@ -281,6 +288,10 @@ def time_commitments_are_approved(wizard, application_round):
             for d in wizard.get_cleaned_data_for_step('Volunteer Time Commitment Info') or []
             if d ]
 
+    ctcs = [ time_commitment(d, d['hours_per_week'])
+            for d in wizard.get_cleaned_data_for_step('Coding School or Online Courses Time Commitment Info') or []
+            if d ]
+
     etcs = [ time_commitment(d, 0 if d['quit_on_acceptance'] else d['hours_per_week'])
             for d in wizard.get_cleaned_data_for_step('Employment Info') or []
             if d ]
@@ -290,7 +301,7 @@ def time_commitments_are_approved(wizard, application_round):
             if d ]
 
     required_free_days = 7*7
-    calendar = create_time_commitment_calendar(chain(tcs, etcs, stcs), application_round)
+    calendar = create_time_commitment_calendar(chain(tcs, ctcs, etcs, stcs), application_round)
 
     for key, group in groupby(calendar, lambda hours: hours <= 20):
         if key is True and len(list(group)) >= required_free_days:
@@ -327,6 +338,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWiz
             'Time Commitments': gender_and_demographics_is_approved,
             'School Info': show_school_info,
             'School Term Info': show_school_info,
+            'Coding School or Online Courses Time Commitment Info': show_noncollege_school_info,
             'Contractor Info': show_contractor_info,
             'Employment Info': show_employment_info,
             'Volunteer Time Commitment Info': show_time_commitment_info,
@@ -429,12 +441,14 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWiz
                 )),
             ('Time Commitments', modelform_factory(ApplicantApproval, fields=(
                 'enrolled_as_student',
+                'enrolled_as_noncollege_student',
                 'employed',
                 'contractor',
                 'volunteer_time_commitments',
                 ),
                 widgets = {
                     'enrolled_as_student': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'enrolled_as_noncollege_student': widgets.RadioSelect(choices=BOOL_CHOICES),
                     'employed': widgets.RadioSelect(choices=BOOL_CHOICES),
                     'contractor': widgets.RadioSelect(choices=BOOL_CHOICES),
                     'volunteer_time_commitments': widgets.RadioSelect(choices=BOOL_CHOICES),
@@ -470,6 +484,18 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWiz
                 widgets = {
                     },
                 )),
+            ('Coding School or Online Courses Time Commitment Info', inlineformset_factory(ApplicantApproval,
+                NonCollegeSchoolTimeCommitment,
+                min_num=1,
+                validate_min=True,
+                extra=4,
+                can_delete=False,
+                fields=(
+                    'start_date',
+                    'end_date',
+                    'hours_per_week',
+                    'description',
+                ))),
             ('Contractor Info', inlineformset_factory(ApplicantApproval,
                 ContractorInformation,
                 min_num=1,
@@ -523,6 +549,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWiz
             'Time Commitments': 'home/eligibility_wizard_time_commitments.html',
             'School Info': 'home/eligibility_wizard_school_info.html',
             'School Term Info': 'home/eligibility_wizard_school_terms.html',
+            'Coding School or Online Courses Time Commitment Info': 'home/eligibility_wizard_noncollege_school_info.html',
             'Contractor Info': 'home/eligibility_wizard_contractor_info.html',
             'Employment Info': 'home/eligibility_wizard_employment_info.html',
             'Volunteer Time Commitment Info': 'home/eligibility_wizard_time_commitment_info.html',
@@ -603,6 +630,7 @@ def eligibility_results(request):
             {
             'application': application,
             'school_time_commitments': tc_dict['school_time_commitments'],
+            'noncollege_school_time_commitments': tc_dict['noncollege_school_time_commitments'],
             'volunteer_time_commitments': tc_dict['volunteer_time_commitments'],
             'employment_time_commitments': tc_dict['employment_time_commitments'],
             'free_period_start_date': tc_dict['free_period_start_date'],

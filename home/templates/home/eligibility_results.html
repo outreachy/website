@@ -147,6 +147,18 @@ Outreachy eligibility results
 			<li>Number of graduate thesis or research credits: <strong>{{ term.thesis_credits }}</strong></li>
 		</ul>
 	{% endfor %}
+	{% if noncollege_school_time_commitments %}
+		<h3>Code School or Online Courses Information</h3>
+	{% endif %}
+	{% for course in noncollege_school_time_commitments %}
+		<p>Course #{{ forloop.counter }}</p>
+		<ul>
+			<li>Date your coding school or online course starts: <strong>{{ course.start_date|date:"F d, Y" }}</strong></li>
+			<li>Date your coding school or online course ends: <strong>{{ course.end_date|date:"F d, Y" }}</strong></li>
+			<li>Maximum hours per week spent on coursework, exercises, homework, and studying: <strong>{{ course.hours_per_week }}</strong></li>
+			<li>Description of organization offering courses and course name and description: <strong>{{ course.description }}</strong></li>
+		</ul>
+	{% endfor %}
 
 	{% if employment_time_commitments %}
 		<h3>Employment or Contract Information</h3>
@@ -175,14 +187,22 @@ Outreachy eligibility results
 		</ul>
 	{% endfor %}
 	<h2>Weeks Free From Full-Time Commitments</h2>
-	<p>Based on the information you provided, you have the
-	following consecutive days free from full-time commitments:
-	<strong>{{ free_period_start_date|date:"F d, Y" }} to {{ free_period_end_date|date:"F d, Y" }}</strong>.</p>
-	<p>Outreachy interns must have a minimum number of 49 consecutive days free from full-time commitments
-	from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
-	</p>
-	<p>You have {{ longest_period_free }} consecutive days free from full-time commitments.
-	We cannot lower the minimum number of days for any applicant.</p>
+	{% if free_period_start_date %}
+		<p>Based on the information you provided, you have the
+		following consecutive days free from full-time commitments:
+		<strong>{{ free_period_start_date|date:"F d, Y" }} to {{ free_period_end_date|date:"F d, Y" }}</strong>.</p>
+		<p>Outreachy interns must have a minimum number of 49 consecutive days free from full-time commitments
+		from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
+		</p>
+		<p>You have {{ longest_period_free }} consecutive days free from full-time commitments.
+		We cannot lower the minimum number of days for any applicant.</p>
+	{% else %}
+		<p>Based on the information you provided, you have no
+		consecutive days free from full-time commitments during the Outreachy internship from
+		<strong>{{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}</strong>.</p>
+		<p>Outreachy interns must have a minimum number of 49 consecutive days free from full-time commitments.
+		</p>
+	{% endif %}
 
 	<h2>Can I contest this result?</h2>
 	<p>
