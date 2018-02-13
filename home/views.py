@@ -334,8 +334,8 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWiz
     form_list = [
             ('General Info', modelform_factory(ApplicantApproval, fields=(
                 'over_18',
-                'gsoc_or_outreachy_internship',
                 'eligible_to_work',
+                'gsoc_or_outreachy_internship',
                 'us_national_or_permanent_resident',
                 'living_in_us',
                 'under_export_control',
