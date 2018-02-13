@@ -34,7 +34,7 @@ Outreachy eligibility results
 	</p>
 	<p><strong>Your Eligibility Information:</strong></p>
 	<ul>
-	{% if application.over_18 == False %}
+	{% if application.over_18 == False or application.over_18 == None %}
 			<li>Will you be 18 years or older when the Outreachy internship starts? <strong>No.</strong>
 				<ul><li>Outreachy internships are open to people who are 18 years or older as of {{ current_round.internstarts|date:"F d, Y" }}.</li></ul>
 			</li>
@@ -44,7 +44,7 @@ Outreachy eligibility results
 				<ul><li>Outreachy internships are open to people who haven't been accepted for either Google Summer of Code or Outreachy internships before.</li></ul>
 			</li>
 	{% endif %}
-	{% if application.eligible_to_work == False %}
+	{% if application.eligible_to_work == False or application.eligible_to_work == None %}
 			<li>Are you eligible to work for 40 hours a week in the country (or countries) you will be living in during the Outreachy internship period? <strong>No.</strong>
 				<ul>
 					<li>Outreachy interns must be eligible to work in the countries they will be living in
