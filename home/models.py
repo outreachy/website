@@ -1246,10 +1246,12 @@ class ApplicantApproval(ApprovalStatus):
             help_text='Have you been accepted as a Google Summer of Code intern or an Outreachy intern before? Please say yes even if you did not complete the internship.')
 
     enrolled_as_student = models.NullBooleanField(
-            help_text='Will you be enrolled in a university or college during the Outreachy internship period?')
+            verbose_name='Are you a university or college student?',
+            help_text='Will you be enrolled in a university or college during the Outreachy internship period? University and college students will be asked questions about the number of credits they are taking.')
 
     enrolled_as_noncollege_student = models.NullBooleanField(
-            help_text='Will you be enrolled in a coding school or self-paced online classes during the Outreachy internship period?')
+            verbose_name='Are you enrolled in a coding school or self-paced online courses?',
+            help_text='Will you be enrolled in a coding school or self-paced online classes during the Outreachy internship period? If you are taking classes without receiving credits, select this option.')
 
     employed = models.NullBooleanField(
             help_text='Will you be an employee (for any number of hours) during the Outreachy internship period?')
@@ -1444,13 +1446,13 @@ class NonCollegeSchoolTimeCommitment(models.Model):
     start_date = models.DateField(help_text="Date your coding school or online course starts. Use YYYY-MM-DD format.")
     end_date = models.DateField(help_text="Date your coding school or online course ends. Use YYYY-MM-DD format.")
     hours_per_week = models.IntegerField(
-            help_text="Maximum hours per week spent on coursework, homework, and studying for this course.",
+            help_text="Maximum hours per week spent on coursework, exercises, homework, and studying for this course.",
             validators=[validators.MinValueValidator(1)],
             )
     description = models.TextField(
             max_length=THREE_PARAGRAPH_LENGTH,
             blank=True,
-            help_text="Please describe the course (name, short description of course work, and link to the coding school or online coursework website).")
+            help_text="Please describe the course. Include the name and a link to the website of your coding school or organization offering online courses. Add the course name and a short description of course work.")
 
 class SchoolTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
