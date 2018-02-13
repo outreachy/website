@@ -131,3 +131,35 @@ Add a cron job to auto-renew the certificate:
 ```
 $ ssh dokku@$DOMAIN letsencrypt:cron-job --add
 ```
+
+Updating the test database
+--------------------------
+
+Periodically, you'll want to import the live database to the test site, in order to try a new migration or test new views code. You could export the database as a backup, but that won't work if the schema used on the test site differs from the live site. Instead, we need to clone the live site's database and do a little dance to link it into the test site.
+
+First, clone the live database (www-database):
+```
+ssh dokku@outreachy.org postgres:clone www-database test-database-updated-2018-02-13
+```
+
+Next, link the cloned database to the dokku test container:
+```
+ssh dokku@outreachy.org postgres:link test-database-updated-2018-02-13 test
+```
+
+We promote the cloned database to be used by the test container:
+```
+ssh dokku@outreachy.org postgres:promote test-database-updated-2018-02-13 test
+```
+
+Then we unlink the older database (use whatever was the old name):
+```
+ssh dokku@outreachy.org postgres:unlink test-database-updated test
+```
+
+You can always figure out which databases are linked with this command:
+```
+ssh dokku@outreachy.org postgres:list
+```
+
+Then, finally, you can `git push` to the test site, migrate, and test any updated views.
