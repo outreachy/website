@@ -1165,7 +1165,8 @@ def project_contributions(request, round_slug, community_slug, project_slug):
             project_round__approval_status=ApprovalStatus.APPROVED)
     applicant = get_object_or_404(ApplicantApproval,
             applicant=request.user.comrade,
-            application_round=current_round)
+            application_round=current_round,
+            approval_status=ApprovalStatus.APPROVED)
     contributions = applicant.contribution_set.filter(
             project=project)
     try:
