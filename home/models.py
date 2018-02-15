@@ -1590,6 +1590,60 @@ class FinalApplication(ApprovalStatus):
             verbose_name="Outreachy internship project timeline",
             help_text="Please work with your mentor to provide a timeline of the work you plan to accomplish on the project and what tasks you will finish at each step. Make sure take into account any time commitments you have during the Outreachy internship round. If you are still working on your contributions and need more time, you can leave this blank and edit your application later.")
 
+    BIT = 'BIT'
+    GIRLSWHOCODE = 'GWC'
+    NAJOBS = 'NAJ'
+    POCIT = 'POCIT'
+    WOMENWHOCODE = 'WWC'
+    HYPATIA = 'HYP'
+    LATINASINTECH = 'LAIT'
+    LGBTQ = 'LGBTQ'
+    RECURSE = 'RC'
+    H4CK = 'H4CK'
+    WITCH = 'WITCH'
+    WIL = 'WIL'
+    TAPIA = 'TAPIA'
+    CONFERENCE = 'CONF'
+    PRESENTATION = 'PRES'
+    ALUM = 'ALUM'
+    MENTOR = 'MENT'
+    TEACHER = 'TEACH'
+    CLASSMATE = 'STUD'
+    FRIEND = 'PAL'
+    TWITTER = 'TWIT'
+    SEARCH = 'SEAR'
+    OTHER = 'OTH'
+    HEARD_CHOICES = (
+        (BIT, 'Job board - Blacks in Tech'),
+        (GIRLSWHOCODE, 'Job board - Girls Who Code'),
+        (NAJOBS, 'Job board - Native American Jobs'),
+        (POCIT, 'Job board - People of Color in Tech'),
+        (WOMENWHOCODE, 'Job board - Women Who Code'),
+        (HYPATIA, 'Community - Hypatia Software'),
+        (LATINASINTECH, 'Community - Latinas in Tech group'),
+        (LGBTQ, 'Community - LGBTQ in Tech slack'),
+        (RECURSE, 'Community - Recurse Center'),
+        (H4CK, 'Community - Trans*H4CK'),
+        (WITCH, 'Community - Women in Tech Chat slack'),
+        (WIL, 'Community - Women in Linux group'),
+        (TAPIA, 'Conference - Richard Tapia Conference'),
+        (CONFERENCE, 'Conference - other'),
+        (PRESENTATION, 'Presentation by an Outreachy organizer, mentor, or coordinator'),
+        (ALUM, 'From a former Outreachy intern'),
+        (MENTOR, 'From an Outreachy mentor'),
+        (TEACHER, 'From a teacher'),
+        (CLASSMATE, 'From a classmate'),
+        (FRIEND, 'From a friend'),
+        (TWITTER, 'From Twitter'),
+        (SEARCH, 'Found Outreachy from a web search'),
+        (OTHER, 'Other'),
+    )
+    spread_the_word = models.CharField(
+            verbose_name="How did you find out about Outreachy? (This will only be displayed to Outreachy Organizers.)",
+            max_length=5,
+            choices=HEARD_CHOICES,
+            default=OTHER)
+
     def is_approver(self, user):
         approved_mentor = self.project.mentors_set.filter(approval_status=ApprovalStatus.APPROVED, mentor=user.comrade)
         if approved_mentor:
