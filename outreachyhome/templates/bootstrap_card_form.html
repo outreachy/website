@@ -1,0 +1,18 @@
+{{ form.non_field_errors }}
+{% for field in form.visible_fields %}
+<div class="form-group card">
+	    {{ field.errors }}
+    <div class = "card-header">
+	    {{ field.label_tag }}
+    </div>	    
+    <div class = "card-body">
+	    {{ field }}
+    </div>
+    {% if field.help_text %}
+	    <div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+    {% endif %}
+</div>
+{% endfor %}
+{% for hidden in form.hidden_fields %}
+{{ hidden }}
+{% endfor %}

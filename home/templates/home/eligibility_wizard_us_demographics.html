@@ -27,7 +27,7 @@ It will not be shared with mentors, coordinators, or other applicants.
 	<hr>
     {% endfor %}
 {% else %}
-    {% include "bootstrap_form.html" with form=wizard.form only %}
+        {% include "bootstrap_card_form.html" with form=wizard.form only %}
 {% endif %}
 {% if wizard.steps.prev %}
 <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}">First step</button>
