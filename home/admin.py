@@ -184,6 +184,7 @@ class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
             )
     search_fields = (
             'applicant__public_name',
+            'applicant__legal_name',
             '=applicant__account__username',
             '=applicant__account__email',
             )
