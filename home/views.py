@@ -1233,6 +1233,7 @@ class FinalApplicationAction(ApprovalStatusAction):
             'applying_to_gsoc',
             'community_specific_questions',
             'timeline',
+            'spread_the_word',
             ]
 
     def get_object(self):
