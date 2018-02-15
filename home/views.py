@@ -21,6 +21,7 @@ from formtools.wizard.views import SessionWizardView
 from itertools import chain, groupby
 from markdownx.utils import markdownify
 from registration.backends.hmac import views as hmac_views
+import reversion
 
 from . import email
 
@@ -330,7 +331,7 @@ def determine_eligibility(wizard, application_round):
 
     return (ApprovalStatus.APPROVED, '')
 
-class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWizardView):
+class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, SessionWizardView):
     template_name = 'home/wizard_form.html'
     condition_dict = {
             'USA demographics': show_us_demographics,
