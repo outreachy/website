@@ -306,7 +306,7 @@ class Comrade(models.Model):
             verbose_name = "Type your legal name to indicate you agree to the Code of Conduct")
 
     def __str__(self):
-        return self.public_name
+        return self.public_name + ' <' + self.account.email + '> (' + self.legal_name + ')'
 
     def email_address(self):
         return Address(self.public_name, addr_spec=self.account.email)
