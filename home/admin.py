@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 import reversion.admin
 
 from .models import ApplicantApproval
+from .models import CommunicationChannel
 from .models import Community
 from .models import Comrade
 from .models import Contribution
@@ -17,6 +18,7 @@ from .models import NonCollegeSchoolTimeCommitment
 from .models import Notification
 from .models import Participation
 from .models import Project
+from .models import ProjectSkill
 from .models import RoundPage
 from .models import SchoolTimeCommitment
 from .models import Sponsorship
@@ -66,6 +68,16 @@ class CommunityAdmin(admin.ModelAdmin):
             'website',
             )
 
+class SkillsInline(admin.StackedInline):
+    model = ProjectSkill
+    can_delete = False
+    verbose_name_plural = 'Project Skills'
+
+class ChannelsInline(admin.StackedInline):
+    model = CommunicationChannel
+    can_delete = False
+    verbose_name_plural = 'Communication Channels'
+
 class ProjectAdmin(reversion.admin.VersionAdmin):
     list_display = (
             'short_title',
@@ -83,6 +95,7 @@ class ProjectAdmin(reversion.admin.VersionAdmin):
             'short_title',
             'project_round__community__name',
             )
+    inlines = (ChannelsInline, SkillsInline)
 
     def community(self, obj):
         return obj.project_round.community.name
