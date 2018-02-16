@@ -61,43 +61,48 @@
 {% endwith %}
 <p>Please contact the mentors for this internship project to get information on how you can make a contribution during the application process. Only applicants who make a contribution will be accepted as interns.</p>
 
-<h3>Interacting with the {{ community.name }} Community</h3>
+<h3>How do I work with the {{ community.name }} community?</h3>
 <p>Community members are there to answer your questions, give you feedback, and help you grow your skills.
 During this internship project, you'll be interacting with a team of {{ project.get_community_size_display|lower }}.
 The community has been accepting contributions from people from around the world for {{ project.get_longevity_display|lower }}.
 </p>
 
-<p>Community members (and Outreachy applicants) discuss contributions in public communication channels.
-It can be intimidating to work in the public, but mentors are always available to encourage you via private message or email.
-We hope you'll introduce yourself on the public project channels and ask for help when you get stuck.
-</p>
-{% for channel in project.communicationchannel_set.all %}
-	<p>
-	This team uses {{ channel.tool_name }} to communicate.
-	{% if channel.communication_help %}
-		You can find helpful documentation about this communication tool <a href="{{ channel.communication_help }}">here</a>. 
-	{% endif %}
-	</p>
-	{% if channel.norms %}
-		<p>Once you join the project's communication channel,
-		the mentors have some additional instructions for you to follow:</p> {{ channel.norms|safe }}
-	{% endif %}
-	{% if channel.url %}
-		<p>
-		{% with url_parsed=channel.url_parsed %}
-		You can join this project's communication channel by
-		{% if url_parsed.scheme == 'irc' %}
-		joining the <a href="https://kiwiirc.com/client/{{ url_parsed.netloc }}{{ url_parsed.path }}" target="_blank">#{{ url_parsed.path|slice:"1:" }} IRC channel on {{ url_parsed.netloc }}</a>.
-		{% else %}
-		<a href="{{ channel.url }}" target="_blank">following this link</a>.
-		{% endif %}
-		{% endwith %}
+{% with channels=project.communicationchannel_set.all %}
+	{% if channels %}
+		<p>Community members (and Outreachy applicants) discuss contributions in public communication channels.
+		It can be intimidating to work in the public, but mentors are always available to encourage you via private message or email.
+		We hope you'll introduce yourself on the public project channels and ask for help when you get stuck.
 		</p>
+		<h3>{{ community.name }} public communication channels</h3>
+		{% for channel in channels %}
+			<p>
+			This team uses {{ channel.tool_name }} to communicate.
+			{% if channel.communication_help %}
+				You can find helpful documentation about this communication tool <a href="{{ channel.communication_help }}">here</a>. 
+			{% endif %}
+			</p>
+			{% if channel.norms %}
+				<p>Once you join the project's communication channel,
+				the mentors have some additional instructions for you to follow:</p> {{ channel.norms|safe }}
+			{% endif %}
+			{% if channel.url %}
+				<p>
+				{% with url_parsed=channel.url_parsed %}
+				You can join this project's communication channel by
+				{% if url_parsed.scheme == 'irc' %}
+				joining the <a href="https://kiwiirc.com/client/{{ url_parsed.netloc }}{{ url_parsed.path }}" target="_blank">#{{ url_parsed.path|slice:"1:" }} IRC channel on {{ url_parsed.netloc }}</a>.
+				{% else %}
+				<a href="{{ channel.url }}" target="_blank">following this link</a>.
+				{% endif %}
+				{% endwith %}
+				</p>
+			{% endif %}
+			{% if channel.instructions %}
+				{{ channel.instructions|safe }}
+			{% endif %}
+		{% endfor %}
 	{% endif %}
-	{% if channel.instructions %}
-		{{ channel.instructions|safe }}
-	{% endif %}
-{% endfor %}
+{% endwith %}
 
 <h3>Project Contribution Information</h3>
 <p>As part of the application process, all applicants must make at least one contribution to be accepted as an intern for this project.
