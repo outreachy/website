@@ -926,6 +926,9 @@ class Project(ApprovalStatus):
     def get_withdrawn_applications(self):
         return FinalApplication.objects.filter(project = self, approval_status=ApprovalStatus.WITHDRAWN)
 
+    def get_approved_mentors(self):
+        return self.mentorapproval_set.filter(approval_status=ApprovalStatus.APPROVED)
+
     @classmethod
     def objects_for_dashboard(cls, user):
         return cls.objects.filter(

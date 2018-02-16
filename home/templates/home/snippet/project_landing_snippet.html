@@ -51,12 +51,14 @@
 <h3>Who will I work with?</h3>
 <p>Each Outreachy intern works remotely with one or more mentors. Most Outreachy mentors only work with one intern per round. Mentors are your guides in learning more about free and open source software, technical and non-technical skills, and will always be there when you get stuck.</p>
 
-{% if approved_mentors %}
-	<p>You'll be working with the following mentor{{ approved_mentors|length|pluralize }}:</p>
-	{% for approval in approved_mentors %}
-		{% include "home/snippet/mentor_info_for_landing.html" with approval=approval only %}
-	{% endfor %}
-{% endif %}
+{% with approved_mentors=project.get_approved_mentors %}
+	{% if approved_mentors %}
+		<p>You'll be working with the following mentor{{ approved_mentors|length|pluralize }}:</p>
+		{% for approval in approved_mentors %}
+			{% include "home/snippet/mentor_info_for_landing.html" with approval=approval only %}
+		{% endfor %}
+	{% endif %}
+{% endwith %}
 <p>Please contact the mentors for this internship project to get information on how you can make a contribution during the application process. Only applicants who make a contribution will be accepted as interns.</p>
 
 <h3>Interacting with the {{ community.name }} Community</h3>
