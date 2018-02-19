@@ -20,6 +20,7 @@ from .models import Participation
 from .models import Project
 from .models import ProjectSkill
 from .models import RoundPage
+from .models import SchoolInformation
 from .models import SchoolTimeCommitment
 from .models import Sponsorship
 from .models import VolunteerTimeCommitment
@@ -154,6 +155,11 @@ class CoordinatorApprovalAdmin(reversion.admin.VersionAdmin):
             '=coordinator__account__email',
             )
 
+class SchoolInformationInline(admin.StackedInline):
+    model = SchoolInformation
+    can_delete = False
+    verbose_name_plural = 'School information'
+
 class SchoolTimeCommitmentsInline(admin.StackedInline):
     model = SchoolTimeCommitment
     can_delete = False
@@ -201,7 +207,7 @@ class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
             '=applicant__account__username',
             '=applicant__account__email',
             )
-    inlines = (SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline)
+    inlines = (SchoolInformationInline, SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline)
 
     def round(self, obj):
         return obj.application_round
