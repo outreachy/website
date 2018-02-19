@@ -1361,6 +1361,25 @@ class ApplicantApproval(ApprovalStatus):
             blank=True,
             help_text="If your gender identity is not listed above, please let us know how you identify so we can add it to the list.")
 
+    AMAZING = 'AMZ'
+    STRONG = 'STR'
+    GOOD = 'GD'
+    UNLIKELY = 'UN'
+    NOTGOOD = 'NGD'
+    UNRATED = 'UNR'
+    RATING_CHOICES = (
+        (AMAZING, '5 - Amazing - multiple large, high-quality contributions'),
+        (STRONG, '4 - Strong - at least one large, high-quality contribution'),
+        (GOOD, '3 - Good - some smaller contributions of good quality'),
+        (UNLIKELY, '2 - Inexperienced - smaller contributions that vary in quality'),
+        (NOTGOOD, '1 - Struggling - applicant did not understand instructions or feedback'),
+        (UNRATED, 'Not rated'),
+    )
+    rating = models.CharField(
+            max_length=3,
+            choices=RATING_CHOICES,
+            default=UNRATED)
+
     def is_approver(self, user):
         return user.is_staff
 
