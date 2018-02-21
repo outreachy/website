@@ -3,7 +3,6 @@ from __future__ import absolute_import, unicode_literals
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.contrib.auth import views as auth_views
 
 from wagtail.wagtailadmin import urls as wagtailadmin_urls
 from home import urls as home_urls
@@ -13,7 +12,6 @@ from contacts import urls as contacts_urls
 
 from . import views as project_views
 from search import views as search_views
-from home import views as home_views
 
 urlpatterns = [
     url(r'^django-admin/', include(admin.site.urls)),
@@ -22,9 +20,11 @@ urlpatterns = [
     url(r'^documents/', include(wagtaildocs_urls)),
 
     url(r'^search/$', search_views.search, name='search'),
-    url(r'^login/$', auth_views.LoginView.as_view(), name='login'),
-    url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
     url(r'^contact/', include(contacts_urls)),
+
+    # https://docs.djangoproject.com/en/1.11/topics/auth/default/#using-the-views
+    url(r'', include('django.contrib.auth.urls')),
+
     url(r'', include(home_urls)),
 
     # For anything not caught by a more specific rule above, hand over to

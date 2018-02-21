@@ -1,6 +1,12 @@
+{# https://docs.djangoproject.com/en/1.11/topics/auth/default/#django.contrib.auth.views.LoginView #}
 {% extends "base.html" %}
 
+{% block title %}
+Log in
+{% endblock %}
+
 {% block content %}
+<h1>Log in</h1>
 
 {% if next %}
     {% if user.is_authenticated %}
@@ -19,8 +25,9 @@
 <form method="post" action="">
 {% csrf_token %}
 {{ form.as_p }}
-<input type="submit" class="btn btn-success" value="Login" />
-
+<p><input type="submit" class="btn btn-success" value="Login" /></p>
 </form>
+
+<p><a href="{% url 'password_reset' %}" class="btn btn-secondary">Forgot your password?</a></p>
 
 {% endblock %}

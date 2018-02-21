@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
+<h1>Outreachy Community Member Information</h1>
+
+<p><a href="{% url 'password_change' %}" class="btn btn-secondary">Change password</a></p>
 
 <form method="post" action="">
 {% csrf_token %}
-    <h1>Outreachy Community Member Information</h1>
     <h2>Required Information</h2>
     {% for field in form.visible_fields %}
     <div class="form-group">
