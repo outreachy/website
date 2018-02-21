@@ -918,10 +918,10 @@ class Project(ApprovalStatus):
         return applicants
 
     def get_applications(self):
-        return FinalApplication.objects.filter(project = self)
+        return FinalApplication.objects.filter(project = self, applicant__approval_status=ApprovalStatus.APPROVED)
 
     def get_gsoc_applications(self):
-        return FinalApplication.objects.filter(project = self).exclude(applying_to_gsoc="")
+        return FinalApplication.objects.filter(project = self, applicant__approval_status=ApprovalStatus.APPROVED).exclude(applying_to_gsoc="")
 
     def get_withdrawn_applications(self):
         return FinalApplication.objects.filter(project = self, approval_status=ApprovalStatus.WITHDRAWN)
