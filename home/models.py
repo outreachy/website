@@ -1529,6 +1529,26 @@ class SchoolInformation(models.Model):
             max_length=SENTENCE_LENGTH,
             help_text='What degree(s) are you pursuing?')
 
+    def print_terms(school_info):
+        print(school_info.applicant.get_approval_status_display(), " ", school_info.applicant.applicant.public_name, " <", school_info.applicant.applicant.account.email, ">")
+        print(school_info.university_name)
+        terms = SchoolTimeCommitment.objects.filter(applicant__applicant__account__email=school_info.applicant.applicant.account.email)
+        for t in terms:
+            print("Term: ", t.term_name, "; Start date: ", t.start_date, "; End date: ", t.end_date)
+            print("Typical " + str(t.typical_credits) + "; registered " + str(t.registered_credits) + "; outreachy " + str(t.outreachy_credits) + "; thesis " + str(t.thesis_credits))
+
+    def print_university_students(school_name):
+        apps = SchoolInformation.objects.filter(university_name__icontains=school_name).orderby('applicant__approval_status')
+        for a in apps.all():
+            self.print_terms(a)
+            print("")
+
+    def print_country_university_students(country):
+        apps = SchoolInformation.objects.filter(applicant__applicant__location__icontains=country).orderby('applicant__approval_status')
+        for a in apps.all():
+            self.print_terms(a)
+            print("")
+
 class ContractorInformation(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
 
