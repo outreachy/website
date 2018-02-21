@@ -32,13 +32,14 @@ that timeline, taking into account any time commitments the applicant has.
 {% with finalapps=project.get_sorted_applications %}
 	{% if finalapps %}
 		<h2 id="rating">Applicant Ratings</h2>
+		<p>Please note that only mentors for this project can change applicant ratings.</p>
 		<form method="post">
 		{% csrf_token %}
 		<table class="table table-striped">
 			<thead>
 				<tr>
 					<th scope="col">Rating</th>
-					<th scope="col">Change Rating</th>
+					{% if project.is_submitter %}<th scope="col">Change Rating</th>{% endif %}
 					<th scope="col">Name and email</th>
 					<th scope="col">Applicant Info</th>
 				</tr>
@@ -47,7 +48,7 @@ that timeline, taking into account any time commitments the applicant has.
 			{% for fa in finalapps %}
 				<tr>
 					<td>{% if fa.rating == fa.UNRATED %}Unrated{% else %}<abbr title="{{ fa.get_rating_display }}">{{ fa.rating }}</abbr>{% endif %}</td>
-					<td>
+					{% if project.is_submitter %}<td>
 						<div class="dropdown">
 							<button class="btn btn-secondary dropdown-toggle" type="button" id="InternRatingMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Applicant Rating</button>
 							<div class="dropdown-menu" aria-labelledby="InternRatingMenu">
@@ -58,6 +59,7 @@ that timeline, taking into account any time commitments the applicant has.
 							</div>
 						</div>
 					</td>
+					{% endif %}
 					<td>{{ fa.applicant.applicant.public_name }} &lt;{{ fa.applicant.applicant.account.email }}&gt; </td>
 					<td><a href="#{{ fa.applicant.applicant.pk }}">(details)</a></td>
 				</tr>
