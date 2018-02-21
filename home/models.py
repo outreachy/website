@@ -901,25 +901,25 @@ class Project(ApprovalStatus):
                         number_contributions=models.Count('contribution'))
 
         for a in applicants:
-            fa = a.finalapplication_set.get(project=self)
-            if fa:
+            try:
+                fa = a.finalapplication_set.get(project=self)
                 a.submitted_application = True
                 if fa.rating == fa.UNRATED:
                     a.rating = "Unrated"
                 else:
                     a.rating = fa.rating
                 a.rating_tip = fa.get_rating_display()
-            else:
-                a.submitted_application = False
-            if a.finalapplication_set.filter(project=self, approval_status = ApprovalStatus.WITHDRAWN):
-                a.withdrew_application = True
-            else:
-                a.withdrew_application = False
+                if a.finalapplication_set.filter(project=self, approval_status = ApprovalStatus.WITHDRAWN):
+                    a.withdrew_application = True
+                else:
+                    a.withdrew_application = False
 
-            if a.finalapplication_set.filter(project=self).exclude(applying_to_gsoc=""):
-                a.applying_to_gsoc = True
-            else:
-                a.applying_to_gsoc = False
+                if a.finalapplication_set.filter(project=self).exclude(applying_to_gsoc=""):
+                    a.applying_to_gsoc = True
+                else:
+                    a.applying_to_gsoc = False
+            except:
+                a.submitted_application = False
 
         return applicants
 
