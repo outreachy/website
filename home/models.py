@@ -306,7 +306,7 @@ class Comrade(models.Model):
             verbose_name = "Type your legal name to indicate you agree to the Code of Conduct")
 
     def __str__(self):
-        return self.public_name
+        return self.public_name + ' <' + self.account.email + '> (' + self.legal_name + ')'
 
     def email_address(self):
         return Address(self.public_name, addr_spec=self.account.email)
@@ -918,13 +918,16 @@ class Project(ApprovalStatus):
         return applicants
 
     def get_applications(self):
-        return FinalApplication.objects.filter(project = self)
+        return FinalApplication.objects.filter(project = self, applicant__approval_status=ApprovalStatus.APPROVED)
 
     def get_gsoc_applications(self):
-        return FinalApplication.objects.filter(project = self).exclude(applying_to_gsoc="")
+        return FinalApplication.objects.filter(project = self, applicant__approval_status=ApprovalStatus.APPROVED).exclude(applying_to_gsoc="")
 
     def get_withdrawn_applications(self):
         return FinalApplication.objects.filter(project = self, approval_status=ApprovalStatus.WITHDRAWN)
+
+    def get_approved_mentors(self):
+        return self.mentorapproval_set.filter(approval_status=ApprovalStatus.APPROVED)
 
     @classmethod
     def objects_for_dashboard(cls, user):
@@ -1358,6 +1361,25 @@ class ApplicantApproval(ApprovalStatus):
             blank=True,
             help_text="If your gender identity is not listed above, please let us know how you identify so we can add it to the list.")
 
+    AMAZING = 'AMZ'
+    STRONG = 'STR'
+    GOOD = 'GD'
+    UNLIKELY = 'UN'
+    NOTGOOD = 'NGD'
+    UNRATED = 'UNR'
+    RATING_CHOICES = (
+        (AMAZING, '5 - Amazing - multiple large, high-quality contributions'),
+        (STRONG, '4 - Strong - at least one large, high-quality contribution'),
+        (GOOD, '3 - Good - some smaller contributions of good quality'),
+        (UNLIKELY, '2 - Inexperienced - smaller contributions that vary in quality'),
+        (NOTGOOD, '1 - Struggling - applicant did not understand instructions or feedback'),
+        (UNRATED, 'Not rated'),
+    )
+    rating = models.CharField(
+            max_length=3,
+            choices=RATING_CHOICES,
+            default=UNRATED)
+
     def is_approver(self, user):
         return user.is_staff
 
@@ -1589,6 +1611,60 @@ class FinalApplication(ApprovalStatus):
             blank=True,
             verbose_name="Outreachy internship project timeline",
             help_text="Please work with your mentor to provide a timeline of the work you plan to accomplish on the project and what tasks you will finish at each step. Make sure take into account any time commitments you have during the Outreachy internship round. If you are still working on your contributions and need more time, you can leave this blank and edit your application later.")
+
+    BIT = 'BIT'
+    GIRLSWHOCODE = 'GWC'
+    NAJOBS = 'NAJ'
+    POCIT = 'POCIT'
+    WOMENWHOCODE = 'WWC'
+    HYPATIA = 'HYP'
+    LATINASINTECH = 'LAIT'
+    LGBTQ = 'LGBTQ'
+    RECURSE = 'RC'
+    H4CK = 'H4CK'
+    WITCH = 'WITCH'
+    WIL = 'WIL'
+    TAPIA = 'TAPIA'
+    CONFERENCE = 'CONF'
+    PRESENTATION = 'PRES'
+    ALUM = 'ALUM'
+    MENTOR = 'MENT'
+    TEACHER = 'TEACH'
+    CLASSMATE = 'STUD'
+    FRIEND = 'PAL'
+    TWITTER = 'TWIT'
+    SEARCH = 'SEAR'
+    OTHER = 'OTH'
+    HEARD_CHOICES = (
+        (BIT, 'Job board - Blacks in Tech'),
+        (GIRLSWHOCODE, 'Job board - Girls Who Code'),
+        (NAJOBS, 'Job board - Native American Jobs'),
+        (POCIT, 'Job board - People of Color in Tech'),
+        (WOMENWHOCODE, 'Job board - Women Who Code'),
+        (HYPATIA, 'Community - Hypatia Software'),
+        (LATINASINTECH, 'Community - Latinas in Tech group'),
+        (LGBTQ, 'Community - LGBTQ in Tech slack'),
+        (RECURSE, 'Community - Recurse Center'),
+        (H4CK, 'Community - Trans*H4CK'),
+        (WITCH, 'Community - Women in Tech Chat slack'),
+        (WIL, 'Community - Women in Linux group'),
+        (TAPIA, 'Conference - Richard Tapia Conference'),
+        (CONFERENCE, 'Conference - other'),
+        (PRESENTATION, 'Presentation by an Outreachy organizer, mentor, or coordinator'),
+        (ALUM, 'From a former Outreachy intern'),
+        (MENTOR, 'From an Outreachy mentor'),
+        (TEACHER, 'From a teacher'),
+        (CLASSMATE, 'From a classmate'),
+        (FRIEND, 'From a friend'),
+        (TWITTER, 'From Twitter'),
+        (SEARCH, 'Found Outreachy from a web search'),
+        (OTHER, 'Other'),
+    )
+    spread_the_word = models.CharField(
+            verbose_name="How did you find out about Outreachy? (This will only be displayed to Outreachy Organizers.)",
+            max_length=5,
+            choices=HEARD_CHOICES,
+            default=OTHER)
 
     def is_approver(self, user):
         approved_mentor = self.project.mentors_set.filter(approval_status=ApprovalStatus.APPROVED, mentor=user.comrade)

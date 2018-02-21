@@ -21,6 +21,7 @@ from formtools.wizard.views import SessionWizardView
 from itertools import chain, groupby
 from markdownx.utils import markdownify
 from registration.backends.hmac import views as hmac_views
+import reversion
 
 from . import email
 
@@ -330,7 +331,7 @@ def determine_eligibility(wizard, application_round):
 
     return (ApprovalStatus.APPROVED, '')
 
-class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWizardView):
+class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, SessionWizardView):
     template_name = 'home/wizard_form.html'
     condition_dict = {
             'USA demographics': show_us_demographics,
@@ -1243,6 +1244,7 @@ class FinalApplicationAction(ApprovalStatusAction):
             'applying_to_gsoc',
             'community_specific_questions',
             'timeline',
+            'spread_the_word',
             ]
 
     def get_object(self):
@@ -1294,7 +1296,8 @@ def project_applicants(request, round_slug, community_slug, project_slug):
     if not request.user.is_staff and not project.project_round.community.is_coordinator(request.user) and not project.project_round.is_mentor(request.user):
         raise PermissionDenied("You are not an approved mentor for this project.")
 
-    contributions = project.contribution_set.order_by(
+    contributions = project.contribution_set.filter(
+            applicant__approval_status=ApprovalStatus.APPROVED).order_by(
             "applicant__applicant__public_name", "date_started")
     internship_total_days = current_round.internends - current_round.internstarts
     return render(request, 'home/project_applicants.html', {

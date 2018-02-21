@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 import reversion.admin
 
 from .models import ApplicantApproval
+from .models import CommunicationChannel
 from .models import Community
 from .models import Comrade
 from .models import Contribution
@@ -17,7 +18,9 @@ from .models import NonCollegeSchoolTimeCommitment
 from .models import Notification
 from .models import Participation
 from .models import Project
+from .models import ProjectSkill
 from .models import RoundPage
+from .models import SchoolInformation
 from .models import SchoolTimeCommitment
 from .models import Sponsorship
 from .models import VolunteerTimeCommitment
@@ -66,6 +69,16 @@ class CommunityAdmin(admin.ModelAdmin):
             'website',
             )
 
+class SkillsInline(admin.StackedInline):
+    model = ProjectSkill
+    can_delete = False
+    verbose_name_plural = 'Project Skills'
+
+class ChannelsInline(admin.StackedInline):
+    model = CommunicationChannel
+    can_delete = False
+    verbose_name_plural = 'Communication Channels'
+
 class ProjectAdmin(reversion.admin.VersionAdmin):
     list_display = (
             'short_title',
@@ -83,6 +96,7 @@ class ProjectAdmin(reversion.admin.VersionAdmin):
             'short_title',
             'project_round__community__name',
             )
+    inlines = (ChannelsInline, SkillsInline)
 
     def community(self, obj):
         return obj.project_round.community.name
@@ -141,6 +155,11 @@ class CoordinatorApprovalAdmin(reversion.admin.VersionAdmin):
             '=coordinator__account__email',
             )
 
+class SchoolInformationInline(admin.StackedInline):
+    model = SchoolInformation
+    can_delete = False
+    verbose_name_plural = 'School information'
+
 class SchoolTimeCommitmentsInline(admin.StackedInline):
     model = SchoolTimeCommitment
     can_delete = False
@@ -184,10 +203,11 @@ class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
             )
     search_fields = (
             'applicant__public_name',
+            'applicant__legal_name',
             '=applicant__account__username',
             '=applicant__account__email',
             )
-    inlines = (SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline)
+    inlines = (SchoolInformationInline, SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline)
 
     def round(self, obj):
         return obj.application_round

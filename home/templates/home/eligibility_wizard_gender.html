@@ -34,17 +34,41 @@ You are valid and welcome here.
     {% endfor %}
 {% else %}
     {% for field in form.visible_fields %}
-    <div class="form-group">
-	{{ field.errors }}
-	{% if 'Man:' in field.label_tag %}
-	<p>What gender do you identify as? Check all that apply.</p>
-	{% endif %}
-	{{ field.label_tag }}
-	{{ field }}
-	{% if field.help_text %}
-	<div class="text-muted">{{ field.help_text|safe }}</div>
-	{% endif %}
-    </div>
+	    {% if 'identify as transgender' in field.label_tag or 'identify as genderqueer' in field.label_tag %}
+		    <div class="form-group card">
+			    {{ field.errors }}
+			    <div class = "card-header">
+				    {{ field.label_tag }}
+			    </div>	    
+			    <div class = "card-body">
+				    {{ field }}
+			    </div>
+			    {% if field.help_text %}
+				    <div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+			    {% endif %}
+		    </div>
+	    {% elif 'Man:' in field.label_tag %}
+		    <div class="form-group card">
+			    <div class = "card-header">
+				    <p>What gender do you identify as? Check all that apply.</p>
+			    </div>
+			    <div class = "card-body">
+				    <p>
+				    {{ field.errors }}
+				    {{ field.label_tag }}
+				    {{ field }}
+				    </p>
+	    {% else %}
+			    <p>
+			    {{ field.errors }}
+			    {{ field.label_tag }}
+			    {{ field }}
+			    </p>
+	    {% endif %} 
+	    {% if 'Self identify' in field.label_tag %}
+		    </div>
+	    </div>
+	    {% endif %} 
     {% endfor %}
     {% for hidden in form.hidden_fields %}
 	{{ hidden }}

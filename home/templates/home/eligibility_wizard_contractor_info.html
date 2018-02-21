@@ -24,11 +24,11 @@ The Outreachy internship period is from {{ current_round.internstarts|date:"F d,
 {% if wizard.form.forms %}
     {{ wizard.form.management_form }}
     {% for form in wizard.form.forms %}
-        {% include "bootstrap_form.html" with form=form only %}
+        {% include "bootstrap_card_form.html" with form=form only %}
 	<hr>
     {% endfor %}
 {% else %}
-    {% include "bootstrap_form.html" with form=wizard.form only %}
+    {% include "bootstrap_card_form.html" with form=wizard.form only %}
 {% endif %}
 {% if wizard.steps.prev %}
 <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}">First step</button>
