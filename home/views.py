@@ -1286,7 +1286,8 @@ def project_applicants(request, round_slug, community_slug, project_slug):
     if not request.user.is_staff and not project.project_round.community.is_coordinator(request.user) and not project.project_round.is_mentor(request.user):
         raise PermissionDenied("You are not an approved mentor for this project.")
 
-    contributions = project.contribution_set.order_by(
+    contributions = project.contribution_set.filter(
+            applicant__approval_status=ApprovalStatus.APPROVED).order_by(
             "applicant__applicant__public_name", "date_started")
     internship_total_days = current_round.internends - current_round.internstarts
     return render(request, 'home/project_applicants.html', {
