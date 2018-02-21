@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 import reversion.admin
 
 from .models import ApplicantApproval
+from .models import ContractorInformation
 from .models import CommunicationChannel
 from .models import Community
 from .models import Comrade
@@ -175,6 +176,11 @@ class EmploymentTimeCommitmentsInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Employment period'
 
+class ContractorInformationInline(admin.StackedInline):
+    model = ContractorInformation
+    can_delete = False
+    verbose_name_plural = 'Contractor Information'
+
 class VolunteerTimeCommitmentsInline(admin.StackedInline):
     model = VolunteerTimeCommitment
     can_delete = False
@@ -207,7 +213,7 @@ class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
             '=applicant__account__username',
             '=applicant__account__email',
             )
-    inlines = (SchoolInformationInline, SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline)
+    inlines = (SchoolInformationInline, SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, ContractorInformationInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline)
 
     def round(self, obj):
         return obj.application_round
