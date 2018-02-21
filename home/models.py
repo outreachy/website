@@ -901,24 +901,33 @@ class Project(ApprovalStatus):
                         number_contributions=models.Count('contribution'))
 
         for a in applicants:
-            if a.finalapplication_set.filter(project=self):
+            try:
+                fa = a.finalapplication_set.get(project=self)
                 a.submitted_application = True
-            else:
-                a.submitted_application = False
-            if a.finalapplication_set.filter(project=self, approval_status = ApprovalStatus.WITHDRAWN):
-                a.withdrew_application = True
-            else:
-                a.withdrew_application = False
+                if fa.rating == fa.UNRATED:
+                    a.rating = "Unrated"
+                else:
+                    a.rating = fa.rating
+                a.rating_tip = fa.get_rating_display()
+                if a.finalapplication_set.filter(project=self, approval_status = ApprovalStatus.WITHDRAWN):
+                    a.withdrew_application = True
+                else:
+                    a.withdrew_application = False
 
-            if a.finalapplication_set.filter(project=self).exclude(applying_to_gsoc=""):
-                a.applying_to_gsoc = True
-            else:
-                a.applying_to_gsoc = False
+                if a.finalapplication_set.filter(project=self).exclude(applying_to_gsoc=""):
+                    a.applying_to_gsoc = True
+                else:
+                    a.applying_to_gsoc = False
+            except:
+                a.submitted_application = False
 
         return applicants
 
     def get_applications(self):
         return FinalApplication.objects.filter(project = self, applicant__approval_status=ApprovalStatus.APPROVED)
+
+    def get_sorted_applications(self):
+        return FinalApplication.objects.filter(project = self, applicant__approval_status=ApprovalStatus.APPROVED).order_by("-rating")
 
     def get_gsoc_applications(self):
         return FinalApplication.objects.filter(project = self, applicant__approval_status=ApprovalStatus.APPROVED).exclude(applying_to_gsoc="")
@@ -1361,25 +1370,6 @@ class ApplicantApproval(ApprovalStatus):
             blank=True,
             help_text="If your gender identity is not listed above, please let us know how you identify so we can add it to the list.")
 
-    AMAZING = 'AMZ'
-    STRONG = 'STR'
-    GOOD = 'GD'
-    UNLIKELY = 'UN'
-    NOTGOOD = 'NGD'
-    UNRATED = 'UNR'
-    RATING_CHOICES = (
-        (AMAZING, '5 - Amazing - multiple large, high-quality contributions'),
-        (STRONG, '4 - Strong - at least one large, high-quality contribution'),
-        (GOOD, '3 - Good - some smaller contributions of good quality'),
-        (UNLIKELY, '2 - Inexperienced - smaller contributions that vary in quality'),
-        (NOTGOOD, '1 - Struggling - applicant did not understand instructions or feedback'),
-        (UNRATED, 'Not rated'),
-    )
-    rating = models.CharField(
-            max_length=3,
-            choices=RATING_CHOICES,
-            default=UNRATED)
-
     def is_approver(self, user):
         return user.is_staff
 
@@ -1529,6 +1519,26 @@ class SchoolInformation(models.Model):
             max_length=SENTENCE_LENGTH,
             help_text='What degree(s) are you pursuing?')
 
+    def print_terms(school_info):
+        print(school_info.applicant.get_approval_status_display(), " ", school_info.applicant.applicant.public_name, " <", school_info.applicant.applicant.account.email, ">")
+        print(school_info.university_name)
+        terms = SchoolTimeCommitment.objects.filter(applicant__applicant__account__email=school_info.applicant.applicant.account.email)
+        for t in terms:
+            print("Term: ", t.term_name, "; Start date: ", t.start_date, "; End date: ", t.end_date)
+            print("Typical " + str(t.typical_credits) + "; registered " + str(t.registered_credits) + "; outreachy " + str(t.outreachy_credits) + "; thesis " + str(t.thesis_credits))
+
+    def print_university_students(school_name):
+        apps = SchoolInformation.objects.filter(university_name__icontains=school_name).orderby('applicant__approval_status')
+        for a in apps.all():
+            self.print_terms(a)
+            print("")
+
+    def print_country_university_students(country):
+        apps = SchoolInformation.objects.filter(applicant__applicant__location__icontains=country).orderby('applicant__approval_status')
+        for a in apps.all():
+            self.print_terms(a)
+            print("")
+
 class ContractorInformation(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
 
@@ -1665,6 +1675,25 @@ class FinalApplication(ApprovalStatus):
             max_length=5,
             choices=HEARD_CHOICES,
             default=OTHER)
+
+    AMAZING = '5'
+    STRONG = '4'
+    GOOD = '3'
+    UNLIKELY = '2'
+    NOTGOOD = '1'
+    UNRATED = '0'
+    RATING_CHOICES = (
+        (AMAZING, '5 - Amazing - multiple large, high-quality contributions'),
+        (STRONG, '4 - Strong - at least one large, high-quality contribution'),
+        (GOOD, '3 - Good - some smaller contributions of good quality'),
+        (UNLIKELY, '2 - Inexperienced - smaller contributions that vary in quality'),
+        (NOTGOOD, '1 - Struggling - applicant did not understand instructions or feedback'),
+        (UNRATED, 'Not rated'),
+    )
+    rating = models.CharField(
+            max_length=1,
+            choices=RATING_CHOICES,
+            default=UNRATED)
 
     def is_approver(self, user):
         approved_mentor = self.project.mentors_set.filter(approval_status=ApprovalStatus.APPROVED, mentor=user.comrade)

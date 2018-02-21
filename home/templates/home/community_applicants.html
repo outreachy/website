@@ -39,6 +39,7 @@ Review {{ community.name }} Applicants
 				<th scope="col">Number of days available</th>
 				<th scope="col">Number of contributions</th>
 				<th scope="col">Application status</th>
+				<th scope="col">Applicant rating</th>
 				<th scope="col">Applying to GSoC?</th>
 			</tr>
 			</thread>
@@ -53,6 +54,7 @@ Review {{ community.name }} Applicants
 					<td> - </td>
 					<td> - </td>
 					<td> - </td>
+					<td> - </td>
 				</tr>
 				{% endif %}
 				{% for application in applicants %}
@@ -63,9 +65,11 @@ Review {{ community.name }} Applicants
 							<td>{{ applicant.public_name }}</td>
 							<td>{{ tcs.longest_period_free }} / {{ tcs.internship_total_days.days }} days</td>
 							<td>{{ application.number_contributions }}</td>
-							<td>{% if application.submitted_application and not application.withdrew_application %}Submitted
-								{% elif application.submitted_application and application.withdrew_application %}Withdrawn
-								{% else %} - {% endif %}</td>
+							<td>{% if application.submitted_application and not application.withdrew_application %}Submitted</td>
+								<td><abbr title="{{ application.rating_tip }}">{{ application.rating }}</abbr></td>
+								{% elif application.submitted_application and application.withdrew_application %}Withdrawn</td>
+								<td> - </td>
+								{% else %} - </td><td> - </td>{% endif %}
 							<td>{% if application.applying_to_gsoc %}Yes{% else %} - {% endif %}</td>
 						</tr>
 					{% endwith %}
