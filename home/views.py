@@ -15,7 +15,7 @@ from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.text import slugify
 from django.views.decorators.http import require_POST
-from django.views.generic import ListView, TemplateView
+from django.views.generic import View, ListView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 from formtools.wizard.views import SessionWizardView
 from itertools import chain, groupby
@@ -1235,6 +1235,42 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
             'community_slug': self.object.project.project_round.community.slug,
             'project_slug': self.object.project.slug,
             })
+
+class FinalApplicationRate(LoginRequiredMixin, ComradeRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        username = kwargs['username']
+        current_round = RoundPage.objects.latest('internstarts')
+        if current_round.slug != kwargs['round_slug']:
+            raise PermissionDenied("You can only rate applicants for the current round.")
+
+        # Make sure both the Community and Project are approved
+        project = get_object_or_404(Project,
+                slug=kwargs['project_slug'],
+                approval_status=ApprovalStatus.APPROVED,
+                project_round__community__slug=kwargs['community_slug'],
+                project_round__participating_round=current_round,
+                project_round__approval_status=ApprovalStatus.APPROVED)
+        applicant = get_object_or_404(ApplicantApproval,
+                applicant__account__username=username,
+                application_round=current_round,
+                approval_status=ApprovalStatus.APPROVED)
+
+        # Only allow approved mentors to rank applicants
+        approved_mentors = project.get_approved_mentors()
+        if request.user.comrade not in [m.mentor for m in approved_mentors]:
+            raise PermissionDenied("You are not an approved mentor for this project.")
+
+        application = get_object_or_404(FinalApplication, applicant=applicant, project=project)
+        rating = kwargs['rating']
+        if rating in [c[0] for c in application.RATING_CHOICES]:
+            application.rating = kwargs['rating']
+            application.save()
+
+        return redirect(reverse('project-applicants', kwargs={
+            'round_slug': kwargs['round_slug'],
+            'community_slug': kwargs['community_slug'],
+            'project_slug': project.slug,
+            }) + "#rating")
 
 class FinalApplicationAction(ApprovalStatusAction):
     fields = [

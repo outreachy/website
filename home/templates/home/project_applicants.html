@@ -29,13 +29,52 @@ internship, and it's expected that applicants will work with mentors to define
 that timeline, taking into account any time commitments the applicant has.
 </p>
 
-<h2>Applicants</h2>
+{% with finalapps=project.get_sorted_applications %}
+	{% if finalapps %}
+		<h2 id="rating">Applicant Ratings</h2>
+		<form method="post">
+		{% csrf_token %}
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">Rating</th>
+					<th scope="col">Change Rating</th>
+					<th scope="col">Name and email</th>
+					<th scope="col">Applicant Info</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for fa in finalapps %}
+				<tr>
+					<td>{% if fa.rating == fa.UNRATED %}Unrated{% else %}<abbr title="{{ fa.get_rating_display }}">{{ fa.rating }}</abbr>{% endif %}</td>
+					<td>
+						<div class="dropdown">
+							<button class="btn btn-secondary dropdown-toggle" type="button" id="InternRatingMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Applicant Rating</button>
+							<div class="dropdown-menu" aria-labelledby="InternRatingMenu">
+								{% for choice in fa.RATING_CHOICES %}
+								<button class="dropdown-item" formaction="{% url 'application-rate' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug username=fa.applicant.applicant.account.username rating=choice.0 %}">{{ choice.1 }}</button>
+				<p><a href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">
+								{% endfor %}
+							</div>
+						</div>
+					</td>
+					<td>{{ fa.applicant.applicant.public_name }} &lt;{{ fa.applicant.applicant.account.email }}&gt; </td>
+					<td><a href="#{{ fa.applicant.applicant.pk }}">(details)</a></td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+		</form>
+	{% endif %}
+{% endwith %}
+
+<h2>Applicant Details</h2>
 
 {% if contributions %}
 	{% regroup contributions by applicant as applicants %}
 	{% for application, applicant_contributions in applicants %}
 		{% with tcs=application.get_time_commitments applicant=application.applicant final_application=applicant_contributions.0.get_application %}
-		<h3>{{ applicant.public_name }}</h3>
+		<h3 id="{{ applicant.pk }}">{{ applicant.public_name }}</h3>
 		{% if final_application and final_application.approval_status == final_application.WITHDRAWN %}
 			<div class="card border-warning mb-3">
 				<div class="card-header text-white bg-warning">Withdrawn Application</div>
