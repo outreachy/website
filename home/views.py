@@ -1043,7 +1043,17 @@ class MentorApprovalAction(ApprovalStatusAction):
             return MentorApproval(mentor=mentor, project=project)
 
     def get_success_url(self):
-        if self.kwargs['action'] == 'submit':
+        # BaseProjectEditPage doesn't allow people who aren't
+        # "submitters" for the project to edit skills/channels. So
+        # we want initial project submission to go
+        #   1. 'project-action'
+        #   2. 'mentorapproval-action'
+        #   3. 'project-skills-edit'
+        #   4. 'communication-channels-edit'
+        # but if this is a co-mentor signup the co-mentor can't follow
+        # that route because they haven't been approved to edit the
+        # project yet when they first sign up.
+        if self.kwargs['action'] == 'submit' and self.object.project.is_submitter(self.request.user):
             return reverse('project-skills-edit', kwargs={
                 'community_slug': self.object.project.project_round.community.slug,
                 'project_slug': self.object.project.slug,
@@ -1115,7 +1125,7 @@ class BaseProjectEditPage(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
                 project_round__community__slug=self.kwargs['community_slug'],
                 project_round__participating_round=participating_round)
         if not project.is_submitter(self.request.user):
-            raise PermissionDenied("You are not an approved mentor for this project.")
+            return redirect(project.get_preview_url())
         return project
 
     def get_success_url(self):
