@@ -1434,6 +1434,11 @@ class ApplicantApproval(ApprovalStatus):
                 'volunteer_time_commitments': volunteer_time_commitments,
                 'employment_time_commitments': employment_time_commitments,
                 }
+    def __str__(self):
+        return "{name} <{email}> - {status}".format(
+                name=self.applicant.public_name,
+                email=self.applicant.account.email,
+                status=self.get_approval_status_display())
 
 class VolunteerTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
@@ -1584,6 +1589,13 @@ class Contribution(models.Model):
                     applicant=self.applicant)
         except FinalApplication.DoesNotExist:
             return None
+
+    def __str__(self):
+        return '{applicant} contribution for {community} - {project}'.format(
+                applicant = self.applicant.applicant.public_name,
+                community = self.project.project_round.community,
+                project = self.project.short_title,
+                )
 
 class FinalApplication(ApprovalStatus):
     applicant = models.ForeignKey(ApplicantApproval)

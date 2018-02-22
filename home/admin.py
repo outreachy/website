@@ -219,13 +219,30 @@ class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
         return obj.application_round
     round.admin_order_field = '-application_round__roundnumber'
 
+class ContributionAdmin(reversion.admin.VersionAdmin):
+    list_display = (
+            'applicant',
+            'project',
+            )
+    list_filter = (
+            'project__project_round__participating_round',
+            'project__project_round__community',
+            'project',
+            )
+    search_fields = (
+            'applicant__public_name',
+            'applicant__legal_name',
+            '=applicant__account__username',
+            '=applicant__account__email',
+            )
+
 admin.site.unregister(User)
 admin.site.register(User, ComradeAdmin)
 
 admin.site.register(ApplicantApproval, ApplicantApprovalAdmin)
 admin.site.register(Community, CommunityAdmin)
 admin.site.register(CoordinatorApproval, CoordinatorApprovalAdmin)
-admin.site.register(Contribution)
+admin.site.register(Contribution, ContributionAdmin)
 admin.site.register(FinalApplication)
 admin.site.register(MentorApproval, MentorApprovalAdmin)
 admin.site.register(NewCommunity, CommunityAdmin)
