@@ -15,7 +15,7 @@ from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.text import slugify
 from django.views.decorators.http import require_POST
-from django.views.generic import View, ListView, TemplateView
+from django.views.generic import View, DetailView, ListView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 from formtools.wizard.views import SessionWizardView
 from itertools import chain, groupby
@@ -618,29 +618,21 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
 
         return redirect('eligibility-results')
 
-@login_required
-def eligibility_results(request):
-    # FIXME: needs ComradeRequiredMixin, switch to a class-based view
-    current_round = RoundPage.objects.latest('internstarts')
-    application = get_object_or_404(ApplicantApproval,
-                applicant=request.user.comrade,
-                application_round=current_round)
-    tc_dict = application.get_time_commitments()
+class EligibilityResults(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
+    template_name = 'home/eligibility_results.html'
+    context_object_name = 'application'
 
-    return render(request, 'home/eligibility_results.html',
-            {
-            'application': application,
-            'school_time_commitments': tc_dict['school_time_commitments'],
-            'noncollege_school_time_commitments': tc_dict['noncollege_school_time_commitments'],
-            'volunteer_time_commitments': tc_dict['volunteer_time_commitments'],
-            'employment_time_commitments': tc_dict['employment_time_commitments'],
-            'free_period_start_date': tc_dict['free_period_start_date'],
-            'free_period_end_date': tc_dict['free_period_end_date'],
-            'longest_period_free': tc_dict['longest_period_free'],
-            'current_round' : current_round,
-            'user': request.user,
-            },
-            )
+    def get_object(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        return get_object_or_404(ApplicantApproval,
+                    applicant=self.request.user.comrade,
+                    application_round=current_round)
+
+    def get_context_data(self, **kwargs):
+        context = super(EligibilityResults, self).get_context_data(**kwargs)
+        context.update(self.object.get_time_commitments())
+        context['current_round'] = self.object.application_round
+        return context
 
 def current_round_page(request):
     current_round = RoundPage.objects.latest('internstarts')
@@ -1159,42 +1151,44 @@ class CoordinatorApprovalPreview(Preview):
                 community__slug=self.kwargs['community_slug'],
                 coordinator__account__username=self.kwargs['username'])
 
-@login_required
-def project_contributions(request, round_slug, community_slug, project_slug):
-    # FIXME: needs ComradeRequiredMixin, switch to a class-based view
-    if not request.user.comrade.eligible_application():
-        raise PermissionDenied("You are not an eligible applicant or you have not filled out the eligibility check.")
+class ProjectContributions(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
+    template_name = 'home/project_contributions.html'
 
-    current_round = RoundPage.objects.latest('internstarts')
+    def get_context_data(self, **kwargs):
+        if not self.request.user.comrade.eligible_application():
+            raise PermissionDenied("You are not an eligible applicant or you have not filled out the eligibility check.")
 
-    # Make sure both the Community and Project are approved
-    project = get_object_or_404(Project,
-            slug=project_slug,
-            approval_status=ApprovalStatus.APPROVED,
-            project_round__community__slug=community_slug,
-            project_round__participating_round=current_round,
-            project_round__approval_status=ApprovalStatus.APPROVED)
-    applicant = get_object_or_404(ApplicantApproval,
-            applicant=request.user.comrade,
-            application_round=current_round,
-            approval_status=ApprovalStatus.APPROVED)
-    contributions = applicant.contribution_set.filter(
-            project=project)
-    try:
-        final_application = applicant.finalapplication_set.get(
+        current_round = RoundPage.objects.latest('internstarts')
+
+        # Make sure both the Community and Project are approved
+        project = get_object_or_404(Project,
+                slug=self.kwargs['project_slug'],
+                approval_status=ApprovalStatus.APPROVED,
+                project_round__community__slug=self.kwargs['community_slug'],
+                project_round__participating_round=current_round,
+                project_round__approval_status=ApprovalStatus.APPROVED)
+        applicant = get_object_or_404(ApplicantApproval,
+                applicant=self.request.user.comrade,
+                application_round=current_round,
+                approval_status=ApprovalStatus.APPROVED)
+        contributions = applicant.contribution_set.filter(
                 project=project)
-    except FinalApplication.DoesNotExist:
-        final_application = None
-    return render(request, 'home/project_contributions.html',
-            {
+        try:
+            final_application = applicant.finalapplication_set.get(
+                    project=project)
+        except FinalApplication.DoesNotExist:
+            final_application = None
+
+        context = super(ProjectContributions, self).get_context_data(**kwargs)
+        context.update({
             'current_round' : current_round,
             'community': project.project_round.community,
             'project': project,
             'applicant': applicant,
             'contributions': contributions,
             'final_application': final_application,
-            },
-            )
+            })
+        return context
 
 # Only submit one contribution at a time
 class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
