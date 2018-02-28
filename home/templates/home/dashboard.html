@@ -7,6 +7,10 @@ Dashboard
 
 {% block content %}
 
+{% if groups %}
+<p>You have {{ groups|length }} action{{ groups|pluralize }} you need to take. <a href="#actions">See all actions.</a></p>
+{% endif %}
+
 {% include "home/snippet/eligibility_prompts.html" %}
 
 {% if request.user.is_staff %}
@@ -86,7 +90,7 @@ Then subscribe them using the following links (anyone already subscribed won't b
 {% endif %}
 
 {% if groups %}
-	<h1>Dashboard</h1>
+	<h1 id="actions">Dashboard</h1>
 {% endif %}
 {% for status, status_group in groups %}
 <h2>{{ status|title }}</h2>
