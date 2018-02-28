@@ -1,5 +1,6 @@
 <div class="card border-info mb-3">
-    <div class="card-header text-white bg-info">Review Your Community's Applicants</div>
+    <div class="card-header"><a data-toggle="collapse" data-parent="coordinator-action-accordion" aria-expanded="false" aria-controls="#coordinator-action-accordion" href="#coordinator-action-accordion">+ Coordinator Actions</a></div>
+    <div class="collapse" id="coordinator-action-accordion">
     <div class="card-body">
 	<p class="card-text">
 	Below is a list of all communities you are approved to be a coordinator for,
@@ -16,5 +17,6 @@
 		<li><a href="{% url 'community-applicants' round_slug=current_round.slug community_slug=c.slug %}">Review community applicants</a></li>
 	</ul>
 	{% endfor %}
+    </div>
     </div>
 </div>
