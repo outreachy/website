@@ -1405,6 +1405,7 @@ def dashboard(request):
         'pending_participations': pending_participations,
         'approved_participations': approved_participations,
         'participations': participations,
+        'show_reminders': 1,
         })
 
 class TrustedVolunteersListView(UserPassesTestMixin, ListView):

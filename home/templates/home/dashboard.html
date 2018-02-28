@@ -6,7 +6,8 @@ Dashboard
 {% endblock %}
 
 {% block content %}
-<a href="{% url 'community-cfp' %}">Timeline, FAQ, & Participating Communities</a> &gt; Dashboard
+
+{% include "home/snippet/eligibility_prompts.html" %}
 
 {% if request.user.is_staff %}
 <h1>Email Subscriptions</h1>
@@ -84,7 +85,9 @@ Then subscribe them using the following links (anyone already subscribed won't b
 
 {% endif %}
 
-<h1>Dashboard</h1>
+{% if groups %}
+	<h1>Dashboard</h1>
+{% endif %}
 {% for status, status_group in groups %}
 <h2>{{ status|title }}</h2>
 {% for label, group in status_group %}

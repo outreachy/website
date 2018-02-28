@@ -3,7 +3,8 @@
 
 {% if project_applications %}
 <div class="card border-info mb-3">
-    <div class="card-header text-white bg-info">Review Your Contributions and Applications</div>
+    <div class="card-header"><a data-toggle="collapse" data-parent="applicant-action-accordion" {% if show_reminders == 1 %}aria-expanded="true"{% else %}aria-expanded="false"{% endif %} aria-controls="#applicant-action-accordion" href="#applicant-action-accordion">+ Applicant Actions</a></div>
+    <div class="collapse{% if show_reminders == 1 %} show{% endif %}" id="applicant-action-accordion">
     <div class="card-body">
 	<p class="card-text">
 	Thank you for recording your contributions and submitting {{ project_applications|pluralize:"a project application, project applications" }}.
@@ -51,6 +52,7 @@
 			{% endfor %}
 		</ul>
 	{% endif %}
+	{% if project_applications %}</div>{% endif %}
     </div>
 </div>
 {% endwith %}

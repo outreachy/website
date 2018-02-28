@@ -1,6 +1,6 @@
 <div class="card border-info mb-3">
-    <div class="card-header"><a data-toggle="collapse" data-parent="mentor-action-accordion" aria-expanded="false" aria-controls="#mentor-action-accordion" href="#mentor-action-accordion">+ Mentor Actions</a></div>
-    <div class="collapse" id="mentor-action-accordion">
+	<div class="card-header"><a data-toggle="collapse" data-parent="mentor-action-accordion" {% if show_reminders == 1 %}aria-expanded="true"{% else %}aria-expanded="false"{% endif %} aria-controls="#mentor-action-accordion" href="#mentor-action-accordion">+ Mentor Actions</a></div>
+	<div class="collapse{% if show_reminders == 1 %} show{% endif %}" id="mentor-action-accordion">
     <div class="card-body">
 	<p class="card-text">
 	Below is a list of all approved projects you are approved to be a mentor for.
