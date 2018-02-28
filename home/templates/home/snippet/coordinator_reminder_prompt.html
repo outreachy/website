@@ -1,6 +1,6 @@
 <div class="card border-info mb-3">
-    <div class="card-header bg-warning"><a data-toggle="collapse" data-parent="coordinator-action-accordion" aria-expanded="false" aria-controls="#coordinator-action-accordion" href="#coordinator-action-accordion">+ Coordinator Actions</a></div>
-    <div class="collapse" id="coordinator-action-accordion">
+	<div class="card-header bg-warning"><a data-toggle="collapse" data-parent="coordinator-action-accordion" {% if show_reminders == 1 %}aria-expanded="true"{% else %}aria-expanded="false"{% endif %} aria-controls="#coordinator-action-accordion" href="#coordinator-action-accordion">+ Coordinator Actions</a></div>
+	<div class="collapse{% if show_reminders == 1 %} show{% endif %}" id="coordinator-action-accordion">
     <div class="card-body">
 	<p class="card-text">
 	Below is a list of all communities you are approved to be a coordinator for,
