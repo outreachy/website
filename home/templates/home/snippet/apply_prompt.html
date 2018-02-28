@@ -3,47 +3,49 @@
 
 {% if project_applications %}
 <div class="card border-info mb-3">
-    <div class="card-header"><a data-toggle="collapse" data-parent="applicant-action-accordion" {% if show_reminders == 1 %}aria-expanded="true"{% else %}aria-expanded="false"{% endif %} aria-controls="#applicant-action-accordion" href="#applicant-action-accordion">+ Applicant Actions</a></div>
+    <div class="card-header bg-warning"><a data-toggle="collapse" data-parent="applicant-action-accordion" {% if show_reminders == 1 %}aria-expanded="true"{% else %}aria-expanded="false"{% endif %} aria-controls="#applicant-action-accordion" href="#applicant-action-accordion">+ My Contributions and Applications</a></div>
     <div class="collapse{% if show_reminders == 1 %} show{% endif %}" id="applicant-action-accordion">
     <div class="card-body">
 	<p class="card-text">
-	Thank you for recording your contributions and submitting {{ project_applications|pluralize:"a project application, project applications" }}.
+	Thank you for recording your contributions and creating {{ project_applications|pluralize:"a project application, project applications" }}. You will need to create an application for each project, in order to be eligible to be selected as an intern for that project.
+	</p>
+	<p class="card-text">
+	The application deadline is {{ current_round.appsclose|date:"F d, Y" }}. Some projects are open to late applications, and their application deadline will be {{ current_round.appslate|date:"F d, Y" }}.
 	</p>
 {% else %}
 <div class="card border-warning mb-3">
     <div class="card-header text-white bg-warning">Submit a Project Application</div>
     <div class="card-body">
 	<p class="card-text">
-	Thank you for recording your contributions! Your next step is to submit an application.
-	Only applicants that have completed their application for a project are eligible to be selected as an Outreachy intern.
+	<strong>Your next step is to create an application.</strong> You will need to create an application for each project, in order to be eligible to be selected as an intern for that project.
+	</p>
+	<p class="card-text">
+	The application deadline is {{ current_round.appsclose|date:"F d, Y" }}. Some projects are open to late applications, and their application deadline will be {{ current_round.appslate|date:"F d, Y" }}.
 	</p>
 {% endif %}
-	<h5 class="card-text">Contributions</h5>
+	<h5 class="card-text">My Contributions</h5>
 	<p class="card-text">
-	You've submitted contributions to the following projects:
+	You'll need to record a contribution for a project in order to be eligible to create an application. You can see the full list of projects and their deadlines on <a href="{% url 'project-selection' %}">project selection page</a>.
+	</p>
+	<p class="card-text">
+	You've recorded that you made a contribution to the following projects:
 	</p>
 	<ul class="card-text">
 		{% for p in project_contributions %}
-			<li><a href="{{ p.get_contributions_url }}">{{ p.short_title }}</a></li>
+			<li>{{ p.project_round.community.name }} - {{ p.short_title }}
+				<ul>
+					<li><a href="{% url 'community-landing' round_slug=current_round.slug slug=p.project_round.community.slug  %}">View project information</a></li>
+					<li><a href="{{ p.get_contributions_url }}">Record your contributions</a></li>
+					<li><a href="{{ p.get_contributions_url }}">Edit or create an application</a></li>
+				</ul>
+			</li>
 		{% endfor %}
 	</ul>
 
+	{% if project_applications %}
 	<h5 class="card-text">Applications</h5>
-
-	{% if not project_applications %}
 		<p class="card-text">
-		After you've made a contribution, you will need to start an application to the project.
-		Your application needs to be complete when the application period closes on
-		{{ current_round.appsclose|date:"F d, Y" }} (or {{ current_round.lateappsclose|date:"F d, Y" }}
-		if the community has a late application deadline).
-		</p>
-
-		<p class="card-text">
-		Please work with your mentor to create an application for the projects you've contributed to.
-		</p>
-	{% else %}
-		<p class="card-text">
-		You've created applications for the following projects:
+		Only applicants who submit an application for a project will be eligible to be selected as an intern for that project. You've created applications for the following projects:
 		</p>
 
 		<ul class="card-text">
