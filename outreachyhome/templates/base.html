@@ -153,7 +153,7 @@
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'dashboard' %}">
-				    Notifications <span class="badge badge-light">{{ pending_approvals }}</span>
+				    <span class="badge badge-light">Dashboard {% if pending_approvals %}({{ pending_approvals }} actions needed){% endif %}</span>
 			    </a>
                         </li>
                         {% for headerp in header_pages %}
