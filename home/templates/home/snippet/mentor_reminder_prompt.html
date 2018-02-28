@@ -3,30 +3,33 @@
     <div class="card-body">
 	<p class="card-text">
 	Below is a list of all approved projects you are approved to be a mentor for.
-	Please follow the link to view detailed information about your applicants.
+	Please follow the link to view detailed information about your applicants and to edit your project information.
+	You can find unapproved projects linked from the <a href="{% url 'community-cfp' %}">community CFP page</a>.
 	</p>
 	<p class="card-text">
 	You can only accept an applicant as an intern if they have recorded their contributions and submitted a final application.
 	</p>
 
-	<ul>
+	<p><a href="{% url 'account' %}">Edit your personal or mentor information</a></p>
 	{% for project in request.user.comrade.get_approved_mentored_projects %}
-		<li><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}">{{ project.short_title }}</a>
+		<h4>{{ project.short_title }}</h4>
 			<ul>
+				<li><a href="{% url 'community-landing' round_slug=current_round.slug slug=project.project_round.community.slug  %}">View the project page applicants see</a></li>
+				<li><a href="{% url 'project-read-only' community_slug=project.project_round.community.slug project_slug=project.slug %}">Edit the project info</a></li>
+				<li><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}">Review applicants</a></li>
 				<li>{{ project.get_applicants_and_contributions_list|length }} applicant{{ project.get_applicants_and_contributions_list|pluralize }} recorded their contributions</li>
 				<li>{{ project.get_applications|length }} applicant{{ project.get_applications|pluralize }} submitted a final application</li>
 			</ul>
-		</li>
 	{% endfor %}
-	</ul>
 	<p class="card-text">
 	You can also see the list of all applicants to the communities you're mentoring for:
 	</p>
 	<ul>
 	{% regroup request.user.comrade.get_approved_mentored_projects by project_round.community as communities %}
 	{% for c, projects_list in communities %}
-		<li><a href="{% url 'community-applicants' round_slug=current_round.slug community_slug=c.slug %}">{{ c.name }} applicants</a></li>
+		<li>{{ c.name }}:<a href="{% url 'community-applicants' round_slug=current_round.slug community_slug=c.slug  %}">see applicants</a> or <a href="{% url 'community-read-only' community_slug=c.slug %}">submit another project</a> or <a href="{% url 'community-landing' round_slug=current_round.slug slug=c.slug %}">view the community projects page applicants see</a>
 	{% endfor %}
-	<ul>
+	</ul>
+	You can also see the <a href="{% url 'community-cfp' %}">list of other communities</a> you can submit a project for.
     </div>
 </div>
