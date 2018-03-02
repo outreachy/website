@@ -27,6 +27,7 @@ from . import email
 
 from .mixins import ApprovalStatusAction
 from .mixins import ComradeRequiredMixin
+from .mixins import EligibleApplicantRequiredMixin
 from .mixins import Preview
 
 from .models import ApplicantApproval
@@ -616,7 +617,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
         if self.object.approval_status == ApprovalStatus.PENDING:
             email.approval_status_changed(self.object, self.request)
 
-        return redirect('eligibility-results')
+        return redirect(self.request.GET.get('next', reverse('eligibility-results')))
 
 class EligibilityResults(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
     template_name = 'home/eligibility_results.html'
@@ -1151,13 +1152,10 @@ class CoordinatorApprovalPreview(Preview):
                 community__slug=self.kwargs['community_slug'],
                 coordinator__account__username=self.kwargs['username'])
 
-class ProjectContributions(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
+class ProjectContributions(LoginRequiredMixin, ComradeRequiredMixin, EligibleApplicantRequiredMixin, TemplateView):
     template_name = 'home/project_contributions.html'
 
     def get_context_data(self, **kwargs):
-        if not self.request.user.comrade.eligible_application():
-            raise PermissionDenied("You are not an eligible applicant or you have not filled out the eligibility check.")
-
         current_round = RoundPage.objects.latest('internstarts')
 
         # Make sure both the Community and Project are approved

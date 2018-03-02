@@ -20,6 +20,7 @@
 				<li><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}">Review applicants</a></li>
 				<li>{{ project.get_applicants_and_contributions_list|length }} applicant{{ project.get_applicants_and_contributions_list|pluralize }} recorded their contributions</li>
 				<li>{{ project.get_applications|length }} applicant{{ project.get_applications|pluralize }} submitted a final application</li>
+				<li>Send <a href="{% url 'contributions' round_slug=current_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}">this link</a> to applicants to ask them to record their contributions or create a final application. (Note that the link only works for eligible applicants, not mentors.)</li>
 			</ul>
 	{% endfor %}
 	<p class="card-text">

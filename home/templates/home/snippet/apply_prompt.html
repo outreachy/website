@@ -25,9 +25,6 @@
 {% endif %}
 	<h5 class="card-text">My Contributions</h5>
 	<p class="card-text">
-	You'll need to record a contribution for a project in order to be eligible to create an application. You can see the full list of projects and their deadlines on <a href="{% url 'project-selection' %}">project selection page</a>.
-	</p>
-	<p class="card-text">
 	You've recorded that you made a contribution to the following projects:
 	</p>
 	<ul class="card-text">
@@ -41,6 +38,9 @@
 			</li>
 		{% endfor %}
 	</ul>
+	<p class="card-text">
+	Interested in applying to another project? You'll need to record a contribution for a project in order to be eligible to create an application. You can see the full list of projects and their deadlines on <a href="{% url 'project-selection' %}">project selection page</a>.
+	</p>
 
 	{% if project_applications %}
 	<h5 class="card-text">Applications</h5>
