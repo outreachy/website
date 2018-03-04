@@ -52,37 +52,3 @@ Internships with other FOSS communities can be found on the <a href="{{ current_
 <p>{{ community.description }}</p>
 
 {{ community.long_description|safe }}
-
-<h2>How do I get help?</h2>
-<p>Each FOSS community has one or more coordinators, who help answer applicants' questions
-and connect them to project mentors.
-{% if approved_coordinator_list %}
-The {{ community.name }} coordinator{{ approved_coordinator_list|length|pluralize:" is,(s) are" }} 
-	{% for approval in approved_coordinator_list %}
-		{{ approval.coordinator.public_name }}
-		{% if user.is_authenticated %}
-			&lt;{{ approval.coordinator.account.email }}&gt;
-		{% endif %}
-	{% endfor %}
-	</p>
-{% else %}
-	This community currently has no approved coordinator, or you have not filled out the <a href="{% url 'eligibility' %}">eligibility check</a> and contact information is hidden from you.</p>
-{% endif %}
-
-<p>Each project will have one or more mentors. Outreachy applicants work one-on-one with mentors
-to complete contributions to the project during the application process. Only applicants who
-make a contribution to a project will be eligible to be selected for an internship.
-Interns then work directly with the mentors on their project during the three month internship period.
-</p>
-
-<p>Each project may have different communication channels, issue trackers, and
-different ways to make a contribution. The project mentor is your guide to
-introduce you to the project community and contribution norms. Mentors
-are here to help answer your questions, encourage you, and help you when you get stuck.
-</p>
-
-{% if community.tutorial %}
-<h2>How do I make a contribution?</h2>
-<p>This community requires applicants to complete a tutorial before they can make their contributions.</p>
-{{ community.tutorial|safe }}
-{% endif %}

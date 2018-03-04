@@ -12,53 +12,35 @@
 {{ project.intern_benefits|safe }}
 {% endif %}
 
-{% if project.required_skills or project.preferred_skills or project.bonus_skills %}
-<h4>Internship skills</h4>
+<h3>Project Contribution Information</h3>
+<p>As part of the application process, all applicants must make at least one contribution to be accepted as an intern for this project.
+Only applicants who make a contribution will be eligible to be accepted as interns.
+{% if community.tutorial %}
+This community requires applicants to complete a tutorial before they can make their contributions.
+{{ community.tutorial|safe }}
 {% endif %}
-{% if project.required_skills %}
-	<h3>Required Skills</h3>
-	<p>{{ project.required_skills.0.get_required_display }}</p>
-	<table class='table table-bordered'>
-		<tr><th>Skill description</th><th>Experience Level</th></tr>
-	{% for skill in project.required_skills %}
-		<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
-	{% endfor %}
-	</table>
+</p>
+
+<p>
+{% if project.repository %}
+	Applicants can contribute to this project through <a href="{{ project.repository }}">the project repository or contribution page</a>.
+{% else %}
+	Some projects accept contributions through a project repository. This project has not provided a link to a project repository.
 {% endif %}
-
-{% if project.preferred_skills %}
-	<h3>Preferred Skills</h3>
-	<p>{{ project.preferred_skills.0.get_required_display }}</p>
-	<table class='table table-bordered'>
-		<tr><th>Skill description</th><th>Experience Level</th></tr>
-	{% for skill in project.preferred_skills %}
-		<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
-	{% endfor %}
-	</table>
-{% endif %}
-
-{% if project.bonus_skills %}
-	<h3>Bonus Skills</h3>
-	<p>{{ project.bonus_skills.0.get_required_display }}</p>
-	<table class='table table-bordered'>
-		<tr><th>Skill description</th><th>Experience Level</th></tr>
-	{% for skill in project.bonus_skills %}
-		<tr><td>{{ skill.skill }}</td><td>{{ skill.get_experience_level_display }}</td></tr>
-	{% endfor %}
-	</table>
-{% endif %}
-
-<h3>Who will I work with?</h3>
-<p>Each Outreachy intern works remotely with one or more mentors. Most Outreachy mentors only work with one intern per round. Mentors are your guides in learning more about free and open source software, technical and non-technical skills, and will always be there when you get stuck.</p>
-
-{% with approved_mentors=project.get_approved_mentors %}
-	{% if approved_mentors %}
-		<p>You'll be working with the following mentor{{ approved_mentors|length|pluralize }}:</p>
-		{% for approval in approved_mentors %}
-			{% include "home/snippet/mentor_info_for_landing.html" with approval=approval only %}
-		{% endfor %}
+{% if project.issue_tracker %}
+	The project uses an <a href="{{ project.issue_tracker }}">issue tracker</a> to keep information about bugs to fix, project features to implement, documentation to write, and more.
+	{% if project.newcomer_issue_tag %}
+		Applicants can look for newcomer-friendly issues to use for their first contributions by looking for the following issue tags in the <a href="{{ project.issue_tracker }}">project issue tracker</a>:
+		{{ project.newcomer_issue_tag }}
 	{% endif %}
-{% endwith %}
+{% endif %}
+</p>
+
+{% if not project.contribution_tasks %}
+	<p>Applicants will need to contact a mentor to find out how they can make their first contributions to the project.</p>
+{% else %}
+	{{ project.contribution_tasks|safe }}
+{% endif %}
 
 <h3>How do I work with the {{ community.name }} community?</h3>
 <p>Community members are there to answer your questions, give you feedback, and help you grow your skills.
@@ -103,32 +85,55 @@ The community has been accepting contributions from people from around the world
 	{% endif %}
 {% endwith %}
 
-<h3>Project Contribution Information</h3>
-<p>As part of the application process, all applicants must make at least one contribution to be accepted as an intern for this project.
-Only applicants who make a contribution will be eligible to be accepted as interns.
-{% if community.tutorial %}
-This community requires applicants to complete a tutorial before they can make their contributions.
-{{ community.tutorial|safe }}
-{% endif %}
+<h3>Who will I work with?</h3>
+<p>Each Outreachy intern works remotely with one or more mentors. Most Outreachy mentors only work with one intern per round. Mentors are your guides in learning more about free and open source software, technical and non-technical skills, and will always be there when you get stuck.</p>
+
+{% with approved_mentors=project.get_approved_mentors %}
+	{% if approved_mentors %}
+		<p>You'll be working with the following mentor{{ approved_mentors|length|pluralize }}:</p>
+		{% for approval in approved_mentors %}
+			{% include "home/snippet/mentor_info_for_landing.html" with approval=approval only %}
+		{% endfor %}
+	{% endif %}
+{% endwith %}
+
+<h2>How do I get help?</h2>
+
+<p>The community members and the project mentor(s) are your guides to
+introduce you to the project community and contribution norms. Mentors
+are here to help answer your questions, encourage you, and help you when you get stuck.
+</p>
+
+<p>You should try to ask your questions on public project channels before
+asking mentors or coordinators questions privately. Often you'll get an answer
+faster if you ask on the public communication channels, rather than waiting for
+a mentor to answer your email. Applicants often have the same questions, so asking them in
+a public place helps other people.
 </p>
 
 <p>
-{% if project.repository %}
-	Applicants can contribute to this project through <a href="{{ project.repository }}">the project repository or contribution page</a>.
-{% else %}
-	Some projects accept contributions through a project repository. This project has not provided a link to a project repository.
-{% endif %}
-{% if project.issue_tracker %}
-	The project uses an <a href="{{ project.issue_tracker }}">issue tracker</a> to keep information about bugs to fix, project features to implement, documentation to write, and more.
-	{% if project.newcomer_issue_tag %}
-		Applicants can look for newcomer-friendly issues to use for their first contributions by looking for the following issue tags in the <a href="{{ project.issue_tracker }}">project issue tracker</a>:
-		{{ project.newcomer_issue_tag }}
-	{% endif %}
-{% endif %}
+Try to make your questions concrete "I'm having trouble installing X and I've
+tried Y but I get Z error message". If you are having trouble figuring out how
+to make a contribution, please state where you looked for contribution tasks.
+For example, "I'm trying to make a contribution to X project. I looked in the Y
+repository for issues marked newcomer-friendly, but they all seem to be claimed
+by other Outreachy applicants. Can you point me to an issue that involves Z?"
 </p>
 
-{% if not project.contribution_tasks %}
-	<p>Applicants will need to contact a mentor to find out how they can make their first contributions to the project.</p>
+<p>When you've exhausted all other avenues of communication, you can reach out
+to the community's coordinator. Each FOSS community has one or more coordinators.
+{% if approved_coordinator_list %}
+The {{ community.name }} coordinator{{ approved_coordinator_list|length|pluralize:" is,(s) are" }} 
+	{% for approval in approved_coordinator_list %}
+		{{ approval.coordinator.public_name }}
+		{% if user.is_authenticated %}
+			&lt;{{ approval.coordinator.account.email }}&gt;
+		{% endif %}
+	{% endfor %}
+	</p>
 {% else %}
-	{{ project.contribution_tasks|safe }}
+	This community currently has no approved coordinator, or you have not filled out the <a href="{% url 'eligibility' %}">eligibility check</a> and contact information is hidden from you.</p>
 {% endif %}
+
+<p>If you're having trouble reaching both the mentors and the coordinators,
+you can <a href="https://www.outreachy.org/contact/mentors/">contact the Outreachy mentors mailing list</a>.</p>
