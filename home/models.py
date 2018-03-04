@@ -992,6 +992,18 @@ class ProjectSkill(models.Model):
             help_text="Is this skill a hard requirement, a preference, or an optional bonus? Choose this carefully! Many Outreachy applicants choose not to apply for an internship project unless they meet 100% of the project skill criteria.",
             )
 
+    def get_skill_level_display(self):
+        if self.experience_level == self.TEACH_YOU:
+            return "1"
+        if self.experience_level == self.CONCEPTS:
+            return "2"
+        if self.experience_level == self.EXPERIMENTATION:
+            return "3"
+        if self.experience_level == self.FAMILIAR:
+            return "4"
+        if self.experience_level == self.CHALLENGE:
+            return "5"
+
     def __str__(self):
         return '{start:%Y %B} to {end:%Y %B} round - {community} - {title} - {skill}'.format(
                 start = self.project.project_round.participating_round.internstarts,

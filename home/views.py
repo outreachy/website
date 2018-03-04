@@ -797,6 +797,7 @@ def community_landing_view(request, round_slug, slug):
     projects = get_list_or_404(participation_info.project_set.approved())
     approved_projects = [p for p in projects if p.accepting_new_applicants]
     closed_projects = [p for p in projects if not p.accepting_new_applicants]
+    example_skill = ProjectSkill
     if request.user.is_authenticated:
         try:
             # Although the current user is authenticated, don't assume
@@ -819,6 +820,7 @@ def community_landing_view(request, round_slug, slug):
             'current_round' : participation_info.participating_round,
             'community': participation_info.community,
             'approved_coordinator_list': approved_coordinator_list,
+            'example_skill': example_skill,
             },
             )
 

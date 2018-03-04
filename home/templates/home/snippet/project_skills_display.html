@@ -1,0 +1,32 @@
+{% if project.required_skills or project.preferred_skills or project.bonus_skills %}
+	<p class="card-text"><div class="container card-text">
+		<div class="row card-text">
+			<div class="col-sm card-text"><strong>Skill description</strong></div>
+			<div class="col-md card-text"><strong>Impact on intern selection</strong></div>
+			<div class="col-md card-text"><strong>Experience Level</strong></div>
+		</div>
+		{% for skill in project.required_skills %}
+			<div class="row card-text">
+				<div class="col-sm card-text border">{{ skill.skill }}</div>
+				<div class="col-md card-text border">Required</div>
+				<div class="col-md card-text border"><button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="{{ skill.get_experience_level_display }}">{{ skill.get_skill_level_display }}</button></div>
+			</div>
+		{% endfor %}
+
+		{% for skill in project.preferred_skills %}
+			<div class="row card-text">
+				<div class="col-sm card-text border">{{ skill.skill }}</div>
+				<div class="col-md card-text border">Preferred</div>
+				<div class="col-md card-text border"><button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="{{ skill.get_experience_level_display }}">{{ skill.get_skill_level_display }}</button></div>
+			</div>
+		{% endfor %}
+
+		{% for skill in project.bonus_skills %}
+			<div class="row card-text">
+				<div class="col-sm card-text border">{{ skill.skill }}</div>
+				<div class="col-md card-text border">Nice to have</div>
+				<div class="col-md card-text border"><button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="{{ skill.get_experience_level_display }}">{{ skill.get_skill_level_display }}</button></div>
+			</div>
+		{% endfor %}
+	</div></p>
+{% endif %}
