@@ -34,7 +34,7 @@ Outreachy internships working with {{ community.name }}
 	{% for project in approved_projects %}
 		<div class="card border">
 			<div class="card-header bg-light">
-				Debian project #{{ forloop.counter }}
+				{{ community.name }} project #{{ forloop.counter }}
 			</div>
 			<div class="card-body">
 			{% if not request.user.comrade.eligible_application and not request.user.comrade.approved_mentor_or_coordinator %}
