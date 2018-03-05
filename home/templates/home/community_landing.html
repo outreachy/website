@@ -25,8 +25,24 @@ Outreachy internships working with {{ community.name }}
 
 {% if approved_projects %}
 	<h1>Open Projects</h1>
-	<p>Mentors for these projects are willing to work with new Outreachy applicants. Please note that as the round goes on, mentors may close their project to new applicants because they are already working with many applicants. Make sure to start your required contribution as soon as possible!</p>
-	<p>Each project mentor is looking for applicants who have different skill levels. Experience levels are:
+
+	<p>Mentors for these projects are willing to work with new Outreachy
+	applicants. Please note that as the round goes on, mentors may close
+	their project to new applicants because they are already working with
+	many applicants. Make sure to start your required contribution as soon
+	as possible!</p>
+
+	<p>Each project mentor is looking for applicants who have
+	different skills. Sometimes a skill is a hard requirement for
+	an applicant to have. Other times, a mentor might prefer an
+	applicant to have a skill, but they would accept an applicant
+	as an intern who didn't have that skill. Some skills are "nice
+	to have" meaning it would be great if applicants have this
+	skill, but the mentor doesn't have a strong preference.</p>
+
+	<p>Each project will require a different level of experience with a
+	particular skill. Experience levels are indicated with numbers:
+	<br>
 		{% for i in example_skill.EXPERIENCE_CHOICES %}
 			<br><button type="button" class="btn btn-info">{{ forloop.counter }}</button> {{ i.1 }}
 		{% endfor %}

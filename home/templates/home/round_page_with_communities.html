@@ -140,7 +140,7 @@ Outreachy Internships | Apply | Pick a Project
 		</p>
 	{% endif %}
 	{% if open_projects %}
-		<h2>Open Outreachy Internship Projects</h2>
+		<h2 id="open-projects">Open Outreachy Internship Projects</h2>
 
 		<p> The following projects are accepting contributions from new
 		applicants. Please note that as the round goes on, mentors may close
@@ -149,28 +149,47 @@ Outreachy Internships | Apply | Pick a Project
 		contribution as soon as possible!
 		</p>
 
+		<p>Each project mentor is looking for applicants who have
+		different skills. Sometimes a skill is a hard requirement for
+		an applicant to have. Other times, a mentor might prefer an
+		applicant to have a skill, but they would accept an applicant
+		as an intern who didn't have that skill. Some skills are "nice
+		to have" meaning it would be great if applicants have this
+		skill, but the mentor doesn't have a strong preference.</p>
+
+		<p>Each project will require a different level of experience with a particular skill. Experience levels are indicated with numbers:
+		<br>
+			{% for i in example_skill.EXPERIENCE_CHOICES %}
+				<br><button type="button" class="btn btn-info">{{ forloop.counter }}</button> {{ i.1 }}
+			{% endfor %}
+		</p>
+
 		{% for community, projects in open_projects %}
 			<h3>{{ community.name }} - {{ community.get_number_of_funded_interns }} intern{{ community.get_number_of_funded_interns|pluralize }}</h3>
 			<p>{{ community.description }}</p>
 			{% if request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator %}
 				<p>Learn how to make a contribution to these internship projects on the
 				<a href="{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}">{{ community.name }} community landing page</a>.</p>
+			{% else %}
+				<p>Project details are hidden, please see message above.</p>
 			{% endif %}
-			<ul>
 			{% for project in projects %}
-				<li>{{ project.short_title }}
-				{% if project.required_skills %}
-					<ul>
-					<li>Skills used or learned in this project: 
-						{% for skill in project.required_skills %}
-							{{ skill.skill }}
-							{% if not forloop.last %}, {% endif %}
-						{% endfor %}
-					</ul>
-				{% endif %}
-				</li>
+				<div class="card border">
+					<div class="card-header bg-light">
+						{{ community.name }} project #{{ forloop.counter }}
+					</div>
+					<div class="card-body">
+					{% if not request.user.comrade.eligible_application and not request.user.comrade.approved_mentor_or_coordinator %}
+						<p><strong>{{ project.short_title }}</strong></p>
+						<div class="card-text"><p>Project details are hidden, see the text above.</p></div>
+					{% else %}
+						<p><strong><a href="{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}#{{ project.slug }}">{{ project.short_title }}</a></strong></p>
+					{% endif %}
+					{% include "home/snippet/project_skills_display.html" %}
+					</div>
+				</div>
+				<br>
 			{% endfor %}
-			</ul>
 		{% endfor %}
 	{% endif %}
 	{% if closed_projects %}
@@ -193,21 +212,23 @@ Outreachy Internships | Apply | Pick a Project
 				<p>Document your contributions to these internship projects on the
 				<a href="{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}">{{ community.name }} community landing page</a>.</p>
 			{% endif %}
-			<ul>
 			{% for project in projects %}
-				<li>{{ project.short_title }}
-				{% if project.required_skills %}
-					<ul>
-					<li>Skills used or learned in this project: 
-						{% for skill in project.required_skills %}
-							{{ skill.skill }}
-							{% if not forloop.last %}, {% endif %}
-						{% endfor %}
-					</ul>
-				{% endif %}
-				</li>
+				<div class="card border">
+					<div class="card-header bg-light">
+						{{ community.name }} project #{{ forloop.counter }}
+					</div>
+					<div class="card-body">
+					{% if not request.user.comrade.eligible_application and not request.user.comrade.approved_mentor_or_coordinator %}
+						<p><strong>{{ project.short_title }}</strong></p>
+						<div class="card-text"><p>Project details are hidden, see the text above.</p></div>
+					{% else %}
+						<p><strong><a href="{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}#{{ project.slug }}">{{ project.short_title }}</a></strong></p>
+					{% endif %}
+					{% include "home/snippet/project_skills_display.html" %}
+					</div>
+				</div>
+				<br>
 			{% endfor %}
-			</ul>
 		{% endfor %}
 	{% endif %}
 {% endblock %}

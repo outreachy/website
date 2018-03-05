@@ -650,12 +650,14 @@ def current_round_page(request):
                 approval_status=ApprovalStatus.APPROVED)
         if projects:
             closed_approved_projects.append((p.community, projects))
+    example_skill = ProjectSkill
 
     return render(request, 'home/round_page_with_communities.html',
             {
             'current_round' : current_round,
             'open_projects': open_approved_projects,
             'closed_projects': closed_approved_projects,
+            'example_skill': example_skill,
             },
             )
 
