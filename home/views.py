@@ -1349,31 +1349,36 @@ class FinalApplicationAction(ApprovalStatusAction):
             'project_slug': self.object.project.slug,
             })
 
-def project_applicants(request, round_slug, community_slug, project_slug):
-    current_round = RoundPage.objects.latest('internstarts')
+class ProjectApplicants(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
+    template_name = 'home/project_applicants.html'
 
-    # Make sure both the Community, Project, and mentor are approved
-    project = get_object_or_404(Project,
-            slug=project_slug,
-            approval_status=ApprovalStatus.APPROVED,
-            project_round__community__slug=community_slug,
-            project_round__participating_round=current_round,
-            project_round__approval_status=ApprovalStatus.APPROVED)
+    def get_context_data(self, **kwargs):
+        current_round = RoundPage.objects.latest('internstarts')
 
-    if not request.user.is_staff and not project.project_round.community.is_coordinator(request.user) and not project.project_round.is_mentor(request.user):
-        raise PermissionDenied("You are not an approved mentor for this project.")
+        # Make sure both the Community, Project, and mentor are approved
+        project = get_object_or_404(Project,
+                slug=kwargs['project_slug'],
+                approval_status=ApprovalStatus.APPROVED,
+                project_round__community__slug=kwargs['community_slug'],
+                project_round__participating_round=current_round,
+                project_round__approval_status=ApprovalStatus.APPROVED)
 
-    contributions = project.contribution_set.filter(
-            applicant__approval_status=ApprovalStatus.APPROVED).order_by(
-            "applicant__applicant__public_name", "date_started")
-    internship_total_days = current_round.internends - current_round.internstarts
-    return render(request, 'home/project_applicants.html', {
-        'current_round': current_round,
-        'community': project.project_round.community,
-        'project': project,
-        'contributions': contributions,
-        'internship_total_days': internship_total_days,
-        })
+        if not self.request.user.is_staff and not project.project_round.community.is_coordinator(self.request.user) and not project.project_round.is_mentor(self.request.user):
+            raise PermissionDenied("You are not an approved mentor for this project.")
+
+        contributions = project.contribution_set.filter(
+                applicant__approval_status=ApprovalStatus.APPROVED).order_by(
+                "applicant__applicant__public_name", "date_started")
+        internship_total_days = current_round.internends - current_round.internstarts
+        context = super(ProjectApplicants, self).get_context_data(**kwargs)
+        context.update({
+            'current_round': current_round,
+            'community': project.project_round.community,
+            'project': project,
+            'contributions': contributions,
+            'internship_total_days': internship_total_days,
+            })
+        return context
 
 def community_applicants(request, round_slug, community_slug):
     current_round = RoundPage.objects.latest('internstarts')
