@@ -1,6 +1,11 @@
 {% for project in projects %}
+	{% if project.needs_more_applicants %}
+	<div class="card border border-success">
+		<div class="card-header bg-success text-light">
+	{% else %}
 	<div class="card border">
 		<div class="card-header bg-light">
+	{% endif %}
 			{{ community.name }} {% if project.deadline == project.CLOSED %}closed {% elif project.deadline == project.LATE %}extended deadline {% endif %}project #{{ forloop.counter }}
 		</div>
 		<div class="card-body">
@@ -10,6 +15,11 @@
 		{% else %}
 			<p><strong><a href="{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}#{{ project.slug }}">{{ project.short_title }}</a></strong></p>
 		{% endif %}
+
+		{% if project.needs_more_applicants %}
+			<p>This project has a low number of applicants, and the project mentor welcomes new applicants to contribute.</p>
+		{% endif %}
+
 		{% if project.deadline == project.LATE %}
 			<p>Deadline is {{ current_round.appslate }} to record your contributions and create a final application.</p>
 		{% else %}

@@ -853,6 +853,10 @@ class Project(ApprovalStatus):
             help_text="If you have too many applicants, and your most promising applicants have recorded both a contribution and a final application, you may want to close your project to new applicants.<br>If you have too few applicants, you may want to extend your project's application deadline by one week.",
             )
 
+    needs_more_applicants = models.BooleanField(
+            default=False,
+            help_text='Advertise this project as needing more applicants.')
+
     class Meta:
         unique_together = (
                 ('slug', 'project_round'),
