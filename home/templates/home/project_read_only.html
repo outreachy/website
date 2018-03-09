@@ -142,6 +142,7 @@
 
 {% if project|is_submitter:request.user %}
 	<p>Does the project information look correct? If not, you can edit it.</p>
+	<p>If you have too many applicants, you can close the project to new applicants. If you have too few applicants, you can extend the project application deadline</p>
 	<p><a class="btn btn-primary" href="{{ project.get_submit_url }}">Edit Project Info</a></p>
 {% endif %}
 
