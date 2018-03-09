@@ -1,0 +1,22 @@
+{% for project in projects %}
+	<div class="card border">
+		<div class="card-header bg-light">
+			{{ community.name }} {% if project.deadline == project.CLOSED %}closed {% elif project.deadline == project.LATE %}extended deadline {% endif %}project #{{ forloop.counter }}
+		</div>
+		<div class="card-body">
+		{% if not request.user.comrade.eligible_application and not request.user.comrade.approved_mentor_or_coordinator %}
+			<p><strong>{{ project.short_title }}</strong></p>
+			<div class="card-text"><p>Project details are hidden, see the text above.</p></div>
+		{% else %}
+			<p><strong><a href="{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}#{{ project.slug }}">{{ project.short_title }}</a></strong></p>
+		{% endif %}
+		{% if project.deadline == project.LATE %}
+			<p>Deadline is {{ current_round.appslate }} to record your contributions and create a final application.</p>
+		{% else %}
+			<p>Deadline is {{ current_round.appsclose }} to record your contributions and create a final application.</p>
+		{% endif %}
+		{% include "home/snippet/project_skills_display.html" %}
+		</div>
+	</div>
+	<br>
+{% endfor %}

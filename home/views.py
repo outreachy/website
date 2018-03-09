@@ -639,24 +639,30 @@ def current_round_page(request):
     current_round = RoundPage.objects.latest('internstarts')
     approved_participations = current_round.participation_set.approved().order_by('community__name')
 
-    open_approved_projects = []
     closed_approved_projects = []
+    ontime_approved_projects = []
+    late_approved_projects = []
     for p in approved_participations:
-        projects = p.project_set.approved().filter(accepting_new_applicants=True,
-                approval_status=ApprovalStatus.APPROVED)
-        if projects:
-            open_approved_projects.append((p.community, projects))
-        projects = p.project_set.approved().filter(accepting_new_applicants=False,
+        projects = p.project_set.approved().filter(deadline=Project.CLOSED,
                 approval_status=ApprovalStatus.APPROVED)
         if projects:
             closed_approved_projects.append((p.community, projects))
+        projects = p.project_set.approved().filter(deadline=Project.ONTIME,
+                approval_status=ApprovalStatus.APPROVED)
+        if projects:
+            ontime_approved_projects.append((p.community, projects))
+        projects = p.project_set.approved().filter(deadline=Project.LATE,
+                approval_status=ApprovalStatus.APPROVED)
+        if projects:
+            late_approved_projects.append((p.community, projects))
     example_skill = ProjectSkill
 
     return render(request, 'home/round_page_with_communities.html',
             {
             'current_round' : current_round,
-            'open_projects': open_approved_projects,
             'closed_projects': closed_approved_projects,
+            'ontime_projects': ontime_approved_projects,
+            'late_projects': late_approved_projects,
             'example_skill': example_skill,
             },
             )
@@ -797,8 +803,9 @@ def community_landing_view(request, round_slug, slug):
             participating_round__slug=round_slug,
             )
     projects = get_list_or_404(participation_info.project_set.approved())
-    approved_projects = [p for p in projects if p.accepting_new_applicants]
-    closed_projects = [p for p in projects if not p.accepting_new_applicants]
+    ontime_projects = [p for p in projects if p.deadline == Project.ONTIME]
+    late_projects = [p for p in projects if p.deadline == Project.LATE]
+    closed_projects = [p for p in projects if p.deadline == Project.CLOSED]
     example_skill = ProjectSkill
     if request.user.is_authenticated:
         try:
@@ -816,7 +823,8 @@ def community_landing_view(request, round_slug, slug):
     return render(request, 'home/community_landing.html',
             {
             'participation_info': participation_info,
-            'approved_projects': approved_projects,
+            'ontime_projects': ontime_projects,
+            'late_projects': late_projects,
             'closed_projects': closed_projects,
             # TODO: make the template get these off the participation_info instead of passing them in the context
             'current_round' : participation_info.participating_round,
@@ -1064,7 +1072,7 @@ class MentorApprovalAction(ApprovalStatusAction):
             email.approval_status_changed(self.object, self.request)
 
 class ProjectAction(ApprovalStatusAction):
-    fields = ['short_title', 'approved_license', 'unapproved_license_description', 'no_proprietary_software', 'proprietary_software_description', 'longevity', 'community_size', 'community_benefits', 'intern_tasks', 'intern_benefits', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'contribution_tasks', 'long_description', 'accepting_new_applicants']
+    fields = ['short_title', 'approved_license', 'unapproved_license_description', 'no_proprietary_software', 'proprietary_software_description', 'longevity', 'community_size', 'community_benefits', 'intern_tasks', 'intern_benefits', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'contribution_tasks', 'long_description', 'deadline']
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     def get_object(self):

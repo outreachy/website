@@ -838,7 +838,20 @@ class Project(ApprovalStatus):
     contribution_tasks = CKEditorField(
             help_text='Instructions for how applicants can make contributions during the Outreachy application period. Make sure to include links to getting started tutorials or documentation, how applicants can find contribution tasks on your project website or issue tracker, who they should ask for tasks, and everything they need to know to get started.')
 
-    accepting_new_applicants = models.BooleanField(help_text='Is this internship project currently accepting contributions from new applicants? If you have an applicant in mind to accept as an intern (or several promising applicants) who have filled out the eligibility information and an application, you can uncheck this box to close the internship project to new applicants.', default=True)
+    CLOSED = 'NOW'
+    ONTIME = 'REG'
+    LATE = 'LAT'
+    DEADLINE_CHOICES = (
+            (CLOSED, 'Immediately close this project to new applicants'),
+            (ONTIME, 'Open applications until the application period ends'),
+            (LATE, 'Extend applications through the late application deadline'),
+            )
+    deadline = models.CharField(
+            max_length=3,
+            choices=DEADLINE_CHOICES,
+            verbose_name="Project application status",
+            help_text="If you have too many applicants, and your most promising applicants have recorded both a contribution and a final application, you may want to close your project to new applicants.<br>If you have too few applicants, you may want to extend your project's application deadline by one week.",
+            )
 
     class Meta:
         unique_together = (

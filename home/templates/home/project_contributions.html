@@ -26,6 +26,13 @@ Record Contributions and Apply to {{ community.name }}
 <p>
 All applicants must work with a mentor to make a contribution to a project.
 </p>
+
+{% if project.deadline == project.LATE %}
+	<p>Deadline is {{ current_round.appslate }} to record your contributions and create a final application. You will not be able to edit your final application or record more contributions after this date.</p>
+{% else %}
+	<p>Deadline is {{ current_round.appsclose }} to record your contributions and create a final application. You will not be able to edit your final application or record more contributions after this date.</p>
+{% endif %}
+
 <p>
 If you're having trouble figuring out how to contribute,
 <a href="https://www.outreachy.org/apply/make-contributions/">check out our contribution tips</a>.

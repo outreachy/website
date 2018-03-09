@@ -78,7 +78,9 @@ Past community participation in Outreachy
 		<ul>
 		{% for project in approved_projects %}
 			<li>
-				{% if not project.accepting_new_applicants %}(Closed to new applicants){% endif %}
+				{% if project.deadline == project.CLOSED %}(Closed to new applicants){% endif %}
+				{% if project.deadline == project.LATE %}(Extended deadline to {{ current_round.appslate }}){% endif %}
+				{% if project.deadline == project.ONTIME %}(Application deadline is {{ current_round.appsclose }}){% endif %}
 				<a href="{{ project.get_preview_url }}">{{ project.short_title }}</a>
 			</li>
 		{% endfor %}

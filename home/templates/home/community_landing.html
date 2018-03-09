@@ -23,7 +23,7 @@ Outreachy internships working with {{ community.name }}
 
 {% include "home/snippet/community_landing_snippet.html" %}
 
-{% if approved_projects %}
+{% if ontime_projects %}
 	<h1>Open Projects</h1>
 
 	<p>Mentors for these projects are willing to work with new Outreachy
@@ -47,31 +47,23 @@ Outreachy internships working with {{ community.name }}
 			<br><button type="button" class="btn btn-info">{{ forloop.counter }}</button> {{ i.1 }}
 		{% endfor %}
 	</p>
-	{% for project in approved_projects %}
-		<div class="card border">
-			<div class="card-header bg-light">
-				{{ community.name }} project #{{ forloop.counter }}
-			</div>
-			<div class="card-body">
-			{% if not request.user.comrade.eligible_application and not request.user.comrade.approved_mentor_or_coordinator %}
-				<p><strong>{{ project.short_title }}</strong></p>
-				<div class="card-text"><p>Project details are hidden, see the text above.</p></div>
-			{% else %}
-				<p><strong><a href="#{{ project.slug }}">{{ project.short_title }}</a></strong></p>
-			{% endif %}
-			{% include "home/snippet/project_skills_display.html" %}
-			</div>
-		</div>
-		<br>
-	{% endfor %}
+	{% with projects=late_projects|add:ontime_projects %}
+		{% include 'home/snippet/projects_for_round_page.html' %}
+	{% endwith %}
 
 	<h2>Project Details</h2>
 	{% if not request.user.comrade.eligible_application and not request.user.comrade.approved_mentor_or_coordinator %}
 		<p>Project details are hidden, see message above.</p>
 	{% else %}
-		{% for project in approved_projects %}
+		{% with projects=late_projects|add:ontime_projects %}
+		{% for project in projects %}
 			<hr id="{{ project.slug }}">
 			<h2>{{ project.short_title }}</h2>
+			{% if project.deadline == project.LATE %}
+				<p>Deadline is {{ current_round.appslate }} to record your contributions and create a final application.</p>
+			{% else %}
+				<p>Deadline is {{ current_round.appsclose }} to record your contributions and create a final application.</p>
+			{% endif %}
 			{% if request.user.comrade.eligible_application %}
 				{% if project in contributions %}
 					<p><a class='btn btn-success' href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Update Contibutions and Apply to This Project</a></p>
@@ -93,26 +85,21 @@ Outreachy internships working with {{ community.name }}
 				<br>
 			{% endif %}
 		{% endfor %}
+		{% endwith %}
 	{% endif %}
 {% endif %}
 
 {% if closed_projects %}
 	<h1>Closed Projects</h1>
 	<p>These projects are closed to new applicants because the mentors are already working with many applicants. Applicants who are already working with a mentor are encouraged to complete their contributions and submit an application for the project.</p>
+	{% with projects=closed_projects project_status="closed " %}
+		{% include 'home/snippet/projects_for_round_page.html' %}
+	{% endwith %}
 	{% for project in closed_projects %}
 		<hr id="{{ project.slug }}">
 		<h2>{{ project.short_title }}</h2>
-		{% if project.required_skills or project.preferred_skills or project.bonus_skills %}
-			<div class="card border">
-				<div class="card-header bg-light">
-					Project skills
-				</div>
-				<div class="card-body">
-				{% include "home/snippet/project_skills_display.html" %}
-				</div>
-			</div>
-		{% endif %}
 		{% if request.user.comrade.eligible_application %}
+			<p>Deadline is {{ current_round.appsclose }} to record your contributions and create a final application.</p>
 			{% if project in contributions %}
 				<p><a class='btn btn-success' href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Update Contibutions and Apply to This Project</a></p>
 			{% else %}
