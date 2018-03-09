@@ -156,10 +156,12 @@ Outreachy Internships | Apply | Pick a Project
 				<br><button type="button" class="btn btn-info">{{ forloop.counter }}</button> {{ i.1 }}
 			{% endfor %}
 		</p>
-		<h3>Applications Due {{ current_round.appslate }}</h3>
+		{% if late_projects %}
+			<h3>Applications Due {{ current_round.appslate }}</h3>
 
-		<p> The following projects have an extended deadline, and will be accepting contributions and applications from new
-		applicants until {{ current_round.appslate }}.</p>
+			<p> The following projects have an extended deadline, and will be accepting contributions and applications from new
+			applicants until {{ current_round.appslate }}.</p>
+		{% endif %}
 		
 		{% for community, projects in late_projects %}
 			<h4>{{ community.name }} - {{ community.get_number_of_funded_interns }} intern{{ community.get_number_of_funded_interns|pluralize }}</h4>
@@ -175,10 +177,12 @@ Outreachy Internships | Apply | Pick a Project
 			{% endwith %}
 		{% endfor %}
 
-		<h3>Applications Due {{ current_round.appsclose }}</h3>
+		{% if ontime_projects %}
+			<h3>Applications Due {{ current_round.appsclose }}</h3>
 
-		<p> The following projects are accepting contributions and applications from new
-		applicants until {{ current_round.appsclose }}.</p>
+			<p> The following projects are accepting contributions and applications from new
+			applicants until {{ current_round.appsclose }}.</p>
+		{% endif %}
 		
 		{% for community, projects in ontime_projects %}
 			<h4>{{ community.name }} - {{ community.get_number_of_funded_interns }} intern{{ community.get_number_of_funded_interns|pluralize }}</h4>
