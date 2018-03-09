@@ -33,6 +33,14 @@ Then subscribe them using the following links (anyone already subscribed won't b
 	<li><a href="https://lists.outreachy.org/cgi-bin/mailman/admin/announce/members/add">announce mailing list</a></li>
 </ul>
 
+<h1>Email Reminders</h1>
+
+<p>Two weeks before the application deadline, project mentors are either overloaded with applicants,
+or don't have enough applicants. Send a reminder email to either close their project to new applicants,
+or extend their project deadline by a week (and/or mark their project as needing more applicants).</p>
+
+<p><a href="{% url 'email-deadline-review' %}"><input class="btn btn-success" value="Email Deadline Reminder" /></a>
+
 <h2>Community progress</h2>
 {% if pending_participations or approved_participations %}
 	<table class="table table-striped table-bordered">

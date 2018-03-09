@@ -13,6 +13,13 @@ def send_template_mail(template, context, recipient_list, request=None, **kwargs
         kwargs.setdefault('from_email', organizers)
         send_mail(message=body.strip(), subject=subject.strip(), recipient_list=[recipient], **kwargs)
 
+def send_group_template_mail(template, context, recipient_list, request=None, **kwargs):
+    context['recipient'] = recipient_list
+    message = render_to_string(template, context, request=request, using='plaintext').strip()
+    subject, body = message.split('\n', 1)
+    kwargs.setdefault('from_email', organizers)
+    send_mail(message=body.strip(), subject=subject.strip(), recipient_list=recipient_list, **kwargs)
+
 def approval_status_changed(obj, request):
     if obj.approval_status == obj.PENDING:
         recipients = obj.get_approver_email_list()
@@ -44,6 +51,13 @@ def project_nonfree_warning(project, request):
         },
         request=request,
         recipient_list=[organizers])
+
+def project_applicant_review(project, request):
+    send_group_template_mail('home/email/mentor-applicant-updates.txt', {
+        'project': project,
+        },
+        request=request,
+        recipient_list=project.get_mentor_email_list())
 
 @override_settings(ALLOWED_HOSTS=['www.outreachy.org'], EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend')
 def message_samples():

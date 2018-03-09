@@ -39,6 +39,7 @@ urlpatterns = [
     url(r'^dashboard/trusted-volunteers/$', views.TrustedVolunteersListView.as_view(), name='trusted-volunteers-list'),
     url(r'^eligibility/$', views.EligibilityUpdateView.as_view(), name='eligibility'),
     url(r'^eligibility-results/$', views.EligibilityResults.as_view(), name='eligibility-results'),
+    url(r'^email/application-deadline-review/$', views.MentorCheckDeadlinesReminder.as_view(), name='email-deadline-review'),
     url(r'^account/$', views.ComradeUpdate.as_view(), name='account'),
     url(r'^apply/project-selection/$', views.current_round_page, name='project-selection'),
     url(r'^apply/make-contributions/$', views.contribution_tips, name='contribution-tips'),

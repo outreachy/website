@@ -1164,6 +1164,33 @@ class CoordinatorApprovalPreview(Preview):
                 community__slug=self.kwargs['community_slug'],
                 coordinator__account__username=self.kwargs['username'])
 
+class MentorCheckDeadlinesReminder(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
+    template_name = 'home/mentor_deadline_reminder.html'
+
+    def get_context_data(self, **kwargs):
+        current_round = RoundPage.objects.latest('internstarts')
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are authorized to send reminder emails.")
+        projects = Project.objects.filter(
+                approval_status__in=[Project.APPROVED, Project.PENDING],
+                project_round__participating_round=current_round)
+        context = super(MentorCheckDeadlinesReminder, self).get_context_data(**kwargs)
+        context.update({
+            'projects': projects,
+            })
+        return context
+
+    def post(self, request, *args, **kwargs):
+        current_round = RoundPage.objects.latest('internstarts')
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are authorized to send reminder emails.")
+        projects = Project.objects.filter(
+                approval_status__in=[Project.APPROVED, Project.PENDING],
+                project_round__participating_round=current_round)
+        for p in projects:
+            email.project_applicant_review(p, self.request)
+        return redirect(reverse('dashboard'))
+
 class ProjectContributions(LoginRequiredMixin, ComradeRequiredMixin, EligibleApplicantRequiredMixin, TemplateView):
     template_name = 'home/project_contributions.html'
 

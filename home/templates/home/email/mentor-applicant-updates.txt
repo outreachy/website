@@ -1,0 +1,47 @@
+{% with community=project.project_round.community %}
+{% with current_round=project.project_round.participating_round %}
+{% with contributors=project.get_applicants_and_contributions_list %}
+{% with applicants=project.get_applications %}
+{% with coordinators=community.get_coordinator_email_list %}
+Review Outreachy applicants and application deadlines
+
+Hi Outreachy mentor,
+
+As the Outreachy application deadline approaches on {{ current_round.appsclose }}, mentors need to review whether their project could benefit from more promotion, an extended deadline, or closing the project to new applicants. You may receive this email for multiple projects you are mentoring for.
+
+{{ community.name }} project "{{ project.short_title }}"
+
+{% if project.approval_status == project.PENDING %}Your coordinator has not yet approved your project for this round, and it is not yet listed on the applicant project selection page.{% else %}{{ contributors|length }} applicant{{ contributors|pluralize:" has,s have" }} recorded their contributions to your project{% if contributors|length > 0 %}: {% for c in contributors %}{{ c.applicant.public_name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}.
+
+{{ applicants|length }} applicant{{ applicants|pluralize:" has,s have" }} created a final application for your project{% if applicants|length > 0 %}: {% for a in applicants %}{{ a.applicant.applicant.public_name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}.
+
+Only applicants that record both a contribution and create an application will be eligible to be selected as interns. You can encourage applicants to record contributions or create an application by sending them the following URL. (Please note that this will redirect applications to complete an eligibility check if they haven't already, so mentors shouldn't follow this link. See the next link instead.)
+
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}
+
+You can review your project's applicants and rank them here:
+
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_applicants_url }}{% endif %}
+
+Application Deadlines
+---------------------
+
+Your project is currently marked as {% if project.deadline == project.LATE %}having an extended deadline to {{ current_round.appslate }}{% else %}having a regular application deadline of {{ current_round.appsclose }}{% endif %}. You can either keep the application deadline to be aligned with the application period deadline ({{ current_round.appsclose}}), or you can extend the deadline by one week ({{ current_round.appslate }}). {% if project.approval_status == project.APPROVED and contributors|length < 2 and project.deadline != project.LATE %}Your project may benefit from extending the deadline to {{ current_round.appslate }}. {% endif %}
+
+Your project is currrent marked as being {% if project.deadline == project.CLOSED %}closed{% else %}open{% endif %} to new applicants.{% if project.approval_status == project.APPROVED and contributors|length > 4 and project.deadline != project.CLOSED %} If you are working with many applicants and your top intern picks have recorded their contributions, you may want to mark the project as closed to new applicants.{% endif %} When a project is closed to new applicants, this moves your project listing to the end of the project selection and community projects pages. Applicants will still be allowed to record contributions and create applications for your project.
+
+Your project is {% if not project.needs_more_applicants %}NOT {% endif %}marked as needing more applicants. Marking a project as needing more applicants moves the project up in the community project list, and adds a colored heading to the listing. If you aren't working with many applicants, it can help to mark your project as needing more applicants.
+
+You can edit your project deadlines or whether your project is marked as needing more applicants here:
+
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_submit_url }}
+
+If you have any questions, please contact your community coordinator{{ coordinators|pluralize }} {% for c in coordinators %}{{ c }}{% if not forloop.last %}, {% endif %}{% endfor %}. You can always contact the Outreachy organizers <organizers@outreachy.org> for help.
+
+Outreachy Organizers
+{% include 'home/email/footer-mentor.txt' %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endwith %}

@@ -877,6 +877,9 @@ class Project(ApprovalStatus):
     def get_contributions_url(self):
         return reverse('contributions', kwargs={'round_slug': self.project_round.participating_round.slug, 'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
 
+    def get_applicants_url(self):
+        return reverse('project-applicants', kwargs={'round_slug': self.project_round.participating_round.slug, 'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
+
     def get_action_url(self, action):
         return reverse('project-action', kwargs={
             'community_slug': self.project_round.community.slug,
@@ -954,6 +957,17 @@ class Project(ApprovalStatus):
 
     def get_approved_mentors(self):
         return self.mentorapproval_set.filter(approval_status=ApprovalStatus.APPROVED)
+
+    def get_mentor_email_list(self):
+        emails = []
+        mentors = Comrade.objects.filter(
+                mentorapproval__project=self,
+                mentorapproval__approval_status=ApprovalStatus.APPROVED).distinct()
+        for m in mentors:
+            emails.append(m.email_address())
+        # Coordinators might get duplicate emails if they're mentors,
+        # but Address isn't hashable, so we can't make a set and then a list.
+        return emails
 
     @classmethod
     def objects_for_dashboard(cls, user):
