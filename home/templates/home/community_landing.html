@@ -59,11 +59,7 @@ Outreachy internships working with {{ community.name }}
 		{% for project in projects %}
 			<hr id="{{ project.slug }}">
 			<h2>{{ project.short_title }}</h2>
-			{% if project.deadline == project.LATE %}
-				<p>Deadline is {{ current_round.appslate }} to record your contributions and create a final application.</p>
-			{% else %}
-				<p>Deadline is {{ current_round.appsclose }} to record your contributions and create a final application.</p>
-			{% endif %}
+			{% include "home/snippet/project_deadline.html" %}
 			{% if request.user.comrade.eligible_application %}
 				{% if project in contributions %}
 					<p><a class='btn btn-success' href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Update Contibutions and Apply to This Project</a></p>
@@ -96,8 +92,8 @@ Outreachy internships working with {{ community.name }}
 	{% for project in closed_projects %}
 		<hr id="{{ project.slug }}">
 		<h2>{{ project.short_title }}</h2>
+		{% include "home/snippet/project_deadline.html" %}
 		{% if request.user.comrade.eligible_application %}
-			<p>Deadline is {{ current_round.appsclose }} to record your contributions and create a final application.</p>
 			{% if project in contributions %}
 				<p><a class='btn btn-success' href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Update Contibutions and Apply to This Project</a></p>
 			{% else %}

@@ -1,0 +1,9 @@
+{% if project.deadline == project.LATE %}
+	<p>Deadline is {{ current_round.appslate }} to
+{% else %}
+	<p>Deadline is {{ current_round.appsclose }} to
+{% endif %}
+{% if request.user.comrade.eligible_application %}<a href="{{ project.get_contributions_url }}">{% endif %}
+	record your contributions and create a final application.
+{% if request.user.comrade.eligible_application %}</a>{% endif %}
+	</p>
