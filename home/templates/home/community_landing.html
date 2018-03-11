@@ -72,16 +72,14 @@ Outreachy internships working with {{ community.name }}
 				{% endif %}
 			{% endif %}
 			{% if request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator %}
-				<div id="project-open-accordion-{{ forloop.counter }}" class="accordion">
 					<div class="card">
-						<div class="card-header" role="tab" id="project-open-heading-{{ forloop.counter }}">
-							<h4 class="mb-0"><a data-toggle="collapse" data-parent="project-open-accordion-{{ forloop.counter }}" href="#project-open-{{ forloop.counter }}">+ Detailed Project Information</a></h4>
+						<div class="card-header">
+							<h4 class="mb-0">Detailed Project Information</h4>
 						</div>
-						<div class="collapse card-body" id="project-open-{{ forloop.counter }}">
+						<div class="card-body">
 							{% include "home/snippet/project_landing_snippet.html" %}
 						</div>
 					</div>
-				</div>
 				<br>
 			{% endif %}
 		{% endfor %}
