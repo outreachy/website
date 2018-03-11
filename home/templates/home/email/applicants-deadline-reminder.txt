@@ -14,10 +14,10 @@ Some projects have enough applicants, and they are closed to new applicants. If 
 {% endfor %}
 {% if late_projects %}All other projects{% else %}All projects currently{% endif %} have a deadline of {{ current_round.appsclose }}. You will need to record a contribution and create a final application in order to be eligible to be selected as an intern.
 
-If you are currently working on a contribution with a mentor (even if the contribution is not merged or accepted yet), make sure to record the contribution in the Outreachy website, and submit a final application for your project. You can record your contributions by finding your project listed on the project selection page, following the link to the project description, and clicking the 'Record Contibutions and Apply to This Project' button.
+If you are currently working on a contribution with a mentor (even if the contribution is not merged or accepted yet), make sure to record the contribution in the Outreachy website, and submit a final application for your project. You can record your contributions by finding your project listed on the project selection page, and following the link 'record your contributions and create a final application' on that project's detailed listing:
 {{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
 
-If you don't see any links to project details, you either aren't logged in, or you haven't filled out the eligibility form at:
+If you don't see any links to project details or a link to record a contribution, you either aren't logged in, or you haven't filled out the eligibility form at:
 {{ request.scheme }}://{{ request.get_host }}{% url 'eligibility' %}
 
 If you have any questions about selecting a project or you are having trouble contacting a mentor who has not closed their project to applicants, please email the Outreachy mentors mailing list at mentors@lists.outreachy.org. If you have questions about eligibility, please email the Outreachy organizers organizers@outreachy.org after you have filled out the eligibility form.
