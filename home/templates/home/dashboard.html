@@ -39,7 +39,12 @@ Then subscribe them using the following links (anyone already subscribed won't b
 or don't have enough applicants. Send a reminder email to either close their project to new applicants,
 or extend their project deadline by a week (and/or mark their project as needing more applicants).</p>
 
-<p><a href="{% url 'email-deadline-review' %}"><input class="btn btn-success" value="Email Deadline Reminder" /></a>
+<p><a href="{% url 'email-deadline-review' %}"><input class="btn btn-success" value="Mentor Deadlines Email" /></a>
+
+<p>Once mentors have had a couple days to mark their project as closed, late, or needs promotion,
+you can send an email to the announcements mailing list to remind applicants of the upcoming deadlines:</p>
+
+<p><a href="{% url 'email-deadline-reminder' %}"><input class="btn btn-success" value="Applicant Deadline Email" /></a>
 
 <h2>Community progress</h2>
 {% if pending_participations or approved_participations %}

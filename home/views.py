@@ -1191,6 +1191,56 @@ class MentorCheckDeadlinesReminder(LoginRequiredMixin, ComradeRequiredMixin, Tem
             email.project_applicant_review(p, self.request)
         return redirect(reverse('dashboard'))
 
+class ApplicantsDeadlinesReminder(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
+    template_name = 'home/applicants_deadline_reminder.html'
+
+    def get_context_data(self, **kwargs):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are authorized to send reminder emails.")
+        current_round = RoundPage.objects.latest('internstarts')
+        late_projects = Project.objects.filter(
+                project_round__participating_round=current_round,
+                approval_status=Project.APPROVED,
+                deadline=Project.LATE)
+        promoted_projects = Project.objects.filter(
+                project_round__participating_round=current_round,
+                approval_status=Project.APPROVED,
+                deadline=Project.ONTIME,
+                needs_more_applicants=True)
+        closed_projects = Project.objects.filter(
+                project_round__participating_round=current_round,
+                approval_status=Project.APPROVED,
+                deadline=Project.CLOSED)
+        context = super(ApplicantsDeadlinesReminder, self).get_context_data(**kwargs)
+        context.update({
+            'current_round': current_round,
+            'late_projects': late_projects,
+            'promoted_projects': promoted_projects,
+            'closed_projects': closed_projects,
+            })
+        return context
+
+    def post(self, request, *args, **kwargs):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are authorized to send reminder emails.")
+        current_round = RoundPage.objects.latest('internstarts')
+        late_projects = Project.objects.filter(
+                project_round__participating_round=current_round,
+                approval_status=Project.APPROVED,
+                deadline=Project.LATE)
+        promoted_projects = Project.objects.filter(
+                project_round__participating_round=current_round,
+                approval_status=Project.APPROVED,
+                deadline=Project.ONTIME,
+                needs_more_applicants=True)
+        closed_projects = Project.objects.filter(
+                project_round__participating_round=current_round,
+                approval_status=Project.APPROVED,
+                deadline=Project.CLOSED)
+        email.applicant_deadline_reminder(late_projects, promoted_projects, closed_projects, current_round, self.request)
+        return redirect(reverse('dashboard'))
+
+
 class ProjectContributions(LoginRequiredMixin, ComradeRequiredMixin, EligibleApplicantRequiredMixin, TemplateView):
     template_name = 'home/project_contributions.html'
 
