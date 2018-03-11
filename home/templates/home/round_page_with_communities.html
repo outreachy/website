@@ -170,7 +170,7 @@ Outreachy Internships | Apply | Pick a Project
 				<p>Learn how to make a contribution to these internship projects on the
 				<a href="{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}">{{ community.name }} community landing page</a>.</p>
 			{% else %}
-				<p>Project details are hidden, please see message above.</p>
+				{% include 'home/snippet/project_hidden.html' %}
 			{% endif %}
 			{% with project_status="" %}
 				{% include 'home/snippet/projects_for_round_page.html' %}
@@ -191,7 +191,7 @@ Outreachy Internships | Apply | Pick a Project
 				<p>Learn how to make a contribution to these internship projects on the
 				<a href="{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}">{{ community.name }} community landing page</a>.</p>
 			{% else %}
-				<p>Project details are hidden, please see message above.</p>
+				{% include 'home/snippet/project_hidden.html' %}
 			{% endif %}
 			{% with project_status="" %}
 				{% include 'home/snippet/projects_for_round_page.html' %}

@@ -11,7 +11,7 @@
 		<div class="card-body">
 		{% if not request.user.comrade.eligible_application and not request.user.comrade.approved_mentor_or_coordinator %}
 			<p><strong>{{ project.short_title }}</strong></p>
-			<div class="card-text"><p>Project details are hidden, see the text above.</p></div>
+			<div class="card-text">{% include 'home/snippet/project_hidden.html' %}</div>
 		{% else %}
 			<p><strong><a href="{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}#{{ project.slug }}">{{ project.short_title }}</a></strong></p>
 		{% endif %}
