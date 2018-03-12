@@ -118,6 +118,13 @@ class ApprovalStatusAction(LoginRequiredMixin, ComradeRequiredMixin, reversion.v
             raise PermissionDenied("Not allowed to {} a {} request.".format(
                 action, self.object.get_approval_status_display()))
 
+        # can't approve or edit after the deadline, but editing approved
+        # objects is okay
+        if action == 'approve' or (action == 'submit' and self.prior_status != ApprovalStatus.APPROVED):
+            if self.object.has_editing_deadline_passed():
+                raise PermissionDenied("Not allowed to {} a {} after its editing deadline.".format(
+                    action, self.object._meta.model_name))
+
         if self.prior_status == self.target_status or self.target_status in (ApprovalStatus.PENDING, ApprovalStatus.WITHDRAWN):
             if not self.object.is_submitter(self.request.user):
                 raise PermissionDenied("You are not an authorized submitter for this request.")

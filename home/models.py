@@ -2,8 +2,7 @@ from __future__ import absolute_import, unicode_literals
 
 from os import urandom
 from base64 import urlsafe_b64encode
-from datetime import date
-from datetime import timedelta
+from datetime import date, time, datetime, timedelta, timezone
 from email.headerregistry import Address
 
 from django.contrib.auth.models import User
@@ -85,6 +84,15 @@ class StatsRoundFifteen(Page):
     content_panels = Page.content_panels + [
         FieldPanel('unused', classname="full"),
     ]
+
+# All dates in RoundPage below, if an exact time matters, actually represent
+# the given date at 4PM UTC.
+DEADLINE_TIME = time(hour=16, tzinfo=timezone.utc)
+
+def has_deadline_passed(deadline_date):
+    deadline = datetime.combine(deadline_date, DEADLINE_TIME)
+    now = datetime.now(deadline.tzinfo)
+    return deadline < now
 
 class RoundPage(Page):
     roundnumber = models.IntegerField()
@@ -465,6 +473,14 @@ class ApprovalStatus(models.Model):
 
     class Meta:
         abstract = True
+
+    def has_editing_deadline_passed(self):
+        """
+        Override in subclasses to return True if people ought not to be
+        editing or approving this request because a deadline has passed.
+        You probably want to use the has_deadline_passed helper above.
+        """
+        return False
 
     def is_approver(self, user):
         """
@@ -889,6 +905,9 @@ class Project(ApprovalStatus):
             'project_slug': self.slug,
             'action': action,
             })
+
+    def has_editing_deadline_passed(self):
+        return has_deadline_passed(self.project_round.participating_round.ProjectsDeadline())
 
     def is_approver(self, user):
         return self.project_round.community.is_coordinator(user)

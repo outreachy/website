@@ -1132,6 +1132,8 @@ class BaseProjectEditPage(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
                 project_round__participating_round=participating_round)
         if not project.is_submitter(self.request.user):
             return redirect(project.get_preview_url())
+        if project.approval_status != ApprovalStatus.APPROVED and project.has_editing_deadline_passed():
+            raise PermissionDenied("The project editing deadline has passed.")
         return project
 
     def get_success_url(self):
