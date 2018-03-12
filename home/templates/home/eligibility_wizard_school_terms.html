@@ -7,19 +7,30 @@ Are you eligible to apply to Outreachy?
 {% block content %}
 <h1>Outreachy Eligibility Checking</h1>
 <p>
-<strong>A school term lasts from the first possible day of classes for ALL students until the last possible exam date for ALL students.</strong>
-</p>
-<p>
 Please enter information for each school term that overlaps with the Outreachy internship period,
-from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
-Make sure to include all overlapping school terms, even if there is only a short period of time that overlaps with the Outreachy internship period.
+from <strong>{{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}</strong>.
 </p>
-<p>
-If you have no school terms that overlap with the Outreachy internship period, fill out the information for your current school term (or the last school term you took) and the next school term you will take.
-</p>
-<p>
-If less than three terms overlap with the Outreachy internship period, leave those terms blank.
-</p>
+<p>Common questions about school term dates:</p>
+<ul>
+	<li><strong>A school term lasts from the first possible day of classes for ALL students until the last possible exam date for ALL students.</strong></li>
+	<li>Outreachy cannot accept university letters of late enrollment.</li>
+	<li>The last school term day must be the last possible exam date, and it cannot be the day you think will be your last exam.</li>
+</ul>
+<p>Common questions about what school terms to include:</p>
+<ul>
+	<li>You are required to fill out information for at least one term.</li>
+	<li>Make sure to include all overlapping school terms, even if there is only a short period of time that overlaps with the Outreachy internship period.</li>
+	<li>If less than three terms overlap with the Outreachy internship period, leave those terms blank.</li>
+	<li>If you have no school terms that overlap with the Outreachy internship period, fill out the information for your current school term (or the last school term you took) and the next school term you will take.</li>
+</ul>
+<p>Common questions about "Number of credits for a typical student":</p>
+<ul>
+	<li>This question asks how many credits a typical student takes each term.</li>
+	<li>Sometimes a term is optional, such as a Summer term. In that case, the "Number of credits for a typical student" should be the number of credits required to be considered a full-time student during that term.</li>
+	<li>Some European universities use ETCS points instead of credits. A student must take so many ETCS per year to be considered a full-time student. For example, if your university requires 60 ETCS per year to be considered a full-time student, and you have two terms in a school year, then the "Number of credits for a typical student" per term would be 30.</li>
+	<li>Some universities in India publish a class schedule for students in each university degree. The class schedule outlines the classes a student is required to take, with some options for elective classes. The total number of required class credits (or credit hours) may vary each term. If your university has different credit requirements for each semester for students in your major, "Number of credits for a typical student" is the number of credits or credit hours that are listed on your syllabus or class schedule for that term.</li>
+	<li>Some universities do not allow students to skip classes or rearrange their schedule without an exception from the university. Outreachy cannot accept letters of exception from class from universities.</li>
+</ul>
 <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
 <hr>
 
