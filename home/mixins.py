@@ -118,10 +118,19 @@ class ApprovalStatusAction(LoginRequiredMixin, ComradeRequiredMixin, reversion.v
             raise PermissionDenied("Not allowed to {} a {} request.".format(
                 action, self.object.get_approval_status_display()))
 
-        # can't approve or edit after the deadline, but editing approved
-        # objects is okay
+        # When the deadline passed:
+        # - don't allow ApprovalStatus objects to move from:
+        #   - rejected -> approved
+        #   - pending -> approved
+        #   - which boils down to not allowing objects to go into the approval state)
+        # - don't allow new objects to be submitted
+        #
+        # After the deadline passed:
+        # - withdrawing is ok
+        # - rejecting is ok
+        # - editing an approved object (which is the same as submit) is ok
         if action == 'approve' or (action == 'submit' and self.prior_status != ApprovalStatus.APPROVED):
-            if self.object.has_editing_deadline_passed():
+            if self.object.has_submission_and_approval_deadline_passed():
                 raise PermissionDenied("Not allowed to {} a {} after its editing deadline.".format(
                     action, self.object._meta.model_name))
 

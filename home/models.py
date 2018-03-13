@@ -474,7 +474,7 @@ class ApprovalStatus(models.Model):
     class Meta:
         abstract = True
 
-    def has_editing_deadline_passed(self):
+    def has_submission_and_approval_deadline_passed(self):
         """
         Override in subclasses to return True if people ought not to be
         editing or approving this request because a deadline has passed.
@@ -906,7 +906,7 @@ class Project(ApprovalStatus):
             'action': action,
             })
 
-    def has_editing_deadline_passed(self):
+    def has_submission_and_approval_deadline_passed(self):
         return has_deadline_passed(self.project_round.participating_round.ProjectsDeadline())
 
     def is_approver(self, user):

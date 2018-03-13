@@ -1132,7 +1132,9 @@ class BaseProjectEditPage(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
                 project_round__participating_round=participating_round)
         if not project.is_submitter(self.request.user):
             return redirect(project.get_preview_url())
-        if project.approval_status != ApprovalStatus.APPROVED and project.has_editing_deadline_passed():
+        # Only allow adding new project communication channels or skills
+        # for approved projects after the deadline has passed.
+        if project.approval_status != ApprovalStatus.APPROVED and project.has_submission_and_approval_deadline_passed():
             raise PermissionDenied("The project editing deadline has passed.")
         return project
 
