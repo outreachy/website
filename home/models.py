@@ -90,6 +90,8 @@ class StatsRoundFifteen(Page):
 DEADLINE_TIME = time(hour=16, tzinfo=timezone.utc)
 
 def has_deadline_passed(deadline_date):
+    if not deadline_date:
+        return False
     deadline = datetime.combine(deadline_date, DEADLINE_TIME)
     now = datetime.now(deadline.tzinfo)
     return deadline < now
@@ -474,13 +476,13 @@ class ApprovalStatus(models.Model):
     class Meta:
         abstract = True
 
-    def has_submission_and_approval_deadline_passed(self):
+    def submission_and_approval_deadline(self):
         """
-        Override in subclasses to return True if people ought not to be
+        Override in subclasses to return a date if people ought not to be
         editing or approving this request because a deadline has passed.
-        You probably want to use the has_deadline_passed helper above.
+        Calling code should use the has_deadline_passed helper above.
         """
-        return False
+        return None
 
     def is_approver(self, user):
         """
@@ -906,8 +908,8 @@ class Project(ApprovalStatus):
             'action': action,
             })
 
-    def has_submission_and_approval_deadline_passed(self):
-        return has_deadline_passed(self.project_round.participating_round.ProjectsDeadline())
+    def submission_and_approval_deadline(self):
+        return self.project_round.participating_round.ProjectsDeadline()
 
     def is_approver(self, user):
         return self.project_round.community.is_coordinator(user)

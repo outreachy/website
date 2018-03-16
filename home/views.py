@@ -42,6 +42,7 @@ from .models import create_time_commitment_calendar
 from .models import DASHBOARD_MODELS
 from .models import EmploymentTimeCommitment
 from .models import FinalApplication
+from .models import has_deadline_passed
 from .models import MentorApproval
 from .models import NewCommunity
 from .models import NonCollegeSchoolTimeCommitment
@@ -1134,8 +1135,9 @@ class BaseProjectEditPage(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
             return redirect(project.get_preview_url())
         # Only allow adding new project communication channels or skills
         # for approved projects after the deadline has passed.
-        if project.approval_status != ApprovalStatus.APPROVED and project.has_submission_and_approval_deadline_passed():
-            raise PermissionDenied("The project editing deadline has passed.")
+        deadline = project.submission_and_approval_deadline()
+        if project.approval_status != ApprovalStatus.APPROVED and has_deadline_passed(deadline):
+            raise PermissionDenied("The project submission and approval deadline ({date}) has passed. Please sign up for the announcement mailing list for a call for mentors for the next Outreachy internship round. https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce".format(date=deadline))
         return project
 
     def get_success_url(self):

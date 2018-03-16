@@ -12,6 +12,7 @@ import reversion
 
 from .models import ApprovalStatus
 from .models import Comrade
+from .models import has_deadline_passed
 
 # If the logged-in user doesn't have a Comrade object, redirect them to
 # create one and then come back to the current page.
@@ -130,9 +131,10 @@ class ApprovalStatusAction(LoginRequiredMixin, ComradeRequiredMixin, reversion.v
         # - rejecting is ok
         # - editing an approved object (which is the same as submit) is ok
         if action == 'approve' or (action == 'submit' and self.prior_status != ApprovalStatus.APPROVED):
-            if self.object.has_submission_and_approval_deadline_passed():
-                raise PermissionDenied("Not allowed to {} a {} after its editing deadline.".format(
-                    action, self.object._meta.model_name))
+            deadline = self.object.submission_and_approval_deadline()
+            if has_deadline_passed(deadline):
+                raise PermissionDenied("Not allowed to {} a {} after its submission and approval deadline ({}).".format(
+                    action, self.object._meta.model_name, deadline))
 
         if self.prior_status == self.target_status or self.target_status in (ApprovalStatus.PENDING, ApprovalStatus.WITHDRAWN):
             if not self.object.is_submitter(self.request.user):
