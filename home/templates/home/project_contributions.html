@@ -51,7 +51,43 @@ Once you've recorded at least one contribution, you can start your application f
 		<p><a class='btn btn-success' href="{% url 'application-action' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' %}">Apply for This Project</a></p>
 	{% else %}
 		<h2>{{ community.name }} Internship Project Application</h2>
+	{% endif %}
 
+	<p>Your final application will ask you to fill out a timeline for the
+	internship project. If you have trouble with this, or a mentor tells
+	you they don't want you to fill out the timeline, you should simply
+	note any full-time commitments you'll have during the internship period
+	that will impact your work.</p>
+
+	<p>When filling out the timeline, applicants should look at the
+	internship tasks listed on the project page, and take into account
+	their full-time commitments to determine what they'll be working on
+	during what part of the internship period. This project's internship tasks are
+	listed here (and if they're not listed, you should contact your mentor to
+	get more information on the internship tasks):</p>
+
+	<p><a href="{{ project.get_landing_url }}">{{ request.scheme }}://{{ request.get_host }}{{ project.get_landing_url }}</a></p>
+
+	<p>Most projects will require a few weeks of ramp-up, research, and
+	integrating into the community. Try to break down each big internship
+	task into several smaller tasks, until you have an idea of what you'll
+	be working for each week of the 12 week internship. All projects will
+	have some tasks where the details will be vague until the time you
+	start the task. It is fine to provide higher-level descriptions of what
+	you'll be working on.</p>
+
+	<p>These are our suggestions for how to complete the timeline. What
+	Outreachy organizers want to see is that you have a solid sense of the
+	direction the project will take. What Outreachy mentors need to see is
+	when your work will be impacted by any full-time commitments, such as
+	exams or vacation. You should work with your mentor to understand when
+	their vacation or conferences occur, so you can plan for periods where
+	they will be less responsive and you'll need to rely on the community
+	to answer your questions. Each of you will have other time commitments,
+	and it's important to communicate those to each other.</p>
+
+	{% if final_application %}
+		<h3>Editing Your Final Application</h3>
 		<p>You'll be able to edit your application until the application deadline has passed.
 		The "Save" button makes the latest version of your application visible to Outreachy mentors and coordinators.
 		Saving your application effectively submits it. There is no specific "Submit" option.
