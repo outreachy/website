@@ -416,7 +416,7 @@ class Comrade(models.Model):
                     application_round = current_round)
         except ApplicantApproval.DoesNotExist:
             return None
-        contributions = Contribution.objects.filter(applicant=applicant)
+        contributions = Contribution.objects.filter(applicant=applicant).order_by('-project__deadline').order_by('project__community__name').order_by('project__short_title')
         projects = []
         for c in contributions:
             if not c.project in projects:
