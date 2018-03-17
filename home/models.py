@@ -130,6 +130,16 @@ class RoundPage(Page):
         FieldPanel('finalfeedback'),
         FieldPanel('sponsordetails', classname="full"),
     ]
+
+    def regular_deadline_reminder(self):
+        return(self.appsclose - timedelta(days=7))
+
+    def regular_deadline_second_reminder(self):
+        return(self.appsclose - timedelta(days=1))
+
+    def late_deadline_reminder(self):
+        return(self.appslate - timedelta(days=1))
+
     def ProjectsDeadline(self):
         return(self.appsclose - timedelta(days=14))
 
@@ -327,6 +337,19 @@ class Comrade(models.Model):
                 pronouns=self.get_pronouns_display(),
                 )
 
+    def get_local_application_deadline(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        utc = datetime.combine(current_round.appsclose, DEADLINE_TIME)
+        if not self.timezone:
+            return utc
+        return utc.astimezone(self.timezone)
+
+    def get_local_late_application_deadline(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        utc = datetime.combine(current_round.appslate, DEADLINE_TIME)
+        if not self.timezone:
+            return utc
+        return utc.astimezone(self.timezone)
 
     def has_application(self, **filters):
         # Does this Comrade have an ApplicantApproval for this round?
@@ -422,6 +445,43 @@ class Comrade(models.Model):
             if not c.project in projects:
                 projects.append(c.project)
         return projects
+
+    def project_applied_to_for_sort(self, project):
+        try:
+            finalapplication = FinalApplication.objects.get(
+                    applicant__applicant=self,
+                    project=project)
+        except FinalApplication.DoesNotExist:
+            return 0
+        return 1
+
+    def get_projects_with_upcoming_and_passed_deadlines(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        all_projects = self.get_projects_contributed_to()
+
+        upcoming_deadlines = []
+        passed_deadlines = []
+        ontime_deadline = current_round.appsclose
+        late_deadline = current_round.appslate
+        for project in all_projects:
+            if not has_deadline_passed(ontime_deadline) and (project.deadline == Project.ONTIME or project.deadline == Project.CLOSED):
+                upcoming_deadlines.append(project)
+            elif not has_deadline_passed(late_deadline) and project.deadline == Project.LATE:
+                upcoming_deadlines.append(project)
+            else:
+                passed_deadlines.append(project)
+        upcoming_deadlines.sort(key=lambda x: x.deadline, reverse=True)
+        passed_deadlines.sort(key=lambda x: x.deadline, reverse=True)
+        passed_deadlines.sort(key=lambda x: self.project_applied_to_for_sort(x), reverse=True)
+        return upcoming_deadlines, passed_deadlines
+
+    def get_projects_with_upcoming_deadlines(self):
+        upcoming, passed = self.get_projects_with_upcoming_and_passed_deadlines()
+        return upcoming
+
+    def get_projects_with_passed_deadlines(self):
+        upcoming, passed = self.get_projects_with_upcoming_and_passed_deadlines()
+        return passed
 
     def get_projects_applied_to(self):
         current_round = RoundPage.objects.latest('internstarts')
@@ -907,6 +967,9 @@ class Project(ApprovalStatus):
             'project_slug': self.slug,
             'action': action,
             })
+
+    def has_submission_and_approval_deadline_passed(self):
+        return has_deadline_passed(self.project_round.participating_round.ProjectsDeadline())
 
     def submission_and_approval_deadline(self):
         return self.project_round.participating_round.ProjectsDeadline()

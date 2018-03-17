@@ -69,6 +69,18 @@ def applicant_deadline_reminder(late_projects, promoted_projects, closed_project
         request=request,
         recipient_list=['announce@lists.outreachy.org'])
 
+def contributor_deadline_reminder(contributor, current_round, request):
+    upcoming_deadlines, passed_deadlines = contributor.get_projects_with_upcoming_and_passed_deadlines()
+    send_template_mail('home/email/contributors-deadline-reminder.txt', {
+        'current_round': current_round,
+        'upcoming_deadlines': upcoming_deadlines,
+        'passed_deadlines': passed_deadlines,
+        'timezone': contributor.timezone,
+        'comrade': contributor,
+        },
+        request=request,
+        recipient_list=[contributor.email_address()])
+
 @override_settings(ALLOWED_HOSTS=['www.outreachy.org'], EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend')
 def message_samples():
     """

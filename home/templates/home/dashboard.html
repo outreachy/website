@@ -46,6 +46,15 @@ you can send an email to the announcements mailing list to remind applicants of 
 
 <p><a href="{% url 'email-deadline-reminder' %}"><input class="btn btn-success" value="Applicant Deadline Email" /></a>
 
+<p>You'll need to send reminder email to applicants who have recorded a contribution. The emails will only remind applicants who have made a contribution to a project whose deadline hasn't passed yet:
+<ul>
+	<li>A week before the regular deadline. Send the email on {{ current_round.regular_deadline_reminder }} at 4pm UTC.</li>
+	<li>A day before the regular deadline (which is a week and one day before the late deadline). Send the email on {{ current_round.regular_deadline_second_reminder }} at 4pm UTC.</li>
+	<li>A day before the late application deadline. Send the email on {{ current_round.late_deadline_reminder }} at 4pm UTC.</li>
+</ul>
+
+<p><a href="{% url 'email-contributor-deadline-reminder' %}"><input class="btn btn-success" value="Contributor Deadline Email" /></a>
+
 <h2>Community progress</h2>
 {% if pending_participations or approved_participations %}
 	<table class="table table-striped table-bordered">

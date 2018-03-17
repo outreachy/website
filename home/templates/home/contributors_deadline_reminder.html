@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}
+Send contributor deadline reminder emails
+{% endblock %}
+
+{% block content %}
+<p>You're about to send an email to all Outreachy applicants who have recorded a contribution about the upcoming project application deadlines.</p>
+
+<p>The email will be sent to {{ contributors|length }} applicants.</p>
+
+<p>Here how the email will look to each applicant:</p>
+
+{% for c in contributors %}
+{% with applications_close_local=c.applications_close_local applications_late_local=c.applications_late_local upcoming_deadlines=c.get_projects_with_upcoming_deadlines passed_deadlines=c.get_projects_with_passed_deadlines timezone=c.timezone comrade=c %}
+<div class="card">
+<div class="card-body">
+<pre>
+To: {{ comrade.email_address }}
+Subject: {% include 'home/email/contributors-deadline-reminder.txt' %}
+</pre>
+</div>
+</div>
+{% endwith %}
+{% endfor %}
+
+<p><form action="" method="post">
+    {% csrf_token %}
+    <input class="btn btn-success" type="submit" value="Confirm" />
+</form></p>
+{% endblock %}

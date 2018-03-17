@@ -1246,6 +1246,50 @@ class ApplicantsDeadlinesReminder(LoginRequiredMixin, ComradeRequiredMixin, Temp
         email.applicant_deadline_reminder(late_projects, promoted_projects, closed_projects, current_round, self.request)
         return redirect(reverse('dashboard'))
 
+def get_contributors_with_upcoming_deadlines():
+    current_round = RoundPage.objects.latest('internstarts')
+    ontime_deadline = current_round.appsclose
+    late_deadline = current_round.appslate
+    if not has_deadline_passed(ontime_deadline):
+        return Comrade.objects.filter(
+                applicantapproval__application_round=current_round,
+                applicantapproval__approval_status=ApprovalStatus.APPROVED,
+                applicantapproval__contribution__isnull=False).distinct()
+    if not has_deadline_passed(late_deadline):
+        return Comrade.objects.filter(
+                applicantapproval__application_round=current_round,
+                applicantapproval__approval_status=ApprovalStatus.APPROVED,
+                applicantapproval__contribution__project__deadline=Project.LATE).distinct()
+    return None
+
+class ContributorsDeadlinesReminder(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
+    template_name = 'home/contributors_deadline_reminder.html'
+
+    def get_context_data(self, **kwargs):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are authorized to send reminder emails.")
+        current_round = RoundPage.objects.latest('internstarts')
+        contributors = get_contributors_with_upcoming_deadlines()
+
+        context = super(ContributorsDeadlinesReminder, self).get_context_data(**kwargs)
+        context.update({
+            'current_round': current_round,
+            'contributors': contributors,
+            })
+        return context
+
+    def post(self, request, *args, **kwargs):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+        current_round = RoundPage.objects.latest('internstarts')
+        contributors = get_contributors_with_upcoming_deadlines()
+
+        for c in contributors:
+            email.contributor_deadline_reminder(
+                    c,
+                    current_round,
+                    self.request)
+        return redirect(reverse('dashboard'))
 
 class ProjectContributions(LoginRequiredMixin, ComradeRequiredMixin, EligibleApplicantRequiredMixin, TemplateView):
     template_name = 'home/project_contributions.html'
