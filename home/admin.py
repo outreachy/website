@@ -93,6 +93,8 @@ class ProjectAdmin(reversion.admin.VersionAdmin):
     list_filter = (
             'approval_status',
             'project_round__participating_round',
+            'deadline',
+            'needs_more_applicants',
             )
     search_fields = (
             'short_title',
