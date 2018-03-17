@@ -60,25 +60,38 @@ Past community participation in Outreachy
 
 {% else %}
 {% if participation_info.approval_status == participation_info.PENDING or participation_info.approval_status == participation_info.APPROVED %}
-	<h2>Submit an Outreachy Intern Project Proposal</h2>
+	{% if not current_round.has_project_submission_and_approval_deadline_passed %}
+		<h2>Submit an Outreachy Intern Project Proposal</h2>
 
-	<p>{{ community.name }} welcomes experienced community contributors to help out as mentors. Each mentor will need to submit their an intern project proposal. The project proposal will then be reviewed and approved by the FOSS community coordinator{{ approved_coordinator_list|length|pluralize }}. Additional co-mentors for the intern project will be able to sign up for the project after it is submitted for review.</p>
-	<p>All proposed intern projects need to be released under licenses that are either an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> that is also identified by the FSF as a <a href="https://www.gnu.org/licenses/license-list.html">free software license</a>, OR a <a href="https://creativecommons.org/share-your-work/public-domain/freeworks/">Creative Commons license approved for free cultural works</a>.
-	</p>
+		<p>{{ community.name }} welcomes experienced community contributors to help out as mentors. Each mentor will need to submit their an intern project proposal. The project proposal will then be reviewed and approved by the FOSS community coordinator{{ approved_coordinator_list|length|pluralize }}. Additional co-mentors for the intern project will be able to sign up for the project after it is submitted for review.</p>
+		<p>All proposed intern projects need to be released under licenses that are either an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> that is also identified by the FSF as a <a href="https://www.gnu.org/licenses/license-list.html">free software license</a>, OR a <a href="https://creativecommons.org/share-your-work/public-domain/freeworks/">Creative Commons license approved for free cultural works</a>.
+		</p>
 
-	<p>Please read the additional <a href="/mentor/mentor-faq/#define-a-project">Outreachy project requirements</a> before submitting an intern project proposal.</p>
+		<p>Please read the additional <a href="/mentor/mentor-faq/#define-a-project">Outreachy project requirements</a> before submitting an intern project proposal.</p>
 
-	<p><strong>Outreachy applicants should not submit project proposals through this form.</strong> You need to look over the <a href="{% url 'project-selection' %}">list of projects</a> and pick a project from that list.</p>
+		<p><strong>Outreachy applicants should not submit project proposals through this form.</strong> You need to look over the <a href="{% url 'project-selection' %}">list of projects</a> and pick a project from that list.</p>
 
-	<p><a class='btn btn-success' href="{% url 'project-action' action='submit' community_slug=community.slug %}">Submit a Project Proposal</a></p>
+		<p><a class='btn btn-success' href="{% url 'project-action' action='submit' community_slug=community.slug %}">Submit a Project Proposal</a></p>
+	{% else %}
+		<h2>Submitted Outreachy Intern Project Proposals</h2>
+		<p>Unfortunately, the deadline to submit new Outreachy internship projects has closed.
+		Mentors who missed the deadline are welcome to sign up for the
+		<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">Outreachy announcement list</a>
+		to receive a notification for next round.</p>
+	{% endif %}
 
 	{% if approved_projects %}
 		<h2>Approved Intern Project Proposals</h2>
-		<p>These intern project proposals have been approved to be listed on the community landing page. Mentors are encouraged to start promoting their project proposals as soon as the Outreachy round opens on {{ current_round.appsopen }}.</p>
+		<p>These intern project proposals have been approved to be listed on the community landing page.
+		{% if not current_round.has_project_submission_and_approval_deadline_passed %}
+			Mentors are encouraged to start promoting their project proposals as soon as the Outreachy round opens on {{ current_round.appsopen }}.</p>
+		{% else %}
+			Mentors are encouraged to make sure applicants record their contributions and submit a final application before the project application deadline.</p>
+		{% endif %}
 		<ul>
 		{% for project in approved_projects %}
 			<li>
-				{% if project.deadline == project.CLOSED %}(Closed to new applicants){% endif %}
+				{% if project.deadline == project.CLOSED %}(Closed to new applicants. Deadline is {{ current_round.appsclose }}){% endif %}
 				{% if project.deadline == project.LATE %}(Extended deadline to {{ current_round.appslate }}){% endif %}
 				{% if project.deadline == project.ONTIME %}(Application deadline is {{ current_round.appsclose }}){% endif %}
 				<a href="{{ project.get_preview_url }}">{{ project.short_title }}</a>
@@ -87,7 +100,7 @@ Past community participation in Outreachy
 		</ul>
 	{% endif %}
 
-	{% if coordinator and coordinator.approval_status == coordinator.APPROVED %}
+	{% if coordinator and coordinator.approval_status == coordinator.APPROVED and not current_round.has_project_submission_and_approval_deadline_passed %}
 	<h2>Need more projects?</h2>
 	<p>Send this page URL out to your community communication channels
 	and ask contributors to submit proposals. Mentors must submit their own
@@ -160,7 +173,11 @@ Past community participation in Outreachy
 		<p>An Outreachy organizer has rejected this community to participate in this round of Outreachy.</p>
 		{% endif %}
 
-		<p>Outreachy organizers should read over the information coordinators provided about participating in this round (including intern funding information) and information about new communities. Then decide whether the community should participate in this round and either accept or reject the community.</p>
+		{% if current_round.has_project_submission_and_approval_deadline_passed %}
+			<p>The deadline to approve new communities and mentored projects has passed. Outreachy organizers cannot approve new communities through the web interface. If absolutely necessary, Sage can approve the communities from the Django admin interface.</p>
+		{% else %}
+			<p>Outreachy organizers should read over the information coordinators provided about participating in this round (including intern funding information) and information about new communities. Then decide whether the community should participate in this round and either accept or reject the community.</p>
+		{% endif %}
 		{% if community.newcommunity %}
 			{% if not community.newcommunity.approved_license %}
 			<div class="card border-warning mb-3">
@@ -218,11 +235,11 @@ Past community participation in Outreachy
 			{% include "home/snippet/community_landing_snippet.html" %}
 			</div>
 		</div>
-		{% if participation_info.approval_status != participation_info.APPROVED %}
-		<a href="{{ participation_info.get_approve_url }}" class="btn btn-success">Approve Community</a>
+		{% if participation_info.approval_status != participation_info.APPROVED and current_round.has_project_submission_and_approval_deadline_passed %}
+			<a href="{{ participation_info.get_approve_url }}" class="btn btn-success">Approve Community</a>
 		{% endif %}
 		{% if participation_info.approval_status != participation_info.REJECTED %}
-		<a href="{{ participation_info.get_reject_url }}" class="btn btn-warning">Reject Community</a>
+			<a href="{{ participation_info.get_reject_url }}" class="btn btn-warning">Reject Community</a>
 		{% endif %}
 	{% endif %}
 {% endif %}

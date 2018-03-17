@@ -143,6 +143,9 @@ class RoundPage(Page):
     def ProjectsDeadline(self):
         return(self.appsclose - timedelta(days=14))
 
+    def has_project_submission_and_approval_deadline_passed(self):
+        return has_deadline_passed(self.ProjectsDeadline())
+
     def LateApplicationsDeadline(self):
         return(self.appsclose + timedelta(days=7))
     

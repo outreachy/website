@@ -21,94 +21,103 @@
 
 {% elif project.approval_status == project.PENDING %}
 	<h1>Pending {{ community.name }} Project</h1>
-	<p>This project is waiting to be approved by the {{ community.name }} coordinator(s) for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
+	{% if not current_round.has_project_submission_and_approval_deadline_passed %}
+		<p>This project is waiting to be approved by the {{ community.name }} coordinator(s) for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
+	{% else %}
+		<p>Unfortunately, the deadline to approve new Outreachy intern proposals has passed, and the coordinator did not approve this project before the deadline.</p>
+	{% endif %}
 {% else %}
 	<h1>Rejected {{ community.name }} Project</h1>
 	<p>The {{ community.name }} coordinator(s) or Outreachy organizers do not think this project is suitable for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
 {% endif %}
 
-<h3>Project Mentors</h3>
-{% if mentor_request %}
-	<p>Your request to mentor this project is:
-	<strong>{{ mentor_request.get_approval_status_display }}</strong></p>
+{% if not current_round.has_project_submission_and_approval_deadline_passed %}
+	<h3>Project Mentors</h3>
+	{% if mentor_request %}
+		<p>Your request to mentor this project is:
+		<strong>{{ mentor_request.get_approval_status_display }}</strong></p>
 
-	{% if mentor_request.approval_status == mentor_request.PENDING or mentor_request.approval_status == mentor_request.APPROVED %}
-	<p><a href="{{ mentor_request.get_withdraw_url }}" class="btn btn-warning">Withdraw From Mentoring</a></p>
-	{% elif mentor_request.approval_status == mentor_request.WITHDRAWN %}
-	<p><a href="{{ mentor_request.get_submit_url }}" class="btn btn-success">Mentor This Project</a></p>
+		{% if mentor_request.approval_status == mentor_request.PENDING or mentor_request.approval_status == mentor_request.APPROVED %}
+		<p><a href="{{ mentor_request.get_withdraw_url }}" class="btn btn-warning">Withdraw From Mentoring</a></p>
+		{% elif mentor_request.approval_status == mentor_request.WITHDRAWN %}
+		<p><a href="{{ mentor_request.get_submit_url }}" class="btn btn-success">Mentor This Project</a></p>
+		{% endif %}
+		<p>Each co-mentor for your project will need to sign up, so that they can view applicant's recorded contributions and application. You can send them this link to sign up as a co-mentor: <a href="{% url 'mentorapproval-action' community_slug=community.slug project_slug=project.slug action='submit' %}">{{ request.scheme }}://{{ request.get_host }}{% url 'mentorapproval-action' community_slug=community.slug project_slug=project.slug action='submit' %}</a>
+
+	{% else %}
+		<a href="{% url 'mentorapproval-action' action='submit' community_slug=community.slug project_slug=project.slug %}" class="btn btn-success">Mentor This Project</a>
 	{% endif %}
-	<p>Each co-mentor for your project will need to sign up, so that they can view applicant's recorded contributions and application. You can send them this link to sign up as a co-mentor: <a href="{% url 'mentorapproval-action' community_slug=community.slug project_slug=project.slug action='submit' %}">{{ request.scheme }}://{{ request.get_host }}{% url 'mentorapproval-action' community_slug=community.slug project_slug=project.slug action='submit' %}</a>
-
-{% else %}
-	<a href="{% url 'mentorapproval-action' action='submit' community_slug=community.slug project_slug=project.slug %}" class="btn btn-success">Mentor This Project</a>
 {% endif %}
-
 
 {% if coordinator %}
 	<h2>Coordinator Actions</h2>
 	<h3>Project Approval</h3>
-	{% if not project.approved_license or not project.no_proprietary_software or project.longevity == project.THREE_MONTHS or project.longevity == project.SIX_MONTHS or project.community_size == project.SMOL %}
-		<p>Coordinators - please double check with the Outreachy organizers before approving this project!</p>
+	{% if current_round.has_project_submission_and_approval_deadline_passed %}
+		<p>The deadline to approve new projects has passed. You can reject the project to let the mentor know their project wasn't accepted, or (if absolutely necessary) contact the Outreachy organizers to have them manually approve the project.</p>
 	{% else %}
-		<p>Coordinators - this project meets Outreachy organizer standards for project community size, project license, and the length of time the project has been accepting contributions from external contributors. You may approve this project if it meets <a href="/mentor/mentor-faq/#define-a-project">other Outreachy project standards</a> and your community's long term goals.</a>
-	{% endif %}
-	{% if not project.approved_license %}
-	<div class="card border-warning mb-3">
-	    <div class="card-header text-white bg-warning">Warning!</div>
-	    <div class="card-body">
-		<h5 class="card-title">This internship project will be released under a license that is not
-		    an OSI-approved and FSF-approved free software license OR Creative Commons license.</h5>
-		<p class="card-text">The Outreachy parent organization, Software Freedom Conservancy, requires that all Outreachy internships further the goals of free and open source communities. Projects that use proprietary licenses are not allowed.</p>
-		{% if project.unapproved_license_description %}
-			<p>The project mentor provided this description of their non-free licenses:</p>
-			{{ project.unapproved_license_description|safe }}
+		{% if not project.approved_license or not project.no_proprietary_software or project.longevity == project.THREE_MONTHS or project.longevity == project.SIX_MONTHS or project.community_size == project.SMOL %}
+			<p>Coordinators - please double check with the Outreachy organizers before approving this project!</p>
+		{% else %}
+			<p>Coordinators - this project meets Outreachy organizer standards for project community size, project license, and the length of time the project has been accepting contributions from external contributors. You may approve this project if it meets <a href="/mentor/mentor-faq/#define-a-project">other Outreachy project standards</a> and your community's long term goals.</a>
 		{% endif %}
-	    </div>
-	</div>
-	{% endif %}
-	{% if not project.no_proprietary_software %}
-	<div class="card border-warning mb-3">
-	    <div class="card-header text-white bg-warning">Warning!</div>
-	    <div class="card-body">
-		<h5 class="card-title">This project furthers the interests of proprietary software, rather than free software.</h5>
-		<p class="card-text">The Outreachy parent organization, Software Freedom Conservancy, requires that all Outreachy internships further the goals of free and open source communities. Projects that further the interests of proprietary software are not allowed.</p>
-		{% if project.proprietary_software_description %}
-			<p>The project mentor provided this description of the proprietary software related to this internship project:</p>
-			{{ project.proprietary_software_description|safe }}
+		{% if not project.approved_license %}
+		<div class="card border-warning mb-3">
+		    <div class="card-header text-white bg-warning">Warning!</div>
+		    <div class="card-body">
+			<h5 class="card-title">This internship project will be released under a license that is not
+			    an OSI-approved and FSF-approved free software license OR Creative Commons license.</h5>
+			<p class="card-text">The Outreachy parent organization, Software Freedom Conservancy, requires that all Outreachy internships further the goals of free and open source communities. Projects that use proprietary licenses are not allowed.</p>
+			{% if project.unapproved_license_description %}
+				<p>The project mentor provided this description of their non-free licenses:</p>
+				{{ project.unapproved_license_description|safe }}
+			{% endif %}
+		    </div>
+		</div>
 		{% endif %}
-	    </div>
-	</div>
-	{% endif %}
+		{% if not project.no_proprietary_software %}
+		<div class="card border-warning mb-3">
+		    <div class="card-header text-white bg-warning">Warning!</div>
+		    <div class="card-body">
+			<h5 class="card-title">This project furthers the interests of proprietary software, rather than free software.</h5>
+			<p class="card-text">The Outreachy parent organization, Software Freedom Conservancy, requires that all Outreachy internships further the goals of free and open source communities. Projects that further the interests of proprietary software are not allowed.</p>
+			{% if project.proprietary_software_description %}
+				<p>The project mentor provided this description of the proprietary software related to this internship project:</p>
+				{{ project.proprietary_software_description|safe }}
+			{% endif %}
+		    </div>
+		</div>
+		{% endif %}
 
-	{% if project.longevity == project.THREE_MONTHS or project.longevity == project.SIX_MONTHS %}
-	<div class="card border-warning mb-3">
-	    <div class="card-header text-white bg-warning">Warning!</div>
-	    <div class="card-body">
-		<h5 class="card-title">This FOSS project has been accepting contributions for less than six months.</h5>
-		<p class="card-text">The mentor indicated the FOSS project has been accepting public contributions for {{ project.get_longevity_display|lower }}. Outreachy projects should be well-established projects. While GSoC allows students to create their own open source projects, we find Outreachy interns benefit the most from having a well-established community of project contributors to work with.</p>
-	    </div>
-	</div>
-	{% endif %}
+		{% if project.longevity == project.THREE_MONTHS or project.longevity == project.SIX_MONTHS %}
+		<div class="card border-warning mb-3">
+		    <div class="card-header text-white bg-warning">Warning!</div>
+		    <div class="card-body">
+			<h5 class="card-title">This FOSS project has been accepting contributions for less than six months.</h5>
+			<p class="card-text">The mentor indicated the FOSS project has been accepting public contributions for {{ project.get_longevity_display|lower }}. Outreachy projects should be well-established projects. While GSoC allows students to create their own open source projects, we find Outreachy interns benefit the most from having a well-established community of project contributors to work with.</p>
+		    </div>
+		</div>
+		{% endif %}
 
-	{% if project.community_size == project.SMOL %}
-	<div class="card border-warning mb-3">
-	    <div class="card-header text-white bg-warning">Warning!</div>
-	    <div class="card-body">
-		<h5 class="card-title">This project has two or fewer regular contributors.</h5>
-		<p class="card-text">Outreachy projects should be well-established projects. While GSoC allows students to create their own open source projects, we find Outreachy interns benefit the most from having a well-established community of project contributors to work with.</p>
-	    </div>
-	</div>
+		{% if project.community_size == project.SMOL %}
+		<div class="card border-warning mb-3">
+		    <div class="card-header text-white bg-warning">Warning!</div>
+		    <div class="card-body">
+			<h5 class="card-title">This project has two or fewer regular contributors.</h5>
+			<p class="card-text">Outreachy projects should be well-established projects. While GSoC allows students to create their own open source projects, we find Outreachy interns benefit the most from having a well-established community of project contributors to work with.</p>
+		    </div>
+		</div>
+		{% endif %}
 	{% endif %}
 
 	{% if project.approval_status != project.WITHDRAWN %}
-	<p>
-	{% if project.approval_status != project.APPROVED %}
-	<a href="{{ project.get_approve_url }}" class="btn btn-success">Approve Project</a>
-	{% endif %}
-	{% if project.approval_status != project.REJECTED %}
-	<a href="{{ project.get_reject_url }}" class="btn btn-warning">Reject Project</a>
-	{% endif %}
-	</p>
+		<p>
+		{% if project.approval_status != project.APPROVED and not current_round.has_project_submission_and_approval_deadline_passed %}
+			<a href="{{ project.get_approve_url }}" class="btn btn-success">Approve Project</a>
+		{% endif %}
+		{% if project.approval_status != project.REJECTED %}
+			<a href="{{ project.get_reject_url }}" class="btn btn-warning">Reject Project</a>
+		{% endif %}
+		</p>
 	{% endif %}
 
 	{% if unapproved_mentors %}
@@ -138,53 +147,60 @@
 
 {% endif %}
 
-<h2>Preview of Project Proposal</h2>
+{% if current_round.has_project_submission_and_approval_deadline_passed and project.approval_status != project.APPROVED %}
+	<h2>Unapproved Project Proposal</h2>
+	<p>The deadline to approve Outreachy project proposals has passed. You cannot edit an unapproved project after the project proposal deadline.</p>
+{% else %}
+	<h2>Preview of Project Proposal</h2>
 
-{% if project|is_submitter:request.user %}
-	<p>Does the project information look correct? If not, you can edit it.</p>
-	<p>If you have too many applicants, you can close the project to new applicants. If you have too few applicants, you can extend the project application deadline, and/or ask for the project to be advertised as needing more applicants.</p>
-	<p><a class="btn btn-primary" href="{{ project.get_submit_url }}">Edit Project Info</a></p>
-{% endif %}
+	{% if project|is_submitter:request.user %}
+		<p>Does the project information look correct? If not, you can edit it.</p>
+		<p>If you have too many applicants, you can close the project to new applicants. If you have too few applicants, you can extend the project application deadline, and/or ask for the project to be advertised as needing more applicants.</p>
+		<p><a class="btn btn-primary" href="{{ project.get_submit_url }}">Edit Project Info</a></p>
+	{% endif %}
 
-{% if mentor_request|is_submitter:request.user %}
-	<p>Does your mentor information (e.g. your mentorship style and mentor experience) look correct? If not, you can edit it.</p>
-	<p><a class="btn btn-primary" href="{{ mentor_request.get_submit_url }}">Edit Mentor Info</a></p>
+	{% if mentor_request|is_submitter:request.user %}
+		<p>Does your mentor information (e.g. your mentorship style and mentor experience) look correct? If not, you can edit it.</p>
+		<p><a class="btn btn-primary" href="{{ mentor_request.get_submit_url }}">Edit Mentor Info</a></p>
 
-	<p>Does your person information (e.g. your public name, pronouns, timezone, location, forum username, GitHub URL, GitLab URL, Blog URL, or Twitter URL) look correct? If not, you can edit it.</p>
-	<p><a class="btn btn-primary" href="{% url 'account' %}">Edit Personal Info</a></p>
+		<p>Does your person information (e.g. your public name, pronouns, timezone, location, forum username, GitHub URL, GitLab URL, Blog URL, or Twitter URL) look correct? If not, you can edit it.</p>
+		<p><a class="btn btn-primary" href="{% url 'account' %}">Edit Personal Info</a></p>
+	{% endif %}
 {% endif %}
 
 {% if user.is_staff or coordinator or mentor_request and mentor_request.approval_status == mentor_request.APPROVED %}
-	<div class="card">
-		<div class="card-header">Preview - Project Proposal Information Shown to Applicants</div>
-		<div class="card-body">
-			<p>This information will be displayed to the applicants on the project landing page.</p>
-			{% include "home/snippet/project_landing_snippet.html" %}
+	{% if project.approval_status == project.APPROVED or project.approval_status == project.PENDING and not current_round.has_project_submission_and_approval_deadline_passed %}
+		<div class="card">
+			<div class="card-header">Preview - Project Proposal Information Shown to Applicants</div>
+			<div class="card-body">
+				<p>This information will be displayed to the applicants on the project landing page.</p>
+				{% include "home/snippet/project_landing_snippet.html" %}
+			</div>
 		</div>
-	</div>
 
-	<br>
-	<h3>Project Information for Coordinators</h3>
-	<p>This project information is used by coordinators to determine if the project is appropriate for Outreachy. The information will not be displayed to applicants.</p>
-	<ul>
-		<li>Project has been accepting external contributions for: {{ project.get_longevity_display|lower }}</li>
-		<li>Number of people contributing to this project regularly: {{ project.get_community_size_display|lower }}</li>
-		{% if project.intern_benefits %}
-			<li>Interns will learn about: {{ project.intern_benefits|safe }}</li>
-		{% else %}
-			<li>Mentor did not provide information about what the interns will learn from this project.</li>
-		{% endif %}
-		{% if project.community_benefits %}
-			<li>The FOSS community will benefit from this project because: {{ project.community_benefits|safe }}</li>
-		{% else %}
-			<li>Mentor did not provide information about how the FOSS community will benefit from this project.</li>
-		{% endif %}
-		{% if not project.approved_license %}
-			<li>Licenses: This project uses a license that is NOT an OSI-approved license or Creative Commons license.</li>
-		{% else %}
-			<li>Licenses: OSI-approved license or Creative Commons license.</li>
-		{% endif %}
-	</ul>
+		<br>
+		<h3>Project Information for Coordinators</h3>
+		<p>This project information is used by coordinators to determine if the project is appropriate for Outreachy. The information will not be displayed to applicants.</p>
+		<ul>
+			<li>Project has been accepting external contributions for: {{ project.get_longevity_display|lower }}</li>
+			<li>Number of people contributing to this project regularly: {{ project.get_community_size_display|lower }}</li>
+			{% if project.intern_benefits %}
+				<li>Interns will learn about: {{ project.intern_benefits|safe }}</li>
+			{% else %}
+				<li>Mentor did not provide information about what the interns will learn from this project.</li>
+			{% endif %}
+			{% if project.community_benefits %}
+				<li>The FOSS community will benefit from this project because: {{ project.community_benefits|safe }}</li>
+			{% else %}
+				<li>Mentor did not provide information about how the FOSS community will benefit from this project.</li>
+			{% endif %}
+			{% if not project.approved_license %}
+				<li>Licenses: This project uses a license that is NOT an OSI-approved license or Creative Commons license.</li>
+			{% else %}
+				<li>Licenses: OSI-approved license or Creative Commons license.</li>
+			{% endif %}
+		</ul>
+	{% endif %}
 {% else %}
 	<p>{{ project.short_title }}</p>
 	<p>Full project details are only available for coordinators and approved project mentors, in order to ensure applicants don't contact mentors until the project is approved and the Outreachy application period opens. If you're an applicant, please wait for projects to appear on the <a href="{{ current_round.url }}">current internship round page</a>!</p>
