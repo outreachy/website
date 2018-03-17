@@ -14,7 +14,7 @@ Application deadline: {% if project.deadline == project.LATE %}{{ current_round.
 {% if project in comrade.get_projects_applied_to %}Your internship application will be reviewed: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% else %}You have NOT submitted an application for this project. Create on here: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% endif %}{% if not forloop.last %}
 {% endif %}{% endfor %}
 
-You will not be able to apply for a new project or edit your application after the project application deadline. You are encouraged to continue working on contributions with your project mentor. You will be able to record those contributions (or edit other recorded contributions) up to the date the interns are selected on {{ current_round.internannounce }}.
+You will be able to edit your application until the project application deadline. After the project application deadline, you are encouraged to continue working on contributions with your project mentor. You will be able to record those contributions (or edit other recorded contributions) up to the date the Outreachy interns for this round are announced on {{ current_round.internannounce }}.
 
 The project application will ask you to fill out a timeline for the internship project. Detailed instructions are included in the pages linked above. If you have trouble with this, or a mentor isn't responsive to your questions about the timeline, do the best you can. You should submit an application by the project deadline, even if you feel the timeline isn't complete or perfect.
 {% endif %}
