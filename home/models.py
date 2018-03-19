@@ -1894,7 +1894,7 @@ class FinalApplication(ApprovalStatus):
             })
 
     def submission_and_approval_deadline(self):
-        return self.project.application_deadline
+        return self.project.application_deadline()
 
     def __str__(self):
         return '{applicant} application for {community} - {project} - {id}'.format(
