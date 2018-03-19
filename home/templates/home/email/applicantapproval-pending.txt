@@ -41,16 +41,16 @@ we do need this information in order to approve you to apply
 for Outreachy internships.
 
 Would you be comfortable supplying this information via email?
-I'm also happy to chat via video conference if you feel more
-comfortable with that.
-
-https://calendly.com/sagesharp/outreachy-organizer-meeting
 {% endif %}
 {% if application.self_identify != '' %}
-You marked that your gender identity is {{ application.self_identify }}.
-Could you tell me a bit more about what pronouns you use?
-If they're listed on pronouns.is, I would love to add
-your gender identity and pronouns to our application system.
+They marked that their gender identity is {{ application.self_identify }}.
+
+Our eligibility system automatically flagged your eligibility account because you self-identified your gender identity. I've now approved your eligibility form. Good luck making contributions with Outreachy mentors!
+
+Sage Sharp
+Outreachy Organizer
+https://pronoun.is/they
+
 {% endif %}
 Thanks,
 Outreachy Organizers
