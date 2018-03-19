@@ -563,7 +563,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
 
     def get_form_instance(self, step):
         current_round = RoundPage.objects.latest('internstarts')
-        if current_round.has_late_application_deadline_passed:
+        if current_round.has_late_application_deadline_passed():
             raise PermissionDenied('The Outreachy application period is closed. If you are an applicant who has submitted an application for an internship project and your time commitments have increased, please contact the Outreachy organizers (see contact link above). Eligibility checking will become available shortly before the next application period opens. Please sign up for the announcements mailing list for an email when the next application period opens: https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce')
 
         # This implementation ignores `step` which is fine as long as
