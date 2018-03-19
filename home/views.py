@@ -1533,7 +1533,8 @@ def dashboard(request):
     for model in DASHBOARD_MODELS:
         by_model = defaultdict(list)
         for obj in model.objects_for_dashboard(request.user).distinct():
-            by_model[obj.approval_status].append(obj)
+            if obj.approval_status == ApprovalStatus.APPROVED or not has_deadline_passed(obj.submission_and_approval_deadline()):
+                by_model[obj.approval_status].append(obj)
 
         label = model._meta.verbose_name
         for status, objects in by_model.items():

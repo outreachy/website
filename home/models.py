@@ -986,9 +986,6 @@ class Project(ApprovalStatus):
             'action': action,
             })
 
-    def has_submission_and_approval_deadline_passed(self):
-        return has_deadline_passed(self.project_round.participating_round.ProjectsDeadline())
-
     def submission_and_approval_deadline(self):
         return self.project_round.participating_round.ProjectsDeadline()
 
