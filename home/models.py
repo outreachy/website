@@ -1000,6 +1000,9 @@ class Project(ApprovalStatus):
             return self.project_round.participating_round.appslate
         return self.project_round.participating_round.appsclose
 
+    def has_intern_announcement_deadline_passed(self):
+        return has_deadline_passed(self.project_round.participating_round.internannounce)
+
     def is_approver(self, user):
         return self.project_round.community.is_coordinator(user)
 
@@ -1745,6 +1748,9 @@ class Contribution(models.Model):
                     applicant=self.applicant)
         except FinalApplication.DoesNotExist:
             return None
+
+    def get_submission_and_approval_deadline(self):
+        return self.project.project_round.participating_round.internannounce
 
     def __str__(self):
         return '{applicant} contribution for {community} - {project}'.format(

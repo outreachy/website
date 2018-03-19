@@ -1353,6 +1353,16 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
         applicant = get_object_or_404(ApplicantApproval,
                 applicant=self.request.user.comrade,
                 application_round=current_round)
+        try:
+            application = FinalApplication.objects.get(
+                    applicant=applicant,
+                    project=project)
+        except FinalApplication.DoesNotExist:
+            application = None
+
+        if project.has_application_deadline_passed and application == None:
+            raise PermissionDenied("Editing or recording new contributions is closed at this time to applicants who have not created a final application.")
+
         if 'contribution_slug' not in self.kwargs:
             return Contribution(applicant=applicant, project=project)
         return get_object_or_404(Contribution,

@@ -50,6 +50,7 @@
 						{% else %}
 							<li>The project deadline has passed, and since you have not submitted an application,
 								you are not eligible to be selected as an intern for this project.</li>
+							<li><a href="{{ p.get_contributions_url }}">View your contributions</a></li>
 						{% endif %}
 						<li><a href="{% url 'community-landing' round_slug=current_round.slug slug=p.project_round.community.slug  %}">View project information</a></li>
 					{% endif %}

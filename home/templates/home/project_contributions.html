@@ -4,7 +4,7 @@
 {% if not project.has_application_deadline_passed %}
 	Record Contributions and Apply to {{ community.name }}
 {% else %}
-	{% if final_application %}
+	{% if final_application and not project.has_intern_announcement_deadline_passed %}
 		Record Contributions and View Application to {{ community.name }}
 	{% else %}
 		View Contributions to {{ community.name }}
@@ -31,7 +31,7 @@
 {% if not project.has_application_deadline_passed %}
 	&gt; Record a Contribution and Apply</p>
 {% else %}
-	{% if final_application %}
+	{% if final_application and not project.has_intern_announcement_deadline_passed %}
 		&gt; Record Contributions and View Application
 	{% else %}
 		&gt; View Contributions
@@ -61,7 +61,7 @@
 	Once you've recorded at least one contribution, you can start your application for the project.
 	</p>
 {% else %}
-	{% if final_application %}
+	{% if final_application and not project.has_intern_announcement_deadline_passed %}
 		<h1>Record Contributions and View Application to {{ community.name }}</h1>
 		<p>You're recording contributions and viewing your application to the following project:</p>
 		<p><strong>{{ project.short_title }}</strong></p>
@@ -220,11 +220,19 @@
 	<br><strong>{{ project.short_title }}</strong>
 	</p>
 {% endif %}
-<p><a class='btn btn-success' href="{% url 'contributions-add' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Record a Contribution</a></p>
+{% if not project.has_application_deadline_passed or not project.has_intern_announcement_deadline_passed and final_application %}
+	<p><a class='btn btn-success' href="{% url 'contributions-add' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Record a Contribution</a></p>
+{% endif %}
 <hr>
 {% for c in contributions %}
-<p><i>Contribution #{{ forloop.counter }}: started {{ c.date_started }}{% if c.date_merged %}, merged {{ c.date_merged }}{% else %}. <strong>Not accepted or merged.</strong> Update accepted date by editing this contribution.{% endif %}</i></p>
-	<p><a class='btn btn-primary' href="{% url 'contributions-edit' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug contribution_slug=c.pk %}">Edit Contribution</a></p>
+<p><i>Contribution #{{ forloop.counter }}: started {{ c.date_started }}{% if c.date_merged %}, merged {{ c.date_merged }}{% else %}. <strong>Not accepted or merged.</strong></i>{% endif %}
+	{% if not project.has_application_deadline_passed or not project.has_intern_announcement_deadline_passed and final_application%}
+		Update accepted date by editing this contribution.</p>
+		<p><a class='btn btn-primary' href="{% url 'contributions-edit' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug contribution_slug=c.pk %}">Edit Contribution</a></p>
+	{% else %}
+		</p>
+	{% endif %}
+
 	<p><a href="{{ c.url }}">{{ c.url }}</a></p>
 	<p>{{ c.description }}</p>
 	{% if not forloop.last %}
