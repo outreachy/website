@@ -233,10 +233,10 @@ class ContributionAdmin(reversion.admin.VersionAdmin):
             'project',
             )
     search_fields = (
-            'applicant__public_name',
-            'applicant__legal_name',
-            '=applicant__account__username',
-            '=applicant__account__email',
+            'applicant__applicant__public_name',
+            'applicant__applicant__legal_name',
+            '=applicant__applicant__account__username',
+            '=applicant__applicant__account__email',
             )
 
 admin.site.unregister(User)
