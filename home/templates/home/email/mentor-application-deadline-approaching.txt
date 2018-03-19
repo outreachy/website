@@ -14,8 +14,15 @@ It's very important that you encourage the applicant(s) you want to accept for y
 
 {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}
 
+Your Project Applicants
+-----------------------
+
 {{ community.name }} project "{{ project.short_title }}"
 {{ applicants|length }} applicant{{ applicants|pluralize:" has,s have" }} created a final application for your project{% if applicants|length > 0 %}: {% for a in applicants %}{{ a.applicant.applicant.public_name }}{% if not forloop.last %}, {% endif %}{% endfor %}.{% endif %}
+
+You can see all the people who have made a contribution and application for your project here:
+
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_applicants_url }}
 {% if project.deadline != project.LATE %}
 If you need to extend your project deadline, you should edit the project information, and change the deadline drop down (at the end of the first form page) to 'Extend applications through the late application deadline'. Please note that {{ community.name }} coordinators cannot change your project deadlines; only mentors can change the project deadline.
 
