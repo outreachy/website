@@ -1535,6 +1535,9 @@ class ApplicantApproval(ApprovalStatus):
     def get_approver_email_list(self):
         return [email.organizers]
 
+    def submission_and_editing_deadline(self):
+        return self.application_round.appslate
+
     def time_commitment_from_model(self, tc, hours):
         return {
                 'start_date': tc.start_date,

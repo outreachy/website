@@ -28,9 +28,26 @@
 	<li>Outreachy internships are full-time 40-hour a week internships. Applicants who have part-time or contracting jobs are welcome to apply, but they must meet additional requirements.
 </ul>
 
-<h2>Check Your Eligibility</h2>
-<p>All Outreachy applicants will need to fill out an eligibility form to determine if they are eligible for the program. If you're unsure if you meet the above eligibility rules, it's better to fill out the eligibility form and remove any doubts. Once you've submitted your eligibility form, if you have any questions, <a href="/contact/">you can contact the Outreachy organizers.</a></p>
+{% if not current_round.has_application_deadline_passed %}
+	<h2>Check Your Eligibility</h2>
 
-<p class="card-text"><a href="{% url 'eligibility' %}" class="btn btn-success">Check Your Eligibility</a></p>
+	<p>All Outreachy applicants will need to fill out an eligibility form
+	to determine if they are eligible for the program.
+	If you're unsure if you meet the above eligibility rules,
+	it's better to fill out the eligibility form and remove any doubts.
+	Once you've submitted your eligibility form, if you have any questions,
+	<a href="/contact/">you can contact the Outreachy organizers.</a></p>
+
+	<p class="card-text"><a href="{% url 'eligibility' %}" class="btn btn-success">Check Your Eligibility</a></p>
+{% else %}
+	<h2>Eligibility Checking</h2>
+
+	<p>All Outreachy applicants will need to fill out an eligibility form to determine if they are eligible for the program.</p>
+
+	<p>Eligibility checking for Outreachy internships is currently closed.
+	The eligibility system will open shortly before the application period opens.
+	To get an email when the round opens, subscribe to the
+	<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">Outreachy announcement mailing list</a>.</p>
+{% endif %}
 
 {% endblock %}
