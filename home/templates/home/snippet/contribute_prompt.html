@@ -1,18 +1,27 @@
 <div class="card border-warning mb-3">
-    <div class="card-header text-white bg-warning">A Contribution is Required</div>
-    <div class="card-body">
-	<p class="card-text">
-	Only applicants who have made a contribution will be eligible to be accepted as an Outreachy intern.
-	Please look over the <a href="/apply/project-selection">projects list</a> and
-	work with a mentor to start a contribution to a project.
-	If you're having trouble figuring out how to contribute,
-	<a href="https://www.outreachy.org/apply/make-contributions/">check out our contribution tips</a>.
-	</p>
-	<p class="card-text">
-	In order to be eligible to be selected as an intern, you'll need to
-	record your contributions to each project. You can record your
-	contributions by going to the community landing page, finding your
-	project, and clicking 'Record Contributions'.
-	</p>
-    </div>
+	{% if not current_round.has_application_deadline_passed %}
+		<div class="card-header text-white bg-warning">A Contribution is Required</div>
+		<div class="card-body">
+			<p class="card-text">
+			Only applicants who have made a contribution will be eligible to be accepted as an Outreachy intern.
+			Please look over the <a href="/apply/project-selection">projects list</a> and
+			work with a mentor to start a contribution to a project.
+			If you're having trouble figuring out how to contribute,
+			<a href="https://www.outreachy.org/apply/make-contributions/">check out our contribution tips</a>.
+			</p>
+			<p class="card-text">
+			In order to be eligible to be selected as an intern, you'll need to
+			record your contributions to each project. You can record your
+			contributions by going to the community landing page, finding your
+			project, and clicking 'Record Contributions'.
+			</p>
+		</div>
+	{% else %}
+		<div class="card-header text-white bg-info">Application deadlines are passed</div>
+		<div class="card-body">
+			<div class="card-text">
+				{% include 'home/snippet/deadline_passed.html' %}
+			</div>
+		</div>
+	{% endif %}
 </div>

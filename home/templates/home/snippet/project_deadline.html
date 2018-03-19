@@ -1,9 +1,13 @@
 {% if project.deadline == project.LATE %}
-	<p>Deadline is {{ current_round.appslate }} to
+	<p>Deadline
+	{% if not project.has_application_deadline_passed %}is{% else %}was{% endif %}
+	{{ current_round.appslate }}
 {% else %}
-	<p>Deadline is {{ current_round.appsclose }} to
+	<p>Deadline
+	{% if not project.has_application_deadline_passed %}is{% else %}was{% endif %}
+	{{ current_round.appsclose }}
 {% endif %}
-{% if request.user.comrade.eligible_application %}<a href="{{ project.get_contributions_url }}">{% endif %}
+{% if request.user.comrade.eligible_application and not project.has_application_deadline_passed %}to <a href="{{ project.get_contributions_url }}">{% endif %}
 	record your contributions and create a final application.
 {% if request.user.comrade.eligible_application %}</a>{% endif %}
 	</p>

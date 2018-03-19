@@ -2,26 +2,33 @@
 {% with project_applications=request.user.comrade.get_projects_applied_to %}
 
 {% if project_applications %}
-<div class="card border-info mb-3">
-    <div class="card-header bg-warning"><a data-toggle="collapse" data-parent="applicant-action-accordion" {% if show_reminders == 1 %}aria-expanded="true"{% else %}aria-expanded="false"{% endif %} aria-controls="#applicant-action-accordion" href="#applicant-action-accordion">+ My Contributions and Applications</a></div>
-    <div class="collapse{% if show_reminders == 1 %} show{% endif %}" id="applicant-action-accordion">
-    <div class="card-body">
-	<p class="card-text">
-	Thank you for recording your contributions and creating {{ project_applications|pluralize:"a project application, project applications" }}. You will need to create an application for each project, in order to be eligible to be selected as an intern for that project.
-	</p>
-	<p class="card-text">
-	The application deadline is {{ current_round.appsclose|date:"F d, Y" }}. Some projects are open to late applications, and their application deadline will be {{ current_round.appslate|date:"F d, Y" }}.
-	</p>
+	<div class="card border-info mb-3">
+	    <div class="card-header bg-warning"><a data-toggle="collapse" data-parent="applicant-action-accordion" {% if show_reminders == 1 %}aria-expanded="true"{% else %}aria-expanded="false"{% endif %} aria-controls="#applicant-action-accordion" href="#applicant-action-accordion">+ My Contributions and Applications</a></div>
+	    <div class="collapse{% if show_reminders == 1 %} show{% endif %}" id="applicant-action-accordion">
+	    <div class="card-body">
+		<p class="card-text">
+		Thank you for recording your contributions and creating {{ project_applications|pluralize:"a project application, project applications" }}. You will need to create an application for each project, in order to be eligible to be selected as an intern for that project.
+		</p>
+		<p class="card-text">
+		The application deadline is {{ current_round.appsclose|date:"F d, Y" }}. Some projects are open to late applications, and their application deadline will be {{ current_round.appslate|date:"F d, Y" }}.
+		</p>
+{% elif current_round.has_application_deadline_passed %}
+	<div class="card border-info mb-3">
+	    <div class="card-header text-white bg-info">Internship Applications are Closed</div>
+	    <div class="card-body">
+		<div class="card-text">
+			{% include 'home/snippet/deadline_passed.html' %}
+		</div>
 {% else %}
-<div class="card border-warning mb-3">
-    <div class="card-header text-white bg-warning">Submit a Project Application</div>
-    <div class="card-body">
-	<p class="card-text">
-	<strong>Your next step is to create an application.</strong> You will need to create an application for each project, in order to be eligible to be selected as an intern for that project.
-	</p>
-	<p class="card-text">
-	The application deadline is {{ current_round.appsclose|date:"F d, Y" }}. Some projects are open to late applications, and their application deadline will be {{ current_round.appslate|date:"F d, Y" }}.
-	</p>
+	<div class="card border-warning mb-3">
+	    <div class="card-header text-white bg-warning">Submit a Project Application</div>
+	    <div class="card-body">
+		<p class="card-text">
+		<strong>Your next step is to create an application.</strong> You will need to create an application for each project, in order to be eligible to be selected as an intern for that project.
+		</p>
+		<p class="card-text">
+		The application deadline is {{ current_round.appsclose|date:"F d, Y" }}. Some projects are open to late applications, and their application deadline will be {{ current_round.appslate|date:"F d, Y" }}.
+		</p>
 {% endif %}
 	<h5 class="card-text">My Contributions</h5>
 	<p class="card-text">
@@ -31,16 +38,33 @@
 		{% for p in project_contributions %}
 			<li>{{ p.project_round.community.name }} - {{ p.short_title }}
 				<ul>
-					<li><a href="{% url 'community-landing' round_slug=current_round.slug slug=p.project_round.community.slug  %}">View project information</a></li>
-					<li><a href="{{ p.get_contributions_url }}">Record your contributions</a></li>
-					<li><a href="{{ p.get_contributions_url }}">Edit or create an application</a></li>
+					<li>Application deadline: {{ p.application_deadline }} 4pm UTC</li>
+					{% if not p.has_application_deadline_passed %}
+						<li><a href="{{ p.get_contributions_url }}">Record your contributions</a></li>
+						<li><a href="{{ p.get_contributions_url }}">Edit or create an application</a></li>
+						<li><a href="{% url 'community-landing' round_slug=current_round.slug slug=p.project_round.community.slug  %}">View project information</a></li>
+					{% else %}
+						{% if p in project_applications %}
+							<li><a href="{{ p.get_contributions_url }}">Record your contributions</a></li>
+							<li><a href="{{ p.get_contributions_url }}">View your application</a></li>
+						{% else %}
+							<li>The project deadline has passed, and since you have not submitted an application,
+								you are not eligible to be selected as an intern for this project.</li>
+						{% endif %}
+						<li><a href="{% url 'community-landing' round_slug=current_round.slug slug=p.project_round.community.slug  %}">View project information</a></li>
+					{% endif %}
 				</ul>
 			</li>
 		{% endfor %}
 	</ul>
-	<p class="card-text">
-	Interested in applying to another project? You'll need to record a contribution for a project in order to be eligible to create an application. You can see the full list of projects and their deadlines on <a href="{% url 'project-selection' %}">project selection page</a>.
-	</p>
+	{% if not current_round.has_application_deadline_passed %}
+		<p class="card-text">
+		Interested in applying to another project?
+		You'll need to record a contribution for a project in order to be eligible to create an application.
+		You can see the full list of projects and their deadlines on the
+		<a href="{% url 'project-selection' %}">project selection page</a>.
+		</p>
+	{% endif %}
 
 	{% if project_applications %}
 	<h5 class="card-text">Applications</h5>

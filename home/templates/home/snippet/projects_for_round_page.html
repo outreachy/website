@@ -17,7 +17,11 @@
 		{% endif %}
 
 		{% if project.needs_more_applicants %}
-			<p>This project has a low number of applicants, and the project mentor welcomes new applicants to contribute.</p>
+			{% if not project.has_application_deadline_passed %}
+				<p>This project has a low number of applicants, and the project mentor welcomes new applicants to contribute.</p>
+			{% else %}
+				<p>This project had a low number of applicants</p>
+			{% endif %}
 		{% endif %}
 
 		{% include "home/snippet/project_deadline.html" %}

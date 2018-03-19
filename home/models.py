@@ -163,6 +163,21 @@ class RoundPage(Page):
 
     def final_stipend_dates(self):
         return (self.finalfeedback + timedelta(days=10), self.finalfeedback + timedelta(days=24))
+    def has_ontime_application_deadline_passed(self):
+        return has_deadline_passed(self.appsclose)
+
+    def has_late_application_deadline_passed(self):
+        return has_deadline_passed(self.appslate)
+
+    # Is there an approved project with a late deadline, or are all projects on time?
+    def has_application_deadline_passed(self):
+        participations = self.participation_set.all().approved()
+        for p in participations:
+            projects = p.project_set.approved()
+            for project in projects:
+                if project.deadline == Project.LATE:
+                    return has_deadline_passed(self.appslate)
+        return has_deadline_passed(self.appsclose)
 
     def gsoc_round(self):
         # The internships would start before August
@@ -976,6 +991,14 @@ class Project(ApprovalStatus):
 
     def submission_and_approval_deadline(self):
         return self.project_round.participating_round.ProjectsDeadline()
+
+    def has_application_deadline_passed(self):
+        return has_deadline_passed(self.application_deadline())
+
+    def application_deadline(self):
+        if self.deadline == Project.LATE:
+            return self.project_round.participating_round.appslate
+        return self.project_round.participating_round.appsclose
 
     def is_approver(self, user):
         return self.project_round.community.is_coordinator(user)
@@ -1863,6 +1886,9 @@ class FinalApplication(ApprovalStatus):
             'username': self.applicant.applicant.account.username,
             'action': action,
             })
+
+    def submission_and_approval_deadline(self):
+        return self.project.application_deadline
 
     def __str__(self):
         return '{applicant} application for {community} - {project} - {id}'.format(

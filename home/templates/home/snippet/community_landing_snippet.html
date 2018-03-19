@@ -33,7 +33,8 @@
 			<table class=table>
 				<tr><td>{{ current_round.appsopen }}</td><td>Outreachy application period opens and applicants make their required contributions to projects</td></tr>
 				{% comment %}FIXME: special case this for communities with an extended application deadline{% endcomment %}
-				<tr><td>{{ current_round.appsclose }}</td><td>Outreachy applications due for {{ community.name }} </td></tr>
+				<tr><td>{{ current_round.appsclose }}</td><td>Outreachy applications due for most {{ community.name }} projects</td></tr>
+				<tr><td>{{ current_round.appslate }}</td><td>Some Outreachy {{ community.name }} projects have a late application deadline</td></tr>
 				<tr><td>{{ current_round.internannounce }}</td><td>Interns are publicly announced at 4pm UTC on <a href="/alums/">the alums page</a></td></tr>
 				<tr><td>{{ current_round.internstarts }} to {{ current_round.internends }}</td><td>Internships period</td></tr>
 			</table>
