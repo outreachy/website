@@ -15,6 +15,8 @@
 	{% for project in request.user.comrade.get_approved_mentored_projects %}
 		<h4>{{ project.short_title }}</h4>
 			<ul>
+				<li>Application deadline: {{ project.application_deadline }} 4pm UTC
+					(<a href="{% url 'project-action' community_slug=project.project_round.community.slug project_slug=project.slug action='submit' %}">Change this by editing the project deadline</a>)</li>
 				<li><a href="{% url 'community-landing' round_slug=current_round.slug slug=project.project_round.community.slug  %}">View the project page applicants see</a></li>
 				<li><a href="{% url 'project-read-only' community_slug=project.project_round.community.slug project_slug=project.slug %}">Edit the project info</a></li>
 				<li><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}">Review applicants</a></li>
