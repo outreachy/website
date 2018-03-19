@@ -52,8 +52,18 @@ you can send an email to the announcements mailing list to remind applicants of 
 	<li>A day before the regular deadline (which is a week and one day before the late deadline). Send the email on {{ current_round.regular_deadline_second_reminder }} at 4pm UTC.</li>
 	<li>A day before the late application deadline. Send the email on {{ current_round.late_deadline_reminder }} at 4pm UTC.</li>
 </ul>
+</p>
 
 <p><a href="{% url 'email-contributor-deadline-reminder' %}"><input class="btn btn-success" value="Contributor Deadline Email" /></a>
+
+<p>You'll need to send a reminder email to mentors who have an approved project to let them know about the application deadline, and to give them instructions on how to help applicants complete the timeline:
+<ul>
+	<li>Approximately a week before the regular deadline (Monday mornings are best). Send the email around {{ current_round.regular_deadline_reminder }}.</li>
+	<li>About a week before the late deadline, but after the regular application deadline. Send the email on {{ current_round.appsclose }} after 4pm UTC.</li>
+</ul>
+</p>
+
+<p><a href="{% url 'email-mentor-application-deadline-reminder' %}"><input class="btn btn-success" value="Mentor Deadline Email 2" /></a>
 
 <h2>Community progress</h2>
 {% if pending_participations or approved_participations %}

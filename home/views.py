@@ -1200,6 +1200,38 @@ class MentorCheckDeadlinesReminder(LoginRequiredMixin, ComradeRequiredMixin, Tem
             email.project_applicant_review(p, self.request)
         return redirect(reverse('dashboard'))
 
+def get_open_approved_projects(current_round):
+    if not current_round.has_ontime_application_deadline_passed():
+        return Project.objects.filter(
+                project_round__participating_round=current_round).all().approved()
+    elif not current_round.has_late_application_deadline_passed():
+        return Project.objects.filter(
+                deadline=Project.LATE,
+                project_round__participating_round=current_round).all().approved()
+    return None
+
+class MentorApplicationDeadlinesReminder(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
+    template_name = 'home/mentor_deadline_application_reminder.html'
+
+    def get_context_data(self, **kwargs):
+        current_round = RoundPage.objects.latest('internstarts')
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are authorized to send reminder emails.")
+        context = super(MentorApplicationDeadlinesReminder, self).get_context_data(**kwargs)
+        context.update({
+            'projects': get_open_approved_projects(current_round),
+            })
+        return context
+
+    def post(self, request, *args, **kwargs):
+        current_round = RoundPage.objects.latest('internstarts')
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are authorized to send reminder emails.")
+        projects = get_open_approved_projects(current_round)
+        for p in projects:
+            email.mentor_application_deadline_reminder(p, self.request)
+        return redirect(reverse('dashboard'))
+
 class ApplicantsDeadlinesReminder(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
     template_name = 'home/applicants_deadline_reminder.html'
 

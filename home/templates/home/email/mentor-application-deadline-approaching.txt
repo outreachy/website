@@ -1,0 +1,41 @@
+{% with community=project.project_round.community %}{% with current_round=project.project_round.participating_round %}{% with contributors=project.get_applicants_and_contributions_list %} {% with applicants=project.get_applications %}{% with coordinators=community.get_coordinator_email_list %}{{ project.application_deadline|date:"F d" }} 4pm UTC: Application deadline for your Outreachy {{ community.name }} project
+
+Hi Outreachy mentor,
+
+In order to be eligible to be selected as an Outreachy intern, each applicant must:
+
+1. Fill out an eligibility check form at {{ request.scheme }}://{{ request.get_host }}{% url 'eligibility' %}
+2. Record a contribution to your project on the Outreachy site.
+3. Complete an application for your project.
+
+The Outreachy application system will close applications for your project on {{ project.application_deadline|date:"F d" }} at 4pm UTC. Applicants who create an application can edit it until the project application deadline. After your project's application deadline, applicants will NOT be able to create a new application. Applicants who have submitted an application cannot edit their application, but they will be able to continue recording and editing their contributions on the Outreachy website until the intern announcement deadline on {{ current_round.internannounce }} at 4pm UTC. Applicants who have not submitted an application will not be able to record or edit their contributions.
+
+It's very important that you encourage the applicant(s) you want to accept for your project to complete their application before your project deadline. If you do not see the applicant you want to select on this list, contact them ASAP and tell them to record a contribution and submit an application at this URL (which only works for eligible applicants, not mentors):
+
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}
+
+{{ community.name }} project "{{ project.short_title }}"
+{{ applicants|length }} applicant{{ applicants|pluralize:" has,s have" }} created a final application for your project{% if applicants|length > 0 %}: {% for a in applicants %}{{ a.applicant.applicant.public_name }}{% if not forloop.last %}, {% endif %}{% endfor %}.{% endif %}
+{% if project.deadline != project.LATE %}
+If you need to extend your project deadline, you should edit the project information, and change the deadline drop down (at the end of the first form page) to 'Extend applications through the late application deadline'. Please note that {{ community.name }} coordinators cannot change your project deadlines; only mentors can change the project deadline.
+
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_submit_url }}
+{% endif %}
+Application - Project Timeline
+------------------------------
+
+The Outreachy project application asks applicants to complete a internship project timeline, and they may ask you questions about it. The project timeline serves many purposes:
+
+1. Ensures the applicant understands the high-level details of the project, and can break down those goals into concrete milestones. The goal is for applicants to have an idea of what they will work during each of the 12 weeks of the internship. The applicants will be looking at the internship tasks listed on the project page, so now is a good time to update those if you don't want to answer the same questions over and over:
+
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_submit_url }}
+
+2. The project timeline lets mentors double check intern expectations about how quickly they will ramp up. Most projects will require a few weeks of ramp-up, research, and integrating into the community. Make sure the project timeline reflects that ramp up.
+
+3. It also opens a dialog between applicants and mentors about what time commitments (exams, vacations, conferences, etc) they will have during the internship period. It's important to recognize those time commitments will happen, and have a plan for working around them.
+
+4. Finally, the project timeline provides mentors a chance to customize an internship plan with an applicant who may need more or less time to ramp up on specific goals. It also gives mentors a chance to re-evaluate any vague or uncertain project goals.
+
+Thank you for participating as an Outreachy mentor! If you have any questions, please contact your community coordinator{{ coordinators|pluralize }} {% for c in coordinators %}{{ c }}{% if not forloop.last %}, {% endif %}{% endfor %}. You can always contact the Outreachy organizers <organizers@outreachy.org> for help.
+
+{% include 'home/email/footer-mentor.txt' %}{% endwith %} {% endwith %} {% endwith %} {% endwith %} {% endwith %}

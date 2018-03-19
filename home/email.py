@@ -59,6 +59,13 @@ def project_applicant_review(project, request):
         request=request,
         recipient_list=project.get_mentor_email_list())
 
+def mentor_application_deadline_reminder(project, request):
+    send_group_template_mail('home/email/mentor-application-deadline-approaching.txt', {
+        'project': project,
+        },
+        request=request,
+        recipient_list=project.get_mentor_email_list())
+
 def applicant_deadline_reminder(late_projects, promoted_projects, closed_projects, current_round, request):
     send_group_template_mail('home/email/applicants-deadline-reminder.txt', {
         'late_projects': late_projects,
