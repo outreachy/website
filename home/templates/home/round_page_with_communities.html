@@ -25,8 +25,8 @@ Outreachy Internships | Apply | Pick a Project
 		<tr><td>{{ current_round.appsopen }}</td><td>Applicants start making contributions to internship projects</td></tr>
 		<tr><td>{{ current_round.lateorgs }}</td><td>Last date for new mentoring community listings</td></tr>
 		<tr><td>{{ current_round.ProjectsDeadline }}</td><td>Last date for new internship project listings</td></tr>
-		<tr><td>{{ current_round.appsclose }}</td><td>Application deadline. Last day to finish any contributions to internship projects. Applications who made a contribution must submit the rest of their project application by this date.</td></tr>
-		<tr><td>{{ current_round.appslate }}</td><td>Late application deadline for specific projects (see below for which projects are accepting late applications)</td></tr>
+		<tr><td>{{ current_round.appsclose }} at 4pm UTC</td><td>Application deadline. Last day to finish any contributions to internship projects. Applications who made a contribution must submit the rest of their project application by this date.</td></tr>
+		<tr><td>{{ current_round.appslate }} at 4pm UTC</td><td>Late application deadline for specific projects (see below for which projects are accepting late applications)</td></tr>
 		<tr><td>{{ current_round.appsclose }} to {{ current_round.internannounce }}</td><td>Applicants are encouraged to continue making contributions</td></tr>
 		<tr><td>{{ current_round.internannounce }}</td><td>Accepted interns announced on <a href"/alums/">the alums page</a> at 4pm UTC</td></tr>
 		<tr><td>{{ current_round.internstarts }} to {{ current_round.internends }}</td><td>Internships period</td></tr>
@@ -166,12 +166,12 @@ Outreachy Internships | Apply | Pick a Project
 		</p>
 		{% if late_projects %}
 			{% if not current_round.has_late_application_deadline_passed %}
-				<h3>Applications Due {{ current_round.appslate }}</h3>
+				<h3>Applications Due {{ current_round.appslate }} at 4pm UTC</h3>
 
 				<p> The following projects have an extended deadline, and will be accepting contributions and applications from new
-				applicants until {{ current_round.appslate }}.</p>
+				applicants until {{ current_round.appslate }} at 4pm UTC.</p>
 			{% else %}
-				<h3>Applications Closed {{ current_round.appslate }}</h3>
+				<h3>Applications Closed {{ current_round.appslate }} at 4pm UTC</h3>
 			{% endif %}
 		{% endif %}
 		
@@ -195,12 +195,12 @@ Outreachy Internships | Apply | Pick a Project
 
 		{% if ontime_projects %}
 			{% if not current_round.has_ontime_application_deadline_passed %}
-				<h3>Applications Due {{ current_round.appsclose }}</h3>
+				<h3>Applications Due {{ current_round.appsclose }} at 4pm UTC</h3>
 
 				<p> The following projects are accepting contributions and applications from new
-				applicants until {{ current_round.appsclose }}.</p>
+				applicants until {{ current_round.appsclose }} at 4pm UTC.</p>
 			{% else %}
-				<h3>Applications Closed {{ current_round.appsclose }}</h3>
+				<h3>Applications Closed {{ current_round.appsclose }} at 4pm UTC</h3>
 			{% endif %}
 		{% endif %}
 		
@@ -239,7 +239,7 @@ Outreachy Internships | Apply | Pick a Project
 			<h2>Closed Early - Outreachy Internship Projects</h2>
 			<p>
 			The following projects were closed to new applicants before
-			the application deadline of {{ current_round.appsclose }}.
+			the application deadline of {{ current_round.appsclose }} at 4pm UTC.
 			This typically means the mentors were working with many promising
 			applicants early in the application period. In future rounds,
 			applicants should make sure to start their contributions early
