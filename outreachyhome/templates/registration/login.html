@@ -18,10 +18,12 @@ Log in
 {% endif %}
 
 <h2>New Account</h2>
-<p>Don't have an account?</p>
+<p>Don't have an account? You can create a new one.</p>
+<p>Please do not create multiple accounts with the same email address, as it interferes with password reset requests.</p>
 <p><a href="{% url 'register' %}?next={{ next|urlencode }}" class="btn btn-success">Create Account</a></p>
 
 <h2>Existing Account</h2>
+<p>Please note the login form accepts only usernames, not email addresses. The account verification email will contain your username.</p>
 <form method="post" action="">
 {% csrf_token %}
 {{ form.as_p }}
