@@ -1899,6 +1899,60 @@ class FinalApplication(ApprovalStatus):
                 ('applicant', 'project'),
                 )
 
+class SignedContract(models.Model):
+    text = models.CharField(max_length=100000, verbose_name="Contract text")
+    legal_name = models.CharField(max_length=LONG_LEGAL_NAME,
+            verbose_name="Legal name",
+            help_text="Your name on your government identification. This is the name that you would use to sign a legal document.")
+    ip_address = models.GenericIPAddressField(protocol="both")
+    date_signed = models.DateField(verbose_name="Date contract was signed in YYYY-MM-DD format")
+
+class InternSelection(ApprovalStatus):
+    applicant = models.ForeignKey(ApplicantApproval)
+    project = models.ForeignKey(Project)
+    intern_contract = models.ForeignKey(SignedContract)
+    mentors = models.ManyToManyField(MentorApproval, through='MentorRelationship')
+
+    GENERAL_FUNDED = 'GEN'
+    ORG_FUNDED = 'ORG'
+    NOT_FUNDED = 'NOT'
+    UNDECIDED_FUNDING = 'UND'
+    FUNDING_CHOICES = (
+        (GENERAL_FUNDED, 'Funded by the Outreachy general fund'),
+        (ORG_FUNDED, 'Funded by the community sponsors'),
+        (NOT_FUNDED, 'Not funded (intern will not be selected for this round)'),
+        (UNDECIDED_FUNDING, 'Funding source undecided'),
+    )
+    funding_source = models.CharField(
+        max_length=3,
+        choices=FUNDING_CHOICES,
+        default=UNDECIDED_FUNDING,
+        help_text="How will this intern be funded?",
+    )
+
+    # Intern funding is decided by Outreachy coordinators
+    # but Outreachy organizers have the final yes/no approval for interns.
+    def is_approver(self, user):
+        user.is_staff()
+
+    def is_submitter(self, user):
+        # Allow coordinators to withdraw an intern
+        if self.project.project_round.community.is_coordinator(user):
+            return True
+        # Allow any approved mentor to withdraw an intern
+        return self.mentorapproval_set.approved().filter(
+                mentor__account=user).exists()
+
+class MentorRelationship(models.Model):
+    intern_selection = models.ForeignKey(InternSelection)
+    mentor = models.ForeignKey(MentorApproval)
+    contract = models.OneToOneField(SignedContract)
+
+    class Meta:
+        unique_together = (
+                ('intern_selection', 'mentor'),
+                )
+
 # Please keep this at the end of this file; it has to come after the
 # models it mentions, so just keep it after all other definitions.
 DASHBOARD_MODELS = (
