@@ -1524,7 +1524,7 @@ class ApplicantApproval(ApprovalStatus):
 
     self_identify = models.CharField(max_length=SENTENCE_LENGTH,
             blank=True,
-            help_text="If your gender identity is NOT listed above, what is your gender identity?")
+            help_text="If your gender identity is NOT listed above, what is your gender identity? Please note that 'gender identity' is NOT your name. Gender identity is your gender.")
 
     def is_approver(self, user):
         return user.is_staff
