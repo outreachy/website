@@ -1943,6 +1943,18 @@ class InternSelection(ApprovalStatus):
         return self.mentorapproval_set.approved().filter(
                 mentor__account=user).exists()
 
+    def intern_public_name(self):
+        return self.applicant.applicant.public_name
+
+    def community_name(self):
+        return self.community.name
+
+    def project_name(self):
+        return self.project.short_title
+
+    def mentor_names(self):
+        return ", ".join([m.mentor.public_name for m in self.mentors])
+
 class MentorRelationship(models.Model):
     intern_selection = models.ForeignKey(InternSelection)
     mentor = models.ForeignKey(MentorApproval)

@@ -13,7 +13,9 @@ from .models import Contribution
 from .models import CoordinatorApproval
 from .models import EmploymentTimeCommitment
 from .models import FinalApplication
+from .models import InternSelection
 from .models import MentorApproval
+from .models import MentorRelationship
 from .models import NewCommunity
 from .models import NonCollegeSchoolTimeCommitment
 from .models import Notification
@@ -23,6 +25,7 @@ from .models import ProjectSkill
 from .models import RoundPage
 from .models import SchoolInformation
 from .models import SchoolTimeCommitment
+from .models import SignedContract
 from .models import Sponsorship
 from .models import VolunteerTimeCommitment
 
@@ -239,6 +242,29 @@ class ContributionAdmin(reversion.admin.VersionAdmin):
             '=applicant__applicant__account__email',
             )
 
+class SignedContractAdmin(admin.ModelAdmin):
+    list_display = (
+            'legal_name',
+            'date_signed',
+            )
+    search_fields = (
+            'legal_name',
+            'date_signed',
+            )
+
+class InternSelectionAdmin(admin.ModelAdmin):
+    list_display = (
+            'intern_public_name',
+            'community_name',
+            'mentor_names',
+            )
+    search_fields = (
+            'applicant__applicant__public_name',
+            'applicant__applicant__account__email',
+            'mentors__mentor__public_name',
+            'mentors__mentor__account__email',
+            )
+
 admin.site.unregister(User)
 admin.site.register(User, ComradeAdmin)
 
@@ -247,9 +273,11 @@ admin.site.register(Community, CommunityAdmin)
 admin.site.register(CoordinatorApproval, CoordinatorApprovalAdmin)
 admin.site.register(Contribution, ContributionAdmin)
 admin.site.register(FinalApplication)
+admin.site.register(InternSelection, InternSelectionAdmin)
 admin.site.register(MentorApproval, MentorApprovalAdmin)
 admin.site.register(NewCommunity, CommunityAdmin)
 admin.site.register(Notification)
 admin.site.register(Participation, ParticipationAdmin)
 admin.site.register(RoundPage)
 admin.site.register(Project, ProjectAdmin)
+admin.site.register(SignedContract, SignedContractAdmin)
