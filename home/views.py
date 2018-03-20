@@ -1555,6 +1555,22 @@ def eligibility_information(request):
         'current_round': current_round,
         })
 
+class TrustedVolunteersListView(UserPassesTestMixin, ListView):
+    template_name = 'home/trusted_volunteers.html'
+    queryset = Comrade.objects.filter(
+            models.Q(
+                mentorapproval__approval_status=ApprovalStatus.APPROVED,
+                mentorapproval__project__approval_status=ApprovalStatus.APPROVED,
+                mentorapproval__project__project_round__approval_status=ApprovalStatus.APPROVED,
+            ) | models.Q(
+                coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+                coordinatorapproval__community__participation__approval_status=ApprovalStatus.APPROVED,
+            )
+        ).order_by('public_name').distinct()
+
+    def test_func(self):
+        return self.request.user.is_staff
+
 @login_required
 def dashboard(request):
     """
@@ -1595,19 +1611,3 @@ def dashboard(request):
         'participations': participations,
         'show_reminders': 1,
         })
-
-class TrustedVolunteersListView(UserPassesTestMixin, ListView):
-    template_name = 'home/trusted_volunteers.html'
-    queryset = Comrade.objects.filter(
-            models.Q(
-                mentorapproval__approval_status=ApprovalStatus.APPROVED,
-                mentorapproval__project__approval_status=ApprovalStatus.APPROVED,
-                mentorapproval__project__project_round__approval_status=ApprovalStatus.APPROVED,
-            ) | models.Q(
-                coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
-                coordinatorapproval__community__participation__approval_status=ApprovalStatus.APPROVED,
-            )
-        ).order_by('public_name').distinct()
-
-    def test_func(self):
-        return self.request.user.is_staff
