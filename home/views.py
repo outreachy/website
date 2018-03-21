@@ -1522,6 +1522,7 @@ class ProjectApplicants(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
             'project': project,
             'contributions': contributions,
             'internship_total_days': internship_total_days,
+            'approved_mentor': project.is_submitter(self.request.user),
             })
         return context
 

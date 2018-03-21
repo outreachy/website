@@ -48,7 +48,7 @@ that timeline, taking into account any time commitments the applicant has.
 			{% for fa in finalapps %}
 				<tr>
 					<td>{% if fa.rating == fa.UNRATED %}Unrated{% else %}<abbr title="{{ fa.get_rating_display }}">{{ fa.rating }}</abbr>{% endif %}</td>
-					{% if project.is_submitter %}<td>
+					{% if approved_mentor %}<td>
 						<div class="dropdown">
 							<button class="btn btn-secondary dropdown-toggle" type="button" id="InternRatingMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Applicant Rating</button>
 							<div class="dropdown-menu" aria-labelledby="InternRatingMenu">
