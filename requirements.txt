@@ -5,6 +5,7 @@ dj-database-url==0.4.2
 dj-static==0.0.6
 Django==1.11.8
 django-appconf==1.0.2
+django-betterforms==1.1.4
 django-ckeditor==5.4.0
 django-compressor==2.2
 django-compressor-postcss==0.8.2

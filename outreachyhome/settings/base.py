@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.forms',
+    'betterforms',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'compressor',
