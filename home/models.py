@@ -1933,7 +1933,7 @@ class InternSelection(ApprovalStatus):
     # Intern funding is decided by Outreachy coordinators
     # but Outreachy organizers have the final yes/no approval for interns.
     def is_approver(self, user):
-        user.is_staff()
+        return user.is_staff
 
     def is_submitter(self, user):
         # Allow coordinators to withdraw an intern
