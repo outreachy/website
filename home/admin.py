@@ -242,6 +242,27 @@ class ContributionAdmin(reversion.admin.VersionAdmin):
             '=applicant__applicant__account__email',
             )
 
+class MentorRelationshipAdmin(admin.ModelAdmin):
+    list_display = (
+            'round',
+            'community_name',
+            'project_name',
+            'intern_name',
+            'mentor_name',
+            )
+    list_filter = (
+            'intern_selection__project__project_round__participating_round',
+            'intern_selection__project__project_round__community__name',
+            'intern_selection__organizer_approved',
+            'intern_selection__funding_source',
+            )
+    search_fields = (
+            'intern_selection__applicant__applicant__public_name',
+            'intern_selection__applicant__applicant__legal_name',
+            'intern_selection__applicant__applicant__account__email',
+            'intern_selection__applicant__applicant__account__username',
+            )
+
 class SignedContractAdmin(admin.ModelAdmin):
     list_display = (
             'legal_name',
@@ -254,9 +275,17 @@ class SignedContractAdmin(admin.ModelAdmin):
 
 class InternSelectionAdmin(admin.ModelAdmin):
     list_display = (
-            'intern_public_name',
+            'round',
             'community_name',
+            'project_name',
+            'intern_name',
             'mentor_names',
+            )
+    list_filter = (
+            'project__project_round__participating_round',
+            'project__project_round__community__name',
+            'organizer_approved',
+            'funding_source',
             )
     search_fields = (
             'applicant__applicant__public_name',
@@ -275,6 +304,7 @@ admin.site.register(Contribution, ContributionAdmin)
 admin.site.register(FinalApplication)
 admin.site.register(InternSelection, InternSelectionAdmin)
 admin.site.register(MentorApproval, MentorApprovalAdmin)
+admin.site.register(MentorRelationship, MentorRelationshipAdmin)
 admin.site.register(NewCommunity, CommunityAdmin)
 admin.site.register(Notification)
 admin.site.register(Participation, ParticipationAdmin)

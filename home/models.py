@@ -1946,23 +1946,46 @@ class InternSelection(models.Model):
         return self.mentorapproval_set.approved().filter(
                 mentor__account=user).exists()
 
-    def intern_public_name(self):
+    def intern_name(self):
         return self.applicant.applicant.public_name
 
+    def round(self):
+        return self.project.project_round.participating_round
+
     def community_name(self):
-        return self.community.name
+        return self.project.project_round.community.name
 
     def project_name(self):
         return self.project.short_title
 
     def mentor_names(self):
-        return ", ".join([m.mentor.public_name for m in self.mentors])
+        return ", ".join([m.mentor.public_name for m in self.mentors.all()])
+
+    def __str__(self):
+        return mentor.mentor.public_name + ' mentoring ' + intern_selection.applicant.applicant.public_name
 
 class MentorRelationship(models.Model):
     intern_selection = models.ForeignKey(InternSelection)
     mentor = models.ForeignKey(MentorApproval)
     contract = models.OneToOneField(SignedContract)
 
+    def intern_name(self):
+        return self.intern_selection.applicant.applicant.public_name
+
+    def round(self):
+        return self.intern_selection.project.project_round.participating_round
+
+    def community_name(self):
+        return self.intern_selection.project.project_round.community.name
+
+    def project_name(self):
+        return self.intern_selection.project.short_title
+
+    def mentor_name(self):
+        return self.mentor.mentor.public_name
+
+    def __str__(self):
+        return mentor.mentor.public_name + ' mentoring ' + intern_selection.applicant.applicant.public_name
     class Meta:
         unique_together = (
                 ('intern_selection', 'mentor'),
