@@ -1645,12 +1645,24 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, FormView):
                     intern_selection__applicant = self.applicant).exists():
             raise PermissionDenied("This intern has already been selected for this project. You cannot sign the mentor agreement twice.")
 
+        with open(path.join(settings.BASE_DIR, 'docs', 'mentor-agreement.md')) as mafile:
+            self.mentor_agreement = mafile.read()
+
         # We pass in all object instances that already exist,
         # and the form will create new object instances in memory that aren't referenced.
         kwargs.update(instance={
             'rating': application,
         })
         return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(InternSelectionUpdate, self).get_context_data(**kwargs)
+        context['mentor_agreement_html'] = markdownify(self.mentor_agreement)
+        context['project'] = self.project
+        context['community'] = self.project.project_round.community
+        context['applicant'] = self.applicant
+        context['current_round'] = RoundPage.objects.latest('internstarts')
+        return context
 
     def form_valid(self, form):
         form['rating'].save()
@@ -1662,6 +1674,7 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, FormView):
         signed_contract = form['contract'].save(commit=False)
         signed_contract.date_signed = datetime.now(timezone.utc)
         signed_contract.ip_address = self.request.META.get('REMOTE_ADDR')
+        signed_contract.text = self.mentor_agreement
         signed_contract.save()
         mentor_relationship = MentorRelationship(
                 intern_selection=intern_selection,

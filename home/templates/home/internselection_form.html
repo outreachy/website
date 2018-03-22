@@ -3,10 +3,38 @@
 {% block content %}
 
 <h1>Mentor or Co-mentor an Outreachy Intern</h1>
+<p>You are selecting the applicant, {{ applicant.applicant.public_name }}, as an intern for the {{ community.name }} project "{{ project.short_title }}".</p>
+
 <form method="post" action="">
 {% csrf_token %}
-    {{ form.as_p }}
-<input type="submit" class="btn btn-block btn-primary" value="Save" />
+	{% for field in form.visible_fields %}
+		<div class="form-group">
+			{{ field.errors }}
+			{% if 'rating' in field.label_tag %}
+				<h2>Applicant Rating</h2>
+				<p>Please provide a rating for the contributions {{ applicant.applicant.public_name }} made during the Outreachy application process.</p>
+			{% elif 'Legal' in field.label_tag %}
+				<h2>Mentor Agreement</h2>
+				<p>By filling out this form, you are agreeing to mentor this intern, putting in approximately 5 hours a week during the internship period from {{ current_round.internstarts }} to {{ current_round.internends }}.</p>
+				<div class="card mb-3">
+					<div class="card-body">
+						{{ mentor_agreement_html|safe }}
+					</div>
+				</div>
+				<h2>Agree to the Outreachy Mentor Agreement</h2>
+				<p>Please type your full legal name below to indicate you agree to the Outreachy Mentor Agreement.</p>
+			{% endif %}
+			{{ field.label_tag }}
+			{{ field }}
+			{% if field.help_text %}
+				<div class="text-muted">{{ field.help_text|safe }}</div>
+			{% endif %}
+		</div>
+	{% endfor %}
+	{% for hidden in form.hidden_fields %}
+		{{ hidden }}
+	{% endfor %}
+<input type="submit" class="btn btn-block btn-primary" value="Accept Agreement" />
 <input type="hidden" name="next" value="{{ next }}" />
 </form>
 
