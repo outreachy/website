@@ -1539,6 +1539,7 @@ class ProjectApplicants(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
             })
         return context
 
+@login_required
 def community_applicants(request, round_slug, community_slug):
     current_round = RoundPage.objects.latest('internstarts')
 
