@@ -1970,7 +1970,7 @@ class InternSelection(models.Model):
         return ", ".join([m.mentor.public_name for m in self.mentors.all()])
 
     def __str__(self):
-        return mentor.mentor.public_name + ' mentoring ' + intern_selection.applicant.applicant.public_name
+        return self.mentor_names() + ' mentoring ' + self.applicant.applicant.public_name
 
 class MentorRelationship(models.Model):
     intern_selection = models.ForeignKey(InternSelection)
@@ -1993,7 +1993,7 @@ class MentorRelationship(models.Model):
         return self.mentor.mentor.public_name
 
     def __str__(self):
-        return mentor.mentor.public_name + ' mentoring ' + intern_selection.applicant.applicant.public_name
+        return self.mentor.mentor.public_name + ' mentoring ' + self.intern_selection.applicant.applicant.public_name
     class Meta:
         unique_together = (
                 ('intern_selection', 'mentor'),
