@@ -1907,10 +1907,10 @@ class SignedContract(models.Model):
     ip_address = models.GenericIPAddressField(protocol="both")
     date_signed = models.DateField(verbose_name="Date contract was signed in YYYY-MM-DD format")
 
-class InternSelection(ApprovalStatus):
+class InternSelection(models.Model):
     applicant = models.ForeignKey(ApplicantApproval)
     project = models.ForeignKey(Project)
-    intern_contract = models.ForeignKey(SignedContract)
+    intern_contract = models.OneToOneField(SignedContract, null=True)
     mentors = models.ManyToManyField(MentorApproval, through='MentorRelationship')
 
     GENERAL_FUNDED = 'GEN'
@@ -1929,6 +1929,9 @@ class InternSelection(ApprovalStatus):
         default=UNDECIDED_FUNDING,
         help_text="How will this intern be funded?",
     )
+    organizer_approved = models.BooleanField(
+            help_text="Is this intern and funding information confirmed to be correct by the Outreachy organizers?",
+            default=False)
 
     # Intern funding is decided by Outreachy coordinators
     # but Outreachy organizers have the final yes/no approval for interns.
