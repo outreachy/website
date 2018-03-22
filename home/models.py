@@ -150,7 +150,7 @@ class RoundPage(Page):
         return(self.appsclose + timedelta(days=7))
     
     def InternSelectionDeadline(self):
-        return(self.appsclose + timedelta(days=10))
+        return(self.appslate + timedelta(days=6))
     
     def InternConfirmationDeadline(self):
         return(self.appsclose + timedelta(days=24))
