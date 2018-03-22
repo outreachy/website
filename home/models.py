@@ -1941,6 +1941,11 @@ class InternSelection(models.Model):
             help_text="Is this intern and funding information confirmed to be correct by the Outreachy organizers?",
             default=False)
 
+    class Meta:
+        unique_together = (
+                ('applicant', 'project'),
+                )
+
     # Intern funding is decided by Outreachy coordinators
     # but Outreachy organizers have the final yes/no approval for interns.
     def is_approver(self, user):
