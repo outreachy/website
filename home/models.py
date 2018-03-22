@@ -1887,6 +1887,14 @@ class FinalApplication(ApprovalStatus):
     def submission_and_approval_deadline(self):
         return self.project.application_deadline()
 
+    def get_intern_selection(self):
+        try:
+            return InternSelection.objects.get(
+                    applicant=self.applicant,
+                    project=self.project)
+        except InternSelection.DoesNotExist:
+            return None
+
     def __str__(self):
         return '{applicant} application for {community} - {project} - {id}'.format(
                 applicant = self.applicant.applicant.public_name,

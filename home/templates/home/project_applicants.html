@@ -32,16 +32,20 @@ that timeline, taking into account any time commitments the applicant has.
 {% with finalapps=project.get_sorted_applications %}
 	{% if finalapps %}
 		<h2 id="rating">Applicant Ratings</h2>
-		<p>Please note that only mentors for this project can change applicant ratings.</p>
+		<p>Please note that only mentors for this project can change applicant ratings or select interns.</p>
+		<p>The deadline for selecting an intern is {{ current_round.InternSelectionDeadline }} at 4pm UTC. Once mentors select their interns, the community coordinator will need to assign funding sources. The Outreachy organizers will then approve the intern selection and funding source.</p>
+		<p>Do not communicate your intern selection choices to applicants until after the interns are announced on {{ current_round.internannounce }} at 4pm UTC on the <a href="/alums/">alums page</a></p>
 		<form method="post">
 		{% csrf_token %}
 		<table class="table table-striped">
 			<thead>
 				<tr>
 					<th scope="col">Rating</th>
-					{% if project.is_submitter %}<th scope="col">Change Rating</th>{% endif %}
-					<th scope="col">Name and email</th>
+					{% if approved_mentor %}<th scope="col">Change Rating</th>{% endif %}
+					<th scope="col">Applicant</th>
 					<th scope="col">Applicant Info</th>
+					<th scope="col">Intern Selection Status</th>
+					<th scope="col">Intern Mentors</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -59,9 +63,28 @@ that timeline, taking into account any time commitments the applicant has.
 							</div>
 						</div>
 					</td>
-					{% endif %}
 					<td>{{ fa.applicant.applicant.public_name }} &lt;{{ fa.applicant.applicant.account.email }}&gt; </td>
 					<td><a href="#{{ fa.applicant.applicant.pk }}">(details)</a></td>
+					<td>{% if not fa.get_intern_selection %}Not selected{% else %}
+						{% with selection=fa.get_intern_selection %}
+						{{ selection.get_funding_source_display }}
+						{% endwith %}{% endif %}
+						<br><br>
+						{% if selection.organizer_approved %}Intern approved{% else %}Intern pending organizer approval{% endif %}
+					</td>
+					{% endif %}
+					<td>
+						{% with selection=fa.get_intern_selection %}
+							{% if selection %}{% for m in selection.mentors.all %}{{ m.mentor.public_name }}{% if not forloop.last %}, {% endif %}{% endfor %}<br>{% endif %}
+							{% if approved_mentor %}
+								{% if not selection %}
+									<a href="{% url 'select-intern' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug applicant_username=fa.applicant.applicant.account.username %}"><input class="btn btn-success" value="Mentor Intern" />
+								{% elif not mentor_approval in selection.mentors.all %}
+									<a href="{% url 'select-intern' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug applicant_username=fa.applicant.applicant.account.username %}"><input class="btn btn-success" value="Co-mentor Intern" />
+								{% else %}<br>You signed the mentor agreement.{% endif %}
+							{% endif %}
+						{% endwith %}
+					</td>
 				</tr>
 			{% endfor %}
 			</tbody>

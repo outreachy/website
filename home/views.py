@@ -1,11 +1,12 @@
+from betterforms.multiform import MultiModelForm
 from collections import defaultdict
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from django.db import models
-from django.forms import inlineformset_factory, modelform_factory, widgets
+from django.forms import inlineformset_factory, ModelForm, modelform_factory, widgets
 from django.forms.models import BaseInlineFormSet
 from django.shortcuts import get_list_or_404
 from django.shortcuts import get_object_or_404
@@ -15,7 +16,7 @@ from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.text import slugify
 from django.views.decorators.http import require_POST
-from django.views.generic import View, DetailView, ListView, TemplateView
+from django.views.generic import FormView, View, DetailView, ListView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 from formtools.wizard.views import SessionWizardView
 from itertools import chain, groupby
@@ -42,8 +43,10 @@ from .models import create_time_commitment_calendar
 from .models import DASHBOARD_MODELS
 from .models import EmploymentTimeCommitment
 from .models import FinalApplication
+from .models import InternSelection
 from .models import has_deadline_passed
 from .models import MentorApproval
+from .models import MentorRelationship
 from .models import NewCommunity
 from .models import NonCollegeSchoolTimeCommitment
 from .models import Notification
@@ -53,6 +56,7 @@ from .models import ProjectSkill
 from .models import RoundPage
 from .models import SchoolInformation
 from .models import SchoolTimeCommitment
+from .models import SignedContract
 from .models import Sponsorship
 from .models import VolunteerTimeCommitment
 
@@ -1515,6 +1519,14 @@ class ProjectApplicants(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
                 applicant__approval_status=ApprovalStatus.APPROVED).order_by(
                 "applicant__applicant__public_name", "date_started")
         internship_total_days = current_round.internends - current_round.internstarts
+        try:
+            mentor_approval = MentorApproval.objects.get(
+                    project=project,
+                    mentor=self.request.user.comrade,
+                    approval_status=MentorApproval.APPROVED)
+        except MentorApproval.DoesNotExist:
+            mentor_approval = None
+
         context = super(ProjectApplicants, self).get_context_data(**kwargs)
         context.update({
             'current_round': current_round,
@@ -1523,6 +1535,7 @@ class ProjectApplicants(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
             'contributions': contributions,
             'internship_total_days': internship_total_days,
             'approved_mentor': project.is_submitter(self.request.user),
+            'mentor_approval': mentor_approval,
             })
         return context
 
@@ -1571,6 +1584,97 @@ class TrustedVolunteersListView(UserPassesTestMixin, ListView):
 
     def test_func(self):
         return self.request.user.is_staff
+
+class SignedContractForm(ModelForm):
+    class Meta:
+        model = SignedContract
+        fields = ('legal_name',)
+
+class FinalApplicationForm(ModelForm):
+    class Meta:
+        model = FinalApplication
+        fields = ('rating',)
+
+class InternSelectionForm(MultiModelForm):
+    form_classes = {
+            'rating': FinalApplicationForm,
+            'contract': SignedContractForm,
+            }
+
+# FIXME: Need a way to 'unselect' an intern. Should destroy the InternSelection object.
+# Passed round_slug, community_slug, project_slug, applicant_username
+class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, FormView):
+    form_class = InternSelectionForm
+    template_name = 'home/internselection_form.html'
+
+    def get_form_kwargs(self):
+        kwargs = super(InternSelectionUpdate, self).get_form_kwargs()
+
+        current_round = RoundPage.objects.latest('internstarts')
+        this_round = RoundPage.objects.get(slug=self.kwargs['round_slug'])
+        if this_round != current_round:
+            raise PermissionDenied("You cannot select an intern for a past Outreachy round.")
+
+        # Make sure both the Community and Project are approved
+        self.project = get_object_or_404(Project,
+                slug=self.kwargs['project_slug'],
+                approval_status=ApprovalStatus.APPROVED,
+                project_round__community__slug=self.kwargs['community_slug'],
+                project_round__participating_round=current_round,
+                project_round__approval_status=ApprovalStatus.APPROVED)
+        self.applicant = get_object_or_404(ApplicantApproval,
+                applicant__account__username=self.kwargs['applicant_username'],
+                approval_status=ApplicantApproval.APPROVED,
+                application_round=current_round)
+        application = get_object_or_404(FinalApplication,
+                applicant=self.applicant,
+                project=self.project)
+
+        # Only allow approved mentors to select interns
+        try:
+            self.mentor_approval = MentorApproval.objects.get(
+                    mentor=self.request.user.comrade,
+                    project=self.project,
+                    approval_status=MentorApproval.APPROVED)
+        except MentorApproval.DoesNotExist:
+            raise PermissionDenied("Only approved mentors can select an applicant as an intern")
+
+        # Don't allow mentors to sign the contract twice
+        if MentorRelationship.objects.filter(
+                    mentor = self.mentor_approval,
+                    intern_selection__applicant = self.applicant).exists():
+            raise PermissionDenied("This intern has already been selected for this project. You cannot sign the mentor agreement twice.")
+
+        # We pass in all object instances that already exist,
+        # and the form will create new object instances in memory that aren't referenced.
+        kwargs.update(instance={
+            'rating': application,
+        })
+        return kwargs
+
+    def form_valid(self, form):
+        form['rating'].save()
+        # Fill in the date and IP address of the signed contract
+        intern_selection, was_intern_selection_created = InternSelection.objects.get_or_create(
+                applicant=self.applicant,
+                project=self.project,
+                )
+        signed_contract = form['contract'].save(commit=False)
+        signed_contract.date_signed = datetime.now(timezone.utc)
+        signed_contract.ip_address = self.request.META.get('REMOTE_ADDR')
+        signed_contract.save()
+        mentor_relationship = MentorRelationship(
+                intern_selection=intern_selection,
+                mentor=self.mentor_approval,
+                contract=signed_contract).save()
+        return redirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('project-applicants', kwargs={
+            'round_slug': self.kwargs['round_slug'],
+            'community_slug': self.kwargs['community_slug'],
+            'project_slug': self.kwargs['project_slug'],
+            }) + "#rating"
 
 @login_required
 def dashboard(request):

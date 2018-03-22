@@ -26,6 +26,7 @@ community_cfp_patterns = [
 urlpatterns = [
     url(r'^communities/cfp/add/$', views.CommunityCreate.as_view(), name='community-add'),
     url(r'^communities/cfp/(?P<community_slug>[^/]+)/', include(community_cfp_patterns)),
+    url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/final-application/(?P<applicant_username>[^/]+)/select/?$', views.InternSelectionUpdate.as_view(), name='select-intern'),
     url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/final-application/(?P<action>[^/]+)/(?:(?P<username>[^/]+)/)?$', views.FinalApplicationAction.as_view(), name='application-action'),
     url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/final-application/rate/(?P<username>[^/]+)/(?P<rating>[^/]+)$', views.FinalApplicationRate.as_view(), name='application-rate'),
     url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/contributions/add/$', views.ContributionUpdate.as_view(), name='contributions-add'),
