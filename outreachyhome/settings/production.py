@@ -11,13 +11,18 @@ COMPRESS_OFFLINE = True
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '162.242.218.160 .outreachy.org').split()
 
 SECRET_KEY = os.environ['SECRET_KEY']
-EMAIL_HOST = os.environ.get('EMAIL_HOST', 'localhost')
-# Environment variables are strings, so we need to convert to an integer
-EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 25))
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
-# Environment variables are strings, so we need to convert to an bool
-EMAIL_USE_SSL = bool(os.environ.get('EMAIL_USE_SSL', False))
+
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+if EMAIL_HOST:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    # Environment variables are strings, so we need to convert to an integer
+    EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 25))
+    EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+    # Environment variables are strings, so we need to convert to an bool
+    EMAIL_USE_SSL = bool(os.environ.get('EMAIL_USE_SSL', False))
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # In production, log warnings and errors to the console where Dokku will
 # capture them for display using `dokku logs`. You can get more detailed
