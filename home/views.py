@@ -1602,6 +1602,18 @@ class InternSelectionForm(MultiModelForm):
             'contract': SignedContractForm,
             }
 
+def set_project_and_applicant(self, current_round):
+    self.project = get_object_or_404(Project,
+            slug=self.kwargs['project_slug'],
+            approval_status=ApprovalStatus.APPROVED,
+            project_round__community__slug=self.kwargs['community_slug'],
+            project_round__participating_round=current_round,
+            project_round__approval_status=ApprovalStatus.APPROVED)
+    self.applicant = get_object_or_404(ApplicantApproval,
+            applicant__account__username=self.kwargs['applicant_username'],
+            approval_status=ApplicantApproval.APPROVED,
+            application_round=current_round)
+
 # FIXME: Need a way to 'unselect' an intern. Should destroy the InternSelection object.
 # Passed round_slug, community_slug, project_slug, applicant_username
 class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, FormView):
@@ -1616,17 +1628,7 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, FormView):
         if this_round != current_round:
             raise PermissionDenied("You cannot select an intern for a past Outreachy round.")
 
-        # Make sure both the Community and Project are approved
-        self.project = get_object_or_404(Project,
-                slug=self.kwargs['project_slug'],
-                approval_status=ApprovalStatus.APPROVED,
-                project_round__community__slug=self.kwargs['community_slug'],
-                project_round__participating_round=current_round,
-                project_round__approval_status=ApprovalStatus.APPROVED)
-        self.applicant = get_object_or_404(ApplicantApproval,
-                applicant__account__username=self.kwargs['applicant_username'],
-                approval_status=ApplicantApproval.APPROVED,
-                application_round=current_round)
+        set_project_and_applicant(self, current_round)
         application = get_object_or_404(FinalApplication,
                 applicant=self.applicant,
                 project=self.project)
@@ -1701,17 +1703,7 @@ class InternRemoval(LoginRequiredMixin, ComradeRequiredMixin, DeleteView):
         if this_round != current_round:
             raise PermissionDenied("You cannot remove an intern from a past Outreachy round.")
 
-        # Make sure both the Community and Project are approved
-        self.project = get_object_or_404(Project,
-                slug=self.kwargs['project_slug'],
-                approval_status=ApprovalStatus.APPROVED,
-                project_round__community__slug=self.kwargs['community_slug'],
-                project_round__participating_round=current_round,
-                project_round__approval_status=ApprovalStatus.APPROVED)
-        self.applicant = get_object_or_404(ApplicantApproval,
-                applicant__account__username=self.kwargs['applicant_username'],
-                approval_status=ApplicantApproval.APPROVED,
-                application_round=current_round)
+        set_project_and_applicant(self, current_round)
         self.intern_selection = get_object_or_404(InternSelection,
                 applicant=self.applicant,
                 project=self.project)
