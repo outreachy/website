@@ -1937,9 +1937,10 @@ class InternSelection(models.Model):
         default=UNDECIDED_FUNDING,
         help_text="How will this intern be funded?",
     )
-    organizer_approved = models.BooleanField(
+    # None = undecided, True = accepted, False = not accepted
+    organizer_approved = models.NullBooleanField(
             help_text="Is this intern and funding information confirmed to be correct by the Outreachy organizers?",
-            default=False)
+            default=None)
 
     class Meta:
         unique_together = (
