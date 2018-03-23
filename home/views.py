@@ -1614,7 +1614,6 @@ def set_project_and_applicant(self, current_round):
             approval_status=ApplicantApproval.APPROVED,
             application_round=current_round)
 
-# FIXME: Need a way to 'unselect' an intern. Should destroy the InternSelection object.
 # Passed round_slug, community_slug, project_slug, applicant_username
 class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, FormView):
     form_class = InternSelectionForm
