@@ -1549,13 +1549,17 @@ def community_applicants(request, round_slug, community_slug):
             participating_round=current_round,
             approval_status=ApprovalStatus.APPROVED)
 
-    if not request.user.is_staff and not participation.community.is_coordinator(request.user) and not participation.is_mentor(request.user):
+    user_is_coordinator = participation.community.is_coordinator(request.user)
+    user_is_staff = request.user.is_staff
+    if not user_is_staff and not user_is_coordinator and not participation.is_mentor(request.user):
         raise PermissionDenied("You are not an approved mentor for this community.")
 
     return render(request, 'home/community_applicants.html', {
         'current_round': current_round,
         'community': participation.community,
         'participation': participation,
+        'is_coordinator': user_is_coordinator,
+        'is_staff': user_is_staff,
         })
 
 def contribution_tips(request):
@@ -1787,6 +1791,34 @@ class MentorResignation(LoginRequiredMixin, ComradeRequiredMixin, DeleteView):
             'community_slug': self.kwargs['community_slug'],
             'project_slug': self.kwargs['project_slug'],
             }) + "#rating"
+
+class InternFund(LoginRequiredMixin, ComradeRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        username = kwargs['applicant_username']
+        current_round = RoundPage.objects.latest('internstarts')
+        if current_round.slug != kwargs['round_slug']:
+            raise PermissionDenied("You can only select funding sources for interns in the current round.")
+
+        set_project_and_applicant(self, current_round)
+        self.intern_selection = get_object_or_404(InternSelection,
+                applicant=self.applicant,
+                project=self.project)
+
+        # Only allow approved coordinators and organizers to select intern funding
+        user_is_coordinator = self.project.project_round.community.is_coordinator(request.user)
+        user_is_staff = request.user.is_staff
+        if not user_is_staff and not user_is_coordinator:
+            raise PermissionDenied("Only approved coordinators and organizers can set intern funding sources.")
+
+        funding = kwargs['funding']
+        if funding in [c[0] for c in self.intern_selection.FUNDING_CHOICES]:
+            self.intern_selection.funding_source = kwargs['funding']
+            self.intern_selection.save()
+
+        return redirect(reverse('community-applicants', kwargs={
+            'round_slug': kwargs['round_slug'],
+            'community_slug': kwargs['community_slug'],
+            }) + "#interns")
 
 @login_required
 def dashboard(request):

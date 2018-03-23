@@ -151,6 +151,9 @@ class RoundPage(Page):
     
     def InternSelectionDeadline(self):
         return(self.appslate + timedelta(days=6))
+
+    def coordinator_funding_deadline(self):
+        return(self.appslate + timedelta(days=10))
     
     def InternConfirmationDeadline(self):
         return(self.appsclose + timedelta(days=24))
@@ -1073,6 +1076,9 @@ class Project(ApprovalStatus):
     def get_withdrawn_applications(self):
         return FinalApplication.objects.filter(project = self, approval_status=ApprovalStatus.WITHDRAWN)
 
+    def get_interns(self):
+        return InternSelection.objects.filter(project = self).all()
+
     def get_approved_mentors(self):
         return self.mentorapproval_set.filter(approval_status=ApprovalStatus.APPROVED)
 
@@ -1892,6 +1898,11 @@ class FinalApplication(ApprovalStatus):
     def submission_and_approval_deadline(self):
         return self.project.application_deadline()
 
+    def number_contributions(self):
+        return Contribution.objects.filter(
+                project=self.project,
+                applicant=self.applicant).count()
+
     def get_intern_selection(self):
         try:
             return InternSelection.objects.get(
@@ -1979,6 +1990,12 @@ class InternSelection(models.Model):
 
     def mentor_names(self):
         return ", ".join([m.mentor.public_name for m in self.mentors.all()])
+
+    def get_application(self):
+        return FinalApplication.objects.get(
+                project=self.project,
+                applicant=self.applicant,
+                )
 
     def __str__(self):
         return self.mentor_names() + ' mentoring ' + self.applicant.applicant.public_name
