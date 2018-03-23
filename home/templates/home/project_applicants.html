@@ -62,7 +62,7 @@ that timeline, taking into account any time commitments the applicant has.
 								{% endfor %}
 							</div>
 						</div>
-					</td>
+					</td>{% endif %}
 					<td>{{ fa.applicant.applicant.public_name }} &lt;{{ fa.applicant.applicant.account.email }}&gt; </td>
 					<td><a href="#{{ fa.applicant.applicant.pk }}">(details)</a></td>
 					<td>{% if not fa.get_intern_selection %}Not selected{% else %}
@@ -72,10 +72,9 @@ that timeline, taking into account any time commitments the applicant has.
 						<br><br>
 						{% if selection.organizer_approved %}Intern approved{% else %}Intern pending organizer approval{% endif %}
 					</td>
-					{% endif %}
 					<td>
 						{% with selection=fa.get_intern_selection %}
-							{% if selection %}{% for m in selection.mentors.all %}{{ m.mentor.public_name }}{% if not forloop.last %}, {% endif %}{% endfor %}<br>{% endif %}
+							{% if selection %}{% for m in selection.mentors.all %}{{ m.mentor.public_name }}{% if not forloop.last %}, {% endif %}{% endfor %}<br>{% else %} - {% endif %}
 							{% if approved_mentor %}
 								{% if not selection %}
 									<a href="{% url 'select-intern' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug applicant_username=fa.applicant.applicant.account.username %}"><input class="btn btn-success" value="Mentor Intern" />
