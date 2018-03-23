@@ -804,7 +804,7 @@ class Participation(ApprovalStatus):
 
     def is_mentor(self, user):
         return MentorApproval.objects.filter(
-                mentor=user.comrade,
+                mentor__account=user,
                 project__project_round=self,
                 project__approval_status=ApprovalStatus.APPROVED,
                 approval_status=ApprovalStatus.APPROVED).exists()
