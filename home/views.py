@@ -1712,9 +1712,6 @@ class InternRemoval(LoginRequiredMixin, ComradeRequiredMixin, DeleteView):
                 applicant__account__username=self.kwargs['applicant_username'],
                 approval_status=ApplicantApproval.APPROVED,
                 application_round=current_round)
-        application = get_object_or_404(FinalApplication,
-                applicant=self.applicant,
-                project=self.project)
         self.intern_selection = get_object_or_404(InternSelection,
                 applicant=self.applicant,
                 project=self.project)
