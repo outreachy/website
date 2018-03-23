@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from django.db import models
-from django.forms import inlineformset_factory, ModelForm, modelform_factory, widgets
+from django.forms import inlineformset_factory, ModelForm, modelform_factory, ValidationError, widgets
 from django.forms.models import BaseInlineFormSet
 from django.shortcuts import get_list_or_404
 from django.shortcuts import get_object_or_404
@@ -1599,6 +1599,13 @@ class FinalApplicationForm(ModelForm):
     class Meta:
         model = FinalApplication
         fields = ('rating',)
+
+    def clean_rating(self):
+        rating = self.cleaned_data['rating']
+        if rating == FinalApplication.UNRATED:
+            raise ValidationError("You must provide a rating for the selected applicant.")
+        return rating
+
 
 class InternSelectionForm(MultiModelForm):
     form_classes = {
