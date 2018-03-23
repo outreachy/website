@@ -1,0 +1,48 @@
+<div class="card border-warning mb-3">
+	<div class="card-header text-white bg-warning">Intern selection conflict</div>
+	<div class="card-body">
+		<div class="card-text">
+			<p>{{ intern.applicant.applicant.public_name }} has been selected by more than one project:
+			<ul>
+		{% for conflict in conflicts %}
+				<li>{{ conflict.project.project_round.community.name }} for "{{ conflict.project.short_title }}" -
+					<a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=conflict.project.project_round.community.slug project_slug=conflict.project.slug %}#{{ intern.applicant.applicant.pk }}">contribution and application details</a>
+					<ul>
+						<li>
+					{{ conflict.project.project_round.community.name }} Coordinators:
+					{% for email in conflict.project.project_round.community.get_coordinator_email_list %}
+						{{ email }}{% if not forloop.last %}, {% endif %}
+					{% endfor %}
+						</li>
+						<li>
+					Mentors:
+					{% for email in conflict.project.get_submitter_email_list %}
+						{{ email }}{% if not forloop.last %}, {% endif %}
+					{% endfor %}
+						</li>
+					</ul>
+				</li>
+		{% endfor %}
+				<li>{{ project.project_round.community.name }} for "{{ project.short_title }}" -
+					<a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}#{{ intern.applicant.applicant.pk }}">contribution and application details</a>
+					<ul>
+						<li>
+					{{ project.project_round.community.name }} Coordinators:
+					{% for email in project.project_round.community.get_coordinator_email_list %}
+						{{ email }}{% if not forloop.last %}, {% endif %}
+					{% endfor %}
+						</li>
+						<li>
+					Mentors:
+					{% for email in project.get_submitter_email_list %}
+						{{ email }}{% if not forloop.last %}, {% endif %}
+					{% endfor %}
+						</li>
+					</ul>
+				</li>
+			</ul>
+			</p>
+			<p>Please email the coordinators and mentors listed above to resolve this conflict, and make sure to Cc &lt;organizers@outreachy.org&gt;</p>
+		</div>
+	</div>
+</div>

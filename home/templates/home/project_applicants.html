@@ -99,6 +99,15 @@ that timeline, taking into account any time commitments the applicant has.
 						{% endwith %}
 					</td>
 				</tr>
+				{% with intern=fa.get_intern_selection conflicts=fa.get_intern_selection.get_intern_selection_conflicts %}
+				{% if conflicts %}
+				<tr>
+					<td colspan=6>
+						{% include 'home/snippet/intern_selection_conflict.html' %}
+					</td>
+				</tr>
+				{% endif %}
+				{% endwith %}
 			{% endfor %}
 			</tbody>
 		</table>

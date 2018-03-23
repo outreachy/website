@@ -193,6 +193,14 @@ class RoundPage(Page):
         # GSoC traditionally starts either in May or June
         return(self.internstarts.month < 8)
 
+    def is_mentor(self, user):
+        return MentorApproval.objects.filter(
+                mentor__account=user,
+                project__project_round__participating_round=self,
+                project__project_round__approval_status=ApprovalStatus.APPROVED,
+                project__approval_status=ApprovalStatus.APPROVED,
+                approval_status=ApprovalStatus.APPROVED).exists()
+
     def serve(self, request, *args, **kwargs):
         # Only show this page if newer rounds exist.
         if RoundPage.objects.filter(internstarts__gt=self.internstarts).exists():
@@ -1996,6 +2004,14 @@ class InternSelection(models.Model):
                 project=self.project,
                 applicant=self.applicant,
                 )
+
+    def get_intern_selection_conflicts(self):
+        if self.funding_source == self.NOT_FUNDED:
+            return []
+        return InternSelection.objects.filter(
+                project__project_round__participating_round=self.project.project_round.participating_round,
+                applicant=self.applicant,
+                ).exclude(funding_source=self.NOT_FUNDED).exclude(project=self.project).all()
 
     def __str__(self):
         return self.mentor_names() + ' mentoring ' + self.applicant.applicant.public_name

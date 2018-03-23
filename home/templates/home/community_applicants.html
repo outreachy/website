@@ -79,6 +79,15 @@ Review {{ community.name }} Applicants
 							<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}#{{ intern.applicant.applicant.pk }}">details</a></td>
 							<td>{% if application.applying_to_gsoc %}Yes{% else %} - {% endif %}</td>
 						</tr>
+						{% with conflicts=intern.get_intern_selection_conflicts %}
+						{% if conflicts %}
+							<tr>
+								<td colspan=10>
+									{% include 'home/snippet/intern_selection_conflict.html' %}
+								</td>
+							</tr>
+						{% endif %}
+						{% endwith %}
 					{% endwith %}
 				{% endfor %}
 			{% endwith %}

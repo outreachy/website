@@ -1512,7 +1512,7 @@ class ProjectApplicants(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
                 project_round__participating_round=current_round,
                 project_round__approval_status=ApprovalStatus.APPROVED)
 
-        if not self.request.user.is_staff and not project.project_round.community.is_coordinator(self.request.user) and not project.project_round.is_mentor(self.request.user):
+        if not self.request.user.is_staff and not project.project_round.community.is_coordinator(self.request.user) and not project.project_round.participating_round.is_mentor(self.request.user):
             raise PermissionDenied("You are not an approved mentor for this project.")
 
         contributions = project.contribution_set.filter(
@@ -1836,6 +1836,8 @@ class InternFund(LoginRequiredMixin, ComradeRequiredMixin, View):
                         funding_source=InternSelection.ORG_FUNDED).count()
                 if org_funded_intern_count + 1 > self.intern_selection.project.project_round.interns_funded():
                     raise PermissionDenied("You've selected more interns for organization funding than you have sponsored funds available. Please use your web browser back button and choose another funding source.")
+            # FIXME - double check if moving this intern from NOT_FUNDED
+            # to any other state would cause an intern to be selected by two projects
             self.intern_selection.funding_source = kwargs['funding']
             self.intern_selection.save()
 
