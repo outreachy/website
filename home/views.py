@@ -1663,10 +1663,19 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super(InternSelectionUpdate, self).get_context_data(**kwargs)
+        try:
+            intern_selection = InternSelection.objects.get(
+                applicant=self.applicant,
+                project=self.project,
+                )
+        except InternSelection.DoesNotExist:
+            intern_selection = None
+
         context['mentor_agreement_html'] = markdownify(self.mentor_agreement)
         context['project'] = self.project
         context['community'] = self.project.project_round.community
         context['applicant'] = self.applicant
+        context['intern_selection'] = intern_selection
         context['current_round'] = RoundPage.objects.latest('internstarts')
         return context
 

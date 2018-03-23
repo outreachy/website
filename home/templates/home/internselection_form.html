@@ -1,9 +1,18 @@
 {% extends "base.html" %}
 
+{% block title %}
+Mentor {{ community.name }} Interns
+{% endblock %}
+
 {% block content %}
 
-<h1>Mentor or Co-mentor an Outreachy Intern</h1>
-<p>You are selecting the applicant, {{ applicant.applicant.public_name }}, as an intern for the {{ community.name }} project "{{ project.short_title }}".</p>
+{% if not intern_selection %}
+	<h1>Mentor an Outreachy Intern</h1>
+	<p>You are selecting the applicant, {{ applicant.applicant.public_name }}, as an intern for the {{ community.name }} project "{{ project.short_title }}".</p>
+{% else %}
+	<h1>Co-mentor an Outreachy Intern</h1>
+	<p>You are agreeing to co-mentor the applicant, {{ applicant.applicant.public_name }}, as an intern for the {{ community.name }} project "{{ project.short_title }}".</p>
+{% endif %}
 
 <form method="post" action="">
 {% csrf_token %}
@@ -12,10 +21,16 @@
 			{{ field.errors }}
 			{% if 'rating' in field.label_tag %}
 				<h2>Applicant Rating</h2>
-				<p>Please provide a rating for the contributions {{ applicant.applicant.public_name }} made during the Outreachy application process.</p>
+				{% if not intern_selection %}
+					<p>Please provide a rating for the contributions {{ applicant.applicant.public_name }} made during the Outreachy application process.</p>
+				{% else %}
+					<p>Your co-mentor provided the following rating for the contributions {{ applicant.applicant.public_name }} made during the Outreachy application process. You may update it if necessary.</p>
+				{% endif %}
 			{% elif 'Legal' in field.label_tag %}
 				<h2>Mentor Agreement</h2>
-				<p>By filling out this form, you are agreeing to mentor this intern, putting in approximately 5 hours a week during the internship period from {{ current_round.internstarts }} to {{ current_round.internends }}.</p>
+				<p>By filling out this form, you are agreeing to mentor this intern. You understand that if a co-mentor for this project terminates their mentorship, you may be solely responsible for mentoring this intern, or finding a new mentor.</p>
+				<p>You agree to mentor for approximately 5 hours a week during the internship period from {{ current_round.internstarts }} to {{ current_round.internends }}. Outreachy internships may be extended for up to 5 weeks at mentor and intern request.</p>
+				<p>Do not tell the applicant they have been selected for the internship until the interns are announced on the <a href="/alums/">alums page</a> on {{ current_round.internannounce }} at 4pm UTC.</p>
 				<div class="card mb-3">
 					<div class="card-body">
 						{{ mentor_agreement_html|safe }}
