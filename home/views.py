@@ -1828,6 +1828,14 @@ class InternFund(LoginRequiredMixin, ComradeRequiredMixin, View):
 
         funding = kwargs['funding']
         if funding in [c[0] for c in self.intern_selection.FUNDING_CHOICES]:
+            if funding == InternSelection.ORG_FUNDED:
+                # 'project_round' is the Participation (community and round)
+                # Look for which are org-funded interns in this round for this community
+                org_funded_intern_count = InternSelection.objects.filter(
+                        project__project_round=self.intern_selection.project.project_round,
+                        funding_source=InternSelection.ORG_FUNDED).count()
+                if org_funded_intern_count + 1 > self.intern_selection.project.project_round.interns_funded():
+                    raise PermissionDenied("You've selected more interns for organization funding than you have sponsored funds available. Please use your web browser back button and choose another funding source.")
             self.intern_selection.funding_source = kwargs['funding']
             self.intern_selection.save()
 
