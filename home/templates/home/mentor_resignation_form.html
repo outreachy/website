@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Resign From Mentoring</h1>
+
+<p>You are resigning as a mentor of the applicant, {{ applicant.applicant.public_name }}, who is an intern for the {{ community.name }} project "{{ project.short_title }}".</p>
+
+<p>Please note this will not remove the applicant from the list of accepted Outreachy interns. If you wanted to do that, there is a different button on the previous page for removing the intern from the Outreachy program.</p>
+
+<form method="post" action="">
+	{% csrf_token %}
+	{{ form.as_p }}
+    <input class="btn btn-warning" type="submit" value="Resign From Mentoring" />
+</form>
+
+{% endblock %}

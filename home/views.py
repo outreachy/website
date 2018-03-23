@@ -1734,9 +1734,54 @@ class InternRemoval(LoginRequiredMixin, ComradeRequiredMixin, DeleteView):
 
         # Delete all the associated signed contracts
         # The MentorRelationships will be deleted automatically
+        # However, if a mentor resigned from the internship,
+        # the contract will still be around, and that's ok.
         for relationship in self.mentor_relationships:
             relationship.contract.delete()
 
+        return reverse('project-applicants', kwargs={
+            'round_slug': self.kwargs['round_slug'],
+            'community_slug': self.kwargs['community_slug'],
+            'project_slug': self.kwargs['project_slug'],
+            }) + "#rating"
+
+# Passed round_slug, community_slug, project_slug, applicant_username
+# Even if someone resigns as a mentor, we still want to keep their signed mentor agreement
+class MentorResignation(LoginRequiredMixin, ComradeRequiredMixin, DeleteView):
+    model = MentorRelationship
+    template_name = 'home/mentor_resignation_form.html'
+
+    def get_object(self):
+        self.current_round = RoundPage.objects.get(slug=self.kwargs['round_slug'])
+        if self.current_round.has_internship_ended():
+            raise PermissionDenied("You cannot resign as a mentor from an internship from a past Outreachy round.")
+
+        set_project_and_applicant(self, self.current_round)
+        self.intern_selection = get_object_or_404(InternSelection,
+                applicant=self.applicant,
+                project=self.project)
+
+        # Only allow approved mentors to resign from the internship
+        try:
+            self.mentor_approval = MentorApproval.objects.get(
+                    mentor=self.request.user.comrade,
+                    project=self.project,
+                    approval_status=MentorApproval.APPROVED)
+        except MentorApproval.DoesNotExist:
+            raise PermissionDenied("Only approved mentors can resign from an internship.")
+        return get_object_or_404(self.intern_selection.mentorrelationship_set,
+                mentor=self.mentor_approval)
+
+    def get_context_data(self, **kwargs):
+        context = super(MentorResignation, self).get_context_data(**kwargs)
+        context['project'] = self.project
+        context['community'] = self.project.project_round.community
+        context['applicant'] = self.applicant
+        context['current_round'] = self.current_round
+        return context
+
+    def get_success_url(self):
+        # Store the signed mentor contract for resigned mentors
         return reverse('project-applicants', kwargs={
             'round_slug': self.kwargs['round_slug'],
             'community_slug': self.kwargs['community_slug'],

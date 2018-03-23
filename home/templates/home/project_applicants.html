@@ -66,26 +66,35 @@ that timeline, taking into account any time commitments the applicant has.
 					<td>{{ fa.applicant.applicant.public_name }} &lt;{{ fa.applicant.applicant.account.email }}&gt; </td>
 					<td><a href="#{{ fa.applicant.applicant.pk }}">(details)</a></td>
 					<td>
-						{% if not fa.get_intern_selection %}Not selected{% else %}
-							Intern selected by mentor
-							{% with selection=fa.get_intern_selection %}
+						{% with selection=fa.get_intern_selection %}
+						<p>
+						{% if not selection %}
+							Not selected</p>
+						{% elif not selection.mentors.all %}
+							Applicant was selected by a mentor, but all mentors have resigned from the internship.</p><p>Applicant will not be shown in the accepted interns list until they have a mentor.</p>
+							{% if approved_mentor %}<a href="{% url 'remove-intern' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug applicant_username=fa.applicant.applicant.account.username %}"><input class="btn btn-danger" value="Remove Intern" />{% endif %}
+						{% else %}
+							Intern selected by mentor</p>
 								<ul>
 									<li>Coordinator funding decision: {{ selection.get_funding_source_display }}</li>
 									<li>{% if selection.organizer_approved %}Intern approved{% else %}Intern pending organizer approval{% endif %}</li>
 								</ul>
 								{% if approved_mentor %}<a href="{% url 'remove-intern' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug applicant_username=fa.applicant.applicant.account.username %}"><input class="btn btn-danger" value="Remove Intern" />{% endif %}
-							{% endwith %}
 						{% endif %}
+						{% endwith %}
 					</td>
 					<td>
 						{% with selection=fa.get_intern_selection %}
-							{% if selection %}{% for m in selection.mentors.all %}{{ m.mentor.public_name }}{% if not forloop.last %}, {% endif %}{% endfor %}<br>{% else %} - {% endif %}
+							{% if selection %}<p>{% for m in selection.mentors.all %}{{ m.mentor.public_name }}{% if not forloop.last %}, {% endif %}{% endfor %}<br>{% elif not approved_mentor %} - {% endif %}</p>
 							{% if approved_mentor %}
 								{% if not selection %}
 									<a href="{% url 'select-intern' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug applicant_username=fa.applicant.applicant.account.username %}"><input class="btn btn-success" value="Mentor Intern" />
 								{% elif not mentor_approval in selection.mentors.all %}
 									<a href="{% url 'select-intern' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug applicant_username=fa.applicant.applicant.account.username %}"><input class="btn btn-success" value="Co-mentor Intern" />
-								{% else %}<br>You signed the mentor agreement.{% endif %}
+								{% else %}
+									<p>You signed the mentor agreement.</p>
+									<a href="{% url 'resign-as-mentor' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug applicant_username=fa.applicant.applicant.account.username %}"><input class="btn btn-warning" value="Resign as Mentor" />
+								{% endif %}
 							{% endif %}
 						{% endwith %}
 					</td>
