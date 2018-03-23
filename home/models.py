@@ -1924,7 +1924,7 @@ class FinalApplication(ApprovalStatus):
                 )
 
 class SignedContract(models.Model):
-    text = models.CharField(max_length=100000, verbose_name="Contract text")
+    text = models.TextField(max_length=100000, verbose_name="Contract text")
     legal_name = models.CharField(max_length=LONG_LEGAL_NAME,
             verbose_name="Legal name",
             help_text="Your name on your government identification. This is the name that you would use to sign a legal document.")
