@@ -65,12 +65,17 @@ that timeline, taking into account any time commitments the applicant has.
 					</td>{% endif %}
 					<td>{{ fa.applicant.applicant.public_name }} &lt;{{ fa.applicant.applicant.account.email }}&gt; </td>
 					<td><a href="#{{ fa.applicant.applicant.pk }}">(details)</a></td>
-					<td>{% if not fa.get_intern_selection %}Not selected{% else %}
-						{% with selection=fa.get_intern_selection %}
-						{{ selection.get_funding_source_display }}
-						{% endwith %}{% endif %}
-						<br><br>
-						{% if selection.organizer_approved %}Intern approved{% else %}Intern pending organizer approval{% endif %}
+					<td>
+						{% if not fa.get_intern_selection %}Not selected{% else %}
+							Intern selected by mentor
+							{% with selection=fa.get_intern_selection %}
+								<ul>
+									<li>Coordinator funding decision: {{ selection.get_funding_source_display }}</li>
+									<li>{% if selection.organizer_approved %}Intern approved{% else %}Intern pending organizer approval{% endif %}</li>
+								</ul>
+								{% if approved_mentor %}<a href="{% url 'remove-intern' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug applicant_username=fa.applicant.applicant.account.username %}"><input class="btn btn-danger" value="Remove Intern" />{% endif %}
+							{% endwith %}
+						{% endif %}
 					</td>
 					<td>
 						{% with selection=fa.get_intern_selection %}

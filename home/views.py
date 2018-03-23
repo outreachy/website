@@ -17,7 +17,7 @@ from django.utils.http import urlencode
 from django.utils.text import slugify
 from django.views.decorators.http import require_POST
 from django.views.generic import FormView, View, DetailView, ListView, TemplateView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from formtools.wizard.views import SessionWizardView
 from itertools import chain, groupby
 from markdownx.utils import markdownify
@@ -1684,6 +1684,71 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, FormView):
         return redirect(self.get_success_url())
 
     def get_success_url(self):
+        return reverse('project-applicants', kwargs={
+            'round_slug': self.kwargs['round_slug'],
+            'community_slug': self.kwargs['community_slug'],
+            'project_slug': self.kwargs['project_slug'],
+            }) + "#rating"
+
+# Passed round_slug, community_slug, project_slug, applicant_username
+class InternRemoval(LoginRequiredMixin, ComradeRequiredMixin, DeleteView):
+    model = InternSelection
+    template_name = 'home/intern_removal_form.html'
+
+    def get_object(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        this_round = RoundPage.objects.get(slug=self.kwargs['round_slug'])
+        if this_round != current_round:
+            raise PermissionDenied("You cannot remove an intern from a past Outreachy round.")
+
+        # Make sure both the Community and Project are approved
+        self.project = get_object_or_404(Project,
+                slug=self.kwargs['project_slug'],
+                approval_status=ApprovalStatus.APPROVED,
+                project_round__community__slug=self.kwargs['community_slug'],
+                project_round__participating_round=current_round,
+                project_round__approval_status=ApprovalStatus.APPROVED)
+        self.applicant = get_object_or_404(ApplicantApproval,
+                applicant__account__username=self.kwargs['applicant_username'],
+                approval_status=ApplicantApproval.APPROVED,
+                application_round=current_round)
+        application = get_object_or_404(FinalApplication,
+                applicant=self.applicant,
+                project=self.project)
+        self.intern_selection = get_object_or_404(InternSelection,
+                applicant=self.applicant,
+                project=self.project)
+        self.mentor_relationships = self.intern_selection.mentorrelationship_set.all()
+
+        # Only allow approved mentors to remove interns
+        # Coordinators can set the funding to 'Not funded'
+        # Organizers can set the InternSelection.organizer_approved to False
+        try:
+            self.mentor_approval = MentorApproval.objects.get(
+                    mentor=self.request.user.comrade,
+                    project=self.project,
+                    approval_status=MentorApproval.APPROVED)
+        except MentorApproval.DoesNotExist:
+            raise PermissionDenied("Only approved mentors can select an applicant as an intern")
+        return self.intern_selection
+
+    def get_context_data(self, **kwargs):
+        context = super(InternRemoval, self).get_context_data(**kwargs)
+        context['project'] = self.project
+        context['community'] = self.project.project_round.community
+        context['applicant'] = self.applicant
+        context['current_round'] = RoundPage.objects.latest('internstarts')
+        return context
+
+    # get_success_url is called before the object is deleted in DeleteView.delete()
+    # so the objects are still in the database.
+    def get_success_url(self):
+
+        # Delete all the associated signed contracts
+        # The MentorRelationships will be deleted automatically
+        for relationship in self.mentor_relationships:
+            relationship.contract.delete()
+
         return reverse('project-applicants', kwargs={
             'round_slug': self.kwargs['round_slug'],
             'community_slug': self.kwargs['community_slug'],

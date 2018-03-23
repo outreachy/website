@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Confirm Cancel of Internship</h1>
+
+<p>You are canceling the selection of the applicant, {{ applicant.applicant.public_name }}, as an intern for the {{ community.name }} project "{{ project.short_title }}".</p>
+
+<p>Please note this will completely remove the applicant from the list of accepted Outreachy interns. If you wanted to remove yourself as a mentor but keep the applicant as an intern for your community, there is a different button on the previous page for removing yourself as a mentor.</p>
+
+<form method="post" action="">
+	{% csrf_token %}
+	{{ form.as_p }}
+    <input class="btn btn-danger" type="submit" value="Remove Intern" />
+</form>
+
+{% endblock %}
