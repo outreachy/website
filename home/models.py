@@ -1919,6 +1919,12 @@ class FinalApplication(ApprovalStatus):
         except InternSelection.DoesNotExist:
             return None
 
+    def get_intern_selection_conflicts(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        return InternSelection.objects.filter(
+                applicant=self.applicant,
+                project__project_round__participating_round=current_round).exclude(project=self.project)
+
     def __str__(self):
         return '{applicant} application for {community} - {project} - {id}'.format(
                 applicant = self.applicant.applicant.public_name,

@@ -46,6 +46,7 @@ that timeline, taking into account any time commitments the applicant has.
 					<th scope="col">Applicant Info</th>
 					<th scope="col">Intern Selection Status</th>
 					<th scope="col">Intern Mentors</th>
+					<th scope="col">Selected by Another Project?</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -96,6 +97,18 @@ that timeline, taking into account any time commitments the applicant has.
 									<a href="{% url 'resign-as-mentor' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug applicant_username=fa.applicant.applicant.account.username %}"><input class="btn btn-warning" value="Resign as Mentor" />
 								{% endif %}
 							{% endif %}
+						{% endwith %}
+					</td>
+					<td>
+						{% with conflicts=fa.get_intern_selection_conflicts %}
+						{% if conflicts %}
+						<ul>
+							{% for conflict in conflicts %}
+								<li>{{ conflict.project.project_round.community.name }}
+									<a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=conflict.project.project_round.community.slug project_slug=conflict.project.slug %}#{{ intern.applicant.applicant.pk }}">(details)</a>
+							{% endfor %}
+						</ul>
+						{% endif %}
 						{% endwith %}
 					</td>
 				</tr>
