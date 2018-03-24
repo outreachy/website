@@ -66,6 +66,13 @@ def mentor_application_deadline_reminder(project, request):
         request=request,
         recipient_list=project.get_mentor_email_list())
 
+def mentor_intern_selection_reminder(project, request):
+    send_group_template_mail('home/email/mentor-choose-intern.txt', {
+        'project': project,
+        },
+        request=request,
+        recipient_list=project.get_mentor_email_list())
+
 def co_mentor_intern_selection_notification(intern_selection, request):
     mentor_email = intern_selection.mentors.get().mentor.account.email
     email_list = []

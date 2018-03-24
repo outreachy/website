@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}
+Send mentor intern selection reminder emails
+{% endblock %}
+
+{% block content %}
+<p>You're about to send an email to mentors about {{ projects|length }} approved projects who had the project application deadline pass.</p>
+
+<p>Mentors will be reminded how to select an intern,
+and (if possible) that they can extend their deadline.
+</p>
+
+{% for project in projects %}
+<div class="card">
+<div class="card-body">
+<pre>
+To: {% for email in project.get_mentor_email_list %}{{ email }}{% if not forloop.last %}, {% endif %}{% endfor %}
+Subject: {% include 'home/email/mentor-choose-intern.txt' %}
+</pre>
+</div>
+</div>
+{% endfor %}
+
+
+<form action="" method="post">
+    {% csrf_token %}
+    <input class="btn btn-success" type="submit" value="Confirm" />
+</form>
+{% endblock %}

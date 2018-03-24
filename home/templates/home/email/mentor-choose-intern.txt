@@ -1,0 +1,29 @@
+{% with community=project.project_round.community %}{% with current_round=project.project_round.participating_round %}{% with contributors=project.get_applicants_and_contributions_list %}{% with applicants=project.get_applications %}{% with coordinators=community.get_coordinator_email_list %}{% if applicants|length > 0 %}Select your Outreachy Intern by {{ current_round.InternSelectionDeadline }}{% else %}Your Outreachy project application has deadline passed{% endif %}
+
+Hi Outreachy mentor,
+
+The application deadline has passed for your {{ community.name }} project "{{ project.short_title }}".
+
+{% if applicants|length == 0 %}Unfortunately, no applicants created a final application for your project this round.{% if project.deadline != project.LATE %} You may want to extend your project deadline to {{ current_round.appslate }}. If you want the Outreachy organizers to do any promotion of your project, please reach out to organizers@outreachy.org{% endif %}
+
+{% else %}Please select your Outreachy intern by {{ current_round.InternSelectionDeadline }}:
+
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_applicants_url }}
+
+When you select an intern, you will be asked to sign the mentor agreement and rate the intern. Please also rate the applicants you did not select, as that helps organizers sort out any internship selection conflicts that happen. You will receive an email if another project also selects the same applicant.
+
+Please do not discuss intern selection with any Outreachy applicants until the interns are announced on {{ current_round.internannounce }} at 4pm UTC on the alums page:
+
+{{ request.scheme }}://{{ request.get_host }}/alums/
+
+The next steps are:
+
+1. After you select an intern, your co-mentors will be emailed to sign the mentor agreement.
+
+2. The {{ community.name }} coordinator will review all intern selections for the community, and assign internship funding sources for each intern. Coordinators will make their funding decisions by {{ current_round.coordinator_funding_deadline }}.
+
+3. The Outreachy organizers will review all intern selections and Outreachy general funding requests. During this time, we will review the strength of the contributions candidates made and their time commitments. We may seek additional funding sources and coordinators may change intern funding status. The Outreachy organizer approval status is on your project applicant's page and the community applicants page. We will approve or not approve all interns by {{ current_round.InternConfirmationDeadline }}.
+
+{% endif %}Thank you for participating as an Outreachy mentor! If you have any questions, please contact your community coordinator{{ coordinators|pluralize }} {% for c in coordinators %}{{ c }}{% if not forloop.last %}, {% endif %}{% endfor %}. You can always contact the Outreachy organizers <organizers@outreachy.org> for help.
+
+{% include 'home/email/footer-mentor.txt' %}{% endwith %} {% endwith %} {% endwith %} {% endwith %} {% endwith %}
