@@ -81,6 +81,24 @@ def co_mentor_intern_selection_notification(intern_selection, request):
             request=request,
             recipient_list=email_list)
 
+def intern_selection_conflict_notification(intern_selection, request):
+    conflicts = intern_selection.get_intern_selection_conflicts()
+    if not conflicts:
+        return
+
+    email_list = []
+    for conflict in conflicts:
+        email_list.extend(conflict.project.get_mentor_email_list())
+        email_list.extend(conflict.project.get_approver_email_list())
+    email_list.extend([organizers])
+
+    if email_list:
+        send_group_template_mail('home/email/intern-selection-conflict.txt', {
+            'intern_selection': intern_selection,
+            },
+            request=request,
+            recipient_list=email_list)
+
 def applicant_deadline_reminder(late_projects, promoted_projects, closed_projects, current_round, request):
     send_group_template_mail('home/email/applicants-deadline-reminder.txt', {
         'late_projects': late_projects,

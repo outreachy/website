@@ -1706,6 +1706,8 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, FormView):
         # email all co-mentors and encourage them to sign the mentor agreement.
         if was_intern_selection_created:
             email.co_mentor_intern_selection_notification(intern_selection, self.request)
+        # Send emails about any project conflicts
+        email.intern_selection_conflict_notification(intern_selection, self.request)
         return redirect(self.get_success_url())
 
     def get_success_url(self):
@@ -1840,10 +1842,15 @@ class InternFund(LoginRequiredMixin, ComradeRequiredMixin, View):
                         funding_source=InternSelection.ORG_FUNDED).count()
                 if org_funded_intern_count + 1 > self.intern_selection.project.project_round.interns_funded():
                     raise PermissionDenied("You've selected more interns for organization funding than you have sponsored funds available. Please use your web browser back button and choose another funding source.")
-            # FIXME - double check if moving this intern from NOT_FUNDED
-            # to any other state would cause an intern to be selected by two projects
+
+            past_funding = self.intern_selection.funding_source
             self.intern_selection.funding_source = kwargs['funding']
             self.intern_selection.save()
+
+            # If the coordinator or organizer is moving this intern from NOT_FUNDED
+            # to any other state, send emails about any project conflicts
+            if past_funding == InternSelection.NOT_FUNDED and funding != InternSelection.NOT_FUNDED:
+                email.intern_selection_conflict_notification(self.intern_selection, self.request)
 
         return redirect(reverse('community-applicants', kwargs={
             'round_slug': kwargs['round_slug'],

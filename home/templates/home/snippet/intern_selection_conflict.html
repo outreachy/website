@@ -7,42 +7,14 @@
 		{% for conflict in conflicts %}
 				<li>{{ conflict.project.project_round.community.name }} for "{{ conflict.project.short_title }}" -
 					<a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=conflict.project.project_round.community.slug project_slug=conflict.project.slug %}#{{ intern.applicant.applicant.pk }}">contribution and application details</a>
-					<ul>
-						<li>
-					{{ conflict.project.project_round.community.name }} Coordinators:
-					{% for email in conflict.project.project_round.community.get_coordinator_email_list %}
-						{{ email }}{% if not forloop.last %}, {% endif %}
-					{% endfor %}
-						</li>
-						<li>
-					Mentors:
-					{% for email in conflict.project.get_submitter_email_list %}
-						{{ email }}{% if not forloop.last %}, {% endif %}
-					{% endfor %}
-						</li>
-					</ul>
 				</li>
 		{% endfor %}
 				<li>{{ project.project_round.community.name }} for "{{ project.short_title }}" -
 					<a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}#{{ intern.applicant.applicant.pk }}">contribution and application details</a>
-					<ul>
-						<li>
-					{{ project.project_round.community.name }} Coordinators:
-					{% for email in project.project_round.community.get_coordinator_email_list %}
-						{{ email }}{% if not forloop.last %}, {% endif %}
-					{% endfor %}
-						</li>
-						<li>
-					Mentors:
-					{% for email in project.get_submitter_email_list %}
-						{{ email }}{% if not forloop.last %}, {% endif %}
-					{% endfor %}
-						</li>
-					</ul>
 				</li>
 			</ul>
 			</p>
-			<p>Please email the coordinators and mentors listed above to resolve this conflict, and make sure to Cc &lt;organizers@outreachy.org&gt;</p>
+			<p>An email has been sent to all mentors and coordinators about this conflict. Please check your email and start a discussion there.</p>
 		</div>
 	</div>
 </div>

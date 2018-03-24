@@ -1,0 +1,24 @@
+{% with project=intern_selection.project %}{% with community=intern_selection.project.project_round.community %}{% with current_round=intern_selection.project.project_round.participating_round %}{% with conflicts=intern_selection.get_intern_selection_conflicts %}URGENT - Outreachy intern selection conflict with {{ community.name }} and {% for conflict in conflicts %}{{ conflict.project.project_round.community.name }}{% if not forloop.last %} and {% endif %}{% endfor %}
+
+The Outreachy applicant {{ intern_selection.applicant.applicant.public_name }} has been selected for multiple projects:
+
+{{ community.name }} project "{{ project.short_title }}
+  - applicant contributions and application at
+    {{ request.scheme }}://{{ request.get_host }}{% url 'project-applicants' round_slug=current_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}#{{ intern_selection.applicant.applicant.pk }}
+
+{% for conflict in conflicts %}{{ conflict.project.project_round.community.name }} for "{{ conflict.project.short_title }}"
+  - applicant contributions and application at
+    {{ request.scheme }}://{{ request.get_host }}{% url 'project-applicants' round_slug=current_round.slug community_slug=conflict.project.project_round.community.slug project_slug=conflict.project.slug %}#{{ intern_selection.applicant.applicant.pk }}
+{% endfor %}
+Mentors and coordinators, please review the applicant's contributions for each project. Sometimes it's obvious that an applicant is a stronger candidate for one project. If one project has many strong applicants and the other project doesn't, it may be best for the intern to work with the other project.
+
+If you've discussed with the other project mentors, and you agree that the applicant should intern with the other project, you or a co-mentor or your coordinator can then remove the intern selection from their community's project by following the links above.
+
+If both projects want to accept the intern, Outreachy organizers can out reach to {{ intern_selection.applicant.applicant.public_name }} and ask them to choose a project. Please don't discuss this conflict with {{ intern_selection.applicant.applicant.public_name }} until the Outreachy organizers email the applicant.
+
+Please let us know what your decision is ASAP.
+
+Thanks,
+Outreachy Organizers
+
+{% include 'home/email/footer-mentor.txt' %}{% endwith %} {% endwith %} {% endwith %} {% endwith %}
