@@ -256,7 +256,7 @@ that timeline, taking into account any time commitments the applicant has.
 		{% for c in applicant_contributions %}
 			<p><i>Contribution #{{ forloop.counter }}: started {{ c.date_started }}{% if c.date_merged %}, merged {{ c.date_merged }}{% else %}. Not accepted or merged.{% endif %}</i></p>
 			<p><a href="{{ c.url }}">{{ c.url }}</a></p>
-			<p>{{ c.description }}</p>
+			<pre>{{ c.description }}</pre>
 			{% if not forloop.last %}
 				<hr>
 			{% endif %}
@@ -270,25 +270,25 @@ that timeline, taking into account any time commitments the applicant has.
 					<p>{{ final_application.get_spread_the_word_display }}</p>
 				{% endif %}
 				<p><i>Their experience with this free software community and project:</i></p>
-				<p>{{ final_application.experience }}</p>
+				<pre>{{ final_application.experience }}</pre>
 				<p><i>Their experience with other free software communities:</i></p>
-				<p>{{ final_application.foss_experience }}</p>
+				<pre>{{ final_application.foss_experience }}</pre>
 				<p><i>Their relevant personal or class projects that relate to this project:</i></p>
-				<p>{{ final_application.relevant_projects }}</p>
+				<pre>{{ final_application.relevant_projects }}</pre>
 				{% if final_application.community_specific_questions %}
 				<p><i>Answers to community-specific questions:</i></p>
-				<p>{{ final_application.community_specific_questions }}</p>
+				<pre>{{ final_application.community_specific_questions }}</pre>
 				{% else %}
 				<p><i>Applicant has not provided answers to community-specific questions.</i></p>
 				{% endif %}
 				{% if final_application.applying_to_gsoc %}
 				<p><i>Google Summer of Code communities and projects you are applying for, and the mentor contact information for those projects:</i></p>
-				<p>{{ final_application.applying_to_gsoc }}</p>
+				<pre>{{ final_application.applying_to_gsoc }}</pre>
 				{% else %}
 				<p><i>You are not applying to Google Summer of Code.</i></p>
 				{% endif %}
 				<p><i>Timeline of tasks for the internship period:</i></p>
-				<p>{% if final_application.timeline %}{{ final_application.timeline }}{% else %}TBD{% endif %}</p>
+				<pre>{% if final_application.timeline %}{{ final_application.timeline }}{% else %}TBD{% endif %}</pre>
 			{% else %}
 				<p>This applicant has not submitted an application for your project. You cannot select them as an intern unless they submit an application.
 				Please remind this applicant to submit an application at this URL:</p>
