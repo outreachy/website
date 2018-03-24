@@ -2019,6 +2019,14 @@ class InternSelection(models.Model):
                 applicant=self.applicant,
                 ).exclude(funding_source=self.NOT_FUNDED).exclude(project=self.project).all()
 
+    def get_mentor_agreement_url(self):
+        return reverse('select-intern', kwargs={
+            'round_slug': self.project.project_round.participating_round.slug,
+            'community_slug': self.project.project_round.community.slug,
+            'project_slug': self.project.slug,
+            'applicant_username': self.applicant.applicant.account.username,
+            })
+
     def __str__(self):
         return self.mentor_names() + ' mentoring ' + self.applicant.applicant.public_name
 

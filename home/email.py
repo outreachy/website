@@ -66,6 +66,21 @@ def mentor_application_deadline_reminder(project, request):
         request=request,
         recipient_list=project.get_mentor_email_list())
 
+def co_mentor_intern_selection_notification(intern_selection, request):
+    mentor_email = intern_selection.mentors.get().mentor.account.email
+    email_list = []
+    for email in intern_selection.project.get_mentor_email_list():
+        if email.addr_spec == mentor_email:
+            continue
+        email_list.append(email)
+
+    if email_list:
+        send_group_template_mail('home/email/co-mentor-sign-agreement.txt', {
+            'intern_selection': intern_selection,
+            },
+            request=request,
+            recipient_list=email_list)
+
 def applicant_deadline_reminder(late_projects, promoted_projects, closed_projects, current_round, request):
     send_group_template_mail('home/email/applicants-deadline-reminder.txt', {
         'late_projects': late_projects,

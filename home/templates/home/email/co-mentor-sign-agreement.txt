@@ -1,0 +1,23 @@
+{% with project=intern_selection.project %}{% with community=intern_selection.project.project_round.community %}{% with current_round=intern_selection.project.project_round.participating_round %}Outreachy intern selected - please sign mentoring agreement
+
+Your co-mentor just selected an intern for your {{ community.name }} project "{{ project.short_title }}":
+
+	{{ intern_selection.applicant.applicant.public_name }}
+
+If you will be mentoring this intern during the Outreachy internship period, you must sign a mentor agreement. Please go to the following page to sign the agreement:
+
+{{ request.scheme }}://{{ request.get_host }}{{ intern_selection.get_mentor_agreement_url }}
+
+The next step is for the {{ community.name }} coordinator to select the funding source for the intern, and for Outreachy organizers to approve the intern selection.
+
+Do not share the intern selection information with this applicant until the interns are announced on {{ current_round.internannounce }} at 4pm UTC on the alums page:
+
+{{ request.scheme }}://{{ request.get_host }}/alums/
+
+You can see the other applicants to your project here:
+
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_applicants_url }}
+
+Thank you for being an Outreachy mentor!
+
+{% include 'home/email/footer-mentor.txt' %}{% endwith %} {% endwith %} {% endwith %}

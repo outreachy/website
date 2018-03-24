@@ -1702,6 +1702,10 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, FormView):
                 intern_selection=intern_selection,
                 mentor=self.mentor_approval,
                 contract=signed_contract).save()
+        # If we just created this intern selection,
+        # email all co-mentors and encourage them to sign the mentor agreement.
+        if was_intern_selection_created:
+            email.co_mentor_intern_selection_notification(intern_selection, self.request)
         return redirect(self.get_success_url())
 
     def get_success_url(self):
