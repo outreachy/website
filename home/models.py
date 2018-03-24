@@ -1923,7 +1923,9 @@ class FinalApplication(ApprovalStatus):
         current_round = RoundPage.objects.latest('internstarts')
         return InternSelection.objects.filter(
                 applicant=self.applicant,
-                project__project_round__participating_round=current_round).exclude(project=self.project)
+                project__project_round__participating_round=current_round).exclude(
+                        funding_source=InternSelection.NOT_FUNDED).exclude(
+                                project=self.project)
 
     def __str__(self):
         return '{applicant} application for {community} - {project} - {id}'.format(
