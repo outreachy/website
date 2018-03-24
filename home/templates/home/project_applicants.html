@@ -292,9 +292,7 @@ that timeline, taking into account any time commitments the applicant has.
 			{% else %}
 				<p>This applicant has not submitted an application for your project. You cannot select them as an intern unless they submit an application.
 				Please remind this applicant to submit an application at this URL:</p>
-				<p><a href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">
-				{{ request.scheme }}://{{ request.get_host }}{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}
-				</a></p>
+				<p>{{ request.scheme }}://{{ request.get_host }}{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}</p>
 			{% endif %}
 		{% endwith %}
 
@@ -304,9 +302,6 @@ that timeline, taking into account any time commitments the applicant has.
 	<p>No applicant has recorded a contribution to your project.
 	If applicants have in-progress contributions, remind them to
 	record their contributions at this URL:
-	<br>
-	<p><a href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">
-		{{ request.scheme }}://{{ request.get_host }}{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}
-	</a></p>
+	<br>{{ request.scheme }}://{{ request.get_host }}{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}</p>
 {% endif %}
 {% endblock %}
