@@ -61,7 +61,7 @@ North Korea, or Syria;
 (c) you are not a person or entity restricted by US export controls or
 sanctions programs; and
 
-(d) you are or will be 18 years of age or older by December 5, 2017.
+(d) you are or will be 18 years of age or older by May 14, 2018.
 
 **Indemnification.**
 
