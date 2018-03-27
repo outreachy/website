@@ -239,6 +239,7 @@ class RoundPage(Page):
                     funding_source=InternSelection.ORG_FUNDED).count()
             if intern_count < funded:
                 communities.append((p.community, intern_count, funded))
+        communities.sort(key=lambda x: x[0].name)
         return communities
 
     def serve(self, request, *args, **kwargs):
