@@ -59,7 +59,7 @@ Review {{ community.name }} Applicants
 						<tr>
 							<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></td>
 							<td>{{ intern.mentor_names }}</td>
-							<td>{{ applicant.applicant.public_name }}</td>
+							<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=intern.project.project_round.community.slug project_slug=intern.project.slug %}#{{ applicant.applicant.pk }}">{{ applicant.applicant.public_name }}</a></td>
 							<td>{{ intern.get_funding_source_display }}
 								{% if is_coordinator or is_staff %}
 								<div class="dropdown">
