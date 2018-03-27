@@ -1891,6 +1891,35 @@ class InternFund(LoginRequiredMixin, ComradeRequiredMixin, View):
             'community_slug': kwargs['community_slug'],
             }) + "#interns")
 
+class InternApprove(LoginRequiredMixin, ComradeRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        username = kwargs['applicant_username']
+        current_round = RoundPage.objects.latest('internstarts')
+        if current_round.slug != kwargs['round_slug']:
+            raise PermissionDenied("You can only approve interns in the current round.")
+
+        set_project_and_applicant(self, current_round)
+        self.intern_selection = get_object_or_404(InternSelection,
+                applicant=self.applicant,
+                project=self.project)
+
+        # Only allow approved organizers to approve interns
+        if not request.user.is_staff:
+            raise PermissionDenied("Only organizers can approve interns.")
+
+        funding = kwargs['approval']
+        if funding == "Approved":
+            self.intern_selection.organizer_approved = True
+        elif funding == "Rejected":
+            self.intern_selection.organizer_approved = False
+        elif funding == "Undecided":
+            self.intern_selection.organizer_approved = None
+        self.intern_selection.save()
+
+        return redirect(reverse('dashboard') + "#intern-{project}-{applicant}".format(
+            project=self.intern_selection.project.slug,
+            applicant=self.intern_selection.applicant.applicant.pk))
+
 @login_required
 def dashboard(request):
     """

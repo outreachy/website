@@ -201,6 +201,46 @@ class RoundPage(Page):
                 project__approval_status=ApprovalStatus.APPROVED,
                 approval_status=ApprovalStatus.APPROVED).exists()
 
+    def get_intern_selections(self):
+        return InternSelection.objects.filter(
+                project__project_round__participating_round=self,
+                project__approval_status=Project.APPROVED,
+                project__project_round__approval_status=Participation.APPROVED).exclude(
+                        funding_source=InternSelection.NOT_FUNDED).order_by('project__community__name').order_by('project__short_title')
+
+    def get_general_funding_intern_selections(self):
+        return self.get_intern_selections().filter(
+                funding_source=InternSelection.GENERAL_FUNDED)
+
+    def get_pending_intern_selections(self):
+        return self.get_intern_selections().filter(
+                organizer_approved=None)
+
+    def get_approved_intern_selections(self):
+        return self.get_intern_selections().filter(
+                organizer_approved=True)
+
+    def get_rejected_intern_selections(self):
+        return self.get_intern_selections().filter(
+                organizer_approved=False)
+
+    def get_communities_with_unused_funding(self):
+        participations = Participation.objects.filter(
+                participating_round=self,
+                approval_status=Participation.APPROVED)
+        communities = []
+        for p in participations:
+            funded = p.interns_funded()
+            if funded < 1:
+                continue
+            intern_count = InternSelection.objects.filter(
+                    project__project_round=p,
+                    project__approval_status=Project.APPROVED,
+                    funding_source=InternSelection.ORG_FUNDED).count()
+            if intern_count < funded:
+                communities.append((p.community, intern_count, funded))
+        return communities
+
     def serve(self, request, *args, **kwargs):
         # Only show this page if newer rounds exist.
         if RoundPage.objects.filter(internstarts__gt=self.internstarts).exists():
