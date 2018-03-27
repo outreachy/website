@@ -2,7 +2,7 @@
 
 **Mentorship Terms of Participation**
 
-_last edited - November 7, 2017_
+_last edited - March 27, 2018_
 
 **Dear Mentor:**
 
@@ -97,7 +97,7 @@ Conservancy’s charitable purposes.
 
 **Termination.**
 
-Internships in the Program will take place between May 14, 2017 and August 14,
+Internships in the Program will take place between May 14, 2018 and August 14,
 2018. In exceptional situations, the internship can be extended for up to five
 weeks, provided that both you and your Intern send a written request for an
 extension specifying a new end date to the Outreachy Project's leadership
