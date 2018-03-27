@@ -72,7 +72,7 @@ Review {{ community.name }} Applicants
 								</div>
 								{% endif %}
 							</td>
-							<td>{% if intern.organizer_approval == None %}Undecided{% elif intern.organizer_approval == True %}Approved{% else %}Rejected{% endif %}</td>
+							<td>{% if intern.organizer_approved == None %}Undecided{% elif intern.organizer_approved == True %}Approved{% else %}Rejected{% endif %}</td>
 							<td>{{ application.get_rating_display }}</td>
 							<td>{{ tcs.longest_period_free }} / {{ tcs.internship_total_days.days }} days</td>
 							<td>{{ application.number_contributions }}</td>
