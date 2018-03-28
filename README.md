@@ -145,6 +145,14 @@ You may need to add a `templates` directory to that app:
 makedir contacts/templates
 ```
 
+# Sentry error logging
+
+Outreachy uses Sentry to log error messages received on both the Outreachy website and the test website. Unfortunately, that means if you ever use dokku to start the Python shell on the remote website, any typos you have end up getting reported to Sentry. To suppress those error messages, you can unset the `SENTRY_DSN` environment variable:
+
+```
+ssh -t dokku@www.outreachy.org run www env --unset=SENTRY_DSN python manage.py shell
+```
+
 # Rolling back migrations
 
 If you have migrated the database (either locally or on the server) and want to go back to a previous migration, you can run:
