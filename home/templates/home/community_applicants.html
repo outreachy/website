@@ -147,7 +147,7 @@ Review {{ community.name }} Applicants
 						<tr>
 							<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></td>
 							<td>{{ project.get_approval_status_display }}</td>
-							<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=intern.project.project_round.community.slug project_slug=intern.project.slug %}#{{ applicant.pk }}">{{ applicant.public_name }}</a></td>
+							<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}#{{ applicant.pk }}">{{ applicant.public_name }}</a></td>
 							<td>
 								{% with conflicts=application.get_intern_selection_conflicts %}
 								{% if conflicts %}
