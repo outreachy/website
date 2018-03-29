@@ -242,6 +242,24 @@ class ContributionAdmin(reversion.admin.VersionAdmin):
             '=applicant__applicant__account__email',
             )
 
+class FinalApplicationAdmin(reversion.admin.VersionAdmin):
+    list_display = (
+            'applicant',
+            'project',
+            )
+    list_filter = (
+            'approval_status',
+            'project__project_round__participating_round',
+            'project__project_round__community',
+            'project',
+            )
+    search_fields = (
+            'applicant__applicant__public_name',
+            'applicant__applicant__legal_name',
+            '=applicant__applicant__account__username',
+            '=applicant__applicant__account__email',
+            )
+
 class MentorRelationshipAdmin(admin.ModelAdmin):
     list_display = (
             'round',
@@ -301,7 +319,7 @@ admin.site.register(ApplicantApproval, ApplicantApprovalAdmin)
 admin.site.register(Community, CommunityAdmin)
 admin.site.register(CoordinatorApproval, CoordinatorApprovalAdmin)
 admin.site.register(Contribution, ContributionAdmin)
-admin.site.register(FinalApplication)
+admin.site.register(FinalApplication, FinalApplicationAdmin)
 admin.site.register(InternSelection, InternSelectionAdmin)
 admin.site.register(MentorApproval, MentorApprovalAdmin)
 admin.site.register(MentorRelationship, MentorRelationshipAdmin)
