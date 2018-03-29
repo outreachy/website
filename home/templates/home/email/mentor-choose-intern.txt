@@ -22,7 +22,7 @@ The next steps are:
 
 2. The {{ community.name }} coordinator will review all intern selections for the community, and assign internship funding sources for each intern. Coordinators will make their funding decisions by {{ current_round.coordinator_funding_deadline }}.
 
-3. The Outreachy organizers will review all intern selections and Outreachy general funding requests. During this time, we will review the strength of the contributions candidates made and their time commitments. We may seek additional funding sources and coordinators may change intern funding status. The Outreachy organizer approval status is on your project applicant's page and the community applicants page. We will approve or not approve all interns by {{ current_round.InternConfirmationDeadline }}.
+3. The Outreachy organizers will review all intern selections and Outreachy general funding requests. During this time, we will review the strength of the contributions candidates made and their time commitments. We may seek additional funding sources and coordinators may change intern funding status. The Outreachy organizer approval status is on your project applicant's page and the community applicants page. We will approve or not approve all interns by {{ current_round.internapproval }}.
 
 {% endif %}Thank you for participating as an Outreachy mentor! If you have any questions, please contact your community coordinator{{ coordinators|pluralize }} {% for c in coordinators %}{{ c }}{% if not forloop.last %}, {% endif %}{% endfor %}. You can always contact the Outreachy organizers <organizers@outreachy.org> for help.
 

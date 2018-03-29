@@ -156,9 +156,6 @@ class RoundPage(Page):
     def coordinator_funding_deadline(self):
         return(self.appslate + timedelta(days=10))
     
-    def InternConfirmationDeadline(self):
-        return(self.appsclose + timedelta(days=24))
-
     def initial_stipend_dates(self):
         return (self.internstarts + timedelta(days=10), self.internstarts + timedelta(days=24))
 
