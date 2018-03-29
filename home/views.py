@@ -1390,7 +1390,7 @@ class ContributorsApplicationPeriodEndedReminder(LoginRequiredMixin, ComradeRequ
                 applicantapproval__contribution__isnull=False).distinct()
 
         for c in contributors:
-            email.contributor_deadline_reminder(
+            email.contributor_application_period_ended(
                     c,
                     current_round,
                     self.request)

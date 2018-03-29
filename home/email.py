@@ -140,9 +140,14 @@ def contributor_deadline_reminder(contributor, current_round, request):
 
 def contributor_application_period_ended(contributor, current_round, request):
     upcoming_deadlines, passed_deadlines = contributor.get_projects_with_upcoming_and_passed_deadlines()
+    projects_applied_to = contributor.get_projects_applied_to()
+    really_passed_deadlines = []
+    for p in passed_deadlines:
+        if p not in projects_applied_to:
+            really_passed_deadlines.append(p)
     send_template_mail('home/email/contributors_application_period_ended.txt', {
         'current_round': current_round,
-        'passed_deadlines': passed_deadlines,
+        'passed_deadlines': really_passed_deadlines,
         'timezone': contributor.timezone,
         'comrade': contributor,
         },
