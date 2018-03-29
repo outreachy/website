@@ -1269,6 +1269,32 @@ class MentorInternSelectionReminder(LoginRequiredMixin, ComradeRequiredMixin, Te
             email.mentor_intern_selection_reminder(p, self.request)
         return redirect(reverse('dashboard'))
 
+class CoordinatorInternSelectionReminder(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
+    template_name = 'home/coordinator_intern_selection_reminder.html'
+
+    def get_context_data(self, **kwargs):
+        current_round = RoundPage.objects.latest('internstarts')
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are authorized to send reminder emails.")
+        context = super(CoordinatorInternSelectionReminder, self).get_context_data(**kwargs)
+        participations = Participation.objects.filter(
+                participating_round=current_round,
+                approval_status=Participation.APPROVED)
+        context.update({
+            'participations': participations,
+            })
+        return context
+
+    def post(self, request, *args, **kwargs):
+        current_round = RoundPage.objects.latest('internstarts')
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are authorized to send reminder emails.")
+        participations = Participation.objects.filter(
+                participating_round=current_round,
+                approval_status=Participation.APPROVED)
+        for p in participations:
+            email.coordinator_intern_selection_reminder(p, self.request)
+        return redirect(reverse('dashboard'))
 
 class ApplicantsDeadlinesReminder(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
     template_name = 'home/applicants_deadline_reminder.html'

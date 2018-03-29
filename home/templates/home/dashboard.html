@@ -65,14 +65,21 @@ you can send an email to the announcements mailing list to remind applicants of 
 
 <p><a href="{% url 'email-mentor-application-deadline-reminder' %}"><input class="btn btn-success" value="Mentor Deadline Email 2" /></a>
 
-<p>Once the two project deadlines have passed, email mentors to remind them to select an intern:
+<p>Once the two project deadlines have passed, email mentors to remind them who has applied and that they can extend their project deadline:
 <ul>
 	<li>After the first application period deadline. Send the email on {{ current_round.appsclose }} after 4pm UTC.</li>
-	<li>After the second application period deadline. Send the email on {{ current_round.appslate }} after 4pm UTC.</li>
 </ul>
 </p>
 
 <p><a href="{% url 'email-mentor-intern-selection-reminder' %}"><input class="btn btn-success" value="Mentor Intern Selection Email" /></a>
+
+<p>Once the late project deadline has passed, email mentors and coordinators with instructions on how to select their intern:
+<ul>
+	<li>After the first application period deadline. Send the email on {{ current_round.appslate }} after 4pm UTC.</li>
+</ul>
+</p>
+
+<p><a href="{% url 'email-coordinator-intern-selection-reminder' %}"><input class="btn btn-success" value="Coordinator Intern Selection Email" /></a>
 
 <h2>Intern Selection</h2>
 

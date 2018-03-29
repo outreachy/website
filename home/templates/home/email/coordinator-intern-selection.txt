@@ -1,0 +1,84 @@
+{{ current_round.InternSelectionDeadline|date:"F d" }}: Deadline to select Outreachy interns for {{ community.name }}
+
+Hi Outreachy coordinators and mentors,
+
+The deadline for {{ community.name }} mentors to select their intern is {{ current_round.InternSelectionDeadline|date:"F d" }}. This deadline is to ensure Outreachy organizers can sort out any duplicate intern selections and find additional funding. It is very important that you ensure all mentors have selected an intern by that date. Details on intern selection are below.
+
+Once mentors have selected their interns, {{ community.name }} coordinators need to review all interns and assign funding sources for those interns by {{ current_round.coordinator_funding_deadline|date:"F d" }}. More details on funding is below.
+
+Do not communicate intern selection with applicants until the interns are announced on the alums page at {{ current_round.internannounce|date:"F d" }} at 4pm UTC:
+
+{{ request.scheme }}://{{ request.get_host }}/alums/
+
+Who can be selected as an intern?
+---------------------------------
+
+Each Outreachy project mentors will need to select their own intern. Coordinators cannot select interns for mentors, because the person who selects the intern must sign the mentor agreement. All co-mentors need to sign the mentor agreement as well.
+
+In order to be eligible to be selected as an Outreachy intern, each applicant must:
+
+1. Fill out an eligibility check form at {{ request.scheme }}://{{ request.get_host }}{% url 'eligibility' %}
+2. Record a contribution to a {{ community }} project listed on the Outreachy site: {{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
+3. Complete an application for the project by the project's application deadline.
+
+The deadline to submit an application was {{ current_round.appslate|date:"F d" }} at 4pm UTC. Each round, we get a few applicants who miss the deadline. If this happens, **and** this is a strong applicant you are considering for the internship, please ask the applicant to send an email to organizers@outreachy.org with you on Cc. Only applicants who have already filled out an eligibility check and who have completed a contribution, or have a contribution in progress for your project are eligible to submit their applications manually.
+
+Selecting an Intern
+-------------------
+
+Please select your intern by {{ current_round.InternSelectionDeadline|date:"F d" }}.
+
+Mentors are encouraged to be selective about the applicants they accept.
+
+Outreachy organizers view this internship as a fellowship. Mentors should not expect a certain project to be completed by the intern, but rather expect that the intern's work will be adjusted to the level of their ability, their interests, and the project's priorities throughout the internship. Outreachy organizers prefer not to fail people in the program as long as they are working full-time on the project.
+
+For this approach to succeed, Outreachy mentors need to carefully review the contributions each applicant made and their interactions with the applicant. A strong applicant shows good problem-solving skills. Many applicants may not have contributed to open source before, but a strong applicant will quickly ramp up on new skills. The strongest applicants will have submitted multiple smaller contributions and worked their way up to larger contributions. We value applicants who are consistently working and in contact with mentors when they are stuck, over applicants who submitted larger contributions late in the application process.
+
+Applicants are eligible for Outreachy if they have 49 consecutive days free from full-time responsibility during the internship period (out of a possible 91 days). This is the absolute minimum requirement, even taking into account that the internship can be extended by up to five weeks. Applicants that are close to the minimum number of days free should be a very strong applicant who has consistently worked with mentors on multiple contributions.
+
+Each mentor can select their intern by following the 'Review applicants' link from their dashboard:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}
+
+Co-mentors can follow the same link to indicate they want to co-mentor the intern and sign the mentor agreement.
+
+Reviewing Applicants
+--------------------
+
+Mentors and coordinators can review all {{ community.name }} applicants and selected interns on this page:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'community-applicants' round_slug=current_round.slug community_slug=community.slug %}
+
+On the {{ community.name }} applicants page, you will find a link to each applicant's detailed description of their contributions and their application. The details are linked from the applicant's name.
+
+It's important that coordinators review the mentor's rating of the intern, the applicant's available time during the internship, and the description of their contributions to ensure they meet the criteria in the section above.
+
+Intern Funding
+--------------
+
+Coordinators should complete intern funding assignment by {{ current_round.coordinator_funding_deadline|date:"F d" }}.
+
+The coordinator can select three different choices for how each mentor intern selection will be funded:
+
+1. Not funded. The coordinator doesn't think this applicant should be an intern for this community (either because there are other stronger applicants or limited funding).
+
+2. Funded by the community sponsors. Each community signed up with a specific amount of sponsorship from one or more organizations/companies. Coordinators may select interns from those funds, up to the sponsorship amount available. Coordinators and organizers can adjust sponsorship sources if a new sponsor is willing to fund this community.
+
+3. Funded by the Outreachy general fund. Outreachy has a general fund that can sponsor a limited number of interns. We review all general funding requests across all communities before deciding whether to fund an applicant. Applicants nominated for the general fund must be strong applicants with multiple non-trivial contributions.
+
+In the case of communities that share funding from one sponsor, each community will have been assigned a minimum number of internship spots. Some communities with shared sponsorship may not have an applicant they want to accept as an intern. In this case, the Outreachy organizers will review the other communities who have nominated an applicant for the Outreachy general fund, and re-assign the shared sponsorship funds to that community.
+
+Outreachy Organizer Intern Approval
+-----------------------------------
+
+Once all coordinators have assigned funding for interns, the Outreachy organizers will review intern selections and approve or reject them. All intern selections should be finalized by {{ current_round.internapproval }}.
+
+Do not communicate intern selection with applicants until the interns are announced on the alums page at {{ current_round.internannounce|date:"F d" }} at 4pm UTC:
+
+{{ request.scheme }}://{{ request.get_host }}/alums/
+
+Thank you for participating as an Outreachy mentor or coordinator! If you have any questions, please contact the Outreachy organizers <organizers@outreachy.org> for help.
+
+Outreachy Organizers
+
+{% include 'home/email/footer-coordinator.txt' %}

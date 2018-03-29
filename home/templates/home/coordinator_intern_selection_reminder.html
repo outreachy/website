@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}
+Send coordinator and mentor intern selection reminder emails
+{% endblock %}
+
+{% block content %}
+<p>You're about to send {{ participations|length }} communities instructions on how to select interns.</p>
+
+{% for p in participations %}
+{% with community=p.community current_round=p.participating_round email_list=p.get_submitter_email_list %}{% if email_list %}
+<div class="card">
+<div class="card-body">
+<pre>
+To: {% for email in p.get_submitter_email_list %}{{ email }}{% if not forloop.last %}, {% endif %}{% endfor %}
+Subject: {% include 'home/email/coordinator-intern-selection.txt' %}
+</pre>
+</div>
+</div>
+{% else %}
+<div class="card">
+<div class="card-header text-white bg-warning"><strong>WARNING: {{ community.name }} has no approved coordinators or mentors!</strong>
+</div>
+</div>
+<br>
+{% endif %}{% endwith %}
+{% endfor %}
+
+<form action="" method="post">
+    {% csrf_token %}
+    <input class="btn btn-success" type="submit" value="Confirm" />
+</form>
+{% endblock %}

@@ -73,6 +73,16 @@ def mentor_intern_selection_reminder(project, request):
         request=request,
         recipient_list=project.get_mentor_email_list())
 
+def coordinator_intern_selection_reminder(participation, request):
+    email_list = participation.get_submitter_email_list()
+    if email_list:
+        send_group_template_mail('home/email/coordinator-intern-selection.txt', {
+            'current_round': participation.participating_round,
+            'community': participation.community,
+            },
+            request=request,
+            recipient_list=email_list)
+
 def co_mentor_intern_selection_notification(intern_selection, request):
     mentor_email = intern_selection.mentors.get().mentor.account.email
     email_list = []
