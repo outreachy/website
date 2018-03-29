@@ -81,6 +81,15 @@ you can send an email to the announcements mailing list to remind applicants of 
 
 <p><a href="{% url 'email-coordinator-intern-selection-reminder' %}"><input class="btn btn-success" value="Coordinator Intern Selection Email" /></a>
 
+<p>Once the late project deadline has passed, email contributors about the round ending:
+<ul>
+	<li>After the first application period deadline. Send the email on {{ current_round.appslate }} after 4pm UTC.</li>
+</ul>
+</p>
+
+<p><a href="{% url 'email-application-period-ended' %}"><input class="btn btn-success" value="Contributor Final Email" /></a>
+
+
 <h2>Intern Selection</h2>
 
 <p>{{ current_round.get_intern_selections|length }} intern{{ current_round.get_intern_selections|pluralize:" has,s have" }} been selected by the Outreachy mentors:

@@ -138,6 +138,17 @@ def contributor_deadline_reminder(contributor, current_round, request):
         request=request,
         recipient_list=[contributor.email_address()])
 
+def contributor_application_period_ended(contributor, current_round, request):
+    upcoming_deadlines, passed_deadlines = contributor.get_projects_with_upcoming_and_passed_deadlines()
+    send_template_mail('home/email/contributors_application_period_ended.txt', {
+        'current_round': current_round,
+        'passed_deadlines': passed_deadlines,
+        'timezone': contributor.timezone,
+        'comrade': contributor,
+        },
+        request=request,
+        recipient_list=[contributor.email_address()])
+
 @override_settings(ALLOWED_HOSTS=['www.outreachy.org'], EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend')
 def message_samples():
     """

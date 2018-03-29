@@ -1361,6 +1361,41 @@ def get_contributors_with_upcoming_deadlines():
                 applicantapproval__contribution__project__deadline=Project.LATE).distinct()
     return None
 
+class ContributorsApplicationPeriodEndedReminder(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
+    template_name = 'home/contributors_application_period_ended.html'
+
+    def get_context_data(self, **kwargs):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are authorized to send reminder emails.")
+        current_round = RoundPage.objects.latest('internstarts')
+        contributors = Comrade.objects.filter(
+                applicantapproval__application_round=current_round,
+                applicantapproval__approval_status=ApprovalStatus.APPROVED,
+                applicantapproval__contribution__isnull=False).distinct()
+
+        context = super(ContributorsApplicationPeriodEndedReminder, self).get_context_data(**kwargs)
+        context.update({
+            'current_round': current_round,
+            'contributors': contributors,
+            })
+        return context
+
+    def post(self, request, *args, **kwargs):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+        current_round = RoundPage.objects.latest('internstarts')
+        contributors = Comrade.objects.filter(
+                applicantapproval__application_round=current_round,
+                applicantapproval__approval_status=ApprovalStatus.APPROVED,
+                applicantapproval__contribution__isnull=False).distinct()
+
+        for c in contributors:
+            email.contributor_deadline_reminder(
+                    c,
+                    current_round,
+                    self.request)
+        return redirect(reverse('dashboard'))
+
 class ContributorsDeadlinesReminder(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
     template_name = 'home/contributors_deadline_reminder.html'
 

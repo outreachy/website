@@ -1,0 +1,45 @@
+{% if comrade.get_projects_applied_to %}Your Outreachy application will be reviewed{% else %}Outreachy application period closed{% endif %}
+
+Thank you for making a contribution to a project during the Outreachy internship application period! Project applications are now closed, and the intern selection will begin. Interns will be announced on {{ current_round.internannounce }} at 4pm UTC:
+
+{{ request.scheme }}://{{ request.get_host }}/alums/
+
+You may not get any emails during this period. There have been spammers in the past who have forged mentor emails telling applicants their application has been rejected and asking applicants to withdraw their application. Please note that Outreachy organizers and mentors will NEVER ask you to withdraw your application. If you have withdrawn your application because of one of these spam emails, you may re-submit your application after it withdrawn by visiting the links below.
+
+During the intern selection period, Outreachy organizers may reach out to confirm that the time commitments you put in your eligibility form are still up-to-date. If you are selected by two Outreachy projects, you may receive an email asking you to pick which project you want to intern with. Otherwise, you won't receive any emails.
+
+Please do not ask Outreachy mentors or coordinators whether you have been selected for the internship. Because it takes Outreachy organizers several weeks to sort out intern select and find additional funds, we want to ensure all applicants find out about intern selection at the same time.
+
+The project contribution period officially ends when the project deadline has passed. However, we find applicants often want to continue working with mentors on a project they've become passionate about. You are welcome (but not required) to continue making contributions to the projects. If you have submitted an application for that project, you are welcome to continue recording your contributions up to the intern announcement date {{ current_round.internannounce }}. If you have not submitted an application for that project, you will not be able to record more contributions.
+
+In order to be eligible to be selected as an Outreachy intern, you must have:
+
+1. Recorded at least one in-progress contribution you've made to an Outreachy internship project by the project application deadline.
+
+2. Finished an application for that project before the project application deadline. Each project may have a different application deadline.
+
+{% with applied_projects=comrade.get_projects_applied_to %}{% if applied_projects %}Project Applications
+----------------
+
+Our records indicate you have submitted an application for the following projects:
+{% for project in applied_projects %}
+{{ project.project_round.community.name }} project "{{ project.short_title }}"
+Your internship application will be reviewed: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% if not forloop.last %}
+{% endif %}{% endfor %}{% endif %}{% endwith %}
+{% if passed_deadlines %}
+Passed Deadlines
+----------------
+
+Our records indicate you recorded a contribution but did not create an application for the following projects:
+
+{% for project in passed_deadlines %}{% if project not in comrade.get_projects_applied_to %}{{ project.project_round.community.name }} project "{{ project.short_title }}"
+Application deadline was {% if project.deadline == project.LATE %}{{ current_round.appslate }} 4pm UTC{% if comrade.timezone %} / {% load tz %}{% timezone comrade.timezone %}{{ comrade.get_local_late_application_deadline }}{% endtimezone %} {{ comrade.timezone }}{% endif %}{% else %}{{ current_round.appsclose }} 4pm UTC{% if comrade.timezone %} / {% load tz %}{% timezone comrade.timezone %}{{ comrade.get_local_application_deadline }}{% endtimezone %} {{ comrade.timezone }}{% endif %}{% endif %}{% endif %}
+{% if not forloop.last and project not in comrade.get_projects_applied_to %}
+{% endif %}{% endfor %}{% endif %}
+
+Thank you for participating in Outreachy! We hope that you've enjoyed contributing to Free and Open Source Software projects. Please sign up for the announcements mailing list to get an email when the interns are selected, and to help spread the word about Outreachy when the next round opens:
+
+https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce
+
+Outreachy Organizers
+{% include 'home/email/footer-applicant.txt' %}

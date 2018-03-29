@@ -45,6 +45,7 @@ urlpatterns = [
     url(r'^eligibility/$', views.EligibilityUpdateView.as_view(), name='eligibility'),
     url(r'^eligibility-results/$', views.EligibilityResults.as_view(), name='eligibility-results'),
     url(r'^email/application-deadline-review/$', views.MentorCheckDeadlinesReminder.as_view(), name='email-deadline-review'),
+    url(r'^email/application-period-ended/$', views.ContributorsApplicationPeriodEndedReminder.as_view(), name='email-application-period-ended'),
     url(r'^email/application-deadline-reminder/$', views.ApplicantsDeadlinesReminder.as_view(), name='email-deadline-reminder'),
     url(r'^email/contributor-deadline-reminder/$', views.ContributorsDeadlinesReminder.as_view(), name='email-contributor-deadline-reminder'),
     url(r'^email/mentor-application-deadline-reminder/$', views.MentorApplicationDeadlinesReminder.as_view(), name='email-mentor-application-deadline-reminder'),
