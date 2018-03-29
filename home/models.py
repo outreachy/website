@@ -106,6 +106,7 @@ class RoundPage(Page):
     lateorgs = models.DateField("Last date to add community landing pages", blank=True, default='2017-10-02')
     appsclose = models.DateField("Date applications are due", blank=True, default='2017-10-23')
     appslate = models.DateField("Date extended applications are due", blank=True, default='2017-10-30')
+    internapproval = models.DateField("Date interns are approved by the Outreachy organizers", default='2017-11-05')
     internannounce = models.DateField("Date interns are announced", default='2017-11-09')
     internstarts = models.DateField("Date internships start", default='2017-12-05')
     midfeedback = models.DateField("Date mid-point feedback is due", blank=True, default='2018-01-16')
