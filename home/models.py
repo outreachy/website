@@ -275,6 +275,8 @@ class RoundPage(Page):
         cities = []
         timezone_regions = []
         for a in all_apps:
+            us_state_abbrevs = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY', 'AS', 'DC', 'FM', 'GU', 'MH', 'MP', 'PW', 'PR', 'VI', ]
+            us_states = [ 'alabama', 'alaska', 'arizona', 'arkansas', 'california', 'colorado', 'connecticut', 'delaware', 'florida', 'georgia', 'hawaii', 'idaho', 'illinois', 'indiana', 'iowa', 'kansas', 'kentucky', 'louisiana', 'maine', 'maryland', 'massachusetts', 'michigan', 'minnesota', 'mississippi', 'missouri', 'montana', 'nebraska', 'nevada', 'new hampshire', 'new jersey', 'new mexico', 'new york', 'north carolina', 'north dakota', 'ohiooH', 'oklahoma', 'oregon', 'pennsylvania', 'rhode island', 'south carolina', 'south dakota', 'tennessee', 'texas', 'utah', 'vermont', 'virginia', 'washington', 'west virginia', 'wisconsin', 'wyoming', 'american samoa', 'district of columbia', 'federated states of micronesia', 'guam', 'marshall islands', 'northern mariana islands', 'palau', 'puerto rico', 'virgin islands', ]
             location = a.applicant.location.split(',')
             if location == '':
                 city = ''
@@ -286,11 +288,10 @@ class RoundPage(Page):
                 country = location[-1].strip().lower()
             elif len(location) == 2:
                 country = location[-1].strip().lower()
-                if country.upper() in ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY', 'AS', 'DC', 'FM', 'GU', 'MH', 'MP', 'PW', 'PR', 'VI', ]:
-                    country = 'USA'
-                elif country in [ 'alabama', 'alaska', 'arizona', 'arkansas', 'california', 'colorado', 'connecticut', 'delaware', 'florida', 'georgia', 'hawaii', 'idaho', 'illinois', 'indiana', 'iowa', 'kansas', 'kentucky', 'louisiana', 'maine', 'maryland', 'massachusetts', 'michigan', 'minnesota', 'mississippi', 'missouri', 'montana', 'nebraska', 'nevada', 'new hampshire', 'new jersey', 'new mexico', 'new york', 'north carolina', 'north dakota', 'ohiooH', 'oklahoma', 'oregon', 'pennsylvania', 'rhode island', 'south carolina', 'south dakota', 'tennessee', 'texas', 'utah', 'vermont', 'virginia', 'washington', 'west virginia', 'wisconsin', 'wyoming', 'american samoa', 'district of columbia', 'federated states of micronesia', 'guam', 'marshall islands', 'northern mariana islands', 'palau', 'puerto rico', 'virgin islands', ]:
+                if country.upper() in us_state_abbrevs or country in us_states:
                     country = 'USA'
 
+            scrubbed_city = ''
             if country:
                 if country == 'brasil' or country == 'brazil':
                     country = 'Brazil'
@@ -310,39 +311,36 @@ class RoundPage(Page):
                     country = 'Russia'
                 elif country == 'ukraine':
                     country = 'Ukraine'
-                elif country == 'usa' or country == 'united states' or country == 'united states of america' or country == 'us' or country == 'california':
+                elif country == 'usa' or country == 'united states' or country == 'united states of america' or country == 'us':
                     country = 'USA'
-                city = ''
             elif city == 'vancouver':
                 country = 'Canada'
-                city = ''
-            elif city == 'são paulo':
+            elif city == 'são paulo' or city == 'são paulo - sp':
                 country = 'Brazil'
-                city = ''
             elif city == 'berlin':
                 country = 'Germany'
-                city = ''
-            elif city == 'india' or city == 'india.' or city == 'new delhi' or city == 'hyderabad' or city == 'bangalore' or city == 'delhi' or city == 'mumbai' or city == 'hyderabad' or city == 'chennai' or city == 'noida' or city == 'kerala':
+            elif city == 'india' or city == 'india.' or city == 'new delhi' or city == 'hyderabad' or city == 'bangalore' or city == 'delhi' or city == 'mumbai' or city == 'hyderabad' or city == 'chennai' or city == 'noida' or city == 'kerala' or city == 'pune':
                 country = 'India'
-                city = ''
+            elif city == 'israel':
+                country = 'Israel'
             elif city == 'mombasa' or city == 'nairobi':
                 country = 'Kenya'
-                city = ''
-            elif city == 'lagos':
+            elif city == 'mexico city':
+                country = 'Mexico'
+            elif city == 'lagos' or city == 'port harcourt':
                 country = 'Nigeria'
-                city = ''
-            elif city == 'moscow':
+            # technically there's a saint petersberg FL, but it's more likely to be Russia
+            elif city == 'moscow' or city == 'saint petersburg':
                 country = 'Russia'
-                city = ''
             elif city == 'istanbul':
                 country = 'Turkey'
-                city = ''
-            elif city == 'boston' or city == 'los angeles' or city == 'san francisco' or city == 'new york' or city == 'new york city':
+            elif city == 'boston' or city == 'los angeles' or city == 'san francisco' or city == 'new york' or city == 'new york city' or city == 'california' or city == 'united states' or city == 'philadelphia':
                 country = 'USA'
-                city = ''
+            else:
+                scrubbed_city = city
 
-            if city != '':
-                cities.append(city)
+            if scrubbed_city != '':
+                cities.append(scrubbed_city)
             if country != '':
                 countries.append(country)
 
