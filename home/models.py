@@ -290,8 +290,20 @@ class RoundPage(Page):
                     country = 'India'
                 elif country == 'brasil' or country == 'brazil':
                     country = 'Brazil'
-            elif city == 'india' or city == 'india.' or city == 'new delhi' or city == 'hyderabad' or city == 'bangalore':
+                elif county == 'canada':
+                    country = 'Canada'
+                city = ''
+            elif city == 'vancouver':
+                country = 'Canada'
+                city = ''
+            elif city == 'india' or city == 'india.' or city == 'new delhi' or city == 'hyderabad' or city == 'bangalore' or city == 'delhi' or city == 'mumbai' or city == 'hyderabad':
                 country = 'India'
+                city = ''
+            elif city == 'moscow':
+                country = 'Russia'
+                city = ''
+            elif city == 'boston' or city == 'los angeles' or city == 'san francisco':
+                country = 'USA'
                 city = ''
 
             if city != '':
