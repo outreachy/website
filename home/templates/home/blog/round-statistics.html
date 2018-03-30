@@ -34,6 +34,12 @@ Statistics for Outreachy {{ current_round.internstarts|date:"F Y" }} to {{ curre
 			<li>{{ name }} - {{ count }} people</li>
 		{% endfor %}
 	</ul>
+	<p>Of the {{ eligibility_stats.1 }} people who were eligible, the most common cities are:</p>
+	<ul>
+		{% for name, count in country_data.2 %}
+			<li>{{ name }} - {{ count }} people</li>
+		{% endfor %}
+	</ul>
 	<p>We can also take a guess at where applicants are located by looking at the timezones. Of the {{ eligibility_stats.1 }} people who were eligible, the most common timezone regions are:</p>
 	<ul>
 		{% for region, count in country_data.1 %}

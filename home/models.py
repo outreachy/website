@@ -272,22 +272,28 @@ class RoundPage(Page):
                 application_round=self,
                 approval_status=ApplicantApproval.APPROVED)
         countries = []
+        cities = []
         timezone_regions = []
         for a in all_apps:
             location = a.applicant.location.split(',')
+            if location != '':
+                cities.append(location[0].strip().lower())
             if len(location) >= 3:
                 country = location[-1].strip().lower()
-                if country == 'usa' or country == 'united states' or country == 'united states of america':
+                if country == 'usa' or country == 'united states' or country == 'united states of america' or country == 'us':
                     country = 'USA'
                 elif country == 'india' or country == 'india.':
                     country = 'India'
+                elif country == 'brasil' or country == 'brazil':
+                    country = 'Brazil'
                 countries.append(country)
+
             if not a.applicant.timezone:
                 continue
             timezone = a.applicant.timezone.zone.split('/')
             if len(timezone) > 1:
                 timezone_regions.append(timezone[0].strip())
-        return (Counter(countries).most_common(10), Counter(timezone_regions).most_common(10))
+        return (Counter(countries).most_common(10), Counter(timezone_regions).most_common(10), Counter(cities).most_common(10))
 
     def get_contributor_demographics(self):
         applicants = ApplicantApproval.objects.filter(
