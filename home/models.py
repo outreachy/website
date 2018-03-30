@@ -281,6 +281,7 @@ class RoundPage(Page):
             else:
                 city = location[0].strip().lower()
 
+            country = ''
             if len(location) >= 3:
                 country = location[-1].strip().lower()
                 if country == 'usa' or country == 'united states' or country == 'united states of america' or country == 'us':
