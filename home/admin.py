@@ -37,6 +37,14 @@ class ComradeInline(admin.StackedInline):
 class ComradeAdmin(UserAdmin):
     inlines = (ComradeInline, )
 
+class OnlyComradeAdmin(reversion.admin.VersionAdmin):
+    model = Comrade
+    list_display = (
+            'public_name',
+            'location',
+            'timezone',
+            )
+
 class SponsorshipInline(admin.StackedInline):
     model = Sponsorship
 
@@ -212,6 +220,11 @@ class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
     list_filter = (
             'approval_status',
             'application_round',
+            'us_national_or_permanent_resident',
+            'living_in_us',
+            'us_resident_demographics',
+            'transgender',
+            'genderqueer'
             )
     search_fields = (
             'applicant__public_name',
@@ -317,6 +330,7 @@ admin.site.register(User, ComradeAdmin)
 
 admin.site.register(ApplicantApproval, ApplicantApprovalAdmin)
 admin.site.register(Community, CommunityAdmin)
+admin.site.register(Comrade, OnlyComradeAdmin)
 admin.site.register(CoordinatorApproval, CoordinatorApprovalAdmin)
 admin.site.register(Contribution, ContributionAdmin)
 admin.site.register(FinalApplication, FinalApplicationAdmin)
