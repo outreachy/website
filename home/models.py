@@ -286,6 +286,10 @@ class RoundPage(Page):
                 country = location[-1].strip().lower()
             elif len(location) == 2:
                 country = location[-1].strip().lower()
+                if country.upper() in ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY', 'AS', 'DC', 'FM', 'GU', 'MH', 'MP', 'PW', 'PR', 'VI', ]:
+                    country = 'USA'
+                elif county in [ 'alabama', 'alaska', 'arizona', 'arkansas', 'california', 'colorado', 'connecticut', 'delaware', 'florida', 'georgia', 'hawaii', 'idaho', 'illinois', 'indiana', 'iowa', 'kansas', 'kentucky', 'louisiana', 'maine', 'maryland', 'massachusetts', 'michigan', 'minnesota', 'mississippi', 'missouri', 'montana', 'nebraska', 'nevada', 'new hampshire', 'new jersey', 'new mexico', 'new york', 'north carolina', 'north dakota', 'ohiooH', 'oklahoma', 'oregon', 'pennsylvania', 'rhode island', 'south carolina', 'south dakota', 'tennessee', 'texas', 'utah', 'vermont', 'virginia', 'washington', 'west virginia', 'wisconsin', 'wyoming', 'american samoa', 'district of columbia', 'federated states of micronesia', 'guam', 'marshall islands', 'northern mariana islands', 'palau', 'puerto rico', 'virgin islands', ]:
+                    country = 'USA'
 
             if country:
                 if country == 'usa' or country == 'united states' or country == 'united states of america' or country == 'us':
@@ -296,6 +300,10 @@ class RoundPage(Page):
                     country = 'Brazil'
                 elif country == 'canada':
                     country = 'Canada'
+                elif country = 'russia':
+                    country = 'Russia'
+                elif country = 'nigeria':
+                    country = 'Nigeria'
                 city = ''
             elif city == 'vancouver':
                 country = 'Canada'
