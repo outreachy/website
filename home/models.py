@@ -284,6 +284,10 @@ class RoundPage(Page):
             country = ''
             if len(location) >= 3:
                 country = location[-1].strip().lower()
+            elif len(location) == 2:
+                country = location[-1].strip().lower()
+
+            if country:
                 if country == 'usa' or country == 'united states' or country == 'united states of america' or country == 'us':
                     country = 'USA'
                 elif country == 'india' or country == 'india.':
@@ -299,10 +303,13 @@ class RoundPage(Page):
             elif city == 'india' or city == 'india.' or city == 'new delhi' or city == 'hyderabad' or city == 'bangalore' or city == 'delhi' or city == 'mumbai' or city == 'hyderabad':
                 country = 'India'
                 city = ''
+            elif city == 'lagos':
+                country = 'Nigeria'
+                city = ''
             elif city == 'moscow':
                 country = 'Russia'
                 city = ''
-            elif city == 'boston' or city == 'los angeles' or city == 'san francisco':
+            elif city == 'boston' or city == 'los angeles' or city == 'san francisco' or city == 'new york':
                 country = 'USA'
                 city = ''
 
