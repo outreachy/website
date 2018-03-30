@@ -277,6 +277,34 @@ class RoundPage(Page):
         for a in all_apps:
             us_state_abbrevs = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY', 'AS', 'DC', 'FM', 'GU', 'MH', 'MP', 'PW', 'PR', 'VI', ]
             us_states = [ 'alabama', 'alaska', 'arizona', 'arkansas', 'california', 'colorado', 'connecticut', 'delaware', 'florida', 'georgia', 'hawaii', 'idaho', 'illinois', 'indiana', 'iowa', 'kansas', 'kentucky', 'louisiana', 'maine', 'maryland', 'massachusetts', 'michigan', 'minnesota', 'mississippi', 'missouri', 'montana', 'nebraska', 'nevada', 'new hampshire', 'new jersey', 'new mexico', 'new york', 'north carolina', 'north dakota', 'ohiooH', 'oklahoma', 'oregon', 'pennsylvania', 'rhode island', 'south carolina', 'south dakota', 'tennessee', 'texas', 'utah', 'vermont', 'virginia', 'washington', 'west virginia', 'wisconsin', 'wyoming', 'american samoa', 'district of columbia', 'federated states of micronesia', 'guam', 'marshall islands', 'northern mariana islands', 'palau', 'puerto rico', 'virgin islands', ]
+
+            us_cities = [
+                    'boston',
+                    'los angeles',
+                    'san francisco',
+                    'new york city',
+                    'united states',
+                    'philadelphia',
+                    'madison',
+                    ]
+
+            indian_cities = [
+                    'india',
+                    'india.',
+                    'new delhi',
+                    'hyderabad',
+                    'bangalore',
+                    'delhi',
+                    'mumbai',
+                    'hyderabad',
+                    'chennai',
+                    'noida',
+                    'kerala',
+                    'pune',
+                    'jaipur',
+                    'maharashtra',
+                    'new delhi india',
+                    ]
             location = a.applicant.location.split(',')
             if location == '':
                 city = ''
@@ -313,13 +341,17 @@ class RoundPage(Page):
                     country = 'Ukraine'
                 elif country == 'usa' or country == 'united states' or country == 'united states of america' or country == 'us':
                     country = 'USA'
-            elif city == 'vancouver':
-                country = 'Canada'
-            elif city == 'são paulo' or city == 'são paulo - sp':
+            elif city == 'buenos aires':
+                country = 'Argentina'
+            # Brazilians like to use dashes instead of commas??
+            elif city.startswith('são paulo'):
                 country = 'Brazil'
+            # There's a Vancouver, WA, but it's more likely to be Canada
+            elif city == 'vancouver' or city == 'canada':
+                country = 'Canada'
             elif city == 'berlin':
                 country = 'Germany'
-            elif city == 'india' or city == 'india.' or city == 'new delhi' or city == 'hyderabad' or city == 'bangalore' or city == 'delhi' or city == 'mumbai' or city == 'hyderabad' or city == 'chennai' or city == 'noida' or city == 'kerala' or city == 'pune':
+            elif city in indian_cities:
                 country = 'India'
             elif city == 'israel':
                 country = 'Israel'
@@ -327,14 +359,16 @@ class RoundPage(Page):
                 country = 'Kenya'
             elif city == 'mexico city':
                 country = 'Mexico'
-            elif city == 'lagos' or city == 'port harcourt':
+            elif city == 'lagos' or city == 'port harcourt' or city == 'ibadan':
                 country = 'Nigeria'
             # technically there's a saint petersberg FL, but it's more likely to be Russia
             elif city == 'moscow' or city == 'saint petersburg':
                 country = 'Russia'
             elif city == 'istanbul':
                 country = 'Turkey'
-            elif city == 'boston' or city == 'los angeles' or city == 'san francisco' or city == 'new york' or city == 'new york city' or city == 'california' or city == 'united states' or city == 'philadelphia':
+            elif city == 'kazakhstan':
+                country = 'United Arab Emirates'
+            elif city in us_cities or city in us_states:
                 country = 'USA'
             else:
                 scrubbed_city = city
@@ -349,7 +383,7 @@ class RoundPage(Page):
             timezone = a.applicant.timezone.zone.split('/')
             if len(timezone) > 1:
                 timezone_regions.append(timezone[0].strip())
-        return (Counter(countries).most_common(10), Counter(timezone_regions).most_common(10), Counter(cities).most_common(10))
+        return (Counter(countries).most_common(20), Counter(timezone_regions).most_common(10), Counter(cities).most_common(10))
 
     def get_contributor_demographics(self):
         applicants = ApplicantApproval.objects.filter(
