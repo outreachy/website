@@ -290,7 +290,7 @@ class RoundPage(Page):
                     country = 'India'
                 elif country == 'brasil' or country == 'brazil':
                     country = 'Brazil'
-                elif county == 'canada':
+                elif country == 'canada':
                     country = 'Canada'
                 city = ''
             elif city == 'vancouver':
