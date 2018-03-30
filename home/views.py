@@ -1981,6 +1981,14 @@ class InternApprove(LoginRequiredMixin, ComradeRequiredMixin, View):
             project=self.intern_selection.project.slug,
             applicant=self.intern_selection.applicant.applicant.pk))
 
+def round_statistics(request, round_slug):
+    current_round = RoundPage.objects.get(slug=round_slug)
+    todays_date = datetime.now()
+    return render(request, 'home/blog/round-statistics.html', {
+        'current_round': current_round,
+        'todays_date': todays_date,
+        })
+
 @login_required
 def dashboard(request):
     """

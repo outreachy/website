@@ -2,6 +2,7 @@ from __future__ import absolute_import, unicode_literals
 
 from os import urandom
 from base64 import urlsafe_b64encode
+from collections import Counter
 from datetime import date, time, datetime, timedelta, timezone
 from email.headerregistry import Address
 
@@ -239,6 +240,123 @@ class RoundPage(Page):
                 communities.append((p.community, intern_count, funded))
         communities.sort(key=lambda x: x[0].name)
         return communities
+
+    # Statistics functions
+    def get_statistics_on_eligibility_check(self):
+        count_all = ApplicantApproval.objects.filter(
+                application_round=self).count()
+        count_approved = ApplicantApproval.objects.filter(
+                approval_status=ApplicantApproval.APPROVED,
+                application_round=self).count()
+        count_rejected_all = ApplicantApproval.objects.filter(
+                approval_status=ApplicantApproval.REJECTED,
+                application_round=self).count()
+        count_rejected_demographics = ApplicantApproval.objects.filter(
+                approval_status=ApplicantApproval.REJECTED,
+                reason_denied="DEMOGRAPHICS",
+                application_round=self).count()
+        count_rejected_time = ApplicantApproval.objects.filter(
+                approval_status=ApplicantApproval.REJECTED,
+                reason_denied="TIME",
+                application_round=self).count()
+        count_rejected_general = ApplicantApproval.objects.filter(
+                approval_status=ApplicantApproval.REJECTED,
+                reason_denied="GENERAL",
+                application_round=self).count()
+        if count_rejected_all == 0:
+            return (count_all, count_approved, 0, 0, 0)
+        return (count_all, count_approved, count_rejected_demographics * 100 / count_rejected_all, count_rejected_time * 100 / count_rejected_all, count_rejected_general * 100 / count_rejected_all)
+
+    def get_countries_stats(self):
+        all_apps = ApplicantApproval.objects.filter(
+                application_round=self,
+                approval_status=ApplicantApproval.APPROVED)
+        countries = []
+        timezone_regions = []
+        for a in all_apps:
+            location = a.applicant.location.split(',')
+            if len(location) >= 3:
+                countries.append(location[-1].strip().lower())
+            if not a.applicant.timezone:
+                continue
+            timezone = a.applicant.timezone.zone.split('/')
+            if len(timezone) > 1:
+                timezone_regions.append(timezone[0].strip())
+        return (Counter(countries).most_common(10), Counter(timezone_regions).most_common(10))
+
+    def get_contributor_demographics(self):
+        applicants = ApplicantApproval.objects.filter(
+                application_round=self,
+                approval_status=ApprovalStatus.APPROVED,
+                contribution__isnull=False).distinct().count()
+
+        us_apps = ApplicantApproval.objects.filter(
+                models.Q(us_national_or_permanent_resident=True) | models.Q(living_in_us=True),
+                application_round=self,
+                approval_status=ApprovalStatus.APPROVED,
+                contribution__isnull=False).distinct().count()
+
+        us_people_of_color_apps = ApplicantApproval.objects.filter(
+                us_resident_demographics=True,
+                application_round=self,
+                approval_status=ApprovalStatus.APPROVED,
+                contribution__isnull=False).distinct().count()
+        if us_apps == 0:
+            return (applicants, 0, 0)
+
+        return (applicants, (us_apps - us_people_of_color_apps) * 100 / us_apps, us_people_of_color_apps * 100 / us_apps)
+
+    def get_contributor_gender_stats(self):
+        all_apps = ApplicantApproval.objects.filter(
+                application_round=self,
+                approval_status=ApprovalStatus.APPROVED,
+                contribution__isnull=False).distinct().count()
+
+        cis_apps = ApplicantApproval.objects.filter(
+                transgender=False,
+                genderqueer=False,
+                demi_boy=False,
+                demi_girl=False,
+                non_binary=False,
+                demi_non_binary=False,
+                genderflux=False,
+                genderfluid=False,
+                demi_genderfluid=False,
+                demi_gender=False,
+                bi_gender=False,
+                tri_gender=False,
+                multigender=False,
+                pangender=False,
+                maxigender=False,
+                aporagender=False,
+                intergender=False,
+                mavrique=False,
+                gender_confusion=False,
+                gender_indifferent=False,
+                graygender=False,
+                agender=False,
+                genderless=False,
+                gender_neutral=False,
+                neutrois=False,
+                androgynous=False,
+                androgyne=False,
+                application_round=self,
+                approval_status=ApprovalStatus.APPROVED,
+                contribution__isnull=False).distinct().count()
+
+        trans_folks_apps = ApplicantApproval.objects.filter(
+                transgender=True,
+                application_round=self,
+                approval_status=ApprovalStatus.APPROVED,
+                contribution__isnull=False).distinct().count()
+
+        genderqueer_folks_apps = ApplicantApproval.objects.filter(
+                genderqueer=True,
+                application_round=self,
+                approval_status=ApprovalStatus.APPROVED,
+                contribution__isnull=False).distinct().count()
+
+        return (cis_apps * 100 / all_apps, trans_folks_apps * 100 / all_apps, genderqueer_folks_apps * 100 / all_apps)
 
     def serve(self, request, *args, **kwargs):
         # Only show this page if newer rounds exist.
