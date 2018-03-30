@@ -276,8 +276,11 @@ class RoundPage(Page):
         timezone_regions = []
         for a in all_apps:
             location = a.applicant.location.split(',')
-            if location != '':
-                cities.append(location[0].strip().lower())
+            if location == '':
+                city = ''
+            else:
+                city = location[0].strip().lower()
+
             if len(location) >= 3:
                 country = location[-1].strip().lower()
                 if country == 'usa' or country == 'united states' or country == 'united states of america' or country == 'us':
@@ -286,6 +289,13 @@ class RoundPage(Page):
                     country = 'India'
                 elif country == 'brasil' or country == 'brazil':
                     country = 'Brazil'
+            elif city == 'india' or city == 'india.' or city == 'new delhi' or city == 'hyderabad' or city == 'bangalore':
+                country = 'India'
+                city = ''
+
+            if city != '':
+                cities.append(city)
+            if country != '':
                 countries.append(country)
 
             if not a.applicant.timezone:
