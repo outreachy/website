@@ -276,7 +276,12 @@ class RoundPage(Page):
         for a in all_apps:
             location = a.applicant.location.split(',')
             if len(location) >= 3:
-                countries.append(location[-1].strip().lower())
+                country = location[-1].strip().lower()
+                if country == 'usa' or country == 'united states' or country == 'united states of america':
+                    country = 'USA'
+                elif country == 'india' or country == 'india.':
+                    country = 'India'
+                countries.append(country)
             if not a.applicant.timezone:
                 continue
             timezone = a.applicant.timezone.zone.split('/')
