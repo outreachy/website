@@ -318,12 +318,14 @@ class RoundPage(Page):
             elif len(location) == 2:
                 country = location[-1].strip().lower()
                 if country.upper() in us_state_abbrevs or country in us_states:
-                    country = 'USA'
+                    country = 'usa'
 
             scrubbed_city = ''
             if country:
                 if country == 'usa' or country == 'united states' or country == 'united states of america' or country == 'us':
                     country = 'usa'
+                if country == 'india.' or country == 'delhi and india':
+                    country = 'india'
             elif city == 'buenos aires' or city.startswith('argentina'):
                 country = 'argentina'
             # Brazilians like to use dashes instead of commas??
@@ -357,18 +359,18 @@ class RoundPage(Page):
                 country = 'usa'
             else:
                 scrubbed_city = city
+                if not a.applicant.timezone:
+                    continue
+                timezone = a.applicant.timezone.zone
+                if len(timezone) > 1:
+                    timezone_regions.append(timezone)
 
             if scrubbed_city != '':
                 cities.append(scrubbed_city)
             if country != '':
                 countries.append(country)
 
-            if not a.applicant.timezone:
-                continue
-            timezone = a.applicant.timezone.zone.split('/')
-            if len(timezone) > 1:
-                timezone_regions.append(timezone[0].strip())
-        return (Counter(countries).most_common(20), Counter(timezone_regions).most_common(20), Counter(cities).most_common(10))
+        return (Counter(countries).most_common(20), Counter(timezone_regions).most_common(20), Counter(cities).most_common(20))
 
     def get_contributor_demographics(self):
         applicants = ApplicantApproval.objects.filter(
