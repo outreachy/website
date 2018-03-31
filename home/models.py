@@ -369,9 +369,11 @@ class RoundPage(Page):
                 if not a.applicant.timezone:
                     continue
                 timezone = a.applicant.timezone.zone
-                if timezone == 'America/Sao_Paulo':
+                if timezone == 'America/Argentina/Buenos_Aires':
+                    country = 'argentina'
+                elif timezone == 'America/Sao_Paulo':
                     country = 'brazil'
-                elif timezone.startswith('Canada'):
+                elif timezone.startswith('Canada') or timezone == 'America/Toronto':
                     country = 'canada'
                 elif timezone == 'Africa/Cairo':
                     country = 'egypt'
@@ -379,10 +381,12 @@ class RoundPage(Page):
                     country = 'germany'
                 elif timezone == 'Africa/Nairobi' or timezone == 'Africa/Lagos':
                     country = 'kenya'
-                elif timezone == 'Asia/Kolkata':
+                elif timezone == 'Asia/Kolkata' or timezone == 'Indian/Mayotte':
                     country = 'india'
                 elif timezone == 'Europe/Rome':
                     country = 'italy'
+                elif timezone == 'Europe/Dublin':
+                    country = 'ireland'
                 elif timezone == 'Indian/Antananarivo':
                     country = 'madagascar'
                 elif timezone == 'Europe/Bucharest':
@@ -391,6 +395,8 @@ class RoundPage(Page):
                     country = 'russia'
                 elif timezone == 'Europe/London':
                     country = 'uk'
+                elif timezone == 'Europe/Kiev':
+                    country = 'ukraine'
                 elif timezone in us_timezones:
                     country = 'usa'
                 else:
