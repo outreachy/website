@@ -287,6 +287,14 @@ class RoundPage(Page):
                     'philadelphia',
                     'madison',
                     ]
+            us_timezones = [
+                    'America/Los_Angeles',
+                    'America/Chicago',
+                    'America/New_York',
+                    'US/Eastern',
+                    'US/Central',
+                    'US/Pacific',
+                    ]
 
             indian_cities = [
                     'india',
@@ -322,7 +330,7 @@ class RoundPage(Page):
 
             scrubbed_city = ''
             if country:
-                if country == 'usa' or country == 'united states' or country == 'united states of america' or country == 'us':
+                if country == 'usa' or country == 'united states' or country == 'united states of america' or country == 'us' or country in us_states:
                     country = 'usa'
                 if country == 'india.' or country == 'delhi and india':
                     country = 'india'
@@ -358,12 +366,37 @@ class RoundPage(Page):
             elif city in us_cities or city in us_states:
                 country = 'usa'
             else:
-                scrubbed_city = city
                 if not a.applicant.timezone:
                     continue
                 timezone = a.applicant.timezone.zone
-                if len(timezone) > 1:
-                    timezone_regions.append(timezone)
+                if timezone == 'America/Sao_Paulo':
+                    country = 'brazil'
+                elif timezone.startswith('Canada'):
+                    country = 'canada'
+                elif timezone == 'Africa/Cairo':
+                    country = 'egypt'
+                elif timezone == 'Europe/Berlin':
+                    country = 'germany'
+                elif timezone == 'Africa/Nairobi' or timezone == 'Africa/Lagos':
+                    country = 'kenya'
+                elif timezone == 'Asia/Kolkata':
+                    country = 'india'
+                elif timezone == 'Europe/Rome':
+                    country = 'italy'
+                elif timezone == 'Indian/Antananarivo':
+                    country = 'madagascar'
+                elif timezone == 'Europe/Bucharest':
+                    country = 'romania'
+                elif timezone == 'Europe/Moscow':
+                    country = 'russia'
+                elif timezone == 'Europe/London':
+                    country = 'uk'
+                elif timezone in us_timezones:
+                    country = 'usa'
+                else:
+                    scrubbed_city = city
+                    if len(timezone) > 1:
+                        timezone_regions.append(timezone)
 
             if scrubbed_city != '':
                 cities.append(scrubbed_city)
