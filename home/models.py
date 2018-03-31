@@ -304,6 +304,7 @@ class RoundPage(Page):
                     'jaipur',
                     'maharashtra',
                     'new delhi india',
+                    'bengaluru',
                     ]
             location = a.applicant.location.split(',')
             if location == '':
@@ -321,55 +322,39 @@ class RoundPage(Page):
 
             scrubbed_city = ''
             if country:
-                if country == 'brasil' or country == 'brazil':
-                    country = 'Brazil'
-                elif country == 'cameroon':
-                    country = 'Cameroon'
-                elif country == 'canada':
-                    country = 'Canada'
-                elif country == 'germany':
-                    country = 'Germany'
-                elif country == 'kenya':
-                    country = 'Kenya'
-                elif country == 'india' or country == 'india.':
-                    country = 'India'
-                elif country == 'nigeria':
-                    country = 'Nigeria'
-                elif country == 'russia':
-                    country = 'Russia'
-                elif country == 'ukraine':
-                    country = 'Ukraine'
-                elif country == 'usa' or country == 'united states' or country == 'united states of america' or country == 'us':
-                    country = 'USA'
-            elif city == 'buenos aires':
-                country = 'Argentina'
+                if country == 'usa' or country == 'united states' or country == 'united states of america' or country == 'us':
+                    country = 'usa'
+            elif city == 'buenos aires' or city.startswith('argentina'):
+                country = 'argentina'
             # Brazilians like to use dashes instead of commas??
-            elif city.startswith('são paulo'):
-                country = 'Brazil'
+            elif city.startswith('são paulo') or city.startswith('curitiba') or city == 'brazil' or city == 'brasil':
+                country = 'brazil'
             # There's a Vancouver, WA, but it's more likely to be Canada
             elif city == 'vancouver' or city == 'canada':
-                country = 'Canada'
+                country = 'canada'
+            elif city == 'egypt':
+                country = 'egypt'
             elif city == 'berlin':
-                country = 'Germany'
+                country = 'germany'
             elif city in indian_cities:
-                country = 'India'
+                country = 'india'
             elif city == 'israel':
-                country = 'Israel'
-            elif city == 'mombasa' or city == 'nairobi':
-                country = 'Kenya'
-            elif city == 'mexico city':
-                country = 'Mexico'
-            elif city == 'lagos' or city == 'port harcourt' or city == 'ibadan':
-                country = 'Nigeria'
+                country = 'israel'
+            elif city == 'mombasa' or city == 'nairobi' or city == 'kenya':
+                country = 'kenya'
+            elif city == 'mexico city' or city == 'mexico':
+                country = 'mexico'
+            elif city.startswith('lagos') or city == 'port harcourt' or city == 'ibadan' or city == 'nigeria':
+                country = 'nigeria'
             # technically there's a saint petersberg FL, but it's more likely to be Russia
-            elif city == 'moscow' or city == 'saint petersburg':
-                country = 'Russia'
-            elif city == 'istanbul':
-                country = 'Turkey'
-            elif city == 'kazakhstan':
-                country = 'United Arab Emirates'
+            elif city == 'moscow' or city == 'saint petersburg' or city == 'saint-petersburg' or city == 'russia':
+                country = 'russia'
+            elif city == 'istanbul' or city == 'turkey':
+                country = 'turkey'
+            elif city == 'kazakhstan' or city == 'united arab emirates':
+                country = 'united arab emirates'
             elif city in us_cities or city in us_states:
-                country = 'USA'
+                country = 'usa'
             else:
                 scrubbed_city = city
 
@@ -383,7 +368,7 @@ class RoundPage(Page):
             timezone = a.applicant.timezone.zone.split('/')
             if len(timezone) > 1:
                 timezone_regions.append(timezone[0].strip())
-        return (Counter(countries).most_common(20), Counter(timezone_regions).most_common(10), Counter(cities).most_common(10))
+        return (Counter(countries).most_common(20), Counter(timezone_regions).most_common(20), Counter(cities).most_common(10))
 
     def get_contributor_demographics(self):
         applicants = ApplicantApproval.objects.filter(
