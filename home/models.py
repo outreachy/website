@@ -371,6 +371,8 @@ class RoundPage(Page):
                 timezone = a.applicant.timezone.zone
                 if timezone == 'America/Argentina/Buenos_Aires':
                     country = 'argentina'
+                if 'Australia' in timezone:
+                    country = 'australia'
                 elif timezone == 'America/Sao_Paulo':
                     country = 'brazil'
                 elif timezone.startswith('Canada') or timezone == 'America/Toronto':
@@ -409,7 +411,7 @@ class RoundPage(Page):
             if country != '':
                 countries.append(country)
 
-        return (Counter(countries).most_common(20), Counter(timezone_regions).most_common(20), Counter(cities).most_common(20))
+        return Counter(countries).most_common(25)
 
     def get_contributor_demographics(self):
         applicants = ApplicantApproval.objects.filter(

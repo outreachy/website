@@ -27,23 +27,10 @@ Statistics for Outreachy {{ current_round.internstarts|date:"F Y" }} to {{ curre
 
 	<h2>Where do people live who are eligible?</h2>
 	{% with country_data=current_round.get_countries_stats %}
-	<p>Outreachy also allows applicants to (optionally) set their location. Although we asked for the location in "City, State/Providence, Country", many people only provided a city name, which makes automatic data science hard.</p>
-	<p>Of the {{ eligibility_stats.1 }} people who were eligible, the most common countries are:</p>
+	<p>Outreachy also allows applicants to (optionally) set their location. Of the {{ eligibility_stats.1 }} people who were eligible, the most common countries are:</p>
 	<ul>
-		{% for name, count in country_data.0 %}
-			<li>{{ name }} - {{ count }} people</li>
-		{% endfor %}
-	</ul>
-	<p>Of the {{ eligibility_stats.1 }} people who were eligible, the most common cities are:</p>
-	<ul>
-		{% for name, count in country_data.2 %}
-			<li>{{ name }} - {{ count }} people</li>
-		{% endfor %}
-	</ul>
-	<p>We can also take a guess at where applicants are located by looking at the timezones. Of the {{ eligibility_stats.1 }} people who were eligible, the most common timezone regions are:</p>
-	<ul>
-		{% for region, count in country_data.1 %}
-			<li>{{ region }} - {{ count }} people</li>
+		{% for name, count in country_data %}
+			<li>{{ name|capfirst }} - {{ count }} people</li>
 		{% endfor %}
 	</ul>
 	{% endwith %}
