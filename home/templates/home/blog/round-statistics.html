@@ -38,12 +38,14 @@ Statistics for Outreachy {{ current_round.internstarts|date:"F Y" }} to {{ curre
 
 	<h2>Who completed a contribution?</h2>
 	<p>Outreachy is a highly competitive program, and we require applicants to work with Outreachy mentors to make a contribution to a project. A contribution can be something small, like refactoring a function, adding a few paragraphs of documentation, translating a small amount of text, creating a graphical element for one part of an application, or reviewing how a user might complete a task to evaluate user experience.</p>
-	{% with demographics_stats=current_round.get_contributor_demographics gender_stats=current_round.get_contributor_gender_stats %}
+	{% with demographics_stats=current_round.get_contributor_demographics gender_stats=current_round.get_contributor_gender_stats funding_stats=current_round.get_contributor_applicant_funding_status %}
 	<p>{{ demographics_stats.0 }} people made a contribution to an Outreachy project:</p>
 	<ul>
 		<li>Across all contributors, {{ gender_stats.1|floatformat:"0"|intcomma }}% are transgender, {{ gender_stats.2|floatformat:"0"|intcomma }}% are genderqueer, and {{ gender_stats.0|floatformat:"0"|intcomma }}% are cisgender</li>
 		<li>For contributors who live in the United States, or are United States residents or nationals, {{ demographics_stats.2|floatformat:"0"|intcomma }}% are Black/African American, Hispanic/Latin@, Native American/American Indian, Alaska Native, Native Hawaiian, or Pacific Islander. {{ demographics_stats.1|floatformat:"0"|intcomma }}% are white.</li>
 	</ul>
+	<h2>How can you help?</h2>
+	<p>Outreachy currently has {{ funding_stats.2 }} applicants, but only enough funding to accept {{ funding_stats.3 }} interns. Can your company sponsor one intern at $6,500? Please <a href="/contact/">contact us today</a>!</p>
 	{% endwith %}
 
 {% endif %}

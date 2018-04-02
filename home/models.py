@@ -487,6 +487,30 @@ class RoundPage(Page):
 
         return (cis_apps * 100 / all_apps, trans_folks_apps * 100 / all_apps, genderqueer_folks_apps * 100 / all_apps)
 
+    def get_contributor_applicant_funding_status(self):
+        eligible = ApplicantApproval.objects.filter(
+                approval_status=ApplicantApproval.APPROVED,
+                application_round=self).count()
+
+        contributed = ApplicantApproval.objects.filter(
+                application_round=self,
+                approval_status=ApprovalStatus.APPROVED,
+                contribution__isnull=False).distinct().count()
+
+        applied = ApplicantApproval.objects.filter(
+                application_round=self,
+                approval_status=ApprovalStatus.APPROVED,
+                finalapplication__isnull=False).distinct().count()
+
+        funded = 0
+        participations = Participation.objects.filter(
+                approval_status=Participation.APPROVED,
+                participating_round=self)
+        for p in participations:
+            funded = funded + p.interns_funded()
+
+        return (eligible, contributed, applied, funded)
+
     def serve(self, request, *args, **kwargs):
         # Only show this page if newer rounds exist.
         if RoundPage.objects.filter(internstarts__gt=self.internstarts).exists():
