@@ -15,9 +15,11 @@
 	<h1>Approved {{ community.name }} Project</h1>
 	<p>This project has been approved by the {{ community.name }} coordinator(s) to participate in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
 
-	<h2>Promoting To Outreachy Applicants</h2>
+	{% if not project.has_application_deadline_passed %}
+		<h2>Promoting To Outreachy Applicants</h2>
 
-	{% include 'home/snippet/project_promotion.html' %}
+		{% include 'home/snippet/project_promotion.html' %}
+	{% endif %}
 
 {% elif project.approval_status == project.PENDING %}
 	<h1>Pending {{ community.name }} Project</h1>
