@@ -12,12 +12,3 @@ The next step is for applicants to work with mentors on a contribution, AND reco
 {{ request.scheme }}://{{ request.get_host }}{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}
 
 Once applicants have recorded at least one contribution through the Outreachy, they will be able to start their application on the same page. The button text will change from 'Record Contributions' to 'Update Contibutions and Apply to This Project'.
-
-Application Dashboard
----------------------
-
-Coordinators and mentors can see which applicants have recorded a contribution and made an application on the community application dashboard:
-
-{{ request.scheme }}://{{ request.get_host }}{% url 'community-applicants' round_slug=current_round.slug community_slug=community.slug %}
-
-Each project has an applicant details page, which is linked from the community application dashboard. The project applicant details page lists applicant's information, time commitments, recorded contributions, and application text.
