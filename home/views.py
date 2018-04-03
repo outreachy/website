@@ -1073,11 +1073,16 @@ class MentorApprovalAction(ApprovalStatusAction):
                 'project_slug': self.object.project.slug,
                 })
 
-        return self.object.get_preview_url()
+        return self.object.project.get_preview_url()
 
     def notify(self):
         if self.prior_status != self.target_status:
             email.approval_status_changed(self.object, self.request)
+            if self.target_status == MentorApproval.APPROVED:
+                interns = self.object.project.get_interns()
+                for i in interns:
+                    if i.funding_source != InternSelection.NOT_FUNDED:
+                        email.co_mentor_intern_selection_notification(i, self.request)
 
 class ProjectAction(ApprovalStatusAction):
     fields = ['short_title', 'approved_license', 'unapproved_license_description', 'no_proprietary_software', 'proprietary_software_description', 'longevity', 'community_size', 'community_benefits', 'intern_tasks', 'intern_benefits', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'contribution_tasks', 'long_description', 'deadline', 'needs_more_applicants']

@@ -5,4 +5,4 @@ Coordinators and mentors can see which applicants have recorded a contribution a
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'community-applicants' round_slug=current_round.slug community_slug=community.slug %}
 
-Each project has an applicant details page, which is linked from the community application dashboard. The project applicant details page lists applicant's information, time commitments, recorded contributions, and application text.
+Each project has an applicant details page, which is linked from the community application dashboard. The project applicant details page lists applicant's information, time commitments, recorded contributions, and application text. Co-mentors can sign up to mentor a selected intern by following the project links from the community application dashboard.

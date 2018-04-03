@@ -33,22 +33,28 @@
 	<p>The {{ community.name }} coordinator(s) or Outreachy organizers do not think this project is suitable for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
 {% endif %}
 
-{% if not current_round.has_project_submission_and_approval_deadline_passed %}
+{% if not current_round.has_internship_ended %}
 	<h3>Project Mentors</h3>
 	{% if mentor_request %}
 		<p>Your request to mentor this project is:
 		<strong>{{ mentor_request.get_approval_status_display }}</strong></p>
 
 		{% if mentor_request.approval_status == mentor_request.PENDING or mentor_request.approval_status == mentor_request.APPROVED %}
-		<p><a href="{{ mentor_request.get_withdraw_url }}" class="btn btn-warning">Withdraw From Mentoring</a></p>
+			<p><a href="{{ mentor_request.get_withdraw_url }}" class="btn btn-warning">Withdraw From Mentoring</a></p>
 		{% elif mentor_request.approval_status == mentor_request.WITHDRAWN %}
-		<p><a href="{{ mentor_request.get_submit_url }}" class="btn btn-success">Mentor This Project</a></p>
+			<p><a href="{{ mentor_request.get_submit_url }}" class="btn btn-success">Mentor This Project</a></p>
 		{% endif %}
-		<p>Each co-mentor for your project will need to sign up, so that they can view applicant's recorded contributions and application. You can send them this link to sign up as a co-mentor: <a href="{% url 'mentorapproval-action' community_slug=community.slug project_slug=project.slug action='submit' %}">{{ request.scheme }}://{{ request.get_host }}{% url 'mentorapproval-action' community_slug=community.slug project_slug=project.slug action='submit' %}</a>
-
+		{% if not current_round.has_late_application_deadline_passed %}
+			<p>Each co-mentor for your project will need to sign up, so that they can view applicant's recorded contributions and application.
+			You can send them this link to sign up as a co-mentor:
+			<a href="{% url 'mentorapproval-action' community_slug=community.slug project_slug=project.slug action='submit' %}">{{ request.scheme }}://{{ request.get_host }}{% url 'mentorapproval-action' community_slug=community.slug project_slug=project.slug action='submit' %}</a>
+		{% endif %}
 	{% else %}
-		<a href="{% url 'mentorapproval-action' action='submit' community_slug=community.slug project_slug=project.slug %}" class="btn btn-success">Mentor This Project</a>
+		<p>If you need to sign up to co-mentor this project, please click the button below to create an account. Once you're approved by the coordinator, you will receive instructions on how to sign the mentor agreement for the selected intern.</p>
+		<p><a href="{% url 'mentorapproval-action' community_slug=community.slug project_slug=project.slug action='submit' %}" class="btn btn-success">Co-mentor This Project</a></p>
 	{% endif %}
+{% else %}
+	<h3>Co-mentor</h3>
 {% endif %}
 
 {% if coordinator %}
