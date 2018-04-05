@@ -205,7 +205,7 @@ class RoundPage(Page):
                 project__project_round__participating_round=self,
                 project__approval_status=Project.APPROVED,
                 project__project_round__approval_status=Participation.APPROVED).exclude(
-                        funding_source=InternSelection.NOT_FUNDED).order_by('project__community__name').order_by('project__short_title')
+                        funding_source=InternSelection.NOT_FUNDED).order_by('project__short_title').order_by('project__community__name')
 
     def get_general_funding_intern_selections(self):
         return self.get_intern_selections().filter(
