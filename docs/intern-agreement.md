@@ -81,9 +81,8 @@ accordance with the following schedule, subject to Conservancy’s receipt of
 such funds from the relevant sponsor. Conservancy payments are generally paid
 on a NET-30 basis. Recognizing internship structure of Outreachy, Conservancy
 will make best efforts to send out payments quickly after internship progress
-confirmation. Payment may be issued earlier than scheduled deadlines below, but
-interns should not rely on earlier payment
-
+confirmations. Payments may be issued earlier than scheduled deadlines below,
+but interns should not rely on earlier payments.
 
  * $500 will be sent to you by June 17, 2018, unless your Volunteer Mentor
    informs Conservancy by May 23, 2018 that you have not begun your internship,
@@ -166,9 +165,16 @@ sanctions programs;
 
 (e) you are or will be 18 years of age or older by May 14, 2018;
 
-(f) the contents of your eligibility form and project application – including
-your stated availability and time commitment to participate in the Program –
-are truthful and accurate.
+(f) (i) the contents of your Application and information you submitted for the
+Eligibility Check, including your stated availability and time commitment to
+participate in the Program, are truthful and accurate or (ii) you corrected the
+contents of your Application and information you submitted for the Eligibility
+Check, including your stated availability and time commitment to participate in
+the Program, by emailing Outreachy Organizers at organizers@outreachy.org and
+your Volunteer Mentor, and you represent that the combined information is
+truthful and accurate. Outreachy Organizers and your Volunteer Mentor have
+confirmed in writing that you can proceed with your participation in the
+Program.
 
 **Indemnification.**
 
