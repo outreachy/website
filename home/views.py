@@ -1986,6 +1986,68 @@ class InternApprove(LoginRequiredMixin, ComradeRequiredMixin, View):
             project=self.intern_selection.project.slug,
             applicant=self.intern_selection.applicant.applicant.pk))
 
+# Passed round_slug, community_slug, project_slug, (get applicant from request.user)
+class InternAgreementSign(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
+    model = SignedContract
+    template_name = 'home/internrelationship_form.html'
+    fields = ('legal_name',)
+
+    def set_project_and_intern_selection(self):
+        self.current_round = RoundPage.objects.latest('internstarts')
+        this_round = RoundPage.objects.get(slug=self.kwargs['round_slug'])
+        if this_round != self.current_round:
+            raise PermissionDenied("You cannot sign an intern agreement for a past Outreachy round.")
+        if not self.current_round.has_intern_announcement_deadline_passed():
+            raise PermissionDenied("Intern agreements cannot be signed before the interns are announced.")
+
+        self.project = get_object_or_404(Project,
+                slug=self.kwargs['project_slug'],
+                approval_status=ApprovalStatus.APPROVED,
+                project_round__community__slug=self.kwargs['community_slug'],
+                project_round__participating_round=self.current_round,
+                project_round__approval_status=ApprovalStatus.APPROVED)
+        self.intern_selection = get_object_or_404(InternSelection,
+                applicant__applicant=self.request.user.comrade,
+                funding_source__in=(InternSelection.ORG_FUNDED, InternSelection.GENERAL_FUNDED),
+                organizer_approved=True,
+                applicant__application_round=self.current_round)
+
+        # Don't allow interns to sign the contract twice
+        if self.intern_selection.intern_contract != None:
+            raise PermissionDenied("You have already signed the intern agreement.")
+
+        with open(path.join(settings.BASE_DIR, 'docs', 'intern-agreement.md')) as iafile:
+            self.intern_agreement = iafile.read()
+
+
+    def get_context_data(self, **kwargs):
+        context = super(InternAgreementSign, self).get_context_data(**kwargs)
+
+        self.set_project_and_intern_selection()
+
+        context['intern_agreement_html'] = markdownify(self.intern_agreement)
+        context['project'] = self.project
+        context['community'] = self.project.project_round.community
+        context['intern_selection'] = self.intern_selection
+        context['applicant'] = self.intern_selection.applicant
+        context['current_round'] = self.current_round
+        return context
+
+    def form_valid(self, form):
+        self.set_project_and_intern_selection()
+
+        intern_contract = form.save(commit=False)
+        intern_contract.date_signed = datetime.now(timezone.utc)
+        intern_contract.ip_address = self.request.META.get('REMOTE_ADDR')
+        intern_contract.text = self.intern_agreement
+        intern_contract.save()
+        self.intern_selection.intern_contract = intern_contract
+        self.intern_selection.save()
+        return redirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('dashboard')
+
 def round_statistics(request, round_slug):
     current_round = RoundPage.objects.get(slug=round_slug)
     todays_date = datetime.now()

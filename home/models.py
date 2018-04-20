@@ -158,6 +158,9 @@ class RoundPage(Page):
 
     def coordinator_funding_deadline(self):
         return(self.appslate + datetime.timedelta(days=10))
+
+    def intern_agreement_deadline(self):
+        return(self.internannounce + datetime.timedelta(days=7))
     
     def initial_stipend_dates(self):
         return (self.internstarts + datetime.timedelta(days=10), self.internstarts + datetime.timedelta(days=24))
@@ -187,6 +190,9 @@ class RoundPage(Page):
                 if project.deadline == Project.LATE:
                     return has_deadline_passed(self.appslate)
         return has_deadline_passed(self.appsclose)
+
+    def has_intern_announcement_deadline_passed(self):
+        return has_deadline_passed(self.internannounce)
 
     def gsoc_round(self):
         # The internships would start before August
@@ -866,6 +872,14 @@ class Comrade(models.Model):
                 projects.append(a.project)
         return projects
 
+    def get_intern_selection(self):
+        try:
+            return InternSelection.objects.get(
+                applicant__applicant=self,
+                funding_source__in=(InternSelection.ORG_FUNDED, InternSelection.GENERAL_FUNDED),
+                organizer_approved=True)
+        except ApplicantApproval.DoesNotExist:
+            return None
 
 class ApprovalStatusQuerySet(models.QuerySet):
     def approved(self):
@@ -2281,7 +2295,7 @@ class SignedContract(models.Model):
 class InternSelection(models.Model):
     applicant = models.ForeignKey(ApplicantApproval)
     project = models.ForeignKey(Project)
-    intern_contract = models.OneToOneField(SignedContract, null=True)
+    intern_contract = models.OneToOneField(SignedContract, null=True, blank=True, on_delete=models.SET_NULL)
     mentors = models.ManyToManyField(MentorApproval, through='MentorRelationship')
 
     GENERAL_FUNDED = 'GEN'
@@ -2336,7 +2350,7 @@ class InternSelection(models.Model):
         return self.project.short_title
 
     def mentor_names(self):
-        return ", ".join([m.mentor.public_name for m in self.mentors.all()])
+        return " and ".join([m.mentor.public_name for m in self.mentors.all()])
 
     def get_application(self):
         return FinalApplication.objects.get(

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}
+Sign Outreachy Intern Agreement
+{% endblock %}
+
+{% block content %}
+
+<h1>Outreachy Intern Agreement</h1>
+<p>Congratulations on being accepted as an intern for the {{ community.name }} project "{{ project.short_title }}". Your mentor(s) are {{ intern_selection.mentor_names }}.</p>
+
+<form method="post" action="">
+{% csrf_token %}
+	{% for field in form.visible_fields %}
+		<div class="form-group">
+			{{ field.errors }}
+			{% if 'Legal' in field.label_tag %}
+				<h2>Intern Agreement</h2>
+				<p>By providing your full legal name below, you are agreeing that the information you provided on your eligibility check and application is accurate. If any of the information needs to be updated, please do not sign this agreement and instead contact the Outreachy organizers to correct the information.</p>
+				<div class="card mb-3">
+					<div class="card-body">
+						{{ intern_agreement_html|safe }}
+					</div>
+				</div>
+				<h2>Agree to the Outreachy Intern Agreement</h2>
+				<p>Please type your full legal name below to indicate you agree to the Outreachy Intern Agreement.</p>
+			{% endif %}
+			{{ field.label_tag }}
+			{{ field }}
+			{% if field.help_text %}
+				<div class="text-muted">{{ field.help_text|safe }}</div>
+			{% endif %}
+		</div>
+	{% endfor %}
+	{% for hidden in form.hidden_fields %}
+		{{ hidden }}
+	{% endfor %}
+<input type="submit" class="btn btn-block btn-primary" value="Accept Agreement" />
+<input type="hidden" name="next" value="{{ next }}" />
+</form>
+
+{% endblock %}
