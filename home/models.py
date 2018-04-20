@@ -5,6 +5,8 @@ from base64 import urlsafe_b64encode
 from collections import Counter
 import datetime
 from email.headerregistry import Address
+import random
+import os.path
 
 from django.contrib.auth.models import User
 from django.core import validators
@@ -581,6 +583,23 @@ LONG_LEGAL_NAME=800
 SHORT_NAME=100
 
 
+def make_comrade_photo_filename(instance, original_name):
+    # Use the underlying User object's primary key rather than any
+    # human-readable name, because if the person changes any of their
+    # names, we don't want to be revealing their old names in these
+    # URLs. It's usually considered bad style to include database IDs in
+    # URLs, for a variety of good reasons, but it seems like the best we
+    # can do here.
+    base = instance.account.id
+    # Incorporate a pseudo-random number to make it harder to guess the
+    # URL to somebody's old photo once they've replaced it.
+    randbase = 100000000
+    unique = random.randrange(randbase, 10 * randbase)
+    # Preserve the original filename's extension as that usually signals
+    # the file's type.
+    extension = os.path.splitext(original_name)[1]
+    return "comrade/{pk}/{unique}{ext}".format(pk=base, unique=unique, ext=extension)
+
 # From Wordnik:
 # comrade: A person who shares one's interests or activities; a friend or companion.
 # user: One who uses addictive drugs.
@@ -591,6 +610,8 @@ class Comrade(models.Model):
     nick_name = models.CharField(max_length=SHORT_NAME, verbose_name="Nick name (internal)", help_text="The short name used in emails to you. You would use this name when introducing yourself to a new person, such as 'Hi, I'm (nick name)'. Emails will be addressed 'Hi (nick name)'. This name will be shown to organizers, coordinators, mentors, and volunteers.")
 
     legal_name = models.CharField(max_length=LONG_LEGAL_NAME, verbose_name="Legal name (private)", help_text="Your name on your government identification. This is the name that you would use to sign a legal document. This will be used only by Outreachy organizers on any private legal contracts. Other applicants, coordinators, mentors, and volunteers will not see this name.")
+
+    photo = models.ImageField(blank=True, upload_to=make_comrade_photo_filename)
 
     # Reference: https://uwm.edu/lgbtrc/support/gender-pronouns/
     PRONOUN_RAW = (
