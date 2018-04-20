@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 from os import urandom
 from base64 import urlsafe_b64encode
 from collections import Counter
-from datetime import date, time, datetime, timedelta, timezone
+import datetime
 from email.headerregistry import Address
 
 from django.contrib.auth.models import User
@@ -88,13 +88,13 @@ class StatsRoundFifteen(Page):
 
 # All dates in RoundPage below, if an exact time matters, actually represent
 # the given date at 4PM UTC.
-DEADLINE_TIME = time(hour=16, tzinfo=timezone.utc)
+DEADLINE_TIME = datetime.time(hour=16, tzinfo=datetime.timezone.utc)
 
 def has_deadline_passed(deadline_date):
     if not deadline_date:
         return False
-    deadline = datetime.combine(deadline_date, DEADLINE_TIME)
-    now = datetime.now(deadline.tzinfo)
+    deadline = datetime.datetime.combine(deadline_date, DEADLINE_TIME)
+    now = datetime.datetime.now(deadline.tzinfo)
     return deadline < now
 
 class RoundPage(Page):
@@ -134,41 +134,41 @@ class RoundPage(Page):
     ]
 
     def regular_deadline_reminder(self):
-        return(self.appsclose - timedelta(days=7))
+        return(self.appsclose - datetime.timedelta(days=7))
 
     def regular_deadline_second_reminder(self):
-        return(self.appsclose - timedelta(days=1))
+        return(self.appsclose - datetime.timedelta(days=1))
 
     def late_deadline_reminder(self):
-        return(self.appslate - timedelta(days=1))
+        return(self.appslate - datetime.timedelta(days=1))
 
     def ProjectsDeadline(self):
-        return(self.appsclose - timedelta(days=14))
+        return(self.appsclose - datetime.timedelta(days=14))
 
     def has_project_submission_and_approval_deadline_passed(self):
         return has_deadline_passed(self.ProjectsDeadline())
 
     def LateApplicationsDeadline(self):
-        return(self.appsclose + timedelta(days=7))
+        return(self.appsclose + datetime.timedelta(days=7))
     
     def InternSelectionDeadline(self):
-        return(self.appslate + timedelta(days=6))
+        return(self.appslate + datetime.timedelta(days=6))
 
     def coordinator_funding_deadline(self):
-        return(self.appslate + timedelta(days=10))
+        return(self.appslate + datetime.timedelta(days=10))
     
     def initial_stipend_dates(self):
-        return (self.internstarts + timedelta(days=10), self.internstarts + timedelta(days=24))
+        return (self.internstarts + datetime.timedelta(days=10), self.internstarts + datetime.timedelta(days=24))
 
     def midpoint_stipend_dates(self):
-        return (self.midfeedback + timedelta(days=10), self.midfeedback + timedelta(days=24))
+        return (self.midfeedback + datetime.timedelta(days=10), self.midfeedback + datetime.timedelta(days=24))
 
     def final_stipend_dates(self):
-        return (self.finalfeedback + timedelta(days=10), self.finalfeedback + timedelta(days=24))
+        return (self.finalfeedback + datetime.timedelta(days=10), self.finalfeedback + datetime.timedelta(days=24))
 
     # Interns get a five week extension at most.
     def has_internship_ended(self):
-        return has_deadline_passed(self.internends + timedelta(days=7*5))
+        return has_deadline_passed(self.internends + datetime.timedelta(days=7*5))
 
     def has_ontime_application_deadline_passed(self):
         return has_deadline_passed(self.appsclose)
@@ -683,14 +683,14 @@ class Comrade(models.Model):
 
     def get_local_application_deadline(self):
         current_round = RoundPage.objects.latest('internstarts')
-        utc = datetime.combine(current_round.appsclose, DEADLINE_TIME)
+        utc = datetime.datetime.combine(current_round.appsclose, DEADLINE_TIME)
         if not self.timezone:
             return utc
         return utc.astimezone(self.timezone)
 
     def get_local_late_application_deadline(self):
         current_round = RoundPage.objects.latest('internstarts')
-        utc = datetime.combine(current_round.appslate, DEADLINE_TIME)
+        utc = datetime.datetime.combine(current_round.appslate, DEADLINE_TIME)
         if not self.timezone:
             return utc
         return utc.astimezone(self.timezone)
@@ -1150,7 +1150,7 @@ class Sponsorship(models.Model):
             """)
 
     funding_decision_date = models.DateField(
-            default=date.today,
+            default=datetime.date.today,
             help_text='Date by which you will know if this funding is confirmed.')
 
     additional_information = CKEditorField(
@@ -1718,7 +1718,7 @@ def create_time_commitment_calendar(tcs, application_round):
         for i in range(application_period_length):
             if date >= tc['start_date'] and date <= tc['end_date']:
                 calendar[i] = calendar[i] + tc['hours']
-            date = date + timedelta(days=1)
+            date = date + datetime.timedelta(days=1)
     return calendar
 
 # This class stores information about whether an applicant is eligible to
@@ -1908,8 +1908,8 @@ class ApplicantApproval(ApprovalStatus):
             free_period_start_date = None
             free_period_end_date = None
         else:
-            free_period_start_date = current_round.internstarts + timedelta(days=free_period_start_day)
-            free_period_end_date = current_round.internstarts + timedelta(days=free_period_start_day + longest_period_free - 1)
+            free_period_start_date = current_round.internstarts + datetime.timedelta(days=free_period_start_day)
+            free_period_end_date = current_round.internstarts + datetime.timedelta(days=free_period_start_day + longest_period_free - 1)
         internship_total_days = current_round.internends - current_round.internstarts
 
         return {
