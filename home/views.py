@@ -31,8 +31,10 @@ from .mixins import ComradeRequiredMixin
 from .mixins import EligibleApplicantRequiredMixin
 from .mixins import Preview
 
+from .models import AlumInfo
 from .models import ApplicantApproval
 from .models import ApprovalStatus
+from .models import CohortPage
 from .models import CommunicationChannel
 from .models import Community
 from .models import Comrade
@@ -2054,6 +2056,20 @@ def round_statistics(request, round_slug):
     return render(request, 'home/blog/round-statistics.html', {
         'current_round': current_round,
         'todays_date': todays_date,
+        })
+
+def alums_page(request):
+    # Get all the older AlumInfo models (before we had round pages)
+    pages = CohortPage.objects.all()
+    old_cohorts = []
+    for p in pages:
+        old_cohorts.append((p.round_start, p.round_end,
+            AlumInfo.objects.filter(page=p).order_by('community', 'name')))
+    rounds = RoundPage.objects.all().order_by('-internstarts')
+    rounds = [x for x in rounds if x.has_intern_announcement_deadline_passed() and x.get_approved_intern_selections() != None]
+    return render(request, 'home/alums.html', {
+        'old_cohorts': old_cohorts,
+        'rounds': rounds,
         })
 
 @login_required

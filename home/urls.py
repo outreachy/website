@@ -40,6 +40,7 @@ urlpatterns = [
     url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/applicants/$', views.ProjectApplicants.as_view(), name='project-applicants'),
     url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/applicants/$', views.community_applicants, name='community-applicants'),
     url(r'^(?P<round_slug>[^/]+)/communities/(?P<slug>[^/]+)/$', views.community_landing_view, name='community-landing'),
+    url(r'^alums/$', views.alums_page, name='alums'),
     url(r'^communities/cfp/$', views.community_cfp_view, name='community-cfp'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
     url(r'^dashboard/trusted-volunteers/$', views.TrustedVolunteersListView.as_view(), name='trusted-volunteers-list'),
