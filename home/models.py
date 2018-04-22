@@ -166,10 +166,10 @@ class RoundPage(Page):
         return self.internstarts + datetime.timedelta(days=31+3)
 
     def midpoint_stipend_payment_deadline(self):
-        return self.midfeedback + datetime.timedelta(days=31+4)
+        return self.midfeedback + datetime.timedelta(days=31)
 
     def final_stipend_payment_deadline(self):
-        return self.finalfeedback + datetime.timedelta(days=31+1)
+        return self.finalfeedback + datetime.timedelta(days=31)
 
     # Interns get a five week extension at most.
     def has_internship_ended(self):
