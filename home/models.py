@@ -568,6 +568,17 @@ class AlumInfo(Orderable):
             FieldPanel('mentors'),
     ]
 
+    def round_string(self):
+        return '{start:%b %Y} to {end:%b %Y}'.format(
+                start=self.page.round_start,
+                end=self.page.round_end)
+
+    def __str__(self):
+        return '{start:%b %Y} to {end:%b %Y}: {name}'.format(
+                start=self.page.round_start,
+                end=self.page.round_end,
+                name=self.name)
+
 # We can't remove this old function because the default value
 # for the token field used mentor_id and so an old migration
 # refers to mentor_id

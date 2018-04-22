@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 import reversion.admin
 
+from .models import AlumInfo
 from .models import ApplicantApproval
 from .models import ContractorInformation
 from .models import CommunicationChannel
@@ -36,6 +37,18 @@ class ComradeInline(admin.StackedInline):
 
 class ComradeAdmin(UserAdmin):
     inlines = (ComradeInline, )
+
+class AlumInfoAdmin(reversion.admin.VersionAdmin):
+    model = AlumInfo
+    list_display = (
+            'name',
+            'community',
+            'round_string',
+            )
+    list_filter = (
+            'community',
+            'page__round_start',
+            )
 
 class OnlyComradeAdmin(reversion.admin.VersionAdmin):
     model = Comrade
@@ -328,6 +341,7 @@ class InternSelectionAdmin(admin.ModelAdmin):
 admin.site.unregister(User)
 admin.site.register(User, ComradeAdmin)
 
+admin.site.register(AlumInfo, AlumInfoAdmin)
 admin.site.register(ApplicantApproval, ApplicantApprovalAdmin)
 admin.site.register(Community, CommunityAdmin)
 admin.site.register(Comrade, OnlyComradeAdmin)
