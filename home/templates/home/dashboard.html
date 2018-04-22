@@ -117,6 +117,14 @@ you can send an email to the announcements mailing list to remind applicants of 
 
 <p><a href="{% url 'email-application-period-ended' %}"><input class="btn btn-success" value="Contributor Final Email" /></a>
 
+<p>On the intern announcement date, once the alums page reflects the accepted interns, send a welcome email to accepted interns:
+<ul>
+	<li>After the interns are announced. Send the email on {{ current_round.internannounce }} after 4pm UTC.</li>
+</ul>
+</p>
+
+<p><a href="{% url 'email-intern-welcome' %}"><input class="btn btn-success" value="Intern Welcome Email" /></a>
+
 
 <h2>Intern Selection</h2>
 

@@ -53,6 +53,7 @@ urlpatterns = [
     url(r'^email/mentor-application-deadline-reminder/$', views.MentorApplicationDeadlinesReminder.as_view(), name='email-mentor-application-deadline-reminder'),
     url(r'^email/mentor-intern-selection-reminder/$', views.MentorInternSelectionReminder.as_view(), name='email-mentor-intern-selection-reminder'),
     url(r'^email/coordinator-intern-selection-reminder/$', views.CoordinatorInternSelectionReminder.as_view(), name='email-coordinator-intern-selection-reminder'),
+    url(r'^email/intern-welcome/$', views.InternNotification.as_view(), name='email-intern-welcome'),
     url(r'^account/$', views.ComradeUpdate.as_view(), name='account'),
     url(r'^apply/project-selection/$', views.current_round_page, name='project-selection'),
     url(r'^apply/make-contributions/$', views.contribution_tips, name='contribution-tips'),

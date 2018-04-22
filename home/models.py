@@ -161,6 +161,12 @@ class RoundPage(Page):
 
     def intern_agreement_deadline(self):
         return(self.internannounce + datetime.timedelta(days=7))
+
+    def intern_not_started_deadline(self):
+        return(self.internstarts + datetime.timedelta(days=9))
+
+    def intern_sfc_initial_payment_notification_deadline(self):
+        return(self.internstarts + datetime.timedelta(days=10))
     
     def initial_stipend_payment_deadline(self):
         return self.internstarts + datetime.timedelta(days=31+3)
@@ -1019,6 +1025,10 @@ class Community(models.Model):
 
     def get_coordinator_email_list(self):
         return [ca.coordinator.email_address()
+                for ca in self.coordinatorapproval_set.approved()]
+
+    def get_coordinator_names(self):
+        return [ca.coordinator.public_name
                 for ca in self.coordinatorapproval_set.approved()]
 
     def get_number_of_funded_interns(self):

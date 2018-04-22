@@ -154,6 +154,20 @@ def contributor_application_period_ended(contributor, current_round, request):
         request=request,
         recipient_list=[contributor.email_address()])
 
+def notify_accepted_intern(intern_selection, request):
+    emails = [intern_selection.applicant.applicant.email_address()]
+    for m in intern_selection.mentors.all():
+        emails.append(m.mentor.email_address())
+    emails = emails + intern_selection.project.project_round.community.get_coordinator_email_list()
+    send_group_template_mail('home/email/interns-notify.txt', {
+        'intern_selection': intern_selection,
+        'coordinator_names': intern_selection.project.project_round.community.get_coordinator_names(),
+        'current_round': intern_selection.project.project_round.participating_round,
+        },
+        request=request,
+        recipient_list=emails)
+
+
 @override_settings(ALLOWED_HOSTS=['www.outreachy.org'], EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend')
 def message_samples():
     """
