@@ -31,7 +31,7 @@ Outreachy Alums
 			{% static 'outreachy-bot-200x200-avatar-2.png' as avatar2 %}
 			{% static 'outreachy-bot-200x200-avatar-3.png' as avatar3 %}
 			{% static 'outreachy-bot-200x200-avatar-4.png' as avatar4 %}
-			<img src='{% cycle avatar1 avatar2 avatar3 avatar4 as avatar %}' class="img-thumbnail float-left mr-3" alt="Photo of {{ intern.public_name }}">
+			<img src='{% cycle avatar1 avatar2 avatar3 avatar4 as avatar %}' class="img-thumbnail float-left mr-3" height="200" alt="Photo of {{ intern.public_name }}">
 			{% endif %}
 			<div class="card-text">
 				<h4 class="mt-0">
@@ -82,7 +82,7 @@ Outreachy Alums
 		{% endifchanged %}
 		<div class="card-body">
 			{% if intern.picture %}
-				<img src="{{ intern.picture.file.url }}" class="img-thumbnail float-left mr-3" alt="Photo of {{ intern.name }}">
+				<img src="{{ intern.picture.file.url }}" class="img-thumbnail float-left mr-3" height="200" alt="Photo of {{ intern.name }}">
 			{% endif %}
 			<div class="card-text">
 				<h4 class="mt-0">
