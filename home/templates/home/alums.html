@@ -8,7 +8,9 @@ Outreachy Alums
 {% endblock %}
 
 {% block content %}
-<p>Congratulations to the {{ rounds.0.get_approved_intern_selections|length }} interns accepted to the Outreachy program!</p>
+{% if rounds.0 %}
+<p>Congratulations to the {{ rounds.0.get_approved_intern_selections|length }} interns accepted to the Outreachy {{ round.internstarts|date:"F Y" }} to {{ round.internends|date:"F Y" }} round!</p>
+{% endif %}
 
 {% for round in rounds %}
 {% with interns=round.get_approved_intern_selections %}
