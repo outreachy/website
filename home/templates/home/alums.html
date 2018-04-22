@@ -11,8 +11,10 @@ Outreachy Alums
 <p>Congratulations to the {{ rounds.0.get_approved_intern_selections|length }} interns accepted to the Outreachy program!</p>
 
 {% for round in rounds %}
-	<h2>Outreachy {{ round.internstarts|date:"F Y" }} to {{ round.internends|date:"F Y" }} Interns</h2>
 {% with interns=round.get_approved_intern_selections %}
+	{% if interns %}
+		<h2>Outreachy {{ round.internstarts|date:"F Y" }} to {{ round.internends|date:"F Y" }} Interns</h2>
+	{% endif %}
 	{% for i in interns %}
 	{% with intern=i.applicant.applicant %}
 		{% ifchanged %}
