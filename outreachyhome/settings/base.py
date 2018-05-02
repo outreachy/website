@@ -69,6 +69,7 @@ if 'SENTRY_DSN' in os.environ:
     INSTALLED_APPS.append('raven.contrib.django.raven_compat')
 
 MIDDLEWARE = [
+    'outreachyhome.middleware.XForwardedForMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
