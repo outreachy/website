@@ -10,6 +10,14 @@ COMPRESS_OFFLINE = True
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '162.242.218.160 .outreachy.org').split()
 
+# Make sure the specified address matches the IP address of the reverse
+# proxy that gunicorn receives connections from. This is the default
+# value if you deploy in Docker, and you haven't changed Docker's
+# default subnet, and the reverse proxy is running on the host machine
+# that's running Docker. These conditions apply to a default Dokku
+# installation, for example.
+TRUSTED_PROXIES = os.getenv('TRUSTED_PROXIES', '172.17.0.1').split()
+
 SECRET_KEY = os.environ['SECRET_KEY']
 
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
