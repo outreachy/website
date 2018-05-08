@@ -3,11 +3,13 @@ from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from django.db import models
 from django.forms import inlineformset_factory, ModelForm, modelform_factory, ValidationError, widgets
 from django.forms.models import BaseInlineFormSet
+from django.http import JsonResponse
 from django.shortcuts import get_list_or_404
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -1691,6 +1693,38 @@ class TrustedVolunteersListView(UserPassesTestMixin, ListView):
 
     def test_func(self):
         return self.request.user.is_staff
+
+@login_required
+@staff_member_required
+def contract_export_view(request, round_slug):
+    def export_comrade_with_contract(comrade, contract):
+        return {
+                'public name': comrade.public_name,
+                'legal name': comrade.legal_name,
+                'blog URL': comrade.blog_url,
+                'email address': comrade.account.email,
+                'contract signed by': contract.legal_name,
+                'contract signed on': str(contract.date_signed),
+                'contract signed from': contract.ip_address,
+                'contract text': contract.text,
+                }
+
+    this_round = get_object_or_404(RoundPage,
+            slug=round_slug)
+    interns = this_round.get_approved_intern_selections().exclude(intern_contract=None)
+    dictionary_list = []
+    for sel in interns:
+        intern_export = export_comrade_with_contract(sel.applicant.applicant,
+                sel.intern_contract)
+        intern_export['community'] = sel.community_name()
+        intern_export['mentors'] = [
+                export_comrade_with_contract(mr.mentor.mentor, mr.contract)
+                for mr in sel.mentorrelationship_set.all()
+                ]
+        dictionary_list.append(intern_export)
+    response = JsonResponse(dictionary_list, safe=False)
+    response['Content-Disposition'] = 'attachment; filename="' + round_slug + '-contracts.json"'
+    return response
 
 class SignedContractForm(ModelForm):
     class Meta:

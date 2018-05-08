@@ -125,8 +125,12 @@ you can send an email to the announcements mailing list to remind applicants of 
 
 <p><a href="{% url 'email-intern-welcome' %}"><input class="btn btn-success" value="Intern Welcome Email" /></a>
 
-
+<hr>
 <h2>Intern Selection</h2>
+
+{% if current_round.has_intern_announcement_deadline_passed %}
+<p><a href="{% url 'contract-export' round_slug=current_round.slug %}"><input class="btn btn-info" value="Export Signed Contracts" /></a></p>
+{% endif %}
 
 <p>{{ current_round.get_intern_selections|length }} intern{{ current_round.get_intern_selections|pluralize:" has,s have" }} been selected by the Outreachy mentors:
 
