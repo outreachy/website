@@ -132,48 +132,49 @@ you can send an email to the announcements mailing list to remind applicants of 
 <p><a href="{% url 'contract-export' round_slug=current_round.slug %}"><input class="btn btn-info" value="Export Signed Contracts" /></a></p>
 {% endif %}
 
-<p>{{ current_round.get_intern_selections|length }} intern{{ current_round.get_intern_selections|pluralize:" has,s have" }} been selected by the Outreachy mentors:
+<p>{{ current_round.get_intern_selections|length }} intern{{ current_round.get_intern_selections|pluralize:" has,s have" }} been selected by the Outreachy mentors{% if not current_round.has_intern_announcement_deadline_passed %}:
 
-{% with approved_interns=current_round.get_approved_intern_selections rejected_interns=current_round.get_rejected_intern_selections pending_interns=current_round.get_pending_intern_selections %}
-<ul>
-	<li>{{ approved_interns|length }} intern{{ approved_interns|pluralize:" is,s are" }} approved by Outreachy Organizers.</li>
-	<li>{{ rejected_interns|length }} intern{{ rejected_interns|pluralize:" is,s are" }} rejected by Outreachy Organizers.</li>
-	<li>{{ pending_interns|length}} intern{{ pending_interns|pluralize:" is,s are" }} pending Outreachy Organizer approval{% if not pending_interns %}.{% else %}:
-		<ul>
-			{% for intern in pending_interns %}
-				<li>{{ intern.project.project_round.community.name }} "{{ intern.project.short_title }}":
-					<a href="#intern-{{ intern.project.slug }}-{{ intern.applicant.applicant.pk }}">details</a>
-				</li>
-			{% endfor %}
-		</ul>
-		{% endif %}
-	</li>
-</ul></p>
-{% endwith %}
-
-{% with unused_funds=current_round.get_communities_with_unused_funding %}
-<p>{{ unused_funds|length }} communit{{ unused_funds|pluralize:"y has,ies have" }} unused funding{% if not unused_funds %}.{% else %}:
-<ul>
-	{% for community, intern_count, funded in unused_funds %}
-	<li><a href="{% url 'community-applicants' round_slug=current_round.slug community_slug=community.slug %}">{{ community.name }}</a>: {{ intern_count }} of {{ funded }} funded intern{{ funded|pluralize }}</li>
-	{% endfor %}
-</ul>
-{% endif %}
-</p>
-{% endwith %}
-
-{% with general_interns=current_round.get_general_funding_intern_selections %}
-<p>{{ general_interns|length }} intern{{ general_interns|pluralize:" is,s are" }} marked for Outreachy general funding{% if not general_interns %}.{% else %}:
-<ul>
-	{% for intern in general_interns %}
-		<li>{{ intern.project.project_round.community.name }} "{{ intern.project.short_title }}":
-			<a href="#intern-{{ intern.project.slug }}-{{ intern.applicant.applicant.pk }}">details</a>
+	{% with approved_interns=current_round.get_approved_intern_selections rejected_interns=current_round.get_rejected_intern_selections pending_interns=current_round.get_pending_intern_selections %}
+	<ul>
+		<li>{{ approved_interns|length }} intern{{ approved_interns|pluralize:" is,s are" }} approved by Outreachy Organizers.</li>
+		<li>{{ rejected_interns|length }} intern{{ rejected_interns|pluralize:" is,s are" }} rejected by Outreachy Organizers.</li>
+		<li>{{ pending_interns|length}} intern{{ pending_interns|pluralize:" is,s are" }} pending Outreachy Organizer approval{% if not pending_interns %}.{% else %}:
+			<ul>
+				{% for intern in pending_interns %}
+					<li>{{ intern.project.project_round.community.name }} "{{ intern.project.short_title }}":
+						<a href="#intern-{{ intern.project.slug }}-{{ intern.applicant.applicant.pk }}">details</a>
+					</li>
+				{% endfor %}
+			</ul>
+			{% endif %}
 		</li>
-	{% endfor %}
-</ul>
+	</ul></p>
+	{% endwith %}
+
+	{% with unused_funds=current_round.get_communities_with_unused_funding %}
+	<p>{{ unused_funds|length }} communit{{ unused_funds|pluralize:"y has,ies have" }} unused funding{% if not unused_funds %}.{% else %}:
+	<ul>
+		{% for community, intern_count, funded in unused_funds %}
+		<li><a href="{% url 'community-applicants' round_slug=current_round.slug community_slug=community.slug %}">{{ community.name }}</a>: {{ intern_count }} of {{ funded }} funded intern{{ funded|pluralize }}</li>
+		{% endfor %}
+	</ul>
+	{% endif %}
+	</p>
+	{% endwith %}
+
+	{% with general_interns=current_round.get_general_funding_intern_selections %}
+	<p>{{ general_interns|length }} intern{{ general_interns|pluralize:" is,s are" }} marked for Outreachy general funding{% if not general_interns %}.{% else %}:
+	<ul>
+		{% for intern in general_interns %}
+			<li>{{ intern.project.project_round.community.name }} "{{ intern.project.short_title }}":
+				<a href="#intern-{{ intern.project.slug }}-{{ intern.applicant.applicant.pk }}">details</a>
+			</li>
+		{% endfor %}
+	</ul>
+	{% endif %}
+	</p>
+	{% endwith %}
 {% endif %}
-</p>
-{% endwith %}
 
 {% if current_round.has_intern_announcement_deadline_passed %}
 {% with unsigned_interns=current_round.get_approved_interns_with_unsigned_contracts %}
