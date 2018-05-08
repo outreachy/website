@@ -237,6 +237,10 @@ class RoundPage(Page):
         return self.get_intern_selections().filter(
                 organizer_approved=False)
 
+    def get_approved_interns_with_unsigned_contracts(self):
+        return self.get_approved_intern_selections().filter(
+                intern_contract=None)
+
     def get_communities_with_unused_funding(self):
         participations = Participation.objects.filter(
                 participating_round=self,

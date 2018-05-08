@@ -175,6 +175,21 @@ you can send an email to the announcements mailing list to remind applicants of 
 </p>
 {% endwith %}
 
+{% if current_round.has_intern_announcement_deadline_passed %}
+{% with unsigned_interns=current_round.get_approved_interns_with_unsigned_contracts %}
+<p>{{ unsigned_interns|length}} approved intern{{ unsigned_interns|pluralize:" has,have" }} not signed their contract{% if not unsigned_interns %}.{% else %}:
+	<ul>
+		{% for intern in unsigned_interns %}
+			<li>{{ intern.project.project_round.community.name }} "{{ intern.project.short_title }}":
+				<a href="#intern-{{ intern.project.slug }}-{{ intern.applicant.applicant.pk }}">{{ intern.applicant.applicant.public_name }}</a>
+			</li>
+		{% endfor %}
+	</ul>
+	{% endif %}
+</p>
+{% endwith %}
+{% endif %}
+
 {% if approved_participations %}
 {% with interns=current_round.get_intern_selections %}
 {% if interns %}
