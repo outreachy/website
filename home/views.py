@@ -2117,6 +2117,31 @@ class InternNotification(LoginRequiredMixin, ComradeRequiredMixin, TemplateView)
             email.notify_accepted_intern(i, self.request)
         return redirect(reverse('dashboard'))
 
+class MentorFirstPaymentNotification(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
+    template_name = 'home/mentor_intern_start_reminder.html'
+
+    def get_context_data(self, **kwargs):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are authorized to send reminder emails.")
+        current_round = RoundPage.objects.latest('internstarts')
+        interns = current_round.get_approved_intern_selections()
+
+        context = super(MentorFirstPaymentNotification, self).get_context_data(**kwargs)
+        context.update({
+            'interns': interns,
+            })
+        return context
+
+    def post(self, request, *args, **kwargs):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+        current_round = RoundPage.objects.latest('internstarts')
+        interns = current_round.get_approved_intern_selections()
+
+        for i in interns:
+            email.notify_mentors_of_first_stipend(i, self.request)
+        return redirect(reverse('dashboard'))
+
 def alums_page(request):
     # Get all the older AlumInfo models (before we had round pages)
     pages = CohortPage.objects.all()

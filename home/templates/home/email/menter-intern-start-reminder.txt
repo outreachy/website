@@ -1,0 +1,11 @@
+{% with community=intern.project.project_round.community %}{% with current_round=intern.project.project_round.participating_round %}Has your Outreachy intern ({{ intern.applicant.applicant.public_name}}) started their internship?
+
+Hi Outreachy mentor,
+
+Unless your intern has notified the Outreachy organizers of a delayed internship start date, {{ intern.applicant.applicant.public_name }} should have started their internship on {{ current_round.internstarts }}.
+
+If your intern has already started their internship or has a delayed internship start date, there is no action you need to take. If your intern has not started their internship or seems unresponsive, please reply to this email to let the Outreachy organizers know.
+
+Please let us know before {{ current_round.intern_not_started_deadline }} if your intern has not started their internship. We will then delay the first payment for the intern until they start their internship.
+
+{% include 'home/email/footer-mentor.txt' %}{% endwith %} {% endwith %}

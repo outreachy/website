@@ -2377,6 +2377,12 @@ class InternSelection(models.Model):
     def mentor_names(self):
         return " and ".join([m.mentor.public_name for m in self.mentors.all()])
 
+    def mentor_emails(self):
+        emails = []
+        for m in self.mentors.all():
+            emails.append(m.mentor.email_address())
+        return emails
+
     def get_application(self):
         return FinalApplication.objects.get(
                 project=self.project,

@@ -167,6 +167,15 @@ def notify_accepted_intern(intern_selection, request):
         request=request,
         recipient_list=emails)
 
+def notify_mentors_of_first_stipend(intern_selection, request):
+    emails = intern_selection.mentor_emails()
+    emails.append(organizers)
+    send_group_template_mail('home/email/menter-intern-start-reminder.txt', {
+        'intern': intern_selection,
+        },
+        request=request,
+        recipient_list=emails)
+
 
 @override_settings(ALLOWED_HOSTS=['www.outreachy.org'], EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend')
 def message_samples():
