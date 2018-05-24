@@ -5,6 +5,8 @@
 
 <p><a href="{% url 'password_change' %}" class="btn btn-secondary">Change password</a></p>
 
+{% include "home/snippet/privacy_policy.html" %}
+
 <form method="post" action="">
 {% csrf_token %}
     <h2>Required Information</h2>

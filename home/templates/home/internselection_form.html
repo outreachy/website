@@ -14,6 +14,8 @@ Mentor {{ community.name }} Interns
 	<p>You are agreeing to co-mentor the applicant, {{ applicant.applicant.public_name }}, as an intern for the {{ community.name }} project "{{ project.short_title }}".</p>
 {% endif %}
 
+{% include "home/snippet/privacy_policy.html" %}
+
 <form method="post" action="">
 {% csrf_token %}
 	{% for field in form.visible_fields %}

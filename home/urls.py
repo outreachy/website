@@ -65,4 +65,5 @@ urlpatterns = [
     url(r'^register/activate/(?P<activation_key>[-.:\w]+)/$', views.ActivationView.as_view(), name='registration_activate'),
     url(r'^register/activate/$', views.ActivationCompleteView.as_view(), name='registration_activation_complete'),
     url(r'^blog/(?P<round_slug>[^/]+)/application-period-statistics/$', views.round_statistics, name='blog-application-period-statistics'),
+    url(r'^privacy-policy/$', views.privacy_policy, name='privacy-policy'),
 ]

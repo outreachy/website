@@ -10,6 +10,8 @@
 	{{ view.kwargs.action|title }} Community Participation for {{ participation.community }}</a>
 </h1>
 
+{% include "home/snippet/privacy_policy.html" %}
+
 {% if view.kwargs.action == 'submit' %}
 	<div class="card border-info mb-3">
 		<div class="card-header text-white bg-info">Outreachy internship funding is required.</div>

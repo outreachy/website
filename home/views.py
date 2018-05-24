@@ -2156,6 +2156,13 @@ def alums_page(request):
         'rounds': rounds,
         })
 
+def privacy_policy(request):
+    with open(path.join(settings.BASE_DIR, 'docs', 'privacy-policy.md')) as policy_file:
+        policy = policy_file.read()
+    return render(request, 'home/privacy_policy.html', {
+        'privacy_policy': markdownify(policy),
+        })
+
 @login_required
 def dashboard(request):
     """

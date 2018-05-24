@@ -9,6 +9,8 @@ Sign Outreachy Intern Agreement
 <h1>Outreachy Intern Agreement</h1>
 <p>Congratulations on being accepted as an intern for the {{ community.name }} project "{{ project.short_title }}". Your mentor(s) are {{ intern_selection.mentor_names }}.</p>
 
+{% include "home/snippet/privacy_policy.html" %}
+
 <form method="post" action="">
 {% csrf_token %}
 	{% for field in form.visible_fields %}

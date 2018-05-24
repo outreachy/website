@@ -6,6 +6,9 @@ Are you eligible to apply to Outreachy?
 
 {% block content %}
 <h1>Outreachy Eligibility Checking</h1>
+
+{% include "home/snippet/privacy_policy.html" %}
+
 <p>
 Please enter information about your time commitments during the Outreachy internship period,
 from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.

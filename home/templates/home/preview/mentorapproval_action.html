@@ -14,7 +14,9 @@
 </h1>
 
 {% if view.kwargs.action == 'submit' %}
-	<p>Mentors provide need to provide some information to be reviewed by the FOSS community coordinators. Additionally, your project communication channel username will be shown to applicants on the project page.</p>
+	<p>Mentors provide need to provide some information about their project so it can be reviewed and approved by their community coordinators. By filling out this information, you understand that some of your personal information will be shown to Outreachy applicants so they can contact you for mentorship.</p>
+
+{% include "home/snippet/privacy_policy.html" %}
 
 	<p><strong>Please read these questions carefully.</strong></p>
 

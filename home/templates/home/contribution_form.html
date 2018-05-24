@@ -3,6 +3,9 @@
 {% block content %}
 
 <h1>Add a Contribution</h1>
+
+{% include "home/snippet/privacy_policy.html" %}
+
 <form method="post" action="">
 {% csrf_token %}
     {{ form.as_p }}
