@@ -1,9 +1,5 @@
-**OUTREACHY PRIVACY POLICY**
+**Privacy Statement for Outreachy**
 
-_last edited - May 24, 2018_
-
-Privacy Statement for Outreachy
- 
 Scope of This Notice
 ===
  
@@ -209,12 +205,9 @@ As part of offering and providing customizable and personalized services, Outrea
  
 Generally, we use cookies to:
  
-
-     Remind us of who you are and to access your account information (stored on our computers) in order to provide a better and more personalized service. This cookie is set when you register or "sign in" and is modified when you "sign out" of our services.
-
-     Estimate audience size. Each browser accessing Outreachy is given a unique cookie that is used to determine the extent of repeat usage and usage by a registered user versus by an unregistered user.
-
-     Personalize the Outreachy website's content for Outreachy organizers, applicants, interns, mentors, and coordinators.
+* Remind us of who you are and to access your account information (stored on our computers) in order to provide a better and more personalized service. This cookie is set when you register or "sign in" and is modified when you "sign out" of our services.
+* Estimate audience size. Each browser accessing Outreachy is given a unique cookie that is used to determine the extent of repeat usage and usage by a registered user versus by an unregistered user.
+* Personalize the Outreachy website's content for Outreachy organizers, applicants, interns, mentors, and coordinators.
 
  
 If you do not want your personal information to be stored by cookies, you can configure your browser so that it always rejects these cookies or asks you each time if you accept them or not. However, you must understand that the use of cookies may be necessary to provide certain services, and choosing to reject cookies will reduce the performance and functionality of the site. Your browser documentation includes instructions explaining how to enable, disable or delete cookies at the browser level (usually located in the “Help”, “Tools” or “Edit” facility). 
@@ -271,10 +264,10 @@ How to Contact Us
 
 If you have any questions about any of these practices or Outreachy's use of your personal information, please feel free to [contact us by e-mail](https://outreachy.org/contact/organizers/), or contact us by mail at: 
     
-  Outreachy
-  c/o Software Freedom Conservancy
-  137 Montague St, STE 380
-  Brooklyn, NY 11201
+    Outreachy
+    c/o Software Freedom Conservancy
+    137 Montague St, STE 380
+    Brooklyn, NY 11201
  
 Outreachy will work with you to resolve any concerns you may have about this Statement. 
  
