@@ -1112,7 +1112,7 @@ class NewCommunity(Community):
             blank=True,
             help_text="(Optional) If any internship project under your community furthers the interests of proprietary software, please explain.")
 
-    goverance = models.URLField(blank=True, help_text="(Optional) Please provide a URL for a description of your community's governance model")
+    governance = models.URLField(blank=True, help_text="(Optional) Please provide a URL for a description of your community's governance model")
     code_of_conduct = models.URLField(blank=True, help_text="(Optional) Please provide a URL for to your community's Code of Conduct")
     cla = models.URLField(blank=True, help_text="(Optional) Please provide a URL for your community's Contributor License Agreement (CLA)")
     dco = models.URLField(blank=True, help_text="(Optional) Please provide a URL for your community's Developer Certificate of Origin (DCO) agreement")
