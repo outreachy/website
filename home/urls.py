@@ -1,4 +1,5 @@
 from . import views
+from django.views.generic import TemplateView
 
 from django.conf.urls import include, url
 
@@ -56,6 +57,10 @@ urlpatterns = [
     url(r'^email/coordinator-intern-selection-reminder/$', views.CoordinatorInternSelectionReminder.as_view(), name='email-coordinator-intern-selection-reminder'),
     url(r'^email/intern-welcome/$', views.InternNotification.as_view(), name='email-intern-welcome'),
     url(r'^email/mentor-intern-start-reminder/$', views.MentorFirstPaymentNotification.as_view(), name='email-mentor-intern-start-reminder'),
+    url(r'^longitudinal-survey/2018-initiate/$', views.Survey2018Notification.as_view(), name='longitudinal-survey-2018-initiate'),
+    url(r'^longitudinal-survey/2018/(?P<survey_slug>[^/]+)/$', views.AlumSurveyUpdate.as_view(), name='longitudinal-survey-2018'),
+    url(r'^longitudinal-survey/2018-completed/$', TemplateView.as_view(template_name='home/survey_confirmation.html'), name='longitudinal-survey-2018-completed'),
+    url(r'^longitudinal-survey/2018-opt-out/(?P<survey_slug>[^/]+)/$', views.survey_opt_out, name='longitudinal-survey-2018-opt-out'),
     url(r'^account/$', views.ComradeUpdate.as_view(), name='account'),
     url(r'^apply/project-selection/$', views.current_round_page, name='project-selection'),
     url(r'^apply/make-contributions/$', views.contribution_tips, name='contribution-tips'),

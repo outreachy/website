@@ -1,0 +1,15 @@
+Help Outreachy by taking the 2018 longitudinal survey
+
+Hi {{ name }},
+
+Outreachy needs your help to make our fundraiser awesome! Outreachy is running a fundraiser in July, and we want to show the world what kind of impact Outreachy has on our past interns.
+
+You can help us provide statistics about Outreachy alums by taking a survey about how your Outreachy internship impacted your life and your passion for FOSS. According to our records, you were an Outreachy intern for {{ community }} in the {{ internstarts|date:"F Y" }} to {{ internends|date:"F Y" }} Outreachy internship round. We want to know how your Outreachy internship impacted you.
+
+Please take the 10 minute survey: {{ request.scheme }}://{{ request.get_host }}{% url 'longitudinal-survey-2018' survey_slug=token %}
+
+As a thank you for filling out the longitudinal survey, we'll mail you an Outreachy sticker. Just provide your address at the end of the survey. (If you don't want a sticker, that's fine, just leave the address fields blank.)
+
+Outreachy Organizers
+
+p.s. If you don't want us to contact you with any future longitudinal surveys, you can opt-out here: {{ request.scheme }}://{{ request.get_host }}{% url 'longitudinal-survey-2018-opt-out' survey_slug=token %}

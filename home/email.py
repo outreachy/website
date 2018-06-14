@@ -1,4 +1,5 @@
 from django.core.mail import send_mail
+from django.core.signing import TimestampSigner
 from django.template.loader import render_to_string
 from django.test import override_settings, RequestFactory
 from email.headerregistry import Address
@@ -166,6 +167,35 @@ def notify_accepted_intern(intern_selection, request):
         },
         request=request,
         recipient_list=emails)
+
+def notify_survey(survey_tracker, request):
+    if survey_tracker.intern_info:
+        name = survey_tracker.intern_info.applicant.applicant.public_name
+        email = survey_tracker.intern_info.applicant.applicant.email_address()
+        community = survey_tracker.intern_info.project.project_round.community.name
+        internstarts = survey_tracker.intern_info.project.project_round.participating_round.internstarts
+        internends = survey_tracker.intern_info.project.project_round.participating_round.internends
+    elif survey_tracker.alumni_info:
+        name = survey_tracker.alumni_info.name
+        email = Address(name, addr_spec=survey_tracker.alumni_info.email)
+        community = survey_tracker.alumni_info.community
+        internstarts = survey_tracker.alumni_info.page.round_start
+        internends = survey_tracker.alumni_info.page.round_end
+    else:
+        return
+    signer = TimestampSigner()
+    token = signer.sign(survey_tracker.pk)
+
+    send_group_template_mail('home/email/alum_survey.txt', {
+        'name': name,
+        'email': email,
+        'community': community,
+        'internstarts': internstarts,
+        'internends': internends,
+        'token': token,
+        },
+        request=request,
+        recipient_list=[email])
 
 def notify_mentors_of_first_stipend(intern_selection, request):
     emails = intern_selection.mentor_emails()

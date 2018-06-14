@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}
+Outreachy Alumni Longitudinal Survey
+{% endblock %}
+
+{% block content %}
+<h1>Outreachy Alumni Longitudinal Survey</h1>
+<p>This 20 question survey should take about 5-10 minutes.</p>
+
+<h2>Background</h2>
+
+<p>This survey helps Outreachy organizers determine if the program helps retain Outreachy alums as contributors to FOSS (Free and Open Source Software) communities. It also helps us determine if the program prepares Outreachy alums for careers in STEM (Science, Technology, Engineering, and Mathematics).</p>
+
+<h2>How we use the data</h2>
+
+<p>We will publish aggregate data without personally identifying information. If you mention additional achievements in this form, we may contact you to ask if we can list your individual achievements on our sponsor page. Publishing the aggregriate data and intern achievements helps Outreachy organizers raise funding for Outreachy. If later you should wish your data or achievements to be removed, please write to organizers@outreachy.org</p>
+
+<p>At the end of the survey, you'll be asked to optionally provide your address so we can send you an Outreachy sticker. Outreachy organizers may (based on your location) contact you to ask you if you want to help us promote Outreachy at regional conferences.</p>
+
+<p>Based on your answers, Outreachy organizers may contact you via email to ask if you are willing to be interviewed to promote your achievements as part of an Outreachy fundraiser.</p>
+
+<h2>Survey</h2>
+
+<p>Only questions marked as "(Required)" require an answer. Other questions are optional.</p>
+
+<p>The survey will ask questions about your actions after your Outreachy internship (which ended on $INTERNSHIPENDDATE). It will also ask questions about your actions in the past year (from $STARTDATE to $ENDDATE).</p>
+
+<form action="" method="post">{% csrf_token %}
+    {{ form.media }}
+    {% for field in form.visible_fields %}
+	    {% if field.name|truncatechars:11 == 'question...' %}
+		    {% if not forloop.first %}</div>{% endif %}
+		    <div class="form-group card">
+			    {{ field.errors }}
+			    <div class = "card-header">
+				    {{ field.label_tag }}
+			    </div>	    
+			    <div class = "card-body">
+	    {% elif field.name|truncatechars:8 == 'multi...' %}
+		    <p>
+		    {{ field.errors }}
+		    {{ field }}
+		    {{ field.label|safe }}
+		    </p>
+	    {% else %}
+		    {% if not forloop.first %}</div>{% endif %}
+		    <div class="form-group card">
+			    {{ field.errors }}
+			    <div class = "card-header">
+				    {{ field.label_tag }}
+			    </div>	    
+			    <div class = "card-body">
+			    <p>
+			    {{ field.errors }}
+			    {{ field }}
+			    </p>
+		    {% if forloop.last %}</div>{% endif %}
+	    {% endif %} 
+    {% endfor %}
+    {% for hidden in form.hidden_fields %}
+	{{ hidden }}
+    {% endfor %}
+<input type="submit" class="btn btn-primary" value="Submit Survey"/>
+</form>
+
+{% endblock %}

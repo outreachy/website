@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}
+Send longitudinal survey
+{% endblock %}
+
+{% block content %}
+
+{% if len_queued_surveys > 0 %}<p>There are currently {{ len_queued_surveys }} queued to be emailed.{% else %}<p>After you confirm the surveys you want to send by clicking the button below, the surveys will be queued in the system.{% endif %} To email them, you'll need to ssh to the dokku server and run:</p>
+
+<pre>from home.models import AlumSurveyTracker
+from home.email import notify_survey
+from datetime import datetime
+queued_surveys = AlumSurveyTracker.objects.filter(survey_date__isnull=True)
+request = { 'scheme':'https', 'get_host':'outreachy.org' }
+for s in queued_surveys:
+	notify_survey(s, request)
+	s.survey_date = datetime.now()
+	s.save()
+</pre>
+
+<p>You're about to send an email to {{ alums|add:past_interns|length }} Outreachy alums about a longitudinal survey.</p>
+
+{% if alums_opt_out|length > 0 or past_interns_opt_out|length > 0 %}
+	<p>The alums who organizers have removed from this survey, or people who have opted-out of receiving surveys are, or people who haven't completed their internship are:</p>
+	<ul>
+	{% for ao in alums_opt_out %}
+		<li>ao.name</li>
+	{% endfor %}
+	{% for ao in past_interns_opt_out %}
+		<li>ao.applicant.applicant.public_name</li>
+	{% endfor %}
+	</ul>
+{% else %}
+	<p>There are no alums who organizers have removed from this survey, or people who have opt-ed out of taking the survey.</p>
+{% endif %}
+
+
+<form action="" method="post">
+    {% csrf_token %}
+    <input class="btn btn-success" type="submit" value="Confirm" />
+</form>
+{% endblock %}

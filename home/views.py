@@ -1,11 +1,12 @@
 from betterforms.multiform import MultiModelForm
 from collections import defaultdict
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, date
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
+from django.core.signing import TimestampSigner, SignatureExpired, BadSignature 
 from django.db import models
 from django.forms import inlineformset_factory, ModelForm, modelform_factory, ValidationError, widgets
 from django.forms.models import BaseInlineFormSet
@@ -34,6 +35,8 @@ from .mixins import EligibleApplicantRequiredMixin
 from .mixins import Preview
 
 from .models import AlumInfo
+from .models import AlumSurvey
+from .models import AlumSurveyTracker
 from .models import ApplicantApproval
 from .models import ApprovalStatus
 from .models import CohortPage
@@ -2162,6 +2165,112 @@ def privacy_policy(request):
     return render(request, 'home/privacy_policy.html', {
         'privacy_policy': markdownify(policy),
         })
+
+def survey_opt_out(request, survey_slug):
+    signer = TimestampSigner()
+    try:
+        this_pk = signer.unsign(survey_slug)
+    except BadSignature:
+        raise PermissionDenied("Bad survey opt-out link.")
+
+    try:
+        survey_tracker = AlumSurveyTracker.objects.get(pk=this_pk)
+    except AlumSurveyTracker.DoesNotExist:
+        raise PermissionDenied("Bad survey opt-out link.")
+
+    if survey_tracker.alumni_info != None:
+        survey_tracker.alumni_info.survey_opt_out = True
+        survey_tracker.alumni_info.save()
+    elif survey_tracker.intern_info != None:
+        survey_tracker.intern_info.survey_opt_out = True
+        survey_tracker.intern_info.save()
+
+    return render(request, 'home/survey_opt_out_confirmation.html')
+
+class AlumSurveyUpdate(UpdateView):
+    form_class = modelform_factory(AlumSurvey, exclude=(
+        'survey_tracker',
+        'survey_date',
+        ),
+        # BooleanField are checkboxes by default
+        widgets = {
+            'community_contact': widgets.Select(choices=BOOL_CHOICES),
+            }
+        )
+
+    def get_object(self):
+        # Decode the timestamped data:
+        # - the PK of the AlumSurveyTracker
+        #
+        # If the timestamp is older than 1 month, display an error message.
+        #
+        # Figure out which model is not null (alumni_info or intern_info) to use.
+        # See if we already have an AlumSurvey that points to this survey tracker.
+        # If not, create it.
+        signer = TimestampSigner()
+        try:
+            this_pk = signer.unsign(self.kwargs['survey_slug'], max_age=timedelta(days=30))
+        except SignatureExpired:
+            raise PermissionDenied("The survey link has expired.")
+        except BadSignature:
+            raise PermissionDenied("Bad survey link.")
+
+        try:
+            return AlumSurvey.objects.get(survey_tracker__pk=this_pk)
+        except AlumSurvey.DoesNotExist:
+            tracker = get_object_or_404(AlumSurveyTracker, pk=this_pk)
+            return AlumSurvey(survey_tracker=tracker, survey_date=datetime.now())
+
+    # No need to override get_context because we can get everything from
+    # form.instance.survey_tracker
+
+    def get_success_url(self):
+        return reverse('longitudinal-survey-2018-completed')
+
+class Survey2018Notification(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
+    template_name = 'home/survey_notification.html'
+
+    def get_alums_and_opt_outs(self):
+        alums = AlumInfo.objects.all()
+        alums_opt_out = [p for p in alums if p.survey_opt_out == True]
+        alums = [p for p in alums if p.survey_opt_out == False]
+
+        # Only send the survey to interns who have completed their internship
+        past_interns = InternSelection.objects.filter(organizer_approved=True,
+                project__project_round__participating_round__internends__lte=date.today())
+        past_interns_opt_out = [p for p in past_interns if p.survey_opt_out == True or p.project.project_round.participating_round.internends >= date.today()]
+        past_interns = [p for p in past_interns if p.survey_opt_out == False and p.project.project_round.participating_round.internends >= date.today()]
+
+        return alums, alums_opt_out, past_interns, past_interns_opt_out
+
+    def get_context_data(self, **kwargs):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send survey emails.")
+
+        alums, alums_opt_out, past_interns, past_interns_opt_out = self.get_alums_and_opt_outs()
+        len_queued_surveys = AlumSurveyTracker.objects.filter(survey_date__isnull=True).count()
+        print("Survey: ", len(alums), len(past_interns))
+
+        context = super(Survey2018Notification, self).get_context_data(**kwargs)
+        context.update({
+            'alums': alums,
+            'alums_opt_out': alums_opt_out,
+            'past_interns': past_interns,
+            'past_interns_opt_out': past_interns_opt_out,
+            'len_queued_surveys': len_queued_surveys,
+            })
+        return context
+
+    def post(self, request, *args, **kwargs):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+        alums, alums_opt_out, past_interns, past_interns_opt_out = self.get_alums_and_opt_outs()
+
+        for a in alums:
+            AlumSurveyTracker.objects.create(alumni_info=a)
+        for p in past_interns:
+            AlumSurveyTracker.objects.create(intern_info=i)
+        return redirect(reverse('dashboard'))
 
 @login_required
 def dashboard(request):
