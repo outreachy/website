@@ -8,69 +8,86 @@ Outreachy Alums
 {% endblock %}
 
 {% block content %}
-{% if rounds.0.get_approved_intern_selections %}
-<p>Congratulations to the {{ rounds.0.get_approved_intern_selections|length }} interns accepted to the Outreachy {{ rounds.0.internstarts|date:"F Y" }} to {{ rounds.0.internends|date:"F Y" }} round!</p>
+{% with num_in_good_standing=rounds.0.get_in_good_standing_intern_selections|length %}
+{% if num_in_good_standing or user.is_staff %}
+<p>Congratulations to the {{ num_in_good_standing }} intern{{ num_in_good_standing|pluralize }} accepted to the Outreachy {{ rounds.0.internstarts|date:"F Y" }} to {{ rounds.0.internends|date:"F Y" }} round!</p>
 {% endif %}
+{% endwith %}
 
+<form method="post">
+{% csrf_token %}
 {% for round in rounds %}
 {% with interns=round.get_approved_intern_selections %}
-	{% if interns %}
+	{% if round.get_in_good_standing_intern_selections or user.is_staff %}
 		<h2>Outreachy {{ round.internstarts|date:"F Y" }} to {{ round.internends|date:"F Y" }} Interns</h2>
 	{% endif %}
 	{% for i in interns %}
 	{% with intern=i.applicant.applicant %}
-		{% ifchanged %}
-			<div class="card border mt-3">
-			<div class="card-header bg-light">{{ i.project.project_round.community }}</div>
-		{% else %}
-			<div class="card border">
-		{% endifchanged %}
-		<div class="card-body">
-			{% if intern.photo %}
-				<img src="{{ intern.photo.url }}" class="img-thumbnail float-left mr-3" alt="Photo of {{ intern.public_name }}" height="200" width="200" alt="Photo of {{ intern.public_name }}">
+		{% if i.in_good_standing or user.is_staff %}
+			{% ifchanged %}
+				<div class="card border mt-3">
+				<div class="card-header bg-light">{{ i.project.project_round.community }}</div>
 			{% else %}
-			{% static 'outreachy-bot-200x200-avatar-1.png' as avatar1 %}
-			{% static 'outreachy-bot-200x200-avatar-2.png' as avatar2 %}
-			{% static 'outreachy-bot-200x200-avatar-3.png' as avatar3 %}
-			{% static 'outreachy-bot-200x200-avatar-4.png' as avatar4 %}
-			<img src='{% cycle avatar1 avatar2 avatar3 avatar4 as avatar %}' class="img-thumbnail float-left mr-3" height="200" width="200" alt="Default avatar for {{ intern.public_name }}">
-			{% endif %}
-			<div class="card-text">
-				<h4 class="mt-0">
-				{{ intern.public_name }}
-				</h4>
-				<div class="container">
-					{% if intern.blog_url %}
-						<a href="{{ intern.blog_url }}"><img src="{% static 'link-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="Blog"></a>
+				<div class="card border">
+			{% endifchanged %}
+			<div class="card-body">
+				{% if intern.photo %}
+					<img src="{{ intern.photo.url }}" class="img-thumbnail float-left mr-3" alt="Photo of {{ intern.public_name }}" height="200" width="200" alt="Photo of {{ intern.public_name }}">
+				{% else %}
+				{% static 'outreachy-bot-200x200-avatar-1.png' as avatar1 %}
+				{% static 'outreachy-bot-200x200-avatar-2.png' as avatar2 %}
+				{% static 'outreachy-bot-200x200-avatar-3.png' as avatar3 %}
+				{% static 'outreachy-bot-200x200-avatar-4.png' as avatar4 %}
+				<img src='{% cycle avatar1 avatar2 avatar3 avatar4 as avatar %}' class="img-thumbnail float-left mr-3" height="200" width="200" alt="Default avatar for {{ intern.public_name }}">
+				{% endif %}
+				<div class="card-text">
+					<h4 class="mt-0">
+					{{ intern.public_name }}{% if not i.in_good_standing %} - [HIDDEN] - Not in good standing{% endif %}
+					</h4>
+					{% if user.is_staff %}
+						<div class="dropdown">
+							<button class="btn btn-secondary dropdown-toggle" type="button" id="AlumStandingMenu-{{ intern.account.username }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Alum Standing</button>
+							<div class="dropdown-menu" aria-labelledby="AlumStandingMenu-{{ intern.account.username }}">
+								<button class="dropdown-item" formaction="{% url 'alum-standing' round_slug=round.slug community_slug=i.project.project_round.community.slug project_slug=i.project.slug applicant_username=i.applicant.applicant.account.username standing='Good' %}">Good Standing</button>
+								<button class="dropdown-item" formaction="{% url 'alum-standing' round_slug=round.slug community_slug=i.project.project_round.community.slug project_slug=i.project.slug applicant_username=i.applicant.applicant.account.username standing='Failed' %}">Failed</button>
+							</div>
+						</div>
+						<BR>
 					{% endif %}
-					{% if intern.twitter_url %}
-						<a href="{{ intern.twitter_url }}"><img src="{% static 'Twitter/Twitter_Social_Icon_Circle_Color-32px.png' %}" class="mx-1" alt="Twitter"></a>
+					<div class="container">
+						{% if intern.blog_url %}
+							<a href="{{ intern.blog_url }}"><img src="{% static 'link-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="Blog"></a>
+						{% endif %}
+						{% if intern.twitter_url %}
+							<a href="{{ intern.twitter_url }}"><img src="{% static 'Twitter/Twitter_Social_Icon_Circle_Color-32px.png' %}" class="mx-1" alt="Twitter"></a>
+						{% endif %}
+						{% if intern.github_url %}
+							<a href="{{ intern.github_url }}"><img src="{% static 'GitHub/PNG/GitHub-Mark-32px.png' %}" class="mx-1" alt="GitHub"></a>
+						{% endif %}
+						{% if intern.gitlab_url %}
+							<a href="{{ intern.gitlab_url }}"><img src="{% static 'GitLab/gitlab-logo-square-32px.png' %}" class="mx-1" alt="GitLab"></a>
+						{% endif %}
+					</div>
+					{% if intern.pronouns_public %}
+						<BR>Pronouns: {{ intern.get_pronouns_html|safe }}<BR>
 					{% endif %}
-					{% if intern.github_url %}
-						<a href="{{ intern.github_url }}"><img src="{% static 'GitHub/PNG/GitHub-Mark-32px.png' %}" class="mx-1" alt="GitHub"></a>
+					{% if intern.location %}
+						Location: {{ intern.location }}<BR>
 					{% endif %}
-					{% if intern.gitlab_url %}
-						<a href="{{ intern.gitlab_url }}"><img src="{% static 'GitLab/gitlab-logo-square-32px.png' %}" class="mx-1" alt="GitLab"></a>
+					{% if intern.nick %}
+						IRC/Chat/Forum username: {{ intern.nick }}<BR>
 					{% endif %}
+					<BR>{{ i.project.project_round.community }} mentor(s): {{ i.mentor_names }}
+					<BR>Project: {{ i.project.short_title }}
 				</div>
-				{% if intern.pronouns_public %}
-					<BR>Pronouns: {{ intern.get_pronouns_html|safe }}<BR>
-				{% endif %}
-				{% if intern.location %}
-					Location: {{ intern.location }}<BR>
-				{% endif %}
-				{% if intern.nick %}
-					IRC/Chat/Forum username: {{ intern.nick }}<BR>
-				{% endif %}
-				<BR>{{ i.project.project_round.community }} mentor(s): {{ i.mentor_names }}
-				<BR>Project: {{ i.project.short_title }}
 			</div>
-		</div>
-		</div>
+			</div>
+		{% endif %}
 	{% endwith %}
 	{% endfor %}
 {% endwith %}
 {% endfor %}
+</form>
 
 {% for page in old_cohorts %}
 	<h2>Outreachy {{ page.0|date:"F Y" }} to {{ page.1|date:"F Y" }} Interns</h2>

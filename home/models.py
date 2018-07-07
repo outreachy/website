@@ -241,6 +241,10 @@ class RoundPage(Page):
         return self.get_approved_intern_selections().filter(
                 intern_contract=None)
 
+    def get_in_good_standing_intern_selections(self):
+        return self.get_approved_intern_selections().filter(
+                in_good_standing=True)
+
     def get_communities_with_unused_funding(self):
         participations = Participation.objects.filter(
                 participating_round=self,
@@ -2345,6 +2349,7 @@ class InternSelection(models.Model):
             help_text="Is this intern and funding information confirmed to be correct by the Outreachy organizers?",
             default=None)
     survey_opt_out = models.BooleanField(default=False)
+    in_good_standing = models.BooleanField(default=True)
 
     class Meta:
         unique_together = (

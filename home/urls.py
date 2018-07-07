@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^communities/cfp/add/$', views.CommunityCreate.as_view(), name='community-add'),
     url(r'^communities/cfp/(?P<community_slug>[^/]+)/', include(community_cfp_patterns)),
     url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/intern-agreement/$', views.InternAgreementSign.as_view(), name='intern-agreement'),
+    url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/alum-standing/(?P<applicant_username>[^/]+)/(?P<standing>[^/]+)$', views.AlumStanding.as_view(), name='alum-standing'),
     url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/final-application/(?P<applicant_username>[^/]+)/select/?$', views.InternSelectionUpdate.as_view(), name='select-intern'),
     url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/final-application/(?P<applicant_username>[^/]+)/remove/?$', views.InternRemoval.as_view(), name='remove-intern'),
     url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/final-application/(?P<applicant_username>[^/]+)/resign/?$', views.MentorResignation.as_view(), name='resign-as-mentor'),

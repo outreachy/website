@@ -2025,6 +2025,32 @@ class InternApprove(LoginRequiredMixin, ComradeRequiredMixin, View):
             project=self.intern_selection.project.slug,
             applicant=self.intern_selection.applicant.applicant.pk))
 
+class AlumStanding(LoginRequiredMixin, ComradeRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        print("AlumStanding", kwargs['standing'])
+        # Only allow approved organizers to approve interns
+        if not request.user.is_staff:
+            raise PermissionDenied("Only organizers can approve interns.")
+
+        username = kwargs['applicant_username']
+        that_round = get_object_or_404(RoundPage,
+                slug=kwargs['round_slug'])
+
+        # FIXME - also need a method to hide AlumInfo
+        set_project_and_applicant(self, that_round)
+        self.intern_selection = get_object_or_404(InternSelection,
+                applicant=self.applicant,
+                project=self.project)
+
+        standing = kwargs['standing']
+        if kwargs['standing'] == "Good":
+            self.intern_selection.in_good_standing = True
+        elif kwargs['standing'] == "Failed":
+            self.intern_selection.in_good_standing = False
+        self.intern_selection.save()
+
+        return redirect(reverse('alums'))
+
 # Passed round_slug, community_slug, project_slug, (get applicant from request.user)
 class InternAgreementSign(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
     model = SignedContract
