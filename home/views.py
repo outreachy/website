@@ -855,7 +855,7 @@ class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
             'community_size', 'longevity', 'participating_orgs',
             'approved_license', 'unapproved_license_description',
             'no_proprietary_software', 'proprietary_software_description',
-            'goverance', 'code_of_conduct', 'cla', 'dco']
+            'governance', 'code_of_conduct', 'cla', 'dco']
 
     # We have to over-ride this method because we need to
     # create a community's slug from its name.
