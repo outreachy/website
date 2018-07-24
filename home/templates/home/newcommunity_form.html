@@ -34,6 +34,9 @@ Mentors will be granted read access to applications for their project and will b
 	{{ form.non_field_errors }}
 	{{ form.media }}
 	{% for field in form.visible_fields %}
+		{% if 'Long description' in field.label_tag %}
+			<h2>Optional Community Information</h2>
+		{% endif %}
 		<div class="form-group card">
 			{{ field.errors }}
 			{% if 'Long description' in field.label_tag or 'Website' in field.label_tag or 'Community size' in field.label_tag or 'Longevity' in field.label_tag or 'Goverance' in field.label_tag or 'Code of conduct' in field.label_tag or 'Cla' in field.label_tag or 'Dco' in field.label_tag %}

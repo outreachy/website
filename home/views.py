@@ -853,11 +853,16 @@ def community_landing_view(request, round_slug, slug):
 
 class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
     model = NewCommunity
-    fields = ['name', 'description', 'long_description', 'website',
+    fields = ['name',
+            'approved_license',
+            'no_proprietary_software',
             'community_size', 'longevity', 'participating_orgs',
-            'approved_license', 'unapproved_license_description',
-            'no_proprietary_software', 'proprietary_software_description',
-            'goverance', 'code_of_conduct', 'cla', 'dco']
+            'description',
+            'long_description', 'website',
+            'goverance', 'code_of_conduct', 'cla', 'dco',
+            'unapproved_license_description',
+            'proprietary_software_description',
+            ]
 
     # We have to over-ride this method because we need to
     # create a community's slug from its name.
