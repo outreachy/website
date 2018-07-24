@@ -177,6 +177,9 @@ class RoundPage(Page):
     def final_stipend_payment_deadline(self):
         return self.finalfeedback + datetime.timedelta(days=31)
 
+    def has_application_period_started(self):
+        return has_deadline_passed(self.appsopen)
+
     # Interns get a five week extension at most.
     def has_internship_ended(self):
         return has_deadline_passed(self.internends + datetime.timedelta(days=7*5))
