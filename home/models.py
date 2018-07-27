@@ -1006,19 +1006,22 @@ class Community(models.Model):
 
     description = models.CharField(
             max_length=PARAGRAPH_LENGTH,
-            help_text="Short description of community. This should be three sentences for someone who has never heard of your community or the technologies involved. Do not put any links in the short description (use the long description instead).")
+            verbose_name="Short description of community",
+            help_text="This should be three sentences for someone who has never heard of your community or the technologies involved. Do not put any links in the short description (use the long description instead).")
 
     long_description = CKEditorField(
             blank=True,
-            help_text="(Optional) Longer description of community.")
+            verbose_name="(Optional) Longer description of community.",
+            help_text="Please avoid adding educational requirements for interns to your community description. Outreachy interns come from a variety of educational backgrounds. Schools around the world may not teach the same topics. If interns need to have specific skills, your mentors need to add application tasks to test those skills.")
 
     website = models.URLField(
             blank=True,
-            help_text="(Optional) Please provide the URL for your FOSS community's website")
+            verbose_name="(Optional) Please provide the URL for your FOSS community's website")
 
     tutorial = CKEditorField(
             blank=True,
-            help_text="(Optional) If your applicants need to complete a tutorial before working on their contributions, please provide a description and the URL for the tutorial")
+            verbose_name="(Optional) Description of your first time contribution tutorial",
+            help_text="If your applicants need to complete a tutorial before working on contributions with mentors, please provide a description and the URL for the tutorial. For example, the Linux kernel asks applicants to complete a tutorial for compiling and installing a custom kernel, and sending in a simple whitespace change patch. Once applicants complete this tutorial, they can start to work with mentors on more complex contributions.")
 
     rounds = models.ManyToManyField(RoundPage, through='Participation')
 
@@ -1083,7 +1086,7 @@ class NewCommunity(Community):
         max_length=3,
         choices=COMMUNITY_SIZE_CHOICES,
         default=SMOL,
-        help_text="How many people are contributing to this FOSS community regularly?",
+        verbose_name="How many people are contributing to this FOSS community regularly?",
     )
 
     THREE_MONTHS = '3M'
@@ -1102,11 +1105,12 @@ class NewCommunity(Community):
         max_length=2,
         choices=LONGEVITY_CHOICES,
         default=THREE_MONTHS,
-        help_text="How long has this FOSS community accepted public contributions?",
+        verbose_name="How long has this FOSS community accepted public contributions?",
     )
 
     participating_orgs = models.CharField(max_length=THREE_PARAGRAPH_LENGTH,
-            help_text="What different organizations and companies participate in this FOSS community? If there are many organizations, list the top five organizations who make large contributions.")
+            verbose_name="What different organizations and companies participate in this FOSS community?",
+            help_text="If there are many organizations, list the top five organizations who make large contributions.")
 
     approved_license = models.BooleanField(
             default=False,
@@ -1120,10 +1124,10 @@ class NewCommunity(Community):
             blank=True,
             help_text="(Optional) If any internship project under your community furthers the interests of proprietary software, please explain.")
 
-    goverance = models.URLField(blank=True, help_text="(Optional) Please provide a URL for a description of your community's governance model")
-    code_of_conduct = models.URLField(blank=True, help_text="(Optional) Please provide a URL for to your community's Code of Conduct")
-    cla = models.URLField(blank=True, help_text="(Optional) Please provide a URL for your community's Contributor License Agreement (CLA)")
-    dco = models.URLField(blank=True, help_text="(Optional) Please provide a URL for your community's Developer Certificate of Origin (DCO) agreement")
+    goverance = models.URLField(blank=True, verbose_name="(Optional) Please provide the URL for a description of your community's governance model")
+    code_of_conduct = models.URLField(blank=True, verbose_name="(Optional) Please provide the URL for to your community's Code of Conduct")
+    cla = models.URLField(blank=True, verbose_name="(Optional) Please provide the URL for your community's Contributor License Agreement (CLA)")
+    dco = models.URLField(blank=True, verbose_name="(Optional) Please provide the URL for your community's Developer Certificate of Origin (DCO) agreement")
 
     class Meta:
         verbose_name_plural = 'new communities'

@@ -31,22 +31,15 @@ Mentors will be granted read access to applications for their project and will b
 <h2>Required Community Information</h2>
 <form action="" method="post">
 	{% csrf_token %}
-	{{ form.non_field_errors }}
 	{{ form.media }}
+	{{ form.non_field_errors }}
 	{% for field in form.visible_fields %}
-		{% if 'Long description' in field.label_tag %}
+		{% if 'Longer description' in field.label_tag %}
 			<h2>Optional Community Information</h2>
 		{% endif %}
 		<div class="form-group card">
 			{{ field.errors }}
-			{% if 'Long description' in field.label_tag or 'Website' in field.label_tag or 'Community size' in field.label_tag or 'Longevity' in field.label_tag or 'Goverance' in field.label_tag or 'Code of conduct' in field.label_tag or 'Cla' in field.label_tag or 'Dco' in field.label_tag %}
-				<div class="card-header">
-					{{ field.help_text|safe }}
-				</div>
-				<div class="card-body">
-					{{ field }}
-				</div>
-			{% elif 'Approved license' in field.label_tag or 'No proprietary software' in field.label_tag %}
+			{% if 'Approved license' in field.label_tag or 'No proprietary software' in field.label_tag %}
 				<div class="card-header">
 					{{ field.label_tag }}
 				</div>
