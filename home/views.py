@@ -858,7 +858,7 @@ class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
             'no_proprietary_software',
             'community_size', 'longevity', 'participating_orgs',
             'description',
-            'long_description', 'website',
+            'long_description', 'tutorial', 'website',
             'goverance', 'code_of_conduct', 'cla', 'dco',
             'unapproved_license_description',
             'proprietary_software_description',
