@@ -1210,15 +1210,18 @@ class Sponsorship(models.Model):
 
     name = models.CharField(
             max_length=SENTENCE_LENGTH,
+            verbose_name='Organization or company full legal name',
             help_text='The full sponsor name to be used on invoices.')
 
-    amount = models.PositiveIntegerField()
+    amount = models.PositiveIntegerField(
+            verbose_name="Sponsorship amount",
+            help_text="Sponsorship for each intern is $6,500.")
 
     funding_secured = models.BooleanField(
             default=False,
             help_text="""
-            Is this funding confirmed by the sponsoring organization, or
-            is it currently only tentative?
+            Check this box if funding has been confirmed by the sponsoring organization.
+            <br>Leave the box unchecked if the funding is tentative.
             """)
 
     funding_decision_date = models.DateField(

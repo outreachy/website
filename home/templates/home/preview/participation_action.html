@@ -63,13 +63,63 @@
 	<p>Given the various options above, and taking into account any
 	credits or additional corporate sponsors listed above, please
 	give us information about your additional sponsors.</p>
+
+	<p>You must fill out the information for at least one sponsor.
+	The form below has space for multiple sponsors,
+	but you can always edit sponsorship information or add more sponsors later.</p>
 {% else %}
 <ul>
 	<li>Number of interns funded: {{ participation.interns_funded }}</li>
 </ul>
 {% endif %}
 
-{% include "home/snippet/action_form.html" %}
+<p><form action="" method="post">
+	{% csrf_token %}
+	{{ form.management_form }}
+	{% for f in form %}
+		{% with forloop.counter as sponsor_number %}
+		<h2>Sponsor #{{ sponsor_number }}</h2>
+		{{ f.media }}
+		{% for field in f.visible_fields %}
+			{% if 'Funding secured' in field.label_tag %}
+				<div class="form-group card">
+					<div class="card-header">
+						Sponsor {{ sponsor_number }} - {{ field.label_tag }}
+					</div>
+					<div class="card-body">
+						{{ field }}
+						{{ field.help_text|safe }}
+					</div>
+				</div>
+			{% elif 'Delete' in field.label_tag %}
+				<div class="form-group card border-warning">
+					<div class="card-header text-white bg-warning">
+						Delete Sponsor {{ sponsor_number }}?
+					</div>
+					<div class="card-body">
+						{{ field }} Check this box to delete this sponsorship information.
+						{{ field.help_text|safe }}
+					</div>
+				</div>
+			{% else %}
+				<div class="form-group card">
+					{{ field.errors }}
+					<div class="card-header">
+						Sponsor {{ sponsor_number }} - {{ field.label_tag }}
+					</div>
+					<div class="card-body">
+						{{ field }}
+					</div>
+					{% if field.help_text %}
+						<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+					{% endif %}
+				</div>
+			{% endif %}
+		{% endfor %}
+		{% endwith %}
+	{% endfor %}
+	<input type="submit" class="btn btn-{% if view.kwargs.action == 'withdraw' %}warning{% elif view.kwargs.action == 'reject' %}danger{% else %}success{% endif %}" value="{{ view.kwargs.action|title }}" />
+</form></p>
 
 {% if view.kwargs.action == 'submit' %}
 	<h2>Funding for Additional Outreachy Interns</h2>
