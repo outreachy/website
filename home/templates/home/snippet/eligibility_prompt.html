@@ -1,5 +1,6 @@
-<div class="card border-info mb-3">
-	{% if not current_round.has_application_deadline_passed %}
+{% if not current_round.has_application_period_started %}
+{% elif not current_round.has_application_deadline_passed %}
+	<div class="card border-info mb-3">
 		<div class="card-header text-white bg-warning">Check your eligibility!</div>
 		<div class="card-body">
 			<p class="card-text">
@@ -13,12 +14,14 @@
 			to internship projects.
 			</p>
 		</div>
-	{% else %}
+	</div>
+{% else %}
+	<div class="card border-info mb-3">
 		<div class="card-header text-white bg-info">Internship applications are now closed</div>
 		<div class="card-body">
 			<div class="card-text">
 				{% include 'home/snippet/deadline_passed.html' %}
 			</div>
 		</div>
-	{% endif %}
-</div>
+	</div>
+{% endif %}
