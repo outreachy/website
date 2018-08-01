@@ -16,30 +16,67 @@ Past community participation in Outreachy
 <a href="{% url 'community-cfp' %}">Timeline, FAQ, & Participating Communities</a> &gt; {{ community.name }}
 <h1>{{ community.name }} in Outreachy</h1>
 
+<p>Outreachy provides internships to people from <a href="/apply/eligibility/">groups traditionally underrepresented in tech</a>. This is a page for Outreachy mentors and coordinators of {{ community.name }}. For more information about what Outreachy is and the deadlines for mentors and coordinators, <a href="/communities/cfp">read the Community Call for Participation page</a>.</p>
 {% with approved_coordinator_list=community.coordinatorapproval_set.approved approved_projects=participation_info.project_set.approved %}
+{% if approved_coordinator_list %}
+	<p>The {{ community.name }} coordinator{{ approved_coordinator_list|length|pluralize:" is,s are" }}
+	{% for approval in approved_coordinator_list %}
+	{% if user.is_authenticated %}<a href="{{ approval.get_preview_url }}">{{ approval.coordinator.public_name }}</a>{% else %}{{ approval.coordinator.public_name }}{% endif %}{% if user.is_authenticated %} &lt;{{ approval.coordinator.account.email }}&gt;{% endif %}{% if not forloop.last %}, {% else %}.{% endif %}
+	{% endfor %}
+{% else %}
+	<p>This community currently has no approved coordinator. Coordinators approve mentored projects, and communicate with both mentors and Outreachy organizers. The full list of coordinator duties can be found on <a href="/mentor/">here</a>.
+{% endif %}
+
+{% if coordinator %}
+	Your request to coordinate for this community is:
+	<a href="{{ coordinator.get_preview_url }}">
+		<strong>{{ coordinator.get_approval_status_display }}</strong>
+	</a>
+{% else %}
+	</p>
+{% endif %}
+
+<div class="card mb-3">
+    <div class="card-header">Community status</div>
+    <div class="card-body">
+	    <table class=table>
+		    {% if not participation_info %}
+			    <tr><td><span class="badge badge-pill badge-warning">Not Participating</span></td><td>The community coordinator{{ approved_coordinator_list|length|pluralize:" has,s have" }} not submitted this community to participate in the {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</td></tr>
+		    {% elif participation_info.approval_status == participation_info.PENDING %}
+			    <tr><td><span class="badge badge-pill badge-info">Pending Participation</span></td><td>Outreachy organizers have not approved this community to participate in the {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} internship round</td></tr>
+		    {% elif participation_info.approval_status == participation_info.REJECTED %}
+			    <tr><td><span class="badge badge-pill badge-warning">Not Participating</span></td><td>Unfortunately, either the community coordinator{{ approved_coordinator_list|length|pluralize }} or the Outreachy organizers have determined that the community will not participate in the {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</td></tr>
+		    {% elif participation_info.approval_status == participation_info.APPROVED %}
+			    <tr><td><span class="badge badge-pill badge-success">Participating</span></td><td>This community is approved to participate in the {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} internship round</td></tr>
+		    {% endif %}
+		    {% if participation_info and participation_info.interns_funded <= 0 %}
+			    <tr><td><span class="badge badge-pill badge-warning">Not Funded</span></td><td>The community has not found funding for at least one intern ($6,500).</td></tr>
+		    {% elif participation_info and participation_info.interns_funded > 0 %}
+			    <tr><td><span class="badge badge-pill badge-success">Funded</span></td><td>This community has funding for {{ participation_info.interns_funded }} intern{{ participation_info.interns_funded|length|pluralize }}.</td></tr>
+		    {% endif %}
+		    {% if not approved_projects %}
+			    <tr><td><span class="badge badge-pill badge-warning">No Projects</span></td><td>The coordinator has not approved any projects for Outreachy interns to work on.</td></tr>
+		    {% else %}
+			    <tr><td><span class="badge badge-pill badge-success">{{ approved_projects|length }} Projects Approved</span></td><td>The coordinator has approved {{ approved_projects|length }} project{{ approved_projects|length|pluralize }}. There are {{ participation_info.project_set.pending|length }} project{{ participation_info.project_set.pending|length|pluralize }} pending approval.</td></tr>
+		    {% endif %}
+		    {% if not current_round.has_project_submission_and_approval_deadline_passed %}
+			    <tr><td><span class="badge badge-pill badge-info">Open to New Projects</span></td><td>Mentors can submit projects for Outreachy interns to work on.</td></tr>
+		    {% else %}
+			    <tr><td><span class="badge badge-pill badge-warning">Closed to New Projects</span></td><td>The deadline to submit new projects for this Outreachy round is closed.</td></tr>
+		    {% endif %}
+	    </table>
+    </div>
+</div>
 
 {% if not participation_info %}
-	<p>The coordinator{{ approved_coordinator_list|length|pluralize }} for {{ community.name }} have not yet indicated whether the community will be participating in {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} internship round.</p>
 {% elif participation_info.approval_status == participation_info.APPROVED %}
-	<p>{{ community.name }} is participating in {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.
-	Outreachy provides internships to people from <a href="/apply/eligibility/">groups traditionally underrepresented in tech</a>.
+	<p>{{ community.name }} is participating in {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.
 	The Outreachy organizers have received confirmation for funding of {{ participation_info.interns_funded }} intern{{ participation_info.interns_funded|length|pluralize }}.</p>
 </p>
 {% elif participation_info.approval_status == participation_info.PENDING %}
 	<p>Outreachy organizers are still reviewing this community and/or its funding status, so Outreachy applicants will not be shown the community landing page yet.</p>
 {% else %}
 	<p>Unfortunately, either the community coordinator{{ approved_coordinator_list|length|pluralize }} or the Outreachy organizers have determined that the community will not participate in this round of Outreachy internships.</p>
-{% endif %}
-{% if approved_coordinator_list %}
-	<p>The {{ community.name }} coordinator{{ approved_coordinator_list|length|pluralize:" is,s are" }}
-	{% for approval in approved_coordinator_list %}
-	<a href="{{ approval.get_preview_url }}">
-		{{ approval.coordinator.public_name }}
-	</a>
-		{% if user.is_authenticated %} &lt;{{ approval.coordinator.account.email }}&gt;{% endif %}{% if not forloop.last %}, {% else %}</p>{% endif %}
-	{% endfor %}
-{% else %}
-	<p>This community currently has no approved coordinator. Coordinators approve mentored projects, and communicate with both mentors and Outreachy organizers. The full list of coordinator duties can be found on <a href="/mentor/">here</a>.
 {% endif %}
 
 {% if participation_info.approval_status == participation_info.APPROVED and not participation_info.participating_round.has_late_application_deadline_passed %}

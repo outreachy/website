@@ -913,6 +913,8 @@ class Comrade(models.Model):
 class ApprovalStatusQuerySet(models.QuerySet):
     def approved(self):
         return self.filter(approval_status=ApprovalStatus.APPROVED)
+    def pending(self):
+        return self.filter(approval_status=ApprovalStatus.PENDING)
 
 class ApprovalStatus(models.Model):
     PENDING = 'P'
