@@ -1179,6 +1179,7 @@ class Participation(ApprovalStatus):
         return self.community.is_coordinator(user)
 
     def is_pending_mentor(self, user):
+        # is this a co-mentor who isn't approved yet?
         mentors = MentorApproval.objects.filter(
                 mentor=user,
                 approval_status=ApprovalStatus.PENDING,
@@ -1186,6 +1187,16 @@ class Participation(ApprovalStatus):
                 )
         if mentors.exists():
             return True
+        # did the mentor submit a new project that isn't approved yet?
+        mentors = MentorApproval.objects.filter(
+                mentor=user,
+                approval_status=ApprovalStatus.APPROVED,
+                project__project_round=self,
+                project__approval_status=ApprovalStatus.PENDING,
+                )
+        if mentors.exists():
+            return True
+        return False
 
     def is_pending_coordinator(self, user):
         coordinators = CoordinatorApproval.objects.filter(
