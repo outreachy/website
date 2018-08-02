@@ -819,7 +819,7 @@ def community_landing_view(request, round_slug, slug):
             community__slug=slug,
             participating_round__slug=round_slug,
             )
-    projects = get_list_or_404(participation_info.project_set.approved())
+    projects = participation_info.project_set.approved()
     ontime_projects = [p for p in projects if p.deadline == Project.ONTIME]
     late_projects = [p for p in projects if p.deadline == Project.LATE]
     closed_projects = [p for p in projects if p.deadline == Project.CLOSED]
@@ -832,10 +832,19 @@ def community_landing_view(request, round_slug, slug):
             # this one.
             approved_coordinator_list = participation_info.community.coordinatorapproval_set.filter(
                     approval_status=ApprovalStatus.APPROVED)
+            approved_mentor_list = participation_info.community.coordinatorapproval_set.filter(
+                    approval_status=ApprovalStatus.APPROVED)
         except CoordinatorApproval.DoesNotExist:
             approved_coordinator_list = None
     else:
             approved_coordinator_list = None
+
+    if request.user.is_authenticated and request.user.comrade:
+            is_pending_mentor = participation_info.is_pending_mentor(request.user.comrade)
+            is_pending_coordinator = participation_info.is_pending_coordinator(request.user.comrade)
+    else:
+            is_pending_mentor = False
+            is_pending_coordinator = False
 
     return render(request, 'home/community_landing.html',
             {
@@ -847,6 +856,8 @@ def community_landing_view(request, round_slug, slug):
             'current_round' : participation_info.participating_round,
             'community': participation_info.community,
             'approved_coordinator_list': approved_coordinator_list,
+            'is_pending_mentor': is_pending_mentor,
+            'is_pending_coordinator': is_pending_coordinator,
             'example_skill': example_skill,
             },
             )

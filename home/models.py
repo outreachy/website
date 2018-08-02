@@ -135,6 +135,9 @@ class RoundPage(Page):
         FieldPanel('sponsordetails', classname="full"),
     ]
 
+    def official_name(self):
+        return(self.internstarts.strftime("%B %Y") + " to " + self.internends.strftime("%B %Y") + " Outreachy internships")
+
     def regular_deadline_reminder(self):
         return(self.appsclose - datetime.timedelta(days=7))
 
@@ -208,6 +211,10 @@ class RoundPage(Page):
         # for rounds aligned with GSoC
         # GSoC traditionally starts either in May or June
         return(self.internstarts.month < 8)
+
+    def get_approved_communities(self):
+        approved_participations = Participation.objects.filter(participating_round=self, approval_status=Participation.APPROVED).order_by('community__name')
+        return [p.community for p in approved_participations]
 
     def is_mentor(self, user):
         return MentorApproval.objects.filter(
@@ -1170,6 +1177,27 @@ class Participation(ApprovalStatus):
 
     def is_submitter(self, user):
         return self.community.is_coordinator(user)
+
+    def is_pending_mentor(self, user):
+        mentors = MentorApproval.objects.filter(
+                mentor=user,
+                approval_status=ApprovalStatus.PENDING,
+                project__project_round=self,
+                )
+        if mentors.exists():
+            return True
+
+    def is_pending_coordinator(self, user):
+        coordinators = CoordinatorApproval.objects.filter(
+                coordinator=user,
+                approval_status=ApprovalStatus.PENDING,
+                community__participation=self,
+                )
+        if coordinators.exists():
+            return True
+
+        return False
+
 
     # Note that is is more than just the submitter!
     # We want to notify mentors as well as coordinators
