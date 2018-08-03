@@ -7,29 +7,90 @@
 
 {% block content %}
 {% with mentor=mentorapproval.mentor project=mentorapproval.project community=mentorapproval.project.project_round.community %}
+{% if view.kwargs.action|title == 'Submit' and mentorapproval.approval_status == mentorapproval.APPROVED %}
+	<p><a href="{% url 'community-cfp' %}">Timeline, FAQ, & Participating Communities</a> &gt; 
+	<a href="{% url 'community-landing' round_slug='project.project.round.slug' slug='project.community.slug' %}">{{ project.project_round.community.name }}</a> &gt;
+	Submit or Edit a Project
+	</p>
+	<p>Steps to submit or edit a Project:
+	<ol>
+		<li>Project details</li>
+		<b><li>Mentor profile</li></b>
+		<li>Project skills</li>
+		<li>Project communication channels</li>
+	</ol>
+	You can always edit this information later.
+	</p>
+{% endif %}
 
-<h1>
-	{{ view.kwargs.action|title }} Mentor for
-	<a href="{{ project.get_preview_url }}">{{ project.short_title }}</a>
-</h1>
+<h1>Mentor Profile</h1>
+
+<p>Project: <a href="{{ project.get_preview_url }}">{{ project.short_title }}</a></p>
 
 {% if view.kwargs.action == 'submit' %}
 	<p>Mentors provide need to provide some information about their project so it can be reviewed and approved by their community coordinators. By filling out this information, you understand that some of your personal information will be shown to Outreachy applicants so they can contact you for mentorship.</p>
 
-{% include "home/snippet/privacy_policy.html" %}
+	{% include "home/snippet/privacy_policy.html" %}
 
 	<p><strong>Please read these questions carefully.</strong></p>
 
-	<h2>Terms Used</h2>
-	{% include "home/snippet/foss-terms.html" %}
-
-	<h2>Mentor Information</h2>
 {% else %}
 	<p>{{ mentor.public_name }} &lt;{{ mentor.account.email }}&gt;</p>
 	{% include "home/snippet/mentor_info.html" with approval=mentorapproval only %}
 {% endif %}
 
-{% include "home/snippet/action_form.html" %}
+<h3>Mentor Commitments</h3>
+<p><form action="" method="post">
+	{% csrf_token %}
+	{{ form.media }}
+	{% for field in form %}
+		{% if 'deadline' in field.label_tag %}
+			<h3>Project Deadline and Advertisement</h3>
+			<p>Close now: If you have many strong applicants who have already filled out an application, you may want to close your project to new applicants.
+			<p>Standard deadline: Most Outreachy projects will close applications on {{ project.project_round.round.appsclose }} at 4pm UTC.</p>
+			<p>Extended deadline: If you have too few applicants, you may want to extend your project deadlines to {{ project.project_round.round.appslate }} at 4pm UTC.</p>
+			</p>
+		{% endif %}
+		{% if 'Have you been a mentor for Outreachy before' in field.label_tag %}
+			<h3>Mentor Profile Details</h3>
+		{% endif %}
+		{% if 'Instructions read' in field.label_tag or 'Understands ' in field.label_tag %}
+			<div class="form-group card">
+				<div class="card-header">
+					{{ field.label_tag }}
+				</div>
+				<div class="card-body">
+					{{ field }}
+					{{ field.help_text|safe }}
+				</div>
+			</div>
+		{% elif 'Delete' in field.label_tag %}
+			<div class="form-group card border-warning">
+				<div class="card-header text-white bg-warning">
+					Delete this item #{{ sponsor_number }}?
+				</div>
+				<div class="card-body">
+					{{ field }} Check this box to delete this item.
+					{{ field.help_text|safe }}
+				</div>
+			</div>
+		{% else %}
+			<div class="form-group card">
+				{{ field.errors }}
+				<div class="card-header">
+					{{ field.label_tag }}
+				</div>
+				<div class="card-body">
+					{{ field }}
+				</div>
+				{% if field.help_text %}
+					<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+				{% endif %}
+			</div>
+		{% endif %}
+	{% endfor %}
+	<input type="submit" class="btn btn-{% if view.kwargs.action == 'withdraw' %}warning{% elif view.kwargs.action == 'reject' %}danger{% else %}success{% endif %}" value="{{ view.kwargs.action|title }}" />
+</form></p>
 
 {% endwith %}
 {% endblock %}
