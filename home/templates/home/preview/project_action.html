@@ -6,19 +6,92 @@
 
 {% block content %}
 
+<p><a href="{% url 'community-cfp' %}">Timeline, FAQ, & Participating Communities</a> &gt; 
+<a href="{% url 'community-landing' round_slug='project.project.round.slug' slug='project.community.slug' %}">{{ project.project_round.community.name }}</a> &gt;
+{{ view.kwargs.action|title }} a Project
+</p>
+
+<p>Steps to {{ view.kwargs.action|title|lower }} a Project:
+<ol>
+	<b><li>Project details</li></b>
+	<li>Mentor profile</li>
+	<li>Project skills</li>
+	<li>Project communication channels</li>
+</ol>
+You can always edit this information later.
+</p>
+
 <h1>{{ view.kwargs.action|title }} Internship Project Proposal</h1>
 
-<p>Mentors submit internship project proposals, which will be reviewed by Outreachy organizers and your community coordinators. Information will be displayed to Outreachy applicants.</p>
+{% if view.kwargs.action|title == 'Submit' %}
+	<p>Before submitting a project, make sure to read:
+	<ul>
+		<li><a href="/mentor/mentor-faq/">The mentor FAQ</a></li>
+		<li><a href="/mentor/#mentor">Outreachy mentor duties</a>, including the 5 hour a week time commitment.</li>
+		<li><a href="/mentor/mentor-faq/#define-a-project">Tips on what makes a good project</a></li>
+		<li><a href="https://github.com/sagesharp/outreachy-django-wagtail/blob/master/docs/mentor-agreement.md">The Outreachy mentor contract</a>, which you as an individual will be required to sign</li>
+	</ul>
+	</p>
+
+	<p>Mentors submit internship project proposals, which will be reviewed and approved by Outreachy organizers and your community coordinators. Coordinators should not submit projects on behalf of mentors. When you submit a project, you are taking responsibility for providing mentorship to interns.</p>
+
+	<p>If you have multiple mentors who will be mentoring different parts of the project, each mentor should submit their own project proposal. If you have multiple mentors working on the same project, one mentor should submit the project, and other mentors can sign up to co-mentor the project.</p>
+
+{% endif %}
 
 {% include "home/snippet/privacy_policy.html" %}
 
-<h2>Terms Used</h2>
-{% include "home/snippet/foss-terms.html" %}
-
-<h2>Internship Project Requirements</h2>
-{% include "home/snippet/license-requirements.html" %}
-
-<h2>Internship Project Information</h2>
-{% include "home/snippet/action_form.html" %}
+<h3>Required Internship Project Details</h3>
+<p><form action="" method="post">
+	{% csrf_token %}
+	{{ form.media }}
+	{% for field in form %}
+		{% if 'deadline' in field.label_tag %}
+			<h3>Project Deadline and Advertisement</h3>
+			<p>Close now: If you have many strong applicants who have already filled out an application, you may want to close your project to new applicants.
+			<p>Standard deadline: Most Outreachy projects will close applications on {{ project.project_round.round.appsclose }} at 4pm UTC.</p>
+			<p>Extended deadline: If you have too few applicants, you may want to extend your project deadlines to {{ project.project_round.round.appslate }} at 4pm UTC.</p>
+			</p>
+		{% endif %}
+		{% if 'Repository' in field.label_tag %}
+			<h3>Optional Internship Project Details</h3>
+		{% endif %}
+		{% if 'Approved license' in field.label_tag or 'No proprietary software' in field.label_tag or 'more applicants' in field.label_tag %}
+			<div class="form-group card">
+				<div class="card-header">
+					{{ field.label_tag }}
+				</div>
+				<div class="card-body">
+					{{ field }}
+					{{ field.help_text|safe }}
+				</div>
+			</div>
+		{% elif 'Delete' in field.label_tag %}
+			<div class="form-group card border-warning">
+				<div class="card-header text-white bg-warning">
+					Delete this item #{{ sponsor_number }}?
+				</div>
+				<div class="card-body">
+					{{ field }} Check this box to delete this item.
+					{{ field.help_text|safe }}
+				</div>
+			</div>
+		{% else %}
+			<div class="form-group card">
+				{{ field.errors }}
+				<div class="card-header">
+					{{ field.label_tag }}
+				</div>
+				<div class="card-body">
+					{{ field }}
+				</div>
+				{% if field.help_text %}
+					<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+				{% endif %}
+			</div>
+		{% endif %}
+	{% endfor %}
+	<input type="submit" class="btn btn-{% if view.kwargs.action == 'withdraw' %}warning{% elif view.kwargs.action == 'reject' %}danger{% else %}success{% endif %}" value="{{ view.kwargs.action|title }}" />
+</form></p>
 
 {% endblock %}
