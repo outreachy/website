@@ -1301,7 +1301,8 @@ class Project(ApprovalStatus):
         max_length=2,
         choices=LONGEVITY_CHOICES,
         default=THREE_MONTHS,
-        help_text="How long has the team accepted publicly submitted contributions? (See the 'Terms Used' section above for a definition of a team.",
+        verbose_name="How long has your team been accepting publicly submitted contributions?",
+        help_text="A community can be comprised of many different teams that each work on separate subsystems, modules, applications, libraries, tools, documentation, user experience, graphical design, and more. Typically each Outreachy project involves working with a particular team in the community. If the Outreachy intern would work with the whole community rather than a particular team, consider the community to be a team for these questions.<br><br>How long has your team been accepting publicly submitted contributions?",
     )
 
     SMOL = '3'
@@ -1324,13 +1325,13 @@ class Project(ApprovalStatus):
         max_length=3,
         choices=COMMUNITY_SIZE_CHOICES,
         default=SMOL,
-        help_text="How many regular contributors does this team have?",
+        verbose_name="How many regular contributors does your team have?",
     )
 
     intern_tasks = CKEditorField(
             max_length=THREE_PARAGRAPH_LENGTH,
             blank=True,
-            help_text='(Optional) Description of possible internship tasks.')
+            help_text='(Optional) Description of possible internship tasks. What smaller tasks will they start on? What is the main task or tasks for the internship? Do you have any optional stretch goals?')
 
     intern_benefits = CKEditorField(
             max_length=PARAGRAPH_LENGTH,
@@ -1358,23 +1359,25 @@ class Project(ApprovalStatus):
 
     short_title = models.CharField(
             max_length=SENTENCE_LENGTH,
+            verbose_name="Project short title",
             help_text='Short title for this internship project proposal. This should be 100 characters or less, starting with a verb like "Create", "Improve", "Extend", "Survey", "Document", etc. Assume the applicant has never heard of your technology before and keep it simple. The short title will be used in your project page URL, so keep it short.')
     slug = models.SlugField(
             max_length=50,
             verbose_name="Project URL slug")
     long_description = CKEditorField(
             blank=True,
-            help_text='Description of the internship project, excluding applicant skills and communication channels. Those will be added in the next step.')
+            help_text='Description of the internship project.<br><br>Please do not place educational restrictions (such as needing a degree) on this project. Outreachy applicants are judged on their demonstrated skills, not on their educational background. If your project requires knowledge that would normally be learned during a degree, your project contribution tasks should test applicants for that knowledge.<br><br>You should exclude applicant skills and communication channels. Those will be added in the next step.<br><br>You should also exclude discussion of internship tasks, internship benefits, repository URLs, issue tracker URLs, newcomer tags, or application period contribution tasks. Those are collected in the optional fields below.')
 
     repository = models.URLField(blank=True, help_text="(Optional) URL for your team's repository or contribution mechanism")
     issue_tracker = models.URLField(blank=True, help_text="(Optional) URL for your team's issue tracker")
     newcomer_issue_tag = models.CharField(
             blank=True,
             max_length=SENTENCE_LENGTH,
-            help_text="(Optional) What tag is used for newcomer-friendly issues for your team or for this internship project?")
+            help_text="(Optional) What tag is used for newcomer-friendly issues for your team or for this internship project? Please use a tag and not a URL.")
 
     contribution_tasks = CKEditorField(
-            help_text='Instructions for how applicants can make contributions during the Outreachy application period. Make sure to include links to getting started tutorials or documentation, how applicants can find contribution tasks on your project website or issue tracker, who they should ask for tasks, and everything they need to know to get started.')
+            verbose_name="How can applicants make a contribution to your project?",
+            help_text='Instructions for how applicants can make contributions during the Outreachy application period.<br><br>Make sure to include links to getting started tutorials or documentation, how applicants can find contribution tasks on your project website or issue tracker, who they should ask for tasks, and everything they need to know to get started.')
 
     CLOSED = 'NOW'
     ONTIME = 'REG'
@@ -1387,13 +1390,14 @@ class Project(ApprovalStatus):
     deadline = models.CharField(
             max_length=3,
             choices=DEADLINE_CHOICES,
-            verbose_name="Project application status",
+            verbose_name="Project deadline",
             help_text="If you have too many applicants, and your most promising applicants have recorded both a contribution and a final application, you may want to close your project to new applicants.<br>If you have too few applicants, you may want to extend your project's application deadline by one week.",
             )
 
     needs_more_applicants = models.BooleanField(
             default=False,
-            help_text='Advertise this project as needing more applicants.')
+            verbose_name="Does your project need more applicants?",
+            help_text='Check this box to advertise this project as needing more applicants. This is typically used by projects without a lot of strong applicants two weeks before the application deadline.<br><br>You should uncheck this box if you already have many strong applicants who have filled out a final application.')
 
     class Meta:
         unique_together = (
@@ -1628,22 +1632,23 @@ class MentorApproval(ApprovalStatus):
     instructions_read = models.BooleanField(
             default=False,
             validators=[mentor_read_instructions],
+            verbose_name="Understands mentor instructions",
             help_text='I have read the <a href="/mentor/#mentor">mentor duties</a> and <a href="/mentor/mentor-faq/">mentor FAQ</a>.')
 
     understands_intern_time_commitment = models.BooleanField(
             default=False,
             validators=[mentor_read_instructions],
-            help_text='I understand that Outreachy mentors will spend a minimum of 5 hours a week mentoring their intern during the three month internship period')
+            help_text='I understand that Outreachy mentors are required to spend a minimum of 5 hours a week mentoring their intern during the three month internship period')
 
     understands_applicant_time_commitment = models.BooleanField(
             default=False,
             validators=[mentor_read_instructions],
-            help_text='I understand that Outreachy mentors often find they must spend more time helping applicants during the application period than helping their intern during the internship period')
+            help_text='I understand that Outreachy mentors often spend 5-10 hours a week helping applicants during the six week application period')
 
     understands_mentor_contract = models.BooleanField(
             default=False,
             validators=[mentor_read_contract],
-            help_text='I understand that Outreachy mentors will need to sign a <a href="/documents/1/Outreachy-Program--Mentorship-Terms-of-Participation-May-2017.pdf">mentor contract</a> after they accept an applicant as an intern')
+            help_text='I understand that Outreachy mentors will need to sign a <a href="https://github.com/sagesharp/outreachy-django-wagtail/blob/master/docs/mentor-agreement.md">mentor contract</a> after they accept an applicant as an intern')
 
     THREE_MONTHS = '3M'
     SIX_MONTHS = '6M'
@@ -1661,17 +1666,20 @@ class MentorApproval(ApprovalStatus):
         max_length=2,
         choices=LONGEVITY_CHOICES,
         default=THREE_MONTHS,
-        help_text="How long have you been a contributor on this team?",
+        verbose_name="How long have you been a contributor on this team?",
+        help_text="A community can be comprised of many different teams that each work on separate subsystems, modules, applications, libraries, tools, documentation, user experience, graphical design, and more. Typically each Outreachy project involves working with a particular team in the community. If the Outreachy intern would work with the whole community rather than a particular team, consider the community to be a team for these questions.<br><br>How long have you been a contributor on this team?",
     )
 
     mentor_foss_contributions = models.CharField(
         max_length=PARAGRAPH_LENGTH,
-        help_text="What contributions have you made to this team and the FOSS community who is funding this internship? If none, what contributions have you made to other FOSS communities?",
+        verbose_name="What contributions have you made to this team and this community?",
+        help_text="If none, what contributions have you made to other FOSS communities?",
     )
 
     communication_channel_username = models.CharField(
         max_length=SENTENCE_LENGTH,
         blank=True,
+        verbose_name="What is your username on the team communication channel?",
         help_text="What is your username on the team communication channel? (This information will be shared with applicants.)",
     )
     OUTREACHY = 'OUT'
@@ -1690,12 +1698,14 @@ class MentorApproval(ApprovalStatus):
         max_length=5,
         choices=MENTOR_CHOICES,
         default=NOT_MENTORED,
-        help_text="Have you been a mentor for Outreachy before? (Note that Outreachy welcomes first time mentors, but this information allows the coordinator and other mentors to provide extra help to new mentors.)",
+        verbose_name="Have you been a mentor for Outreachy before?",
+        help_text="Outreachy welcomes first time mentors, but this information allows the coordinator and other mentors to provide extra help to new mentors.",
     )
 
     mentorship_style = models.CharField(
         max_length=PARAGRAPH_LENGTH,
-        help_text="What is your mentorship style? Do you prefer short daily standups, longer weekly reports, or informal progress reports? Are you willing to try pair programming when your intern gets stuck? Do you like talking over video chat or answering questions via email? Give the applicants a sense of what it will be like to work with you during the internship.",
+        verbose_name="What is your mentorship style?",
+        help_text="Do you prefer short daily standups, longer weekly reports, or informal progress reports? Are you willing to try pair programming when your intern gets stuck? Do you like talking over video chat or answering questions via email? Give the applicants a sense of what it will be like to work with you during the internship.",
     )
 
     def __str__(self):
