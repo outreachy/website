@@ -1052,15 +1052,15 @@ class CoordinatorApprovalAction(ApprovalStatusAction):
 
 class MentorApprovalAction(ApprovalStatusAction):
     fields = [
+            'instructions_read',
+            'understands_intern_time_commitment',
+            'understands_applicant_time_commitment',
+            'understands_mentor_contract',
             'mentored_before',
             'mentorship_style',
             'longevity',
             'mentor_foss_contributions',
             'communication_channel_username',
-            'instructions_read',
-            'understands_intern_time_commitment',
-            'understands_applicant_time_commitment',
-            'understands_mentor_contract',
             ]
 
     def get_object(self):
@@ -1110,7 +1110,7 @@ class MentorApprovalAction(ApprovalStatusAction):
                         email.co_mentor_intern_selection_notification(i, self.request)
 
 class ProjectAction(ApprovalStatusAction):
-    fields = ['short_title', 'approved_license', 'unapproved_license_description', 'no_proprietary_software', 'proprietary_software_description', 'longevity', 'community_size', 'community_benefits', 'intern_tasks', 'intern_benefits', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'contribution_tasks', 'long_description', 'deadline', 'needs_more_applicants']
+    fields = ['approved_license', 'no_proprietary_software', 'longevity', 'community_size', 'short_title', 'long_description', 'contribution_tasks', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'intern_tasks', 'intern_benefits', 'community_benefits', 'unapproved_license_description', 'proprietary_software_description', 'deadline', 'needs_more_applicants', ]
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     def get_object(self):
