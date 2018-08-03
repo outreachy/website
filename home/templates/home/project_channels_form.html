@@ -5,29 +5,86 @@ Add Project Communication Channels
 {% endblock %}
 
 {% block content %}
+<p><a href="{% url 'community-cfp' %}">Timeline, FAQ, & Participating Communities</a> &gt; 
+<a href="{% url 'community-landing' round_slug='project.project.round.slug' slug='project.community.slug' %}">{{ project.project_round.community.name }}</a> &gt;
+Submit or edit a Project
+</p>
+
+<p>Steps to submit or edit a Project:
+<ol>
+	<li>Project details</li>
+	<li>Mentor profile</li>
+	<li>Project skills</li>
+	<b><li>Project communication channels</li></b>
+</ol>
+You can always edit this information later.
+</p>
 <h1>Add Project Communication Channels</h1>
 
 {% include "home/snippet/privacy_policy.html" %}
 
 
-<p>Most applicants won't be familiar with using open source
-communication channels. They may be familiar with a communication tool
-(like a mailing list) but not be aware of common open source
-communication norms.  Applicants are especially confused by
-communication protocols like IRC, which usually require client-side
-software.  Adding communication channels in this special section will
-make it more likely for applicants to be able to contact mentors.</p>
+<p>Most applicants won't be familiar with using FOSS communication channels.
+Applicants are especially confused by communication protocols like IRC, which
+usually require client-side software. We add special links around IRC channels
+to help ease applicants into learning IRC.</p>
+
+<p>Some applicants may be familiar with a communication tool (like a mailing
+list) but they not be aware of common FOSS communication norms.  They may ask
+the wrong channel for help, and then go away when no one answers.  Adding
+information here will help them communicate better with mentors.</p>
 
 <p>You can fill out the optional fields below. If you need to add more
 communication channels than there are fields, you should save this
 internship project proposal and then click 'Edit Project
 information'.</p>
 
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form.media }}
-    {{ form.as_p }}
-    <input class="btn btn-primary" type="submit" value="Save project communication channels" />
-</form>
+<p><form action="" method="post">
+	{% csrf_token %}
+	{{ form.management_form }}
+	{% for f in form %}
+		{% with forloop.counter as channel_number %}
+		<h2>Project Communication Channel #{{ channel_number }}</h2>
+		{{ f.media }}
+		{% for field in f.visible_fields %}
+			{% if 'Funding secured' in field.label_tag %}
+				<div class="form-group card">
+					<div class="card-header">
+						Project Communication Channel #{{ channel_number }} - {{ field.label_tag }}
+					</div>
+					<div class="card-body">
+						{{ field }}
+						{{ field.help_text|safe }}
+					</div>
+				</div>
+			{% elif 'Delete' in field.label_tag %}
+				<div class="form-group card border-warning">
+					<div class="card-header text-white bg-warning">
+						Delete Project Communication Channel #{{ channel_number }}?
+					</div>
+					<div class="card-body">
+						{{ field }} Check this box to delete this communication channel information.
+						{{ field.help_text|safe }}
+					</div>
+				</div>
+			{% else %}
+				<div class="form-group card">
+					{{ field.errors }}
+					<div class="card-header">
+						Project Communication Channel #{{ channel_number }} - {{ field.label_tag }}
+					</div>
+					<div class="card-body">
+						{{ field }}
+					</div>
+					{% if field.help_text %}
+						<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+					{% endif %}
+				</div>
+			{% endif %}
+		{% endfor %}
+		{% endwith %}
+	{% endfor %}
+	<input class="btn btn-primary" type="submit" value="Save project communication channels" />
+</form></p>
 
 {% endblock %}
