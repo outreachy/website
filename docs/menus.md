@@ -8,23 +8,28 @@ Old menu layout:
  - [Opportunities](https://www.outreachy.org/opportunities/)
 
 New menu layout:
-- Interns
-  - Apply
-  - My Participation
+- Applicants
+  - Apply to Outreachy
   - Current Projects
   - Past Projects
+- Interns
   - Alums List
+  - My Internship Info
   - Travel Stipend
   - Opportunities
 - Volunteers
-  - Mentor
-  - My Mentored Projects
+  - Mentor FAQ
+  - Add a Community (CFP)
+  - Submit a Project (CFP)
+  - My Mentored Projects (Dashboard)
+  - All Projects (Rounds page)
   - Promote
 - Donors
   - Sponsor (goes to corporate sponsorship page)
   - Donate (goes to individual donation page)
 - Blog
 - Contact
+- Log In / Log Out
 
 Pages:
  - [Mentor](https://www.outreachy.org/mentor/)
