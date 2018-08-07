@@ -8,15 +8,21 @@ Old menu layout:
  - [Opportunities](https://www.outreachy.org/opportunities/)
 
 New menu layout:
-- Participate
+- Interns
   - Apply
-  - Alums
+  - My Participation
+  - Current Projects
+  - Past Projects
+  - Alums List
+  - Travel Stipend
   - Opportunities
-- Support
+- Volunteers
   - Mentor
+  - My Mentored Projects
+  - Promote
+- Donors
   - Sponsor (goes to corporate sponsorship page)
   - Donate (goes to individual donation page)
-  - Promote
 - Blog
 - Contact
 
@@ -37,18 +43,17 @@ Pages:
    - wagtail page
  - [Eligibility](https://www.outreachy.org/apply/eligibility/)
    - wagtail page
+   - links to [Eligibility Check](https://www.outreachy.org/eligibility/) when applications are open
  - [Initial Application](https://www.outreachy.org/apply/initial-application/)
    - wagtail page
  - [Make Contributions](https://www.outreachy.org/apply/make-contributions/)
    - wagtail page
- - [Project Selection](https://www.outreachy.org/apply/project-selection/)
-   - Django page
  - [Rounds](https://www.outreachy.org/apply/rounds/)
    - template - `home/templates/home/rounds_index_page.html`
  - [Promote](https://www.outreachy.org/promote/)
    - wagtail page
  - [Alums](https://www.outreachy.org/alums/)
-   - wagtail page
+   - wagtail page (ish - can edit from wagtail, but some data from Django is incorporated)
  - [Opportunities](https://www.outreachy.org/opportunities/)
    - wagtail page
  - [Blog](https://www.outreachy.org/blog/)
@@ -56,6 +61,18 @@ Pages:
    - could easily become a Django page? Search for wagtail pages with the URL base of `blog/` and sort by date and display?
  - [Outreachy Statistics for December to March 2017 Applicants](https://www.outreachy.org/blog/outreachy-statistics-december-march-2017-applicants/)
    - Django page?
+ - [Dashboard](https://www.outreachy.org/dashboard)
+   - Django page
+   - Place for coordinators and organizers to take action (e.g. approve project)
+   - Eligibility prompts are here, so mentors sort of get their projects here?
+   - Eligibility prompts are here, so applicants sort of get their projects here?
+   - FIXME: Should also have information for interns about the round they're participating in, deadlines, travel links, export old contract, etc.
+ - [Submit/Edit Project or Community](https://www.outreachy.org/community/cfp/)
+    - Django page
+ - [Current Projects](https://www.outreachy.org/apply/project-selection)
+   - Django page
+ - [Past Projects](https://www.outreachy.org/apply/rounds/)
+ - [Privacy Policy](https://www.outreachy.org/privacy-policy/)
 
 
 Deleted or defunct pages:
