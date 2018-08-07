@@ -1,6 +1,6 @@
 {% extends "base.html" %} 
 {% block title %}
-Call for Outreachy community coordinators, mentors, and volunteers
+Call for Outreachy community coordinators and mentors
 {% endblock %}
 
 {% block content %}
@@ -31,7 +31,7 @@ Call for Outreachy community coordinators, mentors, and volunteers
 
 <h2>Who can participate?</h2>
 {% if not current_round.has_project_submission_and_approval_deadline_passed %}
-<p>Outreachy welcomes participation from FOSS communities and people seeking to help out as Outreachy coordinators, mentors, and volunteers.</p>
+<p>Outreachy welcomes participation from FOSS communities and people seeking to help out as Outreachy coordinators and mentors.</p>
 {% endif %}
 
 <p><u>Funding Requirements</u></p>
@@ -66,7 +66,7 @@ Call for Outreachy community coordinators, mentors, and volunteers
 		<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">Outreachy announcement list</a>
 		to receive a notification for next round. Mentors can still sign up to co-mentor a listed project.</p>
 	{% else %}
-		<p>If you would like to volunteer or mentor with Outreachy, review the list of participating communities below who are looking for help. Make sure to <a href="/mentor/#mentor">review the duties and expections</a> for mentors and volunteers before you sign up to help a community.</p>
+		<p>If you would like to mentor with Outreachy, review the list of participating communities below who are looking for help. Make sure to <a href="/mentor/#mentor">review the duties and expections</a> for mentors before you sign up to help a community.</p>
 	{% endif %}
 {% endif %}
 
@@ -84,7 +84,7 @@ Call for Outreachy community coordinators, mentors, and volunteers
 		<p>The community coordinator had indicated interest in participating in this Outreachy internship round,
 		however, the project listing deadline passed before they could list any mentored projects.</p>
 	{% else %}
-		<p>The community coordinator has indicated these communities will participate in this Outreachy internship round, but Outreachy organizer approval is still pending. Mentors and volunteers are encouraged to sign up while the community is under review.  If you would like to volunteer or mentor with Outreachy, make sure to <a href="/mentor/#mentor">review the duties and expections</a> for mentors and volunteers before you sign up to help a community.</p>
+		<p>The community coordinator has indicated these communities will participate in this Outreachy internship round, but Outreachy organizer approval is still pending. Mentors are encouraged to sign up while the community is under review.<a href="/mentor/#mentor">review the duties and expections</a> for mentors before you sign up to help a community.</p>
 	{% endif %}
 	<ul>
 	{% for c in pending_communities %}
@@ -108,7 +108,7 @@ Call for Outreachy community coordinators, mentors, and volunteers
 <h2>Past Participating FOSS Communities</h2>
 <p>In order for a community to participate in an Outreachy internship round, the community must have at least one coordinator. If you would like to volunteer to be a coordinator, you should <a href="/mentor/#coordinator">understand the coordinator duties</a> and what <a href="/mentor/community-faq">information they will need to update</a> about the community.</p>
 
-<p>Mentors and volunteers may visit the community page and sign up to receive an email notification when a coordinator signs the community up for this Outreachy round.</p>
+<p>Mentors may visit the community page and sign up to receive an email notification when a coordinator signs the community up for this Outreachy round.</p>
 
 <ul>
 {% for c in not_participating_communities %}
