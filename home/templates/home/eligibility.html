@@ -28,7 +28,18 @@
 	<li>Outreachy internships are full-time 40-hour a week internships. Applicants who have part-time or contracting jobs are welcome to apply, but they must meet additional requirements.
 </ul>
 
-{% if not current_round.has_application_deadline_passed %}
+{% if not current_round.has_application_period_started %}
+	<h2>Eligibility Checking</h2>
+
+	<p>All Outreachy applicants will need to fill out an eligibility form to determine if they are eligible for the program.</p>
+
+	<p>Eligibility checking for Outreachy internships is currently closed.
+	The eligibility system will be available when the application period opens on {{ current_round.appsopen }} 4pm UTC.
+	</p>
+	<p>
+	To get an email when the round opens, subscribe to the
+	<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">Outreachy announcement mailing list</a>.</p>
+{% elif not current_round.has_application_deadline_passed %}
 	<h2>Check Your Eligibility</h2>
 
 	<p>All Outreachy applicants will need to fill out an eligibility form
@@ -45,7 +56,9 @@
 	<p>All Outreachy applicants will need to fill out an eligibility form to determine if they are eligible for the program.</p>
 
 	<p>Eligibility checking for Outreachy internships is currently closed.
-	The eligibility system will open shortly before the application period opens.
+	The eligibility system will be available when the next application period opens.
+	</p>
+	<p>
 	To get an email when the round opens, subscribe to the
 	<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">Outreachy announcement mailing list</a>.</p>
 {% endif %}
