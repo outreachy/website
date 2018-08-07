@@ -64,6 +64,7 @@ urlpatterns = [
     url(r'^longitudinal-survey/2018-opt-out/(?P<survey_slug>[^/]+)/$', views.survey_opt_out, name='longitudinal-survey-2018-opt-out'),
     url(r'^account/$', views.ComradeUpdate.as_view(), name='account'),
     url(r'^apply/project-selection/$', views.current_round_page, name='project-selection'),
+    url(r'^past-projects/$', views.past_rounds_page, name='past-rounds'),
     url(r'^apply/make-contributions/$', views.contribution_tips, name='contribution-tips'),
     url(r'^apply/eligibility/$', views.eligibility_information, name='eligibility-information'),
     url(r'^register/$', views.RegisterUser.as_view(), name='register'),

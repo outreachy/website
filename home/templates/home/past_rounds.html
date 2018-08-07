@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-roundindexpage{% endblock %}
+
+{% block content %}
+	<h1>Past Outreachy Internships</h1>
+	<p>Outreachy internships run twice a year.
+	While Outreachy has been running since 2006, we only have information displayed for the last couple of rounds.
+	You can also read about <a href="{% url 'alums' %}">Outreachy's current and past interns</a>.
+	</p>
+
+	<ul>
+		{% for round in rounds %}
+			<li><a href="{% pageurl round %}">{{ round.official_name }}</a></li>
+		{% endfor %}
+	</ul>
+{% endblock %}

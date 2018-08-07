@@ -652,6 +652,13 @@ class EligibilityResults(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
         context['current_round'] = self.object.application_round
         return context
 
+def past_rounds_page(request):
+    return render(request, 'home/past_rounds.html',
+            {
+                'rounds' : RoundPage.objects.all().order_by('internstarts'),
+            },
+            )
+
 def current_round_page(request):
     current_round = RoundPage.objects.latest('internstarts')
     approved_participations = current_round.participation_set.approved().order_by('community__name')
