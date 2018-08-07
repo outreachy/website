@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'compressor',
+    'debug_toolbar',
 ]
 
 if 'SENTRY_DSN' in os.environ:
@@ -79,10 +80,19 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    # The documentation says 'You should include the Debug Toolbar middleware
+    # as early as possible in the list. However, it must come after any other
+    # middleware that encodes the response’s content'
+    # I have no idea how to tell which ones handle response content??
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 
     'wagtail.wagtailcore.middleware.SiteMiddleware',
     'wagtail.wagtailredirects.middleware.RedirectMiddleware',
 ]
+
+INTERNAL_IPS = [
+        '127.0.0.1',
+        ]
 
 ROOT_URLCONF = 'outreachyhome.urls'
 

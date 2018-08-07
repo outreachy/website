@@ -10,6 +10,7 @@ django-ckeditor==5.4.0
 django-compressor==2.2
 django-compressor-postcss==0.8.2
 django-contact-form==1.4.2
+django-debug-toolbar==1.9.1
 django-formtools==2.1
 django-js-asset==0.1.1
 django-language-field==0.0.3
@@ -36,6 +37,7 @@ rcssmin==1.0.6
 requests==2.18.4
 rjsmin==1.0.12
 six==1.11.0
+sqlparse==0.2.4
 static3==0.7.0
 Unidecode==0.4.21
 urllib3==1.22
