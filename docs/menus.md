@@ -9,26 +9,33 @@ Old menu layout:
 
 New menu layout:
 - Applicants
-  - Apply to Outreachy
+  - Eligibility Rules
+  - Application Process
+  - My Application
   - Current Projects
   - Past Projects
+  - Other Opportunities
+- Volunteers
+  - Volunteering FAQ
+  - My Mentored Projects (Dashboard)
+  - Current Projects
+  - Past Projects
+  - Add a Community (CFP)
+  - Submit a Project (CFP)
+  - Co-mentor a Project (CFP)
+  - Promote
 - Interns
   - Alums List
   - My Internship Info
   - Travel Stipend
   - Opportunities
-- Volunteers
-  - Mentor FAQ
-  - Add a Community (CFP)
-  - Submit a Project (CFP)
-  - My Mentored Projects (Dashboard)
-  - All Projects (Rounds page)
-  - Promote
 - Donors
   - Sponsor (goes to corporate sponsorship page)
   - Donate (goes to individual donation page)
-- Blog
-- Contact
+- About Us
+  - Contact
+  - Promote
+  - Blog
 - Log In / Log Out
 
 Pages:
