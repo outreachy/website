@@ -1751,6 +1751,13 @@ def intern_contract_export_view(request):
     response['Content-Disposition'] = 'attachment; filename="internship-contract-' + internship.intern_contract.legal_name + '-' + internship.intern_contract.date_signed.strftime("%Y-%m-%d") + '.md"'
     return response
 
+def generic_intern_contract_export_view(request):
+    with open(path.join(settings.BASE_DIR, 'docs', 'intern-agreement.md')) as iafile:
+        intern_agreement = iafile.read()
+    response = HttpResponse(intern_agreement, content_type="application/text")
+    response['Content-Disposition'] = 'attachment; filename="intern-contract-generic-unsigned.md"'
+    return response
+
 @login_required
 @staff_member_required
 def contract_export_view(request, round_slug):

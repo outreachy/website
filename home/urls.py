@@ -44,6 +44,7 @@ urlpatterns = [
     url(r'^(?P<round_slug>[^/]+)/communities/(?P<slug>[^/]+)/$', views.community_landing_view, name='community-landing'),
     url(r'^(?P<round_slug>[^/]+)/contract-export/$', views.contract_export_view, name='contract-export'),
     url(r'^intern-contract-export/$', views.intern_contract_export_view, name='intern-contract-export'),
+    url(r'^generic-intern-contract-export/$', views.generic_intern_contract_export_view, name='generic-intern-contract-export'),
     url(r'^alums/$', views.alums_page, name='alums'),
     url(r'^communities/cfp/$', views.community_cfp_view, name='community-cfp'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
