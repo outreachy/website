@@ -31,16 +31,7 @@ Outreachy Internships | Apply | Pick a Project
 		<tr><td>{{ current_round.internannounce }}</td><td>Accepted interns announced on <a href"/alums/">the alums page</a> at 4pm UTC</td></tr>
 		<tr><td>{{ current_round.internstarts }} to {{ current_round.internends }}</td><td>Internships period</td></tr>
 	</table>
-	<h2>Intern Payment Schedule</h2>
-	<table class=table>
-		<tr><td>{{ current_round.internstarts }}</td><td>Internships starts</td></tr>
-		<tr><td>{{ current_round.initial_stipend_payment_deadline }}</td><td>Interns who have started their internship will receive the $500 initial stipend</td></tr>
-		<tr><td>{{ current_round.midfeedback }} </td><td>Mid-point feedback due</td></tr>
-		<tr><td>{{ current_round.midpoint_stipend_payment_deadline }}</td><td>Interns with successful mid-point feedback will receive the $2,250 midpoint stipend</td></tr>
-		<tr><td>{{ current_round.internends }}</td><td>Internships end</td></tr>
-		<tr><td>{{ current_round.finalfeedback }} </td><td>Final feedback due</td></tr>
-		<tr><td>{{ current_round.final_stipend_payment_deadline }}</td><td>Interns with successful final feedback will receive the $2,750 midpoint stipend</td></tr>
-	</table>
+	{% include 'home/snippet/payment_schedule.html' %}
 	{{ current_round.sponsordetails|safe }}
 
 	{% if request.user.comrade.eligible_application %}
