@@ -10,7 +10,7 @@ from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
 from django.db import models
 from django.forms import inlineformset_factory, ModelForm, modelform_factory, ValidationError, widgets
 from django.forms.models import BaseInlineFormSet
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_list_or_404
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -1722,6 +1722,35 @@ class TrustedVolunteersListView(UserPassesTestMixin, ListView):
     def test_func(self):
         return self.request.user.is_staff
 
+# Is this a current or past intern in good standing?
+# This will return None if the internship hasn't been announced yet.
+def intern_in_good_standing(comrade):
+    try:
+        internship = InternSelection.objects.get(
+                applicant__applicant = comrade,
+                project__approval_status = ApprovalStatus.APPROVED,
+                project__project_round__approval_status = ApprovalStatus.APPROVED,
+                organizer_approved = True,
+                in_good_standing = True,
+                )
+        if not internship.round().has_intern_announcement_deadline_passed:
+            internship = None
+    except InternSelection.DoesNotExist:
+        internship = None
+    return internship
+
+@login_required
+def intern_contract_export_view(request):
+    internship = intern_in_good_standing(request.user.comrade)
+    if not internship:
+        raise PermissionDenied("You are not an Outreachy intern.")
+    if not internship.intern_contract:
+        raise PermissionDenied("You have not signed your Outreachy internship contract.")
+
+    response = HttpResponse(internship.intern_contract.text, content_type="application/text")
+    response['Content-Disposition'] = 'attachment; filename="internship-contract-' + internship.intern_contract.legal_name + '-' + internship.intern_contract.date_signed.strftime("%Y-%m-%d") + '.md"'
+    return response
+
 @login_required
 @staff_member_required
 def contract_export_view(request, round_slug):
@@ -2356,6 +2385,7 @@ def dashboard(request):
     participations = list(chain(pending_participations, approved_participations))
 
     return render(request, 'home/dashboard.html', {
+        'internship': intern_in_good_standing(request.user.comrade),
         'groups': groups,
         'current_round': current_round,
         'pending_participations': pending_participations,

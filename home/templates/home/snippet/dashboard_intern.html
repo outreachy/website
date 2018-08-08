@@ -1,0 +1,61 @@
+{% with my_round=internship.round %}
+	{% load wagtailcore_tags %}
+	<h1>My Outreachy Internship</h1>
+
+	<p>You {% if not my_round.has_internship_ended %}are participating{% else %}had participated{% endif %} in the <a href="{% pageurl my_round %}">{{ my_round.official_name }}</a>.
+	You can view your profile, project, and mentor on <a href="{% url 'alums' %}">the intern list page</a>.
+	To change your profile, click the 'Edit Profile' button above.
+	</p>
+
+	<h2>Internship Contract</h2>
+	{% if not internship.intern_contract %}
+		<p><b>Please sign your <a href="{% url 'intern-agreement' round_slug=my_round.slug community_slug=internship.project.project_round.community.slug project_slug=internship.project.slug%}">internship contract</a>.</b></p>
+	{% else %}
+		<p>You signed your internship contract on {{ internship.intern_contract.date_signed }}. <a href="{% url 'intern-contract-export' %}">Download your contact</a>.</p>
+	{% endif %}
+
+	<h2>Outreachy Mailing Lists</h2>
+	<p>There are two mailing lists you may want to sign up for:
+	<ul>
+		<li>The <a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/community">community mailing list</a> is only for current interns, alumni, and current and past mentors of Outreachy.
+	You can chit-chat on the list, ask for help, talk about conferences, ask for career advice, and more.
+		</li>
+		<li>The <a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/opportunities">opportunities mailing list</a> is open to anyone who is eligible for the community list, and it is also open to sponsors of the Outreachy program.
+	People use this list to send job postings, other internships, conference CFPs, or other opportunities.
+		</li>
+	</ul>
+	<p>
+
+	<h2>Travel Stipend</h2>
+
+	<p><b>Please read the <a href="">travel stipend details</a> before booking your travel!</b></p>
+	
+	<p>Each Outreachy intern has a $500 USD stipend to travel to conferences or events related to their internship.
+	{% if my_round.is_travel_stipend_valid %}
+		Your travel stipend is good for travel starting on {{ my_round.travel_stipend_starts }} to {{ my_round.travel_stipend_ends }}.
+		Please talk with your mentor about what conferences you might use your travel stipend for.
+	{% else %}
+		Your travel stipend is currently expired.
+	{% endif %}
+	</p>
+
+	{% with current_round=my_round %}
+		{% include 'home/snippet/payment_schedule.html' %}
+	{% endwith %}
+
+	<p>Please note that your payment may be delayed for several reasons:
+	<ul>
+		<li>You did not supply a W8-BEN or W-9 form promptly.</li>
+		<li>Your payment account was in another person's name, and you needed to complete a third-party payment form.
+		That form must be approved by the Software Freedom Conservancy's Executive Director, Karen Sandler.
+		Payment cannot be processed until the third party payment form is approved.
+		Please notify SFC accounting ASAP if you have a different name on your account than the legal name you signed your contract with.
+		</li>
+		<li>You have an extension for your internship.
+		If your internship was extended at the midpoint, your midpoint payment will be delayed by that amount of time.
+		This will also move your final payment by the same amount of time (or more, if your internship is extended again).
+		</li>
+	</ul>
+	</p>
+	<p>If you do not think your payment has been delayed for any of the reasons above, please wait at least ten days past the payment deadline before contacting the SFC accounting.</p>
+{% endwith %}

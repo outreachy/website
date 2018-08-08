@@ -273,6 +273,17 @@ class RoundPage(Page):
         communities.sort(key=lambda x: x[0].name)
         return communities
 
+    def travel_stipend_starts(self):
+        return self.internannounce
+
+    def travel_stipend_ends(self):
+        return self.internstarts + datetime.timedelta(days=365)
+
+    # Travel stipends are good for travel starting the day the internship is announced
+    # Until one year after their internship begins.
+    def is_travel_stipend_valid(self):
+        return not has_deadline_passed(self.internstarts + datetime.timedelta(days=365))
+
     # Statistics functions
     def get_statistics_on_eligibility_check(self):
         count_all = ApplicantApproval.objects.filter(

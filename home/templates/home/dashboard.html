@@ -47,7 +47,10 @@ Dashboard
 
 {% if request.user.is_staff %}
 	{% include "home/snippet/dashboard_staff.html" %}
+{% endif %}
 
+{% if internship %}
+	{% include "home/snippet/dashboard_intern.html" %}
 {% endif %}
 
 {% if groups %}
