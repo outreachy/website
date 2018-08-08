@@ -1659,7 +1659,7 @@ class MentorApproval(ApprovalStatus):
     understands_mentor_contract = models.BooleanField(
             default=False,
             validators=[mentor_read_contract],
-            help_text='I understand that Outreachy mentors will need to sign a <a href="https://github.com/sagesharp/outreachy-django-wagtail/blob/master/docs/mentor-agreement.md">mentor contract</a> after they accept an applicant as an intern')
+            help_text='I understand that Outreachy mentors will need to sign a <a href="/generic-mentor-contract-export/">mentor contract</a> after they accept an applicant as an intern')
 
     THREE_MONTHS = '3M'
     SIX_MONTHS = '6M'
