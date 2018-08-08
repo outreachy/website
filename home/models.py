@@ -88,6 +88,9 @@ class StatsRoundFifteen(Page):
         FieldPanel('unused', classname="full"),
     ]
 
+class BlogIndex(Page):
+    pass
+
 # All dates in RoundPage below, if an exact time matters, actually represent
 # the given date at 4PM UTC.
 DEADLINE_TIME = datetime.time(hour=16, tzinfo=datetime.timezone.utc)

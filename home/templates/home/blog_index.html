@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
+{% load humanize %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block content %}
+<!-- This blog index includes microformats2 h-feed and h-entry annotations,
+     as specified at http://microformats.org/wiki/h-feed -->
+<div class="h-feed">
+<h1 class="p-name">{{ self.title }}</h1>
+
+{% for post in self.get_children.live.specific reversed %}
+<div class="h-entry">
+<h2><a class="u-url p-name" href="{% pageurl post %}">{{ post.title }}</a></h2>
+<p>Posted
+<time class="dt-published" datetime="{{ post.first_published_at|date:"c" }}">{{ post.first_published_at|naturaltime }}</time>
+{% with comrade=post.owner.comrade %}
+{% if comrade %}by <span class="p-author">{{ comrade.public_name }}</span>{% endif %}
+{% endwith %}
+</p>
+</div>
+{% endfor %}
+
+</div>
+{% endblock %}
