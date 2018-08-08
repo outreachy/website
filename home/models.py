@@ -36,9 +36,11 @@ from wagtail.wagtailadmin.edit_handlers import StreamFieldPanel
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 from wagtail.contrib.table_block.blocks import TableBlock
+from wagtail.contrib.wagtailroutablepage.models import RoutablePageMixin, route
 from wagtail.wagtailembeds.blocks import EmbedBlock
 
 from . import email
+from .feeds import WagtailFeed
 
 class HomePage(Page):
     body = StreamField([
@@ -88,8 +90,12 @@ class StatsRoundFifteen(Page):
         FieldPanel('unused', classname="full"),
     ]
 
-class BlogIndex(Page):
-    pass
+class BlogIndex(RoutablePageMixin, Page):
+    feed_generator = WagtailFeed()
+
+    @route(r'^feed/$')
+    def feed(self, request):
+        return self.feed_generator(request, self)
 
 # All dates in RoundPage below, if an exact time matters, actually represent
 # the given date at 4PM UTC.

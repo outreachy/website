@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 
 {% load wagtailcore_tags %}
+{% load wagtailroutablepage_tags %}
 {% load humanize %}
+
+{# XXX: This is not CSS, but this is the only generic block our base.html has in <head> #}
+{% block extra_css %}
+<link rel="alternate" type="application/atom+xml" href="{% routablepageurl self "feed" %}">
+{% endblock %}
 
 {% block body_class %}template-homepage{% endblock %}
 
