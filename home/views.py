@@ -1758,6 +1758,24 @@ def generic_intern_contract_export_view(request):
     response['Content-Disposition'] = 'attachment; filename="intern-contract-generic-unsigned.md"'
     return response
 
+# Passed round_slug, community_slug, project_slug, applicant_username
+# Even if someone resigns as a mentor, we still want to keep their signed mentor agreement
+class MentorContractExport(LoginRequiredMixin, ComradeRequiredMixin, View):
+    def get(self, request, round_slug, community_slug, project_slug, applicant_username):
+        try:
+            mentor_relationship = MentorRelationship.objects.get(
+                    mentor__mentor=request.user.comrade,
+                    intern_selection__project__slug=self.kwargs['project_slug'],
+                    intern_selection__project__project_round__community__slug=self.kwargs['community_slug'],
+                    intern_selection__project__project_round__participating_round__slug=self.kwargs['round_slug'],
+                    intern_selection__applicant__applicant__account__username=self.kwargs['applicant_username'],
+                    )
+        except MentorRelationship.DoesNotExist:
+            raise PermissionDenied("Cannot export mentor contract. You have not signed a contract for this internship.")
+        response = HttpResponse(mentor_relationship.contract.text, content_type="text/plain")
+        response['Content-Disposition'] = 'attachment; filename="mentor-contract-' + mentor_relationship.contract.legal_name + '-' + mentor_relationship.contract.date_signed.strftime("%Y-%m-%d") + '.md"'
+        return response
+
 def generic_mentor_contract_export_view(request):
     with open(path.join(settings.BASE_DIR, 'docs', 'mentor-agreement.md')) as mafile:
         mentor_agreement = mafile.read()

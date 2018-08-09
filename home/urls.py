@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/final-application/(?P<applicant_username>[^/]+)/select/?$', views.InternSelectionUpdate.as_view(), name='select-intern'),
     url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/final-application/(?P<applicant_username>[^/]+)/remove/?$', views.InternRemoval.as_view(), name='remove-intern'),
     url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/final-application/(?P<applicant_username>[^/]+)/resign/?$', views.MentorResignation.as_view(), name='resign-as-mentor'),
+    url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/mentor-contract-export/(?P<applicant_username>[^/]+)/?$', views.MentorContractExport.as_view(), name='mentor-contract'),
     url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/final-application/fund/(?P<applicant_username>[^/]+)/(?P<funding>[^/]+)$', views.InternFund.as_view(), name='intern-fund'),
     url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/final-application/organizer-approval/(?P<applicant_username>[^/]+)/(?P<approval>[^/]+)$', views.InternApprove.as_view(), name='intern-approval'),
     url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/final-application/(?P<action>[^/]+)/(?:(?P<username>[^/]+)/)?$', views.FinalApplicationAction.as_view(), name='application-action'),
