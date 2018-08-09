@@ -288,6 +288,10 @@ class RoundPage(Page):
     def travel_stipend_ends(self):
         return self.internstarts + datetime.timedelta(days=365)
 
+    # Interns have up to 90 days to submit their travel stipend request
+    def has_travel_stipend_ended(self):
+        return has_deadline_passed(self.travel_stipend_ends() + datetime.timedelta(days=90))
+
     # Travel stipends are good for travel starting the day the internship is announced
     # Until one year after their internship begins.
     def is_travel_stipend_valid(self):

@@ -53,6 +53,10 @@ Dashboard
 	{% include "home/snippet/dashboard_intern.html" %}
 {% endif %}
 
+{% if mentor_relationships %}
+	{% include "home/snippet/dashboard_mentor.html" %}
+{% endif %}
+
 {% if groups %}
 	<h1 id="actions">Dashboard</h1>
 {% endif %}

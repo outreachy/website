@@ -2416,8 +2416,11 @@ def dashboard(request):
             approval_status = ApprovalStatus.APPROVED).order_by('community__name')
     participations = list(chain(pending_participations, approved_participations))
 
+    mentor_relationships = MentorRelationship.objects.filter(mentor__mentor=request.user.comrade)
+
     return render(request, 'home/dashboard.html', {
         'internship': intern_in_good_standing(request.user.comrade),
+        'mentor_relationships': mentor_relationships,
         'groups': groups,
         'current_round': current_round,
         'pending_participations': pending_participations,

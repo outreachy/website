@@ -1,0 +1,38 @@
+{% if mentor_relationships %}
+	<h1>Your mentee{{ mentor_relationships|pluralize }}</h1>
+	{% for rel in mentor_relationships %}
+		{% ifchanged %}
+			<h2>{{ rel.round.official_name }}</h2>
+		{% endifchanged %}
+		{% if not rel.round.has_intern_announcement_deadline_passed %}
+			<div class="card mb-3">
+			<div class="card-body">
+				<p class="card-text"><b>This internship has not been announced yet. Please do not tell your mentee about their internship until after {{ rel.round.internannounce }} at 4pm UTC.</b> Outreachy organizers need time to seek additional funding, review all interns, and resolve any conflicts where two mentors accept the same intern. In order to ensure we don't communicate the wrong information, we need all mentors to keep their intern selection private until the official announcement date.</p>
+			</div>
+			</div>
+		{% endif %}
+
+		<p>You {% if rel.round.has_internship_ended %}mentored{% else %}are mentoring{% endif %} {{ rel.intern_name }} for the {{ rel.community_name }} project "{{ rel.project_name }}".{% if not rel.round.has_internship_ended %} Please <a href="/mentor/mentor-faq/#during-the-internship">review our tips</a> for ensuring your mentee is successful.{% endif %}</p>
+		<p>The internship start date is on {{ rel.round.internstarts }}. The official ending date is {{ rel.round.internends }}.{% if not rel.round.has_internship_ended %} <a href="/mentor/mentor-faq/#internship-delays">Internships can be extended</a> by up to five weeks if interns are not putting in a full-time (40 hours a week effort), or the intern needs to take more than a week off from their internship. Please <a href="/contact/">discuss any extensions</a> or changes to the intern start date with the Outreachy organizers.{% endif %}</p>
+		
+		{% if not rel.round.has_internship_ended %}
+			<p><a href="/mentor/mentor-faq/#mid-point-and-final-review">Mentor feedback</a> dates:
+			<ul>
+				<li>{{ rel.round.intern_not_started_deadline }} - Please notify Outreachy organizers if your intern has not started by this date</li>
+				<li>{{ rel.round.midfeedback }} - Mid-point feedback is due</li>
+				<li>{{ rel.round.finalfeedback }} - Final feedback is due</li>
+			</ul>
+			</p>
+			<p>Payments are handled by Outreachy's parent organization, the Software Freedom Conservancy. Payments may be delayed by internship extensions, interns not returning tax paperwork in promptly, or approval delays for third-party payments (such as when a parent or spouse is the owner of a bank account). As a mentor, the best thing you can do to help your intern be paid on time is to respond promptly to requests for mid-point and final feedback.</p>
+			<p>Payment schedule:
+			<ul>
+				<li>{{ rel.round.initial_stipend_payment_deadline }} - Interns who have started their internship will receive the $500 initial stipend</li>
+				<li>{{ rel.round.midpoint_stipend_payment_deadline }} - Interns with successful mid-point feedback will receive the $2,250 midpoint stipend</li>
+				<li>{{ rel.round.final_stipend_payment_deadline }} - Interns with successful final feedback will receive the $2,750 midpoint stipend</li>
+			</ul>
+			</p>
+		{% endif %}
+		<p><a href="https://wiki.gnome.org/Outreachy/TravelAllowance">Travel stipend requirements</a>.{% if not rel.round.has_travel_stipend_ended %} Your mentee is eligible for a $500 USD travel stipend. As a mentor, you should discuss with them what event or conference would be appropriate to attend. The event must be related to their internship (either an event for your community, or another FOSS event). Interns who network with the FOSS community are much more likely to feel connected to our community, and to find a job where they can work with or on FOSS. {{ rel.intern_name }}'s travel stipend is valid for travel between {{ rel.round.travel_stipend_starts }} and {{ rel.round.travel_stipend_ends }}.{% else %} Your mentee's $500 USD travel stipend expired on {{ rel.round.travel_stipend_ends }}.{% endif %}</p>
+		<a href="{% url 'mentor-contract' round_slug=rel.round.slug community_slug=rel.intern_selection.project.project_round.community.slug project_slug=rel.intern_selection.project.slug applicant_username=rel.intern_selection.applicant.applicant.account.username %}"><button type="button" class="btn btn-info">Export Mentor Contract</button></a>
+	{% endfor %}
+{% endif %}
