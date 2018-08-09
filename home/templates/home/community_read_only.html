@@ -68,17 +68,6 @@ Past community participation in Outreachy
     </div>
 </div>
 
-{% if not participation_info %}
-{% elif participation_info.approval_status == participation_info.APPROVED %}
-	<p>{{ community.name }} is participating in {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.
-	The Outreachy organizers have received confirmation for funding of {{ participation_info.interns_funded }} intern{{ participation_info.interns_funded|length|pluralize }}.</p>
-</p>
-{% elif participation_info.approval_status == participation_info.PENDING %}
-	<p>Outreachy organizers are still reviewing this community and/or its funding status, so Outreachy applicants will not be shown the community landing page yet.</p>
-{% else %}
-	<p>Unfortunately, either the community coordinator{{ approved_coordinator_list|length|pluralize }} or the Outreachy organizers have determined that the community will not participate in this round of Outreachy internships.</p>
-{% endif %}
-
 {% if participation_info.approval_status == participation_info.APPROVED and not participation_info.participating_round.has_late_application_deadline_passed %}
 	<h2>Promoting {{ community.name }} to Outreachy applicants</h2>
 	<p>After the Outreachy round opens on {{ current_round.appsopen }}, you can promote this community to applicants by linking to the community landing page:</p>
