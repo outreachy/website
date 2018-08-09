@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'wagtail.wagtailadmin',
     'wagtail.wagtailcore',
     'wagtail.contrib.table_block',
+    'wagtail.contrib.wagtailroutablepage',
 
     'modelcluster',
     'taggit',
@@ -70,8 +71,10 @@ if 'SENTRY_DSN' in os.environ:
     INSTALLED_APPS.append('raven.contrib.django.raven_compat')
 
 MIDDLEWARE = [
+    # https://docs.djangoproject.com/en/1.11/ref/middleware/#middleware-ordering
     'outreachyhome.middleware.XForwardedForMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.http.ConditionalGetMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
