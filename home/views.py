@@ -1748,7 +1748,7 @@ def intern_contract_export_view(request):
         raise PermissionDenied("You have not signed your Outreachy internship contract.")
 
     response = HttpResponse(internship.intern_contract.text, content_type="application/text")
-    response['Content-Disposition'] = 'attachment; filename="internship-contract-' + internship.intern_contract.legal_name + '-' + internship.intern_contract.date_signed.strftime("%Y-%m-%d") + '.md"'
+    response['Content-Disposition'] = 'attachment; filename="intern-contract-' + internship.intern_contract.legal_name + '-' + internship.intern_contract.date_signed.strftime("%Y-%m-%d") + '.md"'
     return response
 
 def generic_intern_contract_export_view(request):
