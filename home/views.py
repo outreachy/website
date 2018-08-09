@@ -1747,21 +1747,21 @@ def intern_contract_export_view(request):
     if not internship.intern_contract:
         raise PermissionDenied("You have not signed your Outreachy internship contract.")
 
-    response = HttpResponse(internship.intern_contract.text, content_type="application/text")
+    response = HttpResponse(internship.intern_contract.text, content_type="text/plain")
     response['Content-Disposition'] = 'attachment; filename="intern-contract-' + internship.intern_contract.legal_name + '-' + internship.intern_contract.date_signed.strftime("%Y-%m-%d") + '.md"'
     return response
 
 def generic_intern_contract_export_view(request):
     with open(path.join(settings.BASE_DIR, 'docs', 'intern-agreement.md')) as iafile:
         intern_agreement = iafile.read()
-    response = HttpResponse(intern_agreement, content_type="application/text")
+    response = HttpResponse(intern_agreement, content_type="text/plain")
     response['Content-Disposition'] = 'attachment; filename="intern-contract-generic-unsigned.md"'
     return response
 
 def generic_mentor_contract_export_view(request):
     with open(path.join(settings.BASE_DIR, 'docs', 'mentor-agreement.md')) as mafile:
         mentor_agreement = mafile.read()
-    response = HttpResponse(mentor_agreement, content_type="application/text")
+    response = HttpResponse(mentor_agreement, content_type="text/plain")
     response['Content-Disposition'] = 'attachment; filename="mentor-contract-generic-unsigned.md"'
     return response
 
