@@ -2,14 +2,27 @@
 {% load approval_status %}
 
 {% block title %}
+{% if view.kwargs.action == "submit" %}
+Sign Up to Coordinate for {{ coordinatorapproval.community }}
+{% else %}
 {{ view.kwargs.action|title }} Coordinator for {{ coordinatorapproval.community }}
+{% endif %}
 {% endblock %}
 
 {% block content %}
 <h1>
-	{{ view.kwargs.action|title }} Coordinator for
+	{% if view.kwargs.action == "submit" %}
+	Sign Up to Coordinate
+	{% else %}
+	{{ view.kwargs.action|title }} Coordinator
+	{% endif %}
 	<a href="{{ coordinatorapproval.community.get_preview_url }}">{{ coordinatorapproval.community }}</a>
 </h1>
+{% if view.kwargs.action == "submit" %}
+	<p>Please make sure you <a href="/mentor/#coordinator">understand the coordinator duties</a>.
+	You will need to be approved by either the current coordinator or an Outreachy organizer to coordinate for this community.
+	If you're comfortable with the coordinator duties, click the 'Submit' button below.</p>
+{% endif %}
 
 {% with c=coordinatorapproval.coordinator community=coordinatorapproval.community %}
 
