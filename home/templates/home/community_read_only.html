@@ -182,6 +182,17 @@ If you are an Outreachy applicant, you should look over the <a href="{% url 'pro
 		<p>Only projects have been approved by the community coordinator for participation in this Outreachy round are open to co-mentor sign-up.
 		</p>
 		<p>Please select which approved project you would like to co-mentor for:
+		<form method="post">
+			{% csrf_token %}
+			<div class="dropdown">
+				<button class="btn btn-success dropdown-toggle" type="button" id="CoMentorMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select project to co-mentor</button>
+				<div class="dropdown-menu" aria-labelledby="CoMentorMenu">
+					{% for project in approved_projects %}
+						<button class="dropdown-item" formaction="{% url 'mentorapproval-action' community_slug=community.slug project_slug=project.slug action='submit' %}">{{ project.short_title }}</button>
+					{% endfor %}
+				</div>
+			</div>
+		</form>
 		</p>
 	{% endif %}
 
