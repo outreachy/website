@@ -157,15 +157,10 @@ If you are an Outreachy applicant, you should look over the <a href="{% url 'pro
 		<h2>Approved Projects for {{ community.name}}</h2>
 		{% if participation_info.approval_status == participation_info.APPROVED and participation_info.participating_round.has_application_period_started %}
 			<p>After the Outreachy round opens on {{ current_round.appsopen }}, you can promote this community to applicants by linking to the community landing page:</p>
-		{% elif participation_info.approval_status == participation_info.PENDING %}
-			<p>This community has not yet been approved to participate in this Outreachy internship round. The projects will be hidden from applicants.
-			You can review the community and its projects as they will be displayed to applicants once your community has been approved.</p>
-			<p>You will be able to see project descriptions on the page linked below if you are logged in and you're an approved Outreachy coordinator or a mentor.</p>
-		{% else %}
-			<p>You will be able to see project descriptions on the page linked below if you are logged in and you're an approved Outreachy coordinator or a mentor:</p>
+			<p><pre>{{ request.scheme }}://{{ request.get_host }}{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}</pre></p>
 		{% endif %}
+		<p>The links below will take you to the {{ community.name }} project page for Outreachy applicants. The project details will be hidden from applicants unless the application period is open{% if participation_info.approval_status != participation_info.APPROVED %} and your community is approved{% endif %}.</p>
 
-		<p><a href="{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}">{{ request.scheme }}://{{ request.get_host }}{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}</a>
 		<ul>
 		{% for project in approved_projects %}
 			<li>
