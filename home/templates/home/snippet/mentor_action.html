@@ -1,0 +1,59 @@
+<div class="card border-info mb-3">
+	<div class="card-header text-white bg-info">Mentor actions</div>
+	<div class="card-body">
+		{% if project.approval_status == project.APPROVED %}
+			{% if project.project_round.participating_round.has_application_period_started %}
+				<p class="card-text">This project is approved.
+				Applicants will see it on the <a href="{% url 'community-landing' round_slug=project.project_round.participating_round.slug slug=project.project_round.community.slug %}">community landing page</a>.
+				</p>
+				<p>
+				{{ project.get_applicants_and_contributions_list|length }} applicant{{ project.get_applicants_and_contributions_list|pluralize }} recorded their contributions
+				</p>
+
+				<p>
+				{{ project.get_applications|length }} applicant{{ project.get_applications|pluralize }} submitted a final application
+				</p>
+				<p>
+				Please note: You can only accept an applicant as an intern if they have recorded their contributions and submitted a final application. If you have an applicant who has been making contributions but not recording it, you can tell them to record their contributions at this link:</p>
+				<p><pre>{{ request.scheme }}://{{ request.get_host }}{% url 'contributions' round_slug=current_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}</pre></p>
+			{% else %}
+				<p class="card-text">This project is approved.
+				Once applications are open, applicants will see it on the <a href="{% url 'community-landing' round_slug=project.project_round.participating_round.slug slug=project.project_round.community.slug %}">community landing page</a>.
+				</p>
+			{% endif %}
+			{% if project.project_round.approval_status == project.project_round.APPROVED %}
+				<p class="card-text">
+				<a class="btn btn-primary" href="{% url 'project-applicants' round_slug=current_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}">Review Project Applicants</a>
+				</p>
+				<p class="card-text">
+				<a class="btn btn-primary" href="{% url 'community-applicants' round_slug=current_round.slug community_slug=project.project_round.community.slug %}">Review Community Applicants</a>
+				</p>
+			{% else %}
+				<p class="card-text">
+				You cannot review applicants until the community is approved to participate in Outreachy.
+				</p>
+			{% endif %}
+			<p>
+			Application deadline: {{ project.application_deadline }} 4pm UTC
+			</p>
+			<p class="card-text">
+			<a class="btn btn-primary" href="{% url 'project-action' community_slug=project.project_round.community.slug project_slug=project.slug action='submit' %}#project-deadline">Update Application Deadline</a>
+			</p>
+		{% elif project.approval_status == project.PENDING %}
+			<p class="card-text">This project is pending.
+			Once applications are open, applicants will see approved projects on the
+			<a href="">community landing page</a>.
+			After your project is approved, you will be able to review project applicants.
+			</p>
+		{% endif %}
+		<p class="card-text">
+		<a class="btn btn-primary" href="{% url 'project-action' community_slug=project.project_round.community.slug project_slug=project.slug action='submit' %}">Update Project Details</a>
+		</p>
+		<p class="card-text">
+		<a class="btn btn-primary" href="{% url 'project-skills-edit' community_slug=project.project_round.community.slug project_slug=project.slug %}">Update Project Skills</a>
+		</p>
+		<p class="card-text">
+		<a class="btn btn-primary" href="{% url 'communication-channels-edit' community_slug=project.project_round.community.slug project_slug=project.slug %}">Update Communication Channels</a>
+		</p>
+	</div>
+</div>

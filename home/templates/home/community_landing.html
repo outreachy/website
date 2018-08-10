@@ -9,15 +9,15 @@ Outreachy internships working with {{ community.name }}
 {% with contributions=request.user.comrade.get_projects_contributed_to %}
 
 	{% comment %}This will always show past rounds, since the application period will always be passed.{% endcomment %}
-	{% if not current_round.has_application_period_started and not request.user.comrade.approved_mentor_or_coordinator and not is_pending_mentor and not is_pending_coordinator %}
+	{% if not approved_to_see_all_project_details and not mentors_pending_projects %}
 		<p>The information about this community is currently only visible to approved mentors and coordinators.
-		If your participation has been approved, you may need to <a href="/login/">log in</a>.</p>
+		If your participation has been approved, you may need to <a href="{% url 'login' %}?next={{ request.path|urlencode }}">log in</a>.</p>
 
 		<p>If you are an Outreachy applicant, this information will be available once the
 		Outreachy application period starts on {{ current_round.appsopen }} at 4pm UTC.
 		You can sign up for an email notification when the round opens by
 		<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">subscribing to the Outreachy announcements mailing list</a>.</p>
-	{% elif current_round.has_application_period_started or request.user.comrade.approved_mentor_or_coordinator %}
+	{% elif approved_to_see_all_project_details or mentors_pending_projects %}
 
 		{% if not current_round.has_application_period_started %}
 			<div class="card border-info mb-3">
@@ -50,8 +50,12 @@ Outreachy internships working with {{ community.name }}
 		&gt; {{ community.name }}</p>
 
 		{% include "home/snippet/community_landing_snippet.html" %}
+		{% if approved_coordinator %}
+			{% include 'home/snippet/coordinator_action.html' %}
+		{% endif %}
 
-		{% if ontime_projects or late_projects %}
+
+		{% if ontime_projects or late_projects or mentors_pending_projects %}
 			<h1>Open Projects</h1>
 
 			<p>Mentors for these projects are willing to work with new Outreachy
@@ -75,18 +79,57 @@ Outreachy internships working with {{ community.name }}
 					<br><button type="button" class="btn btn-info">{{ forloop.counter }}</button> {{ i.1 }}
 				{% endfor %}
 			</p>
-			{% with projects=late_projects|add:ontime_projects %}
-				{% include 'home/snippet/projects_for_round_page.html' %}
-			{% endwith %}
+			{% if approved_to_see_all_project_details %}
+				{% with projects=late_projects|add:ontime_projects %}
+					{% include 'home/snippet/projects_for_round_page.html' %}
 
-			<h2>Project Details</h2>
-			{% if not request.user.comrade.eligible_application and not request.user.comrade.approved_mentor_or_coordinator %}
+				{% endwith %}
+			{% elif mentors_pending_projects %}
+				{% with projects=mentors_pending_projects %}
+					{% include 'home/snippet/projects_for_round_page.html' %}
+
+				{% endwith %}
+			{% else %}
+				<p>Full project details are hidden until you have been approved as a mentor by the community coordinator.</p>
+				<ul>
+				{% for project in approved_projects %}
+					<li>
+						<a href="{{ project.get_landing_url }}">{{ project.short_title }}</a>
+					</li>
+				{% endfor %}
+				</ul>
+			{% endif %}
+
+			{% if mentors_pending_projects %}
+				<h2>Your Pending Project{{ mentors_pending_projects|pluralize }}</h2>
+				{% for project in mentors_pending_projects %}
+					<h2 id="{{ project.slug }}">{{ project.short_title }}</h2>
+					{% include 'home/snippet/mentor_action.html' %}
+					<div class="card">
+						<div class="card-header">
+							<h4 class="mb-0">Detailed Project Information</h4>
+						</div>
+						<div class="card-body">
+							{% include "home/snippet/project_landing_snippet.html" %}
+						</div>
+					</div>
+					<br>
+				{% endfor %}
+			{% endif %}
+
+			<h2>Open Projects</h2>
+			{% if not approved_to_see_all_project_details and not mentors_pending_projects %}
 				{% include 'home/snippet/project_hidden.html' %}
+			{% elif mentors_pending_projects %}
+				<p>Details for the other approved projects are hidden until you are approved to participate as a mentor.</p>
 			{% else %}
 				{% with projects=late_projects|add:ontime_projects %}
 				{% for project in projects %}
 					<hr id="{{ project.slug }}">
 					<h2>{{ project.short_title }}</h2>
+					{% if project in mentored_projects %}
+						{% include 'home/snippet/mentor_action.html' %}
+					{% endif %}
 					{% include "home/snippet/project_deadline.html" %}
 					{% if request.user.comrade.eligible_application %}
 						{% if project in contributions %}
@@ -140,6 +183,8 @@ Outreachy internships working with {{ community.name }}
 						</div>
 					</div>
 					<br>
+				{% elif mentors_pending_projects %}
+					<p>Details for the other approved projects are hidden until you are approved to participate as a mentor.</p>
 				{% else %}
 					{% include 'home/snippet/project_hidden.html' %}
 				{% endif %}

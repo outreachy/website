@@ -852,6 +852,43 @@ class Comrade(models.Model):
                 )
         return [m.project for m in mentor_approvals]
 
+    def get_pending_mentored_projects(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        # Get all projects where they're an approved mentor
+        # where the project is pending,
+        # and the community is approved or pending for the current round.
+        # Don't count withdrawn or rejected communities.
+        mentor_approvals = MentorApproval.objects.filter(mentor = self,
+                approval_status = ApprovalStatus.APPROVED,
+                project__approval_status = ApprovalStatus.PENDING,
+                project__project_round__participating_round = current_round,
+                ).exclude(
+                        project__project_round__approval_status = ApprovalStatus.WITHDRAWN
+                        ).exclude(
+                                project__project_round__approval_status = ApprovalStatus.REJECTED
+                        )
+        if not mentor_approvals:
+            return None
+
+        return [m.project for m in mentor_approvals]
+
+    def get_all_mentored_projects(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        # Get all projects where they're a mentor
+        # Don't count withdrawn or rejected communities.
+        mentor_approvals = MentorApproval.objects.filter(
+                mentor = self,
+                project__project_round__participating_round = current_round,
+                ).exclude(
+                        project__project_round__approval_status = ApprovalStatus.WITHDRAWN
+                        ).exclude(
+                                project__project_round__approval_status = ApprovalStatus.REJECTED
+                        )
+        if not mentor_approvals:
+            return None
+
+        return [m.project for m in mentor_approvals]
+
     def get_approved_coordinator_communities(self):
         current_round = RoundPage.objects.latest('internstarts')
         # Get all communities where they're an approved community
@@ -1202,37 +1239,64 @@ class Participation(ApprovalStatus):
     def is_submitter(self, user):
         return self.community.is_coordinator(user)
 
-    def is_pending_mentor(self, user):
-        # is this a co-mentor who isn't approved yet?
-        mentors = MentorApproval.objects.filter(
-                mentor=user,
-                approval_status=ApprovalStatus.PENDING,
-                project__project_round=self,
-                )
-        if mentors.exists():
-            return True
-        # did the mentor submit a new project that isn't approved yet?
-        mentors = MentorApproval.objects.filter(
-                mentor=user,
-                approval_status=ApprovalStatus.APPROVED,
-                project__project_round=self,
-                project__approval_status=ApprovalStatus.PENDING,
-                )
-        if mentors.exists():
-            return True
-        return False
-
-    def is_pending_coordinator(self, user):
+    def is_approved_coordinator(self, comrade):
         coordinators = CoordinatorApproval.objects.filter(
-                coordinator=user,
-                approval_status=ApprovalStatus.PENDING,
+                coordinator=comrade,
+                approval_status=ApprovalStatus.APPROVED,
                 community__participation=self,
                 )
         if coordinators.exists():
             return True
-
         return False
 
+    # This function should only be used before applications are open
+    # There are a few people who should be approved to see
+    # all the details of all projects for a community
+    # before the applications open:
+    def approved_to_see_all_project_details(self, comrade):
+        # - staff
+        if comrade.account.is_staff:
+            return True
+        # - an approved coordinator for any approved community
+        # - an approved mentor with an approved project for a different approved community
+        if comrade.approved_mentor_or_coordinator():
+            return True
+        # - an approved mentor with an approved project for this community (pending or approved)
+        mentors = MentorApproval.objects.filter(
+                mentor=comrade,
+                approval_status=ApprovalStatus.APPROVED,
+                project__project_round=self,
+                project__approval_status=ApprovalStatus.APPROVED,
+                )
+        if mentors.exists():
+            return True
+        # - an approved coordinator for this pending community
+        return self.is_approved_coordinator(comrade)
+
+    # This function should only be used before applications are open
+    # If a mentor has submitted a project, but it's not approved,
+    # They should be able to see all their project details
+    # And have the link to edit the project
+    def mentors_pending_projects(self, comrade):
+        current_round = RoundPage.objects.latest('internstarts')
+        # Get all projects where they're an approved mentor.
+        # It's ok if the community is pending and the project isn't approved.
+        mentor_approvals = MentorApproval.objects.filter(
+                mentor = comrade,
+                approval_status = ApprovalStatus.APPROVED,
+                project__project_round__participating_round = current_round,
+                project__project_round = self,
+                )
+        return [m.project for m in mentor_approvals]
+
+    def is_pending_co_mentor(self, comrade):
+        mentors = MentorApproval.objects.filter(
+                mentor=comrade,
+                approval_status=ApprovalStatus.PENDING,
+                project__project_round=self,
+                )
+        if mentors.exists():
+            return True
 
     # Note that is is more than just the submitter!
     # We want to notify mentors as well as coordinators
@@ -1554,6 +1618,10 @@ class Project(ApprovalStatus):
         # Coordinators might get duplicate emails if they're mentors,
         # but Address isn't hashable, so we can't make a set and then a list.
         return emails
+
+    def get_mentor_names(self):
+        return " and ".join([m.public_name for m in self.mentors.all()])
+
 
     @classmethod
     def objects_for_dashboard(cls, user):

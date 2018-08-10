@@ -1,0 +1,14 @@
+			<div class="card border-info mb-3">
+				<div class="card-header text-white bg-info">Coordinator actions</div>
+				<div class="card-body">
+					<p class="card-text">
+					<a class="btn btn-primary" href="{% url 'community-update' community_slug=community.slug %}">Update Community Info</a>
+					</p>
+					<p class="card-text">
+					<a class="btn btn-primary" href="{{ participation_info.get_submit_url }}">Update Funding</a>
+					</p>
+					<p class="card-text">
+					<a class="btn btn-primary" href="{% url 'dashboard' %}#actions">Approve Projects</a>
+					</p>
+				</div>
+			</div>

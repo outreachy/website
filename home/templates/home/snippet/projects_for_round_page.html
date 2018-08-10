@@ -6,10 +6,11 @@
 	<div class="card border">
 		<div class="card-header bg-light">
 	{% endif %}
-			{{ community.name }} {% if project.deadline == project.CLOSED %}closed {% elif project.deadline == project.LATE %}extended deadline {% endif %}project #{{ forloop.counter }}
+		{% if project.approval_status != project.APPROVED %}{{ project.get_approval_status_display }} {% endif %}{{ community.name }} {% if project.deadline == project.CLOSED %}closed {% elif project.deadline == project.LATE %}extended deadline {% endif %}project #{{ forloop.counter }}
 		</div>
 		<div class="card-body">
-		{% if not request.user.comrade.eligible_application and not request.user.comrade.approved_mentor_or_coordinator %}
+		{% comment %}If this view didn't set any mentors_pending_projects, it means there's no pending mentored projects {% endcomment %}
+		{% if not request.user.comrade.eligible_application and not request.user.comrade.approved_mentor_or_coordinator and not project in mentors_pending_projects %}
 			<p><strong>{{ project.short_title }}</strong></p>
 			<div class="card-text">{% include 'home/snippet/project_hidden.html' %}</div>
 		{% else %}

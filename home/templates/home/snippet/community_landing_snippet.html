@@ -44,15 +44,19 @@
 <br>
 
 <h2>Outreachy Internships with {{ community.name }}</h2>
-<p><a href="{{ community.website }}">{{ community.name }}</a>
-is a Free and Open Source Software (FOSS) community
-that is offering internship projects through the Outreachy program.
-</p>
-<p>
-Internships with other FOSS communities can be found on the <a href="{{ current_round.url }}">the current round page</a>.
-</p>
+{% if approved_to_see_all_project_details %}
+	<p><a href="{{ community.website }}">{{ community.name }}</a>
+	is a Free and Open Source Software (FOSS) community
+	that is offering internship projects through the Outreachy program.
+	</p>
+	<p>
+	Internships with other FOSS communities can be found on the <a href="{{ current_round.url }}">the current round page</a>.
+	</p>
 
-<h2>What is {{ community.name }}?</h2>
-<p>{{ community.description }}</p>
+	<h2>What is {{ community.name }}?</h2>
+	<p>{{ community.description }}</p>
 
-{{ community.long_description|safe }}
+	{{ community.long_description|safe }}
+{% else %}
+	<p>Community details are hidden until you are approved to participate as a mentor or coordinator.</p>
+{% endif %}
