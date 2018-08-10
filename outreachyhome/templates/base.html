@@ -146,6 +146,9 @@
 			<a class="nav-link" href="{% url 'dashboard' %}">
 				<button type="button" class="btn btn-light btn-sm">My Participation{% if pending_approvals %} <span class="badge badge-warning">{{ pending_approvals }}</span><span class="sr-only">actions needed</span>{% endif %}</button>
 			</a>
+			{% if debug %}
+				{{ request.user.comrade.public_name }}
+			{% endif %}
 		{% else %}
 			<a href="{% url 'login' %}?next={{ request.path|urlencode }}"><button type="button" class="btn btn-light btn-sm">Log In</button></a>
 		{% endif %}
