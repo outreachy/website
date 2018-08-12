@@ -1225,6 +1225,18 @@ class Participation(ApprovalStatus):
         # Use integer division so it rounds down.
         return total_funding // 6500
 
+    # Plain text string to use in email to Outreachy organizers
+    # to confirm this community's participation in the round
+    def intern_funding_details(self):
+        details = ''
+        for sponsor in self.sponsorship_set.all():
+            if sponsor.funding_secured:
+                secured = ' (confirmed)'
+            else:
+                secured = ' (unconfirmed, will know by ' + str(sponsor.funding_decision_date) + ')'
+            details = details + '\n' + sponsor.name + ' $' + str(sponsor.amount) + secured
+        return details
+
     def get_absolute_url(self):
         return reverse('community-landing', kwargs={'round_slug': self.participating_round.slug, 'slug': self.community.slug})
 

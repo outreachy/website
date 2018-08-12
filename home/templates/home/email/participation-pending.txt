@@ -3,7 +3,13 @@ Approve community participation - {{ community.name }}
 
 Hi {{ recipient.display_name }},
 
-Please review and approve {{ community.name }} to participate in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.
+Please review and approve this community to participate in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.
+
+Community: {{ community.name }}
+Coordinator(s): {% for addr in community.get_coordinator_email_list %}{{ addr }}{% if not forloop.last %}, {% endif %}{% endfor %}
+Number of interns funded: {{ participation.interns_funded }}
+Funding details:
+{{ participation.intern_funding_details }}
 
 {% if community.newcommunity %}
 This is a new Outreachy community, so please review the following information carefully:
@@ -28,10 +34,7 @@ Community size: {{ community.newcommunity.get_community_size_display }}
 Community has been open source for: {{ community.newcommunity.get_longevity_display }}
 
 Organizations that participate in this community:
-{{ community.newcommunity.participating_orgs }}
-
-{% endif %}
-Number of interns funded: {{ participation.interns_funded }}
+{{ community.newcommunity.participating_orgs }}{% endif %}
 
 Approve This Community
 ----------------------
