@@ -8,32 +8,20 @@ Please review and approve {{ community.name }} to participate in the {{ current_
 {% if community.newcommunity %}
 This is a new Outreachy community, so please review the following information carefully:
 
-	{% if not community.newcommunity.approved_license %}
-WARNING! This community may be using non-free licenses. Please follow up with the community coordinators.
+{% if not community.newcommunity.approved_license %}WARNING! This community may be using non-free licenses. Please follow up with the community coordinators.
+{% if community.newcommunity.unapproved_license_description %}Coordinators provided this info about non-approved licenses:
+{{ community.newcommunity.unapproved_license_description|striptags }}{% else %}Coordinators provided no info about the non-approved licenses.{% endif %}
+{% else %}Community uses approved licenses.{% endif %}
 
-		{% if community.newcommunity.unapproved_license_description %}
-Coordinators provided this info about non-approved licenses:
-{{ community.newcommunity.unapproved_license_description|striptags }}
-		{% else %}
-Coordinators provided no info about the non-approved licenses.
-		{% endif %}
+{% if not community.newcommunity.no_proprietary_software %}WARNING! This community may be using or building upon proprietary software. Please follow up with the community coordinators.
+{% if community.newcommunity.proprietary_software_description %}Coordinators provided this info about the proprietary software they use or build upon:
+{{ community.newcommunity.proprietary_software_description|striptags }}{% else %}Coordinators provided no info about the proprietary software they use or build upon.{% endif %}
+{% else %}Community uses approved licenses.{% endif %}
 
-	{% else %}
-Community uses approved licenses.
-	{% endif %}
-
-	{% if not community.newcommunity.no_proprietary_software %}
-WARNING! This community may be using or building upon proprietary software. Please follow up with the community coordinators.
-
-		{% if community.newcommunity.proprietary_software_description %}
-Coordinators provided this info about the proprietary software they use or build upon:
-{{ community.newcommunity.proprietary_software_description|striptags }}
-		{% else %}
-Coordinators provided no info about the proprietary software they use or build upon.
-		{% endif %}
-	{% else %}
-Community uses approved licenses.
-	{% endif %}
+{% if not community.newcommunity.approved_advertising %}{% include 'home/snippet/unapproved_advertising.html' %}
+{% if community.newcommunity.unapproved_advertising_description %}Coordinators provided this info about the community advertising:
+{{ community.newcommunity.proprietary_software_description|striptags }}{% else %}Coordinators provided no info about their community advertising.{% endif %}
+{% else %}Community uses approved licenses.{% endif %}
 
 Community size: {{ community.newcommunity.get_community_size_display }}
 
