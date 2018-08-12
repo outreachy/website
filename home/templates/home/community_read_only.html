@@ -31,6 +31,7 @@ If you are an Outreachy applicant, you should look over the <a href="{% url 'pro
 </p>
 
 <h2>{{ community.name }} coordinator</h2>
+<p>Coordinators find and advise mentors who want to participate in Outreachy. Coordinators also provide information about the community for the landing page shown to applicants.</p>
 {% with approved_coordinator_list=community.coordinatorapproval_set.approved approved_projects=participation_info.project_set.approved %}
 {% if approved_coordinator_list %}
 	<p>The {{ community.name }} coordinator{{ approved_coordinator_list|length|pluralize:" is,s are" }}
@@ -51,15 +52,7 @@ If you are an Outreachy applicant, you should look over the <a href="{% url 'pro
 {% endif %}
 
 {% if coordinator and coordinator.approval_status == coordinator.APPROVED %}
-<hr />
-	<p>Coordinators provide information about the community for the landing page shown to applicants.</p>
 	{% if not participation_info %}
-		<h2>Participate in This Round</h2>
-		<p>You can sign the community up to participate in the current round.</p>
-		<p><a class="btn btn-success" href="{% url 'participation-action' action='submit' community_slug=community.slug %}">Community will participate</a></p>
-		<p>If you don't have sponsorship funds or you can't find mentors for this round, you can indicate your community won't participate.
-		This will help direct mentors to communities that are participating.</p>
-		<p><a class="btn btn-warning" href="{% url 'participation-action' action='withdraw' community_slug=community.slug %}">Community will not participate</a></p>
 	{% elif participation_info.approval_status == participation_info.WITHDRAWN %}
 		<p>Have you changed your mind and decided your community can participate in this round of Outreachy?</p>
 		<p><a class="btn btn-success" href="{{ participation_info.get_submit_url }}">Community will participate</a></p>
@@ -120,6 +113,15 @@ If you are an Outreachy applicant, you should look over the <a href="{% url 'pro
     </div>
 </div>
 
+{% if coordinator and coordinator.approval_status == coordinator.APPROVED and not participation_info %}
+<hr />
+	<h2>Participate in This Round</h2>
+	<p>You can sign the community up to participate in the current round.</p>
+	<p><a class="btn btn-success" href="{% url 'participation-action' action='submit' community_slug=community.slug %}">Community will participate</a></p>
+	<p>If you don't have sponsorship funds or you can't find mentors for this round, you can indicate your community won't participate.
+	This will help direct mentors to communities that are participating.</p>
+	<p><a class="btn btn-warning" href="{% url 'participation-action' action='withdraw' community_slug=community.slug %}">Community will not participate</a></p>
+{% endif %}
 
 {% if not participation_info %}
 	{% if notification %}
