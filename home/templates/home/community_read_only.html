@@ -96,12 +96,16 @@ If you are an Outreachy applicant, you should look over the <a href="{% url 'pro
 			    <tr><td><span class="badge badge-pill badge-success">Funded</span></td><td>This community has funding for {{ participation_info.interns_funded }} intern{{ participation_info.interns_funded|length|pluralize }}.</td></tr>
 		    {% endif %}
 		    {% if not approved_projects %}
+			    {% if participation %}
 			    <tr><td><span class="badge badge-pill badge-warning">No Projects</span></td><td>The coordinator has not approved any projects for Outreachy interns to work on.</td></tr>
+			    {% endif %}
 		    {% else %}
 			    <tr><td><span class="badge badge-pill badge-success">{{ approved_projects|length }} Projects Approved</span></td><td>The coordinator has approved {{ approved_projects|length }} project{{ approved_projects|length|pluralize }}. There are {{ participation_info.project_set.pending|length }} project{{ participation_info.project_set.pending|length|pluralize }} pending approval.</td></tr>
 		    {% endif %}
 		    {% if not current_round.has_project_submission_and_approval_deadline_passed %}
-			    <tr><td><span class="badge badge-pill badge-info">Open to New Projects</span></td><td>Mentors can submit projects for Outreachy interns to work on.</td></tr>
+			    {% if participation %}
+				    <tr><td><span class="badge badge-pill badge-info">Open to New Projects</span></td><td>Mentors can submit projects for Outreachy interns to work on.</td></tr>
+			    {% endif %}
 		    {% else %}
 			    <tr><td><span class="badge badge-pill badge-warning">Closed to New Projects</span></td><td>The deadline to submit new projects for this Outreachy round is closed.</td></tr>
 		    {% endif %}
