@@ -897,12 +897,14 @@ class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
     fields = ['name',
             'approved_license',
             'no_proprietary_software',
+            'approved_advertising',
             'community_size', 'longevity', 'participating_orgs',
             'description',
             'long_description', 'tutorial', 'website',
             'goverance', 'code_of_conduct', 'cla', 'dco',
             'unapproved_license_description',
             'proprietary_software_description',
+            'unapproved_advertising_description',
             ]
 
     # We have to over-ride this method because we need to

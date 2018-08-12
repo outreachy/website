@@ -1194,6 +1194,13 @@ class NewCommunity(Community):
             blank=True,
             help_text="(Optional) If any internship project under your community furthers the interests of proprietary software, please explain.")
 
+    approved_advertising = models.BooleanField(
+            default=False,
+            help_text='I assert that my community resources do not advertise the services of only one company. Community resources are where users and developers seek help for your FOSS project. Community resources can include the community website, mailing lists, forums, documentation, or community introduction emails. It is fine to advertise the services of multiple companies or to identify sponsor companies generally.')
+    unapproved_advertising_description = CKEditorField(
+            blank=True,
+            help_text="(Optional) If your community resources advertise the services of only one community, please explain.")
+
     goverance = models.URLField(blank=True, verbose_name="(Optional) Please provide the URL for a description of your community's governance model")
     code_of_conduct = models.URLField(blank=True, verbose_name="(Optional) Please provide the URL for to your community's Code of Conduct")
     cla = models.URLField(blank=True, verbose_name="(Optional) Please provide the URL for your community's Contributor License Agreement (CLA)")

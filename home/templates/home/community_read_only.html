@@ -302,6 +302,22 @@ If you are an Outreachy applicant, you should look over the <a href="{% url 'pro
 			    </div>
 			</div>
 			{% endif %}
+			{% if not community.newcommunity.approved_advertising %}
+			<div class="card border-warning mb-3">
+			    <div class="card-header text-white bg-warning">Warning!</div>
+			    <div class="card-body">
+				<h5 class="card-title">This FOSS community advertises services of only one company.
+</h5>
+				<p class="card-text">
+					{% include 'home/snippet/unapproved_advertising.html' %}
+				</p>
+				{% if community.newcommunity.unapproved_advertising_description %}
+					<p>The coordinator provided this description of their advertising practices:</p>
+					{{ community.newcommunity.unapproved_advertising_description|safe }}
+				{% endif %}
+			    </div>
+			</div>
+			{% endif %}
 			{% if community.newcommunity.longevity == community.newcommunity.THREE_MONTHS or community.newcommunity.longevity == community.newcommunity.SIX_MONTHS %}
 			<div class="card border-warning mb-3">
 			    <div class="card-header text-white bg-warning">Warning!</div>
