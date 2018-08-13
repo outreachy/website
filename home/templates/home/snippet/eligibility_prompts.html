@@ -16,6 +16,3 @@
 {% if request.user.comrade.get_approved_coordinator_communities %}
 {% include "home/snippet/coordinator_reminder_prompt.html" %}
 {% endif %}
-{% if request.user.comrade.get_approved_mentored_projects %}
-{% include "home/snippet/mentor_reminder_prompt.html" %}
-{% endif %}

@@ -5,7 +5,6 @@ Review {{ community.name }} Applicants
 {% endblock %}
 
 {% block content %}
-{% include "home/snippet/eligibility_prompts.html" %}
 
 {% with projects=participation.project_set.all %}
 	{% if not projects %}

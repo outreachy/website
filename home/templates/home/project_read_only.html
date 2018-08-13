@@ -7,8 +7,6 @@
 
 {% block content %}
 
-{% include "home/snippet/eligibility_prompts.html" %}
-
 <a href="{% url 'community-cfp' %}">Timeline, FAQ, & Participating Communities</a> &gt; <a href="{{ community.get_preview_url }}">{{ community.name }}</a> &gt; {{ project.get_approval_status_display }} Project
 
 {% if project.approval_status == project.APPROVED %}

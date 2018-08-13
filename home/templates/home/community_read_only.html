@@ -11,8 +11,6 @@ Past community participation in Outreachy
 {% endblock %}
 
 {% block content %}
-{% include "home/snippet/eligibility_prompts.html" %}
-
 <a href="{% url 'community-cfp' %}">Timeline, FAQ, & Participating Communities</a> &gt; {{ community.name }}
 <h1>{{ community.name }}:
 {% if participation_info and participation_info.approval_status != participation_info.REJECTED and participation_info.approval_status != participation_info.WITHDRAWN %}

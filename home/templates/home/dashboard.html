@@ -17,7 +17,9 @@ Dashboard
 
 {% with intern_selection=request.user.comrade.get_intern_selection project_contributions=request.user.comrade.get_projects_contributed_to project_applications=request.user.comrade.get_projects_applied_to %}
 	{% if not current_round.has_intern_announcement_deadline_passed %}
-		{% include "home/snippet/eligibility_prompts.html" %}
+		{% if not request.user.comrade.get_approved_coordinator_communities and not request.user.comrade.get_editable_mentored_projects and not request.user.is_staff %}
+			{% include "home/snippet/eligibility_prompts.html" %}
+		{% endif %}
 	{% elif intern_selection %}
 		{% with round=intern_selection.project.project_round.participating_round %}
 			<p>Congratulations, you've been selected as an intern for the {{ round.internstarts|date:"F Y" }} to {{ round.internends|date:"F Y" }} Outreachy internship round. You'll be interning with {{ intern_selection.community_name }} on the project "{{ intern_selection.project_name }}". Your mentor(s) are {{ intern_selection.mentor_names }}.</p>
@@ -33,9 +35,6 @@ Dashboard
 		<p>The Outreachy {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} interns have been <a href="/alums/">announced</a>! Thank you for participating as a mentor or coordinator.</p>
 		{% if request.user.comrade.get_approved_coordinator_communities %}
 		{% include "home/snippet/coordinator_reminder_prompt.html" %}
-		{% endif %}
-		{% if request.user.comrade.get_approved_mentored_projects %}
-		{% include "home/snippet/mentor_reminder_prompt.html" %}
 		{% endif %}
 	{% else %}
 		<p>We're sorry to say that you were not selected as an intern for the {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round. The full list of accepted interns can be viewed <a href="/alums/">here</a>.</p>
