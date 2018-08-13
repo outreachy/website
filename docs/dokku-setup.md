@@ -154,7 +154,7 @@ ssh dokku@outreachy.org postgres:promote test-database-updated-2018-02-13 test
 
 Then we unlink the older database (use whatever was the old name):
 ```
-ssh dokku@outreachy.org postgres:unlink test-database-updated test
+ssh dokku@outreachy.org postgres:unlink test-database-updated-old test
 ```
 
 You can always figure out which databases are linked with this command:
@@ -162,4 +162,9 @@ You can always figure out which databases are linked with this command:
 ssh dokku@outreachy.org postgres:list
 ```
 
-Then, finally, you can `git push` to the test site, migrate, and test any updated views.
+Then you can `git push` to the test site, migrate, and test any updated views.
+
+Finally, we can destroy the older database (use whatever was the old name):
+```
+ssh dokku@outreachy.org postgres:destroy test-database-updated-old
+```
