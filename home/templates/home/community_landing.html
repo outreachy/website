@@ -10,7 +10,7 @@ Outreachy internships working with {{ community.name }}
 
 	{% comment %}This will always show past rounds, since the application period will always be passed.{% endcomment %}
 	{% if not approved_to_see_all_project_details and not mentors_pending_projects %}
-		<p>The information about this community is currently only visible to approved mentors and coordinators.
+		<p>The information about this community is currently only available to approved mentors and coordinators.
 		If your participation has been approved, you may need to <a href="{% url 'login' %}?next={{ request.path|urlencode }}">log in</a>.</p>
 
 		<p>If you are an Outreachy applicant, this information will be available once the
