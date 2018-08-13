@@ -2,6 +2,7 @@ from betterforms.multiform import MultiModelForm
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone, date
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -17,6 +18,7 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.http import urlencode
+from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.views.decorators.http import require_POST
 from django.views.generic import FormView, View, DetailView, ListView, TemplateView
@@ -24,6 +26,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from formtools.wizard.views import SessionWizardView
 from itertools import chain, groupby
 from markdownx.utils import markdownify
+from registration.forms import RegistrationForm
 from registration.backends.hmac import views as hmac_views
 import reversion
 
@@ -69,7 +72,15 @@ from .models import VolunteerTimeCommitment
 
 from os import path
 
+class RegisterUserForm(RegistrationForm):
+    def clean(self):
+        email = self.cleaned_data.get('email')
+        if email and User.objects.filter(email=email).exists():
+            self.add_error('email', mark_safe('This email address is already associated with an account. If you have forgotten your password, you can <a href="{}">reset it</a>.'.format(reverse('password_reset'))))
+        super(RegisterUserForm, self).clean()
+
 class RegisterUser(hmac_views.RegistrationView):
+    form_class = RegisterUserForm
 
     # The RegistrationView that django-registration provides
     # doesn't respect the next query parameter, so we have to
