@@ -53,7 +53,7 @@ Dashboard
 	{% include "home/snippet/dashboard_intern.html" %}
 {% endif %}
 
-{% with mentored_projects=request.user.comrade.get_all_mentored_projects %}
+{% with mentored_projects=request.user.comrade.get_editable_mentored_projects %}
 	{% if mentored_projects %}
 		{% include "home/snippet/dashboard_mentor_projects.html" %}
 	{% endif %}
