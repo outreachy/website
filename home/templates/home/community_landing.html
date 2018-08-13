@@ -25,8 +25,27 @@ Outreachy internships working with {{ community.name }}
 				<div class="card-body">
 					<p class="card-text">
 					Information about the community is hidden from applicants until applications open.
-					Only approved mentors and coordinators can see this information.
+					Only mentors and coordinators can see this information.
+					</p>
+					<p class="card-text">
 					Please don't share this link until applications open on {{ current_round.appsopen }} at 4pm UTC.
+					</p>
+				</div>
+			</div>
+		{% else %}
+			{% include "home/snippet/eligibility_prompts.html" %}
+		{% endif %}
+
+		{% if participation_info.approval_status == participation_info.PENDING %}
+			<div class="card border-info mb-3">
+				<div class="card-header text-white bg-warning">Pending community participation</div>
+				<div class="card-body">
+					<p class="card-text">
+					This community is not yet approved to participate in the Outreachy internship round.
+					Only mentors and coordinators can see this information.
+					</p>
+					<p class="card-text">
+					Please don't share this link until the community is approved.
 					</p>
 				</div>
 			</div>
