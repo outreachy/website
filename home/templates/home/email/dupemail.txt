@@ -1,0 +1,23 @@
+Outreachy website - multiple accounts resolved
+
+Hi,
+{% filter wordwrap:72 %}
+Outreachy organizers have been reviewing the accounts on the Outreachy website, and we've found multiple accounts for your email address. To reduce confusion during login and password resets, we need to make sure each email address only has one Outreachy website account associated with it.
+
+We found that you had {{ accounts|length }} accounts on the Outreachy website with the email address {{ recipient }}:
+{% endfilter %}{% for account in accounts %}
+- {{ account.username }} (joined {{ account.date_joined|date:"Y-m-d" }}){% endfor %}
+{% filter wordwrap:72 %}
+If you recorded a contribution to a project, mentored a project, or coordinated a community, then we kept any account you used for that. We deleted any account which has never participated in an Outreachy round.
+
+{% if keeps %}You can still use the following account{{ keeps|length|pluralize }}:
+{% for keep in keeps %}
+- {{ keep.username }}{% endfor %}
+{% else %}Since none of your accounts participated in any Outreachy round, we have deleted all of them. We welcome you to create a new account on the Outreachy website when you are ready to participate in a new round!
+{% endif %}
+Thank you for participating in Outreachy. We hope this change will make it easier for you to participate in the next round.
+
+Outreachy Organizers
+---
+
+You are receiving this email because you created an account on https://www.outreachy.org. If you feel you have received this email in error, please contact "Outreachy Organizers" <organizers@outreachy.org>{% endfilter %}
