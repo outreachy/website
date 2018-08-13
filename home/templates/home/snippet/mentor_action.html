@@ -56,5 +56,10 @@
 		<p class="card-text">
 		<a class="btn btn-primary" href="{% url 'communication-channels-edit' community_slug=project.project_round.community.slug project_slug=project.slug %}">Update Communication Channels</a>
 		</p>
+		<hr>
+		<p class="card-text">You can <a href="{% url 'community-read-only' community_slug=project.project_round.community.slug %}">submit another project</a>
+			or <a href="{% url 'community-read-only' community_slug=project.project_round.community.slug %}">co-mentor another project</a>
+			on the {{ project.project_round.community.name }} community CFP page.</p>
+		<p class="card-text">You can also <a href="{% url 'community-cfp' %}">submit a project for another community</a>.</p>
 	</div>
 </div>
