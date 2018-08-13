@@ -14,7 +14,7 @@
 	Mentor for {{ community.name }}
 </h1>
 
-<p>Please read through the answers {{ mentor.public_name }} has provided and decide whether they should be approved as a mentor for the {{ community.name }} internship project proposal <a href="{{ project.get_preview_url }}">"{{ project.short_title }}"</a></p>
+<p>Please read through the answers {{ mentor.public_name }} has provided and decide whether they should be approved as a mentor for the {{ community.name }} internship project proposal <a href="{{ project.get_landing_url }}">"{{ project.short_title }}"</a></p>
 
 {% if mentorapproval.approval_status == mentorapproval.PENDING %}
 {% if mentorapproval|is_approver:request.user %}

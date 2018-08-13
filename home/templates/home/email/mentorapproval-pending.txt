@@ -8,7 +8,7 @@ A contributor has applied to be a mentor for an intern project under {{ communit
 
 The person applied to mentor this project:
 
-{{ request.scheme }}://{{ request.get_host }}{{ project.get_preview_url }}
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_landing_url }}
 
 Please carefully review the mentor information to ensure the mentor has experience with the project and your FOSS community:
 

@@ -5,7 +5,7 @@ Hi {{ recipient.display_name }},
 
 A intern project proposal has been submitted for {{ community.name }} that uses a non-free license or furthers proprietary software. If necessary, ask your Django admin to put the project proposal in the 'Rejected' state. The intern project proposal can be seen here:
 
-{{ request.scheme }}://{{ request.get_host }}{{ project.get_preview_url }}
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_landing_url }}
 
 Please contact the community coordinators and project mentor to further investigate this issue. Here is a sample email:
 
@@ -16,7 +16,7 @@ Subject: URGENT - Question about Outreachy intern project proposal
 
 A intern project proposal has been submitted for {{ community.name }} that may not be appropriate for Outreachy.
 
-{{ request.scheme }}://{{ request.get_host }}{{ project.get_preview_url }}
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_landing_url }}
 
 {% if not project.approved_license %}Non-free Licenses Used
 ----------------------

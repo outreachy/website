@@ -7,7 +7,7 @@ Hi {{ recipient.display_name }},
 
 A {{ community.name }} coordinator has approved you as a mentor for this project:
 
-{{ request.scheme }}://{{ request.get_host }}{{ project.get_preview_url }}
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_landing_url }}
 
 You now have access to applicant data and the ability to edit the project information. This email describes the next steps you need to take as a mentor.
 

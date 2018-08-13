@@ -6,7 +6,7 @@ Hi {{ recipient.display_name }},
 
 A {{ community.name }} coordinator has approved this Outreachy internship project proposal:
 
-{{ request.scheme }}://{{ request.get_host }}{{ project.get_preview_url }}
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_landing_url }}
 
 {% include 'home/email/snippet-email-filters.txt' %}
 {% if not project.has_application_deadline_passed %}{% include 'home/email/snippet-community-promotion.txt' %}
