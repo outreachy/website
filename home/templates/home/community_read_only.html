@@ -360,7 +360,7 @@ If you are an Outreachy applicant, you should look over the <a href="{% url 'pro
 			{% include "home/snippet/community_landing_snippet.html" %}
 			</div>
 		</div>
-		{% if participation_info.approval_status != participation_info.APPROVED and current_round.has_project_submission_and_approval_deadline_passed %}
+		{% if participation_info.approval_status != participation_info.APPROVED and not current_round.has_project_submission_and_approval_deadline_passed %}
 			<a href="{{ participation_info.get_approve_url }}" class="btn btn-success">Approve Community</a>
 		{% endif %}
 		{% if participation_info.approval_status != participation_info.REJECTED %}
