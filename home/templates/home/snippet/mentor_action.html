@@ -4,7 +4,8 @@
 		{% if project.approval_status == project.APPROVED %}
 			{% if project.project_round.participating_round.has_application_period_started %}
 				<p class="card-text">This project is approved.
-				Applicants will see it on the <a href="{% url 'community-landing' round_slug=project.project_round.participating_round.slug slug=project.project_round.community.slug %}">community landing page</a>.
+				You should
+				<a href="{% url 'community-landing' round_slug=project.project_round.participating_round.slug slug=project.project_round.community.slug %}#{{ project.slug }}">promote your project listing</a>.</p>
 				</p>
 				<p>
 				{{ project.get_applicants_and_contributions_list|length }} applicant{{ project.get_applicants_and_contributions_list|pluralize }} recorded their contributions
@@ -18,8 +19,8 @@
 				<p><pre>{{ request.scheme }}://{{ request.get_host }}{% url 'contributions' round_slug=current_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}</pre></p>
 			{% else %}
 				<p class="card-text">This project is approved.
-				Once applications are open, applicants will see it on the <a href="{% url 'community-landing' round_slug=project.project_round.participating_round.slug slug=project.project_round.community.slug %}">community landing page</a>.
-				</p>
+				Once applications are open, you can
+				<a href="{% url 'community-landing' round_slug=project.project_round.participating_round.slug slug=project.project_round.community.slug %}#{{ project.slug }}">promote your project listing</a>.</p>
 			{% endif %}
 			{% if project.project_round.approval_status == project.project_round.APPROVED %}
 				<p class="card-text">
@@ -41,10 +42,10 @@
 			</p>
 		{% elif project.approval_status == project.PENDING %}
 			<p class="card-text">This project is pending.
-			Once applications are open, applicants will see approved projects on the
-			<a href="">community landing page</a>.
-			After your project is approved, you will be able to review project applicants.
-			</p>
+				Once applications are open and your project is approved, you can
+				<a href="{% url 'community-landing' round_slug=project.project_round.participating_round.slug slug=project.project_round.community.slug %}#{{ project.slug }}">promote your project listing</a>.</p>
+			<p class="card-text">After your project is approved, you will be able to review project applicants.
+				</p>
 		{% endif %}
 		<p class="card-text">
 		<a class="btn btn-primary" href="{% url 'project-action' community_slug=project.project_round.community.slug project_slug=project.slug action='submit' %}">Update Project Details</a>
