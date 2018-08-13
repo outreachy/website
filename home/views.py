@@ -666,7 +666,13 @@ def current_round_page(request):
     closed_approved_projects = []
     ontime_approved_projects = []
     late_approved_projects = []
+    if request.user.is_authenticated and request.user.comrade:
+        mentors_pending_projects = request.user.comrade.get_pending_mentored_projects()
+    else:
+        mentors_pending_projects = []
     for p in approved_participations:
+        if not authorized_to_view_project_details(request, p):
+            continue
         projects = p.project_set.approved().filter(deadline=Project.CLOSED,
                 approval_status=ApprovalStatus.APPROVED)
         if projects:
@@ -687,6 +693,7 @@ def current_round_page(request):
             'closed_projects': closed_approved_projects,
             'ontime_projects': ontime_approved_projects,
             'late_projects': late_approved_projects,
+            'mentors_pending_projects': mentors_pending_projects,
             'example_skill': example_skill,
             },
             )
@@ -826,6 +833,20 @@ class CommunityNotificationUpdate(LoginRequiredMixin, ComradeRequiredMixin, Upda
     def get_success_url(self):
         return self.object.community.get_preview_url()
 
+def authorized_to_view_project_details(request, participation_info):
+    if request.user.is_authenticated and request.user.comrade:
+        # Is the person an approved mentor or coordinator?
+        approved_to_see_all_project_details = participation_info.approved_to_see_all_project_details(request.user.comrade)
+        # Or are applications open and the comrade is eligible?
+        if not approved_to_see_all_project_details and request.user.comrade.eligible_application() and participation_info.participating_round.has_application_period_started():
+            approved_to_see_all_project_details = True
+    else:
+        if participation_info.participating_round.has_application_period_started():
+            approved_to_see_all_project_details = True
+        else:
+            approved_to_see_all_project_details = False
+    return approved_to_see_all_project_details
+
 def community_landing_view(request, round_slug, slug):
     # Try to see if this community is participating in that round
     # and if so, get the Participation object and related objects.
@@ -855,22 +876,14 @@ def community_landing_view(request, round_slug, slug):
     else:
             approved_coordinator_list = None
 
-    if request.user.is_authenticated and request.user.comrade:
-        # Is the person an approved mentor or coordinator?
-        approved_to_see_all_project_details = participation_info.approved_to_see_all_project_details(request.user.comrade)
-        # Or are applications open and the comrade is eligible?
-        if not approved_to_see_all_project_details and request.user.comrade.eligible_application() and participation_info.participating_round.has_application_period_started():
-            approved_to_see_all_project_details = True
+    approved_to_see_all_project_details = authorized_to_view_project_details(request, participation_info)
 
+    if request.user.is_authenticated and request.user.comrade:
         mentors_pending_projects = participation_info.mentors_pending_projects(request.user.comrade)
         mentored_projects = [p for p in projects if p.is_submitter(request.user)]
 
         approved_coordinator = participation_info.is_approved_coordinator(request.user.comrade)
     else:
-        if participation_info.participating_round.has_application_period_started():
-            approved_to_see_all_project_details = True
-        else:
-            approved_to_see_all_project_details = False
         mentors_pending_projects = None
         mentored_projects = None
         approved_coordinator = False

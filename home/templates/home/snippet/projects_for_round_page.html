@@ -1,12 +1,15 @@
 {% for project in projects %}
-	{% if project.needs_more_applicants %}
+	{% if project.needs_more_applicants and project.approval_status == project.APPROVED %}
 	<div class="card border border-success">
 		<div class="card-header bg-success text-light">
+	{% elif project.approval_status != project.APPROVED %}
+	<div class="card border border-warning">
+		<div class="card-header bg-warning text-light">
 	{% else %}
 	<div class="card border">
 		<div class="card-header bg-light">
 	{% endif %}
-		{% if project.approval_status != project.APPROVED %}{{ project.get_approval_status_display }} {% endif %}{{ community.name }} {% if project.deadline == project.CLOSED %}closed {% elif project.deadline == project.LATE %}extended deadline {% endif %}project #{{ forloop.counter }}
+		{% if project.approval_status != project.APPROVED %}{{ project.get_approval_status_display }} {% endif %}{{ project.project_round.community.name }} {% if project.deadline == project.CLOSED %}closed {% elif project.deadline == project.LATE %}extended deadline {% endif %}project #{{ forloop.counter }}
 		</div>
 		<div class="card-body">
 		{% comment %}If this view didn't set any mentors_pending_projects, it means there's no pending mentored projects {% endcomment %}
@@ -14,7 +17,7 @@
 			<p><strong>{{ project.short_title }}</strong></p>
 			<div class="card-text">{% include 'home/snippet/project_hidden.html' %}</div>
 		{% else %}
-			<p><strong><a href="{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}#{{ project.slug }}">{{ project.short_title }}</a></strong></p>
+			<p><strong><a href="{% url 'community-landing' round_slug=current_round.slug slug=project.project_round.community.slug %}#{{ project.slug }}">{{ project.short_title }}</a></strong></p>
 		{% endif %}
 
 		{% if project.needs_more_applicants %}

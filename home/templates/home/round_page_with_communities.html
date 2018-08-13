@@ -214,6 +214,19 @@ Outreachy Internships | Apply | Pick a Project
 		{% endwith %}
 	{% endfor %}
 {% endif %}
+{% if mentors_pending_projects %}
+	<h2>Your Pending Outreachy Internship Projects</h2>
+
+	<p>
+	Your projects are pending approval by the community coordinator.
+	This is how they will be displayed on this page,
+	once they have been approved and the application round opens.
+	</p>
+
+	{% with project_status="pending " projects=mentors_pending_projects %}
+		{% include 'home/snippet/projects_for_round_page.html' %}
+	{% endwith %}
+{% endif %}
 {% if closed_projects %}
 	{% if not current_round.has_ontime_application_deadline_passed %}
 		<h2>Closed Outreachy Internship Projects</h2>
