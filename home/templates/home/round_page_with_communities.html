@@ -7,6 +7,10 @@ Outreachy Internships | Apply | Pick a Project
 
 {% block content %}
 
+{% if not current_round.has_application_period_started and ontime_projects or closed_projects or mentors_pending_projects %}
+	{% include "home/snippet/round_not_open.html" %}
+{% endif %}
+
 {% include "home/snippet/eligibility_prompts.html" %}
 
 <p><a href="/apply/">Why apply to Outreachy?</a> &gt;

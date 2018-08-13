@@ -20,18 +20,7 @@ Outreachy internships working with {{ community.name }}
 	{% elif approved_to_see_all_project_details or mentors_pending_projects %}
 
 		{% if not current_round.has_application_period_started %}
-			<div class="card border-info mb-3">
-				<div class="card-header text-white bg-warning">Applications are not open</div>
-				<div class="card-body">
-					<p class="card-text">
-					Information about the community is hidden from applicants until applications open.
-					Only mentors and coordinators can see this information.
-					</p>
-					<p class="card-text">
-					Please don't share this link until applications open on {{ current_round.appsopen }} at 4pm UTC.
-					</p>
-				</div>
-			</div>
+			{% include "home/snippet/round_not_open.html" %}
 		{% else %}
 			{% include "home/snippet/eligibility_prompts.html" %}
 		{% endif %}

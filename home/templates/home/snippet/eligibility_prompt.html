@@ -1,4 +1,17 @@
 {% if not current_round.has_application_period_started %}
+	<div class="card border-info mb-3">
+		<div class="card-header text-white bg-info">Applications are not open</div>
+		<div class="card-body">
+			<p class="card-text">
+			The Outreachy applications are not open until {{ current_round.appsopen }} at 4pm UTC.
+			Information about projects are hidden from applicants until applications open.
+			</p>
+			<p class="card-text">
+			Please <a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">sign up for the Outreachy announcements mailing list</a>
+			for an email when the round begins.
+			</p>
+		</div>
+	</div>
 {% elif not current_round.has_application_deadline_passed %}
 	<div class="card border-info mb-3">
 		<div class="card-header text-white bg-warning">Check your eligibility!</div>
