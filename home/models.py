@@ -677,7 +677,8 @@ class Comrade(models.Model):
 
     legal_name = models.CharField(max_length=LONG_LEGAL_NAME, verbose_name="Legal name (private)", help_text="Your name on your government identification. This is the name that you would use to sign a legal document. This will be used only by Outreachy organizers on any private legal contracts. Other applicants, coordinators, mentors, and volunteers will not see this name.")
 
-    photo = models.ImageField(blank=True, upload_to=make_comrade_photo_filename)
+    photo = models.ImageField(blank=True, upload_to=make_comrade_photo_filename,
+            help_text="File limit size is 1MB. For best display, use a square photo at least 200x200 pixels.")
 
     # Reference: https://uwm.edu/lgbtrc/support/gender-pronouns/
     PRONOUN_RAW = (
@@ -812,6 +813,16 @@ class Comrade(models.Model):
 
     def eligible_application(self):
         return self.has_application(approval_status=ApprovalStatus.APPROVED)
+
+    def alum_in_good_standing(self):
+        # Search all rounds for an intern selection
+        rounds = RoundPage.objects.all()
+        for r in rounds:
+            intern_selection = r.get_in_good_standing_intern_selections().filter(
+                    applicant__applicant=self)
+            if intern_selection:
+                return True
+        return False
 
     def approved_mentor_or_coordinator(self):
         if self.account.is_staff:

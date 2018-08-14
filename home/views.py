@@ -172,10 +172,16 @@ class ComradeUpdate(LoginRequiredMixin, UpdateView):
     # to the Comrade model instead of the User model.
     def get_object(self):
         # Either grab the current comrade to update, or make a new one
+        comrade = None
         try:
-            return self.request.user.comrade
+            comrade = self.request.user.comrade
+            # Is this an Outreachy organizer or an approved mentor or coordinator?
+            # Is this an intern in good standing from a past round?
+            if (self.request.user.is_staff or comrade.approved_mentor_or_coordinator() or comrade.alum_in_good_standing()):
+                self.fields.insert(6, 'photo')
         except Comrade.DoesNotExist:
-            return Comrade(account=self.request.user)
+            comrade = Comrade(account=self.request.user)
+        return comrade
 
     def get_context_data(self, **kwargs):
         context = super(ComradeUpdate, self).get_context_data(**kwargs)

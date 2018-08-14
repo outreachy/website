@@ -7,13 +7,13 @@
 
 {% include "home/snippet/privacy_policy.html" %}
 
-<form method="post" action="">
+<form enctype="multipart/form-data" method="post" action="">
 {% csrf_token %}
     <h2>Required Information</h2>
     {% for field in form.visible_fields %}
     <div class="form-group">
 	{{ field.errors }}
-	{% if '(Optional) Your timezone:' in field.label_tag %}
+	{% if 'photo' in field.label_tag %}
 	<h2>Optional Information</h2>
 	{% elif 'Code of Conduct' in field.label_tag %}
 	{{ codeofconduct|safe }}
