@@ -686,7 +686,7 @@ def current_round_page(request):
     if request.user.is_authenticated:
         try:
             mentors_pending_projects = request.user.comrade.get_pending_mentored_projects()
-        except RelatedObjectDoesNotExist:
+        except Comrade.DoesNotExist:
             mentors_pending_projects = []
     else:
         mentors_pending_projects = []
@@ -861,7 +861,7 @@ def authorized_to_view_project_details(request, participation_info):
             # Or are applications open and the comrade is eligible?
             if not approved_to_see_all_project_details and request.user.comrade.eligible_application() and participation_info.participating_round.has_application_period_started():
                 approved_to_see_all_project_details = True
-        except RelatedObjectDoesNotExist:
+        except Comrade.DoesNotExist:
                 approved_to_see_all_project_details = False
     else:
         if participation_info.participating_round.has_application_period_started():
@@ -908,7 +908,7 @@ def community_landing_view(request, round_slug, slug):
 
             approved_coordinator = participation_info.is_approved_coordinator(request.user.comrade)
         # Even though the user is authenticated, they may not have a Comrade
-        except RelatedObjectDoesNotExist:
+        except Comrade.DoesNotExist:
             mentors_pending_projects = None
             mentored_projects = None
             approved_coordinator = False
@@ -2483,7 +2483,7 @@ def dashboard(request):
             approval_status = ApprovalStatus.APPROVED).order_by('community__name')
     participations = list(chain(pending_participations, approved_participations))
 
-    mentor_relationships = MentorRelationship.objects.filter(mentor__mentor=request.user.comrade)
+    mentor_relationships = MentorRelationship.objects.filter(mentor__mentor__account=request.user)
 
     return render(request, 'home/dashboard.html', {
         'internship': intern_in_good_standing(request.user.comrade),
