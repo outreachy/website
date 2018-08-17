@@ -110,8 +110,9 @@ class Command(BaseCommand):
                 'accounts': [user for user, _ in accounts],
                 'keeps': [user for user, _ in keep],
             }, [email], connection=connection)
-        else:
-            self.stdout.write('keeping all for {}:'.format(email))
+
+        if keep:
+            self.stdout.write('keeping for {}:'.format(email))
             for account, cascades in keep:
                 self.format_cascades(account, cascades)
             self.stdout.write('')
