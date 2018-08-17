@@ -96,6 +96,13 @@ class Command(BaseCommand):
 
         deletions_by_model = Counter()
         self.stdout.write('')
+
+        if keep:
+            self.stdout.write('keeping for {}:'.format(email))
+            for account, cascades in keep:
+                self.format_cascades(account, cascades)
+            self.stdout.write('')
+
         if remove:
             self.stdout.write('deleting for {}:'.format(email))
 
@@ -110,12 +117,6 @@ class Command(BaseCommand):
                 'accounts': [user for user, _ in accounts],
                 'keeps': [user for user, _ in keep],
             }, [email], connection=connection)
-
-        if keep:
-            self.stdout.write('keeping for {}:'.format(email))
-            for account, cascades in keep:
-                self.format_cascades(account, cascades)
-            self.stdout.write('')
 
         return deletions_by_model
 
