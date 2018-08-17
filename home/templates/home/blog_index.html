@@ -3,6 +3,7 @@
 {% load wagtailcore_tags %}
 {% load wagtailroutablepage_tags %}
 {% load humanize %}
+{% load static %}
 
 {# XXX: This is not CSS, but this is the only generic block our base.html has in <head> #}
 {% block extra_css %}
@@ -16,6 +17,8 @@
      as specified at http://microformats.org/wiki/h-feed -->
 <div class="h-feed">
 <h1 class="p-name">{{ self.title }}</h1>
+
+<p><a href="{% routablepageurl self "feed" %}"><img src="{% static 'Feed_Noun_project_104-32px.png' %}"> Subscribe to the Outreachy blog RSS feed</a> or <a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce"><img src="{% static 'email-postbox-j4p4n-public-domain-32px.png' %}"> Sign up for our announcements mailing list</a>.</p>
 
 {% for post in self.get_children.live.specific reversed %}
 <div class="h-entry">
