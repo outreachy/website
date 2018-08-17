@@ -15,7 +15,7 @@ If you recorded a contribution to a project, mentored a project, or coordinated 
 - {{ keep.username }}{% endfor %}
 {% else %}Since none of your accounts participated in any Outreachy round, we have deleted all of them. We welcome you to create a new account on the Outreachy website when you are ready to participate in a new round!
 {% endif %}
-Thank you for participating in Outreachy. We hope this change will make it easier for you to participate in the next round.
+Thank you for participating in Outreachy. We hope this change will make it easier for you to use the Outreachy website.
 
 Outreachy Organizers
 ---
