@@ -813,12 +813,14 @@ def community_read_only_view(request, community_slug):
             notification = Notification.objects.get(comrade__account=request.user, community=community)
         except Notification.DoesNotExist:
             pass
-        if request.user.comrade:
+        try:
             all_pending_projects = request.user.comrade.get_pending_mentored_projects()
             if all_pending_projects:
                 mentors_pending_projects = [p for p in all_pending_projects if p.project_round.community == community]
             else:
                 mentors_pending_projects = None
+        except Comrade.DoesNotExist:
+            pass
 
     context = {
             'current_round' : current_round,
@@ -1791,10 +1793,12 @@ class TrustedVolunteersListView(UserPassesTestMixin, ListView):
 
 # Is this a current or past intern in good standing?
 # This will return None if the internship hasn't been announced yet.
-def intern_in_good_standing(comrade):
+def intern_in_good_standing(user):
+    if not user.is_authenticated:
+        return None
     try:
         internship = InternSelection.objects.get(
-                applicant__applicant = comrade,
+                applicant__applicant__account = user,
                 project__approval_status = ApprovalStatus.APPROVED,
                 project__project_round__approval_status = ApprovalStatus.APPROVED,
                 organizer_approved = True,
@@ -1808,7 +1812,7 @@ def intern_in_good_standing(comrade):
 
 @login_required
 def intern_contract_export_view(request):
-    internship = intern_in_good_standing(request.user.comrade)
+    internship = intern_in_good_standing(request.user)
     if not internship:
         raise PermissionDenied("You are not an Outreachy intern.")
     if not internship.intern_contract:
@@ -2486,7 +2490,7 @@ def dashboard(request):
     mentor_relationships = MentorRelationship.objects.filter(mentor__mentor__account=request.user)
 
     return render(request, 'home/dashboard.html', {
-        'internship': intern_in_good_standing(request.user.comrade),
+        'internship': intern_in_good_standing(request.user),
         'mentor_relationships': mentor_relationships,
         'groups': groups,
         'current_round': current_round,
