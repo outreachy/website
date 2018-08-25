@@ -80,6 +80,9 @@
 		{% with forloop.counter as sponsor_number %}
 		<h2>Sponsor #{{ sponsor_number }}</h2>
 		{{ f.media }}
+		{% for hidden in f.hidden_fields %}
+			{{ hidden }}
+		{% endfor %}
 		{% for field in f.visible_fields %}
 			{% if 'Funding secured' in field.label_tag %}
 				<div class="form-group card">
