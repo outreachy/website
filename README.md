@@ -70,16 +70,18 @@ In order to develop with Python, you'll need the Python 3 development headers, s
 
 Next, you'll need to create a new virtualenv. A "virtualenv" is a separate virtual environment for working on different Python projects. It's good practice to create a virtual environment for each Python project you're working on, in case they have conflicting dependencies, and so that you make sure to record all the dependencies for each project.
 
-These instructions will help you create a new virtualenv that will have all the python packages installed that you need to work on the Outreachy website. We use the `-r` option to specify where the file is that contains the list and version numbers of Python packages to install in the virtual environment. The `-a` option means that when you activate the virtual environment, you will automatically change directories to the directory where the repository source code was cloned. If you need help understanding the mkvirtualenv command, run `mkvirtualenv --help`
+These instructions will help you create a new virtualenv that will have all the python packages installed that you need to work on the Outreachy website. We use [pipenv](https://pipenv.readthedocs.io/en/latest/) for this purpose.
+
+The following command will automatically create a virtual environment and install the Python dependencies specified in the `Pipfile`. If you need help understanding pipenv, run `pipenv --help`
 
 ```
-mkvirtualenv -a ~/PATH/TO/outreachy-django-wagtail -r ~/PATH/TO/outreachy-django-wagtail/requirements.txt --python=`which python3` outreachy-django
+pipenv install
 ```
 
-Now, you activate the virtual environment by typing the following command:
+Now, you activate the virtual environment by typing the following command in the directory of the project:
 
 ```
-workon outreachy-django
+pipenv shell
 ```
 
 In addition to the Python packages that were installed for you when you created the virtualenv, you also need to install some Node.js packages; these will be placed in a `node_modules` directory inside your project folder. Make sure you have `npm` installed, then run:
