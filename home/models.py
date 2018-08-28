@@ -121,13 +121,13 @@ class RoundPage(Page):
     internapproval = models.DateField("Date interns are approved by the Outreachy organizers", default='2017-11-05')
     internannounce = models.DateField("Date interns are announced", default='2017-11-09')
     internstarts = models.DateField("Date internships start", default='2017-12-05')
-    initialfeedback = models.DateField("Date initial feedback is due", blank=True, default='2017-12-20', null=True)
-    initialpayment = models.IntegerField(default=1000, null=True)
+    initialfeedback = models.DateField("Date initial feedback is due", blank=True, default='2017-12-20')
+    initialpayment = models.IntegerField(default=1000)
     midfeedback = models.DateField("Date mid-point feedback is due", blank=True, default='2018-01-31')
-    midpayment = models.IntegerField(default=2000, null=True)
+    midpayment = models.IntegerField(default=2000)
     internends = models.DateField("Date internships end", default='2018-03-05')
     finalfeedback = models.DateField("Date final feedback is due", blank=True, default='2018-03-12')
-    finalpayment = models.IntegerField(default=2500, null=True)
+    finalpayment = models.IntegerField(default=2500)
     sponsordetails = RichTextField(default='<p>Outreachy is hosted by the <a href="https://sfconservancy.org/">Software Freedom Conservancy</a> with special support from Red Hat, GNOME, and <a href="http://otter.technology">Otter Tech</a>. We invite companies and free and open source communities to sponsor internships in the next round.</p>')
 
     content_panels = Page.content_panels + [
