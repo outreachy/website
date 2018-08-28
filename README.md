@@ -127,7 +127,49 @@ In your web browser, go to `http://localhost:8000/admin/` to get to the Wagtail 
 
 If you want to create participating communities, project proposals etc. you first need to set up a `RoundPage`. An easy way to do so is from the *Django administrative interface*. To do this navigate to `http://127.0.0.1:8000/django-admin/home/roundpage/add/`, login with the `superuser` account and fill out the necessary fields: `path`,`depth`,`title`,`slug`,`content-type` (should be `round page`), `owner`, `page title` and `Roundnumber`. All other fields can be run with the defaults. Afterwards you can navigate to `http://127.0.0.1:8000/communities/cfp/` to see the current round. 
 
+# Django shell
+
+Django has a 'shell' mode where you can run snippets of Python code. This is extremely useful for figuring out why view code isn't working. It's also useful for doing quick tests of how templates (especially email templates) will look.
+
+You can run the shell on either your local copy of the database, or you can run it on the remote server's database. To start the shell on your local copy of the code and local database, run
+
+```
+./manage.py shell
+```
+
+You'll get a Python prompt that looks fairly similar to the standard Python shell, except that all the Django code you've written is available. For instance, you can import all the models in `home/models.py`:
+
+```
+$ ./manage.py shell
+Python 3.6.6 (default, Jun 27 2018, 14:44:17) 
+[GCC 8.1.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from home.models import *
+```
+
+Say we're making changes to an email template, and we want to know whether the template will render correctly. We'll use the template `home/templates/home/email/interns-notify.txt' as an example. This template takes an InternSelection object and a RoundPage object, both of which will be passed in a dictionary to the render function. Let's pick the first InternSelection object in the list:
+
+```
+>>> intern_selection = InternSelection.objects.all()[0]
+```
+
+Now, we can pass those two objects to render to get the HttpResponse. That will change any instances of the objects in the template to use the values of the fields referenced. The render function takes an HTTP request object. If you need to, you can create a simple dictionary to use as the render object. In this example, we pass in None for the request object, because the email template doesn't require it.
+
+```
+>>> response = render(None, 'home/email/interns-notify.txt', { 'current_round' : intern_selection.round(), 'intern_selection' : intern_selection, 'coordinator_names': intern_selection.project.project_round.community.get_coordinator_names(), },)
+```
+
+You can see how the final template will look by getting the content out of the HttpResponse object and decoding it:
+
+```
+>>> print(response.content.decode('utf-8'))
+```
+
+Remember, if you change any of the Python code, you'll need to exit the shell (CTRL-d) and restart it to reload the code.
+
 # Tour of the code base
+
 Django breaks up functionality into a project (a Django web application) and apps (smaller a set of Python code that implements a specific feature). There is only one project deployed on a site at a time, but there could be many apps deployed. You can read more about what an application is in [the Django documentation](https://docs.djangoproject.com/en/2.0/ref/applications/).  
 In the Outreachy repository, the directory `outreachy-home` is the project. We have several apps:
 * `home` which contains models (based on wagtail) used on the Outreachy home pages
