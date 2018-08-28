@@ -185,13 +185,13 @@ class RoundPage(Page):
         return(self.initialfeedback)
     
     def initial_stipend_payment_deadline(self):
-        return self.initialfeedback + datetime.timedelta(days=31)
+        return self.initialfeedback + datetime.timedelta(days=30)
 
     def midpoint_stipend_payment_deadline(self):
-        return self.midfeedback + datetime.timedelta(days=31)
+        return self.midfeedback + datetime.timedelta(days=30)
 
     def final_stipend_payment_deadline(self):
-        return self.finalfeedback + datetime.timedelta(days=31)
+        return self.finalfeedback + datetime.timedelta(days=30)
 
     def has_application_period_started(self):
         return has_deadline_passed(self.appsopen)
