@@ -26,9 +26,9 @@
 			<p>Payments are handled by Outreachy's parent organization, the Software Freedom Conservancy. Payments may be delayed by internship extensions, interns not returning tax paperwork in promptly, or approval delays for third-party payments (such as when a parent or spouse is the owner of a bank account). As a mentor, the best thing you can do to help your intern be paid on time is to respond promptly to requests for mid-point and final feedback.</p>
 			<p>Payment schedule:
 			<ul>
-				<li>{{ rel.round.initial_stipend_payment_deadline }} - Interns who have started their internship will receive the $500 initial stipend</li>
-				<li>{{ rel.round.midpoint_stipend_payment_deadline }} - Interns with successful mid-point feedback will receive the $2,250 midpoint stipend</li>
-				<li>{{ rel.round.final_stipend_payment_deadline }} - Interns with successful final feedback will receive the $2,750 midpoint stipend</li>
+				<li>{{ rel.round.initial_stipend_payment_deadline }} - Interns who have started their internship will receive the ${{ rel.round.initialpayment }} initial stipend</li>
+				<li>{{ rel.round.midpoint_stipend_payment_deadline }} - Interns with successful mid-point feedback will receive the ${{ rel.round.midpayment }} midpoint stipend</li>
+				<li>{{ rel.round.final_stipend_payment_deadline }} - Interns with successful final feedback will receive the ${{ rel.round.finalpayment }} final stipend</li>
 			</ul>
 			</p>
 		{% endif %}

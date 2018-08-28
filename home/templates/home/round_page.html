@@ -34,16 +34,9 @@
 		<tr><td>{{ page.specific.internannounce }}</td><td>Accepted interns announced on this page at 4pm UTC</td></tr>
 		<tr><td>{{ page.specific.internstarts }} to {{ page.specific.internends }}</td><td>Internships period</td></tr>
 	</table>
-	<h2>Intern Payment Schedule</h2>
-	<table class=table>
-		<tr><td>{{ page.internstarts }}</td><td>Internships starts</td></tr>
-		<tr><td>{{ page.initial_stipend_payment_deadline }}</td><td>Interns who have started their internship will receive the $500 initial stipend</td></tr>
-		<tr><td>{{ page.midfeedback }} </td><td>Mid-point feedback due</td></tr>
-		<tr><td>{{ page.midpoint_stipend_payment_deadline }}</td><td>Interns with successful mid-point feedback will receive the $2,250 midpoint stipend</td></tr>
-		<tr><td>{{ page.internends }}</td><td>Internships end</td></tr>
-		<tr><td>{{ page.finalfeedback }} </td><td>Final feedback due</td></tr>
-		<tr><td>{{ page.final_stipend_payment_deadline }}</td><td>Interns with successful final feedback will receive the $2,750 midpoint stipend</td></tr>
-	</table>
+	{% with current_round=page %}
+		{% include 'home/snippet/payment_schedule.html' %}
+	{% endwith %}
 	{{ page.specific.sponsordetails|richtext }}
 
 	{% with communities=page.get_approved_communities %}

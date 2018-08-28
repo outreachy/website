@@ -38,9 +38,9 @@ Please note that the SFC payment and tax email addresses are part of a ticketing
 
 Your payments will be sent on the following schedule, provided you start your internship and your mentor notifies us on time that you are in good standing for mid-point and final evaluation. (See "Stipend" section of your internship agreement for full details on this.)
 
- * $500 will be sent to you by {{ current_round.initial_stipend_payment_deadline }}
- * $2,250 will be sent to you by {{ current_round.midpoint_stipend_payment_deadline }}
- * $2,750 will be sent to you by {{ current_round.final_stipend_payment_deadline }}
+ * ${{ current_round.initialpayment }} will be sent to you by {{ current_round.initial_stipend_payment_deadline }}
+ * ${{ current_round.midpayment }} will be sent to you by {{ current_round.midpoint_stipend_payment_deadline }}
+ * ${{ current_round.finalpayment }} will be sent to you by {{ current_round.final_stipend_payment_deadline }}
 
 W-9 forms
 ---------

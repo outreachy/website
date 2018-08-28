@@ -179,13 +179,13 @@ class RoundPage(Page):
         return(self.internannounce + datetime.timedelta(days=7))
 
     def intern_not_started_deadline(self):
-        return(self.internstarts + datetime.timedelta(days=9))
+        return(self.initialfeedback - datetime.timedelta(days=1))
 
     def intern_sfc_initial_payment_notification_deadline(self):
-        return(self.internstarts + datetime.timedelta(days=10))
+        return(self.initialfeedback)
     
     def initial_stipend_payment_deadline(self):
-        return self.internstarts + datetime.timedelta(days=31+3)
+        return self.initialfeedback + datetime.timedelta(days=31)
 
     def midpoint_stipend_payment_deadline(self):
         return self.midfeedback + datetime.timedelta(days=31)

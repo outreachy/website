@@ -2,7 +2,7 @@
 
 **Internship Terms of Participation**
 
-_last edited - August 7, 2018_
+_last edited - August 28, 2018_
 
 **Dear Participant:**
 
@@ -84,19 +84,19 @@ will make best efforts to send out payments quickly after internship progress
 confirmations. Payments may be issued earlier than scheduled deadlines below,
 but interns should not rely on earlier payments.
 
- * $500 will be sent to you by January 7, 2019, unless your Volunteer Mentor
-   informs Conservancy by December 13, 2018 that you have not begun your internship,
+ * $1,000 will be sent to you by January 18, 2019, unless your Volunteer Mentor
+   informs Conservancy by December 20, 2018 that you have not begun your internship,
    in which case your payment will be delayed and will be subject to your
    Volunteer Mentor informing Conservancy at a later date that you have begun your
    internship.
 
- * $2,250 will be sent to you by February 17, 2019 if your Volunteer Mentor
-   confirms to Conservancy by January 17, 2019 that you are in good standing. If
+ * $2,000 will be sent to you by March 1, 2019 if your Volunteer Mentor
+   confirms to Conservancy by January 31, 2019 that you are in good standing. If
    Conservancy receives such confirmation late, your payment will be delayed. If
    such confirmation is not received, you will not receive payment.
 
- * $2,750 will be sent to you by April 7, 2019 if your Volunteer Mentor
-   confirms to Conservancy by March 7, 2019 that you successfully completed
+ * $2,500 will be sent to you by April 11, 2019 if your Volunteer Mentor
+   confirms to Conservancy by March 11, 2019 that you successfully completed
    your internship. If Conservancy receives such confirmation late, your payment
    will be delayed. If such confirmation is not received, you will not receive
    payment.
