@@ -95,7 +95,7 @@ but interns should not rely on earlier payments.
    Conservancy receives such confirmation late, your payment will be delayed. If
    such confirmation is not received, you will not receive payment.
 
- * $2,500 will be sent to you by April 11, 2019 if your Volunteer Mentor
+ * $2,500 will be sent to you by April 10, 2019 if your Volunteer Mentor
    confirms to Conservancy by March 11, 2019 that you successfully completed
    your internship. If Conservancy receives such confirmation late, your payment
    will be delayed. If such confirmation is not received, you will not receive
