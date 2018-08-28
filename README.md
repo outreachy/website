@@ -72,6 +72,10 @@ Next, you'll need to create a new virtualenv. A "virtualenv" is a separate virtu
 
 These instructions will help you create a new virtualenv that will have all the python packages installed that you need to work on the Outreachy website. We use [pipenv](https://pipenv.readthedocs.io/en/latest/) for this purpose.
 
+To install pipenv, you'll need to either [install Homebrew](https://brew.sh/) (if you're on a Mac or Windows) or (if you're running Linux) [install Linuxbrew](http://linuxbrew.sh/).
+
+Then [install pipenv](https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv).
+
 The following command will automatically create a virtual environment and install the Python dependencies specified in the `Pipfile`. If you need help understanding pipenv, run `pipenv --help`
 
 ```
