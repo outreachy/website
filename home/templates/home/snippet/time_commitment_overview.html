@@ -1,0 +1,13 @@
+{% with tcs=application.get_time_commitments applicant=application.applicant final_application=applicant_contributions.0.get_application %}
+	<p>Time commitment information:</p>
+	<ul>
+		<li><strong>{{ tcs.longest_period_free }} days out of {{ tcs.internship_total_days.days }} days free</strong> from full-time commitments during the internship.
+			<ul>
+				<li>Applicant has {{ tcs.longest_period_free }} consecutive days free from full-time commitments during the internship period.</li>
+				<li>Applicants are required to have at least 49 consecutive days free from full-time commiments.</li>
+				<li>The internship period is {{ tcs.internship_total_days.days }} days long.</li>
+				<li>Applicant is free from {{ tcs.free_period_start_date }} to {{ tcs.free_period_end_date }}.</li>
+			</ul>
+		</li>
+	</ul>
+{% endwith %}

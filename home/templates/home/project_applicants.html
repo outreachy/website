@@ -166,65 +166,7 @@ that timeline, taking into account any time commitments the applicant has.
 				</div>
 			</div>
 		{% endif %}
-		<p>Time commitment information:</p>
-		<ul>
-			<li><strong>{{ tcs.longest_period_free }} days out of {{ tcs.internship_total_days.days }} days free</strong> from full-time commitments during the internship.
-				<ul>
-					<li>Applicant has {{ tcs.longest_period_free }} consecutive days free from full-time commitments during the internship period.</li>
-					<li>Applicants are required to have at least 49 consecutive days free from full-time commiments.</li>
-					<li>The internship period is {{ tcs.internship_total_days.days }} days long.</li>
-					<li>Applicant is free from {{ tcs.free_period_start_date }} to {{ tcs.free_period_end_date }}.</li>
-				</ul>
-			</li>
-		</ul>
-		{% if not tcs.school_time_commitments and not tcs.volunteer_time_commitments and not tcs.employment_time_commitments and not tcs.noncollege_school_time_commitments %}
-			<p>Applicant has not listed any university/college, coding school/online courses, work, or volunteer time commitments.</p>
-		{% endif %}
-		{% if tcs.school_time_commitments %}
-			<p>School time commitments:</p>
-			<ul>
-				<li>Applicant is enrolled at <a href="{{ application.schoolinformation.university_website }}">{{ application.schoolinformation.university_name }}</a></li>
-				<li>Degree: {{ application.schoolinformation.degree_name }}</li>
-				{% for term in tcs.school_time_commitments %}
-				<li>Term name/number: {{ term.term_name }}</li>
-				<ul>
-					<li>{{ term.start_date }} to {{ term.end_date }}</li>
-					<li>Enrolled for {{ term.registered_credits }} credits (students typically register for {{ term.typical_credits }} credits during this term)</li>
-					{% if term.outreachy_credits %}<li>The Outreachy internship will be used for {{ term.outreachy_credits }} credits during this term</li>{% endif %}
-					{% if term.thesis_credits %}<li>Applicant is registered for {{ term.thesis_credits }} graduate thesis or research credits during this term</li>{% endif %}
-				</ul>
-				{% endfor %}
-			</ul>
-		{% endif %}
-		{% if tcs.noncollege_school_time_commitments %}
-			<p>Coding school or online courses time commitments:</p>
-			<ul>
-			{% for course in tcs.noncollege_school_time_commitments %}
-				<li>Course #{{ forloop.counter }}</li>
-				<ul>
-					<li>{{ course.hours_per_week }} hours per week from {{ course.start_date }} to {{ course.end_date }}.</li>
-					<li>Description of course work and organization offering courses: {{ course.description }}</li>
-				</ul>
-			{% endfor %}
-			</ul>
-		{% endif %}
-		{% if tcs.employment_time_commitments %}
-			<p>Employment time commitments:</p>
-			<ul>
-			{% for period in tcs.employment_time_commitments %}
-				<li>{{ period.hours_per_week }} hours per week from {{ period.start_date }} to {{ period.end_date }}.{% if period.quit_on_acceptance %} Applicant has indicated they will quit this job if they are accepted as an Outreachy intern.{% endif %}</li>
-			{% endfor %}
-			</ul>
-		{% endif %}
-		{% if tcs.volunteer_time_commitments %}
-			<p>Volunteer time commitments:</p>
-			<ul>
-			{% for period in tcs.volunteer_time_commitments %}
-				<li>{{ period.hours_per_week }} hours per week from {{ period.start_date }} to {{ period.end_date }}.</li>
-				<li>Description of volunteer commitments: {{ period.description }}</li>
-			{% endfor %}
-			</ul>
-		{% endif %}
+		{% include 'home/snippet/time_commitment_overview.html' %}
 		<p>Contact Information:</p>
 		<ul>
 			<li>{{ applicant.public_name }} &lt;{{ applicant.account.email }}&gt;</li>
