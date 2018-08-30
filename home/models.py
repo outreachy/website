@@ -307,7 +307,22 @@ class RoundPage(Page):
         skills = []
         for p in approved_projects:
             for s in p.projectskill_set.all():
-                skills.append(s.skill)
+                if 'python' in s.skill.lower():
+                    skills.append('Python')
+                elif 'javascript' in s.skill.lower():
+                    skills.append('JavaScript')
+                elif 'java' in s.skill.lower():
+                    skills.append('Java')
+                elif 'django' in s.skill.lower():
+                    skills.append('Django')
+                elif 'c programming' in s.skill.lower() or 'c language' in s.skill.lower() or 'c code' in s.skill.lower():
+                    skills.append('C programming')
+                elif 'operating systems' in s.skill.lower():
+                    skills.append('Operating Systems knowledge')
+                elif 'linux' in s.skill.lower():
+                    skills.append('Linux')
+                else:
+                    skills.append(s.skill)
         skill_counter = Counter(skills)
         return skill_counter.most_common(15)
 
