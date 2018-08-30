@@ -309,7 +309,7 @@ class RoundPage(Page):
             for s in p.projectskill_set.all():
                 skills.append(s.skill)
         skill_counter = Counter(skills)
-        return skill_counter.most_common(10)
+        return skill_counter.most_common(15)
 
     def get_statistics_on_eligibility_check(self):
         count_all = ApplicantApproval.objects.filter(
