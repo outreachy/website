@@ -61,7 +61,7 @@ Outreachy Internships | Apply | Pick a Project
 	<p>You may want to brush up on your skills for contributing to free and open source software communities. Each project will use a different set of skills. Sometimes the project mentors are willing to teach you skills. Projects and the skills they use change each round. The most common skills used in projects last round were:
 	<ul>
 		{% for common_skill in previous_round.get_common_skills %}
-		<li>{{ common_skill.0 }} - {{ common_skill.1 }} project{{ common_skill.1|pluralize }}</li>
+		{% if common_skill.1 > 2 %}<li>{{ common_skill.0 }} - {{ common_skill.1 }} project{{ common_skill.1|pluralize }}</li>{% endif %}
 		{% endfor %}
 	</ul>
 	</p>
