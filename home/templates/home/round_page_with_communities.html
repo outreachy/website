@@ -58,7 +58,7 @@ Outreachy Internships | Apply | Pick a Project
 </p>
 
 {% if previous_round and not current_round.has_application_period_started %}
-	<p>You may want to read up on tutorials for contributing to free and open source software communities. Each project will use a different set of skills. The most common skills used in projects last round were:
+	<p>You may want to brush up on your skills for contributing to free and open source software communities. Each project will use a different set of skills. Sometimes the project mentors are willing to teach you skills. Projects and the skills they use change each round. The most common skills used in projects last round were:
 	<ul>
 		{% for common_skill in previous_round.get_common_skills %}
 		<li>{{ common_skill.0 }} - {{ common_skill.1 }} project{{ common_skill.1|pluralize }}</li>
@@ -68,6 +68,9 @@ Outreachy Internships | Apply | Pick a Project
 {% endif %}
 
 <p>You may also want to purchase a DRM-free copy of <a href="https://pragprog.com/book/vbopens/forge-your-future-with-open-source">"Forge Your Future With Open Source"</a> by VM (Vicky) Brasseur.</p>
+{% if not current_round.has_application_period_started %}
+	<p>The list of Outreachy projects will be available on {{ current_round.appsopen }}.</p>
+{% endif %}
 
 {% if request.user.comrade.eligible_application %}
 	{% if not current_round.has_application_deadline_passed %}
