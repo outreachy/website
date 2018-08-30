@@ -678,6 +678,12 @@ def past_rounds_page(request):
 
 def current_round_page(request):
     current_round = RoundPage.objects.latest('internstarts')
+    all_rounds = RoundPage.objects.all().order_by('-internstarts')
+    if len(all_rounds) > 1:
+        previous_round = all_rounds[1]
+    else:
+        previous_round = None
+
     approved_participations = current_round.participation_set.approved().order_by('community__name')
 
     closed_approved_projects = []
@@ -710,6 +716,7 @@ def current_round_page(request):
     return render(request, 'home/round_page_with_communities.html',
             {
             'current_round' : current_round,
+            'previous_round' : previous_round,
             'closed_projects': closed_approved_projects,
             'ontime_projects': ontime_approved_projects,
             'late_projects': late_approved_projects,

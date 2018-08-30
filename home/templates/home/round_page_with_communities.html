@@ -46,6 +46,30 @@ Outreachy Internships | Apply | Pick a Project
 {% include 'home/snippet/payment_schedule.html' %}
 {{ current_round.sponsordetails|safe }}
 
+<h1>Preparing for the Application Process</h1>
+<p>You can read about what it's like to apply to Outreachy:
+<ul>
+	<li><a href="/apply/#how-to-apply">Outreachy's application process</a></li>
+	<li><a href="https://medium.freecodecamp.org/get-the-most-out-of-your-outreachy-application-process-937d4a8ab4bf">Get the most out of your Outreachy intern application process</a></li>
+	<li><a href="https://medium.freecodecamp.org/outreachy-what-how-why-4fb60d10a228">How I got into the Outreachy open source internship program</a></li>
+	<li><a href="http://exploreshaifali.github.io/2015/06/08/getting-into-summer-of-code-programs/">Getting into Summer of Code Programs</a></li>
+	<li><a href="http://www.litacho.com/opw_the_end.html">The end of my internship</a> - note that Outreachy used to be called OPW</li>
+	<li><a href="https://web.archive.org/web/20130410022646/http://anteaya.info/blog/2013/03/29/suggestions-for-gnome-opw-applicants">Suggestions for Outreachy Applicants</a></li>
+</ul>
+</p>
+
+{% if previous_round and not current_round.has_application_period_started %}
+	<p>You may want to read up on tutorials for contributing to free and open source software communities. Each project will use a different set of skills. The most common skills used in projects last round were:
+	<ul>
+		{% for common_skill in previous_round.get_common_skills %}
+		<li>{{ common_skill.0 }} - {{ common_skill.1 }} project{{ common_skill.1|pluralize }}</li>
+		{% endfor %}
+	</ul>
+	</p>
+{% endif %}
+
+<p>You may also want to purchase a DRM-free copy of <a href="https://pragprog.com/book/vbopens/forge-your-future-with-open-source">"Forge Your Future With Open Source"</a> by VM (Vicky) Brasseur.</p>
+
 {% if request.user.comrade.eligible_application %}
 	{% if not current_round.has_application_deadline_passed %}
 		<h2>Finding a Mentor and an Internship Project</h2>

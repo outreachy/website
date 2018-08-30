@@ -302,6 +302,15 @@ class RoundPage(Page):
         return not has_deadline_passed(self.internstarts + datetime.timedelta(days=365))
 
     # Statistics functions
+    def get_common_skills(self):
+        approved_projects = Project.objects.filter(project_round__participating_round=self, approval_status=Project.APPROVED)
+        skills = []
+        for p in approved_projects:
+            for s in p.projectskill_set.all():
+                skills.append(s.skill)
+        skill_counter = Counter(skills)
+        return skill_counter.most_common(10)
+
     def get_statistics_on_eligibility_check(self):
         count_all = ApplicantApproval.objects.filter(
                 application_round=self).count()
