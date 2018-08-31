@@ -310,6 +310,8 @@ class RoundPage(Page):
                     skills.append('Python')
                 elif 'javascript' in s.skill.lower() or 'JS' in s.skill:
                     skills.append('JavaScript')
+                elif 'html' in s.skill.lower() or 'css' in s.skill.lower():
+                    skills.append('HTML/CSS')
                 elif 'java' in s.skill.lower():
                     skills.append('Java')
                 elif 'django' in s.skill.lower():
