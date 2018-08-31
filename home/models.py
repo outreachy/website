@@ -301,15 +301,14 @@ class RoundPage(Page):
     def is_travel_stipend_valid(self):
         return not has_deadline_passed(self.internstarts + datetime.timedelta(days=365))
 
-    # Statistics functions
-    def get_common_skills(self):
+    def get_common_skills_counter(self):
         approved_projects = Project.objects.filter(project_round__participating_round=self, approval_status=Project.APPROVED)
         skills = []
         for p in approved_projects:
             for s in p.projectskill_set.all():
                 if 'python' in s.skill.lower():
                     skills.append('Python')
-                elif 'javascript' in s.skill.lower():
+                elif 'javascript' in s.skill.lower() or 'JS' in s.skill:
                     skills.append('JavaScript')
                 elif 'java' in s.skill.lower():
                     skills.append('Java')
@@ -317,13 +316,37 @@ class RoundPage(Page):
                     skills.append('Django')
                 elif 'c programming' in s.skill.lower() or 'c language' in s.skill.lower() or 'c code' in s.skill.lower():
                     skills.append('C programming')
-                elif 'operating systems' in s.skill.lower():
+                elif 'c++' in s.skill.lower():
+                    skills.append('C++')
+                elif 'rust' in s.skill.lower():
+                    skills.append('Rust')
+                elif 'operating systems' in s.skill.lower() or 'kernel' in s.skill.lower():
                     skills.append('Operating Systems knowledge')
                 elif 'linux' in s.skill.lower():
                     skills.append('Linux')
+                elif 'web development' in s.skill.lower():
+                    skills.append('Web development')
+                elif 'gtk' in s.skill.lower() or 'gobject' in s.skill.lower():
+                    skills.append('GTK programming')
+                elif 'git' in s.skill.lower():
+                    skills.append('Git')
                 else:
                     skills.append(s.skill)
-        skill_counter = Counter(skills)
+
+                # A lot of projects list Android in conjunction with another skill
+                if 'android' in s.skill.lower():
+                    skills.append(s.skill)
+                # Some projects list both Git or mercurial
+                if 'mercurial' in s.skill.lower():
+                    skills.append(s.skill)
+                # Some projects list both JavaScipt and node.js
+                if 'node.js' in s.skill.lower():
+                    skills.append(s.skill)
+        return Counter(skills)
+
+    # Statistics functions
+    def get_common_skills(self):
+        skill_counter = self.get_common_skills_counter()
         return skill_counter.most_common(15)
 
     def get_statistics_on_eligibility_check(self):
