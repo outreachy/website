@@ -316,12 +316,16 @@ class RoundPage(Page):
                     skills.append('Java')
                 elif 'django' in s.skill.lower():
                     skills.append('Django')
-                elif 'c programming' in s.skill.lower() or 'c language' in s.skill.lower() or 'c code' in s.skill.lower():
+                elif 'c program' in s.skill.lower() or 'c language' in s.skill.lower() or 'c code' in s.skill.lower():
                     skills.append('C programming')
                 elif 'c++' in s.skill.lower():
                     skills.append('C++')
                 elif 'rust' in s.skill.lower():
                     skills.append('Rust')
+                elif 'ruby on rails' in s.skill.lower():
+                    skills.append('Ruby on Rails')
+                elif 'ruby' in s.skill.lower():
+                    skills.append('Ruby')
                 elif 'operating systems' in s.skill.lower() or 'kernel' in s.skill.lower():
                     skills.append('Operating Systems knowledge')
                 elif 'linux' in s.skill.lower():
@@ -332,6 +336,8 @@ class RoundPage(Page):
                     skills.append('GTK programming')
                 elif 'git' in s.skill.lower():
                     skills.append('Git')
+                elif 'writing' in s.skill.lower() or 'documentation' in s.skill.lower():
+                    skills.append('Documentation')
                 else:
                     skills.append(s.skill)
 
