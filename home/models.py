@@ -355,7 +355,7 @@ class RoundPage(Page):
     # Statistics functions
     def get_common_skills(self):
         skill_counter = self.get_common_skills_counter()
-        return skill_counter.most_common(15)
+        return skill_counter.most_common(20)
 
     def get_statistics_on_eligibility_check(self):
         count_all = ApplicantApproval.objects.filter(
