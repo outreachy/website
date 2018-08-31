@@ -316,7 +316,7 @@ class RoundPage(Page):
                     skills.append('Java')
                 elif 'django' in s.skill.lower():
                     skills.append('Django')
-                elif 'c program' in s.skill.lower() or 'c language' in s.skill.lower() or 'c code' in s.skill.lower():
+                elif 'c program' in s.skill.lower() or 'c language' in s.skill.lower() or 'c code' in s.skill.lower() or 'programming in c' in s.skill.lower() or s.skill == 'C':
                     skills.append('C programming')
                 elif 'c++' in s.skill.lower():
                     skills.append('C++')
