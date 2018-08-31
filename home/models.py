@@ -337,13 +337,13 @@ class RoundPage(Page):
 
                 # A lot of projects list Android in conjunction with another skill
                 if 'android' in s.skill.lower():
-                    skills.append(s.skill)
+                    skills.append('Android')
                 # Some projects list both Git or mercurial
                 if 'mercurial' in s.skill.lower():
-                    skills.append(s.skill)
+                    skills.append('Mercurial')
                 # Some projects list both JavaScipt and node.js
                 if 'node.js' in s.skill.lower():
-                    skills.append(s.skill)
+                    skills.append('node.js')
         return Counter(skills)
 
     # Statistics functions
