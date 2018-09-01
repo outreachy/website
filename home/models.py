@@ -301,7 +301,62 @@ class RoundPage(Page):
     def is_travel_stipend_valid(self):
         return not has_deadline_passed(self.internstarts + datetime.timedelta(days=365))
 
+    def get_common_skills_counter(self):
+        approved_projects = Project.objects.filter(project_round__participating_round=self, approval_status=Project.APPROVED)
+        skills = []
+        for p in approved_projects:
+            for s in p.projectskill_set.all():
+                if 'python' in s.skill.lower():
+                    skills.append('Python')
+                elif 'javascript' in s.skill.lower() or 'JS' in s.skill:
+                    skills.append('JavaScript')
+                elif 'html' in s.skill.lower() or 'css' in s.skill.lower():
+                    skills.append('HTML/CSS')
+                elif 'java' in s.skill.lower():
+                    skills.append('Java')
+                elif 'django' in s.skill.lower():
+                    skills.append('Django')
+                elif 'c program' in s.skill.lower() or 'c language' in s.skill.lower() or 'c code' in s.skill.lower() or 'programming in c' in s.skill.lower() or s.skill == 'C':
+                    skills.append('C programming')
+                elif 'c++' in s.skill.lower():
+                    skills.append('C++')
+                elif 'rust' in s.skill.lower():
+                    skills.append('Rust')
+                elif 'ruby on rails' in s.skill.lower():
+                    skills.append('Ruby on Rails')
+                elif 'ruby' in s.skill.lower():
+                    skills.append('Ruby')
+                elif 'operating systems' in s.skill.lower() or 'kernel' in s.skill.lower():
+                    skills.append('Operating Systems knowledge')
+                elif 'linux' in s.skill.lower():
+                    skills.append('Linux')
+                elif 'web development' in s.skill.lower():
+                    skills.append('Web development')
+                elif 'gtk' in s.skill.lower() or 'gobject' in s.skill.lower():
+                    skills.append('GTK programming')
+                elif 'git' in s.skill.lower():
+                    skills.append('Git')
+                elif 'writing' in s.skill.lower() or 'documentation' in s.skill.lower():
+                    skills.append('Documentation')
+                else:
+                    skills.append(s.skill)
+
+                # A lot of projects list Android in conjunction with another skill
+                if 'android' in s.skill.lower():
+                    skills.append('Android')
+                # Some projects list both Git or mercurial
+                if 'mercurial' in s.skill.lower():
+                    skills.append('Mercurial')
+                # Some projects list both JavaScipt and node.js
+                if 'node.js' in s.skill.lower():
+                    skills.append('node.js')
+        return Counter(skills)
+
     # Statistics functions
+    def get_common_skills(self):
+        skill_counter = self.get_common_skills_counter()
+        return skill_counter.most_common(20)
+
     def get_statistics_on_eligibility_check(self):
         count_all = ApplicantApproval.objects.filter(
                 application_round=self).count()
