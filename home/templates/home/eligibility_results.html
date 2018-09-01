@@ -7,16 +7,16 @@ Outreachy eligibility results
 {% block content %}
 {% if application.approval_status == application.APPROVED %}
 
-	<h1>Eligible for Outreachy</h1>
+	<h1>Initial application approved for Outreachy</h1>
 
-	<p>Congratuations! You're eligible to apply for the
-	Outreachy {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} internships.
+	<p>Your initial application for Outreachy has been approved. You can now proceed with the next step of your application.
 	</p>
 
-	<p>Your next step in the application process is to pick out one or two projects to apply for.
+	<p>Next, pick out one or two projects to apply for.
 	</p>
 	<p>
-	You will need to make a contribution to the project in order to be accepted as an intern.
+	You will need to make a contribution to the project.
+	Only applicants that make a contribution will be accepted as an intern.
 	Some projects will have instructions for how to make your first contributions.
 	For other projects, you will need to contact the mentor to get directions on how to make your first contributions.
 	</p>
@@ -25,102 +25,17 @@ Outreachy eligibility results
 	</p>
 	<p><a class='btn btn-success' href="{{ current_round.url }}">View Internship Projects</a></p>
 
-{% elif application.approval_status == application.REJECTED and application.reason_denied == 'GENERAL' %}
-
-	<h1>Ineligible for Outreachy</h1>
-	<p>
-	We're sorry, but based on the general information your supplied on your eligibility information form,
-	you're not eligible to apply for Outreachy internships.
-	</p>
-	<p><strong>Your Eligibility Information:</strong></p>
+{% elif application.approval_status == application.REJECTED and application.reason_denied != 'TIME' %}
+	<h1>Initial application is not approved</h1>
+	<p>We're sorry, but after reviewing your application,
+	we have determined that you are not a strong applicant for the Outreachy internship program.
+	This may be due to one of several reasons:
 	<ul>
-	{% if application.over_18 == False or application.over_18 == None %}
-			<li>Will you be 18 years or older when the Outreachy internship starts? <strong>No.</strong>
-				<ul><li>Outreachy internships are open to people who are 18 years or older as of {{ current_round.internstarts|date:"F d, Y" }}.</li></ul>
-			</li>
-	{% endif %}
-	{% if application.gsoc_or_outreachy_internship == True %}
-			<li>Have you been accepted as a Google Summer of Code intern or an Outreachy intern before? <strong>Yes.</strong>
-				<ul><li>Outreachy internships are open to people who haven't been accepted for either Google Summer of Code or Outreachy internships before.</li></ul>
-			</li>
-	{% endif %}
-	{% if application.eligible_to_work == False or application.eligible_to_work == None %}
-			<li>Are you eligible to work for 40 hours a week in the country (or countries) you will be living in during the Outreachy internship period? <strong>No.</strong>
-				<ul>
-					<li>Outreachy interns must be eligible to work in the countries they will be living in
-						during the Outreachy internship period from
-						{{ current_round.internstarts|date:"F d, Y" }} to
-						{{ current_round.internends|date:"F d, Y" }}.</li>
-					<li>Student visas: Please note that in some countries, students studying abroad
-						on a student visa may not be eligible to work full-time (40 hours a week).
-						If you are on a student visa, please double check with your school counselors before applying.</li>
-					<li>Spouse visas: In some countries, spousal visas may not allow spouses to work.
-						Please contact your immigration officer if you have any questions about
-						whether your visa allows you to work full-time (40 hours a week).</li>
-				</ul>
-			</li>
-	{% endif %}
-	{% if application.under_export_control == True %}
-		<li>Are you a person or entity restricted by <a href="https://www.treasury.gov/resource-center/sanctions/Programs/Pages/Programs.aspx">United States of America export controls or sanctions programs</a>? <strong>Yes.</strong>
-				<ul><li>The Outreachy fiscal sponsor, Software Freedom Conservancy, is a United States of America non-profit. In order to retain their 503c6 non-profit status, they cannot provide internship opportunities to people or entities that are restricted by United States of America export controls or sanctions programs.</li></ul>
-			</li>
-	{% endif %}
+		<li>You may not be eligible to be paid as a contractor of a non-profit based in the United States of America. This could be due to being a legal minor (under 18), visa restrictions, U.S. sanctions programs, or U.S. export restrictions.</li>
+		<li>You may have already participated in Google Summer of Code.</li>
+		<li>You may not have sufficiently explained why your application is aligned with the Outreachy program goal of supporting people from groups under-represented in the technology industry.</li>
 	</ul>
-	<p><strong>Incorrect information?</strong></p>
-	<p>
-	If any of the above information was filled out incorrectly,
-	please contact the Outreachy organizers at organizers@outreachy.org
-	and we can reset your eligibility information form.
-	Please provide the following information:
-	</p>
-	<ul>
-		<li>User name: {{ request.user.username }}</li>
-		<li>Email address: {{ request.user.email }}</li>
-		<li>Which question was filled out incorrectly?</li>
-	</ul>
-
-{% elif application.approval_status == application.REJECTED and application.reason_denied == 'DEMOGRAPHICS' %}
-
-	<h1>Ineligible for Outreachy</h1>
-
-	<p>
-	We're sorry, but based on the demographic information your supplied on your eligibility information form,
-	you're not eligible to apply for Outreachy internships.
-	</p>
-	<p><strong>Your Eligibility Information:</strong></p>
-	<ul>
-	{% if application.us_resident_demographics == False %}
-			<li>Are you a resident, permanent resident, or national of the United States of America who is
-				Black/African American, Hispanic/Latin@, Native American, Alaska Native, Native Hawaiian, or Pacific Islander?
-				<strong>No.</strong>
-			</li>
-	{% endif %}
-	{% if application.transgender == False %}
-			<li>Do you identify as transgender? <strong>No.</strong></li>
-	{% endif %}
-	{% if application.genderqueer == False %}
-			<li>Do you identify as genderqueer? <strong>No.</strong></li>
-	{% endif %}
-	{% if application.man == True %}
-		<li>Do you identify as a Man?<strong>Yes.</strong></li>
-	{% endif %}
-	</ul>
-	<p>
-	Outreachy internships are open 
-	internationally to women (cis and trans), trans men, and genderqueer
-	people. Internships are also open to residents and nationals of the
-	United States of any gender who are Black/African American,
-	Hispanic/Latin@, Native American/American Indian, Alaska Native, Native
-	Hawaiian, or Pacific Islander.
-	</p>
-	{% if current_round.gsoc_round %}
-	<p>
-	If you are a college or university student, you should consider applying for
-	<a href="https://summerofcode.withgoogle.com/">Google Summer of Code.</a>
-	</p>
-	{% endif %}
-	<p>
-	Please consider seeking <a href="/opportunities">other internship opportunities</a> through Outreachy sponsors.
+	We have a list of <a href="/opportunities">other opportunities</a> that may be a better fit for you.
 	</p>
 
 {% elif application.approval_status == application.REJECTED and application.reason_denied == 'TIME' %}
@@ -128,7 +43,7 @@ Outreachy eligibility results
 	<h1>Ineligible for Outreachy</h1>
 
 	<p>
-	We're sorry, but based on the time commitment information your supplied on your eligibility information form,
+	We're sorry, but based on the time commitment information your supplied on your initial application,
 	you don't have 7 consecutive weeks free from full-time commitments.
 	</p>
 	<h2><strong>Your Eligibility Information:</strong></h2>
@@ -280,7 +195,7 @@ Outreachy eligibility results
 
 	<h1>Outreachy Application Pending</h1>
 
-	<p>Your Outreachy eligibility information is pending review by the Outreachy organizers.
+	<p>Your Outreachy initial application is pending review by the Outreachy organizers.
 	We have received a notification about your submitted eligibility information and will follow up with
 	additional questions for you via email.
 	</p>
@@ -288,7 +203,7 @@ Outreachy eligibility results
 	If you have not received a follow up email within a week,
 	please <a href="/contact">contact the Outreachy organizers</a>.
 	</p>
-	<p>You will not be able to record contributions or make a final application until your eligibility form has been approved. Only eligible applicants will be selected as Outreachy interns.</p>
+	<p>You will not be able to record contributions or make a final application until your initial application has been approved.</p>
 	{% if user.is_staff %}
 		<h2>Outreachy Organizer Actions</h2>
 		<p>
