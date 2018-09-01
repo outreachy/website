@@ -224,7 +224,7 @@ def show_us_demographics(wizard):
     living_in_us = cleaned_data.get('living_in_us', True)
     return us_resident or living_in_us
 
-def gender_and_demographics_is_approved(wizard):
+def gender_and_demographics_is_aligned_with_program_goals(wizard):
     if not general_info_is_approved(wizard):
         return False
     demo_data = wizard.get_cleaned_data_for_step('USA demographics')
@@ -272,26 +272,18 @@ def gender_and_demographics_is_approved(wizard):
     return any(gender_data[x] for x in gender_minority_list) or gender_data['self_identify'] != ''
 
 def show_noncollege_school_info(wizard):
-    if not gender_and_demographics_is_approved(wizard):
-        return False
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
     return cleaned_data.get('enrolled_as_noncollege_student', True)
 
 def show_school_info(wizard):
-    if not gender_and_demographics_is_approved(wizard):
-        return False
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
     return cleaned_data.get('enrolled_as_student', True)
 
 def show_contractor_info(wizard):
-    if not gender_and_demographics_is_approved(wizard):
-        return False
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
     return cleaned_data.get('contractor', True)
 
 def show_employment_info(wizard):
-    if not gender_and_demographics_is_approved(wizard):
-        return False
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
     if cleaned_data.get('employed', True):
         return True
@@ -302,8 +294,6 @@ def show_employment_info(wizard):
     return False
 
 def show_time_commitment_info(wizard):
-    if not gender_and_demographics_is_approved(wizard):
-        return False
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
     return cleaned_data.get('volunteer_time_commitments', True)
 
@@ -342,8 +332,8 @@ def time_commitments_are_approved(wizard, application_round):
 def determine_eligibility(wizard, application_round):
     if not (general_info_is_approved(wizard)):
         return (ApprovalStatus.REJECTED, 'GENERAL')
-    if not (gender_and_demographics_is_approved(wizard)):
-        return (ApprovalStatus.REJECTED, 'DEMOGRAPHICS')
+    if not (gender_and_demographics_is_aligned_with_program_goals(wizard)):
+        return (ApprovalStatus.PENDING, '')
 
     if not time_commitments_are_approved(wizard, application_round):
         return (ApprovalStatus.REJECTED, 'TIME')
@@ -366,7 +356,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
     condition_dict = {
             'USA demographics': show_us_demographics,
             'Gender Identity': general_info_is_approved,
-            'Time Commitments': gender_and_demographics_is_approved,
+            'Time Commitments': general_info_is_approved,
             'School Info': show_school_info,
             'School Term Info': show_school_info,
             'Coding School or Online Courses Time Commitment Info': show_noncollege_school_info,
