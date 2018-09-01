@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from django.core.signing import TimestampSigner, SignatureExpired, BadSignature 
 from django.db import models
-from django.forms import inlineformset_factory, ModelForm, modelform_factory, ValidationError, widgets
+from django.forms import inlineformset_factory, ModelForm, modelform_factory, modelformset_factory, ValidationError, widgets
 from django.forms.models import BaseInlineFormSet
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_list_or_404
@@ -66,9 +66,11 @@ from .models import ProjectSkill
 from .models import RoundPage
 from .models import SchoolInformation
 from .models import SchoolTimeCommitment
+from .models import TimeCommitmentSummary
 from .models import SignedContract
 from .models import Sponsorship
 from .models import VolunteerTimeCommitment
+from .models import WorkEligibility
 
 from os import path
 
@@ -197,13 +199,11 @@ class ComradeUpdate(LoginRequiredMixin, UpdateView):
 
 BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
 
-def general_info_is_approved(wizard):
-    cleaned_data = wizard.get_cleaned_data_for_step('General Info')
+def work_eligibility_is_approved(wizard):
+    cleaned_data = wizard.get_cleaned_data_for_step('Work Eligibility')
     if not cleaned_data:
         return True
     if not cleaned_data['over_18']:
-        return False
-    if cleaned_data['gsoc_or_outreachy_internship']:
         return False
     if not cleaned_data['eligible_to_work']:
         return False
@@ -215,9 +215,9 @@ def general_info_is_approved(wizard):
     return True
 
 def show_us_demographics(wizard):
-    if not general_info_is_approved(wizard):
+    if not work_eligibility_is_approved(wizard):
         return False
-    cleaned_data = wizard.get_cleaned_data_for_step('General Info') or {}
+    cleaned_data = wizard.get_cleaned_data_for_step('Work Eligibility') or {}
     if not cleaned_data:
         return True
     us_resident = cleaned_data.get('us_national_or_permanent_resident', True)
@@ -225,7 +225,7 @@ def show_us_demographics(wizard):
     return us_resident or living_in_us
 
 def gender_and_demographics_is_aligned_with_program_goals(wizard):
-    if not general_info_is_approved(wizard):
+    if not work_eligibility_is_approved(wizard):
         return False
     demo_data = wizard.get_cleaned_data_for_step('USA demographics')
     if demo_data and demo_data['us_resident_demographics'] is True:
@@ -330,33 +330,33 @@ def time_commitments_are_approved(wizard, application_round):
     return False
 
 def determine_eligibility(wizard, application_round):
-    if not (general_info_is_approved(wizard)):
+    if not (work_eligibility_is_approved(wizard)):
         return (ApprovalStatus.REJECTED, 'GENERAL')
-    if not (gender_and_demographics_is_aligned_with_program_goals(wizard)):
-        return (ApprovalStatus.PENDING, '')
+    #if not (gender_and_demographics_is_aligned_with_program_goals(wizard)):
+    #    return (ApprovalStatus.PENDING, '')
 
     if not time_commitments_are_approved(wizard, application_round):
         return (ApprovalStatus.REJECTED, 'TIME')
 
-    general_data = wizard.get_cleaned_data_for_step('General Info')
-    gender_data = wizard.get_cleaned_data_for_step('Gender Identity')
+    general_data = wizard.get_cleaned_data_for_step('Work Eligibility')
+    #gender_data = wizard.get_cleaned_data_for_step('Gender Identity')
 
     if general_data['us_sanctioned_country']:
         return (ApprovalStatus.PENDING, '')
 
-    demo_data = wizard.get_cleaned_data_for_step('USA demographics')
-    if not (demo_data and demo_data['us_resident_demographics']):
-        if gender_data['prefer_not_to_say'] or gender_data['self_identify']:
-            return (ApprovalStatus.PENDING, '')
+    #demo_data = wizard.get_cleaned_data_for_step('USA demographics')
+    #if not (demo_data and demo_data['us_resident_demographics']):
+    #    if gender_data['prefer_not_to_say'] or gender_data['self_identify']:
+    #        return (ApprovalStatus.PENDING, '')
 
     return (ApprovalStatus.APPROVED, '')
 
 class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, SessionWizardView):
     template_name = 'home/wizard_form.html'
     condition_dict = {
-            'USA demographics': show_us_demographics,
-            'Gender Identity': general_info_is_approved,
-            'Time Commitments': general_info_is_approved,
+            #'USA demographics': show_us_demographics,
+            #'Gender Identity': work_eligibility_is_approved,
+            'Time Commitments': work_eligibility_is_approved,
             'School Info': show_school_info,
             'School Term Info': show_school_info,
             'Coding School or Online Courses Time Commitment Info': show_noncollege_school_info,
@@ -365,12 +365,31 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
             'Volunteer Time Commitment Info': show_time_commitment_info,
             }
     form_list = [
-            ('General Info', modelform_factory(ApplicantApproval, fields=(
+            #('General Info', modelform_factory(ApplicantApproval, fields=(
+            #    'over_18',
+            #    'eligible_to_work',
+            #    'gsoc_or_outreachy_internship',
+            #    'us_national_or_permanent_resident',
+            #    'living_in_us',
+            #    'under_export_control',
+            #    'us_sanctioned_country',
+            #    ),
+            #    # FIXME: this allows people to submit a partial form
+            #    # without validating either 'yes' or 'no' is selected
+            #    widgets = {
+            #        'over_18': widgets.RadioSelect(choices=BOOL_CHOICES),
+            #        'gsoc_or_outreachy_internship': widgets.RadioSelect(choices=BOOL_CHOICES),
+            #        'eligible_to_work': widgets.RadioSelect(choices=BOOL_CHOICES),
+            #        'us_national_or_permanent_resident': widgets.RadioSelect(choices=BOOL_CHOICES),
+            #        'living_in_us': widgets.RadioSelect(choices=BOOL_CHOICES),
+            #        'under_export_control': widgets.RadioSelect(choices=BOOL_CHOICES),
+            #        'us_sanctioned_country': widgets.RadioSelect(choices=BOOL_CHOICES),
+            #        },
+            #    )),
+            ('Work Eligibility', modelform_factory(WorkEligibility,
+                fields=(
                 'over_18',
                 'eligible_to_work',
-                'gsoc_or_outreachy_internship',
-                'us_national_or_permanent_resident',
-                'living_in_us',
                 'under_export_control',
                 'us_sanctioned_country',
                 ),
@@ -378,89 +397,87 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 # without validating either 'yes' or 'no' is selected
                 widgets = {
                     'over_18': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'gsoc_or_outreachy_internship': widgets.RadioSelect(choices=BOOL_CHOICES),
                     'eligible_to_work': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'us_national_or_permanent_resident': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'living_in_us': widgets.RadioSelect(choices=BOOL_CHOICES),
                     'under_export_control': widgets.RadioSelect(choices=BOOL_CHOICES),
                     'us_sanctioned_country': widgets.RadioSelect(choices=BOOL_CHOICES),
                     },
                 )),
-            ('USA demographics', modelform_factory(ApplicantApproval, fields=(
-                'us_resident_demographics',
-                ),
-                widgets = {
-                    'us_resident_demographics': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    },
-                )),
-            ('Gender Identity', modelform_factory(ApplicantApproval, fields=(
-                'transgender',
-                'genderqueer',
-                'man',
-                'woman',
-                'demi_boy',
-                'demi_girl',
-                'non_binary',
-                'demi_non_binary',
-                'genderqueer',
-                'genderflux',
-                'genderfluid',
-                'demi_genderfluid',
-                'demi_gender',
-                'bi_gender',
-                'tri_gender',
-                'multigender',
-                'pangender',
-                'maxigender',
-                'aporagender',
-                'intergender',
-                'mavrique',
-                'gender_confusion',
-                'gender_indifferent',
-                'graygender',
-                'agender',
-                'genderless',
-                'gender_neutral',
-                'neutrois',
-                'androgynous',
-                'androgyne',
-                'prefer_not_to_say',
-                'self_identify',
-                ),
-                widgets = {
-                    'transgender': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'genderqueer': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'man': widgets.CheckboxInput(),
-                    'woman': widgets.CheckboxInput(),
-                    'demi_boy': widgets.CheckboxInput(),
-                    'demi_girl': widgets.CheckboxInput(),
-                    'non_binary': widgets.CheckboxInput(),
-                    'demi_non_binary': widgets.CheckboxInput(),
-                    'genderflux': widgets.CheckboxInput(),
-                    'genderfluid': widgets.CheckboxInput(),
-                    'demi_genderfluid': widgets.CheckboxInput(),
-                    'demi_gender': widgets.CheckboxInput(),
-                    'bi_gender': widgets.CheckboxInput(),
-                    'tri_gender': widgets.CheckboxInput(),
-                    'multigender': widgets.CheckboxInput(),
-                    'pangender': widgets.CheckboxInput(),
-                    'maxigender': widgets.CheckboxInput(),
-                    'aporagender': widgets.CheckboxInput(),
-                    'intergender': widgets.CheckboxInput(),
-                    'mavrique': widgets.CheckboxInput(),
-                    'gender_confusion': widgets.CheckboxInput(),
-                    'gender_indifferent': widgets.CheckboxInput(),
-                    'graygender': widgets.CheckboxInput(),
-                    'agender': widgets.CheckboxInput(),
-                    'genderless': widgets.CheckboxInput(),
-                    'gender_neutral': widgets.CheckboxInput(),
-                    'neutrois': widgets.CheckboxInput(),
-                    'androgynous': widgets.CheckboxInput(),
-                    'androgyne': widgets.CheckboxInput(),
-                    'prefer_not_to_say': widgets.CheckboxInput(),
-                    },
-                )),
-            ('Time Commitments', modelform_factory(ApplicantApproval, fields=(
+            #('USA demographics', modelform_factory(ApplicantApproval, fields=(
+            #    'us_resident_demographics',
+            #    ),
+            #    widgets = {
+            #        'us_resident_demographics': widgets.RadioSelect(choices=BOOL_CHOICES),
+            #        },
+            #    )),
+            #('Gender Identity', modelform_factory(ApplicantApproval, fields=(
+            #    'transgender',
+            #    'genderqueer',
+            #    'man',
+            #    'woman',
+            #    'demi_boy',
+            #    'demi_girl',
+            #    'non_binary',
+            #    'demi_non_binary',
+            #    'genderqueer',
+            #    'genderflux',
+            #    'genderfluid',
+            #    'demi_genderfluid',
+            #    'demi_gender',
+            #    'bi_gender',
+            #    'tri_gender',
+            #    'multigender',
+            #    'pangender',
+            #    'maxigender',
+            #    'aporagender',
+            #    'intergender',
+            #    'mavrique',
+            #    'gender_confusion',
+            #    'gender_indifferent',
+            #    'graygender',
+            #    'agender',
+            #    'genderless',
+            #    'gender_neutral',
+            #    'neutrois',
+            #    'androgynous',
+            #    'androgyne',
+            #    'prefer_not_to_say',
+            #    'self_identify',
+            #    ),
+            #    widgets = {
+            #        'transgender': widgets.RadioSelect(choices=BOOL_CHOICES),
+            #        'genderqueer': widgets.RadioSelect(choices=BOOL_CHOICES),
+            #        'man': widgets.CheckboxInput(),
+            #        'woman': widgets.CheckboxInput(),
+            #        'demi_boy': widgets.CheckboxInput(),
+            #        'demi_girl': widgets.CheckboxInput(),
+            #        'non_binary': widgets.CheckboxInput(),
+            #        'demi_non_binary': widgets.CheckboxInput(),
+            #        'genderflux': widgets.CheckboxInput(),
+            #        'genderfluid': widgets.CheckboxInput(),
+            #        'demi_genderfluid': widgets.CheckboxInput(),
+            #        'demi_gender': widgets.CheckboxInput(),
+            #        'bi_gender': widgets.CheckboxInput(),
+            #        'tri_gender': widgets.CheckboxInput(),
+            #        'multigender': widgets.CheckboxInput(),
+            #        'pangender': widgets.CheckboxInput(),
+            #        'maxigender': widgets.CheckboxInput(),
+            #        'aporagender': widgets.CheckboxInput(),
+            #        'intergender': widgets.CheckboxInput(),
+            #        'mavrique': widgets.CheckboxInput(),
+            #        'gender_confusion': widgets.CheckboxInput(),
+            #        'gender_indifferent': widgets.CheckboxInput(),
+            #        'graygender': widgets.CheckboxInput(),
+            #        'agender': widgets.CheckboxInput(),
+            #        'genderless': widgets.CheckboxInput(),
+            #        'gender_neutral': widgets.CheckboxInput(),
+            #        'neutrois': widgets.CheckboxInput(),
+            #        'androgynous': widgets.CheckboxInput(),
+            #        'androgyne': widgets.CheckboxInput(),
+            #        'prefer_not_to_say': widgets.CheckboxInput(),
+            #        },
+            #    )),
+            ('Time Commitments', modelform_factory(TimeCommitmentSummary,
+                fields=(
                 'enrolled_as_student',
                 'enrolled_as_noncollege_student',
                 'employed',
@@ -475,20 +492,13 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'volunteer_time_commitments': widgets.RadioSelect(choices=BOOL_CHOICES),
                     },
                 )),
-            ('School Info', inlineformset_factory(ApplicantApproval,
-                SchoolInformation,
-                min_num=1,
-                max_num=1,
-                validate_min=True,
-                validate_max=True,
-                can_delete=False,
+            ('School Info', modelform_factory(SchoolInformation,
                 fields=(
                     'university_name',
                     'university_website',
                     'degree_name',
                 ))),
-            ('School Term Info', inlineformset_factory(ApplicantApproval,
-                SchoolTimeCommitment,
+            ('School Term Info', modelformset_factory(SchoolTimeCommitment,
                 min_num=1,
                 validate_min=True,
                 extra=2,
@@ -505,8 +515,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 widgets = {
                     },
                 )),
-            ('Coding School or Online Courses Time Commitment Info', inlineformset_factory(ApplicantApproval,
-                NonCollegeSchoolTimeCommitment,
+            ('Coding School or Online Courses Time Commitment Info', modelformset_factory(NonCollegeSchoolTimeCommitment,
                 min_num=1,
                 validate_min=True,
                 extra=4,
@@ -517,8 +526,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'hours_per_week',
                     'description',
                 ))),
-            ('Contractor Info', inlineformset_factory(ApplicantApproval,
-                ContractorInformation,
+            ('Contractor Info', modelformset_factory(ContractorInformation,
                 min_num=1,
                 max_num=1,
                 validate_min=True,
@@ -532,8 +540,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'continuing_contract_work': widgets.RadioSelect(choices=BOOL_CHOICES),
                     },
                 )),
-            ('Employment Info', inlineformset_factory(ApplicantApproval,
-                EmploymentTimeCommitment,
+            ('Employment Info', modelformset_factory(EmploymentTimeCommitment,
                 min_num=1,
                 validate_min=True,
                 extra=2,
@@ -548,8 +555,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'quit_on_acceptance': widgets.CheckboxInput(),
                     },
                 )),
-            ('Volunteer Time Commitment Info', inlineformset_factory(ApplicantApproval,
-                VolunteerTimeCommitment,
+            ('Volunteer Time Commitment Info', modelformset_factory(VolunteerTimeCommitment,
                 min_num=1,
                 validate_min=True,
                 extra=2,
@@ -564,7 +570,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
     # TODO: override get method to redirect to results page if the person
     # has filled out an application
     TEMPLATES = {
-            'General Info': 'home/eligibility_wizard_general.html',
+            'Work Eligibility': 'home/eligibility_wizard_general.html',
             'USA demographics': 'home/eligibility_wizard_us_demographics.html',
             'Gender Identity': 'home/eligibility_wizard_gender.html',
             'Time Commitments': 'home/eligibility_wizard_time_commitments.html',
@@ -579,64 +585,52 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
     def get_template_names(self):
         return [self.TEMPLATES[self.steps.current]]
 
-    def get_form_instance(self, step):
+    def get_current_round(self):
         current_round = RoundPage.objects.latest('internstarts')
         if not current_round.has_application_period_started():
             raise PermissionDenied('The Outreachy application period is not yet open. Eligibility checking will become available when the next application period opens. Please sign up for the announcements mailing list for an email when the next application period opens: https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce')
         if current_round.has_late_application_deadline_passed():
             raise PermissionDenied('The Outreachy application period is closed. If you are an applicant who has submitted an application for an internship project and your time commitments have increased, please contact the Outreachy organizers (see contact link above). Eligibility checking will become available when the next application period opens. Please sign up for the announcements mailing list for an email when the next application period opens: https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce')
-
-        # This implementation ignores `step` which is fine as long as
-        # all of the forms are supposed to edit the same base object and
-        # are either ModelForm or InlineModelForm.
-
-        # Make sure to use the same Python object for all steps, rather
-        # than constructing a different empty object for each step, by
-        # caching it on this view instance.
-        if not getattr(self, 'object', None):
-            try:
-                self.object = ApplicantApproval.objects.get(
-                        applicant=self.request.user.comrade,
-                        application_round=current_round)
-            except ApplicantApproval.DoesNotExist:
-                self.object = ApplicantApproval(
-                        applicant=self.request.user.comrade,
-                        application_round=current_round)
-        return self.object
+        return current_round
 
     def get_context_data(self, **kwargs):
         context = super(EligibilityUpdateView, self).get_context_data(**kwargs)
-        context['current_round'] = self.object.application_round
+        context['current_round'] = self.get_current_round()
         return context
 
     def done(self, form_list, **kwargs):
-        # We have multiple forms editing the same object, but we want to
-        # batch up the database writes so the object is only actually
-        # updated once.
 
-        inlines = []
-        for form in form_list:
-            if isinstance(form, BaseInlineFormSet):
-                inlines.append(form)
-            else:
-                # Assume (and assert) that any form which is not an
-                # InlineFormSet must be a ModelForm that edits
-                # self.object.
-                result = form.save(commit=False)
-                assert result == self.object
+        self.object = ApplicantApproval(
+                    applicant=self.request.user.comrade,
+                    application_round=self.get_current_round(),
+                )
 
-        # At this point we've saved (but not committed) all the forms
-        # that edit self.object.
-
+        # It's okay that the other objects aren't saved,
+        # because determine_eligibility get the cleaned data from the form wizard,
+        # not the database objects.
         self.object.approval_status, self.object.reason_denied = determine_eligibility(self, self.object.application_round)
-
         # Make sure to commit the object to the database before saving
-        # any of the InlineFormSets, so they can set their foreign keys
-        # to point to this object.
+        # any of the related objects, so they can set their foreign keys
+        # to point to this ApplicantApproval object.
         self.object.save()
 
-        for inlineformset in inlines:
-            inlineformset.save()
+        for form in form_list:
+            results = form.save(commit=False)
+
+            # result might be a single value because it's a modelform
+            # (WorkEligibility and TimeCommitmentSummary)
+            # or a list because it's a modelformsets
+            # (VolunteerTimeCommitment, EmploymentTimeCommitment, etc)
+            # The next line is magic to check if it's a list
+            if not isinstance(results, list):
+                results = [ results ]
+
+            # For each object which contains data from the modelform
+            # or modelformsets, we save that database object,
+            # after setting the parent pointer.
+            for r in results:
+                r.applicant = self.object
+                r.save()
 
         if self.object.approval_status == ApprovalStatus.PENDING:
             email.approval_status_changed(self.object, self.request)
