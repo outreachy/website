@@ -19,7 +19,7 @@ Outreachy collects personal data when:
 
 * you create a user account;
 * you sign up for a mailing list;
-* you fill out an internship eligibility application;
+* you fill out an initial internship application;
 * you sign up to coordinate mentors for a community;
 * you submit a project in order to sign up to mentor for Outreachy;
 * you participate in surveys and evaluations;
@@ -153,22 +153,23 @@ When an approved Outreachy applicant records a contribution to a mentored projec
 * (optional) your blog URL and RSS feed URL;
 * (optional) your Twitter user profile URL;
 
-Only Outreachy organizers will have access to the following private personal data for applicants who have filled out an eligibility form:
+Only Outreachy organizers will have access to the following private personal data for applicants who have filled out an initial application:
 
 * your legal name to use in intern contracts or payments;
 * your pronouns, if you choose not to share your pronouns with mentors and coordinators;
-* eligibility information that determines whether the Software Freedom Conservancy is allowed to pay you as a contractor under U.S. non-profit laws:
+* information that determines whether the Software Freedom Conservancy is allowed to pay you as a contractor under U.S. non-profit laws:
     * your eligibility to work for 40-hours a week in your country of residence
-    * whether you are a citizen, resident, or national of Crimea, Cuba, Iran, North Korea, or Syria
+    * whether you are a citizen, resident, or national of Crimea, Cuba, Iran, North Korea, or Syria. Outreachy's fiscal parent, Software Freedom Conservancy, is a 501(c)(3) U.S. non-profit. As a U.S. non-profit, Conservancy must ensure that funds are not sent to countries under U.S. sanctions programs, such as Cuba, Iran, North Korea, or Syria.
     * your status as a person or entity restricted by United States of America export controls or sanctions programs
-* eligibility information that helps us determine if you are eligible for an Outreachy internship:
+* information that helps us determine if you are eligible for an Outreachy internship:
     * your age (whether you are over 18)
     * your participation status in past Google Summer of Code, Outreach Program for Women, or Outreachy internships
     * your status as a national or permanent resident of the United States of America
-    * (if you are a national or permanent resident of the United States) your racial/ethnic demographics
+* information that helps us determine if your initial application is aligned with the Outreachy program goal of supporting people from groups under-represented in the technology industry:
+    * your racial/ethnic demographics
     * your gender identity, including whether you are transgender or genderqueer
 
-If you wish to remove your eligibility information from the Outreachy website, please contact us via our [Personal Data Request Form](https://outreachy.org/contact/organizers/). Currently removing the eligibility information means that any recorded contributions or applications to mentored projects will be deleted, and you will not be eligible to be accepted as an Outreachy intern. We are working on features to allow more fine-grained data removal after the application period is over.
+If you wish to remove your initial application information from the Outreachy website, please contact us via our [Personal Data Request Form](https://outreachy.org/contact/organizers/). Currently, removing the initial application information means that any recorded contributions or applications to mentored projects will be deleted, and you will not be eligible to be accepted as an Outreachy intern. We are working on features to allow more fine-grained data removal.
 
 The Software Freedom Conservancy will collect personal data from interns that is necessary to fulfill its contractual obligations and make payments to interns. This information is not sold or distributed to third parties.
 
@@ -194,7 +195,7 @@ Outreachy may send you e-mail about your account, to inform you of important upc
 Outreachy manages several mailing lists. The subscriber list is hidden from other subscribers, so your e-mail information will not be shared unless you post to the list. All mailing lists are moderated, so that spammers cannot send unwanted e-mail. Mailing list subscriber lists are never sold or distributed to third parties. You can unsubscribe from any of these lists directly through the mailing list website.
 
 
-The Outreachy website sends automated e-mails to applicants who have filled out an eligibility check, mentors, and coordinators. By signing up to participate in the program, you agree to receive notification e-mails at the e-mail address listed in your account. We are working to allow Outreachy website users to opt-out of e-mail notifications in the future.
+The Outreachy website sends automated e-mails to applicants who have filled out an initial application, mentors, and coordinators. By signing up to participate in the program, you agree to receive notification e-mails at the e-mail address listed in your account. We are working to allow Outreachy website users to opt-out of e-mail notifications in the future.
  
 Cookies and Other Browser Information
 ===
