@@ -30,6 +30,7 @@ from .models import SchoolTimeCommitment
 from .models import SignedContract
 from .models import Sponsorship
 from .models import VolunteerTimeCommitment
+from .models import WorkEligibility
 
 class ComradeInline(admin.StackedInline):
     model = Comrade
@@ -209,6 +210,11 @@ class CoordinatorApprovalAdmin(reversion.admin.VersionAdmin):
             '=coordinator__account__email',
             )
 
+class WorkEligibilityInline(admin.StackedInline):
+    model = WorkEligibility
+    can_delete = False
+    verbose_name_plural = 'Work Eligibility'
+
 class SchoolInformationInline(admin.StackedInline):
     model = SchoolInformation
     can_delete = False
@@ -271,7 +277,7 @@ class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
             '=applicant__account__username',
             '=applicant__account__email',
             )
-    inlines = (SchoolInformationInline, SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, ContractorInformationInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline)
+    inlines = (WorkEligibilityInline, SchoolInformationInline, SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, ContractorInformationInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline)
 
     def round(self, obj):
         return obj.application_round
