@@ -22,6 +22,7 @@ from .models import NewCommunity
 from .models import NonCollegeSchoolTimeCommitment
 from .models import Notification
 from .models import Participation
+from .models import PaymentEligibility
 from .models import Project
 from .models import ProjectSkill
 from .models import RoundPage
@@ -215,6 +216,11 @@ class WorkEligibilityInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Work Eligibility'
 
+class PaymentEligibilityInline(admin.StackedInline):
+    model = PaymentEligibility
+    can_delete = False
+    verbose_name_plural = 'Payment Eligibility'
+
 class SchoolInformationInline(admin.StackedInline):
     model = SchoolInformation
     can_delete = False
@@ -265,11 +271,6 @@ class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
     list_filter = (
             'approval_status',
             'application_round',
-            'us_national_or_permanent_resident',
-            'living_in_us',
-            'us_resident_demographics',
-            'transgender',
-            'genderqueer'
             )
     search_fields = (
             'applicant__public_name',
@@ -277,7 +278,7 @@ class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
             '=applicant__account__username',
             '=applicant__account__email',
             )
-    inlines = (WorkEligibilityInline, SchoolInformationInline, SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, ContractorInformationInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline)
+    inlines = (WorkEligibilityInline, PaymentEligibilityInline, SchoolInformationInline, SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, ContractorInformationInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline)
 
     def round(self, obj):
         return obj.application_round

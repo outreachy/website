@@ -193,6 +193,16 @@ class RoundPage(Page):
     def final_stipend_payment_deadline(self):
         return self.finalfeedback + datetime.timedelta(days=30)
 
+    # There is a concern about paying interns who are in a country
+    # where they are not eligible to work in (usually due to visa restrictions).
+    # We need to ask interns whether they will be traveling after their internship
+    # when they would normally be paid. Internships may be extended by up to five weeks.
+    # Payment isn't instantaneous, but this is a little better than just saying
+    # "Are you eligible to work in all the countries you are residing in
+    # during the internship period?"
+    def sfc_payment_last_date(self):
+        return self.internends + datetime.timedelta(days=7*5)
+
     def has_application_period_started(self):
         return has_deadline_passed(self.appsopen)
 
@@ -2070,14 +2080,6 @@ class ApplicantApproval(ApprovalStatus):
             verbose_name='Previous Google Summer of Code or Outreachy internship?',
             help_text='Have you been accepted as a Google Summer of Code intern or an Outreachy intern before? Please say yes even if you did not complete the internship.')
 
-    us_national_or_permanent_resident = models.NullBooleanField(
-            help_text='Are you a national or permanent resident of the United States of America? Outreachy is open to some people around the world, and additional grpous of people in the U.S.A.')
-
-    living_in_us = models.NullBooleanField(
-            verbose_name='Will you be living for the majority of the Outreachy internship period in the United States of America and be eligible to work in the U.S.A?',
-            help_text='Please answer yes even if you are a citizen of a country other than USA.')
-
-
     # Race/Ethnicity Information
     us_resident_demographics = models.NullBooleanField(
             verbose_name='Are you Black/African American, Hispanic/Latin@, Native American, Alaska Native, Native Hawaiian, or Pacific Islander?')
@@ -2241,6 +2243,17 @@ class WorkEligibility(models.Model):
     us_sanctioned_country = models.BooleanField(
             verbose_name='Are you a citizen, resident, or national of Crimea, Cuba, Iran, North Korea, or Syria?',
             help_text="Outreachy's fiscal parent, Software Freedom Conservancy, is a 501(c)(3) U.S. non-profit. As a U.S. non-profit, Conservancy must ensure that funds are not sent to countries under U.S. sanctions programs, such as Cuba, Iran, North Korea, or Syria. If you have citizenship with Cuba, Iran, North Korea, or Syria, please answer yes, even if you are not currently living in those countries. We will follow up with additional questions.")
+
+
+class PaymentEligibility(models.Model):
+    applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
+    us_national_or_permanent_resident = models.BooleanField(
+            verbose_name='Are you a national or permanent resident of the United States of America?',
+            help_text='Outreachy is open to applicants around the world. This question is only to determine which tax form you will need to fill out.')
+
+    living_in_us = models.BooleanField(
+            verbose_name='Will you be living in the United States of America during the Outreachy internship period, or for up to five weeks after the internship period ends?',
+            help_text='Please answer yes even if you are a citizen of a country other than the USA.')
 
 class TimeCommitmentSummary(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)

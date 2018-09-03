@@ -61,6 +61,7 @@ from .models import NewCommunity
 from .models import NonCollegeSchoolTimeCommitment
 from .models import Notification
 from .models import Participation
+from .models import PaymentEligibility
 from .models import Project
 from .models import ProjectSkill
 from .models import RoundPage
@@ -217,12 +218,11 @@ def work_eligibility_is_approved(wizard):
 def show_us_demographics(wizard):
     if not work_eligibility_is_approved(wizard):
         return False
-    cleaned_data = wizard.get_cleaned_data_for_step('Work Eligibility') or {}
+    cleaned_data = wizard.get_cleaned_data_for_step('Payment Eligibility') or {}
     if not cleaned_data:
         return True
     us_resident = cleaned_data.get('us_national_or_permanent_resident', True)
-    living_in_us = cleaned_data.get('living_in_us', True)
-    return us_resident or living_in_us
+    return us_resident
 
 def gender_and_demographics_is_aligned_with_program_goals(wizard):
     if not work_eligibility_is_approved(wizard):
@@ -356,6 +356,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
     condition_dict = {
             #'USA demographics': show_us_demographics,
             #'Gender Identity': work_eligibility_is_approved,
+            'Payment Eligibility': work_eligibility_is_approved,
             'Time Commitments': work_eligibility_is_approved,
             'School Info': show_school_info,
             'School Term Info': show_school_info,
@@ -400,6 +401,16 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'eligible_to_work': widgets.RadioSelect(choices=BOOL_CHOICES),
                     'under_export_control': widgets.RadioSelect(choices=BOOL_CHOICES),
                     'us_sanctioned_country': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    },
+                )),
+            ('Payment Eligibility', modelform_factory(PaymentEligibility,
+                fields=(
+                'us_national_or_permanent_resident',
+                'living_in_us',
+                ),
+                widgets = {
+                    'us_national_or_permanent_resident': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'living_in_us': widgets.RadioSelect(choices=BOOL_CHOICES),
                     },
                 )),
             #('USA demographics', modelform_factory(ApplicantApproval, fields=(
@@ -571,6 +582,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
     # has filled out an application
     TEMPLATES = {
             'Work Eligibility': 'home/eligibility_wizard_general.html',
+            'Payment Eligibility': 'home/eligibility_wizard_tax_forms.html',
             'USA demographics': 'home/eligibility_wizard_us_demographics.html',
             'Gender Identity': 'home/eligibility_wizard_gender.html',
             'Time Commitments': 'home/eligibility_wizard_time_commitments.html',
