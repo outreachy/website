@@ -2220,11 +2220,17 @@ class ApplicantApproval(ApprovalStatus):
                 'volunteer_time_commitments': volunteer_time_commitments,
                 'employment_time_commitments': employment_time_commitments,
                 }
+
     def __str__(self):
         return "{name} <{email}> - {status}".format(
                 name=self.applicant.public_name,
                 email=self.applicant.account.email,
                 status=self.get_approval_status_display())
+
+    class Meta:
+        unique_together = (
+                ('applicant', 'application_round'),
+                )
 
 class WorkEligibility(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
