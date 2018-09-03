@@ -272,18 +272,28 @@ def gender_and_demographics_is_aligned_with_program_goals(wizard):
     return any(gender_data[x] for x in gender_minority_list) or gender_data['self_identify'] != ''
 
 def show_noncollege_school_info(wizard):
+    if not work_eligibility_is_approved(wizard):
+        return False
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
     return cleaned_data.get('enrolled_as_noncollege_student', True)
 
 def show_school_info(wizard):
+    if not work_eligibility_is_approved(wizard):
+        return False
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
     return cleaned_data.get('enrolled_as_student', True)
 
 def show_contractor_info(wizard):
+    if not work_eligibility_is_approved(wizard):
+        return False
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
+    if cleaned_data == None:
+        return False
     return cleaned_data.get('contractor', True)
 
 def show_employment_info(wizard):
+    if not work_eligibility_is_approved(wizard):
+        return False
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
     if cleaned_data.get('employed', True):
         return True
@@ -294,6 +304,8 @@ def show_employment_info(wizard):
     return False
 
 def show_time_commitment_info(wizard):
+    if not work_eligibility_is_approved(wizard):
+        return False
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
     return cleaned_data.get('volunteer_time_commitments', True)
 
