@@ -1,43 +1,75 @@
 {% extends "base.html" %}
 
 {% block title %}
-Are you eligible to apply to Outreachy?
+Outreachy Initial Application
 {% endblock %}
 
 {% block content %}
-<h1>Outreachy Eligibility Checking</h1>
+<h1>Outreachy Initial Application</h1>
 <img src="https://www.outreachy.org/media/images/bot-eligibility.original.png" class="float-right">
 <p>
 Welcome to Outreachy! We're excited to have you apply for our internships.
-Before you get started, we need to double check whether you are eligible for the current round of Outreachy internships.
-</p>
-<p>
-Please fill out the following forms to check your eligibility for the Outreachy internships.
-You'll need to fill out this form for each round you apply for.
+You'll need to fill out an initial application for each round you apply for.
 </p>
 
 {% include "home/snippet/privacy_policy.html" %}
 
 <p>
-University and college students who are applying will need to provide information about their school calendar for their current and next terms.
+University and college students who are applying will need to provide information about their school calendar and class credits.
+We will ask about your current term and your next term.
 Please have that information before starting this process.
 </p>
-<p>The Outreachy internships will run from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
 <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
 <hr>
 
 <form action="" method="post">{% csrf_token %}
 {{ wizard.form.media }}
 {{ wizard.management_form }}
-{% if wizard.form.forms %}
-    {{ wizard.form.management_form }}
-    {% for form in wizard.form.forms %}
-        {% include "bootstrap_form.html" with form=form only %}
-	<hr>
-    {% endfor %}
-{% else %}
-        {% include "bootstrap_card_form.html" with form=wizard.form only %}
-{% endif %}
+{% for field in form.visible_fields %}
+	{% if 'Are you eligible to work' in field.label_tag %}
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class = "card-header">
+				Are you eligible to work for 40 hours a week in ALL the countries you will be living in from 
+				{{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.sfc_payment_last_date|date:"F d, Y" }}?
+			</div>	    
+			<div class = "card-body">
+				{{ field }}
+			</div>
+			<div class="card-footer bg-white">
+				<p>{{ field.help_text|safe }}</p>
+			</div>
+		</div>
+	{% elif 'Will you be 18 years' in field.label_tag %}
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class = "card-header">
+				Will you be 18 years or older on {{ current_round.internstarts|date:"F d, Y" }}?
+			</div>	    
+			<div class = "card-body">
+				{{ field }}
+			</div>
+		</div>
+	{% else %}
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class = "card-header">
+				{{ field.label_tag }}
+			</div>	    
+			<div class = "card-body">
+				{{ field }}
+			</div>
+			{% if field.help_text %}
+				<div class="card-footer bg-white">
+					<p>{{ field.help_text|safe }}</p>
+				</div>
+			{% endif %}
+		</div>
+	{% endif %} 
+{% endfor %}
+{% for hidden in form.hidden_fields %}
+{{ hidden }}
+{% endfor %}
 {% if wizard.steps.prev %}
 <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}">First step</button>
 <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.prev }}">Previous step</button>

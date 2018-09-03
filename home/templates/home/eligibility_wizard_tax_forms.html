@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block title %}
-Are you eligible to apply to Outreachy?
+Outreachy Initial Application
 {% endblock %}
 
 {% block content %}
-<h1>Outreachy Eligibility Checking</h1>
+<h1>Outreachy Initial Application</h1>
 
 {% include "home/snippet/privacy_policy.html" %}
 <p>
@@ -17,26 +17,50 @@ These questions will help us determine which form you will need to fill out.
 Please note that Outreachy organizers have experience working with people who are in the middle of name changes or who people who wish to use a pseudonym.
 The tax forms with your legal name will not be shared with mentors.
 </p>
-<p>
-We need to know whether you will be residing in the United States of America during the Outreachy internship period,
-and five weeks after the internship period ends.
-That period is from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.sfc_payment_last_date|date:"F d, Y" }}.
-</p>
 <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
 <hr>
 
 <form action="" method="post">{% csrf_token %}
 {{ wizard.form.media }}
 {{ wizard.management_form }}
-{% if wizard.form.forms %}
-    {{ wizard.form.management_form }}
-    {% for form in wizard.form.forms %}
-        {% include "bootstrap_card_form.html" with form=form only %}
-	<hr>
-    {% endfor %}
-{% else %}
-    {% include "bootstrap_card_form.html" with form=wizard.form only %}
-{% endif %}
+<form action="" method="post">{% csrf_token %}
+{{ wizard.form.media }}
+{{ wizard.management_form }}
+{% for field in form.visible_fields %}
+	{% if 'Will you be living in the United States of America' in field.label_tag %}
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class = "card-header">
+				Will you be living in the United States of America at any time from
+				{{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.sfc_payment_last_date|date:"F d, Y" }}?
+			</div>	    
+			<div class = "card-body">
+				{{ field }}
+			</div>
+			<div class="card-footer bg-white">
+				{{ field.help_text|safe }}
+			</div>
+		</div>
+	{% else %}
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class = "card-header">
+				{{ field.label_tag }}
+			</div>	    
+			<div class = "card-body">
+				{{ field }}
+			</div>
+			{% if field.help_text %}
+				<div class="card-footer bg-white">
+					{{ field.help_text|safe }}
+				</div>
+			{% endif %}
+		</div>
+	{% endif %} 
+{% endfor %}
+{% for hidden in form.hidden_fields %}
+{{ hidden }}
+{% endfor %}
 {% if wizard.steps.prev %}
 <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}">First step</button>
 <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.prev }}">Previous step</button>
