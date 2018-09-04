@@ -348,11 +348,11 @@ def time_commitments_are_approved(wizard, application_round):
 def determine_eligibility(wizard, application_round):
     if not (work_eligibility_is_approved(wizard)):
         return (ApprovalStatus.REJECTED, 'GENERAL')
-    if not (gender_and_demographics_is_aligned_with_program_goals(wizard)):
-        return (ApprovalStatus.PENDING, '')
-
     if not time_commitments_are_approved(wizard, application_round):
         return (ApprovalStatus.REJECTED, 'TIME')
+
+    if not (gender_and_demographics_is_aligned_with_program_goals(wizard)):
+        return (ApprovalStatus.PENDING, '')
 
     general_data = wizard.get_cleaned_data_for_step('Work Eligibility')
     gender_data = wizard.get_cleaned_data_for_step('Gender Identity')
