@@ -571,6 +571,8 @@ class RoundPage(Page):
                 genderqueer=False,
                 demi_boy=False,
                 demi_girl=False,
+                trans_masculine=False,
+                trans_feminine=False,
                 non_binary=False,
                 demi_non_binary=False,
                 genderflux=False,
@@ -2210,6 +2212,10 @@ class ApplicantGenderIdentity(models.Model):
     demi_boy = models.BooleanField()
 
     demi_girl = models.BooleanField()
+
+    trans_masculine = models.BooleanField()
+
+    trans_feminine = models.BooleanField()
 
     non_binary = models.BooleanField()
 
