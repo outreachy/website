@@ -2269,6 +2269,13 @@ class ApplicantGenderIdentity(models.Model):
             blank=True,
             help_text="If your gender identity is NOT listed above, what is your gender identity? Please note that 'gender identity' is NOT your name. Gender identity is your gender.")
 
+    # FIXME: iterate over the fields in self
+    # if they're true, return a comma separated list of gender identities,
+    # e.g. 'non-binary, agender, and that you self-identify as gender fuck'
+    # Need to take into account 'prefer not to say' also marked with other genders?
+    def __str__(self):
+        return self.self_identify
+
 class TimeCommitmentSummary(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
 

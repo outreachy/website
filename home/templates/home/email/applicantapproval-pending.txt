@@ -1,8 +1,7 @@
 {% with application=applicantapproval %}
-Approve Outreachy applicant
+Approve Outreachy applicant {{ application.applicant.public_name }}
 
-The applicant {{ application.applicant.public_name }}
-may not be eligible for Outreachy.
+Please review the initial application submitted by {{ application.applicant.public_name }}.
 
 Here is a sample email that can help clarify the situation:
 
@@ -12,11 +11,9 @@ Subject: Outreachy eligibility question for {{ application.applicant.public_name
 
 Hi {{ application.applicant.public_name }},
 
-You recently submitted an eligibility form for the Outreachy internship
-program.
-{% if application.us_sanctioned_country %}
-You indicated you were a citizen, resident, or national of Crimea, Cuba,
-Iran, North Korea, or Syria.
+You recently submitted an eligibility form for the Outreachy internship program.
+
+{% if application.us_sanctioned_country %}You indicated you were a citizen, resident, or national of Crimea, Cuba, Iran, North Korea, or Syria.
 
 In order for Outreachy's parent non-profit, Software Freedom Conservancy,
 to retain its 501c3 status, it must abide by U.S. law with respect to
@@ -33,25 +30,16 @@ countries under U.S. sanctions. Please answer the following questions:
 
 4. Are you planning on sending any portion of your Outreachy internship
    stipend back to family members or friends living in the listed countries?
-{% endif %}
-{% if application.prefer_not_to_say %}
-When asked which gender identities you have, you checked that
-you would prefer not to specify your gender. Unfortunately,
-we do need this information in order to approve you to apply
-for Outreachy internships.
+
+{% endif %}{% if application.applicantgenderidentity.prefer_not_to_say %}When asked which gender identities you have, you checked that you would prefer not to specify your gender. Unfortunately, we do need this information in order to review your Outreachy initial application.
 
 Would you be comfortable supplying this information via email?
-{% endif %}
-{% if application.self_identify != '' %}
-They marked that their gender identity is {{ application.self_identify }}.
 
-Our eligibility system automatically flagged your eligibility account because you self-identified your gender identity. I've now approved your eligibility form. Good luck making contributions with Outreachy mentors!
+{% endif %}{% if application.applicantgenderidentity.self_identify != '' %}Your initial application was marked as pending because you self-identified your gender identity as {{ application.applicantgenderidentity }}.
 
-Sage Sharp
+I've now approved your initial application. Good luck making contributions with Outreachy mentors!
+
+{% endif %}Sage Sharp
 Outreachy Organizer
 https://pronoun.is/they
-
-{% endif %}
-Thanks,
-Outreachy Organizers
 {% endwith %}
