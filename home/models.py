@@ -2308,7 +2308,7 @@ class ApplicantGenderIdentity(models.Model):
 class ApplicantRaceEthnicityInformation(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
 
-    us_resident_demographics = models.NullBooleanField(
+    us_resident_demographics = models.BooleanField(
             verbose_name='Are you Black/African American, Hispanic/Latin@, Native American, Alaska Native, Native Hawaiian, or Pacific Islander?')
 
 
