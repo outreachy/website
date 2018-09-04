@@ -2082,10 +2082,6 @@ class ApplicantApproval(ApprovalStatus):
             verbose_name='Previous Google Summer of Code or Outreachy internship?',
             help_text='Have you been accepted as a Google Summer of Code intern or an Outreachy intern before? Please say yes even if you did not complete the internship.')
 
-    # Race/Ethnicity Information
-    us_resident_demographics = models.NullBooleanField(
-            verbose_name='Are you Black/African American, Hispanic/Latin@, Native American, Alaska Native, Native Hawaiian, or Pacific Islander?')
-
     def is_approver(self, user):
         return user.is_staff
 
@@ -2275,6 +2271,14 @@ class ApplicantGenderIdentity(models.Model):
     # Need to take into account 'prefer not to say' also marked with other genders?
     def __str__(self):
         return self.self_identify
+
+
+class ApplicantRaceEthnicityInformation(models.Model):
+    applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
+
+    us_resident_demographics = models.NullBooleanField(
+            verbose_name='Are you Black/African American, Hispanic/Latin@, Native American, Alaska Native, Native Hawaiian, or Pacific Islander?')
+
 
 class TimeCommitmentSummary(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)

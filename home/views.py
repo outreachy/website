@@ -42,6 +42,7 @@ from .models import AlumSurvey
 from .models import AlumSurveyTracker
 from .models import ApplicantApproval
 from .models import ApplicantGenderIdentity
+from .models import ApplicantRaceEthnicityInformation
 from .models import ApprovalStatus
 from .models import CohortPage
 from .models import CommunicationChannel
@@ -369,10 +370,10 @@ def determine_eligibility(wizard, application_round):
 class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, SessionWizardView):
     template_name = 'home/wizard_form.html'
     condition_dict = {
-            #'USA demographics': show_us_demographics,
             'Payment Eligibility': work_eligibility_is_approved,
             'Time Commitments': work_eligibility_is_approved,
             'Gender Identity': work_eligibility_is_approved,
+            'USA demographics': show_us_demographics,
             'School Info': show_school_info,
             'School Term Info': show_school_info,
             'Coding School or Online Courses Time Commitment Info': show_noncollege_school_info,
@@ -428,13 +429,14 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'living_in_us': widgets.RadioSelect(choices=BOOL_CHOICES),
                     },
                 )),
-            #('USA demographics', modelform_factory(ApplicantApproval, fields=(
-            #    'us_resident_demographics',
-            #    ),
-            #    widgets = {
-            #        'us_resident_demographics': widgets.RadioSelect(choices=BOOL_CHOICES),
-            #        },
-            #    )),
+            ('USA demographics', modelform_factory(ApplicantRaceEthnicityInformation,
+                fields=(
+                'us_resident_demographics',
+                ),
+                widgets = {
+                    'us_resident_demographics': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    },
+                )),
             ('Gender Identity', modelform_factory(ApplicantGenderIdentity, fields=(
                 'transgender',
                 'genderqueer',

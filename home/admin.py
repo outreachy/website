@@ -8,6 +8,7 @@ from .models import AlumInfo
 from .models import AlumSurvey
 from .models import ApplicantApproval
 from .models import ApplicantGenderIdentity
+from .models import ApplicantRaceEthnicityInformation
 from .models import ContractorInformation
 from .models import CommunicationChannel
 from .models import Community
@@ -227,6 +228,11 @@ class ApplicantGenderIdentityInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Gender Identity'
 
+class ApplicantRaceEthnicityInformationInline(admin.StackedInline):
+    model = ApplicantRaceEthnicityInformation
+    can_delete = False
+    verbose_name_plural = 'Race and Ethnicity'
+
 class SchoolInformationInline(admin.StackedInline):
     model = SchoolInformation
     can_delete = False
@@ -284,7 +290,7 @@ class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
             '=applicant__account__username',
             '=applicant__account__email',
             )
-    inlines = (WorkEligibilityInline, PaymentEligibilityInline, ApplicantGenderIdentityInline, SchoolInformationInline, SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, ContractorInformationInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline)
+    inlines = (WorkEligibilityInline, PaymentEligibilityInline, ApplicantGenderIdentityInline, ApplicantRaceEthnicityInformationInline, SchoolInformationInline, SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, ContractorInformationInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline)
 
     def round(self, obj):
         return obj.application_round
