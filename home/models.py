@@ -2297,12 +2297,27 @@ class ApplicantGenderIdentity(models.Model):
             blank=True,
             help_text="If your gender identity is NOT listed above, what is your gender identity? Please note that 'gender identity' is NOT your name. Gender identity is your gender.")
 
-    # FIXME: iterate over the fields in self
+    # Iterate over the fields in self
     # if they're true, return a comma separated list of gender identities,
-    # e.g. 'non-binary, agender, and that you self-identify as gender fuck'
-    # Need to take into account 'prefer not to say' also marked with other genders?
+    # e.g. 'non-binary, agender and self-identify as ⚨'
     def __str__(self):
-        return self.self_identify
+        # getattr looks up the field's value on the object
+        gender_identities = [f.name.replace('_', ' ') for f in self._meta.get_fields() if f.get_internal_type() == 'BooleanField' and getattr(self, f.attname) and f.name != 'prefer_not_to_say']
+
+        if self.self_identify:
+            gender_identities.append('self-identifies as ' + self.self_identify)
+        if self.prefer_not_to_say:
+            gender_identities.append('prefers not to specify their gender identity')
+
+        gender_identity_string = ', '.join(gender_identities[:-1])
+
+        if len(gender_identities) == 1:
+            ending_joiner = ''
+        else:
+            ending_joiner = ' and '
+        gender_identity_string = gender_identity_string + ending_joiner + gender_identities[-1]
+
+        return gender_identity_string
 
 
 class ApplicantRaceEthnicityInformation(models.Model):
