@@ -2190,6 +2190,38 @@ class PaymentEligibility(models.Model):
             verbose_name='Will you be living in the United States of America during the Outreachy internship period, or for up to five weeks after the internship period ends?',
             help_text='Please answer yes even if you are a citizen of a country other than the USA.')
 
+
+class PriorFOSSExperience(models.Model):
+    applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
+
+    gsoc_or_outreachy_internship = models.BooleanField(
+            verbose_name='Have you been accepted as a Google Summer of Code intern, an Outreach Program for Women intern, or an Outreachy intern before?',
+            help_text='Please say yes even if you did not successfully complete the internship.')
+
+    prior_contributor = models.BooleanField(verbose_name='Have you contributed to free and open source software before?', help_text='<p>Outreachy welcomes applicants who are newcomers to free and open source software (FOSS). We also welcome applicants who have made contributions to FOSS, and want to take the next step in their FOSS career. Outreachy asks this questions to see if we are meeting our goal of promoting free software to people from groups under-represented in the technology industry. It will not have an impact on your initial application approval.</p><p>Please exclude contributions that were made as part of a prior Outreachy application period.</p>')
+
+    prior_paid_contributor = models.BooleanField(verbose_name='Have you ever been PAID to contribute to free and open source software before?', help_text='Please include paid internships, contract work, employment, stipends, or grants.')
+
+    # A series of check boxes to say what areas they have contributed to free software before
+    prior_contrib_coding = models.BooleanField(verbose_name='Programming')
+    prior_contrib_forums = models.BooleanField(verbose_name='Participating in forums')
+    prior_contrib_events = models.BooleanField(verbose_name='Organizing events')
+    prior_contrib_issues = models.BooleanField(verbose_name='Reporting issues')
+    prior_contrib_devops = models.BooleanField(verbose_name='Running project infrastructure')
+    prior_contrib_docs = models.BooleanField(verbose_name='Documentation')
+    prior_contrib_data = models.BooleanField(verbose_name='Data science')
+    prior_contrib_translate = models.BooleanField(verbose_name='Translation')
+    prior_contrib_illustration = models.BooleanField(verbose_name='Graphical design')
+    prior_contrib_ux = models.BooleanField(verbose_name='User experience')
+    prior_contrib_short_talk = models.BooleanField(verbose_name='Giving a short talk')
+    prior_contrib_testing = models.BooleanField(verbose_name='Testing releases or quality assurance')
+    prior_contrib_security = models.BooleanField(verbose_name='Improving security or pen testing')
+    prior_contrib_marketing = models.BooleanField(verbose_name='Marketing for projects')
+    prior_contrib_reviewer = models.BooleanField(verbose_name='Reviewing contributions')
+    prior_contrib_mentor = models.BooleanField(verbose_name='Mentoring contributors')
+    prior_contrib_accessibility = models.BooleanField(verbose_name='Improving or testing accessibility')
+
+
 class ApplicantGenderIdentity(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
 

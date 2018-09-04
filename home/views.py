@@ -64,6 +64,7 @@ from .models import NonCollegeSchoolTimeCommitment
 from .models import Notification
 from .models import Participation
 from .models import PaymentEligibility
+from .models import PriorFOSSExperience
 from .models import Project
 from .models import ProjectSkill
 from .models import RoundPage
@@ -217,8 +218,18 @@ def work_eligibility_is_approved(wizard):
     # PENDING later.
     return True
 
-def show_us_demographics(wizard):
+def prior_foss_experience_is_approved(wizard):
     if not work_eligibility_is_approved(wizard):
+        return False
+    cleaned_data = wizard.get_cleaned_data_for_step('Prior FOSS Experience')
+    if not cleaned_data:
+        return True
+    if cleaned_data['gsoc_or_outreachy_internship']:
+        return False
+    return True
+
+def show_us_demographics(wizard):
+    if not prior_foss_experience_is_approved(wizard):
         return False
     cleaned_data = wizard.get_cleaned_data_for_step('Payment Eligibility') or {}
     if not cleaned_data:
@@ -227,7 +238,7 @@ def show_us_demographics(wizard):
     return us_resident
 
 def gender_and_demographics_is_aligned_with_program_goals(wizard):
-    if not work_eligibility_is_approved(wizard):
+    if not prior_foss_experience_is_approved(wizard):
         return False
     demo_data = wizard.get_cleaned_data_for_step('USA demographics')
     if demo_data and demo_data['us_resident_demographics'] is True:
@@ -276,19 +287,19 @@ def gender_and_demographics_is_aligned_with_program_goals(wizard):
     return any(gender_data[x] for x in gender_minority_list) or gender_data['self_identify'] != ''
 
 def show_noncollege_school_info(wizard):
-    if not work_eligibility_is_approved(wizard):
+    if not prior_foss_experience_is_approved(wizard):
         return False
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
     return cleaned_data.get('enrolled_as_noncollege_student', True)
 
 def show_school_info(wizard):
-    if not work_eligibility_is_approved(wizard):
+    if not prior_foss_experience_is_approved(wizard):
         return False
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
     return cleaned_data.get('enrolled_as_student', True)
 
 def show_contractor_info(wizard):
-    if not work_eligibility_is_approved(wizard):
+    if not prior_foss_experience_is_approved(wizard):
         return False
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
     if cleaned_data == None:
@@ -296,7 +307,7 @@ def show_contractor_info(wizard):
     return cleaned_data.get('contractor', True)
 
 def show_employment_info(wizard):
-    if not work_eligibility_is_approved(wizard):
+    if not prior_foss_experience_is_approved(wizard):
         return False
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
     if cleaned_data.get('employed', True):
@@ -308,7 +319,7 @@ def show_employment_info(wizard):
     return False
 
 def show_time_commitment_info(wizard):
-    if not work_eligibility_is_approved(wizard):
+    if not prior_foss_experience_is_approved(wizard):
         return False
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
     return cleaned_data.get('volunteer_time_commitments', True)
@@ -348,6 +359,8 @@ def time_commitments_are_approved(wizard, application_round):
 def determine_eligibility(wizard, application_round):
     if not (work_eligibility_is_approved(wizard)):
         return (ApprovalStatus.REJECTED, 'GENERAL')
+    if not (prior_foss_experience_is_approved(wizard)):
+        return (ApprovalStatus.REJECTED, 'GENERAL')
     if not time_commitments_are_approved(wizard, application_round):
         return (ApprovalStatus.REJECTED, 'TIME')
 
@@ -371,9 +384,10 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
     template_name = 'home/wizard_form.html'
     condition_dict = {
             'Payment Eligibility': work_eligibility_is_approved,
-            'Time Commitments': work_eligibility_is_approved,
-            'Gender Identity': work_eligibility_is_approved,
+            'Prior FOSS Experience': work_eligibility_is_approved,
+            'Gender Identity': prior_foss_experience_is_approved,
             'USA demographics': show_us_demographics,
+            'Time Commitments': prior_foss_experience_is_approved,
             'School Info': show_school_info,
             'School Term Info': show_school_info,
             'Coding School or Online Courses Time Commitment Info': show_noncollege_school_info,
@@ -427,6 +441,52 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 widgets = {
                     'us_national_or_permanent_resident': widgets.RadioSelect(choices=BOOL_CHOICES),
                     'living_in_us': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    },
+                )),
+            ('Prior FOSS Experience', modelform_factory(PriorFOSSExperience,
+                fields=(
+                'gsoc_or_outreachy_internship',
+                'prior_contributor',
+                'prior_paid_contributor',
+                'prior_contrib_coding',
+                'prior_contrib_forums',
+                'prior_contrib_events',
+                'prior_contrib_issues',
+                'prior_contrib_devops',
+                'prior_contrib_docs',
+                'prior_contrib_data',
+                'prior_contrib_translate',
+                'prior_contrib_illustration',
+                'prior_contrib_ux',
+                'prior_contrib_short_talk',
+                'prior_contrib_testing',
+                'prior_contrib_security',
+                'prior_contrib_marketing',
+                'prior_contrib_reviewer',
+                'prior_contrib_mentor',
+                'prior_contrib_accessibility',
+                ),
+                widgets = {
+                    'gsoc_or_outreachy_internship': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'prior_contributor': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'prior_paid_contributor': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'prior_contrib_coding': widgets.CheckboxInput(),
+                    'prior_contrib_forums': widgets.CheckboxInput(),
+                    'prior_contrib_events': widgets.CheckboxInput(),
+                    'prior_contrib_issues': widgets.CheckboxInput(),
+                    'prior_contrib_devops': widgets.CheckboxInput(),
+                    'prior_contrib_docs': widgets.CheckboxInput(),
+                    'prior_contrib_data': widgets.CheckboxInput(),
+                    'prior_contrib_translate': widgets.CheckboxInput(),
+                    'prior_contrib_illustration': widgets.CheckboxInput(),
+                    'prior_contrib_ux': widgets.CheckboxInput(),
+                    'prior_contrib_short_talk': widgets.CheckboxInput(),
+                    'prior_contrib_testing': widgets.CheckboxInput(),
+                    'prior_contrib_security': widgets.CheckboxInput(),
+                    'prior_contrib_marketing': widgets.CheckboxInput(),
+                    'prior_contrib_reviewer': widgets.CheckboxInput(),
+                    'prior_contrib_mentor': widgets.CheckboxInput(),
+                    'prior_contrib_accessibility': widgets.CheckboxInput(),
                     },
                 )),
             ('USA demographics', modelform_factory(ApplicantRaceEthnicityInformation,
@@ -604,6 +664,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
     TEMPLATES = {
             'Work Eligibility': 'home/eligibility_wizard_general.html',
             'Payment Eligibility': 'home/eligibility_wizard_tax_forms.html',
+            'Prior FOSS Experience': 'home/eligibility_wizard_foss_experience.html',
             'USA demographics': 'home/eligibility_wizard_us_demographics.html',
             'Gender Identity': 'home/eligibility_wizard_gender.html',
             'Time Commitments': 'home/eligibility_wizard_time_commitments.html',
