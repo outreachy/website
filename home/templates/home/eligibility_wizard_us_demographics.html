@@ -1,20 +1,19 @@
 {% extends "base.html" %}
 
 {% block title %}
-Are you eligible to apply to Outreachy?
+Outreachy Initial Application
 {% endblock %}
 
 {% block content %}
-<h1>Outreachy Eligibility Checking</h1>
+<h1>Outreachy Initial Application</h1>
 
 {% include "home/snippet/privacy_policy.html" %}
 
 <p>
-The following question applies to U.S. citizens and permanent residents, and people living in the United States who are citizens of another country.
+The following question applies to U.S. citizens and permanent residents.
 </p>
 <p>
-The question is used to determine eligibility for the Outreachy internships.
-This private data will only be seen by the <a href="/contact/">Outreachy organizers</a>.
+The answer to this question will only be seen by the <a href="/contact/">Outreachy organizers</a>.
 It will not be shared with mentors, coordinators, or other applicants.
 </p>
 <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
