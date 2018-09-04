@@ -7,6 +7,7 @@ import reversion.admin
 from .models import AlumInfo
 from .models import AlumSurvey
 from .models import ApplicantApproval
+from .models import ApplicantGenderIdentity
 from .models import ContractorInformation
 from .models import CommunicationChannel
 from .models import Community
@@ -221,6 +222,11 @@ class PaymentEligibilityInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Payment Eligibility'
 
+class ApplicantGenderIdentityInline(admin.StackedInline):
+    model = ApplicantGenderIdentity
+    can_delete = False
+    verbose_name_plural = 'Gender Identity'
+
 class SchoolInformationInline(admin.StackedInline):
     model = SchoolInformation
     can_delete = False
@@ -278,7 +284,7 @@ class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
             '=applicant__account__username',
             '=applicant__account__email',
             )
-    inlines = (WorkEligibilityInline, PaymentEligibilityInline, SchoolInformationInline, SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, ContractorInformationInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline)
+    inlines = (WorkEligibilityInline, PaymentEligibilityInline, ApplicantGenderIdentityInline, SchoolInformationInline, SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, ContractorInformationInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline)
 
     def round(self, obj):
         return obj.application_round

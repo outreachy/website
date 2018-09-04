@@ -566,7 +566,7 @@ class RoundPage(Page):
                 approval_status=ApprovalStatus.APPROVED,
                 contribution__isnull=False).distinct().count()
 
-        cis_apps = ApplicantApproval.objects.filter(
+        cis_apps = ApplicantGenderIdentity.objects.filter(
                 transgender=False,
                 genderqueer=False,
                 demi_boy=False,
@@ -594,21 +594,21 @@ class RoundPage(Page):
                 neutrois=False,
                 androgynous=False,
                 androgyne=False,
-                application_round=self,
-                approval_status=ApprovalStatus.APPROVED,
-                contribution__isnull=False).distinct().count()
+                applicant__application_round=self,
+                applicant__approval_status=ApprovalStatus.APPROVED,
+                applicant__contribution__isnull=False).distinct().count()
 
-        trans_folks_apps = ApplicantApproval.objects.filter(
+        trans_folks_apps = ApplicantGenderIdentity.objects.filter(
                 transgender=True,
-                application_round=self,
-                approval_status=ApprovalStatus.APPROVED,
-                contribution__isnull=False).distinct().count()
+                applicant__application_round=self,
+                applicant__approval_status=ApprovalStatus.APPROVED,
+                applicant__contribution__isnull=False).distinct().count()
 
-        genderqueer_folks_apps = ApplicantApproval.objects.filter(
+        genderqueer_folks_apps = ApplicantGenderIdentity.objects.filter(
                 genderqueer=True,
-                application_round=self,
-                approval_status=ApprovalStatus.APPROVED,
-                contribution__isnull=False).distinct().count()
+                applicant__application_round=self,
+                applicant__approval_status=ApprovalStatus.APPROVED,
+                applicant__contribution__isnull=False).distinct().count()
 
         return (cis_apps * 100 / all_apps, trans_folks_apps * 100 / all_apps, genderqueer_folks_apps * 100 / all_apps)
 
@@ -2084,75 +2084,6 @@ class ApplicantApproval(ApprovalStatus):
     us_resident_demographics = models.NullBooleanField(
             verbose_name='Are you Black/African American, Hispanic/Latin@, Native American, Alaska Native, Native Hawaiian, or Pacific Islander?')
 
-    # Gender Information
-    transgender = models.NullBooleanField(
-            verbose_name='Do you identify as transgender?',
-            help_text='If you are questioning whether you are transgender, please say yes.')
-
-    genderqueer = models.NullBooleanField(
-            verbose_name='Do you identify as genderqueer?',
-            help_text='Do you identify as genderqueer, gender non-conforming, gender diverse, gender varient, or gender expansive? If you are questioning whether you identify with any of those terms, please say yes.')
-
-    man = models.NullBooleanField()
-
-    woman = models.NullBooleanField()
-
-    demi_boy = models.NullBooleanField()
-
-    demi_girl = models.NullBooleanField()
-
-    non_binary = models.NullBooleanField()
-
-    demi_non_binary = models.NullBooleanField()
-
-    genderflux = models.NullBooleanField()
-
-    genderfluid = models.NullBooleanField()
-
-    demi_genderfluid = models.NullBooleanField()
-
-    demi_gender = models.NullBooleanField()
-
-    bi_gender = models.NullBooleanField()
-
-    tri_gender = models.NullBooleanField()
-
-    multigender = models.NullBooleanField()
-
-    pangender = models.NullBooleanField()
-
-    maxigender = models.NullBooleanField()
-
-    aporagender = models.NullBooleanField()
-
-    intergender = models.NullBooleanField()
-
-    mavrique = models.NullBooleanField()
-
-    gender_confusion = models.NullBooleanField()
-
-    gender_indifferent = models.NullBooleanField()
-
-    graygender = models.NullBooleanField()
-
-    agender = models.NullBooleanField()
-
-    genderless = models.NullBooleanField()
-
-    gender_neutral = models.NullBooleanField()
-
-    neutrois = models.NullBooleanField()
-
-    androgynous = models.NullBooleanField()
-
-    androgyne = models.NullBooleanField()
-
-    prefer_not_to_say = models.NullBooleanField()
-
-    self_identify = models.CharField(max_length=SENTENCE_LENGTH,
-            blank=True,
-            help_text="If your gender identity is NOT listed above, what is your gender identity? Please note that 'gender identity' is NOT your name. Gender identity is your gender.")
-
     def is_approver(self, user):
         return user.is_staff
 
@@ -2260,6 +2191,77 @@ class PaymentEligibility(models.Model):
     living_in_us = models.BooleanField(
             verbose_name='Will you be living in the United States of America during the Outreachy internship period, or for up to five weeks after the internship period ends?',
             help_text='Please answer yes even if you are a citizen of a country other than the USA.')
+
+class ApplicantGenderIdentity(models.Model):
+    applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
+
+    transgender = models.BooleanField(
+            verbose_name='Do you identify as transgender?',
+            help_text='If you are questioning whether you are transgender, please say yes.')
+
+    genderqueer = models.BooleanField(
+            verbose_name='Do you identify as genderqueer?',
+            help_text='Do you identify as genderqueer, gender non-conforming, gender diverse, gender varient, or gender expansive? If you are questioning whether you identify with any of those terms, please say yes.')
+
+    man = models.BooleanField()
+
+    woman = models.BooleanField()
+
+    demi_boy = models.BooleanField()
+
+    demi_girl = models.BooleanField()
+
+    non_binary = models.BooleanField()
+
+    demi_non_binary = models.BooleanField()
+
+    genderflux = models.BooleanField()
+
+    genderfluid = models.BooleanField()
+
+    demi_genderfluid = models.BooleanField()
+
+    demi_gender = models.BooleanField()
+
+    bi_gender = models.BooleanField()
+
+    tri_gender = models.BooleanField()
+
+    multigender = models.BooleanField()
+
+    pangender = models.BooleanField()
+
+    maxigender = models.BooleanField()
+
+    aporagender = models.BooleanField()
+
+    intergender = models.BooleanField()
+
+    mavrique = models.BooleanField()
+
+    gender_confusion = models.BooleanField()
+
+    gender_indifferent = models.BooleanField()
+
+    graygender = models.BooleanField()
+
+    agender = models.BooleanField()
+
+    genderless = models.BooleanField()
+
+    gender_neutral = models.BooleanField()
+
+    neutrois = models.BooleanField()
+
+    androgynous = models.BooleanField()
+
+    androgyne = models.BooleanField()
+
+    prefer_not_to_say = models.BooleanField()
+
+    self_identify = models.CharField(max_length=SENTENCE_LENGTH,
+            blank=True,
+            help_text="If your gender identity is NOT listed above, what is your gender identity? Please note that 'gender identity' is NOT your name. Gender identity is your gender.")
 
 class TimeCommitmentSummary(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
