@@ -49,13 +49,14 @@ Outreachy eligibility results
 
 {% elif application.approval_status == application.REJECTED and application.reason_denied == 'TIME' %}
 
-	<h1>Ineligible for Outreachy</h1>
+	<h1>Initial application is not approved</h1>
 
 	<p>
 	We're sorry, but based on the time commitment information your supplied on your initial application,
 	you don't have 7 consecutive weeks free from full-time commitments.
+	Please apply another round.
 	</p>
-	<h2><strong>Your Eligibility Information:</strong></h2>
+	<h2><strong>Your Time Commitments:</strong></h2>
 
 	{% if school_time_commitments %}
 		<h3>School Term Information</h3>
