@@ -44,6 +44,7 @@ from .models import ApplicantApproval
 from .models import ApplicantGenderIdentity
 from .models import ApplicantRaceEthnicityInformation
 from .models import ApprovalStatus
+from .models import BarriersToParticipation
 from .models import CohortPage
 from .models import CommunicationChannel
 from .models import Community
@@ -286,6 +287,11 @@ def gender_and_demographics_is_aligned_with_program_goals(wizard):
             ]
     return any(gender_data[x] for x in gender_minority_list) or gender_data['self_identify'] != ''
 
+def show_essay_questions(wizard):
+    if not gender_and_demographics_is_aligned_with_program_goals(wizard):
+        return True
+    return False
+
 def show_noncollege_school_info(wizard):
     if not prior_foss_experience_is_approved(wizard):
         return False
@@ -387,6 +393,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
             'Prior FOSS Experience': work_eligibility_is_approved,
             'Gender Identity': prior_foss_experience_is_approved,
             'USA demographics': show_us_demographics,
+            'Barriers to Participation': show_essay_questions,
             'Time Commitments': prior_foss_experience_is_approved,
             'School Info': show_school_info,
             'School Term Info': show_school_info,
@@ -568,6 +575,12 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'prefer_not_to_say': widgets.CheckboxInput(),
                     },
                 )),
+            ('Barriers to Participation', modelform_factory(BarriersToParticipation,
+                fields=(
+                    'barriers_to_contribution',
+                    'systematic_bias',
+                ),
+                )),
             ('Time Commitments', modelform_factory(TimeCommitmentSummary,
                 fields=(
                 'enrolled_as_student',
@@ -667,6 +680,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
             'Prior FOSS Experience': 'home/eligibility_wizard_foss_experience.html',
             'USA demographics': 'home/eligibility_wizard_us_demographics.html',
             'Gender Identity': 'home/eligibility_wizard_gender.html',
+            'Barriers to Participation': 'home/eligibility_wizard_essay_questions.html',
             'Time Commitments': 'home/eligibility_wizard_time_commitments.html',
             'School Info': 'home/eligibility_wizard_school_info.html',
             'School Term Info': 'home/eligibility_wizard_school_terms.html',

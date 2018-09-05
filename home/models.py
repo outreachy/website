@@ -2327,6 +2327,16 @@ class ApplicantRaceEthnicityInformation(models.Model):
             verbose_name='Are you Black/African American, Hispanic/Latin@, Native American, Alaska Native, Native Hawaiian, or Pacific Islander?')
 
 
+class BarriersToParticipation(models.Model):
+    applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
+
+    barriers_to_contribution = models.TextField(
+            verbose_name='What barriers or concerns have kept you from contributing to free and open source software?')
+
+    systematic_bias = models.TextField(
+            verbose_name='What systematic bias or discrimination have you faced while building your skills for contributing to free and open source software?',
+            help_text='Contributing to free and open source software takes some skill. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker. In these settings, have you faced systematic bias or discrimination? Have you been discouraged from accessing to these resources because of your identity or background?')
+
 class TimeCommitmentSummary(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
 

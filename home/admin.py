@@ -9,6 +9,7 @@ from .models import AlumSurvey
 from .models import ApplicantApproval
 from .models import ApplicantGenderIdentity
 from .models import ApplicantRaceEthnicityInformation
+from .models import BarriersToParticipation
 from .models import PriorFOSSExperience
 from .models import ContractorInformation
 from .models import CommunicationChannel
@@ -234,6 +235,11 @@ class ApplicantRaceEthnicityInformationInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Race and Ethnicity'
 
+class BarriersToParticipationInline(admin.StackedInline):
+    model = BarriersToParticipation
+    can_delete = False
+    verbose_name_plural = 'Barriers to Participation'
+
 class PriorFOSSExperienceInline(admin.StackedInline):
     model = PriorFOSSExperience
     can_delete = False
@@ -296,7 +302,7 @@ class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
             '=applicant__account__username',
             '=applicant__account__email',
             )
-    inlines = (WorkEligibilityInline, PaymentEligibilityInline, ApplicantGenderIdentityInline, ApplicantRaceEthnicityInformationInline, PriorFOSSExperienceInline, SchoolInformationInline, SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, ContractorInformationInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline)
+    inlines = (WorkEligibilityInline, PaymentEligibilityInline, ApplicantGenderIdentityInline, ApplicantRaceEthnicityInformationInline, PriorFOSSExperienceInline, BarriersToParticipationInline, SchoolInformationInline, SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, ContractorInformationInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline)
 
     def round(self, obj):
         return obj.application_round
