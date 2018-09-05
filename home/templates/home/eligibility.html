@@ -11,52 +11,60 @@
 &gt; <a href="/apply/project-selection/">Find a Mentor and Internship Project</a></p>
 </p>
 
-<p>All accepted interns must sign an <a href="{% url 'generic-intern-contract-export' %}">intern agreement</a>. This is a legal document that certifies you are eligible to apply for Outreachy, and that all the eligibility information you supply in your application is truthful. All accepted interns will need to fill out either a W8-BEN or a W-9 tax form. It is fraud if you sign these legal documents after supplying incorrect information.</p>
+<h2>Outreachy Supports Diversity in Tech</h2>
+
+<p>Outreachy expressly invites applicants who are women (both cis and trans), trans men, and genderqueer people to apply. We also invite applications who are residents and nationals of the United States of any gender who are Black/African American, Hispanic/Latin@, Native American/American Indian, Alaska Native, Native Hawaiian, or Pacific Islander. Anyone who faces systematic bias or discrimination in the technology industry of their country is invited to apply.</p>
 
 <h2>Outreachy Eligibility Rules</h2>
-<p>Outreachy is open internationally to people who meet the following requirements:<p>
+
+<p>Outreachy is open to applicants around the world. You will need to meet the following requirements:</p>
 <ul>
 	<li>You are or will be 18 years of age or older by {{ current_round.internstarts }}</li>
 	<li>You have not previously participated in an Outreachy, Outreach Program for Women, or Google Summer of Code internship. People who participated as an intern for Google Summer of Code are not eligible for Outreachy. All Google Summer of Code participants are ineligible for Outreachy, including people who did not successfully finish their GSoC internship.</li>
 	<li>You are available for a full-time, 40 hours a week internship from {{ current_round.internstarts }} to {{ current_round.internends }}.</li>
-	<li>You must meet one of the following criteria:</li>
-	<ul>
-		<li>You live any where in the world and you identify as a woman (cis or trans), trans man, or genderqueer person (including genderfluid or genderfree).</li>
-		<li>You live in the United States or you are a U.S. national or permanent resident living abroad, AND you are a person of any gender who is Black/African American, Hispanic/Latin@, Native American/American Indian, Alaska Native, Native Hawaiian, or Pacific Islander</li>
-	</ul>
 	<li>Outreachy is open to both students and people who are not students. However, applicants who are students must meet additional requirements. Please have your class schedule and school calendar on hand when completing the initial application.</li>
 	<li>Outreachy internships are full-time 40-hour a week internships. Applicants who have part-time or contracting jobs are welcome to apply, but they must meet additional requirements.
 </ul>
 
+<p>The initial application also includes questions about:</p>
+<ul>
+	<li>Your gender identity</li>
+	<li>Your race or ethnicity (only for U.S. residents and nationals)</li>
+</ul>
+
+<p>All accepted interns must sign an <a href="{% url 'generic-intern-contract-export' %}">intern agreement</a>. This is a legal document that certifies you are eligible to apply for Outreachy, and that all the eligibility information you supply in your application is truthful. All accepted interns will need to fill out either a W8-BEN or a W-9 tax form. It is fraud if you sign these legal documents after supplying incorrect information.</p>
+
+
 {% if not current_round.has_application_period_started %}
-	<h2>Eligibility Checking</h2>
+	<h2>Initial Application</h2>
 
-	<p>All Outreachy applicants will need to fill out an eligibility form to determine if they are eligible for the program.</p>
+	<p>All Outreachy applicants will need to fill out an initial application.</p>
 
-	<p>Eligibility checking for Outreachy internships is currently closed.
-	The eligibility system will be available when the application period opens on {{ current_round.appsopen }} 4pm UTC.
+	<p>The application system for Outreachy internships is currently closed.
+	The application system will be available when the application period opens on {{ current_round.appsopen }} 4pm UTC.
 	</p>
 	<p>
 	To get an email when the round opens, subscribe to the
 	<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">Outreachy announcement mailing list</a>.</p>
 {% elif not current_round.has_application_deadline_passed %}
-	<h2>Check Your Eligibility</h2>
+	<h2>Initial Application</h2>
 
-	<p>All Outreachy applicants will need to fill out an eligibility form
-	to determine if they are eligible for the program.
+	<p>All Outreachy applicants will need to fill out an initial application.
+	We encourage you to complete it as soon as possible.
+	It should only take you 5 minutes to 30 minutes.
 	If you're unsure if you meet the above eligibility rules,
-	it's better to fill out the eligibility form and remove any doubts.
-	Once you've submitted your eligibility form, if you have any questions,
+	it's better to fill out the initial application.
+	Once you've submitted your initial application, if you have any questions,
 	<a href="/contact/">you can contact the Outreachy organizers.</a></p>
 
-	<p class="card-text"><a href="{% url 'eligibility' %}" class="btn btn-success">Check Your Eligibility</a></p>
+	<p class="card-text"><a href="{% url 'eligibility' %}" class="btn btn-success">Start Your Initial Application</a></p>
 {% else %}
-	<h2>Eligibility Checking</h2>
+	<h2>Initial Application</h2>
 
-	<p>All Outreachy applicants will need to fill out an eligibility form to determine if they are eligible for the program.</p>
+	<p>All Outreachy applicants will need to fill out an initial application.</p>
 
-	<p>Eligibility checking for Outreachy internships is currently closed.
-	The eligibility system will be available when the next application period opens.
+	<p>The application system for Outreachy internships is currently closed.
+	The application system will be available when the next application period opens.
 	</p>
 	<p>
 	To get an email when the round opens, subscribe to the
