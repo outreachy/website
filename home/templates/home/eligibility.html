@@ -32,7 +32,7 @@
 	<li>Your race or ethnicity (only for U.S. residents and nationals)</li>
 </ul>
 
-<p>All accepted interns must sign an <a href="{% url 'generic-intern-contract-export' %}">intern agreement</a>. This is a legal document that certifies you are eligible to apply for Outreachy, and that all the eligibility information you supply in your application is truthful. All accepted interns will need to fill out either a W8-BEN or a W-9 tax form. It is fraud if you sign these legal documents after supplying incorrect information.</p>
+<p>All accepted interns must sign an {% comment %}<a href="{% url 'generic-intern-contract-export' %}">{% endcomment %}intern agreement{% comment %}</a>{% endcomment %}. This is a legal document that certifies you are eligible to apply for Outreachy, and that all the eligibility information you supply in your application is truthful. All accepted interns will need to fill out either a W8-BEN or a W-9 tax form. It is fraud if you sign these legal documents after supplying incorrect information.</p>
 
 
 {% if not current_round.has_application_period_started %}
