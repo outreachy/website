@@ -14,15 +14,15 @@
 	</div>
 {% elif not current_round.has_application_deadline_passed %}
 	<div class="card border-info mb-3">
-		<div class="card-header text-white bg-warning">Check your eligibility!</div>
+		<div class="card-header text-white bg-warning">Complete your initial application!</div>
 		<div class="card-body">
 			<p class="card-text">
-			Before you apply for an Outreachy internship,
-			you must first check your eligibility.
+			In order to see all project information,
+			you must fill out a short initial application.
 			</p>
-			<p class="card-text"><a href="{% url 'eligibility' %}" class="btn btn-success">Check Eligibility</a></p>
+			<p class="card-text"><a href="{% url 'eligibility' %}" class="btn btn-success">Start Initial Application</a></p>
 			<p class="card-text">
-			Until you verify your eligibility, some information about the internships will be hidden,
+			Until your initial application is approved, some information about the internships will be hidden,
 			including full project details, mentor contact information, and how to make contributions
 			to internship projects.
 			</p>
