@@ -20,9 +20,9 @@
 
 <p><a href="/apply/">Why apply to Outreachy?</a> &gt;
 {% if not request.user.comrade or request.user.comrade.needs_application %}
-	<a href="{% url 'eligibility' %}">Check Eligibility</a>
+	<a href="{% url 'eligibility' %}">Start your initial application</a>
 {% elif request.user.comrade.ineligible_application or request.user.comrade.pending_application %}
-	<a href="{% url 'eligibility-results' %}">Review Your Eligibility</a>
+	<a href="{% url 'eligibility-results' %}">Review your initial application</a>
 {% else %}
 	<a href="/apply/eligibility/">Outreachy Eligibility Rules</a>
 {% endif %}
