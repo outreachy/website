@@ -29,10 +29,12 @@
 <p>The initial application also includes questions about:</p>
 <ul>
 	<li>Your gender identity</li>
-	<li>Your race or ethnicity (only for U.S. residents and nationals)</li>
+	<li>Your race or ethnicity (only for residents and nationals of the United States of America)</li>
 </ul>
 
 <p>All accepted interns must sign an {% comment %}<a href="{% url 'generic-intern-contract-export' %}">{% endcomment %}intern agreement{% comment %}</a>{% endcomment %}. This is a legal document that certifies you are eligible to apply for Outreachy, and that all the eligibility information you supply in your application is truthful. All accepted interns will need to fill out either a W8-BEN or a W-9 tax form. It is fraud if you sign these legal documents after supplying incorrect information.</p>
+
+<p>If you are concerned about these forms, please note that Outreachy has experience with people in the middle of a legal name change and transgender people who cannot change their legal name. Only Outreachy organizers and the Software Freedom Conservancy accounting team will see these legal documents. Your mentors will not see your tax form or your signed intern agreement.</p>
 
 
 {% if not current_round.has_application_period_started %}
