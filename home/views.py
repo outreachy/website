@@ -427,6 +427,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
             ('Work Eligibility', modelform_factory(WorkEligibility,
                 fields=(
                 'over_18',
+                'student_visa_restrictions',
                 'eligible_to_work',
                 'under_export_control',
                 'us_sanctioned_country',
@@ -435,6 +436,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 # without validating either 'yes' or 'no' is selected
                 widgets = {
                     'over_18': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'student_visa_restrictions': widgets.RadioSelect(choices=BOOL_CHOICES),
                     'eligible_to_work': widgets.RadioSelect(choices=BOOL_CHOICES),
                     'under_export_control': widgets.RadioSelect(choices=BOOL_CHOICES),
                     'us_sanctioned_country': widgets.RadioSelect(choices=BOOL_CHOICES),

@@ -175,6 +175,7 @@ you can send an email to the announcements mailing list to remind applicants of 
 			<th scope="col">Number of contribs</th>
 			<th scope="col">Applicant details</th>
 			<th scope="col">Applying to GSoC?</th>
+			<th scope="col">CPT?</th>
 		</tr>
 		</thread>
 		{% for intern in interns %}
@@ -201,6 +202,7 @@ you can send an email to the announcements mailing list to remind applicants of 
 					<td>{{ application.number_contributions }}</td>
 					<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=intern.project.project_round.community.slug project_slug=intern.project.slug %}#{{ intern.applicant.applicant.pk }}">details</a></td>
 					<td>{% if application.applying_to_gsoc %}Yes{% else %} - {% endif %}</td>
+					<td>{% if intern.needs_cpt %}Yes{% else %} - {% endif %}</td>
 			</tr>
 				{% with conflicts=intern.get_intern_selection_conflicts project=intern.project %}
 				{% if conflicts %}

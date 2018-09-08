@@ -2163,6 +2163,10 @@ class WorkEligibility(models.Model):
     over_18 = models.BooleanField(
             verbose_name='Will you be 18 years or older when the Outreachy internship starts?')
 
+    student_visa_restrictions = models.BooleanField(
+            verbose_name='Do you have a student visa that limits the dates that you can work 40 hours a week during the internship period?',
+            help_text='Your student visa must allow you to work 40 hours a week for you to be eligible for Outreachy. If you are on a student visa in the United States of America, you might have limited dates when you can work 40 hours a week. We will work with you to shift your internship dates by up to five weeks. However, we cannot accommodate shortening the 12 week internship. Students on an F-1 visa might need to provide their university documentation to apply for CPT. Outreachy organizers can provide you CPT documentation once you are selected as an intern.')
+
     eligible_to_work = models.BooleanField(
             verbose_name='Are you eligible to work for 40 hours a week in ALL the countries you will be living in for the entire internship period, and five weeks after the internship period ends?',
             help_text='<p><b>Student visas</b>: Please note that in some countries, students studying abroad on a student visa may not be eligible to work full-time (40 hours a week). If you are on a student visa, please double check with your school counselors before applying.</p><p><b>Spouse visas</b>: In some countries, spousal visas may not allow spouses to work. Please contact your immigration officer if you have any questions about whether your visa allows you to work full-time (40 hours a week).</p><p><b>International Travel</b>: Outreachy interns are not required to work while they are traveling internationally. If you travel for more than 1 week, you may need to extend your internship. Internships can be extended for up to five weeks.</p>')
@@ -2761,6 +2765,11 @@ class InternSelection(models.Model):
                 project=self.project,
                 applicant=self.applicant,
                 )
+
+    def needs_cpt(self):
+        work_info = WorkEligibility.objects.get(
+                applicant=self.applicant)
+        return work_info.student_visa_restrictions
 
     def get_intern_selection_conflicts(self):
         if self.funding_source == self.NOT_FUNDED:

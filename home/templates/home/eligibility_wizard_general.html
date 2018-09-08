@@ -40,6 +40,19 @@ Please have that information before starting this process.
 				<p>{{ field.help_text|safe }}</p>
 			</div>
 		</div>
+	{% elif 'Do you have a student visa' in field.label_tag %}
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class = "card-header">
+				Do you have a student visa that limits the dates that you can work 40 hours a week from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}?
+			</div>	    
+			<div class = "card-body">
+				{{ field }}
+			</div>
+			<div class="card-footer bg-white">
+				<p>{{ field.help_text|safe }}</p>
+			</div>
+		</div>
 	{% elif 'Will you be 18 years' in field.label_tag %}
 		<div class="form-group card">
 			{{ field.errors }}
