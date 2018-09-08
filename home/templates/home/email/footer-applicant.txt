@@ -1,5 +1,5 @@
 ---
 
 This is an automated email sent via Django on {{ request.scheme }}://{{ request.get_host }}
-You are receiving this email because you completed an eligibility check for Outreachy intern applicants.
+You are receiving this email because you completed an initial application for Outreachy.
 If you feel you have received this email in error, please contact "Outreachy Organizers" <organizers@outreachy.org>
