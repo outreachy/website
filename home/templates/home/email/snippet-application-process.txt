@@ -1,11 +1,11 @@
 Application Process
 -------------------
 
-The first step for applicants is to fill out an eligibility check:
+The first step for applicants is to fill out an initial application:
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'eligibility' %}
 
-Details about community projects will only be visible to applicants that have completed an eligibility check and are eligible for Outreachy.
+Details about community projects will only be visible to applicants with an approved initial application.
 
 The next step is for applicants to work with mentors on a contribution, AND record those in-progress contributions in the Outreachy website. Eligible applicants will see a 'Record Contributions' button on the community landing page next to each project proposal.
 
