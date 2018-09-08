@@ -13,23 +13,13 @@ Hi {{ application.applicant.public_name }},
 
 You recently submitted an initial application for the Outreachy internship program.
 
-{% if application.us_sanctioned_country %}You indicated you were a citizen, resident, or national of Crimea, Cuba, Iran, North Korea, or Syria.
+{% if application.us_sanctioned_country %}On your initial application, you said you were a citizen or national of Crimea, Cuba, Iran, North Korea, or Syria.
 
-In order for Outreachy's parent non-profit, Software Freedom Conservancy,
-to retain its 501c3 status, it must abide by U.S. law with respect to
-countries under U.S. sanctions. Please answer the following questions:
+Unfortunately, Software Freedom Conservancy, Outreachy's fiscal sponsor and chartiable home, is a non-profit based in the United States of America. Conservancy must follow U.S. sanctions regulations and cannot knowingly send money to those countries and regions.
 
-1. Which of these countries are you a resident, citizen, or national of?
+Are you currently living in Crimea, Cuba, Iran, North Korea, or Syria?
 
-2. What country or countries you will be living in during the Outreachy
-   internship?
-
-3. Are you eligible to work 40 hours a week in those countries? If you are
-   on a resident or work visa, which visa do you have? Please let us know
-   if you are a permanent resident or citizen of the country you're living in.
-
-4. Are you planning on sending any portion of your Outreachy internship
-   stipend back to family members or friends living in the listed countries?
+If not, will you be sending any part of the internship payment back to family or friends in those countries or regions?
 
 {% endif %}{% if application.applicantgenderidentity.prefer_not_to_say %}When asked which gender identities you have, you checked that you would prefer not to specify your gender. Unfortunately, we do need this information in order to review your Outreachy initial application.
 
