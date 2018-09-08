@@ -38,7 +38,7 @@ The tax forms with your legal name will not be shared with mentors.
 				{{ field }}
 			</div>
 			<div class="card-footer bg-white">
-				{{ field.help_text|safe }}
+				Note that the end date in this question extends past the end of internships to {{ current_round.sfc_payment_last_date|date:"F d, Y" }}.
 			</div>
 		</div>
 	{% else %}
