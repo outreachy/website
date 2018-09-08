@@ -2078,10 +2078,6 @@ class ApplicantApproval(ApprovalStatus):
     application_round = models.ForeignKey(RoundPage, on_delete=models.CASCADE)
     project_contributions = models.ManyToManyField(Project, through='Contribution')
 
-    gsoc_or_outreachy_internship = models.NullBooleanField(
-            verbose_name='Previous Google Summer of Code or Outreachy internship?',
-            help_text='Have you been accepted as a Google Summer of Code intern or an Outreachy intern before? Please say yes even if you did not complete the internship.')
-
     def is_approver(self, user):
         return user.is_staff
 
