@@ -1,5 +1,5 @@
 {% with application=applicantapproval %}
-Approve Outreachy applicant {{ application.applicant.public_name }}
+Approve Outreachy initial application {{ application.applicant.public_name }}
 
 Please review the initial application submitted by {{ application.applicant.public_name }}.
 
@@ -7,11 +7,11 @@ Here is a sample email that can help clarify the situation:
 
 To: {{ application.applicant.public_name }} <{{ application.applicant.account.email }}>
 Bcc: Outreachy Organizers <organizers@outreachy.org>
-Subject: Outreachy eligibility question for {{ application.applicant.public_name }}
+Subject: Question on Outreachy initial application for {{ application.applicant.public_name }}
 
 Hi {{ application.applicant.public_name }},
 
-You recently submitted an eligibility form for the Outreachy internship program.
+You recently submitted an initial application for the Outreachy internship program.
 
 {% if application.us_sanctioned_country %}You indicated you were a citizen, resident, or national of Crimea, Cuba, Iran, North Korea, or Syria.
 
