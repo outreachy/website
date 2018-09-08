@@ -2334,11 +2334,12 @@ class BarriersToParticipation(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
 
     barriers_to_contribution = models.TextField(
-            verbose_name='What barriers or concerns have kept you from contributing to free and open source software?')
+            verbose_name='What barriers or concerns have kept you from contributing to free and open source software?',
+            help_text="Please provide specific examples. Outreachy organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.")
 
     systematic_bias = models.TextField(
             verbose_name='What systematic bias or discrimination have you faced while building your skills for contributing to free and open source software?',
-            help_text='Contributing to free and open source software takes some skill. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker. In these settings, have you faced systematic bias or discrimination? Have you been discouraged from accessing to these resources because of your identity or background?')
+            help_text="<p>Contributing to free and open source software takes some skill. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>In these settings, have you faced systematic bias or discrimination? Have you been discouraged from accessing these resources because of your identity or background?</p><p>Please provide specific examples and (optionally) statistics. Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
 
 class TimeCommitmentSummary(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
