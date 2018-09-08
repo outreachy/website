@@ -2220,6 +2220,9 @@ class PriorFOSSExperience(models.Model):
     prior_contrib_reviewer = models.BooleanField(verbose_name='Reviewing contributions')
     prior_contrib_mentor = models.BooleanField(verbose_name='Mentoring contributors')
     prior_contrib_accessibility = models.BooleanField(verbose_name='Improving or testing accessibility')
+    prior_contrib_self_identify = models.CharField(max_length=SENTENCE_LENGTH,
+            blank=True,
+            verbose_name="If your contribution type is NOT listed above, how have you contributed to free and open source software before?")
 
 
 class ApplicantGenderIdentity(models.Model):

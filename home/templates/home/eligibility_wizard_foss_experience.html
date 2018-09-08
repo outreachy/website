@@ -29,7 +29,7 @@ Please be completely honest in your answers.
 {{ wizard.form.media }}
 {{ wizard.management_form }}
 {% for field in form.visible_fields %}
-    {% if 'outreachy' in field.label_tag or 'ave you contributed' in field.label_tag or 'ave you ever been' in field.label_tag %}
+    {% if 'outreachy' in field.label_tag or 'ave you contributed' in field.label_tag or 'ave you ever been' in field.label_tag or 'your contribution type' in field.label_tag %}
 	    <div class="form-group card">
 		    {{ field.errors }}
 		    <div class = "card-header">

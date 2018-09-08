@@ -474,6 +474,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 'prior_contrib_reviewer',
                 'prior_contrib_mentor',
                 'prior_contrib_accessibility',
+                'prior_contrib_self_identify',
                 ),
                 widgets = {
                     'gsoc_or_outreachy_internship': widgets.RadioSelect(choices=BOOL_CHOICES),
