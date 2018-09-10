@@ -24,6 +24,12 @@ Examples of unacceptable behavior by Outreachy community members include:
 * Other conduct which could reasonably be considered inappropriate in a professional setting
 * Providing false information on the Outreachy mentor or intern agreement, the internship application, W-9 or W8-BEN forms, third-party payment authorization, or payment authorization request
 
+Outreachy prioritizes marginalized people's safety over privileged people's comfort. The Outreachy organizers will not act on complaints regarding:
+
+* "Reverse"-isms, including "reverse racism," "reverse sexism," and "cisphobia"
+* The tone or writing style used when responding to harassment, racism, sexism, transphobia, or otherwise oppressive behavior or assumptions
+* Reasonable communication of boundaries, such as "leave me alone," "go away," or "I'm not discussing this with you."
+
 ## Our Responsibilities
 
 Outreachy organizers are responsible for clarifying the standards of acceptable behavior and are expected to take appropriate and fair corrective action in response to any instances of unacceptable behavior.
