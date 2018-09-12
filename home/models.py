@@ -2380,6 +2380,11 @@ class VolunteerTimeCommitment(models.Model):
             blank=True,
             help_text="Please describe what kind of volunteer position and duties you have.")
 
+    def clean(self):
+        if self.start_date > self.end_date:
+            error_string = 'Volunteer role start date ' + self.start_date.strftime("%Y-%m-%d") + ' is after volunteer role end date ' + self.end_date.strftime("%Y-%m-%d")
+            raise ValidationError({'start_date': error_string})
+
 class EmploymentTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
     start_date = models.DateField(help_text="Start date of employment period. Use YYYY-MM-DD format.")
@@ -2390,6 +2395,11 @@ class EmploymentTimeCommitment(models.Model):
             )
     quit_on_acceptance = models.BooleanField(
             help_text="I will quit this job or contract if I am accepted as an Outreachy intern.")
+
+    def clean(self):
+        if self.start_date > self.end_date:
+            error_string = 'Employment period start date ' + self.start_date.strftime("%Y-%m-%d") + ' is after employment period end date ' + self.end_date.strftime("%Y-%m-%d")
+            raise ValidationError({'start_date': error_string})
 
 class NonCollegeSchoolTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
@@ -2403,6 +2413,11 @@ class NonCollegeSchoolTimeCommitment(models.Model):
             max_length=THREE_PARAGRAPH_LENGTH,
             blank=True,
             help_text="Please describe the course. Include the name and a link to the website of your coding school or organization offering online courses. Add the course name and a short description of course work.")
+
+    def clean(self):
+        if self.start_date > self.end_date:
+            error_string = 'Coding school or online class start date ' + self.start_date.strftime("%Y-%m-%d") + ' is after class end date ' + self.end_date.strftime("%Y-%m-%d")
+            raise ValidationError({'start_date': error_string})
 
 class SchoolTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
@@ -2437,6 +2452,11 @@ class SchoolTimeCommitment(models.Model):
     thesis_credits = models.PositiveIntegerField(
             verbose_name="Number of graduate thesis or research credits",
             help_text="If you are a graduate student, how many credits will you earn for working on your thesis or research (not including the credits earned for the Outreachy internship)?")
+
+    def clean(self):
+        if self.start_date > self.end_date:
+            error_string = 'School term (' + self.term_name + ') start date ' + self.start_date.strftime("%Y-%m-%d") + ' is after term end date ' + self.end_date.strftime("%Y-%m-%d")
+            raise ValidationError({'start_date': error_string})
 
 class SchoolInformation(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
