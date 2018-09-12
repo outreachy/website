@@ -281,11 +281,8 @@ def gender_and_demographics_is_aligned_with_program_goals(wizard):
             'neutrois',
             'androgynous',
             'androgyne',
-            # Collect information for someone who doesn't specify their gender
-            # then ask them to send an email to the Outreachy organizers
-            'prefer_not_to_say',
             ]
-    return any(gender_data[x] for x in gender_minority_list) or gender_data['self_identify'] != ''
+    return any(gender_data[x] for x in gender_minority_list)
 
 def show_essay_questions(wizard):
     if not gender_and_demographics_is_aligned_with_program_goals(wizard):
@@ -377,11 +374,6 @@ def determine_eligibility(wizard, application_round):
     gender_data = wizard.get_cleaned_data_for_step('Gender Identity')
 
     if general_data['us_sanctioned_country']:
-        return (ApprovalStatus.PENDING, '')
-
-    #demo_data = wizard.get_cleaned_data_for_step('USA demographics')
-    #if not (demo_data and demo_data['us_resident_demographics']):
-    if gender_data['prefer_not_to_say'] or gender_data['self_identify']:
         return (ApprovalStatus.PENDING, '')
 
     return (ApprovalStatus.APPROVED, '')
