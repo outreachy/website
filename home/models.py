@@ -2077,6 +2077,7 @@ class ApplicantApproval(ApprovalStatus):
     applicant = models.ForeignKey(Comrade, on_delete=models.CASCADE)
     application_round = models.ForeignKey(RoundPage, on_delete=models.CASCADE)
     project_contributions = models.ManyToManyField(Project, through='Contribution')
+    submission_date = models.DateField(auto_now_add=True)
 
     def is_approver(self, user):
         return user.is_staff
