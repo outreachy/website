@@ -371,14 +371,16 @@ def determine_eligibility(wizard, application_round):
     if not time_commitments_are_approved(wizard, application_round):
         return (ApprovalStatus.REJECTED, 'TIME')
 
+    gender_data = wizard.get_cleaned_data_for_step('Gender Identity')
     if not (gender_and_demographics_is_aligned_with_program_goals(wizard)):
-        return (ApprovalStatus.PENDING, '')
+        # Did this person self-identify their gender?
+        if gender_data['self_identify']:
+            return (ApprovalStatus.PENDING, 'SELFIDENTIFY')
+        return (ApprovalStatus.PENDING, 'ESSAY')
 
     general_data = wizard.get_cleaned_data_for_step('Work Eligibility')
-    gender_data = wizard.get_cleaned_data_for_step('Gender Identity')
-
     if general_data['us_sanctioned_country']:
-        return (ApprovalStatus.PENDING, '')
+        return (ApprovalStatus.PENDING, 'SANCTIONED')
 
     return (ApprovalStatus.APPROVED, '')
 
