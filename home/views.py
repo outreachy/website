@@ -10,7 +10,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.signing import TimestampSigner, SignatureExpired, BadSignature 
 from django.db import models
 from django.forms import inlineformset_factory, ModelForm, modelform_factory, modelformset_factory, ValidationError, widgets
-from django.forms.models import BaseInlineFormSet
+from django.forms.models import BaseInlineFormSet, BaseModelFormSet
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_list_or_404
 from django.shortcuts import get_object_or_404
@@ -203,6 +203,10 @@ class ComradeUpdate(LoginRequiredMixin, UpdateView):
         return self.request.POST.get('next', '/')
 
 BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
+
+class EmptyModelFormSet(BaseModelFormSet):
+    def get_queryset(self):
+        return self.model._default_manager.none()
 
 def work_eligibility_is_approved(wizard):
     cleaned_data = wizard.get_cleaned_data_for_step('Work Eligibility')
@@ -599,6 +603,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'degree_name',
                 ))),
             ('School Term Info', modelformset_factory(SchoolTimeCommitment,
+                formset=EmptyModelFormSet,
                 min_num=1,
                 validate_min=True,
                 extra=2,
@@ -616,6 +621,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     },
                 )),
             ('Coding School or Online Courses Time Commitment Info', modelformset_factory(NonCollegeSchoolTimeCommitment,
+                formset=EmptyModelFormSet,
                 min_num=1,
                 validate_min=True,
                 extra=4,
@@ -627,6 +633,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'description',
                 ))),
             ('Contractor Info', modelformset_factory(ContractorInformation,
+                formset=EmptyModelFormSet,
                 min_num=1,
                 max_num=1,
                 validate_min=True,
@@ -641,6 +648,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     },
                 )),
             ('Employment Info', modelformset_factory(EmploymentTimeCommitment,
+                formset=EmptyModelFormSet,
                 min_num=1,
                 validate_min=True,
                 extra=2,
@@ -656,6 +664,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     },
                 )),
             ('Volunteer Time Commitment Info', modelformset_factory(VolunteerTimeCommitment,
+                formset=EmptyModelFormSet,
                 min_num=1,
                 validate_min=True,
                 extra=2,
