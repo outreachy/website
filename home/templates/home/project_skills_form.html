@@ -44,6 +44,9 @@ proposal and then click 'Edit Project information'.</p>
 		{% with forloop.counter as skill_number %}
 		<h2>Project Skill #{{ skill_number }}</h2>
 		{{ f.media }}
+		{% for hidden in f.hidden_fields %}
+			{{ hidden }}
+		{% endfor %}
 		{% for field in f.visible_fields %}
 			{% if 'Funding secured' in field.label_tag %}
 				<div class="form-group card">
