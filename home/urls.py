@@ -50,6 +50,7 @@ urlpatterns = [
     url(r'^alums/$', views.alums_page, name='alums'),
     url(r'^communities/cfp/$', views.community_cfp_view, name='community-cfp'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
+    url(r'^dashboard/review-applications/$', views.applicant_review_summary, name='applicant-review-summary'),
     url(r'^dashboard/trusted-volunteers/$', views.TrustedVolunteersListView.as_view(), name='trusted-volunteers-list'),
     url(r'^eligibility/$', views.EligibilityUpdateView.as_view(), name='eligibility'),
     url(r'^eligibility-results/$', views.EligibilityResults.as_view(), name='eligibility-results'),

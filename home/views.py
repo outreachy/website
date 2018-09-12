@@ -2564,6 +2564,28 @@ class Survey2018Notification(LoginRequiredMixin, ComradeRequiredMixin, TemplateV
         return redirect(reverse('dashboard'))
 
 @login_required
+def applicant_review_summary(request):
+    """
+    For applicant reviewers and staff, show the status of pending applications.
+    """
+    current_round = RoundPage.objects.latest('internstarts')
+    pending_applications = ApplicantApproval.objects.filter(
+            application_round = current_round,
+            approval_status = ApprovalStatus.PENDING).order_by('submission_date')
+    approved_applications = ApplicantApproval.objects.filter(
+            application_round = current_round,
+            approval_status = ApprovalStatus.APPROVED).order_by('submission_date')
+    rejected_applications = ApplicantApproval.objects.filter(
+            application_round = current_round,
+            approval_status = ApprovalStatus.REJECTED).order_by('submission_date')
+
+    return render(request, 'home/applicant_review_summary.html', {
+        'pending_applications': pending_applications,
+        'approved_applications': approved_applications,
+        'rejected_applications': rejected_applications,
+        })
+
+@login_required
 def dashboard(request):
     """
     Find objects for which the current user is either an approver or a
@@ -2595,6 +2617,10 @@ def dashboard(request):
             approval_status = ApprovalStatus.APPROVED).order_by('community__name')
     participations = list(chain(pending_participations, approved_participations))
 
+    pending_applications_count = ApplicantApproval.objects.filter(
+            application_round = current_round,
+            approval_status = ApprovalStatus.PENDING).count()
+
     mentor_relationships = MentorRelationship.objects.filter(mentor__mentor__account=request.user)
 
     return render(request, 'home/dashboard.html', {
@@ -2605,5 +2631,6 @@ def dashboard(request):
         'pending_participations': pending_participations,
         'approved_participations': approved_participations,
         'participations': participations,
+        'pending_applications_count': pending_applications_count,
         'show_reminders': 1,
         })

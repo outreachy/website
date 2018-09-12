@@ -1,0 +1,28 @@
+{% extends "base.html" %} 
+
+{% block title %}
+Applicant Review Summary
+{% endblock %}
+
+{% block content %}
+{% comment %}FIXME: create new class for applicant reviewers and deny people access if they aren't staff or an approved applicant reviewer{% endcomment %}
+{% if not user.is_staff %}
+	<p>You are not authorized to review applications.</p>
+{% else %}
+	<h1>Pending Applications</h1>
+	<table class="table table-striped table-bordered">
+		{% include 'home/snippet/application_review_headers.html' %}
+		{% for app in pending_applications %}
+			{% include 'home/snippet/application_review_rows.html' %}
+		{% endfor %}
+	</table>
+
+	<h1>Rejected Applications</h1>
+	<table class="table table-striped table-bordered">
+		{% include 'home/snippet/application_review_headers.html' %}
+		{% for app in rejected_applications %}
+			{% include 'home/snippet/application_review_rows.html' %}
+		{% endfor %}
+	</table>
+{% endif %}
+{% endblock %}
