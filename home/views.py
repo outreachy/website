@@ -1784,14 +1784,17 @@ def eligibility_information(request):
 
 class TrustedVolunteersListView(UserPassesTestMixin, ListView):
     template_name = 'home/trusted_volunteers.html'
+    current_round = RoundPage.objects.latest('internstarts')
     queryset = Comrade.objects.filter(
             models.Q(
                 mentorapproval__approval_status=ApprovalStatus.APPROVED,
                 mentorapproval__project__approval_status=ApprovalStatus.APPROVED,
                 mentorapproval__project__project_round__approval_status=ApprovalStatus.APPROVED,
+                mentorapproval__project__project_round__participating_round_status=current_round,
             ) | models.Q(
                 coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
                 coordinatorapproval__community__participation__approval_status=ApprovalStatus.APPROVED,
+                coordinatorapproval__community__participation__participating_round=current_round,
             )
         ).order_by('public_name').distinct()
 
