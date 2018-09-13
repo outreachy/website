@@ -2136,7 +2136,7 @@ class ApplicantApproval(ApprovalStatus):
             if self.workeligibility.under_export_control:
                 return 'Under U.S. export control'
 
-            if self.priorfossexperience and not self.priorfossexperience.gsoc_or_outreachy_internship:
+            if self.priorfossexperience and self.priorfossexperience.gsoc_or_outreachy_internship:
                 return 'Participated in GSoC or Outreachy before'
 
             return 'Unknown'
