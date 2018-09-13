@@ -1,0 +1,29 @@
+{% if user.is_staff %}
+	<h1>Staff Actions</h1>
+
+	<table class="table table-striped table-bordered">
+		<thread class="thread-dark">
+		<tr>
+			<th scope="col">Approve applicant?</th>
+			<th scope="col">Pend application?</th>
+			<th scope="col">Reject applicant?</th>
+			<th scope="col">Delete application?</th>
+		</tr>
+		</thread>
+		<td>{% if application.approval_status != application.APPROVED %}
+				<a class='btn btn-success' href="{% url 'applicant-review-detail' applicant_username=application.applicant.account.username %}">Approve Application</a>
+			{% endif %}
+		</td>
+		<td>{% if application.approval_status != application.PENDING %}
+				<a class='btn btn-secondary' href="{% url 'applicant-review-detail' applicant_username=application.applicant.account.username %}">Put in Pending</a>
+			{% endif %}
+		</td>
+		<td>{% if application.approval_status != application.REJECTED %}
+				<a class='btn btn-warning' href="{% url 'applicant-review-detail' applicant_username=application.applicant.account.username %}">Reject Application</a>
+			{% endif %}
+		</td>
+		<td>
+			<a class='btn btn-danger' href="{% url 'applicant-review-detail' applicant_username=application.applicant.account.username %}">Delete Application</a>
+		</td>
+	</table>
+{% endif %}

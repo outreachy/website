@@ -18,6 +18,7 @@
 			{% include 'home/snippet/application_review_rows.html' %}
 		{% endwith %}
 	</table>
+	{% include 'home/snippet/applicant_review_actions.html' %}
 
 	<h1>Initial Application</h1>
 
@@ -189,5 +190,6 @@
 			</ul>
 		{% endif %}
 	{% endwith %}
+	{% include 'home/snippet/applicant_review_actions.html' %}
 {% endif %}
 {% endblock %}
