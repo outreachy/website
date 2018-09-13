@@ -2088,6 +2088,74 @@ class ApplicantApproval(ApprovalStatus):
     def submission_and_editing_deadline(self):
         return self.application_round.appslate
 
+    def is_over_18(self):
+        if not self.workeligibility:
+            return None
+        if self.workeligibility.over_18:
+            return True
+        return False
+
+    def is_eligible_to_work(self):
+        if not self.workeligibility:
+            return None
+        if self.workeligibility.eligible_to_work:
+            return True
+        return False
+
+    def is_not_under_export_control(self):
+        if not self.workeligibility:
+            return None
+        if self.workeligibility.under_export_control:
+            return False
+        return True
+
+    def is_not_under_sanctions(self):
+        if not self.workeligibility:
+            return None
+        if self.workeligibility.us_sanctioned_country:
+            return False
+        return True
+
+    def was_not_intern_with_gsoc_or_outreachy(self):
+        if not self.priorfossexperience:
+            return None
+        if self.priorfossexperience.gsoc_or_outreachy_internship:
+            return False
+        return True
+
+    def get_reason_for_status(self):
+        if self.approval_status == self.APPROVED:
+            return ''
+        if self.reason_denied == 'GENERAL':
+            if not self.workeligibility.over_18:
+                return 'Younger than 18'
+
+            if not self.workeligibility.eligible_to_work:
+                return 'Not eligible to work'
+
+            if self.workeligibility.under_export_control:
+                return 'Under U.S. export control'
+
+            if self.priorfossexperience and not self.priorfossexperience.gsoc_or_outreachy_internship:
+                return 'Participated in GSoC or Outreachy before'
+
+            return 'Unknown'
+
+        if self.reason_denied == 'SANCTIONED':
+            return 'Under U.S. sanctions'
+
+        if self.reason_denied == 'SELFIDENTIFY':
+            return 'Self-identified their gender'
+
+        if self.reason_denied == 'TIME':
+            tcs = self.get_time_commitments()
+            return 'Not enough days free: ' + str(tcs['longest_period_free']) + ' days free / ' + str(tcs['internship_total_days'].days) + ' days total, 49 days free required'
+
+        if self.approval_status == self.PENDING:
+            return 'Essay questions need review'
+
+        return 'Unknown'
+
     def time_commitment_from_model(self, tc, hours):
         return {
                 'start_date': tc.start_date,
@@ -2225,6 +2293,25 @@ class PriorFOSSExperience(models.Model):
             blank=True,
             verbose_name="If your contribution type is NOT listed above, how have you contributed to free and open source software before?")
 
+    def get_prior_contribution_types(self):
+        # getattr looks up the field's value on the object
+        prior_contribs = [f.verbose_name.lower() for f in self._meta.get_fields() if f.get_internal_type() == 'BooleanField' and getattr(self, f.attname) and f.name.startswith('prior_contrib_')]
+        if len(prior_contribs) == 0:
+            return ''
+
+        if self.prior_contrib_self_identify:
+            prior_contribs.append(self.prior_contrib_self_identify)
+
+        prior_contribs_string = ', '.join(prior_contribs[:-1])
+
+        if len(prior_contribs) == 1:
+            ending_joiner = ''
+        else:
+            ending_joiner = ' and '
+        prior_contribs_string = prior_contribs_string + ending_joiner + prior_contribs[-1]
+
+        return prior_contribs_string
+
 
 class ApplicantGenderIdentity(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
@@ -2334,6 +2421,8 @@ class ApplicantRaceEthnicityInformation(models.Model):
 class BarriersToParticipation(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
 
+    # NOTE: Make sure to change the text in applicant_review_detail.html template
+    # if you change the verbose_name or help_text here.
     barriers_to_contribution = models.TextField(
             verbose_name='What barriers or concerns have kept you from contributing to free and open source software?',
             help_text="Please provide specific examples. Outreachy organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.")

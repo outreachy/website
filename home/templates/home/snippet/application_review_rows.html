@@ -3,24 +3,12 @@
 	<td><p>{{ app.get_approval_status_display }}</p>
 	<td>
 		{% if app.reason_denied %}
-			{% if app.reason_denied == 'TIME' %}
-				{% with tcs=app.get_time_commitments %}
-					Time commitments: </p><p>{{ tcs.longest_period_free }} / {{ tcs.internship_total_days.days }} days free, 49 days free required</p>
-				{% endwith %}
-			{% elif app.reason_denied == 'ESSAY' %}
-				Review essay questions</p>
-			{% elif app.reason_denied == 'SELFIDENTIFY' %}
-				Review self-identified gender</p>
-			{% elif app.reason_denied == 'SANCTIONED' %}
-				Ask questions of resident of U.S. sanctioned region</p>
-			{% else %} - {{ app.reason_denied }}</p>
-			{% endif %}
+			{{ app.get_reason_for_status }}</p>
 		{% else %} - 
 		{% endif %}
 	</td>
 	<td>{{ app.applicant.public_name }} &lt;{{ app.applicant.account.email }}&gt;</td>
-	<td>{{ app.applicant.get_pronouns_html|safe }}</td>
 	<td></td>
 	<td></td>
-	<td></td>
+	<td><a class='btn btn-info' href="{% url 'applicant-review-detail' applicant_username=app.applicant.account.username %}">Review Application</a></td>
 </tr>

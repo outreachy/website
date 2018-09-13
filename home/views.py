@@ -767,6 +767,16 @@ class EligibilityResults(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
         context['current_round'] = self.object.application_round
         return context
 
+class ViewInitialApplication(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
+    template_name = 'home/applicant_review_detail.html'
+    context_object_name = 'application'
+
+    def get_object(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        return get_object_or_404(ApplicantApproval,
+                    applicant__account__username=self.kwargs['applicant_username'],
+                    application_round=current_round)
+
 def past_rounds_page(request):
     return render(request, 'home/past_rounds.html',
             {

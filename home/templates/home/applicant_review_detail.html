@@ -1,0 +1,193 @@
+{% extends "base.html" %} 
+
+{% block title %}
+{{ application.applicant.public_name }} - Review Application
+{% endblock %}
+
+{% block content %}
+{% comment %}FIXME: create new class for applicant reviewers and deny people access if they aren't staff or an approved applicant reviewer{% endcomment %}
+{% if not user.is_staff %}
+	<p>You are not authorized to review applications.</p>
+{% else %}
+	<td><a class='btn btn-secondary' href="{% url 'applicant-review-summary' %}"> &lt;- Back to summary of applications</a></td>
+
+	<h1>Status</h1>
+	<table class="table table-striped table-bordered">
+		{% include 'home/snippet/application_review_headers.html' %}
+		{% with app=application %}
+			{% include 'home/snippet/application_review_rows.html' %}
+		{% endwith %}
+	</table>
+
+	<h1>Initial Application</h1>
+
+	{% if application.approval_status == application.REJECTED %}
+		<p><b>Reason for rejection:</b> {{ application.get_reason_for_status }}</p>
+	{% elif application.approval_status == application.PENDING %}
+		<p><b>Reason for pending status:</b> {{ application.get_reason_for_status }}</p>
+	{% elif application.approval_status == application.APPROVED %}
+		<p><b>Application has been approved</b></p>
+	{% endif %}
+
+	<h2>Eligibility</h2>
+	<ul>
+		<li>
+			{% if application.is_over_18 == False %}
+				<span class="badge badge-warning">Warning</span> Age eligibility: <b>No</b>, applicant is not over 18 years of age when the internship starts.
+			{% elif application.is_over_18 == True %}
+				Age eligibility: <b>Yes</b>, applicant is over 18 years of age when the internship starts.
+			{% else %}
+				Age eligibility: Applicant was not asked this question.
+			{% endif %}
+		</li>
+
+		<li>
+			{% if application.is_eligible_to_work == False %}
+				<span class="badge badge-warning">Warning</span> Work eligibility: <b>No</b>, applicant is not eligible to work in the countries they are living in during the internship.
+			{% elif application.is_eligible_to_work == True %}
+				Work eligibility: <b>Yes</b>, applicant is eligible to work in the countries they are living in during the internship.
+			{% else %}
+				Work eligibility: Applicant was not asked this question.
+			{% endif %}
+		</li>
+	{% with tcs=application.get_time_commitments %}
+		<li>
+			{% if tcs.longest_period_free < 49 %}
+				<span class="badge badge-warning">Warning</span> Time eligibility: <b>No</b>, applicant has
+			{% else %}
+				Time eligibility: <b>Yes</b>, applicant has
+			{% endif %}
+			{{ tcs.longest_period_free }} days free / {{ tcs.internship_total_days.days }} days total. Applicants are required to have 49 days free.
+		</li>
+	{% endwith %}
+		<li>
+			{% if application.is_not_under_export_control == False %}
+				<span class="badge badge-warning">Warning</span> Free from U.S. export control: <b>No</b>, applicant is under U.S. export control.
+			{% elif application.is_not_under_export_control == True %}
+				Free from U.S. export control: <b>Yes</b>, applicant is free from U.S. export control.
+			{% else %}
+				Free from U.S. export control: Applicant was not asked this question.
+			{% endif %}
+		</li>
+		<li>
+			{% if application.is_not_under_sanctions == False %}
+				<span class="badge badge-warning">Warning</span> Free from U.S. sanctions: <b>No</b>, applicant is in a country or region under U.S. sanctions.
+			{% elif application.is_not_under_sanctions == True %}
+				Free from U.S. sanctions: <b>Yes</b>, applicant is not in a country or region under U.S. sanctions.
+			{% else %}
+				Free from U.S. sanctions: Applicant was not asked this question.
+			{% endif %}
+		</li>
+		<li>
+			{% if application.was_not_intern_with_gsoc_or_outreachy == False %}
+				<span class="badge badge-warning">Warning</span> Has not participated in GSoC or Outreachy: <b>No</b>, applicant has participated in Google Summer of Code, Outreach Program for Women, or Outreachy before.
+			{% elif application.was_not_intern_with_gsoc_or_outreachy == True %}
+				Has not participated in GSoC or Outreachy: <b>Yes</b>, applicant has not participated in Google Summer of Code, Outreach Program for Women, or Outreachy before.
+			{% else %}
+				Has not participated in GSoC or Outreachy: Applicant was not asked this question.
+			{% endif %}
+		</li>
+	</ul>
+
+	<h2>Additional Information</h2>
+	<p>Pronouns: <b>{{ application.applicant.get_pronouns_display }}</b>
+	<p>Gender identity: {% if application.applicantgenderidentity %}<b>{{ application.applicantgenderidentity }}</b>{% else %} Applicant was not asked this question.</p>{% endif %}
+	
+	<p>Racial or ethnic minority in the United States technology industry: {% if not application.paymenteligibility.us_national_or_permanent_resident %}Unknown; not a U.S. resident or national.{% elif application.ApplicantRaceEthnicityInformation.us_resident_demographics %}<b>Yes</b>, they're Black/African American, Hispanic/Latinx, Native American, Alaska Native, Native Hawaiian, or Pacific Islander{% else %}<b>No</b>, they're not Black/African American, Hispanic/Latinx, Native American, Alaska Native, Native Hawaiian, or Pacific Islander.{% endif %}</p>
+
+	<p>Prior experience with FOSS:
+	<ul>
+		<li>
+			{% if application.priorfossexperience.prior_contributor %}
+				<b>Yes</b>, they have volunteered to create FOSS contributions.
+			{% else %}
+				<b>No</b>, no they have not volunteered contributions to FOSS.
+			{% endif %}
+		</li>
+		<li>
+			{% if application.priorfossexperience.prior_paid_contributor %}
+				<b>Yes</b>, they have been paid for their FOSS contributions.
+			{% else %}
+				<b>No</b>, no they have not been paid for their contributions to FOSS.
+			{% endif %}
+		</li>
+		<li>Prior experiences contributing to FOSS as a volunteer or paid contributor: <b>{{ application.priorfossexperience.get_prior_contribution_types }}</b>{% if not application.priorfossexperience.get_prior_contribution_types %}None{% endif %}</li>
+	</ul>
+	</p>
+	<h2>Essay Answers</h2>
+	{% if not application.barrierstoparticipation %}
+		<p>Applicant was not prompted to answer the essay questions.</p>
+	{% else %}
+		<div class="card mb-3">
+			<div class="card-header">Q1. What barriers or concerns have kept you from contributing to free and open source software?</div>
+			<div class="card-body">
+				<p class="card-text"><b>A1. {{ application.barrierstoparticipation.barriers_to_contribution }}</b></p>
+			</div>
+			<div class="card-footer bg-white">
+				<p>Help text: Please provide specific examples. Outreachy organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>
+			</div>
+		</div>
+		<div class="card mb-3">
+			<div class="card-header">Q2. What systematic bias or discrimination have you faced while building your skills for contributing to free and open source software?</div>
+			<div class="card-body">
+				<p class="card-text"><b>A2. {{ application.barrierstoparticipation.systematic_bias }}</b>
+				</p>
+			</div>
+			<div class="card-footer bg-white">
+				<p>Help text: Contributing to free and open source software takes some skill. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>In these settings, have you faced systematic bias or discrimination? Have you been discouraged from accessing these resources because of your identity or background?</p><p>Please provide specific examples and (optionally) statistics. Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>
+			</div>
+		</div>
+	{% endif %}
+	<h2>Time Commitment Details</h2>
+	{% with tcs=application.get_time_commitments applicant=application.applicant final_application=applicant_contributions.0.get_application %}
+		{% if not tcs.school_time_commitments and not tcs.volunteer_time_commitments and not tcs.employment_time_commitments and not tcs.noncollege_school_time_commitments %}
+			<p>Applicant has not listed any university/college, coding school/online courses, work, or volunteer time commitments.</p>
+		{% endif %}
+		{% if tcs.school_time_commitments %}
+			<p>School time commitments:</p>
+			<ul>
+				<li>Applicant is enrolled at <a href="{{ application.schoolinformation.university_website }}">{{ application.schoolinformation.university_name }}</a></li>
+				<li>Degree: {{ application.schoolinformation.degree_name }}</li>
+				{% for term in tcs.school_time_commitments %}
+					<li>Term name/number: {{ term.term_name }}</li>
+					<ul>
+						<li>{{ term.start_date }} to {{ term.end_date }}</li>
+						<li>Enrolled for {{ term.registered_credits }} credits (students typically register for {{ term.typical_credits }} credits during this term)</li>
+						{% if term.outreachy_credits %}<li>The Outreachy internship will be used for {{ term.outreachy_credits }} credits during this term</li>{% endif %}
+						{% if term.thesis_credits %}<li>Applicant is registered for {{ term.thesis_credits }} graduate thesis or research credits during this term</li>{% endif %}
+					</ul>
+				{% endfor %}
+			</ul>
+		{% endif %}
+		{% if tcs.noncollege_school_time_commitments %}
+			<p>Coding school or online courses time commitments:</p>
+			<ul>
+			{% for course in tcs.noncollege_school_time_commitments %}
+				<li>Course #{{ forloop.counter }}</li>
+				<ul>
+					<li>{{ course.hours_per_week }} hours per week from {{ course.start_date }} to {{ course.end_date }}.</li>
+					<li>Description of course work and organization offering courses: {{ course.description }}</li>
+				</ul>
+			{% endfor %}
+			</ul>
+		{% endif %}
+		{% if tcs.employment_time_commitments %}
+			<p>Employment time commitments:</p>
+			<ul>
+			{% for period in tcs.employment_time_commitments %}
+				<li>{{ period.hours_per_week }} hours per week from {{ period.start_date }} to {{ period.end_date }}.{% if period.quit_on_acceptance %} Applicant has indicated they will quit this job if they are accepted as an Outreachy intern.{% endif %}</li>
+			{% endfor %}
+			</ul>
+		{% endif %}
+		{% if tcs.volunteer_time_commitments %}
+			<p>Volunteer time commitments:</p>
+			<ul>
+			{% for period in tcs.volunteer_time_commitments %}
+				<li>{{ period.hours_per_week }} hours per week from {{ period.start_date }} to {{ period.end_date }}.</li>
+				<li>Description of volunteer commitments: {{ period.description }}</li>
+			{% endfor %}
+			</ul>
+		{% endif %}
+	{% endwith %}
+{% endif %}
+{% endblock %}
