@@ -2078,6 +2078,7 @@ class ApplicantApproval(ApprovalStatus):
     application_round = models.ForeignKey(RoundPage, on_delete=models.CASCADE)
     project_contributions = models.ManyToManyField(Project, through='Contribution')
     submission_date = models.DateField(auto_now_add=True)
+    ip_address = models.GenericIPAddressField(protocol="both")
 
     def is_approver(self, user):
         return user.is_staff

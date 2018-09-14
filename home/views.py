@@ -718,6 +718,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     applicant=self.request.user.comrade,
                     application_round=self.get_current_round(),
                 )
+        self.object.ip_address = self.request.META.get('REMOTE_ADDR')
 
         # It's okay that the other objects aren't saved,
         # because determine_eligibility get the cleaned data from the form wizard,
