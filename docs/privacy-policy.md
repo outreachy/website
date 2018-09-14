@@ -19,7 +19,7 @@ Outreachy collects personal data when:
 
 * you create a user account;
 * you sign up for a mailing list;
-* you fill out an initial internship application;
+* you fill out an initial or final internship application;
 * you sign up to coordinate mentors for a community;
 * you submit a project in order to sign up to mentor for Outreachy;
 * you participate in surveys and evaluations;
@@ -42,7 +42,7 @@ The types of personal data collected may include (but are not limited to):
 * your telephone number;
 * any other identifier that permits Outreachy to make physical or online contact with you;
 * information necessary to make payments to Outreachy interns and process sponsorship commitments;
-* any errrors or exceptions you triggered on the Outreachy website, including your username, IP address, and which URL triggered the error or exception.
+* any errors or exceptions you triggered on the Outreachy website, including your username, IP address, and which URL triggered the error or exception.
 * any information that Outreachy collects online from you and maintains in association with your account, such as: 
     * your Outreachy Account System username, e-mail address, and password;
     * the public name you want us to display on the Outreachy website and use in e-mail communications;
@@ -137,13 +137,7 @@ When an approved Outreachy applicant records a contribution to a mentored projec
 * the public name you want us to display on the Outreachy website and use in e-mail communications;
 * your e-mail address;
 * your pronouns (if you choose to share those pronouns with mentors and coordinators), and whether to use those pronouns on public community forums/chat/IRC;
-* your time commitment information, including:
-    * whether you are currently applying to Google Summer of Code
-    * your student enrollment status, course load, and typical student course load
-    * your enrollment status in a coding school or online self-paced courses
-    * your contracted employment hours
-    * your hours working as a self-employed contractor
-    * your volunteer time commitments or other time commitments
+* your time commitment summary (number of days free from full-time commitments)
 * (optional) your nickname on community forums/chat/IRC;
 * (optional) your language preference;
 * (optional) your timezone;
@@ -153,8 +147,10 @@ When an approved Outreachy applicant records a contribution to a mentored projec
 * (optional) your blog URL and RSS feed URL;
 * (optional) your Twitter user profile URL;
 
-Only Outreachy organizers will have access to the following private personal data for applicants who have filled out an initial application:
+Only Outreachy organizers and designated applicant reviewers will have access to the following private personal data for applicants who have filled out an initial application:
 
+* the date you submitted your application;
+* your IP address;
 * your legal name to use in intern contracts or payments;
 * your pronouns, if you choose not to share your pronouns with mentors and coordinators;
 * information that determines whether the Software Freedom Conservancy is allowed to pay you as a contractor under U.S. non-profit laws:
@@ -165,9 +161,18 @@ Only Outreachy organizers will have access to the following private personal dat
     * your age (whether you are over 18)
     * your participation status in past Google Summer of Code, Outreach Program for Women, or Outreachy internships
     * your status as a national or permanent resident of the United States of America
+    * any limitations on the dates or hours you can work due to student visa restrictions
+* information that helps us determine if you will need to fill out a W8-BEN or a W-9 form:
+    * whether you are a U.S. national or permanent resident
+    * whether you will be in the United States of America at any time during your internship, or five weeks after the internship ends
 * information that helps us determine if your initial application is aligned with the Outreachy program goal of supporting people from groups under-represented in the technology industry:
-    * your racial/ethnic demographics
+    * your racial/ethnic demographics (for U.S. nationals and permanent residents only)
     * your gender identity, including whether you are transgender or genderqueer
+    * your prior experiences contributing to free and open source software
+    * your concerns or barriers that have kept you from participating in free and open source software
+    * examples of the systematic bias, discrimination you have faced
+* information that helps us improve our promotional efforts:
+    * where you heard about Outreachy from
 
 If you wish to remove your initial application information from the Outreachy website, please contact us via our [Personal Data Request Form](https://outreachy.org/contact/organizers/). Currently, removing the initial application information means that any recorded contributions or applications to mentored projects will be deleted, and you will not be eligible to be accepted as an Outreachy intern. We are working on features to allow more fine-grained data removal.
 
