@@ -147,6 +147,9 @@ When an approved Outreachy applicant records a contribution to a mentored projec
 * (optional) your blog URL and RSS feed URL;
 * (optional) your Twitter user profile URL;
 
+Outreachy organizers may use anonymized quotes from essay questions in sponsor materials and on the Outreachy website:
+* examples of the systematic bias, discrimination you have faced
+
 Only Outreachy organizers and designated applicant reviewers will have access to the following private personal data for applicants who have filled out an initial application:
 
 * the date you submitted your application;
