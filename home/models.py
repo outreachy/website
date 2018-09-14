@@ -2054,6 +2054,11 @@ class CoordinatorApproval(ApprovalStatus):
                 | models.Q(coordinator__account=user)
                 )
 
+
+# --------------------------------------------------------------------------- #
+# initial application models
+# --------------------------------------------------------------------------- #
+
 def create_time_commitment_calendar(tcs, application_round):
     application_period_length = (application_round.internends - application_round.internstarts).days + 1
     calendar = [0]*(application_period_length)
@@ -2592,6 +2597,12 @@ class ContractorInformation(models.Model):
 
     continuing_contract_work = models.NullBooleanField(
             verbose_name="Will you be doing contract work during the Outreachy internship period?")
+
+
+# --------------------------------------------------------------------------- #
+# end initial application models
+# --------------------------------------------------------------------------- #
+
 
 class Contribution(models.Model):
     applicant = models.ForeignKey(ApplicantApproval)
