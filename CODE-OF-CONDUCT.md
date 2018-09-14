@@ -79,7 +79,7 @@ If a concern about a past incident in any space is brought up about a current Ou
 
 ## Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the Outreachy organizers through our [website contact form](https://www.outreachy.org/contact/).
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the Outreachy organizers through our [website contact form](https://www.outreachy.org/contact/contact-us/).
 
 The contact form reaches the five Outreachy organizers, who can be emailed
 individually with an incident report:

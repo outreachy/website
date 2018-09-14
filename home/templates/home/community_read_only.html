@@ -54,7 +54,7 @@ If you are an Outreachy applicant, you should look over the <a href="{% url 'pro
 		<p>Have you changed your mind and decided your community can participate in this round of Outreachy?</p>
 		<p><a class="btn btn-success" href="{{ participation_info.get_submit_url }}">Community will participate</a></p>
 	{% elif participation_info.approval_status == participation_info.REJECTED %}
-		<p>Unfortunately, the Outreachy organizers have determined your community should not participate in this round. Please <a href="/contact/">contact us</a> for more details.</p>
+	<p>Unfortunately, the Outreachy organizers have determined your community should not participate in this round. Please <a href="{% url 'contact-us' %}">contact us</a> for more details.</p>
 	{% else %}
 		{% include 'home/snippet/coordinator_action.html' %}
 	{% endif %}

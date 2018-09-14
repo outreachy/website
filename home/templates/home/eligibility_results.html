@@ -6,7 +6,7 @@ Outreachy eligibility results
 
 {% block content %}
 
-<p><b>Do not use the browser back button to update your initial application. You will experience website errors.</b> If you filled out the application wrong, <a href="/contact/">contact Outreachy organizers</a></p>
+<p><b>Do not use the browser back button to update your initial application. You will experience website errors.</b> If you filled out the application wrong, <a href="{% url 'contact-applicant-help' %}">contact the Outreachy applicant helpers.</a></p>
 
 {% if application.approval_status == application.APPROVED %}
 
@@ -24,7 +24,7 @@ Outreachy eligibility results
 	For other projects, you will need to contact the mentor to get directions on how to make your first contributions.
 	</p>
 	<p>
-	If you get stuck at any time, please reach out to the mentors or <a href="/contact/">Outreachy organizers</a>.
+	If you get stuck at any time, please reach out to the mentors or <a href="{% url 'contact-applicant-help' %}">contact the Outreachy applicant helpers.</a>.
 	</p>
 	<p><a class='btn btn-success' href="{{ current_round.url }}">View Internship Projects</a></p>
 

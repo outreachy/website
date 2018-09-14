@@ -13,7 +13,7 @@
 		{% endif %}
 
 		<p>You {% if rel.round.has_internship_ended %}mentored{% else %}are mentoring{% endif %} {{ rel.intern_name }} for the {{ rel.community_name }} project "{{ rel.project_name }}".{% if not rel.round.has_internship_ended %} Please <a href="/mentor/mentor-faq/#during-the-internship">review our tips</a> for ensuring your mentee is successful.{% endif %}</p>
-		<p>The internship start date is on {{ rel.round.internstarts }}. The official ending date is {{ rel.round.internends }}.{% if not rel.round.has_internship_ended %} <a href="/mentor/mentor-faq/#internship-delays">Internships can be extended</a> by up to five weeks if interns are not putting in a full-time (40 hours a week effort), or the intern needs to take more than a week off from their internship. Please <a href="/contact/">discuss any extensions</a> or changes to the intern start date with the Outreachy organizers.{% endif %}</p>
+		<p>The internship start date is on {{ rel.round.internstarts }}. The official ending date is {{ rel.round.internends }}.{% if not rel.round.has_internship_ended %} <a href="/mentor/mentor-faq/#internship-delays">Internships can be extended</a> by up to five weeks if interns are not putting in a full-time (40 hours a week effort), or the intern needs to take more than a week off from their internship. Please <a href="{% url 'contact-organizers' %}">discuss any extensions</a> or changes to the intern start date with the Outreachy organizers.{% endif %}</p>
 		
 		{% if not rel.round.has_internship_ended %}
 			<p><a href="/mentor/mentor-faq/#mid-point-and-final-review">Mentor feedback</a> dates:
