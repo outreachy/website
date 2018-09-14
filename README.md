@@ -203,6 +203,14 @@ You may need to add a `templates` directory to that app:
 makedir contacts/templates
 ```
 
+# Dokku logs
+
+If you've deployed to a test server with the Django debugging settings turned on, Django will send all emails to the console. If you want to create new test users, you'll need to extract the verification URL from the log. You can run:
+
+```
+ssh -t dokku@outreachy.org logs test
+```
+
 # Sentry error logging
 
 Outreachy uses Sentry to log error messages received on both the Outreachy website and the test website. Unfortunately, that means if you ever use dokku to start the Python shell on the remote website, any typos you have end up getting reported to Sentry. To suppress those error messages, you can unset the `SENTRY_DSN` environment variable:
