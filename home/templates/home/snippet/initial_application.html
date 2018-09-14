@@ -1,0 +1,44 @@
+<div class="card border-secondary mb-3">
+	<div class="card-header text-white bg-secondary">
+		Your Initial Application
+	</div>
+	<div class="card-body">
+		<div class="card-text">
+			{% if application.workeligibility %}
+				<h4>Work Eligibility</h4>
+				{{ application.workeligibility.get_html|safe }}
+				<hr>
+			{% endif %}
+			{% if application.paymenteligibility %}
+				<h4>Tax Form information</h4>
+				{{ application.paymenteligibility.get_html|safe }}
+				<hr>
+			{% endif %}
+			{% if application.priorfossexperience %}
+				<h4>Prior Experience with Free and Open Source Software</h4>
+				{{ application.priorfossexperience.get_html|safe }}
+				<hr>
+			{% endif %}
+			{% if application.applicantraceethnicityinformation %}
+				<h4>Race and Ethnicity</h4>
+				{{ application.applicantraceethnicityinformation.get_html|safe }}
+				<hr>
+			{% endif %}
+			{% if application.applicantgenderidentity %}
+				<h4>Gender Identity</h4>
+				<hr>
+				<p>Q1. What is your gender identity?</p>
+				<p>A1. {{ application.applicantgenderidentity }}</p>
+				<hr>
+			{% endif %}
+			{% if application.barrierstoparticipation %}
+				<h4>Essay Questions</h4>
+				{{ application.barrierstoparticipation.get_html|safe }}
+				<hr>
+			{% endif %}
+			<h4>Time Commitments</h4>
+			{% include 'home/snippet/time_commitments.html' %}
+		</div>
+	</div>
+</div>
+

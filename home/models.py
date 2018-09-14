@@ -2232,6 +2232,20 @@ class ApplicantApproval(ApprovalStatus):
                 ('applicant', 'application_round'),
                 )
 
+def get_html_for_all_booleans(self):
+    # getattr looks up the field's value on the object
+    answers = [(f.verbose_name, getattr(self, f.attname)) for f in self._meta.get_fields() if f.name != 'applicant']
+    string = ''
+    for index, a in enumerate(answers):
+        string += '<hr>'
+        string += '<p>Q' + str(index+1) + '. ' + a[0] + '</p>'
+        string += '<p>A' + str(index+1) + '. '
+        if a[1] == True:
+            string += 'Yes</p>'
+        if a[1] == False:
+            string += 'No</p>'
+    return string
+
 class WorkEligibility(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
 
@@ -2254,6 +2268,9 @@ class WorkEligibility(models.Model):
             verbose_name='Are you a citizen, resident, or national of Crimea, Cuba, Iran, North Korea, or Syria?',
             help_text="Outreachy's fiscal parent, Software Freedom Conservancy, is a 501(c)(3) charitable non-profit in the United States of America. As a U.S. non-profit, Conservancy must ensure that funds are not sent to countries under U.S. sanctions programs, such as Cuba, Iran, North Korea, or Syria. If you have citizenship with Cuba, Iran, North Korea, or Syria, please answer yes, even if you are not currently living in those countries. We will follow up with additional questions.")
 
+    def get_html(self):
+        return get_html_for_all_booleans(self)
+
 
 class PaymentEligibility(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
@@ -2264,6 +2281,9 @@ class PaymentEligibility(models.Model):
     living_in_us = models.BooleanField(
             verbose_name='Will you be living in the United States of America during the Outreachy internship period, or for up to five weeks after the internship period ends?',
             help_text='Note that the interval in this question extends past the end of internships.')
+
+    def get_html(self):
+        return get_html_for_all_booleans(self)
 
 
 class PriorFOSSExperience(models.Model):
@@ -2317,6 +2337,26 @@ class PriorFOSSExperience(models.Model):
         prior_contribs_string = prior_contribs_string + ending_joiner + prior_contribs[-1]
 
         return prior_contribs_string
+
+    def get_html(self):
+        # getattr looks up the field's value on the object
+        answers = [(f.verbose_name, getattr(self, f.attname)) for f in self._meta.get_fields() if f.get_internal_type() == 'BooleanField' and not f.name.startswith('prior_contrib_')]
+        string = ''
+        for index, a in enumerate(answers):
+            string += '<hr>'
+            string += '<p>Q' + str(index+1) + '. ' + a[0] + '</p>'
+            string += '<p>A' + str(index+1) + '. '
+            if a[1] == True:
+                string += 'Yes</p>'
+            if a[1] == False:
+                string += 'No</p>'
+        index += 1
+        string += '<hr><p>Q' + str(index+1) + '. In the past, how have you contributed to free and open source software?</p>'
+        contribs = self.get_prior_contribution_types()
+        if not contribs:
+            contribs = 'No prior contributions'
+        string += '<p>A' + str(index+1) + '. ' + contribs + '</p>'
+        return string
 
 
 class ApplicantGenderIdentity(models.Model):
@@ -2423,6 +2463,9 @@ class ApplicantRaceEthnicityInformation(models.Model):
     us_resident_demographics = models.BooleanField(
             verbose_name='Are you Black/African American, Hispanic/Latinx, Native American, Alaska Native, Native Hawaiian, or Pacific Islander?')
 
+    def get_html(self):
+        return get_html_for_all_booleans(self)
+
 
 class BarriersToParticipation(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
@@ -2436,6 +2479,14 @@ class BarriersToParticipation(models.Model):
     systematic_bias = models.TextField(
             verbose_name='What systematic bias or discrimination have you faced while building your skills for contributing to free and open source software?',
             help_text="<p>Contributing to free and open source software takes some skill. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>In these settings, have you faced systematic bias or discrimination? Have you been discouraged from accessing these resources because of your identity or background?</p><p>Please provide specific examples and (optionally) statistics. Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
+
+    def get_html(self):
+        string = ''
+        string += '<hr><p>Q1. What barriers or concerns have kept you from contributing to free and open source software?</p>'
+        string += '<p>A1. ' + self.barriers_to_contribution + '</p>'
+        string += '<hr><p>Q1. What systematic bias or discrimination have you faced while building your skills for contributing to free and open source software?</p>'
+        string += '<p>A1. ' + self.systematic_bias + '</p>'
+        return string
 
 class TimeCommitmentSummary(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
