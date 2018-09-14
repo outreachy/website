@@ -137,7 +137,7 @@ When an approved Outreachy applicant records a contribution to a mentored projec
 * the public name you want us to display on the Outreachy website and use in e-mail communications;
 * your e-mail address;
 * your pronouns (if you choose to share those pronouns with mentors and coordinators), and whether to use those pronouns on public community forums/chat/IRC;
-* your time commitment summary (number of days free from full-time commitments)
+* your time commitment summary (number of days free from full-time commitments during the internship)
 * (optional) your nickname on community forums/chat/IRC;
 * (optional) your language preference;
 * (optional) your timezone;
@@ -153,6 +153,13 @@ Only Outreachy organizers and designated applicant reviewers will have access to
 * your IP address;
 * your legal name to use in intern contracts or payments;
 * your pronouns, if you choose not to share your pronouns with mentors and coordinators;
+* your time commitment detailed information:
+    * whether you are currently applying to Google Summer of Code
+    * your student enrollment status, course load, and typical student course load
+    * your enrollment status in a coding school or online self-paced courses
+    * your contracted employment hours
+    * your hours working as a self-employed contractor
+    * your volunteer time commitments or other time commitments
 * information that determines whether the Software Freedom Conservancy is allowed to pay you as a contractor under U.S. non-profit laws:
     * your eligibility to work for 40-hours a week in your country of residence
     * whether you are a citizen, resident, or national of Crimea, Cuba, Iran, North Korea, or Syria. Outreachy's fiscal parent, Software Freedom Conservancy, is a 501(c)(3) U.S. non-profit. As a U.S. non-profit, Conservancy must ensure that funds are not sent to countries under U.S. sanctions programs, such as Cuba, Iran, North Korea, or Syria.
