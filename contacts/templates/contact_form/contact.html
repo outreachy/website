@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Contact Outreachy
+{% endblock %}
+
+{% block content %}
+
+<p>The Outreachy program is comprised of the Outreachy organizers who run the program, and multiple FOSS community coordinators and mentors. Please feel free to reach out to them if you have any questions.</p>
+
+<h2>Outreachy Applicant Help</h2>
+
+<p>Outreachy volunteers are looking forward questions from Outreachy applicants! If you need help filling out your initial application, or you have any questions about how to apply, please <a href="{% url 'contact-applicant-help' %}">contact Outreachy applicant help</a>.</p>
+
+<h2>Outreachy Mentors</h2>
+
+<p>Please <a href="{% url 'contact-mentors' %}">contact coordinators and mentors</a> for general applicant questions, such as which project to choose or if you are having a hard time contacting a mentor.</p>
+
+<h2>Outreachy Organizers</h2>
+
+<p>Please <a href="{% url 'contact-organizers' %}">contact Outreachy organizers</a> for questions relating to sponsorship, community participation, volunteering or mentoring for Outreachy, or to give a <a href="https://github.com/sagesharp/outreachy-django-wagtail/blob/master/CODE-OF-CONDUCT.md">Code of Conduct incident report</a>. Coordinators are also available on <a href="https://twitter.com/Outreachy/">Twitter</a>.</p>
+
+<div class="container">
+	<div class="row">
+		<div class="col-sm">
+			<img src="{% static 'organizers/cindy.jpg' %}" class="img-thumbnail float-top mr-3" alt="Photo of Cindy" height="200" width="200">
+			<p>Cindy Pallares-Quezada is a software developer at GitLab. Cindy uses they/them or she/her pronouns.</p>
+		</div>
+		<div class="col-sm">
+			<img src="{% static 'organizers/karen.jpg' %}" class="img-thumbnail float-top mr-3" alt="Photo of Karen" height="200" width="200">
+			<p>Karen Sandler is the Executive Director of the Software Freedom Conservancy. Karen uses she/her pronouns.</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm">
+			<img src="{% static 'organizers/sage.jpg' %}" class="img-thumbnail float-top mr-3" alt="Photo of Sage" height="200" width="200">
+			<p>Sage Sharp is a diversity and inclusion consultant, and founder of Otter Tech. Sage uses they/them pronouns.</p>
+		</div>
+		<div class="col-sm">
+			<img src="{% static 'organizers/tony.jpg' %}" class="img-thumbnail float-top mr-3" alt="Photo of Sage" height="200" width="200">
+			<p>Tony Sebro is General Council for the Wikimedia Foundation. Tony uses he/him pronouns.</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm">
+			<img src="{% static 'organizers/marina.jpg' %}" class="img-thumbnail float-top mr-3" alt="Photo of Sage" height="200" width="200">
+			<p>Marina Zhurakhinskaya is a Senior Outreach Specialist in Community Diversity and Inclusion at Red Hat. Marina uses she/her pronouns.</p>
+		</div>
+		<div class="col-sm">
+		</div>
+	</div>
+</div>
+
+
+
+
+
+{% endblock %}

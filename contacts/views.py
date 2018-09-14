@@ -28,3 +28,17 @@ class MentorsContactFormView(ContactFormView):
 
 class MentorsTemplateView(TemplateView):
     template_name = 'contact_form/contacted_mentors.html'
+
+class ApplicantHelpContactFormView(ContactFormView):
+    form_class = OutreachyContactForm
+    recipient_list = ['Outreachy Applicant Help <applicant-help@outreachy.org>']
+    template_name = 'contact_form/contact_applicant_help.html'
+
+    def get_success_url(self):
+        return reverse('contacted-applicant-help')
+
+class ApplicantHelpTemplateView(TemplateView):
+    template_name = 'contact_form/contacted_applicant_help.html'
+
+class ContactTemplateView(TemplateView):
+    template_name = 'contact_form/contact.html'
