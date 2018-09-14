@@ -401,27 +401,6 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
             'Volunteer Time Commitment Info': show_time_commitment_info,
             }
     form_list = [
-            #('General Info', modelform_factory(ApplicantApproval, fields=(
-            #    'over_18',
-            #    'eligible_to_work',
-            #    'gsoc_or_outreachy_internship',
-            #    'us_national_or_permanent_resident',
-            #    'living_in_us',
-            #    'under_export_control',
-            #    'us_sanctioned_country',
-            #    ),
-            #    # FIXME: this allows people to submit a partial form
-            #    # without validating either 'yes' or 'no' is selected
-            #    widgets = {
-            #        'over_18': widgets.RadioSelect(choices=BOOL_CHOICES),
-            #        'gsoc_or_outreachy_internship': widgets.RadioSelect(choices=BOOL_CHOICES),
-            #        'eligible_to_work': widgets.RadioSelect(choices=BOOL_CHOICES),
-            #        'us_national_or_permanent_resident': widgets.RadioSelect(choices=BOOL_CHOICES),
-            #        'living_in_us': widgets.RadioSelect(choices=BOOL_CHOICES),
-            #        'under_export_control': widgets.RadioSelect(choices=BOOL_CHOICES),
-            #        'us_sanctioned_country': widgets.RadioSelect(choices=BOOL_CHOICES),
-            #        },
-            #    )),
             ('Work Eligibility', modelform_factory(WorkEligibility,
                 fields=(
                 'over_18',
