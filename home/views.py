@@ -289,6 +289,8 @@ def gender_and_demographics_is_aligned_with_program_goals(wizard):
     return any(gender_data[x] for x in gender_minority_list)
 
 def show_essay_questions(wizard):
+    if not work_eligibility_is_approved(wizard):
+        return False
     if not gender_and_demographics_is_aligned_with_program_goals(wizard):
         return True
     return False
