@@ -68,6 +68,7 @@ from .models import PaymentEligibility
 from .models import PriorFOSSExperience
 from .models import Project
 from .models import ProjectSkill
+from .models import PromotionTracking
 from .models import RoundPage
 from .models import SchoolInformation
 from .models import SchoolTimeCommitment
@@ -658,6 +659,11 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'hours_per_week',
                     'description',
                 ))),
+            ('Outreachy Promotional Information', modelform_factory(PromotionTracking,
+                fields=(
+                'spread_the_word',
+                ),
+                )),
             ]
     # TODO: override get method to redirect to results page if the person
     # has filled out an application
@@ -675,6 +681,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
             'Contractor Info': 'home/eligibility_wizard_contractor_info.html',
             'Employment Info': 'home/eligibility_wizard_employment_info.html',
             'Volunteer Time Commitment Info': 'home/eligibility_wizard_time_commitment_info.html',
+            'Outreachy Promotional Information': 'home/eligibility_wizard_promotional.html',
             }
 
     def get_template_names(self):
@@ -1758,7 +1765,6 @@ class FinalApplicationAction(ApprovalStatusAction):
             'applying_to_gsoc',
             'community_specific_questions',
             'timeline',
-            'spread_the_word',
             ]
 
     def get_object(self):

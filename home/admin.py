@@ -29,6 +29,7 @@ from .models import Participation
 from .models import PaymentEligibility
 from .models import Project
 from .models import ProjectSkill
+from .models import PromotionTracking
 from .models import RoundPage
 from .models import SchoolInformation
 from .models import SchoolTimeCommitment
@@ -285,6 +286,11 @@ class ApplicationsInline(admin.StackedInline):
     can_delete = True
     verbose_name_plural = 'Project application'
 
+class PromotionTrackingInline(admin.StackedInline):
+    model = PromotionTracking
+    can_delete = False
+    verbose_name_plural = 'Promotion tracking'
+
 class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
     list_display = (
             'applicant',
@@ -302,7 +308,7 @@ class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
             '=applicant__account__username',
             '=applicant__account__email',
             )
-    inlines = (WorkEligibilityInline, PaymentEligibilityInline, ApplicantGenderIdentityInline, ApplicantRaceEthnicityInformationInline, PriorFOSSExperienceInline, BarriersToParticipationInline, SchoolInformationInline, SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, ContractorInformationInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline)
+    inlines = (WorkEligibilityInline, PaymentEligibilityInline, ApplicantGenderIdentityInline, ApplicantRaceEthnicityInformationInline, PriorFOSSExperienceInline, BarriersToParticipationInline, SchoolInformationInline, SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, ContractorInformationInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline, PromotionTrackingInline)
 
     def round(self, obj):
         return obj.application_round
