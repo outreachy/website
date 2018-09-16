@@ -735,9 +735,6 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 r.applicant = self.object
                 r.save()
 
-        if self.object.approval_status == ApprovalStatus.PENDING:
-            email.approval_status_changed(self.object, self.request)
-
         return redirect(self.request.GET.get('next', reverse('eligibility-results')))
 
 class EligibilityResults(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
