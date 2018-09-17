@@ -2567,17 +2567,37 @@ def applicant_review_summary(request):
     pending_applications = ApplicantApproval.objects.filter(
             application_round = current_round,
             approval_status = ApprovalStatus.PENDING).order_by('submission_date')
-    approved_applications = ApplicantApproval.objects.filter(
-            application_round = current_round,
-            approval_status = ApprovalStatus.APPROVED).order_by('submission_date')
+
+    return render(request, 'home/applicant_review_summary.html', {
+        'pending_applications': pending_applications,
+        })
+
+@login_required
+def rejected_applicants_summary(request):
+    """
+    For applicant reviewers and staff, show the status of rejected applications.
+    """
+    current_round = RoundPage.objects.latest('internstarts')
     rejected_applications = ApplicantApproval.objects.filter(
             application_round = current_round,
             approval_status = ApprovalStatus.REJECTED).order_by('submission_date')
 
     return render(request, 'home/applicant_review_summary.html', {
-        'pending_applications': pending_applications,
-        'approved_applications': approved_applications,
         'rejected_applications': rejected_applications,
+        })
+
+@login_required
+def approved_applicants_summary(request):
+    """
+    For applicant reviewers and staff, show the status of approved applications.
+    """
+    current_round = RoundPage.objects.latest('internstarts')
+    approved_applications = ApplicantApproval.objects.filter(
+            application_round = current_round,
+            approval_status = ApprovalStatus.APPROVED).order_by('submission_date')
+
+    return render(request, 'home/applicant_review_summary.html', {
+        'approved_applications': approved_applications,
         })
 
 @login_required
@@ -2615,6 +2635,12 @@ def dashboard(request):
     pending_applications_count = ApplicantApproval.objects.filter(
             application_round = current_round,
             approval_status = ApprovalStatus.PENDING).count()
+    rejected_applications_count = ApplicantApproval.objects.filter(
+            application_round = current_round,
+            approval_status = ApprovalStatus.REJECTED).count()
+    approved_applications_count = ApplicantApproval.objects.filter(
+            application_round = current_round,
+            approval_status = ApprovalStatus.APPROVED).count()
 
     mentor_relationships = MentorRelationship.objects.filter(mentor__mentor__account=request.user)
 
@@ -2627,5 +2653,7 @@ def dashboard(request):
         'approved_participations': approved_participations,
         'participations': participations,
         'pending_applications_count': pending_applications_count,
+        'rejected_applications_count': rejected_applications_count,
+        'approved_applications_count': approved_applications_count,
         'show_reminders': 1,
         })

@@ -1,9 +1,4 @@
-{% if pending_applications_count %}
-<h1>Pending Applications</h1>
-
-<p>There are <a href="{% url 'applicant-review-summary' %}">{{ pending_applications_count }} applications to review</a>.</p>
-{% endif %}
-
+{% include 'home/snippet/dashboard_application_summary.html' %}
 <h1>Email Subscriptions</h1>
 
 <p>

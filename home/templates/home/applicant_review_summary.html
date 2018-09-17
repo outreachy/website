@@ -9,20 +9,34 @@ Applicant Review Summary
 {% if not user.is_staff %}
 	<p>You are not authorized to review applications.</p>
 {% else %}
-	<h1>Pending Applications</h1>
-	<table class="table table-striped table-bordered">
-		{% include 'home/snippet/application_review_headers.html' %}
-		{% for app in pending_applications %}
-			{% include 'home/snippet/application_review_rows.html' %}
-		{% endfor %}
-	</table>
+	{% if pending_applications %}
+		<h1>Pending Applications</h1>
+		<table class="table table-striped table-bordered">
+			{% include 'home/snippet/application_review_headers.html' %}
+			{% for app in pending_applications %}
+				{% include 'home/snippet/application_review_rows.html' %}
+			{% endfor %}
+		</table>
+	{% endif %}
 
-	<h1>Rejected Applications</h1>
-	<table class="table table-striped table-bordered">
-		{% include 'home/snippet/application_review_headers.html' %}
-		{% for app in rejected_applications %}
-			{% include 'home/snippet/application_review_rows.html' %}
-		{% endfor %}
-	</table>
+	{% if rejected_applications %}
+		<h1>Rejected Applications</h1>
+		<table class="table table-striped table-bordered">
+			{% include 'home/snippet/application_review_headers.html' %}
+			{% for app in rejected_applications %}
+				{% include 'home/snippet/application_review_rows.html' %}
+			{% endfor %}
+		</table>
+	{% endif %}
+
+	{% if approved_applications %}
+		<h1>Approved Applications</h1>
+		<table class="table table-striped table-bordered">
+			{% include 'home/snippet/application_review_headers.html' %}
+			{% for app in approved_applications %}
+				{% include 'home/snippet/application_review_rows.html' %}
+			{% endfor %}
+		</table>
+	{% endif %}
 {% endif %}
 {% endblock %}

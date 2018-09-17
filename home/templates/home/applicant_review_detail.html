@@ -9,7 +9,13 @@
 {% if not user.is_staff %}
 	<p>You are not authorized to review applications.</p>
 {% else %}
-	<td><a class='btn btn-secondary' href="{% url 'applicant-review-summary' %}"> &lt;- Back to summary of applications</a></td>
+	{% if application.approval_status == application.APPROVED %}
+		<td><a class='btn btn-secondary' href="{% url 'approved-applicants-summary' %}"> &lt;- Back to summary of approved applications</a></td>
+	{% elif application.approval_status == application.PENDING %}
+		<td><a class='btn btn-secondary' href="{% url 'pending-applicants-summary' %}"> &lt;- Back to summary of pending applications</a></td>
+	{% elif application.approval_status == application.REJECTED %}
+		<td><a class='btn btn-secondary' href="{% url 'rejected-applicants-summary' %}"> &lt;- Back to summary of rejected applications</a></td>
+	{% endif %}
 
 	<h1>Status</h1>
 	<table class="table table-striped table-bordered">

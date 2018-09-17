@@ -1,0 +1,15 @@
+<h1>Application Status</h1>
+<ul>
+	{% if pending_applications_count %}
+		<li><a href="{% url 'approved-applicants-summary' %}">{{ pending_applications_count }} pending applications to review</a></li>
+	{% endif %}
+	{% if rejected_applications_count %}
+		<li><a href="{% url 'rejected-applicants-summary' %}">{{ rejected_applications_count }} rejected applications</a></li>
+	{% endif %}
+	{% if approved_applications_count %}
+		<li><a href="{% url 'approved-applicants-summary' %}">{{ approved_applications_count }} approved applications</a></li>
+	{% endif %}
+	{% if pending_applications_count == 0 and rejected_applications_count == 0 and approved_applications_count == 0 %}
+		<li>No initial applications have been submitted</li>
+	{% endif %}
+</ul>
