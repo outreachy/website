@@ -1,0 +1,22 @@
+Your Outreachy initial application is approved
+
+Hi {{ recipient.display_name }},
+
+Your initial application for Outreachy has been approved. You can now proceed with the next step of your application.
+
+The next step is to pick one or two projects, and make a contribution to them. Only applicants that make a contribution will be accepted as an intern. Some projects will have instructions for how to make your first contributions. For other projects, you will need to contact the mentor to get directions on how to make your first contributions.
+
+If you get stuck at any time, please reach out to the mentors or contact the Outreachy applicant helpers:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'contact-mentors' %}
+{{ request.scheme }}://{{ request.get_host }}{% url 'contact-applicant-help' %}
+
+The list of projects can be found here:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
+
+Good luck making your contributions!
+
+Outreachy Organizers
+
+{% include 'home/email/footer-applicant.txt' %}

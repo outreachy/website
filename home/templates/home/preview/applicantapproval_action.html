@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load approval_status %}
+
+{% block title %}
+{% if view.kwargs.action == "approve" %}
+Approve {{ applicantapproval.applicant.public_name }}'s Application
+{% elif view.kwargs.action == "reject" %}
+Reject {{ applicantapproval.applicant.public_name }}'s Application
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<h1>
+	{% if view.kwargs.action == "approve" %}
+	Approve {{ applicantapproval.applicant.public_name }}
+	{% elif view.kwargs.action == "reject" %}
+	Reject {{ applicantapproval.applicant.public_name }}
+	{% endif %}
+</h1>
+{% if view.kwargs.action == "reject" %}
+	<p>Are you sure you want to reject the initial application from {{ applicantapproval.applicant.public_name }}?</p>
+{% elif view.kwargs.action == "approve" %}
+	<p>Confirm approval of the initial application from {{ applicantapproval.applicant.public_name }}.</p>
+{% endif %}
+
+{% include "home/snippet/action_form.html" %}
+
+{% endblock %}

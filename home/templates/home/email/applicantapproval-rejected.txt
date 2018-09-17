@@ -1,0 +1,11 @@
+Your Outreachy initial application status
+
+Hi {{ recipient.display_name }},
+
+We're sorry, but after reviewing your application, we have determined that you are not a strong applicant for the Outreachy internship program. You can view your submitted initial application and its status here:
+
+{{ request.scheme }}://{{ request.get_host }}{%}{% url 'eligibility-results' %}
+
+Outreachy Organizers
+
+{% include 'home/email/footer-applicant.txt' %}
