@@ -48,7 +48,8 @@ The types of personal data collected may include (but are not limited to):
     * the public name you want us to display on the Outreachy website and use in e-mail communications;
     * your legal name to use in intern or mentor contracts or payments;
     * your pronouns, whether to share those pronouns with mentors and coordinators, and whether to publicly display those pronouns on the Outreachy website;
-    * information about your age, location, demographics, employment and other information that we collect to determine your elligibility for the program.
+    * information about your age, location, employment, time commitment information, and other information that we collect to determine your eligibility for the program
+    * information about your gender identity, demographics, your experiences with systematic bias and discrimination, what barriers you face in free software, and other information that we collect to determine we are meeting our program goal to support people from groups under represented in the technology industry in their country
     * information about mentors and mentored projects, such as information about your role in your community, your mentorship background and the project you wish to mentor
     * (optional) your nickname on community forums/chat/IRC;
     * (optional) your language preference;
@@ -164,7 +165,7 @@ Only Outreachy organizers and designated applicant reviewers will have access to
     * your hours working as a self-employed contractor
     * your volunteer time commitments or other time commitments
 * information that determines whether the Software Freedom Conservancy is allowed to pay you as a contractor under U.S. non-profit laws:
-    * your eligibility to work for 40-hours a week in your country of residence
+    * your eligibility to work for 40-hours a week in your country of residence and all countries you will be living in from the start of your internship and five weeks after the internship ends
     * whether you are a citizen, resident, or national of Crimea, Cuba, Iran, North Korea, or Syria. Outreachy's fiscal parent, Software Freedom Conservancy, is a 501(c)(3) U.S. non-profit. As a U.S. non-profit, Conservancy must ensure that funds are not sent to countries under U.S. sanctions programs, such as Cuba, Iran, North Korea, or Syria.
     * your status as a person or entity restricted by United States of America export controls or sanctions programs
 * information that helps us determine if you are eligible for an Outreachy internship:
@@ -175,7 +176,7 @@ Only Outreachy organizers and designated applicant reviewers will have access to
 * information that helps us determine if you will need to fill out a W8-BEN or a W-9 form:
     * whether you are a U.S. national or permanent resident
     * whether you will be in the United States of America at any time during your internship, or five weeks after the internship ends
-* information that helps us determine if your initial application is aligned with the Outreachy program goal of supporting people from groups under-represented in the technology industry:
+* information that helps us determine if we are meeting our program's goal of supporting people from groups under-represented in the technology industry:
     * your racial/ethnic demographics (for U.S. nationals and permanent residents only)
     * your gender identity, including whether you are transgender or genderqueer
     * your prior experiences contributing to free and open source software
