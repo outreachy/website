@@ -17,11 +17,11 @@ Each Outreachy project mentors will need to select their own intern. Coordinator
 
 In order to be eligible to be selected as an Outreachy intern, each applicant must:
 
-1. Fill out an eligibility check form at {{ request.scheme }}://{{ request.get_host }}{% url 'eligibility' %}
+1. Fill out an initial application at {{ request.scheme }}://{{ request.get_host }}{% url 'eligibility' %}
 2. Record a contribution to a {{ community }} project listed on the Outreachy site: {{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
 3. Complete an application for the project by the project's application deadline.
 
-The deadline to submit an application was {{ current_round.appslate|date:"F d" }} at 4pm UTC. Each round, we get a few applicants who miss the deadline. If this happens, **and** this is a strong applicant you are considering for the internship, please ask the applicant to send an email to organizers@outreachy.org with you on Cc. Only applicants who have already filled out an eligibility check and who have completed a contribution, or have a contribution in progress for your project are eligible to submit their applications manually.
+The deadline to submit an application was {{ current_round.appslate|date:"F d" }} at 4pm UTC. Each round, we get a few applicants who miss the deadline. If this happens, **and** this is a strong applicant you are considering for the internship, please ask the applicant to send an email to organizers@outreachy.org with you on Cc. Only applicants who have already filled out an initial application and who have completed a contribution, or have a contribution in progress for your project are eligible to submit their applications manually.
 
 Selecting an Intern
 -------------------

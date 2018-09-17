@@ -21,9 +21,15 @@ The rest of the email outlines important steps to take in the next week.
 Internship Agreement
 --------------------
 
-You will need to log into the Outreachy site and accept the Outreachy internship agreement by {{ current_round.intern_agreement_deadline }}. https://www.outreachy.org/dashboard 
+You will need to log into the Outreachy site and accept the Outreachy internship agreement by {{ current_round.intern_agreement_deadline }}:
 
-This is a legal document that asserts the information you provided on your application and eligibility check (including your eligibility information, school credits, and work information) is accurate and correct. You cannot participate in the internship unless you sign this document. If you don't plan on participating or signing this document, please let organizers@outreachy.org know as soon as possible.
+https://www.outreachy.org/dashboard 
+
+This is a legal document that asserts the information you provided on your initial and final application (including your eligibility information, school credits, and work information) is accurate and correct. Please review your time commitment information to ensure it is accurate, and email organizers@outreachy.org if you need to make any corrections. Your initial application, with your stated time commitment information can be viewed here:
+
+https://www.outreachy.org/eligibility-results/
+
+You cannot participate in the internship unless you sign the internship agreement. If you don't plan on participating or signing this document, please let organizers@outreachy.org know as soon as possible.
 
 You will need to review the agreement and provide your full legal name as your electronic signature. You may use a nickname or a shortened name for working with Outreachy mentors, but you must provide your full legal name on the internship agreement. Only Outreachy organizers (Marina, Sage, Karen, Cindy, and Tony) and Software Freedom Conservancy staff (Bradley and Brett) will see your legal name.
 

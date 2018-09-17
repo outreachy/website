@@ -4,7 +4,7 @@ Hi Outreachy mentor,
 
 In order to be eligible to be selected as an Outreachy intern, each applicant must:
 
-1. Fill out an eligibility check form at {{ request.scheme }}://{{ request.get_host }}{% url 'eligibility' %}
+1. Fill out an initial application at {{ request.scheme }}://{{ request.get_host }}{% url 'eligibility' %}
 2. Record a contribution to your project on the Outreachy site.
 3. Complete an application for your project.
 
