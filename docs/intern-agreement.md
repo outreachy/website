@@ -2,7 +2,7 @@
 
 **Internship Terms of Participation**
 
-_last edited - August 28, 2018_
+_last edited - September 17, 2018_
 
 **Dear Participant:**
 
@@ -165,16 +165,16 @@ sanctions programs;
 
 (e) you are or will be 18 years of age or older by December 4, 2018;
 
-(f) (i) the contents of your Application and information you submitted for the
-Eligibility Check, including your stated availability and time commitment to
+(f) (i) the contents of your Application and information you submitted for your
+Initial Application, including your stated availability and time commitment to
 participate in the Program, are truthful and accurate or (ii) you corrected the
-contents of your Application and information you submitted for the Eligibility
-Check, including your stated availability and time commitment to participate in
-the Program, by emailing Outreachy Organizers at organizers@outreachy.org and
-your Volunteer Mentor, and you represent that the combined information is
-truthful and accurate. Outreachy Organizers and your Volunteer Mentor have
-confirmed in writing that you can proceed with your participation in the
-Program.
+contents of your Application and information you submitted for the Initial
+Application, including your stated availability and time commitment to
+participate in the Program, by emailing Outreachy Organizers at
+organizers@outreachy.org and your Volunteer Mentor, and you represent that the
+combined information is truthful and accurate. Outreachy Organizers and your
+Volunteer Mentor have confirmed in writing that you can proceed with your
+participation in the Program.
 
 **Indemnification.**
 
