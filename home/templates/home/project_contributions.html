@@ -76,9 +76,9 @@
 		<p>Deadline was {{ current_round.appsclose }} 4pm UTC to record your contributions and create a final application.
 	{% endif %}
 	{% if final_application %}
-		Since you submitted an application by the deadline, you are eligible to be selected as an intern for this project. You may continue recording your contributions to this project until the intern announcement on {{ current_round.internannounce }} at 4pm UTC.</p>
+		Since you submitted a final application by the deadline, you are eligible to be selected as an intern for this project. You may continue recording your contributions to this project until the intern announcement on {{ current_round.internannounce }} at 4pm UTC.</p>
 	{% else %}
-		Since you did not submit an application by the deadline, you are not eligible to be selected as an intern for this project.</p>
+		Since you did not submit a final application by the deadline, you are not eligible to be selected as an intern for this project.</p>
 	{% endif %}
 {% endif %}
 
