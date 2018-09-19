@@ -289,13 +289,6 @@ def gender_and_demographics_is_aligned_with_program_goals(wizard):
             ]
     return any(gender_data[x] for x in gender_minority_list)
 
-def show_essay_questions(wizard):
-    if not work_eligibility_is_approved(wizard):
-        return False
-    if not gender_and_demographics_is_aligned_with_program_goals(wizard):
-        return True
-    return False
-
 def show_noncollege_school_info(wizard):
     if not prior_foss_experience_is_approved(wizard):
         return False
@@ -385,7 +378,7 @@ def determine_eligibility(wizard, application_round):
     if general_data['us_sanctioned_country']:
         return (ApprovalStatus.PENDING, 'SANCTIONED')
 
-    return (ApprovalStatus.APPROVED, '')
+    return (ApprovalStatus.PENDING, 'ESSAY')
 
 class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, SessionWizardView):
     template_name = 'home/wizard_form.html'
@@ -394,7 +387,6 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
             'Prior FOSS Experience': work_eligibility_is_approved,
             'Gender Identity': prior_foss_experience_is_approved,
             'USA demographics': show_us_demographics,
-            'Barriers to Participation': show_essay_questions,
             'Time Commitments': prior_foss_experience_is_approved,
             'School Info': show_school_info,
             'School Term Info': show_school_info,
