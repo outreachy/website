@@ -28,7 +28,7 @@ Outreachy eligibility results
 	</p>
 	<p><a class='btn btn-success' href="{{ current_round.url }}">View Internship Projects</a></p>
 
-	{% include 'home/snippets/initial_application.html' %}
+	{% include 'home/snippet/initial_application.html' %}
 
 {% elif application.approval_status == application.REJECTED and application.reason_denied != 'TIME' %}
 	<h1>Initial application is not approved</h1>
@@ -49,7 +49,7 @@ Outreachy eligibility results
 	If the information is correct, please take a look at the list of <a href="/opportunities">other opportunities</a> that may be a better fit for you.
 	</p>
 
-	{% include 'home/snippets/initial_application.html' %}
+	{% include 'home/snippet/initial_application.html' %}
 
 {% elif application.approval_status == application.REJECTED and application.reason_denied == 'TIME' %}
 
