@@ -2600,6 +2600,26 @@ def approved_applicants_summary(request):
         'approved_applications': approved_applications,
         })
 
+# Passed action, applicant_username
+class ApplicantApprovalUpdate(ApprovalStatusAction):
+    model = ApplicantApproval
+
+    def get_object(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        return get_object_or_404(ApplicantApproval,
+                applicant__account__username=self.kwargs['applicant_username'],
+                application_round=current_round)
+
+    def notify(self):
+        if self.prior_status != self.target_status:
+            # email applicant about their change in status
+            email.approval_status_changed(self.object, self.request)
+
+    def get_success_url(self):
+        return reverse('applicant-review-detail', kwargs={
+            'applicant_username': self.kwargs['applicant_username'],
+            })
+
 @login_required
 def dashboard(request):
     """

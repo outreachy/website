@@ -2094,6 +2094,12 @@ class ApplicantApproval(ApprovalStatus):
     def submission_and_editing_deadline(self):
         return self.application_round.appslate
 
+    def get_preview_url(self):
+        return reverse('applicant-review-detail', kwargs={'applicant_username': self.applicant.account.username})
+
+    def get_submitter_email_list(self):
+        return [self.applicant.email_address()]
+
     def is_over_18(self):
         if not self.workeligibility:
             return None

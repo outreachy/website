@@ -54,6 +54,7 @@ urlpatterns = [
     url(r'^dashboard/rejected-applications/$', views.rejected_applicants_summary, name='rejected-applicants-summary'),
     url(r'^dashboard/approved-applications/$', views.approved_applicants_summary, name='approved-applicants-summary'),
     url(r'^dashboard/review-applications/(?P<applicant_username>[^/]+)/$', views.ViewInitialApplication.as_view(), name='applicant-review-detail'),
+    url(r'^dashboard/review-applications/(?P<action>[^/]+)/(?P<applicant_username>[^/]+)/$', views.ApplicantApprovalUpdate.as_view(), name='application-action'),
     url(r'^dashboard/trusted-volunteers/$', views.TrustedVolunteersListView.as_view(), name='trusted-volunteers-list'),
     url(r'^eligibility/$', views.EligibilityUpdateView.as_view(), name='eligibility'),
     url(r'^eligibility-results/$', views.EligibilityResults.as_view(), name='eligibility-results'),
