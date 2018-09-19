@@ -2484,14 +2484,20 @@ class BarriersToParticipation(models.Model):
 
     systematic_bias = models.TextField(
             verbose_name='What systematic bias or discrimination have you faced while building your skills for contributing to free and open source software?',
-            help_text="<p>Contributing to free and open source software takes some skill. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>In these settings, have you faced systematic bias or discrimination? Have you been discouraged from accessing these resources because of your identity or background?</p><p>Please provide specific examples and (optionally) statistics. Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
+            help_text="<p>Contributing to free and open source software takes some skill. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>In these settings, have you faced systematic bias or discrimination? Have you been discouraged from accessing these resources because of your identity or background?</p><p>Please provide specific examples and (optionally) statistics.</p><p>Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
+
+    lacking_representation = models.TextField(
+            verbose_name='Does your learning environment have few people who share your identity or background?',
+            help_text="<p>Contributing to free and open source software takes some skill. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>Does any of your learning environments have few people who share your identity or background? How did your identity or background differ from the majority of people in this learning environment?</p><p>Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
 
     def get_html(self):
         string = ''
-        string += '<hr><p>Q1. What barriers or concerns have kept you from contributing to free and open source software?</p>'
-        string += '<p>A1. ' + self.barriers_to_contribution + '</p>'
-        string += '<hr><p>Q1. What systematic bias or discrimination have you faced while building your skills for contributing to free and open source software?</p>'
-        string += '<p>A1. ' + self.systematic_bias + '</p>'
+        string += '<hr><p>Q1. Does your learning environment have few people who share your identity or background?</p>'
+        string += '<p>A1. ' + self.lacking_representation + '</p>'
+        string += '<hr><p>Q2. What systematic bias or discrimination have you faced while building your skills for contributing to free and open source software?</p>'
+        string += '<p>A2. ' + self.systematic_bias + '</p>'
+        string += '<hr><p>Q3. What barriers or concerns have kept you from contributing to free and open source software?</p>'
+        string += '<p>A3. ' + self.barriers_to_contribution + '</p>'
         return string
 
 class TimeCommitmentSummary(models.Model):

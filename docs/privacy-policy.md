@@ -49,7 +49,7 @@ The types of personal data collected may include (but are not limited to):
     * your legal name to use in intern or mentor contracts or payments;
     * your pronouns, whether to share those pronouns with mentors and coordinators, and whether to publicly display those pronouns on the Outreachy website;
     * information about your age, location, employment, time commitment information, and other information that we collect to determine your eligibility for the program
-    * information about your gender identity, demographics, your experiences with systematic bias and discrimination, what barriers you face in free software, and other information that we collect to determine we are meeting our program goal to support people from groups under represented in the technology industry in their country
+    * information about your gender identity, demographics, the representation of people who share your background and identity in your learning environments, your experiences with systematic bias and discrimination, what barriers you face in free software, and other information that we collect to determine we are meeting our program goal to support people from groups under represented in the technology industry in their country
     * information about mentors and mentored projects, such as information about your role in your community, your mentorship background and the project you wish to mentor
     * (optional) your nickname on community forums/chat/IRC;
     * (optional) your language preference;

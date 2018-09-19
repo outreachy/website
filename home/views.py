@@ -552,8 +552,9 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 )),
             ('Barriers to Participation', modelform_factory(BarriersToParticipation,
                 fields=(
-                    'barriers_to_contribution',
+                    'lacking_representation',
                     'systematic_bias',
+                    'barriers_to_contribution',
                 ),
                 )),
             ('Time Commitments', modelform_factory(TimeCommitmentSummary,
