@@ -2452,6 +2452,9 @@ class ApplicantGenderIdentity(models.Model):
         if self.prefer_not_to_say:
             gender_identities.append('prefers not to specify their gender identity')
 
+        if not gender_identities:
+            return ''
+
         gender_identity_string = ', '.join(gender_identities[:-1])
 
         if len(gender_identities) == 1:
