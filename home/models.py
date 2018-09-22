@@ -2724,6 +2724,57 @@ class PromotionTracking(models.Model):
 # end initial application models
 # --------------------------------------------------------------------------- #
 
+# --------------------------------------------------------------------------- #
+# reviewer models
+# --------------------------------------------------------------------------- #
+
+class ApplicationReviewer(ApprovalStatus):
+    comrade = models.ForeignKey(Comrade)
+    reviewing_round = models.ForeignKey(RoundPage)
+
+class InitialApplicationReview(models.Model):
+    application = models.ForeignKey(ApplicantApproval)
+    reviewer = models.ForeignKey(ApplicationReviewer)
+
+    STRONG = '+3'
+    GOOD = '+2'
+    MAYBE = '+1'
+    UNCLEAR = '??'
+    UNRATED = '0'
+    NOBIAS = '-1'
+    NOTUNDERSTOOD = '-2'
+    SPAM = '-3'
+    RATING_CHOICES = (
+        (STRONG, '+3 - Essay shows a *strongly* compelling argument for how the applicant *both* faces discrimination/bias and is from a group underrepresented in the technology industry of their country'),
+        (GOOD, '+2 - Essay shows a *strongly* compelling argument for how the applicant *either* faces discrimination/bias or they are from a group underrepresented in technology industry of their country'),
+        (MAYBE, '+1 - Essay shows a *weak* argument for how the applicant either faces discrimination/bias or they are from a group underrepresented in technology industry of their country'),
+        (UNCLEAR, '?? - Essay questions were too short or unclear to make a decision'),
+        (UNRATED, 'Not rated'),
+        (NOBIAS, '-1 - Essay questions did not show either discrimination/bias or underrepresentation'),
+        (NOTUNDERSTOOD, '-2 - Essay questions were not understood'),
+        (SPAM, '-3 - Essay answers were spam or trolling'),
+    )
+    essay_rating = models.CharField(
+            max_length=2,
+            choices=RATING_CHOICES,
+            default=UNRATED)
+
+    # Time commitments red flags
+    #review_school = models.BooleanField(default=False,
+    #        verbose_name="School term info needs review or follow up")
+
+    #missing_school = models.BooleanField(default=False,
+    #        verbose_name="Essay mentioned school, but no school term info was supplied")
+
+    #review_work = models.BooleanField(default=False,
+    #        verbose_name="Work time commitments need review or follow up")
+
+    #missing_work = models.BooleanField(default=False,
+    #        verbose_name="Essay mentioned work, but no work hours info was supplied")
+
+# --------------------------------------------------------------------------- #
+# end reviewer models
+# --------------------------------------------------------------------------- #
 
 class Contribution(models.Model):
     applicant = models.ForeignKey(ApplicantApproval)
