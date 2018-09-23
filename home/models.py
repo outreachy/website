@@ -24,6 +24,8 @@ from modelcluster.fields import ParentalKey
 
 from languages.fields import LanguageField
 
+from reversion.models import Version
+
 from timezone_field.fields import TimeZoneField
 
 from wagtail.wagtailcore.models import Orderable
@@ -2515,9 +2517,17 @@ class BarriersToParticipation(models.Model):
             help_text="<p>Contributing to free and open source software takes some skill. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>Does any of your learning environments have few people who share your identity or background? How did your identity or background differ from the majority of people in this learning environment?</p><p>Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
 
     def get_answers(self):
-        # getattr looks up the field's value on the object
+        versions = Version.objects.get_for_object(self).reverse()
         return [
-            (self._meta.get_field(attname).verbose_name, getattr(self, attname))
+            (
+                self._meta.get_field(attname).verbose_name,
+                '\n\n'.join(
+                    'On {:%Y-%m-%d at %I:%M%p} you wrote:\n{}'.format(
+                        v.revision.date_created,
+                        v.field_dict[attname])
+                    for v in versions
+                ),
+            )
             for attname in ('lacking_representation', 'systematic_bias', 'barriers_to_contribution')
         ]
 
