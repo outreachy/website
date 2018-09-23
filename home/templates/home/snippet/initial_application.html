@@ -26,9 +26,7 @@
 			{% endif %}
 			{% if application.applicantgenderidentity %}
 				<h4>Gender Identity</h4>
-				<hr>
-				<p>Q1. What is your gender identity?</p>
-				<p>A1. {{ application.applicantgenderidentity }}</p>
+				{{ application.applicantgenderidentity.get_html|safe }}
 				<hr>
 			{% endif %}
 			{% if application.barrierstoparticipation %}

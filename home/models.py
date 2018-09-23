@@ -2249,19 +2249,20 @@ class ApplicantApproval(ApprovalStatus):
                 ('applicant', 'application_round'),
                 )
 
-def get_html_for_all_booleans(self):
+def get_answers_for_all_booleans(obj):
     # getattr looks up the field's value on the object
-    answers = [(f.verbose_name, getattr(self, f.attname)) for f in self._meta.get_fields() if f.name != 'applicant']
-    string = ''
-    for index, a in enumerate(answers):
-        string += '<hr>'
-        string += '<p>Q' + str(index+1) + '. ' + a[0] + '</p>'
-        string += '<p>A' + str(index+1) + '. '
-        if a[1] == True:
-            string += 'Yes</p>'
-        if a[1] == False:
-            string += 'No</p>'
-    return string
+    return [
+        (f.verbose_name, "Yes" if getattr(obj, f.attname) else "No")
+        for f in obj._meta.get_fields()
+        if f.get_internal_type() == 'BooleanField'
+    ]
+
+def get_html_for_answers(answers):
+    return ''.join(
+        '<hr><p>Q{index}. {question}</p><p>A{index}. {answer}</p>'.format(
+            index=index, question=a[0], answer=a[1])
+        for index, a in enumerate(answers, 1)
+    )
 
 class WorkEligibility(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
@@ -2286,7 +2287,7 @@ class WorkEligibility(models.Model):
             help_text="Outreachy's fiscal parent, Software Freedom Conservancy, is a 501(c)(3) charitable non-profit in the United States of America. As a U.S. non-profit, Conservancy must ensure that funds are not sent to countries under U.S. sanctions programs, such as Cuba, Iran, North Korea, or Syria. If you have citizenship with Cuba, Iran, North Korea, or Syria, please answer yes, even if you are not currently living in those countries. We will follow up with additional questions.")
 
     def get_html(self):
-        return get_html_for_all_booleans(self)
+        return get_html_for_answers(get_answers_for_all_booleans(self))
 
 
 class PaymentEligibility(models.Model):
@@ -2300,7 +2301,7 @@ class PaymentEligibility(models.Model):
             help_text='Note that the interval in this question extends past the end of internships.')
 
     def get_html(self):
-        return get_html_for_all_booleans(self)
+        return get_html_for_answers(get_answers_for_all_booleans(self))
 
 
 class PriorFOSSExperience(models.Model):
@@ -2357,23 +2358,16 @@ class PriorFOSSExperience(models.Model):
 
     def get_html(self):
         # getattr looks up the field's value on the object
-        answers = [(f.verbose_name, getattr(self, f.attname)) for f in self._meta.get_fields() if f.get_internal_type() == 'BooleanField' and not f.name.startswith('prior_contrib_')]
-        string = ''
-        for index, a in enumerate(answers):
-            string += '<hr>'
-            string += '<p>Q' + str(index+1) + '. ' + a[0] + '</p>'
-            string += '<p>A' + str(index+1) + '. '
-            if a[1] == True:
-                string += 'Yes</p>'
-            if a[1] == False:
-                string += 'No</p>'
-        index += 1
-        string += '<hr><p>Q' + str(index+1) + '. In the past, how have you contributed to free and open source software?</p>'
-        contribs = self.get_prior_contribution_types()
-        if not contribs:
-            contribs = 'No prior contributions'
-        string += '<p>A' + str(index+1) + '. ' + contribs + '</p>'
-        return string
+        answers = [
+            (f.verbose_name, "Yes" if getattr(self, f.attname) else "No")
+            for f in self._meta.get_fields()
+            if f.get_internal_type() == 'BooleanField' and not f.name.startswith('prior_contrib_')
+        ]
+        answers.append((
+            'In the past, how have you contributed to free and open source software?',
+            self.get_prior_contribution_types() or 'No prior contributions',
+        ))
+        return get_html_for_answers(answers)
 
 
 class ApplicantGenderIdentity(models.Model):
@@ -2476,6 +2470,12 @@ class ApplicantGenderIdentity(models.Model):
 
         return gender_identity_string
 
+    def get_html(self):
+        answers = [
+            ('What is your gender identity?', str(self)),
+        ]
+        return get_html_for_answers(answers)
+
 
 class ApplicantRaceEthnicityInformation(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
@@ -2484,7 +2484,7 @@ class ApplicantRaceEthnicityInformation(models.Model):
             verbose_name='Are you Black/African American, Hispanic/Latinx, Native American, Alaska Native, Native Hawaiian, or Pacific Islander?')
 
     def get_html(self):
-        return get_html_for_all_booleans(self)
+        return get_html_for_answers(get_answers_for_all_booleans(self))
 
 
 class BarriersToParticipation(models.Model):
@@ -2505,14 +2505,12 @@ class BarriersToParticipation(models.Model):
             help_text="<p>Contributing to free and open source software takes some skill. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>Does any of your learning environments have few people who share your identity or background? How did your identity or background differ from the majority of people in this learning environment?</p><p>Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
 
     def get_html(self):
-        string = ''
-        string += '<hr><p>Q1. Does your learning environment have few people who share your identity or background?</p>'
-        string += '<p>A1. ' + self.lacking_representation + '</p>'
-        string += '<hr><p>Q2. What systematic bias or discrimination have you faced while building your skills?</p>'
-        string += '<p>A2. ' + self.systematic_bias + '</p>'
-        string += '<hr><p>Q3. What barriers or concerns have kept you from contributing to free and open source software?</p>'
-        string += '<p>A3. ' + self.barriers_to_contribution + '</p>'
-        return string
+        # getattr looks up the field's value on the object
+        answers = [
+            (self._meta.get_field(attname).verbose_name, getattr(self, attname))
+            for attname in ('lacking_representation', 'systematic_bias', 'barriers_to_contribution')
+        ]
+        return get_html_for_answers(answers)
 
 class TimeCommitmentSummary(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
