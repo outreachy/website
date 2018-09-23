@@ -778,6 +778,8 @@ class Comrade(models.Model):
         # Brazilians like to use dashes instead of commas??
         elif city.startswith('são paulo') or city.startswith('curitiba') or city == 'brazil' or city == 'brasil':
             country = 'brazil'
+        elif city == 'yaounde':
+            country = 'cameroon'
         # There's a Vancouver, WA, but it's more likely to be Canada
         elif city == 'vancouver' or city == 'canada':
             country = 'canada'
@@ -2258,6 +2260,13 @@ class ApplicantApproval(ApprovalStatus):
                 pass
         return result
 
+    def get_all_red_flags(self):
+        red_flags_list = []
+        reviews = InitialApplicationReview.objects.filter(application=self)
+        for r in reviews:
+           red_flags_list.append(r.get_red_flags())
+        return red_flags_list
+
     def __str__(self):
         return "{name} <{email}> - {status}".format(
                 name=self.applicant.public_name,
@@ -2793,23 +2802,41 @@ class InitialApplicationReview(models.Model):
             default=UNRATED)
 
     # Time commitments red flags
-    #review_school = models.BooleanField(default=False,
-    #        verbose_name="School term info needs review or follow up")
+    review_school = models.BooleanField(default=False,
+            verbose_name="School term info needs review or follow up")
 
-    #missing_school = models.BooleanField(default=False,
-    #        verbose_name="Essay mentioned school, but no school term info was supplied")
+    missing_school = models.BooleanField(default=False,
+            verbose_name="Essay mentioned school, but no school term info was supplied")
 
-    #review_work = models.BooleanField(default=False,
-    #        verbose_name="Work time commitments need review or follow up")
+    review_work = models.BooleanField(default=False,
+            verbose_name="Work time commitments need review or follow up")
 
-    #missing_work = models.BooleanField(default=False,
-    #        verbose_name="Essay mentioned work, but no work hours info was supplied")
+    missing_work = models.BooleanField(default=False,
+            verbose_name="Essay mentioned work, but no work hours info was supplied")
+
+    incorrect_dates = models.BooleanField(default=False,
+            verbose_name="Dates on time commitments look incorrect")
 
     def get_essay_rating(self):
         if self.essay_rating == self.UNRATED:
             return ''
 
         return (self.essay_rating, self.reviewer.comrade.public_name)
+
+    def get_red_flags(self):
+        red_flags = []
+        if self.review_school:
+            red_flags.append('Review school terms')
+        if self.missing_school:
+            red_flags.append('Missing school terms')
+        if self.review_work:
+            red_flags.append('Review work commitments')
+        if self.missing_work:
+            red_flags.append('Missing work hours')
+        if self.incorrect_dates:
+            red_flags.append('Incorrect time commitment dates')
+
+        return (red_flags, self.reviewer.comrade.public_name)
 
 # --------------------------------------------------------------------------- #
 # end reviewer models

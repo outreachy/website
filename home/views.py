@@ -2634,25 +2634,30 @@ class DeleteApplication(LoginRequiredMixin, ComradeRequiredMixin, View):
         # so I'm not sure which to redirect to.
         return redirect(reverse('dashboard'))
 
+def get_or_create_application_reviewer_and_review(self):
+    # Only allow approved reviewers to rate applications for the current round
+    current_round = RoundPage.objects.latest('internstarts')
+    reviewer = get_object_or_404(ApplicationReviewer,
+            comrade=self.request.user.comrade,
+            reviewing_round=current_round)
+    application = get_object_or_404(ApplicantApproval,
+            applicant__account__username=self.kwargs['applicant_username'],
+            application_round=current_round)
+
+    # If the reviewer gave an essay review, update it. Otherwise create a new review.
+    try:
+        review = InitialApplicationReview.objects.get(
+                application=application,
+                reviewer=reviewer)
+    except InitialApplicationReview.DoesNotExist:
+        review = InitialApplicationReview(application=application, reviewer=reviewer)
+
+    return (application, reviewer, review)
+
 class EssayRating(LoginRequiredMixin, ComradeRequiredMixin, View):
     def post(self, request, *args, **kwargs):
 
-        # Only allow approved reviewers to rate applications for the current round
-        current_round = RoundPage.objects.latest('internstarts')
-        reviewer = get_object_or_404(ApplicationReviewer,
-                comrade=request.user.comrade,
-                reviewing_round=current_round)
-        application = get_object_or_404(ApplicantApproval,
-                applicant__account__username=self.kwargs['applicant_username'],
-                application_round=current_round)
-
-        # If the reviewer gave an essay review, update it. Otherwise create a new review.
-        try:
-            review = InitialApplicationReview.objects.get(
-                    application=application,
-                    reviewer=reviewer)
-        except InitialApplicationReview.DoesNotExist:
-            review = InitialApplicationReview(application=application, reviewer=reviewer)
+        application, reviewer, review = get_or_create_application_reviewer_and_review(self)
 
         rating = kwargs['rating']
         if rating == "STRONG":
@@ -2676,6 +2681,61 @@ class EssayRating(LoginRequiredMixin, ComradeRequiredMixin, View):
         return redirect(reverse('applicant-review-detail', kwargs={
             'applicant_username': self.kwargs['applicant_username'],
             }))
+
+# When reviewing the application's time commitments, there are several red flags
+# reviewers can set or unset.
+class ChangeRedFlag(LoginRequiredMixin, ComradeRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+
+        flags = [
+                'review_school',
+                'missing_school',
+                'review_work',
+                'missing_work',
+                'incorrect_dates',
+                ]
+
+        # validate input
+        flag_value = kwargs['flag_value']
+        flag = kwargs['flag']
+        if flag_value != 'True' and flag_value != 'False':
+            raise PermissionDenied('Time commitment review flags must be True or False.')
+        if flag not in flags:
+            raise PermissionDenied('Unknown time commitment review flag.')
+
+        application, reviewer, review = get_or_create_application_reviewer_and_review(self)
+
+        if flag == "review_school":
+            if flag_value == 'True':
+                review.review_school = True
+            elif flag_value == 'False':
+                review.review_school = False
+        elif flag == "missing_school":
+            if flag_value == 'True':
+                review.missing_school = True
+            elif flag_value == 'False':
+                review.missing_school = False
+        elif flag == "review_work":
+            if flag_value == 'True':
+                review.review_work = True
+            elif flag_value == 'False':
+                review.review_work = False
+        elif flag == "missing_work":
+            if flag_value == 'True':
+                review.missing_work = True
+            elif flag_value == 'False':
+                review.missing_work = False
+        elif flag == "incorrect_dates":
+            if flag_value == 'True':
+                review.incorrect_dates = True
+            elif flag_value == 'False':
+                review.incorrect_dates = False
+        review.save()
+
+        return redirect(reverse('applicant-review-detail', kwargs={
+            'applicant_username': self.kwargs['applicant_username'],
+            }))
+
 
 @login_required
 def dashboard(request):

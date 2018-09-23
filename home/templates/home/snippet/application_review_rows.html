@@ -13,6 +13,10 @@
 			{% if not forloop.last %}<br>{% endif %}
 		{% endfor %}
 	</td>
-	<td></td>
+	<td>
+		{% for red_flag_tuple in app.get_all_red_flags %}
+			<p>{% include 'home/snippet/red_flags_display.html' %}</p>
+		{% endfor %}
+	</td>
 	<td><a class='btn btn-info' href="{% url 'applicant-review-detail' applicant_username=app.applicant.account.username %}">Review Application</a></td>
 </tr>
