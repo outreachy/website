@@ -10,6 +10,7 @@ import os.path
 
 from django.contrib.auth.models import User
 from django.core import validators
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.forms import ValidationError
 from django.shortcuts import redirect
@@ -2238,6 +2239,23 @@ class ApplicantApproval(ApprovalStatus):
            ratings_list.append(r.get_essay_rating())
         return ratings_list
 
+    def get_question_models(self):
+        parts = (
+            ('Work Eligibility', 'workeligibility'),
+            ('Tax Form information', 'paymenteligibility'),
+            ('Prior Experience with Free and Open Source Software', 'priorfossexperience'),
+            ('Race and Ethnicity', 'applicantraceethnicityinformation'),
+            ('Gender Identity', 'applicantgenderidentity'),
+            ('Essay Questions', 'barrierstoparticipation'),
+        )
+        result = []
+        for label, field in parts:
+            try:
+                result.append((label, getattr(self, field)))
+            except ObjectDoesNotExist:
+                pass
+        return result
+
     def __str__(self):
         return "{name} <{email}> - {status}".format(
                 name=self.applicant.public_name,
@@ -2256,13 +2274,6 @@ def get_answers_for_all_booleans(obj):
         for f in obj._meta.get_fields()
         if f.get_internal_type() == 'BooleanField'
     ]
-
-def get_html_for_answers(answers):
-    return ''.join(
-        '<hr><p>Q{index}. {question}</p><p>A{index}. {answer}</p>'.format(
-            index=index, question=a[0], answer=a[1])
-        for index, a in enumerate(answers, 1)
-    )
 
 class WorkEligibility(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
@@ -2286,8 +2297,8 @@ class WorkEligibility(models.Model):
             verbose_name='Are you a citizen, resident, or national of Crimea, Cuba, Iran, North Korea, or Syria?',
             help_text="Outreachy's fiscal parent, Software Freedom Conservancy, is a 501(c)(3) charitable non-profit in the United States of America. As a U.S. non-profit, Conservancy must ensure that funds are not sent to countries under U.S. sanctions programs, such as Cuba, Iran, North Korea, or Syria. If you have citizenship with Cuba, Iran, North Korea, or Syria, please answer yes, even if you are not currently living in those countries. We will follow up with additional questions.")
 
-    def get_html(self):
-        return get_html_for_answers(get_answers_for_all_booleans(self))
+    def get_answers(self):
+        return get_answers_for_all_booleans(self)
 
 
 class PaymentEligibility(models.Model):
@@ -2300,8 +2311,8 @@ class PaymentEligibility(models.Model):
             verbose_name='Will you be living in the United States of America during the Outreachy internship period, or for up to five weeks after the internship period ends?',
             help_text='Note that the interval in this question extends past the end of internships.')
 
-    def get_html(self):
-        return get_html_for_answers(get_answers_for_all_booleans(self))
+    def get_answers(self):
+        return get_answers_for_all_booleans(self)
 
 
 class PriorFOSSExperience(models.Model):
@@ -2356,7 +2367,7 @@ class PriorFOSSExperience(models.Model):
 
         return prior_contribs_string
 
-    def get_html(self):
+    def get_answers(self):
         # getattr looks up the field's value on the object
         answers = [
             (f.verbose_name, "Yes" if getattr(self, f.attname) else "No")
@@ -2367,7 +2378,7 @@ class PriorFOSSExperience(models.Model):
             'In the past, how have you contributed to free and open source software?',
             self.get_prior_contribution_types() or 'No prior contributions',
         ))
-        return get_html_for_answers(answers)
+        return answers
 
 
 class ApplicantGenderIdentity(models.Model):
@@ -2470,11 +2481,10 @@ class ApplicantGenderIdentity(models.Model):
 
         return gender_identity_string
 
-    def get_html(self):
-        answers = [
+    def get_answers(self):
+        return [
             ('What is your gender identity?', str(self)),
         ]
-        return get_html_for_answers(answers)
 
 
 class ApplicantRaceEthnicityInformation(models.Model):
@@ -2483,8 +2493,8 @@ class ApplicantRaceEthnicityInformation(models.Model):
     us_resident_demographics = models.BooleanField(
             verbose_name='Are you Black/African American, Hispanic/Latinx, Native American, Alaska Native, Native Hawaiian, or Pacific Islander?')
 
-    def get_html(self):
-        return get_html_for_answers(get_answers_for_all_booleans(self))
+    def get_answers(self):
+        return get_answers_for_all_booleans(self)
 
 
 class BarriersToParticipation(models.Model):
@@ -2504,13 +2514,12 @@ class BarriersToParticipation(models.Model):
             verbose_name='Does your learning environment have few people who share your identity or background? Please provide details.',
             help_text="<p>Contributing to free and open source software takes some skill. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>Does any of your learning environments have few people who share your identity or background? How did your identity or background differ from the majority of people in this learning environment?</p><p>Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
 
-    def get_html(self):
+    def get_answers(self):
         # getattr looks up the field's value on the object
-        answers = [
+        return [
             (self._meta.get_field(attname).verbose_name, getattr(self, attname))
             for attname in ('lacking_representation', 'systematic_bias', 'barriers_to_contribution')
         ]
-        return get_html_for_answers(answers)
 
 class TimeCommitmentSummary(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
