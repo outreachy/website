@@ -9,6 +9,7 @@ from .models import AlumSurvey
 from .models import ApplicantApproval
 from .models import ApplicantGenderIdentity
 from .models import ApplicantRaceEthnicityInformation
+from .models import ApplicationReviewer
 from .models import BarriersToParticipation
 from .models import PriorFOSSExperience
 from .models import ContractorInformation
@@ -216,6 +217,22 @@ class CoordinatorApprovalAdmin(reversion.admin.VersionAdmin):
             '=coordinator__account__email',
             )
 
+class ApplicationReviewerAdmin(reversion.admin.VersionAdmin):
+    list_display = (
+            'comrade',
+            'reviewing_round',
+            'approval_status',
+            )
+    list_filter = (
+            'approval_status',
+            'reviewing_round',
+            )
+    search_fields = (
+            'comrade__public_name',
+            '=comrade__account__username',
+            '=comrade__account__email',
+            )
+
 class WorkEligibilityInline(admin.StackedInline):
     model = WorkEligibility
     can_delete = False
@@ -407,6 +424,7 @@ admin.site.register(User, ComradeAdmin)
 admin.site.register(AlumInfo, AlumInfoAdmin)
 admin.site.register(AlumSurvey, AlumSurveyAdmin)
 admin.site.register(ApplicantApproval, ApplicantApprovalAdmin)
+admin.site.register(ApplicationReviewer, ApplicationReviewerAdmin)
 admin.site.register(Community, CommunityAdmin)
 admin.site.register(Comrade, OnlyComradeAdmin)
 admin.site.register(CoordinatorApproval, CoordinatorApprovalAdmin)
