@@ -2281,7 +2281,7 @@ class ApplicantApproval(ApprovalStatus):
 def get_answers_for_all_booleans(obj):
     # getattr looks up the field's value on the object
     return [
-        (f.verbose_name, "Yes" if getattr(obj, f.attname) else "No")
+        (f, "Yes" if getattr(obj, f.attname) else "No")
         for f in obj._meta.get_fields()
         if f.get_internal_type() == 'BooleanField'
     ]
@@ -2381,12 +2381,12 @@ class PriorFOSSExperience(models.Model):
     def get_answers(self):
         # getattr looks up the field's value on the object
         answers = [
-            (f.verbose_name, "Yes" if getattr(self, f.attname) else "No")
+            (f, "Yes" if getattr(self, f.attname) else "No")
             for f in self._meta.get_fields()
             if f.get_internal_type() == 'BooleanField' and not f.name.startswith('prior_contrib_')
         ]
         answers.append((
-            'In the past, how have you contributed to free and open source software?',
+            { 'verbose_name': 'In the past, how have you contributed to free and open source software?' },
             self.get_prior_contribution_types() or 'No prior contributions',
         ))
         return answers
@@ -2494,7 +2494,7 @@ class ApplicantGenderIdentity(models.Model):
 
     def get_answers(self):
         return [
-            ('What is your gender identity?', str(self)),
+            ({ 'verbose_name': 'What is your gender identity?' }, str(self)),
         ]
 
 
@@ -2529,7 +2529,7 @@ class BarriersToParticipation(models.Model):
         versions = Version.objects.get_for_object(self).reverse()
         return [
             (
-                self._meta.get_field(attname).verbose_name,
+                self._meta.get_field(attname),
                 '\n\n'.join(
                     'On {:%Y-%m-%d at %I:%M%p} you wrote:\n{}'.format(
                         v.revision.date_created,

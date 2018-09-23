@@ -6,10 +6,10 @@
 		<div class="card-text">
 			{% for label, obj in application.get_question_models %}
 				<h4>{{ label }}</h4>
-				{% for question, answer in obj.get_answers %}
+				{% for field, answer in obj.get_answers %}
 					<div class="card">
 						<div class="card-body">
-							<h5 class="card-title">Q{{ forloop.counter }}. {{ question }}</h5>
+							<h5 class="card-title">Q{{ forloop.counter }}. {{ field.verbose_name }}</h5>
 							<p class="card-text">{{ answer|linebreaksbr }}</p>
 						</div>
 					</div>
