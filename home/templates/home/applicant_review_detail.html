@@ -126,35 +126,18 @@
 	</p>
 	<h2>Essay Answers</h2>
 
+	{% for field, answer in application.barrierstoparticipation.get_answers %}
 	<div class="card mb-3">
-		<div class="card-header">Q1. Does your learning environment have few people who share your identity or background?</div>
+		<div class="card-header">Q{{ forloop.counter }}. {{ field.verbose_name }}</div>
 		<div class="card-body">
-			<p class="card-text"><b>A1. {{ application.barrierstoparticipation.lacking_representation }}</b>
+			<p class="card-text"><b>A{{ forloop.counter }}. {{ answer|linebreaksbr }}</b>
 			</p>
 		</div>
 		<div class="card-footer bg-white">
-			<p>Help text: Contributing to free and open source software takes some skill. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>Does any of your learning environments have few people who share your identity or background? How did your identity or background differ from the majority of people in this learning environment?</p><p>Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>
+			<p>Help text:</p> {{ field.help_text|safe }}
 		</div>
 	</div>
-	<div class="card mb-3">
-		<div class="card-header">Q2. What systematic bias or discrimination have you faced while building your skills for contributing to free and open source software?</div>
-		<div class="card-body">
-			<p class="card-text"><b>A2. {{ application.barrierstoparticipation.systematic_bias }}</b>
-			</p>
-		</div>
-		<div class="card-footer bg-white">
-			<p>Help text: Contributing to free and open source software takes some skill. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>In these settings, have you faced systematic bias or discrimination? Have you been discouraged from accessing these resources because of your identity or background?</p><p>Please provide specific examples and (optionally) statistics. Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>
-		</div>
-	</div>
-	<div class="card mb-3">
-		<div class="card-header">Q3. What barriers or concerns have kept you from contributing to free and open source software?</div>
-		<div class="card-body">
-			<p class="card-text"><b>A3. {{ application.barrierstoparticipation.barriers_to_contribution }}</b></p>
-		</div>
-		<div class="card-footer bg-white">
-			<p>Help text: Please provide specific examples. Outreachy organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>
-		</div>
-	</div>
+	{% endfor %}
 	{% include 'home/snippet/applicant_review_essay_rating.html' %}
 
 	<h2>Time Commitment Details</h2>
