@@ -29,11 +29,27 @@ It will not be shared with mentors, coordinators, or other applicants.
 {% else %}
         {% include "bootstrap_card_form.html" with form=wizard.form only %}
 {% endif %}
+
+<div class="card border mt-3" id="essay-rating">
+	<div class="card-header bg-warning text-white">Please double check your answers</div>
+	<div class="card-body">
+		<div class="card-text">
+			<p>Please carefully review your initial application answers before you submit it.
+			Please do not skip questions, and make sure you answer either 'Yes' or 'No' to all Yes/No questions.
+			</p>
+			<p>You can review your answers by using the 'Previous step' button below.
+			You will not be able to edit your application after you submit it.
+			Once you are sure your answers are correct, click the 'Submit Initial Application' button below.
+			</p>
+		</div>
+	</div>
+</div>
+<br>
 {% if wizard.steps.prev %}
 <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}">First step</button>
 <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.prev }}">Previous step</button>
 {% endif %}
-<input type="submit" class="btn btn-primary" value="Next step"/>
+<input type="submit" class="btn btn-success" value="Submit Initial Application"/>
 </form>
 
 {% endblock %}
