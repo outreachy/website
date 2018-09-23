@@ -2617,6 +2617,23 @@ class ApplicantApprovalUpdate(ApprovalStatusAction):
             'applicant_username': self.kwargs['applicant_username'],
             })
 
+class DeleteApplication(LoginRequiredMixin, ComradeRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+
+        # Only allow staff to delete initial applications
+        if not request.user.is_staff:
+            raise PermissionDenied("Only Outreachy organizers can delete initial applications.")
+
+        current_round = RoundPage.objects.latest('internstarts')
+        application = get_object_or_404(ApplicantApproval,
+                applicant__account__username=self.kwargs['applicant_username'],
+                application_round=current_round)
+        application.delete()
+
+        # We need to delete both pending and rejected applications,
+        # so I'm not sure which to redirect to.
+        return redirect(reverse('dashboard'))
+
 class EssayRating(LoginRequiredMixin, ComradeRequiredMixin, View):
     def post(self, request, *args, **kwargs):
 

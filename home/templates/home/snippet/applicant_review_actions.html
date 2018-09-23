@@ -18,7 +18,10 @@
 			{% endif %}
 		</td>
 		<td>
-			<a class='btn btn-danger' href="{% url 'applicant-review-detail' applicant_username=application.applicant.account.username %}">Delete Application</a>
+			<form method="post" action="{% url 'delete-application' applicant_username=application.applicant.account.username %}">
+				{% csrf_token %}
+				<input type='submit' class='btn btn-danger' value="Delete Application">
+			</form>
 		</td>
 	</table>
 {% endif %}
