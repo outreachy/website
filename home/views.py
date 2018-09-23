@@ -2563,7 +2563,7 @@ def applicant_review_summary(request):
     current_round = RoundPage.objects.latest('internstarts')
     pending_applications = ApplicantApproval.objects.filter(
             application_round = current_round,
-            approval_status = ApprovalStatus.PENDING).order_by('submission_date')
+            approval_status = ApprovalStatus.PENDING).order_by('applicant__account__username').order_by('submission_date')
 
     return render(request, 'home/applicant_review_summary.html', {
         'pending_applications': pending_applications,
@@ -2577,7 +2577,7 @@ def rejected_applicants_summary(request):
     current_round = RoundPage.objects.latest('internstarts')
     rejected_applications = ApplicantApproval.objects.filter(
             application_round = current_round,
-            approval_status = ApprovalStatus.REJECTED).order_by('submission_date')
+            approval_status = ApprovalStatus.REJECTED).order_by('applicant__account__username').order_by('submission_date')
 
     return render(request, 'home/applicant_review_summary.html', {
         'rejected_applications': rejected_applications,
@@ -2591,7 +2591,7 @@ def approved_applicants_summary(request):
     current_round = RoundPage.objects.latest('internstarts')
     approved_applications = ApplicantApproval.objects.filter(
             application_round = current_round,
-            approval_status = ApprovalStatus.APPROVED).order_by('submission_date')
+            approval_status = ApprovalStatus.APPROVED).order_by('applicant__account__username').order_by('submission_date')
 
     return render(request, 'home/applicant_review_summary.html', {
         'approved_applications': approved_applications,
