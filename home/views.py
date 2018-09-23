@@ -43,6 +43,7 @@ from .models import AlumSurveyTracker
 from .models import ApplicantApproval
 from .models import ApplicantGenderIdentity
 from .models import ApplicantRaceEthnicityInformation
+from .models import ApplicationReviewer
 from .models import ApprovalStatus
 from .models import BarriersToParticipation
 from .models import CohortPage
@@ -57,6 +58,7 @@ from .models import DASHBOARD_MODELS
 from .models import EmploymentTimeCommitment
 from .models import FinalApplication
 from .models import InternSelection
+from .models import InitialApplicationReview
 from .models import has_deadline_passed
 from .models import MentorApproval
 from .models import MentorRelationship
@@ -2612,6 +2614,49 @@ class ApplicantApprovalUpdate(ApprovalStatusAction):
         return reverse('applicant-review-detail', kwargs={
             'applicant_username': self.kwargs['applicant_username'],
             })
+
+class EssayRating(LoginRequiredMixin, ComradeRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+
+        # Only allow approved reviewers to rate applications for the current round
+        current_round = RoundPage.objects.latest('internstarts')
+        reviewer = get_object_or_404(ApplicationReviewer,
+                comrade=request.user.comrade,
+                reviewing_round=current_round)
+        application = get_object_or_404(ApplicantApproval,
+                applicant__account__username=self.kwargs['applicant_username'],
+                application_round=current_round)
+
+        # If the reviewer gave an essay review, update it. Otherwise create a new review.
+        try:
+            review = InitialApplicationReview.objects.get(
+                    application=application,
+                    reviewer=reviewer)
+        except InitialApplicationReview.DoesNotExist:
+            review = InitialApplicationReview(application=application, reviewer=reviewer)
+
+        rating = kwargs['rating']
+        if rating == "STRONG":
+            review.essay_rating = review.STRONG
+        elif rating == "GOOD":
+            review.essay_rating = review.GOOD
+        elif rating == "MAYBE":
+            review.essay_rating = review.MAYBE
+        elif rating == "UNCLEAR":
+            review.essay_rating = review.UNCLEAR
+        elif rating == "UNRATED":
+            review.essay_rating = review.UNRATED
+        elif rating == "NOBIAS":
+            review.essay_rating = review.NOBIAS
+        elif rating == "NOTUNDERSTOOD":
+            review.essay_rating = review.NOTUNDERSTOOD
+        elif rating == "SPAM":
+            review.essay_rating = review.SPAM
+        review.save()
+
+        return redirect(reverse('applicant-review-detail', kwargs={
+            'applicant_username': self.kwargs['applicant_username'],
+            }))
 
 @login_required
 def dashboard(request):

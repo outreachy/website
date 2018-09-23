@@ -921,6 +921,12 @@ class Comrade(models.Model):
 
         return False
 
+    def approved_reviewer(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        return ApplicationReviewer.objects.filter(
+                comrade=self,
+                reviewing_round=current_round).exists()
+
     def get_approved_mentored_projects(self):
         current_round = RoundPage.objects.latest('internstarts')
         # Get all projects where they're an approved mentor
@@ -2227,6 +2233,13 @@ class ApplicantApproval(ApprovalStatus):
                 'employment_time_commitments': employment_time_commitments,
                 }
 
+    def get_essay_ratings(self):
+        ratings_list = []
+        ratings = InitialApplicationReview.objects.filter(application=self)
+        for r in ratings:
+           ratings_list.append(r.get_essay_rating())
+        return ratings_list
+
     def __str__(self):
         return "{name} <{email}> - {status}".format(
                 name=self.applicant.public_name,
@@ -2744,6 +2757,8 @@ class InitialApplicationReview(models.Model):
     NOBIAS = '-1'
     NOTUNDERSTOOD = '-2'
     SPAM = '-3'
+    # Change essay choices in home/templates/home/snippet/applicant_review_essay_rating.html
+    # if you update this text
     RATING_CHOICES = (
         (STRONG, '+3 - Essay shows a *strongly* compelling argument for how the applicant *both* faces discrimination/bias and is from a group underrepresented in the technology industry of their country'),
         (GOOD, '+2 - Essay shows a *strongly* compelling argument for how the applicant *either* faces discrimination/bias or they are from a group underrepresented in technology industry of their country'),
@@ -2771,6 +2786,12 @@ class InitialApplicationReview(models.Model):
 
     #missing_work = models.BooleanField(default=False,
     #        verbose_name="Essay mentioned work, but no work hours info was supplied")
+
+    def get_essay_rating(self):
+        if self.essay_rating == self.UNRATED:
+            return ''
+
+        return (self.essay_rating, self.reviewer.comrade.public_name)
 
 # --------------------------------------------------------------------------- #
 # end reviewer models

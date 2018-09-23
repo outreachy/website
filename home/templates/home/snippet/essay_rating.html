@@ -1,0 +1,14 @@
+{% if essay_rating.0 == '+3' or essay_rating.0 == '+2' or essay_rating.0 == '+1' %}
+	<button type="button" class="btn btn-success">
+	{{ essay_rating.0 }}
+	</button>
+{% elif essay_rating.0 == '0' %}
+	<button type="button" class="btn btn-secondary">
+	{{ essay_rating.0 }}
+	</button>
+{% else %}
+	<button type="button" class="btn btn-warning">
+	{{ essay_rating.0 }}
+	</button>
+{% endif %}
+{{ essay_rating.1 }}

@@ -152,6 +152,7 @@
 			<p>Help text: Please provide specific examples. Outreachy organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>
 		</div>
 	</div>
+	{% include 'home/snippet/applicant_review_essay_rating.html' %}
 
 	<h2>Time Commitment Details</h2>
 	{% with tcs=application.get_time_commitments applicant=application.applicant final_application=applicant_contributions.0.get_application %}

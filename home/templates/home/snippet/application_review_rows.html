@@ -8,7 +8,11 @@
 		{% endif %}
 	</td>
 	<td>{{ app.applicant.public_name }} &lt;{{ app.applicant.account.email }}&gt;</td>
-	<td></td>
+	<td>{% for essay_rating in app.get_essay_ratings %}
+			{% include 'home/snippet/essay_rating.html' %}
+			{% if not forloop.last %}<br>{% endif %}
+		{% endfor %}
+	</td>
 	<td></td>
 	<td><a class='btn btn-info' href="{% url 'applicant-review-detail' applicant_username=app.applicant.account.username %}">Review Application</a></td>
 </tr>
