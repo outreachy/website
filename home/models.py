@@ -775,6 +775,8 @@ class Comrade(models.Model):
         # Brazilians like to use dashes instead of commas??
         elif city.startswith('são paulo') or city.startswith('curitiba') or city == 'brazil' or city == 'brasil':
             country = 'brazil'
+        elif city == 'yaounde':
+            country = 'cameroon'
         # There's a Vancouver, WA, but it's more likely to be Canada
         elif city == 'vancouver' or city == 'canada':
             country = 'canada'
