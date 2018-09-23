@@ -2634,25 +2634,30 @@ class DeleteApplication(LoginRequiredMixin, ComradeRequiredMixin, View):
         # so I'm not sure which to redirect to.
         return redirect(reverse('dashboard'))
 
+def get_or_create_application_reviewer_and_review(self):
+    # Only allow approved reviewers to rate applications for the current round
+    current_round = RoundPage.objects.latest('internstarts')
+    reviewer = get_object_or_404(ApplicationReviewer,
+            comrade=self.request.user.comrade,
+            reviewing_round=current_round)
+    application = get_object_or_404(ApplicantApproval,
+            applicant__account__username=self.kwargs['applicant_username'],
+            application_round=current_round)
+
+    # If the reviewer gave an essay review, update it. Otherwise create a new review.
+    try:
+        review = InitialApplicationReview.objects.get(
+                application=application,
+                reviewer=reviewer)
+    except InitialApplicationReview.DoesNotExist:
+        review = InitialApplicationReview(application=application, reviewer=reviewer)
+
+    return (application, reviewer, review)
+
 class EssayRating(LoginRequiredMixin, ComradeRequiredMixin, View):
     def post(self, request, *args, **kwargs):
 
-        # Only allow approved reviewers to rate applications for the current round
-        current_round = RoundPage.objects.latest('internstarts')
-        reviewer = get_object_or_404(ApplicationReviewer,
-                comrade=request.user.comrade,
-                reviewing_round=current_round)
-        application = get_object_or_404(ApplicantApproval,
-                applicant__account__username=self.kwargs['applicant_username'],
-                application_round=current_round)
-
-        # If the reviewer gave an essay review, update it. Otherwise create a new review.
-        try:
-            review = InitialApplicationReview.objects.get(
-                    application=application,
-                    reviewer=reviewer)
-        except InitialApplicationReview.DoesNotExist:
-            review = InitialApplicationReview(application=application, reviewer=reviewer)
+        application, reviewer, review = get_or_create_application_reviewer_and_review(self)
 
         rating = kwargs['rating']
         if rating == "STRONG":
