@@ -2682,6 +2682,61 @@ class EssayRating(LoginRequiredMixin, ComradeRequiredMixin, View):
             'applicant_username': self.kwargs['applicant_username'],
             }))
 
+# When reviewing the application's time commitments, there are several red flags
+# reviewers can set or unset.
+class ChangeRedFlag(LoginRequiredMixin, ComradeRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+
+        flags = [
+                'review_school',
+                'missing_school',
+                'review_work',
+                'missing_work',
+                'incorrect_dates',
+                ]
+
+        # validate input
+        flag_value = kwargs['flag_value']
+        flag = kwargs['flag']
+        if flag_value != 'True' and flag_value != 'False':
+            raise PermissionDenied('Time commitment review flags must be True or False.')
+        if flag not in flags:
+            raise PermissionDenied('Unknown time commitment review flag.')
+
+        application, reviewer, review = get_or_create_application_reviewer_and_review(self)
+
+        if flag == "review_school":
+            if flag_value == 'True':
+                review.review_school = True
+            elif flag_value == 'False':
+                review.review_school = False
+        elif flag == "missing_school":
+            if flag_value == 'True':
+                review.missing_school = True
+            elif flag_value == 'False':
+                review.missing_school = False
+        elif flag == "review_work":
+            if flag_value == 'True':
+                review.review_work = True
+            elif flag_value == 'False':
+                review.review_work = False
+        elif flag == "missing_work":
+            if flag_value == 'True':
+                review.missing_work = True
+            elif flag_value == 'False':
+                review.missing_work = False
+        elif flag == "incorrect_dates":
+            if flag_value == 'True':
+                review.incorrect_dates = True
+            elif flag_value == 'False':
+                review.incorrect_dates = False
+        review.save()
+
+        return redirect(reverse('applicant-review-detail', kwargs={
+            'applicant_username': self.kwargs['applicant_username'],
+            }))
+
+
 @login_required
 def dashboard(request):
     """
