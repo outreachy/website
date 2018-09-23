@@ -7,9 +7,12 @@
 			{% for label, obj in application.get_question_models %}
 				<h4>{{ label }}</h4>
 				{% for question, answer in obj.get_answers %}
-					<hr>
-					<p>Q{{ forloop.counter }}. {{ question }}</p>
-					<p>A{{ forloop.counter }}. {{ answer }}</p>
+					<div class="card">
+						<div class="card-body">
+							<h5 class="card-title">Q{{ forloop.counter }}. {{ question }}</h5>
+							<p class="card-text">{{ answer|linebreaksbr }}</p>
+						</div>
+					</div>
 				{% endfor %}
 				<hr>
 			{% endfor %}
