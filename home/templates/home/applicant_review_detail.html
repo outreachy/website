@@ -99,6 +99,9 @@
 	<h2>Additional Information</h2>
 	<p>Pronouns: <b>{{ application.applicant.get_pronouns_display }}</b>
 	<p>Gender identity: {% if application.applicantgenderidentity %}<b>{{ application.applicantgenderidentity }}</b>{% else %} Applicant was not asked this question.{% endif %}</p>
+
+	<p>Location: <b>{% with location=application.applicant.get_city_country %}{% if location.0 %}{{ location.0}}, {% endif %}{% if location.1 %}{{ location.1 }}{% endif %}
+	{% if not location.0 and not location.1 %}Unknown{% endif %}{% endwith %}</b></p>
 	
 	<p>Racial or ethnic minority in the United States technology industry: {% if not application.paymenteligibility.us_national_or_permanent_resident %}Unknown; not a U.S. resident or national.{% elif application.ApplicantRaceEthnicityInformation.us_resident_demographics %}<b>Yes</b>, they're Black/African American, Hispanic/Latinx, Native American, Alaska Native, Native Hawaiian, or Pacific Islander{% else %}<b>No</b>, they're not Black/African American, Hispanic/Latinx, Native American, Alaska Native, Native Hawaiian, or Pacific Islander.{% endif %}</p>
 
