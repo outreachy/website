@@ -3,8 +3,8 @@
 	<td><p>{{ app.get_approval_status_display }}</p>
 	<td>
 		{% if app.reason_denied %}
-			{{ app.get_reason_for_status }}</p>
-		{% else %} - 
+			<p>{{ app.get_reason_for_status }}</p>
+		{% else %}<p> - </p>
 		{% endif %}
 	</td>
 	<td>{{ app.applicant.public_name }} &lt;{{ app.applicant.account.email }}&gt;</td>
