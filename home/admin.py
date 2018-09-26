@@ -331,6 +331,24 @@ class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
         return obj.application_round
     round.admin_order_field = '-application_round__roundnumber'
 
+class BarriersToParticipationAdmin(reversion.admin.VersionAdmin):
+    model = AlumInfo
+    list_display = (
+            'applicant',
+            'applicant_should_update',
+            )
+    list_filter = (
+            'applicant__approval_status',
+            'applicant_should_update',
+            'applicant__application_round__internstarts',
+            )
+    search_fields = (
+            'applicant__public_name',
+            'applicant__legal_name',
+            '=applicant__account__username',
+            '=applicant__account__email',
+            )
+
 class ContributionAdmin(reversion.admin.VersionAdmin):
     list_display = (
             'applicant',
@@ -425,6 +443,7 @@ admin.site.register(AlumInfo, AlumInfoAdmin)
 admin.site.register(AlumSurvey, AlumSurveyAdmin)
 admin.site.register(ApplicantApproval, ApplicantApprovalAdmin)
 admin.site.register(ApplicationReviewer, ApplicationReviewerAdmin)
+admin.site.register(BarriersToParticipation, BarriersToParticipationAdmin)
 admin.site.register(Community, CommunityAdmin)
 admin.site.register(Comrade, OnlyComradeAdmin)
 admin.site.register(CoordinatorApproval, CoordinatorApprovalAdmin)
