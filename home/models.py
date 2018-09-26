@@ -2523,6 +2523,8 @@ class BarriersToParticipation(models.Model):
             verbose_name='Does your learning environment have few people who share your identity or background? Please provide details.',
             help_text="<p>Contributing to free and open source software takes some skill. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>Does any of your learning environments have few people who share your identity or background? How did your identity or background differ from the majority of people in this learning environment?</p><p>Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
 
+    applicant_should_update = models.BooleanField(default=False)
+
     def get_answers(self):
         versions = Version.objects.get_for_object(self).reverse()
         return [
