@@ -14,7 +14,18 @@ Applicant Review Summary
 		<table class="table table-striped table-bordered">
 			{% include 'home/snippet/application_review_headers.html' %}
 			{% for app in pending_applications %}
-				{% include 'home/snippet/application_review_rows.html' %}
+				{% if not app.barrierstoparticipation.applicant_should_update %}
+					{% include 'home/snippet/application_review_rows.html' %}
+				{% endif %}
+			{% endfor %}
+		</table>
+		<h1>Pending Applications that need essay revisions</h1>
+		<table class="table table-striped table-bordered">
+			{% include 'home/snippet/application_review_headers.html' %}
+			{% for app in pending_applications %}
+				{% if app.barrierstoparticipation.applicant_should_update %}
+					{% include 'home/snippet/application_review_rows.html' %}
+				{% endif %}
 			{% endfor %}
 		</table>
 	{% endif %}

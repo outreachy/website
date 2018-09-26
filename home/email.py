@@ -127,6 +127,13 @@ def applicant_deadline_reminder(late_projects, promoted_projects, closed_project
         request=request,
         recipient_list=['announce@lists.outreachy.org'])
 
+def applicant_essay_needs_updated(applicant, request):
+    send_template_mail('home/email/applicant-essay-needs-updated.txt', {
+        'comrade': applicant,
+        },
+        request=request,
+        recipient_list=[applicant.email_address()])
+
 def contributor_deadline_reminder(contributor, current_round, request):
     upcoming_deadlines, passed_deadlines = contributor.get_projects_with_upcoming_and_passed_deadlines()
     send_template_mail('home/email/contributors-deadline-reminder.txt', {

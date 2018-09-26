@@ -2172,6 +2172,9 @@ class ApplicantApproval(ApprovalStatus):
             tcs = self.get_time_commitments()
             return 'Not enough days free: ' + str(tcs['longest_period_free']) + ' days free / ' + str(tcs['internship_total_days'].days) + ' days total, 49 days free required'
 
+        if self.barrierstoparticipation and self.barrierstoparticipation.applicant_should_update:
+            return 'Revisions to essay requested'
+
         if self.approval_status == self.PENDING:
             return 'Essay questions need review'
 
@@ -2525,19 +2528,51 @@ class BarriersToParticipation(models.Model):
 
     applicant_should_update = models.BooleanField(default=False)
 
-    def get_answers(self):
+    def get_original_answers(self):
         versions = Version.objects.get_for_object(self).reverse()
-        return [
+        original_answers = [
             (
                 self._meta.get_field(attname),
                 '\n\n'.join(
                     'On {:%Y-%m-%d at %I:%M%p} you wrote:\n{}'.format(
                         v.revision.date_created,
                         v.field_dict[attname])
-                    for v in versions
+                    for v in [versions[0]]
                 ),
             )
             for attname in ('lacking_representation', 'systematic_bias', 'barriers_to_contribution')
+        ]
+        new_answers = []
+        for new_field, answers in self.get_answers():
+            for index, a in enumerate(original_answers):
+                original_field = a[0]
+                if new_field['verbose_name'] == original_field.verbose_name:
+                    if a[1].split('you wrote:\n', 1)[1] == answers:
+                        new_answers.append(
+                                (original_field,
+                                    a[1],
+                                    ))
+                    else:
+                        new_answers.append(
+                                (original_field,
+                                    a[1] + '\n\n' + 'Updated Essay:\n\n' + answers,
+                                    ))
+        return new_answers
+
+    def get_answers(self):
+        return [
+                (
+                { 'verbose_name':
+                    'Does your learning environment have few people who share your identity or background? Please provide details.',
+                    }, self.lacking_representation),
+                (
+                { 'verbose_name':
+                    'What systematic bias or discrimination have you faced while building your skills?',
+                    }, self.systematic_bias),
+                (
+                { 'verbose_name':
+                    'What barriers or concerns have kept you from contributing to free and open source software?',
+                    }, self.barriers_to_contribution),
         ]
 
 class TimeCommitmentSummary(models.Model):

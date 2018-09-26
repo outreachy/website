@@ -2634,6 +2634,54 @@ class DeleteApplication(LoginRequiredMixin, ComradeRequiredMixin, View):
         # so I'm not sure which to redirect to.
         return redirect(reverse('dashboard'))
 
+class NotifyEssayNeedsUpdating(LoginRequiredMixin, ComradeRequiredMixin, View):
+
+    def post(self, request, *args, **kwargs):
+        current_round = RoundPage.objects.latest('internstarts')
+        # Allow staff to ask applicants to revise their essays
+        if not request.user.is_staff:
+            raise PermissionDenied("Only Outreachy organizers can ask applicants to revise their essays.")
+
+        essay = get_object_or_404(BarriersToParticipation,
+                applicant__application_round=current_round,
+                applicant__applicant__account__username=self.kwargs['applicant_username'],
+                )
+        essay.applicant_should_update = True
+        essay.save()
+        # Notify applicant their essay needs review
+        email.applicant_essay_needs_updated(essay.applicant.applicant, request)
+        return redirect(reverse('applicant-review-detail', kwargs={
+            'applicant_username': self.kwargs['applicant_username'],
+            }))
+
+class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
+    model = BarriersToParticipation
+
+    fields = [
+            'lacking_representation',
+            'systematic_bias',
+            'barriers_to_contribution',
+            ]
+
+    def get_object(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        # Only allow applicants to revise their own essays
+        if self.request.user.comrade.account.username != self.kwargs['applicant_username']:
+            raise PermissionDenied('You can only edit your own essay.')
+        essay = get_object_or_404(BarriersToParticipation,
+                applicant__application_round=current_round,
+                applicant__applicant__account__username=self.kwargs['applicant_username'],
+                )
+        # Only allow people to edit their essays if the flag has been set.
+        if not essay.applicant_should_update:
+            raise PermissionDenied('You cannot edit your essay at this time.')
+        return essay
+
+    def get_success_url(self):
+        self.object.applicant_should_update = False
+        self.object.save()
+        return reverse('eligibility-results')
+
 def get_or_create_application_reviewer_and_review(self):
     # Only allow approved reviewers to rate applications for the current round
     current_round = RoundPage.objects.latest('internstarts')
@@ -2771,7 +2819,12 @@ def dashboard(request):
 
     pending_applications_count = ApplicantApproval.objects.filter(
             application_round = current_round,
-            approval_status = ApprovalStatus.PENDING).count()
+            approval_status = ApprovalStatus.PENDING,
+            barrierstoparticipation__applicant_should_update=False).count()
+    pending_revisions_count = ApplicantApproval.objects.filter(
+            application_round = current_round,
+            approval_status = ApprovalStatus.PENDING,
+            barrierstoparticipation__applicant_should_update=True).count()
     rejected_applications_count = ApplicantApproval.objects.filter(
             application_round = current_round,
             approval_status = ApprovalStatus.REJECTED).count()
@@ -2790,6 +2843,7 @@ def dashboard(request):
         'approved_participations': approved_participations,
         'participations': participations,
         'pending_applications_count': pending_applications_count,
+        'pending_revisions_count': pending_revisions_count,
         'rejected_applications_count': rejected_applications_count,
         'approved_applications_count': approved_applications_count,
         'show_reminders': 1,

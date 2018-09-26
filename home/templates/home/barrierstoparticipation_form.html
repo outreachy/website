@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}
+Update Your Essay Questions
+{% endblock %}
+
+{% block content %}
+
+{% include "home/snippet/privacy_policy.html" %}
+
+<h1>Update Your Essay Answers</h1>
+
+<div class="card border-warning mb-3">
+	<div class="card-header text-white bg-warning">Please read these instructions carefully</div>
+	<div class="card-body">
+		<div class="card-text">
+			<p>The Outreachy organizers have reviewed your answers to our essay questions.
+			We found your previous answers were unclear, not detailed enough, or you did not understand the question.
+			We would like to provide you the opportunity to revise your essay questions.
+			</p>
+			<p>
+			Please review the question and <b>review the help text below the question</b>.
+			Make sure you fully understand each question.
+			</p>
+			<p>
+			In some cases, you may need to provide more details.
+			Good essay answers have at least 2 to 3 sentences.
+			We prefer essays with detailed examples or stories from your life.
+			</p>
+		</div>
+	</div>
+</div>
+
+<form method="post" action="">
+{% csrf_token %}
+	{% include "bootstrap_card_form.html" with form=form only %}
+<input type="submit" class="btn btn-block btn-primary" value="Submit Revised Essay" />
+</form>
+
+{% endblock %}

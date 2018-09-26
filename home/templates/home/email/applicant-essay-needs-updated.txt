@@ -1,0 +1,16 @@
+Update your Outreachy initial application
+
+The Outreachy organizers have reviewed your initial application. We found your essay answers were unclear, not detailed enough, or you did not understand the essay questions.
+
+We would like to provide you the opportunity to revise your essay questions. You will only be able to submit your revised essay questions once.
+
+Please review the question and review the help text below the question. Make sure you fully understand each question.
+
+In some cases, you may need to provide more details. Good essay answers have at least 2 to 3 sentences. We prefer essays with detailed examples or stories from your life.
+
+You may revise your initial application here:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'essay-revision' applicant_username=comrade.account.username %}
+
+Outreachy Organizers
+{% include 'home/email/footer-applicant.txt' %}
