@@ -2654,7 +2654,7 @@ class NotifyEssayNeedsUpdating(LoginRequiredMixin, ComradeRequiredMixin, View):
             'applicant_username': self.kwargs['applicant_username'],
             }))
 
-class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
+class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView, reversion.views.RevisionMixin):
     model = BarriersToParticipation
 
     fields = [
