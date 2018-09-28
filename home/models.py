@@ -2698,6 +2698,18 @@ class SchoolTimeCommitment(models.Model):
             error_string = 'School term (' + self.term_name + ') start date ' + self.start_date.strftime("%Y-%m-%d") + ' is after term end date ' + self.end_date.strftime("%Y-%m-%d")
             raise ValidationError({'start_date': error_string})
 
+        if self.outreachy_credits + self.thesis_credits > self.registered_credits:
+            error_string = 'The total number of credits for this term (' + str(self.registered_credits) + ') is less than your graduate credits (' + str(self.thesis_credits) + ') plus the credit you will receive for Outreachy (' + str(self.outreachy_credits) + '). Total credits = ' + str(self.registered_credits) + ' < ' + str(self.outreachy_credits + self.thesis_credits) + '. Please make sure your total number of credits includes both your graduate credits and the credits you will receive for your Outreachy internship.'
+            raise ValidationError({'registered_credits': error_string})
+
+        # Look for people which list Outreachy project credit for a term that is
+        # already underway - people often think we mean the number of hours they'll spend
+        # on Outreachy.
+        current_round = RoundPage.objects.latest('internstarts')
+        if self.outreachy_credits and self.start_date < current_round.internstarts:
+            error_string = 'You cannot receive school course credits for an Outreachy internship for a term that starts before the Outreachy internship starts.'
+            raise ValidationError({'outreachy_credits': error_string})
+
 class SchoolInformation(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
 
