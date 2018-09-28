@@ -1,11 +1,29 @@
+{% with reason=applicantapproval.reason_denied %}
 Your Outreachy initial application status
 
 Hi {{ recipient.display_name }},
 
-We're sorry, but after reviewing your application, we have determined that you are not a strong applicant for the Outreachy internship program. You can view your submitted initial application and its status here:
+{% if reason == 'TIME' %}After reviewing your school's academic calendar, we have determined that you do not have a long enough break between your school terms. In order to be eligible, applicants must have 49 consecutive days free from full-time commitments during the Outreachy internship period. 49 days is the absolute minimum, and we cannot make exceptions or accept letters from school administrators for exceptions.
 
-{{ request.scheme }}://{{ request.get_host }}{%}{% url 'eligibility-results' %}
+I really encourage you to apply to the next Outreachy internship round! It's much better aligned with your summer break. You can sign up for the announcements mailing list to get an email when the application period opens for the next round:
+
+https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce
+
+Sage Sharp
+Outreachy Organizer
+{% elif reason|slice:":5" == 'ALIGN' %}The Outreachy organizers have been reviewing your initial application, including your essay questions. We're sorry, but we have determined that you are not a strong applicant for the Outreachy internship program.
+{% elif reason == 'GENERAL' %}The Outreachy organizers have been reviewing your initial application. Unfortunately we found you are ineligible for Outreachy. This could be because of one of the following reasons:
+
+* You may not be eligible to be paid as a contractor of a non-profit based in the United States of America. This could be due to you not being eligible to work in all the countries you are living in during your internship, you being a legal minor (under 18), visa restrictions, U.S. sanctions programs, or U.S. export restrictions.
+
+* You may have already participated in Google Summer of Code or a previous Outreachy round.
+{% else %}The Outreachy organizers have been reviewing your initial application. We're sorry, but we have determined that you are not a strong applicant for the Outreachy internship program.
+{% endif %}
+You can view your submitted initial application and its status here:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'eligibility-results' %}
 
 Outreachy Organizers
 
 {% include 'home/email/footer-applicant.txt' %}
+{% endwith %}

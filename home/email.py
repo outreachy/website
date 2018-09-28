@@ -21,6 +21,25 @@ def send_group_template_mail(template, context, recipient_list, request=None, **
     kwargs.setdefault('from_email', organizers)
     send_mail(message=body.strip(), subject=subject.strip(), recipient_list=recipient_list, **kwargs)
 
+def applicant_approval_status_changed(obj, request):
+    if obj.approval_status == obj.PENDING:
+        recipients = obj.get_approver_email_list()
+    elif obj.approval_status == obj.APPROVED:
+        recipients = obj.get_submitter_email_list()
+    elif obj.approval_status == obj.REJECTED:
+        recipients = obj.get_submitter_email_list()
+    else:
+        # FIXME: write emails for other states
+        return
+
+    # produces template names like "home/email/project-pending.txt"
+    template = "{}/email/{}-{}.txt".format(
+            obj._meta.app_label,
+            obj._meta.model_name,
+            obj.get_approval_status_display().lower())
+    context = { obj._meta.model_name: obj }
+    send_template_mail(template, context, request=request, recipient_list=recipients)
+
 def approval_status_changed(obj, request):
     if obj.approval_status == obj.PENDING:
         recipients = obj.get_approver_email_list()
