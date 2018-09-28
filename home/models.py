@@ -2701,7 +2701,7 @@ class SchoolTimeCommitment(models.Model):
         extra_credits = 0
         if self.outreachy_credits:
             extra_credits += self.outreachy_credits
-        if self.thesis_credits
+        if self.thesis_credits:
             extra_credits += self.thesis_credits
         if self.registered_credits:
             if extra_credits > self.registered_credits:
