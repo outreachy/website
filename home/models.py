@@ -2204,7 +2204,7 @@ class ApplicantApproval(ApprovalStatus):
                 for d in employment_time_commitments or []
                 if d ]
 
-        stcs = [ self.time_commitment_from_model(d, 40 * ((d.registered_credits - d.outreachy_credits - d.thesis_credits) / d.typical_credits))
+        stcs = [ self.time_commitment_from_model(d, 40 * (d.get_total_credits() / d.typical_credits))
                 for d in school_time_commitments or []
                 if d ]
         calendar = create_time_commitment_calendar(chain(tcs, ctcs, etcs, stcs), current_round)
@@ -2686,6 +2686,12 @@ class SchoolTimeCommitment(models.Model):
     thesis_credits = models.PositiveIntegerField(
             verbose_name="Number of graduate thesis or research credits",
             help_text="If you are a graduate student, how many credits will you earn for working on your thesis or research (not including the credits earned for the Outreachy internship)?")
+
+    def get_total_credits(self):
+        # Ignore Outreachy or thesis credits if people filled them in wrong
+        if (self.outreachy_credits + self.thesis_credits) > self.registered_credits:
+            return self.registered_credits
+        return self.registered_credits - self.outreachy_credits - self.thesis_credits 
 
     def clean(self):
         if self.start_date and self.end_date and self.start_date > self.end_date:
