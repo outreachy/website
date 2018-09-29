@@ -10,4 +10,55 @@
 			</ul>
 		</li>
 	</ul>
+	{% with tcs=application.get_time_commitments applicant=application.applicant final_application=applicant_contributions.0.get_application %}
+		{% if not tcs.school_time_commitments and not tcs.volunteer_time_commitments and not tcs.employment_time_commitments and not tcs.noncollege_school_time_commitments %}
+			<p>Applicant has not listed any university/college, coding school/online courses, work, or volunteer time commitments.</p>
+		{% endif %}
+		{% if tcs.school_time_commitments %}
+			<p>All school time commitments during the internship period ({{ current_round.internstarts }} to {{ current_round.internends }}):</p>
+			<ul>
+				<li>Applicant is enrolled at <a href="{{ application.schoolinformation.university_website }}">{{ application.schoolinformation.university_name }}</a></li>
+				<li>Degree: {{ application.schoolinformation.degree_name }}</li>
+				{% for term in tcs.school_time_commitments %}
+					<li>Term name/number: {{ term.term_name }}</li>
+					<ul>
+						<li>{{ term.start_date }} to {{ term.end_date }}</li>
+						<li>Total credits enrolled for: {{ term.registered_credits }} credits.</li>
+						<li>Students typically register for {{ term.typical_credits }} credits during this term.</li>
+						{% if term.outreachy_credits %}<li>The Outreachy internship will be used for {{ term.outreachy_credits }} credits during this term</li>{% endif %}
+						{% if term.thesis_credits %}<li>Applicant is registered for {{ term.thesis_credits }} graduate thesis or research credits during this term</li>{% endif %}
+					</ul>
+				{% endfor %}
+			</ul>
+		{% endif %}
+		{% if tcs.noncollege_school_time_commitments %}
+			<p>Coding school or online courses time commitments:</p>
+			<ul>
+			{% for course in tcs.noncollege_school_time_commitments %}
+				<li>Course #{{ forloop.counter }}</li>
+				<ul>
+					<li>{{ course.hours_per_week }} hours per week from {{ course.start_date }} to {{ course.end_date }}.</li>
+					<li>Description of course work and organization offering courses: {{ course.description }}</li>
+				</ul>
+			{% endfor %}
+			</ul>
+		{% endif %}
+		{% if tcs.employment_time_commitments %}
+			<p>Employment time commitments:</p>
+			<ul>
+			{% for period in tcs.employment_time_commitments %}
+				<li>{{ period.hours_per_week }} hours per week from {{ period.start_date }} to {{ period.end_date }}.{% if period.quit_on_acceptance %} Applicant has indicated they will quit this job if they are accepted as an Outreachy intern.{% endif %}</li>
+			{% endfor %}
+			</ul>
+		{% endif %}
+		{% if tcs.volunteer_time_commitments %}
+			<p>Volunteer time commitments:</p>
+			<ul>
+			{% for period in tcs.volunteer_time_commitments %}
+				<li>{{ period.hours_per_week }} hours per week from {{ period.start_date }} to {{ period.end_date }}.</li>
+				<li>Description of volunteer commitments: {{ period.description }}</li>
+			{% endfor %}
+			</ul>
+		{% endif %}
+	{% endwith %}
 {% endwith %}
