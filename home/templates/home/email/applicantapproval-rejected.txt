@@ -12,7 +12,11 @@ https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce
 Outreachy organizers review each applicant's time commitments, including volunteer work, employment, contract work, stated class credits, and the school's academic calendar.
 
 For applicants who are students, we look at the school's academic calendar to determine if students have a long enough break between school terms. In order to be eligible, applicants who are students must have 49 consecutive days free from full-time commitments during the Outreachy internship period. 49 days is the absolute minimum, and we cannot make exceptions or accept letters from school administrators for exceptions.
-{% elif reason|slice:":5" == 'ALIGN' %}The Outreachy organizers have been reviewing your initial application, including your essay questions. We're sorry, but we have determined that you are not a strong applicant for the Outreachy internship program.
+{% elif reason|slice:":5" == 'ALIGN' %}The Outreachy organizers have been reviewing your initial application, including your essay questions.
+
+Outreachy has a program goal of supporting people who are from groups underrepresented in the technology industry of their country. Based on your essay answers, we found that you did not sufficiently explain why your application is aligned with the Outreachy program goal of supporting people from groups underrepresented in the technology industry of their country.
+
+We're sorry to say your initial application was not approved.
 {% elif reason == 'GENERAL' %}The Outreachy organizers have been reviewing your initial application. Unfortunately we found you are ineligible for Outreachy. This could be because of one of the following reasons:
 
 * You may not be eligible to be paid as a contractor of a non-profit based in the United States of America. This could be due to you not being eligible to work in all the countries you are living in during your internship, you being a legal minor (under 18), visa restrictions, U.S. sanctions programs, or U.S. export restrictions.
