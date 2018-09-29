@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}
+Update Your School Information
+{% endblock %}
+
+{% block content %}
+
+{% include "home/snippet/privacy_policy.html" %}
+
+<h1>Update Your School Information</h1>
+
+<div class="card border-warning mb-3">
+	<div class="card-header text-white bg-warning">Please read these instructions carefully</div>
+	<div class="card-body">
+		<div class="card-text">
+
+			<p>The Outreachy organizers are reviewing your school
+			time commitments. We need your help to provide more
+			information about your school terms and academic
+			calendar.</p>
+			
+			<p>Applicants need to have 49 consecutive days free from full-time
+			commitments. Due to the time commitment, students in
+			the northern hemisphere will most likely be eligible
+			for the May to August internship round. Students from
+			the southern hemisphere will most likely be eligible
+			for the December to March internships.</p>
+
+			<p>We have observed that some students make the following common mistakes:
+			</p>
+			<ul>
+				<li>forget to include all terms during the internship period from
+			{{ current_round.internstarts|date:"F d, Y" }} to
+			{{ current_round.internends|date:"F d, Y" }}.</li>
+				<li>list term dates that differ from their official academic calendar</li>
+				<li>state that they will be receiving school course credit for their Outreachy internship for more than one term</li>
+				<li>list graduate credits when they are not graduate students</li>
+			</ul>
+			<p>
+			Please ensure your school terms are correct by providing updated information below.
+			</p>
+		</div>
+	</div>
+</div>
+
+<form method="post" action="">
+{% csrf_token %}
+	{% for field in form.visible_fields %}
+		{% if 'academic calendar for your *current*' in field.label_tag %}
+			<h2>Provide Your Academic Calendar</h2>
+		{% elif 'ovide any updates' in field.label_tag %}
+			<h2>Verify Your School Terms</h2>
+			<p><b>Please ensure you have listed all terms</b>.
+			You need to list all terms that overlap with
+			the Outreachy internship period from
+			{{ current_round.internstarts|date:"F d, Y" }} to
+			{{ current_round.internends|date:"F d, Y" }}.</p>
+
+			<p><b>Please ensure that the term start and end dates
+			match the dates on your academic calendar</b>. We cannot
+			make exceptions for starting clases late. Your
+			application will be rejected if the term start date
+			does not match your academic calendar's date for the
+			start of classes. Your application will be rejected if
+			your term end date does not match the academic calendar
+			date for when exams end for all students in your
+			school term.</p>
+
+			<p>If your academic calendar for your next term has not
+			been released yet, please use the academic calendar
+			for the term during the previous school year.</p>
+
+			<p><b>Please provide proof that students are allowed to
+			enroll in a part-time course load.</b> In many
+			schools, especially in India, it is required
+			(compulsory) that students register for a specific
+			number of credits each term.  We cannot accept letters
+			from school administrators providing an exception to
+			these policies.  Please provide a link to a page on
+			your official school's website that shows students can
+			register for a part-time course load without an
+			exception.</p>
+			<h2>Your Stated School Terms</h2>
+			{% with tcs=schoolinformation.applicant.get_time_commitments applicant=schoolinformation.applicant.applicant %}
+				{% if tcs.school_time_commitments %}
+					<p>All school time commitments during the internship period ({{ current_round.internstarts }} to {{ current_round.internends }}):</p>
+					<ul>
+						<li>Applicant is enrolled at <a href="{{ schoolinformation.university_website }}">{{ schoolinformation.university_name }}</a></li>
+						<li>Degree: {{ schoolinformation.degree_name }}</li>
+						{% for term in tcs.school_time_commitments %}
+						<li>Term name/number: {{ term.term_name }}</li>
+						<ul>
+							<li>{{ term.start_date }} to {{ term.end_date }}</li>
+							<li>Applicant is registered for {{ term.registered_credits }} total credits.</li>
+							<li>Students typically register for {{ term.typical_credits }} total credits during this term.</li>
+							{% if term.outreachy_credits %}<li>The Outreachy internship will be used for {{ term.outreachy_credits }} credits during this term</li>{% endif %}
+							{% if term.thesis_credits %}<li>Applicant is registered for {{ term.thesis_credits }} graduate thesis or research credits during this term</li>{% endif %}
+						</ul>
+						{% endfor %}
+					</ul>
+				{% else %}
+					<p>No school terms were provided. Your essay questions may have mentioned school, and the Outreachy organizers wanted to double check if you had School Time commitments.</p>
+				{% endif %}
+			{% endwith %}
+		{% endif %}
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class = "card-header">
+				{{ field.label_tag }}
+			</div>	    
+			<div class = "card-body">
+				{{ field }}
+			</div>
+			{% if field.help_text %}
+				<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+			{% endif %}
+		</div>
+	{% endfor %}
+<input type="submit" class="btn btn-block btn-primary" value="Submit Revised School Information" />
+</form>
+
+{% endblock %}

@@ -157,6 +157,13 @@ def applicant_essay_needs_updated(applicant, request):
         request=request,
         recipient_list=[applicant.email_address()])
 
+def applicant_school_info_needs_updated(applicant, request):
+    send_template_mail('home/email/applicant-school-info-needs-updated.txt', {
+        'comrade': applicant,
+        },
+        request=request,
+        recipient_list=[applicant.email_address()])
+
 def contributor_deadline_reminder(contributor, current_round, request):
     upcoming_deadlines, passed_deadlines = contributor.get_projects_with_upcoming_and_passed_deadlines()
     send_template_mail('home/email/contributors-deadline-reminder.txt', {

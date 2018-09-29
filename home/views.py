@@ -2689,6 +2689,63 @@ class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, Up
         self.object.save()
         return reverse('eligibility-results')
 
+class NotifySchoolInformationUpdating(LoginRequiredMixin, ComradeRequiredMixin, View):
+
+    def post(self, request, *args, **kwargs):
+        current_round = RoundPage.objects.latest('internstarts')
+        if not request.user.is_staff:
+            raise PermissionDenied("Only Outreachy organizers can ask applicants to revise their school information.")
+
+        school_info = get_object_or_404(SchoolInformation,
+                applicant__application_round=current_round,
+                applicant__applicant__account__username=self.kwargs['applicant_username'],
+                )
+        school_info.applicant_should_update = True
+        school_info.save()
+        # Notify applicant their essay needs review
+        email.applicant_school_info_needs_updated(school_info.applicant.applicant, request)
+        return redirect(reverse('applicant-review-detail', kwargs={
+            'applicant_username': self.kwargs['applicant_username'],
+            }))
+
+class SchoolInformationUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView, reversion.views.RevisionMixin):
+    model = SchoolInformation
+
+    fields = [
+            'current_academic_calendar',
+            'next_academic_calendar',
+            'school_term_updates',
+            ]
+
+    def get_object(self):
+        current_round = RoundPage.objects.latest('internstarts')
+        # Only allow applicants to revise their own essays
+        if self.request.user.comrade.account.username != self.kwargs['applicant_username']:
+            raise PermissionDenied('You can only edit your own school information.')
+        school_info = get_object_or_404(SchoolInformation,
+                applicant__application_round=current_round,
+                applicant__applicant__account__username=self.kwargs['applicant_username'],
+                )
+        return school_info
+
+    def get_context_data(self, **kwargs):
+        current_round = RoundPage.objects.latest('internstarts')
+        school_terms = SchoolTimeCommitment.objects.filter(
+                applicant__applicant__account__username=self.kwargs['applicant_username'],
+                applicant__application_round=current_round)
+        context = super(SchoolInformationUpdate, self).get_context_data(**kwargs)
+        context.update({
+            'current_round': current_round,
+            'school_terms': school_terms,
+            })
+        return context
+
+    def get_success_url(self):
+        self.object.applicant_should_update = False
+        self.object.save()
+        return reverse('eligibility-results')
+
+
 def get_or_create_application_reviewer_and_review(self):
     # Only allow approved reviewers to rate applications for the current round
     current_round = RoundPage.objects.latest('internstarts')

@@ -1,0 +1,10 @@
+Update your Outreachy initial application
+
+The Outreachy organizers have reviewed your initial application, and your school time commitments. We need your help to provide more information about your school terms and academic calendars.
+
+You may provide the information through this form:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'school-revision' applicant_username=comrade.account.username %}
+
+Outreachy Organizers
+{% include 'home/email/footer-applicant.txt' %}

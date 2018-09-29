@@ -10,6 +10,17 @@
 							<p>{% include 'home/snippet/red_flags_display.html' %}</p>
 						{% endfor %}
 					{% endif %}
+					{% if user.is_staff %}
+						<h2>Request School Information Revision?</h2>
+						<p>If the applicant is missing school terms or you suspect the information they provided is incorrect, then you can ask the applicant to revise their school information.
+						They can revise their school information once after you click the button below.
+						Clicking the button will send an email to them asking them to revise their school information.
+						</p>
+						<p><form method="post" action="{% url 'request-school-info-revision' applicant_username=application.applicant.account.username %}">
+							{% csrf_token %}
+							<input type='submit' class='btn btn-warning' value="Request School Info Revision">
+						</form></p>
+					{% endif %}
 					<h2>Your Review of Time Commitments</h2>
 					<p>In order to help other reviewers follow up with applicants on inconsistent or unclear time commitment details, you'll need to set a series of warning flags. Once a flag is set, please coordinate with other application reviewers to determine who is following up with the applicant.</p>
 					<p>Please review whether the applicant's time commitments for the following inconsistencies:

@@ -19,6 +19,13 @@
 			<ul>
 				<li>Applicant is enrolled at <a href="{{ application.schoolinformation.university_website }}">{{ application.schoolinformation.university_name }}</a></li>
 				<li>Degree: {{ application.schoolinformation.degree_name }}</li>
+				{% if application.schoolinformation.current_academic_calendar %}
+					<li><a href="{{ application.schoolinformation.current_academic_calendar }}">Current term academic calendar</a></li>
+				{% endif %}
+				{% if application.schoolinformation.next_academic_calendar %}
+					<li><a href="{{ application.schoolinformation.next_academic_calendar }}">Next term academic calendar</a></li>
+				{% endif %}
+				<li>Degree: {{ application.schoolinformation.degree_name }}</li>
 				{% for term in tcs.school_time_commitments %}
 					<li>Term name/number: {{ term.term_name }}</li>
 					<ul>
@@ -30,6 +37,10 @@
 					</ul>
 				{% endfor %}
 			</ul>
+			{% if application.schoolinformation.school_term_updates %}
+			<p>The applicant provided the following updates about their school term:</p>
+			<p>{{ application.schoolinformation.school_term_updates|linebreaksbr }}</p>
+			{% endif %}
 		{% endif %}
 		{% if tcs.noncollege_school_time_commitments %}
 			<p>Coding school or online courses time commitments:</p>
