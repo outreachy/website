@@ -5,6 +5,7 @@ from django.test import override_settings, RequestFactory
 from email.headerregistry import Address
 
 organizers = Address("Outreachy Organizers", "organizers", "outreachy.org")
+applicant_help = Address("Outreachy Applicant Helpers", "applicant-help", "outreachy.org")
 
 def send_template_mail(template, context, recipient_list, request=None, **kwargs):
     for recipient in recipient_list:
@@ -38,6 +39,7 @@ def applicant_approval_status_changed(obj, request):
             obj._meta.model_name,
             obj.get_approval_status_display().lower())
     context = { obj._meta.model_name: obj }
+    kwargs.setdefault('from_email', applicant_help)
     send_template_mail(template, context, request=request, recipient_list=recipients)
 
 def approval_status_changed(obj, request):
