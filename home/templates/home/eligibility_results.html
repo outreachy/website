@@ -30,7 +30,7 @@ Outreachy eligibility results
 
 	{% include 'home/snippet/initial_application.html' %}
 
-{% elif application.approval_status == application.REJECTED and application.reason_denied != 'TIME' and application.reason_denied|slice:"5:" != 'ALIGN' %}
+{% elif application.approval_status == application.REJECTED and application.reason_denied != 'TIME' and application.reason_denied|slice:":5" != 'ALIGN' %}
 	<h1>Initial application is not approved</h1>
 	<p>We're sorry, but after reviewing your application,
 	we have determined that you are not a strong applicant for the Outreachy internship program.
