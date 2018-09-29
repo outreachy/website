@@ -2178,6 +2178,12 @@ class ApplicantApproval(ApprovalStatus):
         if self.barrierstoparticipation and self.barrierstoparticipation.applicant_should_update:
             return 'Revisions to essay requested'
 
+        if self.schoolinformation and self.schoolinformation.applicant_should_update:
+            tcs = self.get_time_commitments()
+            time_string = str(tcs['longest_period_free']) + ' days free / ' + str(tcs['internship_total_days'].days) + ' days total, 49 days free required'
+
+            return 'Revisions to school info requested: ' + time_string
+
         if self.approval_status == self.PENDING:
             return 'Essay questions need review'
 
@@ -2738,6 +2744,13 @@ class SchoolInformation(models.Model):
     degree_name = models.CharField(
             max_length=SENTENCE_LENGTH,
             help_text='What degree(s) are you pursuing?')
+
+    school_term_updates = models.TextField(
+            max_length=THREE_PARAGRAPH_LENGTH,
+            blank=True,
+            verbose_name='Provide any updates about your school term information',
+            help_text="<p>If the school terms above are incorrect, or you have forgotten to include a term that overlaps with the Outreachy internship period, please update your terms.<p>For each school term, please provide:</p><ol><li>The term name</li><li>The start date of classes for ALL students in the school</li><li>The end date of exams for ALL students in the school</li><li>The total number of credits you will be enrolled for this term</li><li>The total number of credits a student typically enrolls for during this school term.</li><li>If you are a graduate student, the subset of those credits you will be using for graduate research or thesis credits.</li><li>If you will receive any school credits for your Outreachy internship, how many credits will you receive during that term?</li></ol><p>Please do not modify your dates to differ from the starting dates in your academic calendar. Outreachy organizers cannot accept statements that you will start your classes late.</p><p>Please provide a link to your school website which proves that students are eligible to register for less than a full course load. Some schools, especially those in India, do not allow students to register for a part-time course load.</p>")
+    applicant_should_update = models.BooleanField(default=False)
 
     def print_terms(school_info):
         print(school_info.applicant.get_approval_status_display(), " ", school_info.applicant.applicant.public_name, " <", school_info.applicant.applicant.account.email, ">")
