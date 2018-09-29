@@ -2712,7 +2712,7 @@ class SchoolTimeCommitment(models.Model):
         # already underway - people often think we mean the number of hours they'll spend
         # on Outreachy.
         current_round = RoundPage.objects.latest('internstarts')
-        if self.outreachy_credits and self.start_date < current_round.internstarts:
+        if self.outreachy_credits and self.start_date and self.start_date < current_round.internstarts:
             error_string = 'You cannot receive school course credits for an Outreachy internship for a term that starts before the Outreachy internship starts.'
             raise ValidationError({'outreachy_credits': error_string})
 
