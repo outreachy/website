@@ -2881,14 +2881,18 @@ def dashboard(request):
             approval_status = ApprovalStatus.APPROVED).order_by('community__name')
     participations = list(chain(pending_participations, approved_participations))
 
-    pending_applications_count = ApplicantApproval.objects.filter(
-            application_round = current_round,
-            approval_status = ApprovalStatus.PENDING,
-            barrierstoparticipation__applicant_should_update=False).count()
     pending_revisions_count = ApplicantApproval.objects.filter(
             application_round = current_round,
             approval_status = ApprovalStatus.PENDING,
-            barrierstoparticipation__applicant_should_update=True).count()
+            barrierstoparticipation__applicant_should_update=True).count() + ApplicantApproval.objects.filter(
+                    application_round = current_round,
+                    approval_status = ApprovalStatus.PENDING,
+                    schoolinformation__applicant_should_update=True).count()
+
+    pending_applications_count = ApplicantApproval.objects.filter(
+            application_round = current_round,
+            approval_status = ApprovalStatus.PENDING).count() - pending_revisions_count
+
     rejected_applications_count = ApplicantApproval.objects.filter(
             application_round = current_round,
             approval_status = ApprovalStatus.REJECTED).count()
