@@ -2514,6 +2514,7 @@ class ApplicantRaceEthnicityInformation(models.Model):
 class BarriersToParticipation(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
 
+    # NOTE: Update home/templates/home/eligibility.html if you change the text here:
     barriers_to_contribution = models.TextField(
             verbose_name='What barriers or concerns have kept you from contributing to free and open source software?',
             help_text="Please provide specific examples. Outreachy organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.")
