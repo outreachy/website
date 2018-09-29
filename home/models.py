@@ -2172,6 +2172,9 @@ class ApplicantApproval(ApprovalStatus):
             tcs = self.get_time_commitments()
             return 'Not enough days free: ' + str(tcs['longest_period_free']) + ' days free / ' + str(tcs['internship_total_days'].days) + ' days total, 49 days free required'
 
+        if self.reason_denied[:5] == 'ALIGN':
+            return 'Essay answers not aligned with Outreachy program goals'
+
         if self.barrierstoparticipation and self.barrierstoparticipation.applicant_should_update:
             return 'Revisions to essay requested'
 
