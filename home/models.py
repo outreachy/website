@@ -2898,6 +2898,26 @@ class InitialApplicationReview(models.Model):
 
         return (red_flags, self.reviewer.comrade.public_name)
 
+#class UniversityInformation(models.Model):
+#    university_name = models.CharField(
+#            max_length=SENTENCE_LENGTH,
+#            help_text='University or college name')
+#
+#    university_website = models.URLField(help_text="University or college website")
+#
+#    term_name = models.CharField(
+#            max_length=SENTENCE_LENGTH,
+#            verbose_name="Term name or term number",
+#            help_text="If your university uses term names (e.g. Winter 2018 term of your Sophomore year), enter your current term name, year in college, and term year. If your university uses term numbers (e.g. 7th semester), enter the term number.")
+#
+#    start_date = models.DateField(
+#            verbose_name="Date classes start. Use YYYY-MM-DD format.",
+#            help_text="What is the first possible day of classes for all students?<br>If you started this term late (or will start this term late), use the date that classes start for all students, not the late registration date.<br>If students who are in different school years or different semester numbers start classes on different dates, use the first possible date that students in your year or semester start classes.<br>If you do not know when the term will start, use the start date of that term from last year.")
+#
+#    end_date = models.DateField(
+#            verbose_name="Date all exams end. Use YYYY-MM-DD format.",
+#            help_text="This is the date your university advertises for the last possible date of any exam for any student in your semester. Use the last possible exam date, even if your personal exams end sooner.")
+    
 # --------------------------------------------------------------------------- #
 # end reviewer models
 # --------------------------------------------------------------------------- #
