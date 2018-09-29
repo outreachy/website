@@ -2676,7 +2676,7 @@ class SchoolTimeCommitment(models.Model):
 
     registered_credits = models.IntegerField(
             validators=[validators.MinValueValidator(1)],
-            verbose_name="Number of credits you're registered for",
+            verbose_name="Total number of credits you're registered for",
             help_text="What is the total number of credits you are enrolled for this term?<br>If you aren't registered yet, please provide an approximate number of credits?")
 
     outreachy_credits = models.PositiveIntegerField(
