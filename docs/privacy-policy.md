@@ -159,7 +159,7 @@ Only Outreachy organizers and designated applicant reviewers will have access to
 * your pronouns, if you choose not to share your pronouns with mentors and coordinators;
 * your time commitment detailed information:
     * whether you are currently applying to Google Summer of Code
-    * your student enrollment status, course load, and typical student course load
+    * your student enrollment status, course load, typical student course load, and academic calendar
     * your enrollment status in a coding school or online self-paced courses
     * your contracted employment hours
     * your hours working as a self-employed contractor

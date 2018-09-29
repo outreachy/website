@@ -579,6 +579,8 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 fields=(
                     'university_name',
                     'university_website',
+                    'current_academic_calendar',
+                    'next_academic_calendar',
                     'degree_name',
                 ))),
             ('School Term Info', modelformset_factory(SchoolTimeCommitment,
@@ -751,6 +753,11 @@ class EligibilityResults(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
 class ViewInitialApplication(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
     template_name = 'home/applicant_review_detail.html'
     context_object_name = 'application'
+
+    def get_context_data(self, **kwargs):
+        context = super(ViewInitialApplication, self).get_context_data(**kwargs)
+        context['current_round'] = RoundPage.objects.latest('internstarts')
+        return context
 
     def get_object(self):
         current_round = RoundPage.objects.latest('internstarts')

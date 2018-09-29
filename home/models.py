@@ -2729,6 +2729,12 @@ class SchoolInformation(models.Model):
 
     university_website = models.URLField(help_text="University or college website")
 
+    current_academic_calendar = models.URLField(verbose_name="Link to your official academic calendar for your *current* school term")
+
+    next_academic_calendar = models.URLField(
+            verbose_name="Link to your official academic calendar for your *next* school term",
+            help_text="If the calendar for your next term is not released yet, link to last year's academic calendar for that term.")
+
     degree_name = models.CharField(
             max_length=SENTENCE_LENGTH,
             help_text='What degree(s) are you pursuing?')
