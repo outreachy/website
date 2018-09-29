@@ -12,7 +12,10 @@ def send_template_mail(template, context, recipient_list, request=None, **kwargs
         context['recipient'] = recipient
         message = render_to_string(template, context, request=request, using='plaintext').strip()
         subject, body = message.split('\n', 1)
-        kwargs.setdefault('from_email', organizers)
+        if 'initial application' in subject:
+            kwargs.setdefault('from_email', applicant_help)
+        else:
+            kwargs.setdefault('from_email', organizers)
         send_mail(message=body.strip(), subject=subject.strip(), recipient_list=[recipient], **kwargs)
 
 def send_group_template_mail(template, context, recipient_list, request=None, **kwargs):
@@ -39,7 +42,6 @@ def applicant_approval_status_changed(obj, request):
             obj._meta.model_name,
             obj.get_approval_status_display().lower())
     context = { obj._meta.model_name: obj }
-    kwargs.setdefault('from_email', applicant_help)
     send_template_mail(template, context, request=request, recipient_list=recipients)
 
 def approval_status_changed(obj, request):
