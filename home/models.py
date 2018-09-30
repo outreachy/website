@@ -2178,11 +2178,15 @@ class ApplicantApproval(ApprovalStatus):
         if self.barrierstoparticipation and self.barrierstoparticipation.applicant_should_update:
             return 'Revisions to essay requested'
 
-        if self.schoolinformation and self.schoolinformation.applicant_should_update:
-            tcs = self.get_time_commitments()
-            time_string = str(tcs['longest_period_free']) + ' days free / ' + str(tcs['internship_total_days'].days) + ' days total, 49 days free required'
+        # Not everyone filled out the school information model
+        try:
+            if self.schoolinformation and self.schoolinformation.applicant_should_update:
+                tcs = self.get_time_commitments()
+                time_string = str(tcs['longest_period_free']) + ' days free / ' + str(tcs['internship_total_days'].days) + ' days total, 49 days free required'
 
-            return 'Revisions to school info requested: ' + time_string
+                return 'Revisions to school info requested: ' + time_string
+        except SchoolInformation.DoesNotExist:
+            pass
 
         if self.approval_status == self.PENDING:
             return 'Essay questions need review'
