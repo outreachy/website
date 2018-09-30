@@ -5,7 +5,7 @@
   "license": "GPL-3.0",
   "dependencies": {
     "autoprefixer": "^7.2.4",
-    "bootstrap": "^4.0.0-beta.3",
+    "bootstrap": "^4.1.2",
     "clean-css-cli": "^4.1.10",
     "postcss-cli-simple": "^1.0.4"
   }
