@@ -2777,6 +2777,17 @@ class SchoolInformation(models.Model):
             self.print_terms(a)
             print("")
 
+    def clean(self):
+        if self.university_website and self.current_academic_calendar and self.next_academic_calendar:
+            error_string = 'You must provide a valid academic calendar'
+            if self.university_website == self.current_academic_calendar:
+                raise ValidationError({'current_academic_calendar': error_string})
+            if self.university_website == self.next_academic_calendar:
+                raise ValidationError({'next_academic_calendar': error_string})
+
+            # Allow students to use the same academic calendar link for both terms,
+            # since the terms might be listed on the same page.
+
 class ContractorInformation(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
 
