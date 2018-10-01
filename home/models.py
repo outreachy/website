@@ -2739,11 +2739,12 @@ class SchoolInformation(models.Model):
 
     university_website = models.URLField(help_text="University or college website")
 
-    current_academic_calendar = models.URLField(verbose_name="Link to your official academic calendar for your *current* school term")
+    current_academic_calendar = models.URLField(verbose_name="Link to your official academic calendar for your *current* school term",
+            help_text="For some students, their academic calendar is not available online (or is only available to students). In this case, please upload a copy of the PDF or a picture of your official academic calendar to a file sharing site and add the link to the file here. Do not leave off your academic calendar or your initial application will not be processed promptly.")
 
     next_academic_calendar = models.URLField(
             verbose_name="Link to your official academic calendar for your *next* school term",
-            help_text="If the calendar for your next term is not released yet, link to last year's academic calendar for that term.")
+            help_text="If the calendar for your next term is not released yet, link to last year's academic calendar for that term. For some students, their academic calendar is not available online (or is only available to students). In this case, please upload a copy of the PDF or a picture of your official academic calendar to a file sharing site and add the link to the file here. Do not leave off your academic calendar or your initial application will not be processed promptly.")
 
     degree_name = models.CharField(
             max_length=SENTENCE_LENGTH,
