@@ -874,7 +874,7 @@ class Comrade(models.Model):
             return False
 
         # Is this Comrade an approved mentor or coordinator?
-        if self.approved_mentor_or_coordinator():
+        if self.approved_mentor_or_coordinator() or self.approved_reviewer():
             return False
         return True
 

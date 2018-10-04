@@ -17,7 +17,7 @@ Dashboard
 
 {% with intern_selection=request.user.comrade.get_intern_selection project_contributions=request.user.comrade.get_projects_contributed_to project_applications=request.user.comrade.get_projects_applied_to %}
 	{% if not current_round.has_intern_announcement_deadline_passed %}
-		{% if not request.user.comrade.get_approved_coordinator_communities and not request.user.comrade.get_editable_mentored_projects and not request.user.is_staff %}
+		{% if not request.user.comrade.get_approved_coordinator_communities and not request.user.comrade.get_editable_mentored_projects and not request.user.is_staff and not request.user.comrade.approved_reviewer %}
 			{% include "home/snippet/eligibility_prompts.html" %}
 		{% endif %}
 	{% elif intern_selection %}
