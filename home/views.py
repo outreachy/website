@@ -187,7 +187,7 @@ class ComradeUpdate(LoginRequiredMixin, UpdateView):
             comrade = self.request.user.comrade
             # Is this an Outreachy organizer or an approved mentor or coordinator?
             # Is this an intern in good standing from a past round?
-            if (self.request.user.is_staff or comrade.approved_mentor_or_coordinator() or comrade.alum_in_good_standing()):
+            if (self.request.user.is_staff or comrade.approved_reviewer() or comrade.approved_mentor_or_coordinator() or comrade.alum_in_good_standing()):
                 self.fields.insert(6, 'photo')
         except Comrade.DoesNotExist:
             comrade = Comrade(account=self.request.user)
