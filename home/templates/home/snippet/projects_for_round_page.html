@@ -13,7 +13,7 @@
 		</div>
 		<div class="card-body">
 		{% comment %}If this view didn't set any mentors_pending_projects, it means there's no pending mentored projects {% endcomment %}
-		{% if not request.user.comrade.eligible_application and not request.user.comrade.approved_mentor_or_coordinator and not project in mentors_pending_projects %}
+		{% if not request.user.comrade.approved_reviewer and not request.user.comrade.eligible_application and not request.user.comrade.approved_mentor_or_coordinator and not project in mentors_pending_projects %}
 			<p><strong>{{ project.short_title }}</strong></p>
 			<div class="card-text">{% include 'home/snippet/project_hidden.html' %}</div>
 		{% else %}

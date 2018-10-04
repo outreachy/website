@@ -208,7 +208,7 @@ Outreachy Internships | Apply | Pick a Project
 	{% for community, projects in late_projects %}
 		<h4>{{ community.name }} - {{ community.get_number_of_funded_interns }} intern{{ community.get_number_of_funded_interns|pluralize }}</h4>
 		<p>{{ community.description }}</p>
-		{% if request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator %}
+		{% if request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator or request.user.comrade.approved_reviewer %}
 			{% if not current_round.has_late_application_deadline_passed %}
 				<p>Learn how to make a contribution to these internship projects on the
 			{% else %}
@@ -237,7 +237,7 @@ Outreachy Internships | Apply | Pick a Project
 	{% for community, projects in ontime_projects %}
 		<h4>{{ community.name }} - {{ community.get_number_of_funded_interns }} intern{{ community.get_number_of_funded_interns|pluralize }}</h4>
 		<p>{{ community.description }}</p>
-		{% if request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator %}
+		{% if request.user.comrade.approved_reviewer or request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator %}
 			{% if not current_round.has_ontime_application_deadline_passed %}
 				<p>Learn how to make a contribution to these internship projects on the
 			{% else %}
@@ -292,7 +292,7 @@ Outreachy Internships | Apply | Pick a Project
 	{% for community, projects in closed_projects %}
 		<h3>{{ community.name }}</h3>
 		<p>{{ community.description }}</p>
-		{% if request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator %}
+		{% if request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator or request.user.comrade.approved_reviewer %}
 			<p>Document your contributions to these internship projects on the
 			<a href="{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}">{{ community.name }} community landing page</a>.</p>
 		{% endif %}
