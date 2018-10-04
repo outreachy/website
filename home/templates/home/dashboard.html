@@ -46,6 +46,8 @@ Dashboard
 
 {% if request.user.is_staff %}
 	{% include "home/snippet/dashboard_staff.html" %}
+{% elif request.user.comrade.approved_reviewer %}
+	{% include 'home/snippet/dashboard_application_summary.html' %}
 {% endif %}
 
 {% if internship %}
