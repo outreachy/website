@@ -928,7 +928,8 @@ class Comrade(models.Model):
         current_round = RoundPage.objects.latest('internstarts')
         return ApplicationReviewer.objects.filter(
                 comrade=self,
-                reviewing_round=current_round).exists()
+                reviewing_round=current_round,
+                approval_status=ApprovalStatus.APPROVED).exists()
 
     def get_approved_mentored_projects(self):
         current_round = RoundPage.objects.latest('internstarts')

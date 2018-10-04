@@ -2751,7 +2751,8 @@ def get_or_create_application_reviewer_and_review(self):
     current_round = RoundPage.objects.latest('internstarts')
     reviewer = get_object_or_404(ApplicationReviewer,
             comrade=self.request.user.comrade,
-            reviewing_round=current_round)
+            reviewing_round=current_round,
+            approval_status=ApprovalStatus.APPROVED)
     application = get_object_or_404(ApplicantApproval,
             applicant__account__username=self.kwargs['applicant_username'],
             application_round=current_round)
