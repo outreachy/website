@@ -963,8 +963,10 @@ def authorized_to_view_project_details(request, participation_info):
         try:
             # Is the person an approved mentor or coordinator?
             approved_to_see_all_project_details = participation_info.approved_to_see_all_project_details(request.user.comrade)
-            # Or are applications open and the comrade is eligible?
-            if not approved_to_see_all_project_details and request.user.comrade.eligible_application() and participation_info.participating_round.has_application_period_started():
+            # Or are applications open and everyone should see the projects?
+            # Note in the template, links are still hidden if the
+            # initial application is pending or rejected
+            if not approved_to_see_all_project_details and participation_info.participating_round.has_application_period_started():
                 approved_to_see_all_project_details = True
         except Comrade.DoesNotExist:
                 approved_to_see_all_project_details = False
