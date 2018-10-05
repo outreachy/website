@@ -1350,7 +1350,7 @@ class BaseProjectEditPage(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
                 project_round__community__slug=self.kwargs['community_slug'],
                 project_round__participating_round=participating_round)
         if not project.is_submitter(self.request.user):
-            return redirect(project.get_preview_url())
+            raise PermissionDenied("You are not an approved mentor for this project")
         # Only allow adding new project communication channels or skills
         # for approved projects after the deadline has passed.
         deadline = project.submission_and_approval_deadline()
