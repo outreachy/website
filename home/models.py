@@ -2916,6 +2916,12 @@ class InitialApplicationReview(models.Model):
     incorrect_dates = models.BooleanField(default=False,
             verbose_name="Dates on time commitments look incorrect")
 
+    comments = models.TextField(
+            max_length=EIGHT_PARAGRAPH_LENGTH,
+            blank=True,
+            verbose_name="Reviewer comments",
+            help_text="Please provide any comments on the status of this initial application, or questions you have while reviewing it.")
+
     def get_essay_rating(self):
         if self.essay_rating == self.UNRATED:
             return ''
