@@ -2194,6 +2194,15 @@ class ApplicantApproval(ApprovalStatus):
 
         return 'Unknown'
 
+    def get_reviewer_comments(self):
+        reviews = InitialApplicationReview.objects.filter(application=self)
+        if not reviews:
+            return []
+        comments = []
+        for r in reviews:
+            comments.append((r.reviewer.comrade.public_name, r.comments))
+        return comments
+
     def time_commitment_from_model(self, tc, hours):
         return {
                 'start_date': tc.start_date,

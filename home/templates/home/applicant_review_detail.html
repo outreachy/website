@@ -25,6 +25,16 @@
 		{% endwith %}
 	</table>
 	{% include 'home/snippet/applicant_review_actions.html' %}
+	<h2>Reviewer Comments</h2>
+	<p><a class='btn btn-info' href="{% url 'update-comment' applicant_username=application.applicant.account.username %}">Update your comments</a></p>
+	{% for reviewer, comment in application.get_reviewer_comments %}
+		<div class="card mb-3">
+			<div class="card-header">{{ reviewer }} - Reviewer Comments</div>
+			<div class="card-body">
+				<div class="card-text">{{ comment|linebreaks }}</div>
+			</div>
+		</div>
+	{% endfor %}
 
 	<h1>Initial Application</h1>
 

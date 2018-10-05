@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ initialapplicationreview.application.applicant.public_name }} - Update Reviewer Comment
+{% endblock %}
+
+{% block content %}
+
+<h2>Update Reviewer Comment</h2>
+
+<p>Initial application comment for: <b>{{ initialapplicationreview.application.applicant.email_address }}</b>
+
+<form method="post" action="">
+{% csrf_token %}
+	{% include "bootstrap_card_form.html" with form=form only %}
+<input type="submit" class="btn btn-block btn-primary" value="Save Updated Comment" />
+</form>
+
+{% endblock %}

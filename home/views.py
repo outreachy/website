@@ -2851,6 +2851,18 @@ class ChangeRedFlag(LoginRequiredMixin, ComradeRequiredMixin, View):
             'applicant_username': self.kwargs['applicant_username'],
             }))
 
+class ReviewCommentUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
+    model = InitialApplicationReview
+    fields = ['comments',]
+
+    def get_object(self):
+        application, reviewer, review = get_or_create_application_reviewer_and_review(self)
+        return review
+
+    def get_success_url(self):
+        return reverse('applicant-review-detail', kwargs={
+            'applicant_username': self.kwargs['applicant_username'],
+            })
 
 @login_required
 def dashboard(request):
