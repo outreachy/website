@@ -2080,6 +2080,10 @@ def create_time_commitment_calendar(tcs, application_round):
             date = date + datetime.timedelta(days=1)
     return calendar
 
+class ApplicationReviewer(ApprovalStatus):
+    comrade = models.ForeignKey(Comrade)
+    reviewing_round = models.ForeignKey(RoundPage)
+
 # This class stores information about whether an applicant is eligible to
 # participate in this round Automated checking will set the applicant to
 # Approved or Rejected, but the Outreachy organizers can move the applicant to
@@ -2094,6 +2098,7 @@ class ApplicantApproval(ApprovalStatus):
     project_contributions = models.ManyToManyField(Project, through='Contribution')
     submission_date = models.DateField(auto_now_add=True)
     ip_address = models.GenericIPAddressField(protocol="both")
+    review_owner = models.ForeignKey(ApplicationReviewer, blank=True, null=True)
 
     def is_approver(self, user):
         return user.is_staff
@@ -2292,6 +2297,11 @@ class ApplicantApproval(ApprovalStatus):
         for r in reviews:
            red_flags_list.append(r.get_red_flags())
         return red_flags_list
+
+    def get_possible_reviewers(self):
+        return ApplicationReviewer.objects.filter(
+                reviewing_round=self.application_round,
+                approval_status=ApprovalStatus.APPROVED)
 
     def __str__(self):
         return "{name} <{email}> - {status}".format(
@@ -2875,10 +2885,6 @@ class PromotionTracking(models.Model):
 # --------------------------------------------------------------------------- #
 # reviewer models
 # --------------------------------------------------------------------------- #
-
-class ApplicationReviewer(ApprovalStatus):
-    comrade = models.ForeignKey(Comrade)
-    reviewing_round = models.ForeignKey(RoundPage)
 
 class InitialApplicationReview(models.Model):
     application = models.ForeignKey(ApplicantApproval)
