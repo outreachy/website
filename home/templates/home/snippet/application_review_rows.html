@@ -8,9 +8,9 @@
 		{% endif %}
 	</td>
 	<td>{{ app.applicant.public_name }} &lt;{{ app.applicant.account.email }}&gt;</td>
-	<td>{% for essay_rating in app.get_essay_ratings %}
-			{% include 'home/snippet/essay_rating.html' %}
-			{% if not forloop.last %}<br>{% endif %}
+	<td>
+		{% for essay_rating in app.get_essay_ratings %}
+			<p>{% include 'home/snippet/essay_rating.html' %}</p>
 		{% endfor %}
 		<p>{% if app.review_owner %}Owned by: {{ app.review_owner.comrade.public_name }}{% endif %}</p>
 	</td>
