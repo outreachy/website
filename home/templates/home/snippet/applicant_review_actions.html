@@ -25,3 +25,24 @@
 		</td>
 	</table>
 {% endif %}
+{% if user.comrade.approved_reviewer %}
+	<h2>Initial Application Review Owner</h2>
+	{% if application.review_owner %}
+		<p>Owner for this application: {{ application.review_owner.comrade.public_name }}.</p>
+	{% else %}
+		<p>No reviewer owns this application.</p>
+	{% endif %}
+	<p>If no one has claimed this application, feel free to claim it as something you're working on. You can also assign it to the best person to handle it. Assign an application to a staff member when all additional information has been gathered and/or reviewed, and the application is ready to be approved or denied.</p>
+	<form method="post">
+		{% csrf_token %}
+		<div class="dropdown">
+			<button class="btn btn-secondary dropdown-toggle" type="button" id="review-owner-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Assign application owner</button>
+			<div class="dropdown-menu" aria-labelledby="review-owner-menu">
+				{% for reviewer in application.get_possible_reviewers %}
+					<button class="dropdown-item" formaction="{% url 'set-review-owner' applicant_username=application.applicant.account.username owner=reviewer.comrade.account.username %}">{{ reviewer.comrade.public_name }}</button>
+				{% endfor %}
+				<button class="dropdown-item" formaction="{% url 'set-review-owner' applicant_username=application.applicant.account.username owner=None %}">Clear reviewer</button>
+			</div>
+		</div>
+	</form>
+{% endif %}

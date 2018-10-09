@@ -12,6 +12,7 @@
 			{% include 'home/snippet/essay_rating.html' %}
 			{% if not forloop.last %}<br>{% endif %}
 		{% endfor %}
+		<p>{% if app.review_owner %}Owned by: {{ app.review_owner.comrade.public_name }}{% endif %}</p>
 	</td>
 	<td>
 		{% for red_flag_tuple in app.get_all_red_flags %}

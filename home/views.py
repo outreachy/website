@@ -2769,6 +2769,34 @@ def get_or_create_application_reviewer_and_review(self):
 
     return (application, reviewer, review)
 
+class SetReviewOwner(LoginRequiredMixin, ComradeRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+
+        application, reviewer, review = get_or_create_application_reviewer_and_review(self)
+        # Only allow approved reviewers to change review owners
+        current_round = RoundPage.objects.latest('internstarts')
+        requester = get_object_or_404(ApplicationReviewer,
+                comrade=self.request.user.comrade,
+                reviewing_round=current_round,
+                approval_status=ApprovalStatus.APPROVED)
+        if self.kwargs['owner'] == 'None':
+            reviewer = None
+        else:
+            reviewer = get_object_or_404(ApplicationReviewer,
+                    comrade__account__username=self.kwargs['owner'],
+                    reviewing_round=current_round,
+                    approval_status=ApprovalStatus.APPROVED)
+        application = get_object_or_404(ApplicantApproval,
+                applicant__account__username=self.kwargs['applicant_username'],
+                application_round=current_round)
+
+        application.review_owner = reviewer
+        application.save()
+
+        return redirect(reverse('applicant-review-detail', kwargs={
+            'applicant_username': self.kwargs['applicant_username'],
+            }))
+
 class EssayRating(LoginRequiredMixin, ComradeRequiredMixin, View):
     def post(self, request, *args, **kwargs):
 
