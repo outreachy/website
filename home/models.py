@@ -119,6 +119,7 @@ class RoundPage(Page):
     landingdue = models.DateField("Date community landing pages are due", blank=True, default='2017-08-28')
     appsopen = models.DateField("Date applications open", default='2017-09-07')
     lateorgs = models.DateField("Last date to add community landing pages", blank=True, default='2017-10-02')
+    lateprojects = models.DateField("Last date to add projects", blank=True, default='2017-10-16')
     appsclose = models.DateField("Date applications are due", blank=True, default='2017-10-23')
     appslate = models.DateField("Date extended applications are due", blank=True, default='2017-10-30')
     internapproval = models.DateField("Date interns are approved by the Outreachy organizers", default='2017-11-05')
@@ -164,7 +165,7 @@ class RoundPage(Page):
         return(self.appslate - datetime.timedelta(days=1))
 
     def ProjectsDeadline(self):
-        return(self.appsclose - datetime.timedelta(days=14))
+        return(self.lateprojects)
 
     def has_project_submission_and_approval_deadline_passed(self):
         return has_deadline_passed(self.ProjectsDeadline())
