@@ -1,0 +1,75 @@
+<ul class="navbar-nav ml-auto">
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" id="navbarApplicants" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Applicants
+    </a>
+
+    <div class="dropdown-menu" aria-labelledby="navbarApplicants">
+      <a class="dropdown-item" href="/apply/eligibility/">Eligibility Rules</a>
+      <a class="dropdown-item" href="/apply/">Application Process</a>
+      <a class="dropdown-item" href="{% url 'dashboard' %}">My Application</a>
+      <a class="dropdown-item" href="{% url 'project-selection' %}">Current Projects</a>
+      <a class="dropdown-item" href="{% url 'past-rounds' %}">Past Projects</a>
+      <a class="dropdown-item" href="/opportunities/">Other Opportunities</a>
+    </div>
+  </li>
+
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" id="navbarVolunteers" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Volunteers
+    </a>
+
+    <div class="dropdown-menu" aria-labelledby="navbarVolunteers">
+      <a class="dropdown-item" href="/mentor/">Volunteering FAQ</a>
+      <a class="dropdown-item" href="{% url 'dashboard' %}">My Mentored Projects</a>
+      <a class="dropdown-item" href="{% url 'project-selection' %}">Current Projects</a>
+      <a class="dropdown-item" href="{% url 'past-rounds' %}">Past Projects</a>
+      <a class="dropdown-item" href="{% url 'community-cfp' %}">Add A Community</a>
+      <a class="dropdown-item" href="{% url 'community-cfp' %}#mentor">Submit A Project</a>
+      <a class="dropdown-item" href="{% url 'community-cfp' %}#mentor">Co-mentor A Project</a>
+      <a class="dropdown-item" href="/promote/">Promote Outreachy</a>
+    </div>
+  </li>
+
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" id="navbarInterns" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Interns
+    </a>
+
+    <div class="dropdown-menu" aria-labelledby="navbarInterns">
+      <a class="dropdown-item" href="{% url 'alums' %}">Past Interns</a>
+      <a class="dropdown-item" href="{% url 'dashboard' %}">My Internship</a>
+      <a class="dropdown-item" href="https://wiki.gnome.org/Outreachy/TravelAllowance">Travel Stipend</a>
+      <a class="dropdown-item" href="/opportunities/">Opportunities</a>
+    </div>
+  </li>
+
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" id="navbarDonors" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Donors
+    </a>
+
+    <div class="dropdown-menu" aria-labelledby="navbarDonors">
+      <a class="dropdown-item" href="/sponsor/">Sponsor Interns</a>
+      <a class="dropdown-item" href="/sponsor/donate/">Donate to Outreachy</a>
+    </div>
+  </li>
+
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" id="navbarAboutUs" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      About Us
+    </a>
+
+    <div class="dropdown-menu" aria-labelledby="navbarAboutUs">
+      <a class="dropdown-item" href="/contact/contact-us/">Contact Us</a>
+      <a class="dropdown-item" href="/promote/">Promote Outreachy</a>
+      <a class="dropdown-item" href="/blog/">Blog</a>
+    </div>
+  </li>
+
+  {% if request.user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+    </li>
+  {% endif %}
+</ul>

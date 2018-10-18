@@ -106,149 +106,81 @@
                 @extend .text-muted;
             }
 
-	    .errorlist {
-		@extend .bg-danger;
-		@extend .text-light;
-	    }
+            .errorlist {
+              @extend .bg-danger;
+              @extend .text-light;
+            }
 
             .footer-art {
-                background: url(static("css/img/footer-balloons.png")) no-repeat bottom right;
-                height: 160px;
+              background: url(static("css/img/footer-balloons.png")) no-repeat bottom right;
+              height: 160px;
             }
 
             .footer-grass {
-                background: url(static("css/img/footer-grass.png"));
-                height: 39px;
+              background: url(static("css/img/footer-grass.png"));
+              height: 39px;
             }
 
             .footer-wrapper {
-                // This color matches the footer-grass background.
-                background-color: #d1d8cd;
+              // This color matches the footer-grass background.
+              background-color: #d1d8cd;
             }
 
             .cc-description {
-                font-size: $font-size-sm;
+              font-size: $font-size-sm;
+            }
+
+            .navbar-dark .navbar-nav .nav-link {
+              color: white;
             }
         </style>
-        {% endcompress %}
+    {% endcompress %}
 
-        {% block extra_css %}
-            {# Override this in templates to add extra stylesheets #}
-        {% endblock %}
-    </head>
+    {# Override this in templates to add extra stylesheets #}
+    {% block extra_css %}{% endblock %}
+  </head>
 
-    <body class="{% block body_class %}{% endblock %}">
-        {% wagtailuserbar %}
-        <div class="navbar navbar-dark bg-primary fixed-top navbar-expand-lg">
-            <div class="container">
-                <a class="navbar-brand brand" href="/">Outreachy</a>
-		{% if request.user.is_authenticated %}
-			<a class="nav-link" href="{% url 'dashboard' %}">
-				<button type="button" class="btn btn-light btn-sm">My Participation{% if pending_approvals %} <span class="badge badge-warning">{{ pending_approvals }}</span><span class="sr-only">actions needed</span>{% endif %}</button>
-			</a>
-			{% if debug %}
-				{{ request.user.comrade.public_name }}
-			{% endif %}
-		{% else %}
-			<a href="{% url 'login' %}?next={{ request.path|urlencode }}"><button type="button" class="btn btn-light btn-sm">Log In</button></a>
-		{% endif %}
-                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#sitenavbar" aria-controls="sitenavbar" aria-expanded="false" aria-label="Toggle navigation" >
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div id="sitenavbar" class="navbar-collapse collapse">
-			<ul class="navbar-nav ml-auto">
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" id="navbarApplicants" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						Applicants
-					</a>
-					<div class="dropdown-menu" aria-labelledby="navbarApplicants">
-						<a class="dropdown-item" href="/apply/eligibility/">Eligibility Rules</a>
-						<a class="dropdown-item" href="/apply/">Application Process</a>
-						<a class="dropdown-item" href="{% url 'dashboard' %}">My Application</a>
-						<a class="dropdown-item" href="{% url 'project-selection' %}">Current Projects</a>
-						<a class="dropdown-item" href="{% url 'past-rounds' %}">Past Projects</a>
-						<a class="dropdown-item" href="/opportunities/">Other Opportunities</a>
-					</div>
-				</li>
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" id="navbarVolunteers" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						Volunteers
-					</a>
-					<div class="dropdown-menu" aria-labelledby="navbarVolunteers">
-						<a class="dropdown-item" href="/mentor/">Volunteering FAQ</a>
-						<a class="dropdown-item" href="{% url 'dashboard' %}">My Mentored Projects</a>
-						<a class="dropdown-item" href="{% url 'project-selection' %}">Current Projects</a>
-						<a class="dropdown-item" href="{% url 'past-rounds' %}">Past Projects</a>
-						<a class="dropdown-item" href="{% url 'community-cfp' %}">Add A Community</a>
-						<a class="dropdown-item" href="{% url 'community-cfp' %}#mentor">Submit A Project</a>
-						<a class="dropdown-item" href="{% url 'community-cfp' %}#mentor">Co-mentor A Project</a>
-						<a class="dropdown-item" href="/promote/">Promote Outreachy</a>
-					</div>
-				</li>
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" id="navbarInterns" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						Interns
-					</a>
-					<div class="dropdown-menu" aria-labelledby="navbarInterns">
-						<a class="dropdown-item" href="{% url 'alums' %}">Past Interns</a>
-						<a class="dropdown-item" href="{% url 'dashboard' %}">My Internship</a>
-						<a class="dropdown-item" href="https://wiki.gnome.org/Outreachy/TravelAllowance">Travel Stipend</a>
-						<a class="dropdown-item" href="/opportunities/">Opportunities</a>
-					</div>
-				</li>
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" id="navbarDonors" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						Donors
-					</a>
-					<div class="dropdown-menu" aria-labelledby="navbarDonors">
-						<a class="dropdown-item" href="/sponsor/">Sponsor Interns</a>
-						<a class="dropdown-item" href="/sponsor/donate/">Donate to Outreachy</a>
-					</div>
-				</li>
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" id="navbarAboutUs" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						About Us
-					</a>
-					<div class="dropdown-menu" aria-labelledby="navbarAboutUs">
-						<a class="dropdown-item" href="/contact/contact-us/">Contact Us</a>
-						<a class="dropdown-item" href="/promote/">Promote Outreachy</a>
-						<a class="dropdown-item" href="/blog/">Blog</a>
-					</div>
-				</li>
-			    {% if request.user.is_authenticated %}
-				    <li class="nav-item">
-					    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-				    </li>
-			    {% endif %}
-                    </ul>
-                </div>
-            </div>
+  <body class="{% block body_class %}{% endblock %}">
+    {% wagtailuserbar %}
+
+    <div class="navbar navbar-dark bg-primary fixed-top navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand brand" href="/">Outreachy</a>
+
+        {% if request.user.is_authenticated %}
+          <a class="nav-link" href="{% url 'dashboard' %}">
+            <button type="button" class="btn btn-light btn-sm">My Participation{% if pending_approvals %} <span class="badge badge-warning">{{ pending_approvals }}</span><span class="sr-only">actions needed</span>{% endif %}</button>
+          </a>
+
+          {% if debug %}
+            {{ request.user.comrade.public_name }}
+          {% endif %}
+        {% else %}
+          <a href="{% url 'login' %}?next={{ request.path|urlencode }}"><button type="button" class="btn btn-light btn-sm">Log In</button></a>
+        {% endif %}
+
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#sitenavbar" aria-controls="sitenavbar" aria-expanded="false" aria-label="Toggle navigation" >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div id="sitenavbar" class="navbar-collapse collapse">
+          {% include 'partials/_navigation.html' %}
         </div>
+      </div>
+    </div>
 
-        <div class="container">
-        {% block content %}{% endblock %}
-        </div>
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
 
-        <div class="footer">
-            <div class="footer-art"></div>
-            <div class="footer-grass"></div>
-            <div class="footer-wrapper">
-                <div class="container">
-                    <p>Copyright © {% now "Y" %} Outreachy</p>
-                    <p class="cc-description">Free to share and remix: <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons CC-BY</a>, except for the individual organization logos, which are property of their respective owners, and any pictures with additional creative commons attributions.</p>
-                    <p class="cc-description">The Outreachy website is built with <a href="https://www.djangoproject.com/">Django</a>, <a href="https://wagtail.io/">Wagtail</a>, <a href="http://getbootstrap.com/">bootstrap</a> and deployed with <a href="http://dokku.viewdocs.io/dokku/">Dokku</a>. The code is licensed <a href="https://www.gnu.org/licenses/gpl.html">GPL v3</a> and can be found on <a href="http://github.com/sagesharp/outreachy-django-wagtail/">GitHub.</a></p>
-                    <p>This program and all offers related to it are void where prohibited or restricted by law or where operation of the program would violate any law or right. All participants in the program must agree to the terms and conditions of the program which will be provided to the selected applicants.</p>
-		   <p><a href="{% url 'privacy-policy' %}">Outreachy privacy policy</a>.</p>
-                </div>
-            </div>
-        </div>
-        {# Global javascript #}
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+    {% include 'partials/_footer.html' %}
 
-        {% block extra_js %}
-            {# Override this in templates to add extra javascript #}
-        {% endblock %}
-    </body>
+    {# Global javascript #}
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+
+    {# Override this in templates to add extra javascript #}
+    {% block extra_js %}{% endblock %}
+  </body>
 </html>
