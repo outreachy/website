@@ -1,0 +1,55 @@
+body {
+  margin-top: 5em;
+}
+
+// Django automatically applies a 'helptext' class in forms;
+// Bootstrap wants us to use other classes instead; so we
+// let SCSS wire one to the other.
+.helptext {
+  @extend .form-text;
+  @extend .text-muted;
+}
+
+.errorlist {
+  @extend .bg-danger;
+  @extend .text-light;
+}
+
+//
+// Navbar
+.navbar-brand {
+  font-family: 'ChunkFiveRegular';
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: white;
+}
+
+:target:before { // Offset for anchor link jumping
+  content: "";
+  display: block;
+  height: 70px;
+  margin: -70px 0 0;
+}
+
+//
+// Footer
+.footer-art {
+  background: url(static("css/img/footer-balloons.png")) no-repeat bottom right;
+  height: 160px;
+}
+
+.footer-grass {
+  background: url(static("css/img/footer-grass.png"));
+  height: 39px;
+}
+
+.footer-wrapper {
+  // This color matches the footer-grass background.
+  background-color: #d1d8cd;
+  overflow: auto;
+}
+
+.cc-description {
+  font-size: $font-size-sm;
+}
