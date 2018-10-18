@@ -134,6 +134,13 @@
             .navbar-dark .navbar-nav .nav-link {
               color: white;
             }
+
+            :target:before { // Offset for anchor link jumping
+              content: "";
+              display: block;
+              height: 70px;
+              margin: -70px 0 0;
+            }
         </style>
     {% endcompress %}
 
