@@ -35,8 +35,8 @@
         <!-- Open Graph data -->
         <meta property="og:title" content="Outreachy | Internships Supporting Diversity in Tech " />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.outreachy.org/" />
-        <meta property="og:image" content="{% static 'outreachy-logo-open-graph-1200x1200.png' %}">
+        <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}" />
+        <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'outreachy-logo-open-graph-1200x1200.png' %}">
         <meta property="og:description" content="An internship program that supports diversity in free and open source software. Learn more by visiting our website!" />
         <meta property="og:image:width" content="1200">
         <meta property="og:image:height" content="1200">
