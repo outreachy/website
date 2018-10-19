@@ -18,11 +18,17 @@ body {
 //
 // Navbar
 .navbar-brand {
-  font-family: 'ChunkFiveRegular';
+  padding: 0;
+
+  img {
+    width: 180px;
+  }
 }
 
+.navbar-dark .navbar-toggler,
 .navbar-dark .navbar-nav .nav-link {
   color: white;
+  border-color: rgba(255,255,255,.75);
 }
 
 :target:before { // Offset for anchor link jumping
