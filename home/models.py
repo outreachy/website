@@ -2688,6 +2688,40 @@ class NonCollegeSchoolTimeCommitment(models.Model):
             error_string = 'Coding school or online class start date ' + self.start_date.strftime("%Y-%m-%d") + ' is after class end date ' + self.end_date.strftime("%Y-%m-%d")
             raise ValidationError({'start_date': error_string})
 
+class OfficialSchool(models.Model):
+    university_name = models.CharField(
+            max_length=SENTENCE_LENGTH,
+            help_text='University or college name')
+
+    university_website = models.URLField(
+            help_text="University or college website")
+
+class OfficialSchoolTerm(models.Model):
+    school = models.ForeignKey(OfficialSchool, on_delete=models.CASCADE)
+    term_name = models.CharField(
+            max_length=SENTENCE_LENGTH,
+            verbose_name="Term name or term number",
+            help_text="If the university uses term names (e.g. Winter 2018 term of Sophomore year), enter the current term name, year in college, and term year. If the university uses term numbers (e.g. 7th semester), enter the term number.")
+
+    academic_calendar = models.URLField(
+            blank=True,
+            verbose_name="Link to the official academic calendar for this school term",
+            help_text="If necessary, save a file to a cloud hosting service and add the link to it here.")
+
+    start_date = models.DateField(
+            verbose_name="Date classes start. Use YYYY-MM-DD format.",
+            help_text="What is the first possible day of classes for all students?<br>If students who are in different school years or different semester numbers start classes on different dates, use the first possible date that students in that year or semester start classes.<br>If you do not know when the term will start, use the start date of that term from last year.")
+
+    end_date = models.DateField(
+            verbose_name="Date all exams end. Use YYYY-MM-DD format.",
+            help_text="This is the date the university advertises for the last possible date of any exam for any student in the semester.")
+
+    typical_credits = models.IntegerField(
+            blank=True,
+            null=True,
+            verbose_name="Number of credits for a typical student",
+            help_text="How many credits does a typical student register for?<br> If the university has different credit requirements for each semester for students in each major, pick the most common major listed by students in this university.")
+
 class SchoolTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
 
