@@ -26,6 +26,8 @@ from .models import MentorRelationship
 from .models import NewCommunity
 from .models import NonCollegeSchoolTimeCommitment
 from .models import Notification
+from .models import OfficialSchool
+from .models import OfficialSchoolTerm
 from .models import Participation
 from .models import PaymentEligibility
 from .models import Project
@@ -331,6 +333,22 @@ class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
         return obj.application_round
     round.admin_order_field = '-application_round__roundnumber'
 
+class OfficialSchoolTermInline(admin.StackedInline):
+    model = OfficialSchoolTerm
+    can_delete = True
+    verbose_name_plural = 'Official School Terms'
+
+class OfficialSchoolAdmin(admin.ModelAdmin):
+    list_display = (
+            'university_name',
+            'university_website',
+            )
+    search_fields = (
+            'university_name',
+            'university_website',
+            )
+    inlines = (OfficialSchoolTermInline, )
+
 class BarriersToParticipationAdmin(reversion.admin.VersionAdmin):
     model = AlumInfo
     list_display = (
@@ -454,6 +472,7 @@ admin.site.register(MentorApproval, MentorApprovalAdmin)
 admin.site.register(MentorRelationship, MentorRelationshipAdmin)
 admin.site.register(NewCommunity, CommunityAdmin)
 admin.site.register(Notification)
+admin.site.register(OfficialSchool, OfficialSchoolAdmin)
 admin.site.register(Participation, ParticipationAdmin)
 admin.site.register(RoundPage)
 admin.site.register(Project, ProjectAdmin)
