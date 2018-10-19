@@ -16,7 +16,7 @@ from django.forms import ValidationError
 from django.shortcuts import redirect
 from django.urls import reverse
 from itertools import chain, groupby
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, urlparse
 
 from ckeditor.fields import RichTextField as CKEditorField
 
@@ -2811,6 +2811,20 @@ class SchoolInformation(models.Model):
             verbose_name='Provide any updates about your school term information',
             help_text="<p>If the school terms above are incorrect, or you have forgotten to include a term that overlaps with the Outreachy internship period, please update your terms.<p>For each school term, please provide:</p><ol><li>The term name</li><li>The start date of classes for ALL students in the school</li><li>The end date of exams for ALL students in the school</li><li>The total number of credits you will be enrolled for this term</li><li>The total number of credits a student typically enrolls for during this school term.</li><li>If you are a graduate student, the subset of those credits you will be using for graduate research or thesis credits.</li><li>If you will receive any school credits for your Outreachy internship, how many credits will you receive during that term?</li></ol><p>Please do not modify your dates to differ from the starting dates in your academic calendar. Outreachy organizers cannot accept statements that you will start your classes late.</p><p>Please provide a link to your school website which proves that students are eligible to register for less than a full course load. Some schools, especially those in India, do not allow students to register for a part-time course load.</p>")
     applicant_should_update = models.BooleanField(default=False)
+
+    def find_official_terms(self):
+        school_url = urlparse(self.university_website)
+        school_domain = school_url.netloc
+
+        # find all OfficialSchools with the same domain
+        matches = OfficialSchool.objects.filter(university_website__icontains=school_domain)
+        # We need to be able to combine querysets with Q
+        # https://docs.djangoproject.com/en/1.11/topics/db/queries/#complex-lookups-with-q-objects
+        results = OfficialSchoolTerm.objects.all()
+        query = models.Q()
+        for school_match in matches:
+            query = query | models.Q(school=school_match)
+        return results.filter(query).order_by('school__university_website', '-start_date')
 
     def print_terms(school_info):
         print(school_info.applicant.get_approval_status_display(), " ", school_info.applicant.applicant.public_name, " <", school_info.applicant.applicant.account.email, ">")
