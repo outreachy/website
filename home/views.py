@@ -1543,16 +1543,16 @@ class ApplicantsDeadlinesReminder(LoginRequiredMixin, ComradeRequiredMixin, Temp
         late_projects = Project.objects.filter(
                 project_round__participating_round=current_round,
                 approval_status=Project.APPROVED,
-                deadline=Project.LATE)
+                deadline=Project.LATE).order_by('project_round__community')
         promoted_projects = Project.objects.filter(
                 project_round__participating_round=current_round,
                 approval_status=Project.APPROVED,
                 deadline=Project.ONTIME,
-                needs_more_applicants=True)
+                needs_more_applicants=True).order_by('project_round__community')
         closed_projects = Project.objects.filter(
                 project_round__participating_round=current_round,
                 approval_status=Project.APPROVED,
-                deadline=Project.CLOSED)
+                deadline=Project.CLOSED).order_by('project_round__community')
         email.applicant_deadline_reminder(late_projects, promoted_projects, closed_projects, current_round, self.request)
         return redirect(reverse('dashboard'))
 
