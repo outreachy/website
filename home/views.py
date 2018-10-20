@@ -1517,16 +1517,16 @@ class ApplicantsDeadlinesReminder(LoginRequiredMixin, ComradeRequiredMixin, Temp
         late_projects = Project.objects.filter(
                 project_round__participating_round=current_round,
                 approval_status=Project.APPROVED,
-                deadline=Project.LATE)
+                deadline=Project.LATE).order_by('project_round__community')
         promoted_projects = Project.objects.filter(
                 project_round__participating_round=current_round,
                 approval_status=Project.APPROVED,
                 deadline=Project.ONTIME,
-                needs_more_applicants=True)
+                needs_more_applicants=True).order_by('project_round__community')
         closed_projects = Project.objects.filter(
                 project_round__participating_round=current_round,
                 approval_status=Project.APPROVED,
-                deadline=Project.CLOSED)
+                deadline=Project.CLOSED).order_by('project_round__community')
         context = super(ApplicantsDeadlinesReminder, self).get_context_data(**kwargs)
         context.update({
             'current_round': current_round,
