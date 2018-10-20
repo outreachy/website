@@ -2818,6 +2818,9 @@ class SchoolInformation(models.Model):
 
         # find all OfficialSchools with the same domain
         matches = OfficialSchool.objects.filter(university_website__icontains=school_domain)
+        if not matches:
+            return []
+
         # We need to be able to combine querysets with Q
         # https://docs.djangoproject.com/en/1.11/topics/db/queries/#complex-lookups-with-q-objects
         results = OfficialSchoolTerm.objects.all()
