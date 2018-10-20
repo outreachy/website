@@ -151,8 +151,6 @@
 	{% include 'home/snippet/applicant_review_essay_rating.html' %}
 
 	<h2>Time Commitment Details</h2>
-	<p>Location: <b>{% with location=application.applicant.get_city_country %}{% if location.0 %}{{ location.0}}, {% endif %}{% if location.1 %}{{ location.1 }}{% endif %}
-	{% if not location.0 and not location.1 %}Unknown{% endif %}{% endwith %}</b></p>
 	{% include 'home/snippet/time_commitment_overview.html' %}
 	{% include 'home/snippet/applicant_review_time_commitments.html' %}
 
