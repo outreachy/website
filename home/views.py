@@ -1517,16 +1517,16 @@ class ApplicantsDeadlinesReminder(LoginRequiredMixin, ComradeRequiredMixin, Temp
         late_projects = Project.objects.filter(
                 project_round__participating_round=current_round,
                 approval_status=Project.APPROVED,
-                deadline=Project.LATE).order_by('project_round__community')
+                deadline=Project.LATE).order_by('project_round__community__name')
         promoted_projects = Project.objects.filter(
                 project_round__participating_round=current_round,
                 approval_status=Project.APPROVED,
                 deadline=Project.ONTIME,
-                needs_more_applicants=True).order_by('project_round__community')
+                needs_more_applicants=True).order_by('project_round__community__name')
         closed_projects = Project.objects.filter(
                 project_round__participating_round=current_round,
                 approval_status=Project.APPROVED,
-                deadline=Project.CLOSED).order_by('project_round__community')
+                deadline=Project.CLOSED).order_by('project_round__community__name')
         context = super(ApplicantsDeadlinesReminder, self).get_context_data(**kwargs)
         context.update({
             'current_round': current_round,
@@ -1543,16 +1543,16 @@ class ApplicantsDeadlinesReminder(LoginRequiredMixin, ComradeRequiredMixin, Temp
         late_projects = Project.objects.filter(
                 project_round__participating_round=current_round,
                 approval_status=Project.APPROVED,
-                deadline=Project.LATE).order_by('project_round__community')
+                deadline=Project.LATE).order_by('project_round__community__name')
         promoted_projects = Project.objects.filter(
                 project_round__participating_round=current_round,
                 approval_status=Project.APPROVED,
                 deadline=Project.ONTIME,
-                needs_more_applicants=True).order_by('project_round__community')
+                needs_more_applicants=True).order_by('project_round__community__name')
         closed_projects = Project.objects.filter(
                 project_round__participating_round=current_round,
                 approval_status=Project.APPROVED,
-                deadline=Project.CLOSED).order_by('project_round__community')
+                deadline=Project.CLOSED).order_by('project_round__community__name')
         email.applicant_deadline_reminder(late_projects, promoted_projects, closed_projects, current_round, self.request)
         return redirect(reverse('dashboard'))
 
