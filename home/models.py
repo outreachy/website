@@ -2829,27 +2829,48 @@ class SchoolInformation(models.Model):
             query = query | models.Q(school=school_match)
         return results.filter(query).order_by('school__university_website', 'start_date')
 
-    def acceptance_rates(self):
+    def pending_classmates(self):
         school_url = urlparse(self.university_website)
         school_domain = school_url.netloc
 
         # find the number of classmates applied this round
-        total_classmates = ApplicantApproval.objects.filter(
+        return ApplicantApproval.objects.filter(
+                approval_status=ApprovalStatus.PENDING,
                 application_round=self.applicant.application_round,
-                school_information__university_website__icontains=school_domain).count()
+                schoolinformation__university_website__icontains=school_domain).count()
+
+    def total_classmates(self):
+        school_url = urlparse(self.university_website)
+        school_domain = school_url.netloc
+
+        # find the number of classmates applied this round
+        return ApplicantApproval.objects.filter(
+                application_round=self.applicant.application_round,
+                schoolinformation__university_website__icontains=school_domain).count()
+
+    def acceptance_rate(self):
+        school_url = urlparse(self.university_website)
+        school_domain = school_url.netloc
+
+        # find the number of classmates applied this round
+        total_classmates = self.total_classmates()
         accepted = ApplicantApproval.objects.filter(
-                approval_status=ApprovalStatus.ACCEPTED,
+                approval_status=ApprovalStatus.APPROVED,
                 application_round=self.applicant.application_round,
-                school_information__university_website__icontains=school_domain).count()
+                schoolinformation__university_website__icontains=school_domain).count()
+        return accepted / total_classmates * 100
+
+    def rejection_rate(self):
+        school_url = urlparse(self.university_website)
+        school_domain = school_url.netloc
+
+        # find the number of classmates applied this round
+        total_classmates = self.total_classmates()
         rejected = ApplicantApproval.objects.filter(
                 approval_status=ApprovalStatus.REJECTED,
                 application_round=self.applicant.application_round,
-                school_information__university_website__icontains=school_domain).count()
-        pending = ApplicantApproval.objects.filter(
-                approval_status=ApprovalStatus.PENDING,
-                application_round=self.applicant.application_round,
-                school_information__university_website__icontains=school_domain).count()
-        return total_classmates, accepted, rejected, pending
+                schoolinformation__university_website__icontains=school_domain).count()
+        return rejected / total_classmates * 100
 
     def print_terms(school_info):
         print(school_info.applicant.get_approval_status_display(), " ", school_info.applicant.applicant.public_name, " <", school_info.applicant.applicant.account.email, ">")
