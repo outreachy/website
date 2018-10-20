@@ -53,6 +53,7 @@
 								</div>
 								<div class="col">
 									{% if tcs.school_time_commitments %}
+									<p>Classmates with the same school website:<br>{{ application.schoolinformation.total_classmates }} applied, {{ application.schoolinformation.pending_classmates }} pending, {{ application.schoolinformation.acceptance_rate|floatformat }}% accepted, {{ application.schoolinformation.rejection_rate|floatformat }}% rejected</p>
 									<p>Possible school term matches:</p>
 									<ul>
 										{% with terms=application.schoolinformation.find_official_terms %}
