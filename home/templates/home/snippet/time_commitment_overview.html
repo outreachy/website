@@ -60,7 +60,7 @@
 											{% for term in terms %}
 											<li><a href="{{ term.school.university_website}}">{{ term.school.university_name}}</a></li>
 											<ul>
-												<li>{{ term.term_name }}</li>
+												<li>{% if term.academic_calendar %}<a href="{{ term.academic_calendar }}">{% endif %}{{ term.term_name }}{% if term.academic_calendar %}</a>{% endif %}</li>
 												<li>{{ term.start_date }} to {{ term.end_date }}</li>
 												{% if term.typical_credits %}
 												<li>Students typically register for {{ term.typical_credits }} credits during this term.</li>
