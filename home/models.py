@@ -2824,7 +2824,29 @@ class SchoolInformation(models.Model):
         query = models.Q()
         for school_match in matches:
             query = query | models.Q(school=school_match)
-        return results.filter(query).order_by('school__university_website', '-start_date')
+        return results.filter(query).order_by('school__university_website', 'start_date')
+
+    def acceptance_rates(self):
+        school_url = urlparse(self.university_website)
+        school_domain = school_url.netloc
+
+        # find the number of classmates applied this round
+        total_classmates = ApplicantApproval.objects.filter(
+                application_round=self.applicant.application_round,
+                school_information__university_website__icontains=school_domain).count()
+        accepted = ApplicantApproval.objects.filter(
+                approval_status=ApprovalStatus.ACCEPTED,
+                application_round=self.applicant.application_round,
+                school_information__university_website__icontains=school_domain).count()
+        rejected = ApplicantApproval.objects.filter(
+                approval_status=ApprovalStatus.REJECTED,
+                application_round=self.applicant.application_round,
+                school_information__university_website__icontains=school_domain).count()
+        pending = ApplicantApproval.objects.filter(
+                approval_status=ApprovalStatus.PENDING,
+                application_round=self.applicant.application_round,
+                school_information__university_website__icontains=school_domain).count()
+        return total_classmates, accepted, rejected, pending
 
     def print_terms(school_info):
         print(school_info.applicant.get_approval_status_display(), " ", school_info.applicant.applicant.public_name, " <", school_info.applicant.applicant.account.email, ">")
