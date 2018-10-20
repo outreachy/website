@@ -1,6 +1,6 @@
 Outreachy internship deadlines
 
-{{ current_round.appsclose }} is the deadline for making contributions and submitting your final application for Outreachy internships. If you haven't started a contribution yet, now is the time to pick a project, get in contact with the project mentor, and start working with them on your project contribution:
+{{ current_round.appsclose }} is the deadline for making contributions and submitting your final application for the {{ current_round.official_name }}. If you haven't started a contribution yet, now is the time to pick a project, get in contact with the project mentor, and start working with them on your project contribution:
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
 {% if late_projects %}
