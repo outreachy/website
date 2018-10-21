@@ -2860,7 +2860,7 @@ class SchoolInformation(models.Model):
                 schoolinformation__university_website__icontains=school_domain).count()
         return accepted / total_classmates * 100
 
-    def rejection_rate(self):
+    def time_rejection_rate(self):
         school_url = urlparse(self.university_website)
         school_domain = school_url.netloc
 
@@ -2868,6 +2868,7 @@ class SchoolInformation(models.Model):
         total_classmates = self.total_classmates()
         rejected = ApplicantApproval.objects.filter(
                 approval_status=ApprovalStatus.REJECTED,
+                reason_denied="TIME",
                 application_round=self.applicant.application_round,
                 schoolinformation__university_website__icontains=school_domain).count()
         return rejected / total_classmates * 100
