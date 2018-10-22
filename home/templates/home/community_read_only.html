@@ -358,7 +358,7 @@ If you are an Outreachy applicant, you should look over the <a href="{% url 'pro
 				<li>{% if community.newcommunity.approved_license %}Community licenses are approved.{% else %}WARNING: Community licenses are not approved. {{ community.newcommunity.unapproved_license_description }}{% endif %}</li>
 				<li>{% if community.newcommunity.no_proprietary_software %}Projects support free software only.{% else %}WARNING: Projects may support proprietary software. {{ community.newcommunity.proprietary_software_description }}{% endif %}</li>
 				<li>{% if community.newcommunity.approved_advertising %}Community does not advertise services of only one company.{% else %}WARNING: Community advertises services of only one company. {{ community.newcommunity.proprietary_software_description }}{% endif %}</li>
-				{% if community.newcommunity.goverance %}<li>Goverance: {{ community.newcommunity.goverance }}</li>{% endif %}
+				{% if community.newcommunity.governance %}<li>Governance: {{ community.newcommunity.governance }}</li>{% endif %}
 				{% if community.newcommunity.code_of_conduct %}<li>Code of Conduct: {{ community.newcommunity.code_of_conduct }}</li>{% endif %}
 				{% if community.newcommunity.cla %}<li>Code Licensing Agreement: {{ community.newcommunity.cla }}</li>{% endif %}
 				{% if community.newcommunity.dco %}<li>Developer Certificate of Origin: {{ community.newcommunity.dco }}</li>{% endif %}
