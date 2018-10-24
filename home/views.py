@@ -1570,7 +1570,7 @@ def get_contributors_with_upcoming_deadlines():
                 applicantapproval__application_round=current_round,
                 applicantapproval__approval_status=ApprovalStatus.APPROVED,
                 applicantapproval__contribution__project__deadline=Project.LATE).distinct()
-    return None
+    return []
 
 class ContributorsApplicationPeriodEndedReminder(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
     template_name = 'home/contributors_application_period_ended.html'
