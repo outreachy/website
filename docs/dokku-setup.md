@@ -174,20 +174,23 @@ Sending mass emails
 
 When you need to send a mass email manually, you can do so through the dokku interface to the Django shell. It's useful to run the commands under the test database, because it will simply print out the messages, rather than sending them. Make sure to migrate the test database to an updated version from the live site, using the instructions above.
 
-Then, ssh into the test server shell, and run the commands you want. In this example, we'll be sending the stock rejection email to all applicants who were rejected by the user 'sage' (and not rejected immediately after submitting their initial application).
+Then, ssh into the test server shell, and run the commands you want. In this example, we'll simulate clicking the "Contributor Deadline Email" button on the staff dashboard:
 
 ```
-$ ssh -t dokku@162.242.218.160 run test env --unset=SENTRY_DSN python manage.py shell
+$ ssh -t dokku@www.outreachy.org run test env --unset=SENTRY_DSN python manage.py shell
 Python 3.6.3 (default, Nov 14 2017, 17:29:48) 
 [GCC 5.4.0 20160609] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 (InteractiveConsole)
->>> from home.models import *
->>> from home.email import *
->>> current_round = RoundPage.objects.latest('internstarts')
->>> rejected = ApplicantApproval.objects.filter(application_round=current_round, approval_status=ApplicantApproval.REJECTED, pk__in=list(Version.objects.get_for_model(ApplicantApproval).filter(revision__user__username='sage').values_list('object_id', flat=True)))
->>> request = { 'scheme': 'https', 'get_host': 'www.outreachy.org' }
->>> for app in rejected:
-...     applicant_approval_status_changed(app, request)
+>>> from django.test import Client
+>>> from django.contrib.auth.models import User
+>>> c = Client(HTTP_HOST='test.outreachy.org') # set this to the domain you expect to be on
+>>> c.force_login(User.objects.filter(is_staff=True, comrade__isnull=False)[0])
+>>> c.post('/email/contributor-deadline-reminder/', secure=True)
+```
 
+If this is run on the test server, you should see lots of email bodies get printed; the live server will send them to their intended recipients, instead. Either way, if it worked, you should eventually see:
+
+```
+<HttpResponseRedirect status_code=302, "text/html; charset=utf-8", url="/dashboard/">
 ```
