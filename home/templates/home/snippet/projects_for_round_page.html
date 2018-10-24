@@ -1,6 +1,6 @@
 {% for project in projects %}
 	{% if project.needs_more_applicants and project.approval_status == project.APPROVED %}
-	<div class="card border border-success">
+	<div class="card border border-success" id="{{ project.project_round.community.slug}}-{{ project.slug }}">
 		<div class="card-header bg-success text-light">
 	{% elif project.approval_status != project.APPROVED %}
 	<div class="card border border-warning">
