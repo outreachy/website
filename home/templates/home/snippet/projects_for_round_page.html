@@ -3,10 +3,10 @@
 	<div class="card border border-success" id="{{ project.project_round.community.slug}}-{{ project.slug }}">
 		<div class="card-header bg-success text-light">
 	{% elif project.approval_status != project.APPROVED %}
-	<div class="card border border-warning">
+	<div class="card border border-warning" id="{{ project.project_round.community.slug}}-{{ project.slug }}">
 		<div class="card-header bg-warning text-light">
 	{% else %}
-	<div class="card border">
+	<div class="card border" id="{{ project.project_round.community.slug}}-{{ project.slug }}">
 		<div class="card-header bg-light">
 	{% endif %}
 		{% if project.approval_status != project.APPROVED %}{{ project.get_approval_status_display }} {% endif %}{{ project.project_round.community.name }} {% if project.deadline == project.CLOSED %}closed {% elif project.deadline == project.LATE %}extended deadline {% endif %}project #{{ forloop.counter }}
