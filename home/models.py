@@ -243,6 +243,26 @@ class RoundPage(Page):
         approved_participations = Participation.objects.filter(participating_round=self, approval_status=Participation.APPROVED).order_by('community__name')
         return [p.community for p in approved_participations]
 
+    def number_approved_communities_with_projects(self):
+        return Participation.objects.filter(participating_round=self,
+                approval_status=ApprovalStatus.APPROVED,
+                project__isnull=False).distinct().count()
+
+    def number_approved_projects(self):
+        return Project.objects.filter(project_round__participating_round=self,
+                approval_status=ApprovalStatus.APPROVED,
+                project_round__approval_status=ApprovalStatus.APPROVED).distinct().count()
+
+    def number_funded_interns(self):
+        participations = Participation.objects.filter(
+                participating_round=self,
+                approval_status=Participation.APPROVED,
+                project__isnull=False).distinct()
+        funded = 0
+        for p in participations:
+            funded += p.interns_funded()
+        return funded
+
     def is_mentor(self, user):
         return MentorApproval.objects.filter(
                 mentor__account=user,
@@ -371,6 +391,17 @@ class RoundPage(Page):
         skill_counter = self.get_common_skills_counter()
         return skill_counter.most_common(20)
 
+    def number_accepted_initial_applications(self):
+        return ApplicantApproval.objects.filter(
+                approval_status=ApplicantApproval.APPROVED,
+                application_round=self).count()
+
+    def number_contributors(self):
+        return ApplicantApproval.objects.filter(
+                application_round=self,
+                approval_status=ApprovalStatus.APPROVED,
+                contribution__isnull=False).distinct().count()
+
     def get_statistics_on_eligibility_check(self):
         count_all = ApplicantApproval.objects.filter(
                 application_round=self).count()
@@ -380,10 +411,6 @@ class RoundPage(Page):
         count_rejected_all = ApplicantApproval.objects.filter(
                 approval_status=ApplicantApproval.REJECTED,
                 application_round=self).count()
-        count_rejected_demographics = ApplicantApproval.objects.filter(
-                approval_status=ApplicantApproval.REJECTED,
-                reason_denied="DEMOGRAPHICS",
-                application_round=self).count()
         count_rejected_time = ApplicantApproval.objects.filter(
                 approval_status=ApplicantApproval.REJECTED,
                 reason_denied="TIME",
@@ -392,9 +419,13 @@ class RoundPage(Page):
                 approval_status=ApplicantApproval.REJECTED,
                 reason_denied="GENERAL",
                 application_round=self).count()
+        count_rejected_essay = ApplicantApproval.objects.filter(
+                approval_status=ApplicantApproval.REJECTED,
+                reason_denied_contains="ALIGNMENT",
+                application_round=self).count()
         if count_rejected_all == 0:
             return (count_all, count_approved, 0, 0, 0)
-        return (count_all, count_approved, count_rejected_demographics * 100 / count_rejected_all, count_rejected_time * 100 / count_rejected_all, count_rejected_general * 100 / count_rejected_all)
+        return (count_all, count_approved, count_rejected_essay * 100 / count_rejected_all, count_rejected_time * 100 / count_rejected_all, count_rejected_general * 100 / count_rejected_all)
 
     def get_countries_stats(self):
         all_apps = ApplicantApproval.objects.filter(
