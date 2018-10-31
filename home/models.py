@@ -122,6 +122,7 @@ class RoundPage(Page):
     lateprojects = models.DateField("Last date to add projects", blank=True, default='2017-10-16')
     appsclose = models.DateField("Date applications are due", blank=True, default='2017-10-23')
     appslate = models.DateField("Date extended applications are due", blank=True, default='2017-10-30')
+    mentor_intern_selection_deadline = models.DateField("Date mentors must select their intern by", default='2017-11-02')
     coordinator_funding_deadline = models.DateField("Date coordinators must mark funding sources for interns by", default='2017-11-03')
     internapproval = models.DateField("Date interns are approved by the Outreachy organizers", default='2017-11-05')
     internannounce = models.DateField("Date interns are announced", default='2017-11-09')
@@ -175,7 +176,7 @@ class RoundPage(Page):
         return(self.appsclose + datetime.timedelta(days=7))
     
     def InternSelectionDeadline(self):
-        return(self.appslate + datetime.timedelta(days=6))
+        return(self.mentor_intern_selection_deadline)
 
     def intern_agreement_deadline(self):
         return(self.internannounce + datetime.timedelta(days=7))
