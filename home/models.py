@@ -1112,6 +1112,15 @@ class Comrade(models.Model):
                 projects.append(a.project)
         return projects
 
+    def get_passed_projects_not_applied_to(self):
+        passed_deadlines = self.get_projects_with_passed_deadlines()
+        projects_applied_to = self.get_projects_applied_to()
+        really_passed_deadlines = []
+        for p in passed_deadlines:
+            if p not in projects_applied_to:
+                really_passed_deadlines.append(p)
+        return really_passed_deadlines
+
     def get_intern_selection(self):
         try:
             return InternSelection.objects.get(

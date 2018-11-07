@@ -12,7 +12,7 @@ Send contributor deadline reminder emails
 <p>Here how the email will look to each applicant:</p>
 
 {% for c in contributors %}
-{% with applications_close_local=c.applications_close_local applications_late_local=c.applications_late_local passed_deadlines=c.get_projects_with_passed_deadlines timezone=c.timezone comrade=c %}
+{% with applications_close_local=c.applications_close_local applications_late_local=c.applications_late_local passed_deadlines=c.get_passed_projects_not_applied_to timezone=c.timezone comrade=c %}
 <div class="card">
 <div class="card-body">
 <pre>
