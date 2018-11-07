@@ -32,9 +32,9 @@ Passed Deadlines
 
 Our records indicate you recorded a contribution but did not create an application for the following projects:
 
-{% for project in passed_deadlines %}{% if project not in comrade.get_projects_applied_to %}{{ project.project_round.community.name }} project "{{ project.short_title }}"
-Application deadline was {% if project.deadline == project.LATE %}{{ current_round.appslate }} 4pm UTC{% if comrade.timezone %} / {% load tz %}{% timezone comrade.timezone %}{{ comrade.get_local_late_application_deadline }}{% endtimezone %} {{ comrade.timezone }}{% endif %}{% else %}{{ current_round.appsclose }} 4pm UTC{% if comrade.timezone %} / {% load tz %}{% timezone comrade.timezone %}{{ comrade.get_local_application_deadline }}{% endtimezone %} {{ comrade.timezone }}{% endif %}{% endif %}{% endif %}
-{% if not forloop.last and project not in comrade.get_projects_applied_to %}
+{% for project in passed_deadlines %}{{ project.project_round.community.name }} project "{{ project.short_title }}"
+Application deadline was {% if project.deadline == project.LATE %}{{ current_round.appslate }} 4pm UTC{% if comrade.timezone %} / {% load tz %}{% timezone comrade.timezone %}{{ comrade.get_local_late_application_deadline }}{% endtimezone %} {{ comrade.timezone }}{% endif %}{% else %}{{ current_round.appsclose }} 4pm UTC{% if comrade.timezone %} / {% load tz %}{% timezone comrade.timezone %}{{ comrade.get_local_application_deadline }}{% endtimezone %} {{ comrade.timezone }}{% endif %}{% endif %}
+{% if not forloop.last %}
 {% endif %}{% endfor %}{% endif %}
 
 Thank you for participating in Outreachy! We hope that you've enjoyed contributing to Free and Open Source Software projects. Please sign up for the announcements mailing list to get an email when the interns are selected, and to help spread the word about Outreachy when the next round opens:
