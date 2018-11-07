@@ -1100,7 +1100,7 @@ class Comrade(models.Model):
             applicant = ApplicantApproval.objects.get(applicant = self,
                     application_round = current_round)
         except ApplicantApproval.DoesNotExist:
-            return None
+            return []
         applications = FinalApplication.objects.filter(applicant=applicant)
         projects = []
         for a in applications:
