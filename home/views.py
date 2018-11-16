@@ -1913,7 +1913,7 @@ def intern_in_good_standing(user):
                 organizer_approved = True,
                 in_good_standing = True,
                 )
-        if not internship.round().has_intern_announcement_deadline_passed:
+        if not internship.round().has_intern_announcement_deadline_passed():
             internship = None
     except InternSelection.DoesNotExist:
         internship = None
