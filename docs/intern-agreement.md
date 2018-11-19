@@ -2,7 +2,7 @@
 
 **Internship Terms of Participation**
 
-_last edited - September 17, 2018_
+_last edited - November 19, 2018_
 
 **Dear Participant:**
 
@@ -147,25 +147,20 @@ or injuries sustained by you that result from any negligence by Conservancy.
 
 You hereby represent, warrant, and agree that:
 
-(a) (i) you identify as a woman, trans man, or genderqueer person (including
-genderfluid or genderfree) or (ii) you are a resident or national of the United
-States of any gender who is Black/African American, Hispanic/Latin@,
-American Indian, Alaska Native, Native Hawaiian, or Pacific Islander;
-
-(b) you are eligible to work in the country or countries in which you will
+(a) you are eligible to work in the country or countries in which you will
 reside throughout the duration of the program;
 
-(c) you (i) are not a resident of Crimea, or a resident or national of Cuba,
+(b) you (i) are not a resident of Crimea, or a resident or national of Cuba,
 Iran, North Korea, or Syria, or (ii) you have disclosed that you are a national
 of Iran, North Korea, or Syria, participating in the Program to Conservancy
 and are not currently residing in one of these countries;
 
-(d) you are not a person or entity restricted by US export controls or
+(c) you are not a person or entity restricted by US export controls or
 sanctions programs;
 
-(e) you are or will be 18 years of age or older by December 4, 2018;
+(d) you are or will be 18 years of age or older by December 4, 2018;
 
-(f) (i) the contents of your Application and information you submitted for your
+(e) (i) the contents of your Application and information you submitted for your
 Initial Application, including your stated availability and time commitment to
 participate in the Program, are truthful and accurate or (ii) you corrected the
 contents of your Application and information you submitted for the Initial
