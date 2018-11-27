@@ -11,7 +11,7 @@ from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
 from django.db import models
 from django.forms import inlineformset_factory, ModelForm, modelform_factory, modelformset_factory, ValidationError, widgets
 from django.forms.models import BaseInlineFormSet, BaseModelFormSet
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, Http404
 from django.shortcuts import get_list_or_404
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -2436,6 +2436,29 @@ class MentorFirstPaymentNotification(LoginRequiredMixin, ComradeRequiredMixin, T
         for i in interns:
             email.notify_mentors_of_first_stipend(i, self.request)
         return redirect(reverse('dashboard'))
+
+class InitialMentorFeedbackUpdate(LoginRequiredMixin, UpdateView, reversion.views.RevisionMixin):
+    def get_object(self):
+        internship = intern_in_good_standing(get_object_or_404(User, username=self.kwargs['username']))
+        if not internship:
+            raise Http404("{} is not an intern in good standing".format(self.kwargs['username']))
+
+        if not internship.mentorrelationship_set.filter(mentor__mentor__account=self.request.user).exists():
+            raise PermissionDenied("You are not a mentor for this intern.")
+
+        try:
+            feedback = InitialMentorFeedback.objects.get(intern_selection=internship)
+            if not feedback.can_edit():
+                raise PermissionDenied("This feedback is already submitted and can't be updated right now.")
+            return feedback
+        except InitialMentorFeedback.DoesNotExist:
+            return InitialMentorFeedback(intern_selection=internship)
+
+    def form_valid(self, form):
+        feedback = form.save(commit=False)
+        feedback.allow_edits = False
+        feedback.save()
+        return redirect('dashboard')
 
 def alums_page(request):
     # Get all the older AlumInfo models (before we had round pages)

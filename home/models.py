@@ -3459,6 +3459,76 @@ class MentorRelationship(models.Model):
                 ('intern_selection', 'mentor'),
                 )
 
+class InitialMentorFeedback(models.Model):
+    intern_selection = models.OneToOneField(InternSelection)
+    allow_edits = models.BooleanField(editable=False)
+
+    in_contact = models.BooleanField(help_text="Has your intern been in contact to discuss how to approach their first tasks?")
+    asking_questions = models.BooleanField(help_text="Has your intern been asking questions about their first tasks?")
+    active_in_public = models.BooleanField(help_text="Has your intern been active on public project channels, such as the community's chat, forums, issue tracker, mailing list, etc?")
+    provided_onboarding = models.BooleanField(help_text="Have you provided documentation or other resources to help onboard your intern?")
+
+    NOT_SCHEDULED = ''
+    ONCE_DAILY = 'D'
+    MULTIPLE_WEEKLY = 'M'
+    ONCE_WEEKLY = 'W'
+    EVERY_OTHER_WEEK = 'B'
+    CHECKIN_FREQUENCY_CHOICES = (
+        (NOT_SCHEDULED, 'Not scheduled yet'),
+        (ONCE_DAILY, 'Once per day'),
+        (MULTIPLE_WEEKLY, 'Multiple times per week'),
+        (ONCE_WEEKLY, 'Once per week'),
+        (EVERY_OTHER_WEEK, 'Every other week'),
+    )
+    checkin_frequency = models.CharField(max_length=1, choices=CHECKIN_FREQUENCY_CHOICES, default=NOT_SCHEDULED, help_text="How often do you have a real-time chat, video conference, or phone conversation to check in with your intern's progress on tasks?")
+
+    last_contact = models.DateField(help_text="What was the last date you were in contact with your intern?")
+
+    HOURS_1 = '1H'
+    HOURS_3 = '3H'
+    HOURS_6 = '6H'
+    HOURS_12 = '12H'
+    DAYS_1 = '1D'
+    DAYS_2 = '2D'
+    DAYS_4 = '4D'
+    DAYS_6 = '6D'
+    LONGER = '>7D'
+    RESPONSE_TIME_CHOICES = (
+        (HOURS_1, '1 hour'),
+        (HOURS_3, '3 hours'),
+        (HOURS_6, '6 hours'),
+        (HOURS_12, '12 hours'),
+        (DAYS_1, '1 day'),
+        (DAYS_2, '2-3 days'),
+        (DAYS_4, '4-5 days'),
+        (DAYS_6, '6-7 days'),
+        (LONGER, '> 7 days'),
+    )
+    intern_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, help_text="On average, how long does it take for your intern to respond to your questions or feedback?")
+    mentor_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, help_text="On average, how long does it take for you to respond to your intern's questions or requests for feedback?")
+
+    progress_report = models.TextField(help_text="Please provide a paragraph describing your intern's progress on establishing communication with you, and ramping up on their first tasks.")
+    full_time_effort = models.BooleanField(help_text="Do you believe your Outreachy intern is putting in a full-time, 40 hours a week effort into the internship?")
+    payment_approved = models.BooleanField(help_text="Should your Outreachy intern be paid the initial $1,000 payment? Please base your answer on whether your intern has established communication with their mentors and has start learning how to tackle their first tasks.")
+    request_extension = models.BooleanField(help_text="Sometimes interns do not put in a full-time effort. In this case, one of the options is to delay payment of their stipend and extend their internship a specific number of weeks. You will be asked to re-evaluate your intern after the extension is done.")
+    extension_date = models.DateField(help_text="If you want to extend the internship, please pick a date when you will be asked to update your intern's initial feedback and authorize payment. Internships can be extended for up to five weeks. We don't recommend extending an internship for more than 1 week at initial feedback.")
+
+    def can_edit(self):
+        if not self.allow_edits:
+            return False
+
+        deadline = datetime.datetime.combine(self.intern_selection.initial_feedback_deadline, DEADLINE_TIME)
+        feedback_open = deadline - datetime.timedelta(days=4)
+        return datetime.datetime.now() >= feedback_open
+
+    def clean(self):
+        if self.request_extension and self.extension_date is not None:
+            # should not be more than five weeks from the initial feedback deadline in the RoundPage
+            base = self.intern_selection.round().initialfeedback
+            limit = base + datetime.timedelta(weeks=5)
+            if not (base <= self.extension_date <= limit):
+                raise ValidationError({'extension_date': "Extension date must be between {} and {}".format(base, limit)})
+
 # Track each person we sent a survey to
 class AlumSurveyTracker(models.Model):
     # Track the alums we sent a survey invitation to

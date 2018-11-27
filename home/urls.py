@@ -60,6 +60,7 @@ urlpatterns = [
     url(r'^dashboard/review-applications/rate-essay/(?P<rating>[^/]+)/(?P<applicant_username>[^/]+)/$', views.EssayRating.as_view(), name='essay-rating'),
     url(r'^dashboard/review-applications/change-red-flag/(?P<flag>[^/]+)/(?P<flag_value>[^/]+)/(?P<applicant_username>[^/]+)/$', views.ChangeRedFlag.as_view(), name='change-red-flag'),
     url(r'^dashboard/review-applications/set-owner/(?P<owner>[^/]+)/(?P<applicant_username>[^/]+)/$', views.SetReviewOwner.as_view(), name='set-review-owner'),
+    url(r'^dashboard/feedback/mentor/initial/(?P<username>[^/]+)/$', views.InitialMentorFeedbackUpdate.as_view(), name='initial-mentor-feedback'),
     url(r'^dashboard/trusted-volunteers/$', views.TrustedVolunteersListView.as_view(), name='trusted-volunteers-list'),
     url(r'^eligibility/$', views.EligibilityUpdateView.as_view(), name='eligibility'),
     url(r'^eligibility/essay-revision/(?P<applicant_username>[^/]+)/$', views.BarriersToParticipationUpdate.as_view(), name='essay-revision'),

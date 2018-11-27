@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}
+Initial mentor feedback
+{% endblock %}
+
+{% block content %}
+<h1>Initial mentor feedback</h1>
+
+<form method="post" action="">
+{% csrf_token %}
+        {% include "bootstrap_card_form.html" with form=form only %}
+<input type="submit" class="btn btn-block btn-primary" value="Submit feedback" />
+</form>
+
+{% endblock %}
