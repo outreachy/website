@@ -1,0 +1,68 @@
+Outreachy week 1: Assignments for mentors & interns
+
+Welcome to the first week of your Outreachy internship! We’re so happy to support you through this journey.
+
+This is the first of several messages Outreachy organizers will send throughout the internship period. Each message will have a section for interns and a section for mentors. We hope this transparency provides better understanding of expectations and goals for both parties and ultimately creates a successful internship!
+
+We have some goals and assignments for both mentors and interns. Please read the sections below to ensure that the first internship feedback (due on {{ current_round.initialfeedback }}) is successful. Contact us at organizers@outreachy.org anytime with questions or comments.
+
+Mentors
+-------
+
+Week 1 goals:
+
+ - Set up a weekly real-time conversation to check in. This could take place either in chat, phone, or video chat.
+ - Let your mentee know what day and times you'll be available to answer questions
+ - Be responsive to questions from your intern
+ - Send your intern documentation or other resources to help them learn more about your community and their first tasks (you may need to create it if it doesn't exist)
+ - Spend time with your intern explaining community norms (contribution style requirements, where to ask questions, who is working on this part of the project, etc)
+
+Week 1 tips:
+
+ - contact Outreachy organizers organizers@outreachy.org if your intern hasn't been in contact with you about their first tasks by the end of week one
+ - if you need any help or advice, you can email the mentors mailing list, or ask on the private mentors stream on the Outreachy Zulip chat
+ - you've got this!
+
+Interns
+-------
+
+Save the date for an introduction chat and Q&A! We want to let you ask any questions of Outreachy organizers, and give you time to connect to other Outreachy interns. We know some of you may have unreliable internet, so we offer both a text chat and a video chat. The two chats are at different times to try and accomodate everyone's timezone. Join whichever works for you!
+
+The text chat will take place on {{ current_round.week_two_chat_text_date|date:"D M d, Y" }} {{ current_round.week_two_chat_text_date|time:"H:i" }} UTC on {{ current_round.week_two_chat_text_url }}
+
+The video chat will take place on {{ current_round.week_two_chat_video_date|date:"D M d, Y" }} {{ current_round.week_two_chat_video_date|time:"H:i" }} UTC at {{ current_round.week_two_chat_video_url }}
+
+Week 1 goals:
+
+ - Get in touch with your mentor
+ - Discuss how to approach your first tasks
+ - Ask your mentor questions about your project
+ - Join your free and open source software community's public community chat channels and introduce yourself
+ - Sign up for the Outreachy Zulip chat (you should have received an email invitation)
+ - Set up your blog, and link to it on your Outreachy profile: https://outreachy.org/account
+ - Write a blog post about your experience applying to Outreachy (see guidelines below)
+
+Week 1 tips:
+
+ - contact Outreachy organizers organizers@outreachy.org if you can't get a hold of your mentor after 2 days of trying to reach them and/or if your mentor is being unresponsive to questions
+ - you've got this!
+
+Week 1 Blog
+-----------
+
+The goal of this blog post is to explain to someone who is interested in applying for Outreachy what it's like to apply, and give them tips for making the most out of the application process. A secondary goal is to help Outreachy organizers fix anything that is confusing or unwelcoming about our application process. (If you don't feel comfortable putting feedback about the process in a public post, you can always email organizers@outreachy.org with your feedback.)
+
+Here's some prompts that could get you started writing this blog post:
+
+ - What motivated you to apply to Outreachy?
+ - What were you excited about when thinking about applying? 
+ - What made you passionate about the project you applied to?
+ - What was confusing about the Outreachy application process? 
+ - How did you find information or who did you ask questions of when you were stuck?
+ - How did you mentor help you during the application process? 
+ - What would you tell someone who is worried about applying to Outreachy? 
+
+Again, if you have any questions, please contact us!
+
+Outreachy Organizers
+{% include 'home/email/footer-applicant.txt' %}

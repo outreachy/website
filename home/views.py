@@ -2412,6 +2412,35 @@ class InternNotification(LoginRequiredMixin, ComradeRequiredMixin, TemplateView)
             email.notify_accepted_intern(i, self.request)
         return redirect(reverse('dashboard'))
 
+class InternWeekOne(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
+    template_name = 'home/internship_week_one.html'
+
+    def get_context_data(self, **kwargs):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are authorized to send reminder emails.")
+
+        # FIXME for future emails: How do we find the latest round with interns selected?
+        # We have to be careful when the rounds overlap
+        # (e.g. internship just ending while selection for next round has begun)
+        current_round = RoundPage.objects.latest('internstarts')
+        interns = current_round.get_approved_intern_selections()
+
+        context = super(InternWeekOne, self).get_context_data(**kwargs)
+        context.update({
+            'interns': interns,
+            })
+        return context
+
+    def post(self, request, *args, **kwargs):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+        current_round = RoundPage.objects.latest('internstarts')
+        interns = current_round.get_approved_intern_selections()
+
+        for i in interns:
+            email.week_one_email(i, self.request)
+        return redirect(reverse('dashboard'))
+
 class MentorFirstPaymentNotification(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
     template_name = 'home/mentor_intern_start_reminder.html'
 

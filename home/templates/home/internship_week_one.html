@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}
+Send internship week one emails
+{% endblock %}
+
+{% block content %}
+<p>Internship week 1: You're about to send an email to all approved Outreachy interns.</p>
+
+<p>The email will be sent to {{ interns|length }} applicants.</p>
+
+<p>Here how the email will look to each intern:</p>
+
+{% for i in interns %}
+{% with intern_selection=i coordinator_names=i.project.project_round.community.get_coordinator_names comrade=i.applicant.applicant current_round=i.project.project_round.participating_round mentors=i.mentors.all coordinator_emails=i.project.project_round.community.get_coordinator_email_list %}
+<div class="card">
+<div class="card-body">
+<pre>
+To: {{ comrade.email_address }}, {% for m in mentors %}{{ m.mentor.email_address }}, {% endfor %}{% for email in coordinator_emails %}{{email }}, {% endfor %}
+Subject: {% include 'home/email/internship-week-one.txt' %}
+</pre>
+</div>
+</div>
+{% endwith %}
+{% endfor %}
+
+<p><form action="" method="post">
+    {% csrf_token %}
+    <input class="btn btn-success" type="submit" value="Confirm" />
+</form></p>
+{% endblock %}
