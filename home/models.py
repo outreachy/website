@@ -128,7 +128,7 @@ class RoundPage(Page):
     internannounce = models.DateField("Date interns are announced", default='2017-11-09')
     internstarts = models.DateField("Date internships start", default='2017-12-05')
     week_two_chat_text_date = models.DateTimeField("Date and time of outreachy week two chat (text only)", default='2018-12-10 13:00Z')
-    week_two_chat_video_date = models.DateTimeField("Date and time of outreachy week two chat (video only)", default='2017-12-10 16:00Z')
+    week_two_chat_video_date = models.DateTimeField("Date and time of outreachy week two chat (video only)", default='2018-12-10 16:00Z')
     week_two_chat_text_url = models.URLField(blank=True, verbose_name="URL of the real-time text chat")
     week_two_chat_video_url = models.URLField(blank=True, verbose_name="URL of the video chat")
     initialfeedback = models.DateField("Date initial feedback is due", blank=True, default='2017-12-20')
