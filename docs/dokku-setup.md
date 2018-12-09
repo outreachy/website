@@ -194,3 +194,32 @@ If this is run on the test server, you should see lots of email bodies get print
 ```
 <HttpResponseRedirect status_code=302, "text/html; charset=utf-8", url="/dashboard/">
 ```
+
+Sending mass emails manually
+----------------------------
+
+```
+$ ssh -t dokku@www.outreachy.org run www env --unset=SENTRY_DSN python manage.py shell
+>>> from home.models import *
+>>> from django.core.mail import send_mail
+>>> current_round = RoundPage.objects.latest('internstarts')
+>>> interns = current_round.get_approved_intern_selections()
+>>> request = { 'scheme': 'https', 'get_host': 'www.outreachy.org' }
+>>> subject = '[Outreachy] Important information'
+>>> body = '''This is a multiline message.
+... 
+... This is the second line.
+... 
+... This is the third line.
+... 
+... This is the final line.
+... 
+... Sage Sharp
+... Outreachy Organizer'''
+>>> for i in interns:
+...     emails = [ i.applicant.applicant.email_address() ]
+...     for m in i.mentors.all():
+...             emails.append(m.mentor.email_address())
+...     send_mail(message=body.strip(), subject=subject.strip(), recipient_list=emails, from_email=Address("Outreachy Organizers", "organizers", "outreachy.org"))
+... 
+```
