@@ -3521,7 +3521,12 @@ class InitialMentorFeedback(models.Model):
 
     progress_report = models.TextField(help_text="Please provide a paragraph describing your intern's progress on establishing communication with you, and ramping up on their first tasks.")
     full_time_effort = models.BooleanField(help_text="Do you believe your Outreachy intern is putting in a full-time, 40 hours a week effort into the internship?")
+
     payment_approved = models.BooleanField(help_text="Should your Outreachy intern be paid the initial $1,000 payment? Please base your answer on whether your intern has established communication with their mentors and has start learning how to tackle their first tasks.")
+    # FIXME - send email to mentors and interns when organizers approve their payment and send documentation off to Conservancy
+    organizer_payment_approved = models.NullBooleanField(help_text="Outreachy organizers approve or do not approve to pay this intern.",
+            default=None)
+
     request_extension = models.BooleanField(help_text="Sometimes interns do not put in a full-time effort. In this case, one of the options is to delay payment of their stipend and extend their internship a specific number of weeks. You will be asked to re-evaluate your intern after the extension is done.")
     extension_date = models.DateField(help_text="If you want to extend the internship, please pick a date when you will be asked to update your intern's initial feedback and authorize payment. Internships can be extended for up to five weeks. We don't recommend extending an internship for more than 1 week at initial feedback.")
 
