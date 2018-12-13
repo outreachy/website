@@ -232,6 +232,9 @@ class RoundPage(Page):
     def has_intern_announcement_deadline_passed(self):
         return has_deadline_passed(self.internannounce)
 
+    def has_internship_start_date_passed(self):
+        return has_deadline_passed(self.internstarts)
+
     def gsoc_round(self):
         # The internships would start before August
         # for rounds aligned with GSoC
@@ -997,6 +1000,14 @@ class Comrade(models.Model):
 
     def get_editable_mentored_projects(self):
         current_round = RoundPage.objects.latest('internstarts')
+
+        # It's possible that some intern selections may not work out,
+        # and a mentor will have to select another intern
+        # after the intern announcement date.
+        # Show their project until the day after their intern starts.
+        if current_round.has_internship_start_date_passed():
+            return None
+
         # Get all projects where they're an approved mentor
         # where the project is pending,
         # and the community is approved or pending for the current round.
