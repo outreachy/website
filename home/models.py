@@ -3374,8 +3374,8 @@ class InternSelection(models.Model):
     survey_opt_out = models.BooleanField(default=False)
     in_good_standing = models.BooleanField(default=True)
 
-    initial_feedback_opens = models.DateField("Date initial feedback form opens", blank=True)
-    initial_feedback_due = models.DateField("Date initial feedback form opens", blank=True)
+    initial_feedback_opens = models.DateField("Date initial feedback form opens (typically 7 days before the initial feedback deadline)", blank=True)
+    initial_feedback_due = models.DateField("Date initial feedback form due", blank=True)
 
     class Meta:
         unique_together = (
