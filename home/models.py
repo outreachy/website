@@ -3459,6 +3459,18 @@ class MentorRelationship(models.Model):
                 ('intern_selection', 'mentor'),
                 )
 
+# There shouldn't be a need to record which mentor filled out the form.
+# The revision control on the object should store which Django user made the changes.
+#
+# We can dig out the latest feedback version
+# (assuming self references the InitialMentorFeedback object):
+# from reversion.models import Version
+# versions = Version.objects.get_for_object(self)
+# print('On {:%Y-%m-%d at %I:%M%p} %u wrote:\n{}'.format(versions[0].revision.date_created, versions[0].revision.user))
+#
+# This also allows us to keep the feedback around, even if a mentor withdraws from the project.
+# As long as their Django user account is intact, the feedback should remain intact.
+# This is important to keep around for Conservancy record keeping.
 class InitialMentorFeedback(models.Model):
     intern_selection = models.OneToOneField(InternSelection)
     allow_edits = models.BooleanField(editable=False)
