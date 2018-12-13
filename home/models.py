@@ -3374,6 +3374,9 @@ class InternSelection(models.Model):
     survey_opt_out = models.BooleanField(default=False)
     in_good_standing = models.BooleanField(default=True)
 
+    initial_feedback_opens = models.DateField("Date initial feedback form opens", blank=True)
+    initial_feedback_due = models.DateField("Date initial feedback form opens", blank=True)
+
     class Meta:
         unique_together = (
                 ('applicant', 'project'),
@@ -3557,9 +3560,10 @@ class InitialMentorFeedback(models.Model):
         if not self.allow_edits:
             return False
 
-        deadline = datetime.datetime.combine(self.intern_selection.initial_feedback_deadline, DEADLINE_TIME)
-        feedback_open = deadline - datetime.timedelta(days=4)
-        return datetime.datetime.now() >= feedback_open
+        # XXX: I guess we open the feedback form at 4pm UTC?
+        if has_deadline_passed(self.intern_selection.initial_feedback_opens):
+            return True
+        return False
 
     def clean(self):
         if self.request_extension and self.extension_date is not None:
