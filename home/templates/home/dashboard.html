@@ -54,15 +54,15 @@ Dashboard
 	{% include "home/snippet/dashboard_intern.html" %}
 {% endif %}
 
+{% if mentor_relationships %}
+	{% include "home/snippet/dashboard_mentor.html" %}
+{% endif %}
+
 {% with mentored_projects=request.user.comrade.get_editable_mentored_projects %}
 	{% if mentored_projects %}
 		{% include "home/snippet/dashboard_mentor_projects.html" %}
 	{% endif %}
 {% endwith %}
-
-{% if mentor_relationships %}
-	{% include "home/snippet/dashboard_mentor.html" %}
-{% endif %}
 
 {% if groups %}
 	<h1 id="actions">Dashboard</h1>
