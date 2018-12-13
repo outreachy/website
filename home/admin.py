@@ -21,6 +21,7 @@ from .models import CoordinatorApproval
 from .models import EmploymentTimeCommitment
 from .models import FinalApplication
 from .models import InternSelection
+from .models import InitialMentorFeedback
 from .models import MentorApproval
 from .models import MentorRelationship
 from .models import NewCommunity
@@ -454,6 +455,24 @@ class InternSelectionAdmin(admin.ModelAdmin):
             'mentors__mentor__account__email',
             )
 
+class InitialMentorFeedbackAdmin(reversion.admin.VersionAdmin):
+    list_display = (
+            'intern_name',
+            'community_name',
+            'project_name',
+            'round',
+            )
+    list_filter = (
+            'intern_selection__project__project_round__participating_round',
+            'intern_selection__project__project_round__community__name',
+            )
+    search_fields = (
+            'intern_selection__applicant__applicant__public_name',
+            'intern_selection__applicant__applicant__legal_name',
+            '=intern_selection__applicant__applicant__account__username',
+            '=intern_selection__applicant__applicant__account__email',
+            )
+
 admin.site.unregister(User)
 admin.site.register(User, ComradeAdmin)
 
@@ -468,6 +487,7 @@ admin.site.register(CoordinatorApproval, CoordinatorApprovalAdmin)
 admin.site.register(Contribution, ContributionAdmin)
 admin.site.register(FinalApplication, FinalApplicationAdmin)
 admin.site.register(InternSelection, InternSelectionAdmin)
+admin.site.register(InitialMentorFeedback, InitialMentorFeedbackAdmin)
 admin.site.register(MentorApproval, MentorApprovalAdmin)
 admin.site.register(MentorRelationship, MentorRelationshipAdmin)
 admin.site.register(NewCommunity, CommunityAdmin)

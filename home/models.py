@@ -3525,6 +3525,18 @@ class InitialMentorFeedback(models.Model):
     request_extension = models.BooleanField(help_text="Sometimes interns do not put in a full-time effort. In this case, one of the options is to delay payment of their stipend and extend their internship a specific number of weeks. You will be asked to re-evaluate your intern after the extension is done.")
     extension_date = models.DateField(help_text="If you want to extend the internship, please pick a date when you will be asked to update your intern's initial feedback and authorize payment. Internships can be extended for up to five weeks. We don't recommend extending an internship for more than 1 week at initial feedback.")
 
+    def intern_name(self):
+        return self.intern_selection.intern_name()
+
+    def round(self):
+        return self.intern_selection.round()
+
+    def community_name(self):
+        return self.intern_selection.community_name()
+
+    def project_name(self):
+        return self.intern_selection.project_name()
+
     def can_edit(self):
         if not self.allow_edits:
             return False
