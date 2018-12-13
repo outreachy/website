@@ -15,8 +15,9 @@ You can also <a href="{% url 'community-cfp' %}#mentor">submit another project</
 	You can also see the list of all applicants to the communities you're mentoring for:
 	</p>
 	{% endif %}
+	<ul>
 	{% for c, projects_list in communities %}
-		<li>{{ c.name }}:<a href="{% url 'community-applicants' round_slug=current_round.slug community_slug=c.slug  %}">see applicants</a> or <a href="{% url 'community-read-only' community_slug=c.slug %}">submit another project</a> or <a href="{% url 'community-landing' round_slug=current_round.slug slug=c.slug %}">view the community projects page applicants see</a>
+		<li>{{ c.name }}: <a href="{% url 'community-applicants' round_slug=current_round.slug community_slug=c.slug  %}">see applicants</a> or <a href="{% url 'community-read-only' community_slug=c.slug %}">submit another project</a> or <a href="{% url 'community-landing' round_slug=current_round.slug slug=c.slug %}">view the community projects page applicants see</a></li>
 	{% endfor %}
 	</ul>
 {% endfor %}
