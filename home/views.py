@@ -2097,8 +2097,10 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, FormView):
         intern_selection, was_intern_selection_created = InternSelection.objects.get_or_create(
                 applicant=self.applicant,
                 project=self.project,
+                intern_starts=self.project.project_round.participating_round.internstarts,
                 initial_feedback_opens=self.project.project_round.participating_round.initialfeedback - datetime.timedelta(days=7),
                 initial_feedback_due=self.project.project_round.participating_round.initialfeedback,
+                intern_ends=self.project.project_round.participating_round.internends,
                 )
         signed_contract = form['contract'].save(commit=False)
         signed_contract.date_signed = datetime.now(timezone.utc)
