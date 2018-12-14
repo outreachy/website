@@ -11,8 +11,6 @@ class InternSelectionTestCase(TestCase):
             with self.subTest(mentors_count=mentors_count):
                 internselection = InternSelectionFactory(
                     active=True,
-                    applicant__approval_status=models.ApprovalStatus.APPROVED,
-                    mentors__mentor__approval_status=models.ApprovalStatus.APPROVED,
                     mentors=mentors_count,
                 )
                 mentors = list(internselection.mentors.all())

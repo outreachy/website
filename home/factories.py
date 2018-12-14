@@ -223,8 +223,6 @@ class InternSelectionFactory(factory.django.DjangoModelFactory):
 
         active = factory.Trait(
             # checked by home.views.intern_in_good_standing()
-            project__approval_status=models.ApprovalStatus.APPROVED,
-            project__project_round__approval_status=models.ApprovalStatus.APPROVED,
             organizer_approved=True,
             in_good_standing=True,
 
@@ -233,11 +231,18 @@ class InternSelectionFactory(factory.django.DjangoModelFactory):
             #mentors=1, # the post_generation function is not called if this is set
         )
 
+    # set all the approval_status fields to APPROVED, because an
+    # InternSelection object can only be created if
+    # home.views.set_project_and_applicant succeeds
+
     applicant = factory.SubFactory(ApplicantApprovalFactory,
         application_round=factory.SelfAttribute('..round'),
+        approval_status=models.ApprovalStatus.APPROVED,
     )
     project = factory.SubFactory(ProjectFactory,
         project_round__participating_round=factory.SelfAttribute('...round'),
+        approval_status=models.ApprovalStatus.APPROVED,
+        project_round__approval_status=models.ApprovalStatus.APPROVED,
     )
 
     @factory.post_generation
@@ -249,12 +254,17 @@ class InternSelectionFactory(factory.django.DjangoModelFactory):
         if not create:
             return
 
+        defaults = {
+            'mentor__approval_status': models.ApprovalStatus.APPROVED,
+        }
+        defaults.update(kwargs)
+
         # allow mentors=3 to generate 3 new mentors
         for _ in range(extracted):
             MentorRelationshipFactory.create(
                 intern_selection=self,
                 mentor__project=self.project,
-                **kwargs
+                **defaults
             )
 
 class MentorRelationshipFactory(factory.django.DjangoModelFactory):
