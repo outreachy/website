@@ -3510,7 +3510,7 @@ class MentorRelationship(models.Model):
 # This is important to keep around for Conservancy record keeping.
 class InitialMentorFeedback(models.Model):
     intern_selection = models.OneToOneField(InternSelection)
-    allow_edits = models.BooleanField(editable=False)
+    allow_edits = models.BooleanField()
 
     in_contact = models.BooleanField(verbose_name="Has your intern been in contact to discuss how to approach their first tasks?")
     asking_questions = models.BooleanField(verbose_name="Has your intern been asking questions about their first tasks?")
