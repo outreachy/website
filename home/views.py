@@ -2032,7 +2032,7 @@ def set_project_and_applicant(self, current_round):
             application_round=current_round)
 
 # Passed round_slug, community_slug, project_slug, applicant_username
-class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, FormView):
+class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, FormView, reversion.views.RevisionMixin):
     form_class = InternSelectionForm
     template_name = 'home/internselection_form.html'
 
@@ -2128,7 +2128,7 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, FormView):
             }) + "#rating"
 
 # Passed round_slug, community_slug, project_slug, applicant_username
-class InternRemoval(LoginRequiredMixin, ComradeRequiredMixin, DeleteView):
+class InternRemoval(LoginRequiredMixin, ComradeRequiredMixin, DeleteView, reversion.views.RevisionMixin):
     model = InternSelection
     template_name = 'home/intern_removal_form.html'
 
@@ -2224,7 +2224,7 @@ class MentorResignation(LoginRequiredMixin, ComradeRequiredMixin, DeleteView):
             'project_slug': self.kwargs['project_slug'],
             }) + "#rating"
 
-class InternFund(LoginRequiredMixin, ComradeRequiredMixin, View):
+class InternFund(LoginRequiredMixin, ComradeRequiredMixin, View, reversion.views.RevisionMixin):
     def post(self, request, *args, **kwargs):
         username = kwargs['applicant_username']
         current_round = RoundPage.objects.latest('internstarts')
@@ -2267,7 +2267,7 @@ class InternFund(LoginRequiredMixin, ComradeRequiredMixin, View):
             'community_slug': kwargs['community_slug'],
             }) + "#interns")
 
-class InternApprove(LoginRequiredMixin, ComradeRequiredMixin, View):
+class InternApprove(LoginRequiredMixin, ComradeRequiredMixin, View, reversion.views.RevisionMixin):
     def post(self, request, *args, **kwargs):
         username = kwargs['applicant_username']
         current_round = RoundPage.objects.latest('internstarts')
@@ -2296,7 +2296,7 @@ class InternApprove(LoginRequiredMixin, ComradeRequiredMixin, View):
             project=self.intern_selection.project.slug,
             applicant=self.intern_selection.applicant.applicant.pk))
 
-class AlumStanding(LoginRequiredMixin, ComradeRequiredMixin, View):
+class AlumStanding(LoginRequiredMixin, ComradeRequiredMixin, View, reversion.views.RevisionMixin):
     def post(self, request, *args, **kwargs):
         print("AlumStanding", kwargs['standing'])
         # Only allow approved organizers to approve interns

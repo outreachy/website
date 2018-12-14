@@ -434,7 +434,7 @@ class SignedContractAdmin(admin.ModelAdmin):
             'date_signed',
             )
 
-class InternSelectionAdmin(admin.ModelAdmin):
+class InternSelectionAdmin(reversion.admin.VersionAdmin):
     list_display = (
             'round',
             'community_name',
