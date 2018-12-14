@@ -2695,8 +2695,8 @@ class TimeCommitmentSummary(models.Model):
 
 class VolunteerTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
-    start_date = models.DateField(help_text="Date your volunteer time commitments start. Use YYYY-MM-DD format.")
-    end_date = models.DateField(help_text="Date your volunteer time commitments end. Use YYYY-MM-DD format.")
+    start_date = models.DateField(help_text="Date your volunteer time commitments start.")
+    end_date = models.DateField(help_text="Date your volunteer time commitments end.")
     hours_per_week = models.IntegerField(
             help_text="Maximum hours per week spent volunteering.",
             validators=[validators.MinValueValidator(1)],
@@ -2713,8 +2713,8 @@ class VolunteerTimeCommitment(models.Model):
 
 class EmploymentTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
-    start_date = models.DateField(help_text="Start date of employment period. Use YYYY-MM-DD format.")
-    end_date = models.DateField(help_text="End date of employment period. Use YYYY-MM-DD format.")
+    start_date = models.DateField(help_text="Start date of employment period.")
+    end_date = models.DateField(help_text="End date of employment period.")
     hours_per_week = models.IntegerField(
             help_text="Number of hours per week required by your employment contract",
             validators=[validators.MinValueValidator(1)],
@@ -2729,8 +2729,8 @@ class EmploymentTimeCommitment(models.Model):
 
 class NonCollegeSchoolTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
-    start_date = models.DateField(help_text="Date your coding school or online course starts. Use YYYY-MM-DD format.")
-    end_date = models.DateField(help_text="Date your coding school or online course ends. Use YYYY-MM-DD format.")
+    start_date = models.DateField(help_text="Date your coding school or online course starts.")
+    end_date = models.DateField(help_text="Date your coding school or online course ends.")
     hours_per_week = models.IntegerField(
             help_text="Maximum hours per week spent on coursework, exercises, homework, and studying for this course.",
             validators=[validators.MinValueValidator(1)],
@@ -2766,11 +2766,11 @@ class OfficialSchoolTerm(models.Model):
             help_text="If necessary, save a file to a cloud hosting service and add the link to it here.")
 
     start_date = models.DateField(
-            verbose_name="Date classes start. Use YYYY-MM-DD format.",
+            verbose_name="Date classes start.",
             help_text="What is the first possible day of classes for all students?<br>If students who are in different school years or different semester numbers start classes on different dates, use the first possible date that students in that year or semester start classes.<br>If you do not know when the term will start, use the start date of that term from last year.")
 
     end_date = models.DateField(
-            verbose_name="Date all exams end. Use YYYY-MM-DD format.",
+            verbose_name="Date all exams end.",
             help_text="This is the date the university advertises for the last possible date of any exam for any student in the semester.")
 
     typical_credits = models.IntegerField(
@@ -2788,11 +2788,11 @@ class SchoolTimeCommitment(models.Model):
             help_text="If your university uses term names (e.g. Winter 2018 term of your Sophomore year), enter your current term name, year in college, and term year. If your university uses term numbers (e.g. 7th semester), enter the term number.")
     
     start_date = models.DateField(
-            verbose_name="Date classes start. Use YYYY-MM-DD format.",
+            verbose_name="Date classes start.",
             help_text="What is the first possible day of classes for all students?<br>If you started this term late (or will start this term late), use the date that classes start for all students, not the late registration date.<br>If students who are in different school years or different semester numbers start classes on different dates, use the first possible date that students in your year or semester start classes.<br>If you do not know when the term will start, use the start date of that term from last year.")
     
     end_date = models.DateField(
-            verbose_name="Date all exams end. Use YYYY-MM-DD format.",
+            verbose_name="Date all exams end.",
             help_text="This is the date your university advertises for the last possible date of any exam for any student in your semester. Use the last possible exam date, even if your personal exams end sooner.")
     
     typical_credits = models.IntegerField(
@@ -3124,11 +3124,11 @@ class InitialApplicationReview(models.Model):
 #            help_text="If your university uses term names (e.g. Winter 2018 term of your Sophomore year), enter your current term name, year in college, and term year. If your university uses term numbers (e.g. 7th semester), enter the term number.")
 #
 #    start_date = models.DateField(
-#            verbose_name="Date classes start. Use YYYY-MM-DD format.",
+#            verbose_name="Date classes start.",
 #            help_text="What is the first possible day of classes for all students?<br>If you started this term late (or will start this term late), use the date that classes start for all students, not the late registration date.<br>If students who are in different school years or different semester numbers start classes on different dates, use the first possible date that students in your year or semester start classes.<br>If you do not know when the term will start, use the start date of that term from last year.")
 #
 #    end_date = models.DateField(
-#            verbose_name="Date all exams end. Use YYYY-MM-DD format.",
+#            verbose_name="Date all exams end.",
 #            help_text="This is the date your university advertises for the last possible date of any exam for any student in your semester. Use the last possible exam date, even if your personal exams end sooner.")
     
 # --------------------------------------------------------------------------- #
@@ -3139,8 +3139,8 @@ class Contribution(models.Model):
     applicant = models.ForeignKey(ApplicantApproval)
     project = models.ForeignKey(Project)
 
-    date_started = models.DateField(verbose_name="Date contribution was started (in YYYY-MM-DD format)")
-    date_merged = models.DateField(verbose_name="Date contribution was accepted or merged (in YYYY-MM-DD format)",
+    date_started = models.DateField(verbose_name="Date contribution was started")
+    date_merged = models.DateField(verbose_name="Date contribution was accepted or merged",
             help_text="If this contribution is still in progress, you can leave this field blank and edit it later.",
             blank=True,
             null=True)
@@ -3347,7 +3347,7 @@ class SignedContract(models.Model):
             verbose_name="Legal name",
             help_text="Your name on your government identification. This is the name that you would use to sign a legal document.")
     ip_address = models.GenericIPAddressField(protocol="both")
-    date_signed = models.DateField(verbose_name="Date contract was signed in YYYY-MM-DD format")
+    date_signed = models.DateField(verbose_name="Date contract was signed")
 
 class InternSelection(models.Model):
     applicant = models.ForeignKey(ApplicantApproval)
