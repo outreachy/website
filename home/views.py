@@ -32,6 +32,8 @@ import reversion
 
 from . import email
 
+from .forms import RadioBooleanField
+
 from .mixins import ApprovalStatusAction
 from .mixins import ComradeRequiredMixin
 from .mixins import EligibleApplicantRequiredMixin
@@ -2487,17 +2489,18 @@ class InitialMentorFeedbackUpdate(LoginRequiredMixin, UpdateView, reversion.view
                 'progress_report',
                 'request_extension',
                 'extension_date',
-                ),
-                widgets = {
-                    'in_contact': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'asking_questions': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'active_in_public': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'provided_onboarding': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'full_time_effort': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'payment_approved': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'request_extension': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    },
-                )
+            ),
+            field_classes = {
+                'in_contact': RadioBooleanField,
+                'asking_questions': RadioBooleanField,
+                'active_in_public': RadioBooleanField,
+                'provided_onboarding': RadioBooleanField,
+                'full_time_effort': RadioBooleanField,
+                'payment_approved': RadioBooleanField,
+                'request_extension': RadioBooleanField,
+            },
+        )
+
     def get_object(self):
         internship = intern_in_good_standing(get_object_or_404(User, username=self.kwargs['username']))
         if not internship:
