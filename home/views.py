@@ -2443,6 +2443,27 @@ class MentorFirstPaymentNotification(LoginRequiredMixin, ComradeRequiredMixin, T
         return redirect(reverse('dashboard'))
 
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, UpdateView, reversion.views.RevisionMixin):
+    form_class = modelform_factory(InitialMentorFeedback,
+            fields=(
+                'in_contact',
+                'asking_questions',
+                'active_in_public',
+                'provided_onboarding',
+                'checkin_frequency',
+                'last_contact',
+                'intern_response_time',
+                'mentor_response_time',
+                'progress_report',
+                'full_time_effort',
+                ),
+                widgets = {
+                    'in_contact': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'asking_questions': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'active_in_public': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'provided_onboarding': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'full_time_effort': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    },
+                )
     def get_object(self):
         internship = intern_in_good_standing(get_object_or_404(User, username=self.kwargs['username']))
         if not internship:
