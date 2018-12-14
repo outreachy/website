@@ -22,7 +22,7 @@
 				<p>Your intern has custom internship dates. Their internship will start on {{ rel.intern_selection.intern_starts }} and end on {{ rel.intern_selection.intern_ends}}.{% if not rel.round.has_internship_ended %} <a href="/mentor/mentor-faq/#internship-delays">Internships can be extended</a> by up to five weeks from the official end date of {{ rel.round.internends }}. Please <a href="{% url 'contact-organizers' %}">discuss any further extensions</a> or changes to the intern start date with the Outreachy organizers.{% endif %}</p>
 			{% endif %}
 
-			<h3>Internship Feedback</h3>
+			<h3 id="feedback">Internship Feedback</h3>
 			<p>Outreachy organizers require <a href="/mentor/mentor-faq/#mid-point-and-final-review">mentor feedback</a> at three points during the internship. We must receive successful feedback from one mentor in order for the intern to be paid their stipends. Only one mentor can submit feedback for one intern. If you are co-mentoring an intern, please talk with your co-mentor to decide who will be submitting feedback. Mentors can only submit feedback once, so please make sure you are ready to evaluate your intern's efforts.</p>
 			<p>Mentor feedback dates:
 			<ul>

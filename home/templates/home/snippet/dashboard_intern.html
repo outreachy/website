@@ -48,7 +48,7 @@
 			<p>Your internship will start on {{ internship.intern_starts }} and end on {{ internship.intern_ends}}.{% if not my_round.has_internship_ended %} <a href="/mentor/mentor-faq/#internship-delays">Internships can be extended</a> by up to five weeks from the official end date of {{ my_round.internends }}. Please have your mentor <a href="{% url 'contact-organizers' %}">discuss any further extensions</a> or changes to the your start date with the Outreachy organizers.{% endif %}</p>
 		{% endif %}
 
-		<h2>Internship Feedback</h2>
+		<h2 id="feedback">Internship Feedback</h2>
 		<p>The Outreachy organizers want to ensure that all interns get the support they need from their mentors. You will be asked to provide mentor feedback on specific dates, which coincide with when your mentor is giving feedback on your internship efforts.</p>
 		<p>The feedback is private and completely optional. Your feedback about your mentors will only be seen by the Outreachy organizers. We will discuss the feedback with you before contacting your mentors about how to improve their mentorship.</p>
 		<p>Dates for you to give feedback on your mentor:
