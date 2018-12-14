@@ -3513,9 +3513,9 @@ class InitialMentorFeedback(models.Model):
     allow_edits = models.BooleanField(editable=False)
 
     in_contact = models.BooleanField(verbose_name="Has your intern been in contact to discuss how to approach their first tasks?")
-    asking_questions = models.BooleanField(help_text="Has your intern been asking questions about their first tasks?")
-    active_in_public = models.BooleanField(help_text="Has your intern been active on public project channels, such as the community's chat, forums, issue tracker, mailing list, etc?")
-    provided_onboarding = models.BooleanField(help_text="Have you provided documentation or other resources to help onboard your intern?")
+    asking_questions = models.BooleanField(verbose_name="Has your intern been asking questions about their first tasks?")
+    active_in_public = models.BooleanField(verbose_name="Has your intern been active on public project channels, such as the community's chat, forums, issue tracker, mailing list, etc?")
+    provided_onboarding = models.BooleanField(verbose_name="Have you provided documentation or other resources to help onboard your intern?")
 
     NOT_SCHEDULED = ''
     ONCE_DAILY = 'D'
@@ -3529,9 +3529,9 @@ class InitialMentorFeedback(models.Model):
         (ONCE_WEEKLY, 'Once per week'),
         (EVERY_OTHER_WEEK, 'Every other week'),
     )
-    checkin_frequency = models.CharField(max_length=1, choices=CHECKIN_FREQUENCY_CHOICES, default=NOT_SCHEDULED, help_text="How often do you have a real-time chat, video conference, or phone conversation to check in with your intern's progress on tasks?")
+    checkin_frequency = models.CharField(max_length=1, choices=CHECKIN_FREQUENCY_CHOICES, default=NOT_SCHEDULED, verbose_name="How often do you have a real-time chat, video conference, or phone conversation to check in with your intern's progress on tasks?")
 
-    last_contact = models.DateField(help_text="What was the last date you were in contact with your intern?")
+    last_contact = models.DateField(verbose_name="What was the last date you were in contact with your intern?")
 
     HOURS_1 = '1H'
     HOURS_3 = '3H'
@@ -3553,19 +3553,19 @@ class InitialMentorFeedback(models.Model):
         (DAYS_6, '6-7 days'),
         (LONGER, '> 7 days'),
     )
-    intern_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, help_text="On average, how long does it take for your intern to respond to your questions or feedback?")
-    mentor_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, help_text="On average, how long does it take for you to respond to your intern's questions or requests for feedback?")
+    intern_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="On average, how long does it take for <b>your intern</b> to respond to your questions or feedback?")
+    mentor_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="On average, how long does it take for <b>you</b> to respond to your intern's questions or requests for feedback?")
 
-    progress_report = models.TextField(help_text="Please provide a paragraph describing your intern's progress on establishing communication with you, and ramping up on their first tasks.")
-    full_time_effort = models.BooleanField(help_text="Do you believe your Outreachy intern is putting in a full-time, 40 hours a week effort into the internship?")
+    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your intern's progress on establishing communication with you, connecting to your FOSS community, and ramping up on their first tasks.")
+    full_time_effort = models.BooleanField(verbose_name="Do you believe your Outreachy intern is putting in a full-time, 40 hours a week effort into the internship?")
 
-    payment_approved = models.BooleanField(help_text="Should your Outreachy intern be paid the initial $1,000 payment? Please base your answer on whether your intern has established communication with their mentors and has start learning how to tackle their first tasks.")
+    payment_approved = models.BooleanField(verbose_name="Should your Outreachy intern be paid the initial $1,000 payment?", help_text="Please base your answer on whether your intern has put in a full-time, 40 hours a week effort. They should have established communication with you and other mentors, and have started learning how to tackle their first tasks. If you are going to ask for an internship extension, please say no to this question.")
     # FIXME - send email to mentors and interns when organizers approve their payment and send documentation off to Conservancy
     organizer_payment_approved = models.NullBooleanField(help_text="Outreachy organizers approve or do not approve to pay this intern.",
             default=None)
 
-    request_extension = models.BooleanField(help_text="Sometimes interns do not put in a full-time effort. In this case, one of the options is to delay payment of their stipend and extend their internship a specific number of weeks. You will be asked to re-evaluate your intern after the extension is done.")
-    extension_date = models.DateField(help_text="If you want to extend the internship, please pick a date when you will be asked to update your intern's initial feedback and authorize payment. Internships can be extended for up to five weeks. We don't recommend extending an internship for more than 1 week at initial feedback.", blank=True, null=True)
+    request_extension = models.BooleanField(verbose_name="Does your intern need an extension?", help_text="Sometimes interns do not put in a full-time effort. In this case, one of the options is to delay payment of their stipend and extend their internship a specific number of weeks. You will be asked to re-evaluate your intern after the extension is done.")
+    extension_date = models.DateField(help_text="If you want to extend the internship, please pick a date when you will be asked to update your intern's initial feedback and authorize payment. Internships can be extended for up to five weeks. We don't recommend extending an internship for more than 1 week at initial feedback. Please leave this field blank if you are not asking for an extension.", blank=True, null=True)
 
     def intern_name(self):
         return self.intern_selection.intern_name()
