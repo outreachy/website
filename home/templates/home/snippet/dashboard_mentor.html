@@ -24,6 +24,9 @@
 
 			<h3 id="feedback">Internship Feedback</h3>
 			<p>Outreachy organizers require <a href="/mentor/mentor-faq/#mid-point-and-final-review">mentor feedback</a> at three points during the internship. We must receive successful feedback from one mentor in order for the intern to be paid their stipends. Only one mentor can submit feedback for one intern. If you are co-mentoring an intern, please talk with your co-mentor to decide who will be submitting feedback. Mentors can only submit feedback once, so please make sure you are ready to evaluate your intern's efforts.</p>
+			{% if rel.intern_selection.is_initial_feedback_on_intern_open %}
+				<p><a href="{% url 'initial-mentor-feedback' username=rel.intern_selection.applicant.applicant.account.username %}"><button type="button" class="btn btn-info">Submit Initial Feedback</button></a></p>
+			{% endif %}
 			<p>Mentor feedback dates:
 			<ul>
 				<li>{{ rel.intern_selection.initial_feedback_opens }} 4pm UTC - Initial feedback forms open</li>

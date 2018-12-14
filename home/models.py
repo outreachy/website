@@ -3406,6 +3406,14 @@ class InternSelection(models.Model):
             return True
         return False
 
+    def is_initial_feedback_on_intern_open(self):
+        if not has_deadline_passed(self.initial_feedback_opens):
+            return False
+        try:
+            return self.initialmentorfeedback.can_edit()
+        except InitialMentorFeedback.DoesNotExist:
+            return True
+
     def intern_name(self):
         return self.applicant.applicant.public_name
 
