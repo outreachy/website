@@ -3508,7 +3508,7 @@ class InitialMentorFeedback(models.Model):
     intern_selection = models.OneToOneField(InternSelection)
     allow_edits = models.BooleanField(editable=False)
 
-    in_contact = models.BooleanField(help_text="Has your intern been in contact to discuss how to approach their first tasks?")
+    in_contact = models.BooleanField(verbose_name="Has your intern been in contact to discuss how to approach their first tasks?")
     asking_questions = models.BooleanField(help_text="Has your intern been asking questions about their first tasks?")
     active_in_public = models.BooleanField(help_text="Has your intern been active on public project channels, such as the community's chat, forums, issue tracker, mailing list, etc?")
     provided_onboarding = models.BooleanField(help_text="Have you provided documentation or other resources to help onboard your intern?")
