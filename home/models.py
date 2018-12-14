@@ -3565,7 +3565,7 @@ class InitialMentorFeedback(models.Model):
             default=None)
 
     request_extension = models.BooleanField(help_text="Sometimes interns do not put in a full-time effort. In this case, one of the options is to delay payment of their stipend and extend their internship a specific number of weeks. You will be asked to re-evaluate your intern after the extension is done.")
-    extension_date = models.DateField(help_text="If you want to extend the internship, please pick a date when you will be asked to update your intern's initial feedback and authorize payment. Internships can be extended for up to five weeks. We don't recommend extending an internship for more than 1 week at initial feedback.")
+    extension_date = models.DateField(help_text="If you want to extend the internship, please pick a date when you will be asked to update your intern's initial feedback and authorize payment. Internships can be extended for up to five weeks. We don't recommend extending an internship for more than 1 week at initial feedback.", blank=True, null=True)
 
     def intern_name(self):
         return self.intern_selection.intern_name()
@@ -3589,12 +3589,15 @@ class InitialMentorFeedback(models.Model):
         return False
 
     def clean(self):
-        if self.request_extension and self.extension_date is not None:
-            # should not be more than five weeks from the initial feedback deadline in the RoundPage
-            base = self.intern_selection.round().initialfeedback
-            limit = base + datetime.timedelta(weeks=5)
-            if not (base <= self.extension_date <= limit):
-                raise ValidationError({'extension_date': "Extension date must be between {} and {}".format(base, limit)})
+        if self.request_extension:
+            if self.extension_date is None:
+                raise ValidationError({'extension_date': "If you're requesting an extension, this field is required."})
+            else:
+                # should not be more than five weeks from the initial feedback deadline in the RoundPage
+                base = self.intern_selection.round().initialfeedback
+                limit = base + datetime.timedelta(weeks=5)
+                if not (base <= self.extension_date <= limit):
+                    raise ValidationError({'extension_date': "Extension date must be between {} and {}".format(base, limit)})
 
 # Track each person we sent a survey to
 class AlumSurveyTracker(models.Model):

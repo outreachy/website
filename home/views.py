@@ -2484,6 +2484,9 @@ class InitialMentorFeedbackUpdate(LoginRequiredMixin, UpdateView, reversion.view
                 'mentor_response_time',
                 'progress_report',
                 'full_time_effort',
+                'payment_approved',
+                'request_extension',
+                'extension_date',
                 ),
                 widgets = {
                     'in_contact': widgets.RadioSelect(choices=BOOL_CHOICES),
@@ -2491,6 +2494,8 @@ class InitialMentorFeedbackUpdate(LoginRequiredMixin, UpdateView, reversion.view
                     'active_in_public': widgets.RadioSelect(choices=BOOL_CHOICES),
                     'provided_onboarding': widgets.RadioSelect(choices=BOOL_CHOICES),
                     'full_time_effort': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'payment_approved': widgets.RadioSelect(choices=BOOL_CHOICES),
+                    'request_extension': widgets.RadioSelect(choices=BOOL_CHOICES),
                     },
                 )
     def get_object(self):
