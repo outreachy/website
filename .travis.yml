@@ -2,10 +2,19 @@ sudo: false
 language: python
 python:
   - "3.6"
-cache: pip
-install: "make"
+cache:
+  pip: true
+  directories:
+    - node_modules
+
+install:
+  - nvm install 8
+  - npm install
+  - pip install pipenv --upgrade
+  - pipenv install --dev
 script:
-  - make test
+  - PATH="$PWD/node_modules/.bin:$PATH" pipenv run python manage.py test home/
+
 notifications:
   webhooks:
     - https://chat.outreachy.org/api/v1/external/travis?api_key=fOLPEfIUeqxjijWSSpnospk5gRp9Avny&stream=Outreachy%20website&ignore_pull_requests=false
