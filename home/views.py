@@ -59,6 +59,7 @@ from .models import EmploymentTimeCommitment
 from .models import FinalApplication
 from .models import InternSelection
 from .models import InitialApplicationReview
+from .models import InitialMentorFeedback
 from .models import has_deadline_passed
 from .models import MentorApproval
 from .models import MentorRelationship
