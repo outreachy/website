@@ -177,14 +177,14 @@ When you need to send a mass email manually, you can do so through the dokku int
 Then, ssh into the test server shell, and run the commands you want. In this example, we'll simulate clicking the "Contributor Deadline Email" button on the staff dashboard:
 
 ```
-$ ssh -t dokku@www.outreachy.org run test env --unset=SENTRY_DSN python manage.py shell
+$ ssh -t dokku@www.outreachy.org run www env --unset=SENTRY_DSN python manage.py shell
 Python 3.6.3 (default, Nov 14 2017, 17:29:48) 
 [GCC 5.4.0 20160609] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 (InteractiveConsole)
 >>> from django.test import Client
 >>> from django.contrib.auth.models import User
->>> c = Client(HTTP_HOST='test.outreachy.org') # set this to the domain you expect to be on
+>>> c = Client(HTTP_HOST='www.outreachy.org') # set this to the domain you expect to be on
 >>> c.force_login(User.objects.filter(is_staff=True, comrade__isnull=False)[0])
 >>> c.post('/email/contributor-deadline-reminder/', secure=True)
 ```
@@ -193,4 +193,33 @@ If this is run on the test server, you should see lots of email bodies get print
 
 ```
 <HttpResponseRedirect status_code=302, "text/html; charset=utf-8", url="/dashboard/">
+```
+
+Sending mass emails manually
+----------------------------
+
+```
+$ ssh -t dokku@www.outreachy.org run www env --unset=SENTRY_DSN python manage.py shell
+>>> from home.models import *
+>>> from django.core.mail import send_mail
+>>> current_round = RoundPage.objects.latest('internstarts')
+>>> interns = current_round.get_approved_intern_selections()
+>>> request = { 'scheme': 'https', 'get_host': 'www.outreachy.org' }
+>>> subject = '[Outreachy] Important information'
+>>> body = '''This is a multiline message.
+... 
+... This is the second line.
+... 
+... This is the third line.
+... 
+... This is the final line.
+... 
+... Sage Sharp
+... Outreachy Organizer'''
+>>> for i in interns:
+...     emails = [ i.applicant.applicant.email_address() ]
+...     for m in i.mentors.all():
+...             emails.append(m.mentor.email_address())
+...     send_mail(message=body.strip(), subject=subject.strip(), recipient_list=emails, from_email=Address("Outreachy Organizers", "organizers", "outreachy.org"))
+... 
 ```

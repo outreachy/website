@@ -1,0 +1,11 @@
+sudo: false
+language: python
+python:
+  - "3.6"
+cache: pip
+install: "make"
+script:
+  - make test
+notifications:
+  webhooks:
+    - https://chat.outreachy.org/api/v1/external/travis?api_key=fOLPEfIUeqxjijWSSpnospk5gRp9Avny&stream=Outreachy%20website&ignore_pull_requests=false

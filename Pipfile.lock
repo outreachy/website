@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "234f3eccdd2e9f7c7a904717cd1bebb6e7319b0f1192fe1c79315e8449611b5c"
+            "sha256": "91863e9ce1a74c687d15ab23f8fdbe3f0c90b5494be600cc0378830772deb53a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -205,6 +205,21 @@
             "index": "pypi",
             "version": "==3.6.4"
         },
+        "factory-boy": {
+            "hashes": [
+                "sha256:6f25cc4761ac109efd503f096e2ad99421b1159f01a29dbb917359dcd68e08ca",
+                "sha256:d552cb872b310ae78bd7429bf318e42e1e903b1a109e899a523293dfa762ea4f"
+            ],
+            "index": "pypi",
+            "version": "==2.11.1"
+        },
+        "faker": {
+            "hashes": [
+                "sha256:228419b0a788a7ac867ebfafdd438461559ab1a0975edb607300852d9acaa78d",
+                "sha256:52a3dcc6a565b15fe1c95090321756d5a8a7c1caf5ab3df2f573ed70936ff518"
+            ],
+            "version": "==1.0.1"
+        },
         "gunicorn": {
             "hashes": [
                 "sha256:75af03c99389535f218cc596c7de74df4763803f7b63eb09d77e92b3956b36c6",
@@ -333,6 +348,13 @@
             "index": "pypi",
             "version": "==2.7.3.2"
         },
+        "python-dateutil": {
+            "hashes": [
+                "sha256:063df5763652e21de43de7d9e00ccf239f953a832941e37be541614732cdfc93",
+                "sha256:88f9287c0174266bb0d8cedd395cfba9c58e87e5ad86b2ce58859bc11be3cf02"
+            ],
+            "version": "==2.7.5"
+        },
         "pytz": {
             "hashes": [
                 "sha256:c41c62827ce9cafacd6f2f7018e4f83a6f1986e87bfd000b8cfbd4ab5da95f1a",
@@ -393,6 +415,13 @@
             ],
             "index": "pypi",
             "version": "==0.7.0"
+        },
+        "text-unidecode": {
+            "hashes": [
+                "sha256:5a1375bb2ba7968740508ae38d92e1f889a0832913cb1c447d5e2046061a396d",
+                "sha256:801e38bd550b943563660a91de8d4b6fa5df60a542be9093f7abf819f86050cc"
+            ],
+            "version": "==1.2"
         },
         "unidecode": {
             "hashes": [

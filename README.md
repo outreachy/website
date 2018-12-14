@@ -5,6 +5,8 @@ This particular project is an attempt to rebuild a new website for Outreachy.
 
 # Current state of Outreachy tech
 
+[![Build Status](https://travis-ci.org/sagesharp/outreachy-django-wagtail.svg?branch=master)](https://travis-ci.org/sagesharp/outreachy-django-wagtail)
+
 The Outreachy web presence is scattered across multiple different sites, domains, and technologies:
  - [GNOME Outreachy homepage](https://www.gnome.org/outreachy/) - shell homepage, where the outreachy.org domain currently redirects to
  - [GNOME wiki Outreachy pages](http://wiki.gnome.org/Outreachy) - moinmoin based wiki with information about how to apply and sponsor
