@@ -434,6 +434,11 @@ class SignedContractAdmin(admin.ModelAdmin):
             'date_signed',
             )
 
+class InitialMentorFeedbackInline(admin.StackedInline):
+    model = InitialMentorFeedback
+    can_delete = False
+    verbose_name_plural = 'Mentor submitted feedback forms'
+
 class InternSelectionAdmin(reversion.admin.VersionAdmin):
     list_display = (
             'round',
@@ -454,6 +459,7 @@ class InternSelectionAdmin(reversion.admin.VersionAdmin):
             'mentors__mentor__public_name',
             'mentors__mentor__account__email',
             )
+    inlines = (InitialMentorFeedbackInline, )
 
 class InitialMentorFeedbackAdmin(reversion.admin.VersionAdmin):
     list_display = (
