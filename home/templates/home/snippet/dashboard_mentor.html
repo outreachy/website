@@ -13,12 +13,18 @@
 		{% endif %}
 
 		<p>You {% if rel.round.has_internship_ended %}mentored{% else %}are mentoring{% endif %} {{ rel.intern_name }} for the {{ rel.community_name }} project "<a href="{% url 'community-landing' round_slug=current_round.slug slug=rel.intern_selection.project.project_round.community.slug %}#{{ rel.intern_selection.project.slug }}">{{ rel.project_name }}</a>".{% if not rel.round.has_internship_ended %} Please <a href="/mentor/mentor-faq/#during-the-internship">review our tips</a> for ensuring your mentee is successful.{% endif %}</p>
-		<p>The internship start date is on {{ rel.round.internstarts }}. The official ending date is {{ rel.round.internends }}.{% if not rel.round.has_internship_ended %} <a href="/mentor/mentor-faq/#internship-delays">Internships can be extended</a> by up to five weeks if interns are not putting in a full-time (40 hours a week effort), or the intern needs to take more than a week off from their internship. Please <a href="{% url 'contact-organizers' %}">discuss any extensions</a> or changes to the intern start date with the Outreachy organizers.{% endif %}</p>
 		
 		{% if not rel.round.has_internship_ended %}
+			{% if not rel.intern_selection.intern_has_custom_dates %}
+				<p>Outreachy internships start on {{ rel.round.internstarts }} and end on {{ rel.round.internends }}.{% if not rel.round.has_internship_ended %} <a href="/mentor/mentor-faq/#internship-delays">Internships can be extended</a> by up to five weeks if interns are not putting in a full-time (40 hours a week effort), or the intern needs to take more than a week off from their internship. Please <a href="{% url 'contact-organizers' %}">discuss any extensions</a> or changes to the intern start date with the Outreachy organizers.{% endif %}</p>
+			{% else %}
+				<p>Your intern has custom internship dates. They will start on {{ rel.intern_selection.intern_starts }} and end on {{ rel.intern_selection.intern_ends}}.{% if not rel.round.has_internship_ended %} <a href="/mentor/mentor-faq/#internship-delays">Internships can be extended</a> by up to five weeks from the official end date of {{ rel.round.internends }}. Please <a href="{% url 'contact-organizers' %}">discuss any further extensions</a> or changes to the intern start date with the Outreachy organizers.{% endif %}</p>
+			{% endif %}
+
 			<p><a href="/mentor/mentor-faq/#mid-point-and-final-review">Mentor feedback</a> dates:
 			<ul>
-				<li>{{ rel.round.intern_not_started_deadline }} - Please notify Outreachy organizers if your intern has not started by this date</li>
+				<li>{{ rel.intern_selection.initial_feedback_opens }} 4pm UTC - Initial feedback forms open</li>
+				<li>{{ rel.intern_selection.initial_feedback_due }} 4pm UTC - Initial feedback is due</li>
 				<li>{{ rel.round.midfeedback }} - Mid-point feedback is due</li>
 				<li>{{ rel.round.finalfeedback }} - Final feedback is due</li>
 			</ul>
@@ -26,9 +32,9 @@
 			<p>Payments are handled by Outreachy's parent organization, the Software Freedom Conservancy. Payments may be delayed by internship extensions, interns not returning tax paperwork in promptly, or approval delays for third-party payments (such as when a parent or spouse is the owner of a bank account). As a mentor, the best thing you can do to help your intern be paid on time is to respond promptly to requests for mid-point and final feedback.</p>
 			<p>Payment schedule:
 			<ul>
-				<li>{{ rel.round.initial_stipend_payment_deadline }} - Interns who have started their internship will receive the ${{ rel.round.initialpayment }} initial stipend</li>
-				<li>{{ rel.round.midpoint_stipend_payment_deadline }} - Interns with successful mid-point feedback will receive the ${{ rel.round.midpayment }} midpoint stipend</li>
-				<li>{{ rel.round.final_stipend_payment_deadline }} - Interns with successful final feedback will receive the ${{ rel.round.finalpayment }} final stipend</li>
+				<li>{{ rel.round.initial_stipend_payment_deadline }} - Interns with a standard start date and successful initial feedback from their mentor will receive the ${{ rel.round.initialpayment }} initial stipend</li>
+				<li>{{ rel.round.midpoint_stipend_payment_deadline }} - Interns without extensions and successful mid-point feedback from their mentor will receive the ${{ rel.round.midpayment }} midpoint stipend</li>
+				<li>{{ rel.round.final_stipend_payment_deadline }} - Interns without extensions and successful final feedback from their mentor will receive the ${{ rel.round.finalpayment }} final stipend</li>
 			</ul>
 			</p>
 		{% endif %}

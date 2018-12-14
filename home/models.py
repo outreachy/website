@@ -3397,6 +3397,15 @@ class InternSelection(models.Model):
         return self.mentorapproval_set.approved().filter(
                 mentor__account=user).exists()
 
+    def intern_has_custom_dates(self):
+        if self.intern_starts != self.project.project_round.participating_round.internstarts:
+            return True
+        if self.intern_ends != self.project.project_round.participating_round.internends:
+            return True
+        if self.initial_feedback_due != self.project.project_round.participating_round.initialfeedback:
+            return True
+        return False
+
     def intern_name(self):
         return self.applicant.applicant.public_name
 
