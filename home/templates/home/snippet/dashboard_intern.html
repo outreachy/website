@@ -39,6 +39,29 @@
 	{% endif %}
 	</p>
 
+	{% if not my_round.has_internship_ended %}
+		<h2>Internship Dates</h2>
+		{% if not internship.intern_has_custom_dates %}
+			<p>Your Outreachy internship starts on {{ my_round.internstarts }} and ends on {{ my_round.internends }}.{% if not my_round.has_internship_ended %} <a href="/mentor/mentor-faq/#internship-delays">Internships can be extended</a> by up to five weeks if your mentor feels you are not putting in a full-time (40 hours a week effort), or you need to take more than a week off from your internship. Please have your mentor <a href="{% url 'contact-organizers' %}">discuss any extensions</a> or changes to your start date with the Outreachy organizers.{% endif %}</p>
+		{% else %}
+			<p>Your Outreachy internship has custom start or end dates, or custom feedback dates.</p>
+			<p>Your internship will start on {{ internship.intern_starts }} and end on {{ internship.intern_ends}}.{% if not my_round.has_internship_ended %} <a href="/mentor/mentor-faq/#internship-delays">Internships can be extended</a> by up to five weeks from the official end date of {{ my_round.internends }}. Please have your mentor <a href="{% url 'contact-organizers' %}">discuss any further extensions</a> or changes to the your start date with the Outreachy organizers.{% endif %}</p>
+		{% endif %}
+
+		<h2>Internship Feedback</h2>
+		<p>The Outreachy organizers want to ensure that all interns get the support they need from their mentors. You will be asked to provide mentor feedback on specific dates, which coincide with when your mentor is giving feedback on your internship efforts.</p>
+		<p>The feedback is private and completely optional. Your feedback about your mentors will only be seen by the Outreachy organizers. We will discuss the feedback with you before contacting your mentors about how to improve their mentorship.</p>
+		<p>Dates for you to give feedback on your mentor:
+		<ul>
+			<li>{{ internship.initial_feedback_opens }} 4pm UTC - Initial feedback forms open</li>
+			<li>{{ internship.initial_feedback_due }} 4pm UTC - Initial feedback is due</li>
+			<li>{{ my_round.midfeedback }} - Mid-point feedback is due</li>
+			<li>{{ my_round.finalfeedback }} - Final feedback is due</li>
+		</ul>
+		</p>
+		<p>You can <a href="{% url 'contact-organizers' %}">contact Outreachy organizers</a> at any time to give informal feedback or ask for additional help.</p>
+	{% endif %}
+
 	{% with current_round=my_round %}
 		{% include 'home/snippet/payment_schedule.html' %}
 	{% endwith %}
