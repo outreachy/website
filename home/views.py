@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from django.core.signing import TimestampSigner, SignatureExpired, BadSignature 
 from django.db import models
-from django.forms import inlineformset_factory, ModelForm, modelform_factory, modelformset_factory, ValidationError, widgets
+from django.forms import inlineformset_factory, ModelForm, modelform_factory, modelformset_factory, ValidationError
 from django.forms.models import BaseInlineFormSet, BaseModelFormSet
 from django.http import JsonResponse, HttpResponse, Http404
 from django.shortcuts import get_list_or_404
@@ -208,8 +208,6 @@ class ComradeUpdate(LoginRequiredMixin, UpdateView):
     # Take them back to the home page right now.
     def get_success_url(self):
         return self.request.POST.get('next', '/')
-
-BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
 
 class EmptyModelFormSet(BaseModelFormSet):
     def get_queryset(self):
@@ -410,26 +408,24 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 'under_export_control',
                 'us_sanctioned_country',
                 ),
-                # FIXME: this allows people to submit a partial form
-                # without validating either 'yes' or 'no' is selected
-                widgets = {
-                    'over_18': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'student_visa_restrictions': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'eligible_to_work': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'under_export_control': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'us_sanctioned_country': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    },
-                )),
+                field_classes={
+                    'over_18': RadioBooleanField,
+                    'student_visa_restrictions': RadioBooleanField,
+                    'eligible_to_work': RadioBooleanField,
+                    'under_export_control': RadioBooleanField,
+                    'us_sanctioned_country': RadioBooleanField,
+                },
+            )),
             ('Payment Eligibility', modelform_factory(PaymentEligibility,
                 fields=(
                 'us_national_or_permanent_resident',
                 'living_in_us',
                 ),
-                widgets = {
-                    'us_national_or_permanent_resident': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'living_in_us': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    },
-                )),
+                field_classes={
+                    'us_national_or_permanent_resident': RadioBooleanField,
+                    'living_in_us': RadioBooleanField,
+                },
+            )),
             ('Prior FOSS Experience', modelform_factory(PriorFOSSExperience,
                 fields=(
                 'gsoc_or_outreachy_internship',
@@ -454,37 +450,20 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 'prior_contrib_accessibility',
                 'prior_contrib_self_identify',
                 ),
-                widgets = {
-                    'gsoc_or_outreachy_internship': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'prior_contributor': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'prior_paid_contributor': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'prior_contrib_coding': widgets.CheckboxInput(),
-                    'prior_contrib_forums': widgets.CheckboxInput(),
-                    'prior_contrib_events': widgets.CheckboxInput(),
-                    'prior_contrib_issues': widgets.CheckboxInput(),
-                    'prior_contrib_devops': widgets.CheckboxInput(),
-                    'prior_contrib_docs': widgets.CheckboxInput(),
-                    'prior_contrib_data': widgets.CheckboxInput(),
-                    'prior_contrib_translate': widgets.CheckboxInput(),
-                    'prior_contrib_illustration': widgets.CheckboxInput(),
-                    'prior_contrib_ux': widgets.CheckboxInput(),
-                    'prior_contrib_short_talk': widgets.CheckboxInput(),
-                    'prior_contrib_testing': widgets.CheckboxInput(),
-                    'prior_contrib_security': widgets.CheckboxInput(),
-                    'prior_contrib_marketing': widgets.CheckboxInput(),
-                    'prior_contrib_reviewer': widgets.CheckboxInput(),
-                    'prior_contrib_mentor': widgets.CheckboxInput(),
-                    'prior_contrib_accessibility': widgets.CheckboxInput(),
-                    },
-                )),
+                field_classes={
+                    'gsoc_or_outreachy_internship': RadioBooleanField,
+                    'prior_contributor': RadioBooleanField,
+                    'prior_paid_contributor': RadioBooleanField,
+                },
+            )),
             ('USA demographics', modelform_factory(ApplicantRaceEthnicityInformation,
                 fields=(
                 'us_resident_demographics',
                 ),
-                widgets = {
-                    'us_resident_demographics': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    },
-                )),
+                field_classes={
+                    'us_resident_demographics': RadioBooleanField,
+                },
+            )),
             ('Gender Identity', modelform_factory(ApplicantGenderIdentity, fields=(
                 'transgender',
                 'genderqueer',
@@ -521,48 +500,18 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 'prefer_not_to_say',
                 'self_identify',
                 ),
-                widgets = {
-                    'transgender': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'genderqueer': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'man': widgets.CheckboxInput(),
-                    'woman': widgets.CheckboxInput(),
-                    'demi_boy': widgets.CheckboxInput(),
-                    'demi_girl': widgets.CheckboxInput(),
-                    'trans_masculine': widgets.CheckboxInput(),
-                    'trans_feminine': widgets.CheckboxInput(),
-                    'non_binary': widgets.CheckboxInput(),
-                    'demi_non_binary': widgets.CheckboxInput(),
-                    'genderflux': widgets.CheckboxInput(),
-                    'genderfluid': widgets.CheckboxInput(),
-                    'demi_genderfluid': widgets.CheckboxInput(),
-                    'demi_gender': widgets.CheckboxInput(),
-                    'bi_gender': widgets.CheckboxInput(),
-                    'tri_gender': widgets.CheckboxInput(),
-                    'multigender': widgets.CheckboxInput(),
-                    'pangender': widgets.CheckboxInput(),
-                    'maxigender': widgets.CheckboxInput(),
-                    'aporagender': widgets.CheckboxInput(),
-                    'intergender': widgets.CheckboxInput(),
-                    'mavrique': widgets.CheckboxInput(),
-                    'gender_confusion': widgets.CheckboxInput(),
-                    'gender_indifferent': widgets.CheckboxInput(),
-                    'graygender': widgets.CheckboxInput(),
-                    'agender': widgets.CheckboxInput(),
-                    'genderless': widgets.CheckboxInput(),
-                    'gender_neutral': widgets.CheckboxInput(),
-                    'neutrois': widgets.CheckboxInput(),
-                    'androgynous': widgets.CheckboxInput(),
-                    'androgyne': widgets.CheckboxInput(),
-                    'prefer_not_to_say': widgets.CheckboxInput(),
-                    },
-                )),
+                field_classes={
+                    'transgender': RadioBooleanField,
+                    'genderqueer': RadioBooleanField,
+                },
+            )),
             ('Barriers to Participation', modelform_factory(BarriersToParticipation,
                 fields=(
                     'lacking_representation',
                     'systematic_bias',
                     'barriers_to_contribution',
                 ),
-                )),
+            )),
             ('Time Commitments', modelform_factory(TimeCommitmentSummary,
                 fields=(
                 'enrolled_as_student',
@@ -571,14 +520,14 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 'contractor',
                 'volunteer_time_commitments',
                 ),
-                widgets = {
-                    'enrolled_as_student': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'enrolled_as_noncollege_student': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'employed': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'contractor': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    'volunteer_time_commitments': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    },
-                )),
+                field_classes={
+                    'enrolled_as_student': RadioBooleanField,
+                    'enrolled_as_noncollege_student': RadioBooleanField,
+                    'employed': RadioBooleanField,
+                    'contractor': RadioBooleanField,
+                    'volunteer_time_commitments': RadioBooleanField,
+                },
+            )),
             ('School Info', modelform_factory(SchoolInformation,
                 fields=(
                     'university_name',
@@ -586,7 +535,8 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'current_academic_calendar',
                     'next_academic_calendar',
                     'degree_name',
-                ))),
+                ),
+            )),
             ('School Term Info', modelformset_factory(SchoolTimeCommitment,
                 formset=EmptyModelFormSet,
                 min_num=1,
@@ -602,9 +552,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'outreachy_credits',
                     'thesis_credits',
                 ),
-                widgets = {
-                    },
-                )),
+            )),
             ('Coding School or Online Courses Time Commitment Info', modelformset_factory(NonCollegeSchoolTimeCommitment,
                 formset=EmptyModelFormSet,
                 min_num=1,
@@ -616,7 +564,8 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'end_date',
                     'hours_per_week',
                     'description',
-                ))),
+                ),
+            )),
             ('Contractor Info', modelformset_factory(ContractorInformation,
                 formset=EmptyModelFormSet,
                 min_num=1,
@@ -628,10 +577,10 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'typical_hours',
                     'continuing_contract_work',
                 ),
-                widgets = {
-                    'continuing_contract_work': widgets.RadioSelect(choices=BOOL_CHOICES),
-                    },
-                )),
+                field_classes={
+                    'continuing_contract_work': RadioBooleanField,
+                },
+            )),
             ('Employment Info', modelformset_factory(EmploymentTimeCommitment,
                 formset=EmptyModelFormSet,
                 min_num=1,
@@ -644,10 +593,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'hours_per_week',
                     'quit_on_acceptance',
                 ),
-                widgets = {
-                    'quit_on_acceptance': widgets.CheckboxInput(),
-                    },
-                )),
+            )),
             ('Volunteer Time Commitment Info', modelformset_factory(VolunteerTimeCommitment,
                 formset=EmptyModelFormSet,
                 min_num=1,
@@ -659,13 +605,14 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'end_date',
                     'hours_per_week',
                     'description',
-                ))),
+                ),
+            )),
             ('Outreachy Promotional Information', modelform_factory(PromotionTracking,
                 fields=(
                 'spread_the_word',
                 ),
-                )),
-            ]
+            )),
+        ]
     # TODO: override get method to redirect to results page if the person
     # has filled out an application
     TEMPLATES = {
@@ -2613,11 +2560,10 @@ class AlumSurveyUpdate(UpdateView):
         'survey_tracker',
         'survey_date',
         ),
-        # BooleanField are checkboxes by default
-        widgets = {
-            'community_contact': widgets.Select(choices=BOOL_CHOICES),
-            }
-        )
+        field_classes={
+            'community_contact': RadioBooleanField,
+        },
+    )
 
     def get_object(self):
         # Decode the timestamped data:
