@@ -76,28 +76,31 @@ def project_nonfree_warning(project, request):
         request=request,
         recipient_list=[organizers])
 
-def project_applicant_review(project, request):
+def project_applicant_review(project, request, **kwargs):
     send_group_template_mail('home/email/mentor-applicant-updates.txt', {
         'project': project,
         },
         request=request,
-        recipient_list=project.get_mentor_email_list())
+        recipient_list=project.get_mentor_email_list(),
+        **kwargs)
 
-def mentor_application_deadline_reminder(project, request):
+def mentor_application_deadline_reminder(project, request, **kwargs):
     send_group_template_mail('home/email/mentor-application-deadline-approaching.txt', {
         'project': project,
         },
         request=request,
-        recipient_list=project.get_mentor_email_list())
+        recipient_list=project.get_mentor_email_list(),
+        **kwargs)
 
-def mentor_intern_selection_reminder(project, request):
+def mentor_intern_selection_reminder(project, request, **kwargs):
     send_group_template_mail('home/email/mentor-choose-intern.txt', {
         'project': project,
         },
         request=request,
-        recipient_list=project.get_mentor_email_list())
+        recipient_list=project.get_mentor_email_list(),
+        **kwargs)
 
-def coordinator_intern_selection_reminder(participation, request):
+def coordinator_intern_selection_reminder(participation, request, **kwargs):
     email_list = participation.get_submitter_email_list()
     if email_list:
         send_group_template_mail('home/email/coordinator-intern-selection.txt', {
@@ -105,7 +108,8 @@ def coordinator_intern_selection_reminder(participation, request):
             'community': participation.community,
             },
             request=request,
-            recipient_list=email_list)
+            recipient_list=email_list,
+            **kwargs)
 
 def co_mentor_intern_selection_notification(intern_selection, request):
     mentor_email = intern_selection.mentors.get().mentor.account.email
@@ -140,7 +144,7 @@ def intern_selection_conflict_notification(intern_selection, request):
             request=request,
             recipient_list=email_list)
 
-def applicant_deadline_reminder(late_projects, promoted_projects, closed_projects, current_round, request):
+def applicant_deadline_reminder(late_projects, promoted_projects, closed_projects, current_round, request, **kwargs):
     send_group_template_mail('home/email/applicants-deadline-reminder.txt', {
         'late_projects': late_projects,
         'closed_projects': closed_projects,
@@ -148,7 +152,8 @@ def applicant_deadline_reminder(late_projects, promoted_projects, closed_project
         'current_round': current_round,
         },
         request=request,
-        recipient_list=['announce@lists.outreachy.org'])
+        recipient_list=['announce@lists.outreachy.org'],
+        **kwargs)
 
 def applicant_essay_needs_updated(applicant, request):
     send_template_mail('home/email/applicant-essay-needs-updated.txt', {
@@ -164,7 +169,7 @@ def applicant_school_info_needs_updated(applicant, request):
         request=request,
         recipient_list=[applicant.email_address()])
 
-def contributor_deadline_reminder(contributor, current_round, request):
+def contributor_deadline_reminder(contributor, current_round, request, **kwargs):
     upcoming_deadlines, passed_deadlines = contributor.get_projects_with_upcoming_and_passed_deadlines()
     send_template_mail('home/email/contributors-deadline-reminder.txt', {
         'current_round': current_round,
@@ -174,9 +179,10 @@ def contributor_deadline_reminder(contributor, current_round, request):
         'comrade': contributor,
         },
         request=request,
-        recipient_list=[contributor.email_address()])
+        recipient_list=[contributor.email_address()],
+        **kwargs)
 
-def contributor_application_period_ended(contributor, current_round, request):
+def contributor_application_period_ended(contributor, current_round, request, **kwargs):
     passed_deadlines = contributor.get_passed_projects_not_applied_to()
     send_template_mail('home/email/contributors_application_period_ended.txt', {
         'current_round': current_round,
@@ -185,9 +191,10 @@ def contributor_application_period_ended(contributor, current_round, request):
         'comrade': contributor,
         },
         request=request,
-        recipient_list=[contributor.email_address()])
+        recipient_list=[contributor.email_address()],
+        **kwargs)
 
-def notify_accepted_intern(intern_selection, request):
+def notify_accepted_intern(intern_selection, request, **kwargs):
     emails = [intern_selection.applicant.applicant.email_address()]
     for m in intern_selection.mentors.all():
         emails.append(m.mentor.email_address())
@@ -198,9 +205,10 @@ def notify_accepted_intern(intern_selection, request):
         'current_round': intern_selection.project.project_round.participating_round,
         },
         request=request,
-        recipient_list=emails)
+        recipient_list=emails,
+        **kwargs)
 
-def week_one_email(intern_selection, request):
+def week_one_email(intern_selection, request, **kwargs):
     emails = [intern_selection.applicant.applicant.email_address()]
     for m in intern_selection.mentors.all():
         emails.append(m.mentor.email_address())
@@ -210,7 +218,8 @@ def week_one_email(intern_selection, request):
         'current_round': intern_selection.project.project_round.participating_round,
         },
         request=request,
-        recipient_list=emails)
+        recipient_list=emails,
+        **kwargs)
 
 def notify_survey(survey_tracker, request):
     if survey_tracker.intern_info:
@@ -241,14 +250,15 @@ def notify_survey(survey_tracker, request):
         request=request,
         recipient_list=[email])
 
-def notify_mentors_of_first_stipend(intern_selection, request):
+def notify_mentors_of_first_stipend(intern_selection, request, **kwargs):
     emails = intern_selection.mentor_emails()
     emails.append(organizers)
     send_group_template_mail('home/email/menter-intern-start-reminder.txt', {
         'intern': intern_selection,
         },
         request=request,
-        recipient_list=emails)
+        recipient_list=emails,
+        **kwargs)
 
 
 @override_settings(ALLOWED_HOSTS=['www.outreachy.org'], EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend')

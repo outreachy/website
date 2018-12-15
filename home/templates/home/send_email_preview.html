@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}
+Send reminder emails
+{% endblock %}
+
+{% block content %}
+<p>You're about to send {{ messages|length }} emails. Please check that these are the messages you want to send.</p>
+
+{% for message in messages %}
+<div class="card">
+<div class="card-body">
+<pre>
+{{ message.message }}
+</pre>
+</div>
+</div>
+{% endfor %}
+
+<form action="" method="post">
+    {% csrf_token %}
+    <input class="btn btn-success" type="submit" value="Confirm" />
+</form>
+{% endblock %}
