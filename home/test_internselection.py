@@ -43,8 +43,9 @@ class InternSelectionTestCase(TestCase):
             'last_contact': internselection.initial_feedback_opens,
             'intern_response_time': models.InitialMentorFeedback.HOURS_12,
             'mentor_response_time': models.InitialMentorFeedback.HOURS_12,
-            'progress_report': 'Everything is fine.',
+            'payment_approved': True,
             'full_time_effort': True,
+            'progress_report': 'Everything is fine.',
             'request_extension': None,
             'extension_date': None,
         }
