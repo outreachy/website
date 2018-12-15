@@ -22,6 +22,7 @@ from .models import EmploymentTimeCommitment
 from .models import FinalApplication
 from .models import InternSelection
 from .models import InitialMentorFeedback
+from .models import InitialInternFeedback
 from .models import MentorApproval
 from .models import MentorRelationship
 from .models import NewCommunity
@@ -434,6 +435,16 @@ class SignedContractAdmin(admin.ModelAdmin):
             'date_signed',
             )
 
+class InitialMentorFeedbackInline(admin.StackedInline):
+    model = InitialMentorFeedback
+    can_delete = False
+    verbose_name_plural = 'Mentor submitted feedback forms'
+
+class InitialInternFeedbackInline(admin.StackedInline):
+    model = InitialInternFeedback
+    can_delete = False
+    verbose_name_plural = 'Intern submitted feedback forms'
+
 class InternSelectionAdmin(reversion.admin.VersionAdmin):
     list_display = (
             'round',
@@ -454,8 +465,27 @@ class InternSelectionAdmin(reversion.admin.VersionAdmin):
             'mentors__mentor__public_name',
             'mentors__mentor__account__email',
             )
+    inlines = (InitialMentorFeedbackInline, InitialInternFeedbackInline)
 
 class InitialMentorFeedbackAdmin(reversion.admin.VersionAdmin):
+    list_display = (
+            'intern_name',
+            'community_name',
+            'project_name',
+            'round',
+            )
+    list_filter = (
+            'intern_selection__project__project_round__participating_round',
+            'intern_selection__project__project_round__community__name',
+            )
+    search_fields = (
+            'intern_selection__applicant__applicant__public_name',
+            'intern_selection__applicant__applicant__legal_name',
+            '=intern_selection__applicant__applicant__account__username',
+            '=intern_selection__applicant__applicant__account__email',
+            )
+
+class InitialInternFeedbackAdmin(reversion.admin.VersionAdmin):
     list_display = (
             'intern_name',
             'community_name',

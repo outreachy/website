@@ -64,6 +64,7 @@ from .models import FinalApplication
 from .models import InternSelection
 from .models import InitialApplicationReview
 from .models import InitialMentorFeedback
+from .models import InitialInternFeedback
 from .models import has_deadline_passed
 from .models import MentorApproval
 from .models import MentorRelationship
@@ -2344,7 +2345,49 @@ class InitialMentorFeedbackUpdate(LoginRequiredMixin, UpdateView, reversion.view
         feedback = form.save(commit=False)
         feedback.allow_edits = False
         feedback.save()
-        return redirect('dashboard')
+        return redirect(reverse('dashboard') + '#feedback')
+
+class InitialInternFeedbackUpdate(LoginRequiredMixin, UpdateView, reversion.views.RevisionMixin):
+    form_class = modelform_factory(InitialInternFeedback,
+            fields=(
+                'in_contact',
+                'asking_questions',
+                'active_in_public',
+                'provided_onboarding',
+                'checkin_frequency',
+                'last_contact',
+                'intern_response_time',
+                'mentor_response_time',
+                'mentor_support',
+                'hours_worked',
+                'progress_report',
+                ),
+            field_classes = {
+                'in_contact': RadioBooleanField,
+                'asking_questions': RadioBooleanField,
+                'active_in_public': RadioBooleanField,
+                'provided_onboarding': RadioBooleanField,
+                },
+            )
+    def get_object(self):
+        internship = intern_in_good_standing(self.request.user)
+        if not internship:
+            raise Http404("The account for {} is not associated with an intern in good standing".format(self.request.user.username))
+
+        try:
+            feedback = InitialInternFeedback.objects.get(intern_selection=internship)
+            if not feedback.can_edit():
+                raise PermissionDenied("This feedback is already submitted and can't be updated right now.")
+            return feedback
+        except InitialInternFeedback.DoesNotExist:
+            return InitialInternFeedback(intern_selection=internship)
+
+    def form_valid(self, form):
+        feedback = form.save(commit=False)
+        feedback.allow_edits = False
+        feedback.save()
+        return redirect(reverse('dashboard') + '#feedback')
+
 
 def alums_page(request):
     # Get all the older AlumInfo models (before we had round pages)
