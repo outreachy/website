@@ -134,3 +134,54 @@ class InternSelectionTestCase(TestCase):
                     internselection.initialmentorfeedback
 
                 self.assertFormError(response, "form", "extension_date", expected_error)
+
+    @staticmethod
+    def _intern_feedback_form(internselection, **kwargs):
+        defaults = {
+            'in_contact': True,
+            'asking_questions': True,
+            'active_in_public': True,
+            'provided_onboarding': True,
+            'checkin_frequency': models.InitialInternFeedback.ONCE_WEEKLY,
+            'last_contact': internselection.initial_feedback_opens,
+            'intern_response_time': models.InitialInternFeedback.HOURS_12,
+            'mentor_response_time': models.InitialInternFeedback.HOURS_12,
+            'mentor_support': 'My mentor is awesome.',
+            'hours_worked': models.InitialInternFeedback.HOURS_40,
+            'progress_report': 'Everything is fine.',
+        }
+        defaults.update(kwargs)
+        return defaults
+
+    def _submit_intern_feedback_form(self, internselection, answers):
+        self.client.force_login(internselection.applicant.applicant.account)
+
+        return self.client.post(reverse('initial-intern-feedback'), {
+            # This is a dictionary comprehension that converts model-level
+            # values to form/POST values. It assumes all form widgets accept
+            # the str() representation of their type when the form is POSTed.
+            # Values which are supposed to be unspecified can be provided as
+            # None, in which case we don't POST that key at all.
+            key: str(value)
+            for key, value in answers.items()
+            if value is not None
+        })
+
+    def test_intern_can_give_initial_feedback(self):
+        internselection = InternSelectionFactory(
+            active=True,
+            round__start_from='initialfeedback',
+        )
+
+        answers = self._intern_feedback_form(internselection)
+        response = self._submit_intern_feedback_form(internselection, answers)
+        self.assertEqual(response.status_code, 302)
+
+        # will raise DoesNotExist if the view didn't create this
+        feedback = internselection.initialinternfeedback
+
+        for key, expected in answers.items():
+            self.assertEqual(getattr(feedback, key), expected)
+
+        # only allow submitting once
+        self.assertFalse(feedback.allow_edits)
