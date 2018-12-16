@@ -5,7 +5,7 @@ Initial mentor feedback
 {% endblock %}
 
 {% block content %}
-<h1>Feedback on Your Intern's Effort</h1>
+<h1>Feedback on {{ initialmentorfeedback.intern_selection.applicant.applicant.public_name }}</h1>
 
 <p>Outreachy organizers collect intern feedback from mentors three times during the Outreachy internship. Please give yourself at least 5 to 15 minutes to complete this form.</p>
 
@@ -22,6 +22,18 @@ Initial mentor feedback
 <h2>Metrics for Success</h2>
 
 <p>The most important metric for success is whether your intern is putting in a full-time, 40 hours a week effort. If an intern isn't putting in a full-time effort, we use the other metrics to come up with a plan to get the intern back on track. We also gather metrics about mentor engagement to ensure success for all Outreachy mentors.</p>
+
+<div class="card border-warning mb-3">
+    <div class="card-header text-white bg-warning">
+        Verify your intern name
+    </div>
+    <div class="card-body">
+        <p class="card-text">
+	<b>{{ initialmentorfeedback.intern_selection.applicant.applicant.public_name }}</b> is the intern you are giving feedback on.
+	If you are mentoring multiple interns, please make sure you're filling out the right initial feedback form.
+        </p>
+    </div>
+</div>
 
 <form method="post" action="">
 {% csrf_token %}
@@ -76,6 +88,17 @@ Initial mentor feedback
 {% for hidden in form.hidden_fields %}
 	{{ hidden }}
 {% endfor %}
+<div class="card border-warning mb-3">
+    <div class="card-header text-white bg-warning">
+        Verify your intern name
+    </div>
+    <div class="card-body">
+        <p class="card-text">
+	<b>{{ initialmentorfeedback.intern_selection.applicant.applicant.public_name }}</b> is the intern you are giving feedback on.
+	If you are mentoring multiple interns, please make sure you're filling out the right initial feedback form.
+        </p>
+    </div>
+</div>
 <input type="submit" class="btn btn-block btn-primary" value="Submit feedback" />
 </form>
 
