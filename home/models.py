@@ -3595,6 +3595,9 @@ class InitialMentorFeedback(models.Model):
     def summary(self):
         return 'foo'
 
+    def get_versions(self):
+        return Version.objects.get_for_object(self)
+
     def can_edit(self):
         if not self.allow_edits:
             return False

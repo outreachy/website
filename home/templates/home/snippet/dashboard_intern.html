@@ -55,9 +55,23 @@
 
 		{% if internship.is_initial_feedback_on_mentor_open %}
 			<p><a href="{% url 'initial-intern-feedback' %}"><button type="button" class="btn btn-info">Submit Initial Feedback</button></a></p>
-		{% elif rel.intern_selection.initialinternfeedback.summary %}
-			<p>Your initial feedback was submitted.</p>
 		{% endif %}
+		<p>Submitted feedback:</p>
+		<ul>
+			{% if internship.initialinternfeedback.summary %}
+				<li>Your initial feedback was submitted.</li>
+			{% endif %}
+			{% if internship.initialmentorfeedback %}
+				<li>Your mentor has submitted initial feedback on
+					{% for v in internship.initialmentorfeedback.get_versions %}
+						{{ v.revision.date_created }}
+					{% endfor %}
+				</li>
+			{% endif %}
+			{% if not internship.initialinternfeedback and not internship.initialmentorfeedback %}
+				<li>Neither you nor your mentor have submitted initial feedback.</li>
+			{% endif %}
+		</ul>
 
 		<p>Dates for you to give feedback on your mentor:
 		<ul>
