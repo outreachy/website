@@ -3526,7 +3526,7 @@ class InitialMentorFeedback(models.Model):
     active_in_public = models.BooleanField(verbose_name="Has your intern been active on public project channels, such as the community's chat, forums, issue tracker, mailing list, etc?")
     provided_onboarding = models.BooleanField(verbose_name="Have you provided documentation or other resources to help onboard your intern?")
 
-    NOT_SCHEDULED = ''
+    NOT_SCHEDULED = '0'
     ONCE_DAILY = 'D'
     MULTIPLE_WEEKLY = 'M'
     ONCE_WEEKLY = 'W'
@@ -3629,7 +3629,7 @@ class InitialInternFeedback(models.Model):
     active_in_public = models.BooleanField(verbose_name="Have you been active on public project channels, such as the community's chat, forums, issue tracker, mailing list, etc?")
     provided_onboarding = models.BooleanField(verbose_name="Has your mentor provided documentation or other resources to help you learn more about your community and your first tasks?")
 
-    NOT_SCHEDULED = ''
+    NOT_SCHEDULED = '0'
     ONCE_DAILY = 'D'
     MULTIPLE_WEEKLY = 'M'
     ONCE_WEEKLY = 'W'
