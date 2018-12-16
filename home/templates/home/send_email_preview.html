@@ -7,6 +7,7 @@ Send reminder emails
 {% block content %}
 <p>You're about to send {{ messages|length }} emails. Please check that these are the messages you want to send.</p>
 
+<div class="email-preview">
 {% for message in messages %}
 <div class="card">
 <div class="card-body">
@@ -16,6 +17,7 @@ Send reminder emails
 </div>
 </div>
 {% endfor %}
+</div>
 
 <form action="" method="post">
     {% csrf_token %}
