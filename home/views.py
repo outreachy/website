@@ -1903,7 +1903,7 @@ def set_project_and_applicant(self, current_round):
             application_round=current_round)
 
 # Passed round_slug, community_slug, project_slug, applicant_username
-class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, FormView, reversion.views.RevisionMixin):
+class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, FormView):
     form_class = InternSelectionForm
     template_name = 'home/internselection_form.html'
 
@@ -1999,7 +1999,7 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, FormView, 
             }) + "#rating"
 
 # Passed round_slug, community_slug, project_slug, applicant_username
-class InternRemoval(LoginRequiredMixin, ComradeRequiredMixin, DeleteView, reversion.views.RevisionMixin):
+class InternRemoval(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, DeleteView):
     model = InternSelection
     template_name = 'home/intern_removal_form.html'
 
@@ -2095,7 +2095,7 @@ class MentorResignation(LoginRequiredMixin, ComradeRequiredMixin, DeleteView):
             'project_slug': self.kwargs['project_slug'],
             }) + "#rating"
 
-class InternFund(LoginRequiredMixin, ComradeRequiredMixin, View, reversion.views.RevisionMixin):
+class InternFund(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, View):
     def post(self, request, *args, **kwargs):
         username = kwargs['applicant_username']
         current_round = RoundPage.objects.latest('internstarts')
@@ -2138,7 +2138,7 @@ class InternFund(LoginRequiredMixin, ComradeRequiredMixin, View, reversion.views
             'community_slug': kwargs['community_slug'],
             }) + "#interns")
 
-class InternApprove(LoginRequiredMixin, ComradeRequiredMixin, View, reversion.views.RevisionMixin):
+class InternApprove(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, View):
     def post(self, request, *args, **kwargs):
         username = kwargs['applicant_username']
         current_round = RoundPage.objects.latest('internstarts')
@@ -2167,7 +2167,7 @@ class InternApprove(LoginRequiredMixin, ComradeRequiredMixin, View, reversion.vi
             project=self.intern_selection.project.slug,
             applicant=self.intern_selection.applicant.applicant.pk))
 
-class AlumStanding(LoginRequiredMixin, ComradeRequiredMixin, View, reversion.views.RevisionMixin):
+class AlumStanding(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, View):
     def post(self, request, *args, **kwargs):
         print("AlumStanding", kwargs['standing'])
         # Only allow approved organizers to approve interns
@@ -2297,7 +2297,7 @@ class MentorFirstPaymentNotification(SendEmailView):
         for i in interns:
             email.notify_mentors_of_first_stipend(i, self.request, connection=connection)
 
-class InitialMentorFeedbackUpdate(LoginRequiredMixin, UpdateView, reversion.views.RevisionMixin):
+class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(InitialMentorFeedback,
             fields=(
                 'in_contact',
@@ -2347,7 +2347,7 @@ class InitialMentorFeedbackUpdate(LoginRequiredMixin, UpdateView, reversion.view
         feedback.save()
         return redirect(reverse('dashboard') + '#feedback')
 
-class InitialInternFeedbackUpdate(LoginRequiredMixin, UpdateView, reversion.views.RevisionMixin):
+class InitialInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(InitialInternFeedback,
             fields=(
                 'in_contact',
@@ -2614,7 +2614,7 @@ class NotifyEssayNeedsUpdating(LoginRequiredMixin, ComradeRequiredMixin, View):
             'applicant_username': self.kwargs['applicant_username'],
             }))
 
-class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView, reversion.views.RevisionMixin):
+class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     model = BarriersToParticipation
 
     fields = [
@@ -2661,7 +2661,7 @@ class NotifySchoolInformationUpdating(LoginRequiredMixin, ComradeRequiredMixin, 
             'applicant_username': self.kwargs['applicant_username'],
             }))
 
-class SchoolInformationUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView, reversion.views.RevisionMixin):
+class SchoolInformationUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     model = SchoolInformation
 
     fields = [

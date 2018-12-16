@@ -1,6 +1,7 @@
 import datetime
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
+from reversion.models import Version
 
 from . import models
 from .factories import RoundPageFactory
@@ -101,6 +102,8 @@ class InternSelectionTestCase(TestCase):
                 # only allow submitting once
                 self.assertFalse(feedback.allow_edits)
 
+                self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+
     def test_invalid_duplicate_mentor_feedback(self):
         prior = InitialMentorFeedbackFactory(allow_edits=False)
         internselection = prior.intern_selection
@@ -197,3 +200,5 @@ class InternSelectionTestCase(TestCase):
 
         # only allow submitting once
         self.assertFalse(feedback.allow_edits)
+
+        self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
