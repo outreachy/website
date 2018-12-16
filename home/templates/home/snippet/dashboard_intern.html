@@ -53,7 +53,7 @@
 		<p>The feedback form also collects information about how you view your own progress in the internship. This is important to provide, especially if your mentor has previously asked for an extension for your internship. The feedback form also offers a way for interns to request additional help or support.</p>
 		<p>The feedback is private and completely optional. Your feedback about your mentors will only be seen by the Outreachy organizers. We will discuss the feedback with you before contacting your mentors about how to improve their mentorship.</p>
 
-		{% if internship.is_initial_feedback_on_intern_open %}
+		{% if internship.is_initial_feedback_on_mentor_open %}
 			<p><a href="{% url 'initial-intern-feedback' %}"><button type="button" class="btn btn-info">Submit Initial Feedback</button></a></p>
 		{% elif rel.intern_selection.initialinternfeedback.summary %}
 			<p>Your initial feedback was submitted.</p>

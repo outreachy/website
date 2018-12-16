@@ -3418,6 +3418,14 @@ class InternSelection(models.Model):
         except InitialMentorFeedback.DoesNotExist:
             return True
 
+    def is_initial_feedback_on_mentor_open(self):
+        if not has_deadline_passed(self.initial_feedback_opens):
+            return False
+        try:
+            return self.initialinternfeedback.can_edit()
+        except InitialInternFeedback.DoesNotExist:
+            return True
+
     def intern_name(self):
         return self.applicant.applicant.public_name
 
