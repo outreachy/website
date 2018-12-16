@@ -3,7 +3,9 @@ from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 
 from . import models
-from .factories import RoundPageFactory, InternSelectionFactory
+from .factories import RoundPageFactory
+from .factories import InternSelectionFactory
+from .factories import InitialMentorFeedbackFactory
 
 
 # don't try to use the static files manifest during tests
@@ -46,7 +48,7 @@ class InternSelectionTestCase(TestCase):
             'payment_approved': True,
             'full_time_effort': True,
             'progress_report': 'Everything is fine.',
-            'request_extension': None,
+            'request_extension': False,
             'extension_date': None,
         }
         defaults.update(kwargs)
@@ -98,6 +100,16 @@ class InternSelectionTestCase(TestCase):
 
                 # only allow submitting once
                 self.assertFalse(feedback.allow_edits)
+
+    def test_invalid_duplicate_mentor_feedback(self):
+        prior = InitialMentorFeedbackFactory(allow_edits=False)
+        internselection = prior.intern_selection
+
+        answers = self._mentor_feedback_form(internselection)
+        response = self._submit_mentor_feedback_form(internselection, answers)
+
+        # permission denied
+        self.assertEqual(response.status_code, 403)
 
     def test_invalid_mentor_extension_request(self):
         round = RoundPageFactory(start_from='initialfeedback')

@@ -280,3 +280,32 @@ class MentorRelationshipFactory(factory.django.DjangoModelFactory):
     intern_selection = factory.SubFactory(InternSelectionFactory)
     mentor = factory.SubFactory(MentorApprovalFactory)
     contract = factory.SubFactory(SignedContractFactory)
+
+class InitialMentorFeedbackFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.InitialMentorFeedback
+        django_get_or_create = ('intern_selection',)
+
+    intern_selection = factory.SubFactory(InternSelectionFactory,
+        active=True,
+        round__start_from='initialfeedback',
+    )
+    allow_edits = False
+
+    in_contact = True
+    asking_questions = True
+    active_in_public = True
+    provided_onboarding = True
+
+    checkin_frequency = factory.Iterator(models.InitialMentorFeedback.CHECKIN_FREQUENCY_CHOICES, getter=lambda c: c[0])
+
+    last_contact = factory.Faker('past_date')
+
+    intern_response_time = factory.Iterator(models.InitialMentorFeedback.RESPONSE_TIME_CHOICES, getter=lambda c: c[0])
+    mentor_response_time = factory.Iterator(models.InitialMentorFeedback.RESPONSE_TIME_CHOICES, getter=lambda c: c[0])
+
+    progress_report = factory.Faker('paragraph')
+    full_time_effort = True
+    payment_approved = True
+
+    request_extension = False
