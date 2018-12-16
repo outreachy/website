@@ -3511,6 +3511,7 @@ class MentorRelationship(models.Model):
 class InitialMentorFeedback(models.Model):
     intern_selection = models.OneToOneField(InternSelection)
     allow_edits = models.BooleanField()
+    ip_address = models.GenericIPAddressField(protocol="both")
 
     in_contact = models.BooleanField(verbose_name="Has your intern been in contact to discuss how to approach their first tasks?")
     asking_questions = models.BooleanField(verbose_name="Has your intern been asking questions about their first tasks?")
@@ -3556,7 +3557,8 @@ class InitialMentorFeedback(models.Model):
     intern_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="On average, how long does it take for <b>your intern</b> to respond to your questions or feedback?")
     mentor_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="On average, how long does it take for <b>you</b> to respond to your intern's questions or requests for feedback?")
 
-    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your intern's progress on establishing communication with you, connecting to your FOSS community, and ramping up on their first tasks.")
+    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your intern's progress on establishing communication with you, connecting to your FOSS community, and ramping up on their first tasks. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.")
+    mentors_report = models.TextField(verbose_name="(Optional) Please provide a paragraph for Outreachy coordinators and other mentors describing your intern's progress. This will be shared on the mentors mailing list, but will not be made public.", blank=True, null=True)
     full_time_effort = models.BooleanField(verbose_name="Do you believe your Outreachy intern is putting in a full-time, 40 hours a week effort into the internship?")
 
     payment_approved = models.BooleanField(verbose_name="Should your Outreachy intern be paid the initial $1,000 payment?", help_text="Please base your answer on whether your intern has put in a full-time, 40 hours a week effort. They should have established communication with you and other mentors, and have started learning how to tackle their first tasks. If you are going to ask for an internship extension, please say no to this question.")
@@ -3566,6 +3568,9 @@ class InitialMentorFeedback(models.Model):
 
     request_extension = models.BooleanField(verbose_name="Does your intern need an extension?", help_text="Sometimes interns do not put in a full-time effort. In this case, one of the options is to delay payment of their stipend and extend their internship a specific number of weeks. You will be asked to re-evaluate your intern after the extension is done.")
     extension_date = models.DateField(help_text="If you want to extend the internship, please pick a date when you will be asked to update your intern's initial feedback and authorize payment. Internships can be extended for up to five weeks. We don't recommend extending an internship for more than 1 week at initial feedback. Please leave this field blank if you are not asking for an extension.", blank=True, null=True)
+
+    request_termination = models.BooleanField(verbose_name="Do you believe the internship should be terminated?", help_text="Sometimes after several extensions, interns still do not put in a full-time effort. If you believe that your intern would not put in a full-time effort with a further extension, you may request to terminate the internship. The Outreachy organizers will be in touch to discuss the request.")
+    termination_reason = RichTextField(verbose_name="Why you feel the internship should be terminated?", help_text="Please elaborate on the efforts you have put in to get your intern back on track, and the results of those efforts. Tell us about your intern's work efforts, communication frequency, and meeting attendance since their last extension. Provide links to any work that is still in progress or has been completed since their last extension. Please let us know any additional information about why the internship should be terminated.", blank=True, null=True)
 
     def intern_name(self):
         return self.intern_selection.intern_name()
@@ -3606,6 +3611,7 @@ class InitialMentorFeedback(models.Model):
 class InitialInternFeedback(models.Model):
     intern_selection = models.OneToOneField(InternSelection)
     allow_edits = models.BooleanField()
+    ip_address = models.GenericIPAddressField(protocol="both")
 
     in_contact = models.BooleanField(verbose_name="Have you been in contact with your mentor to discuss how to approach your first tasks?")
     asking_questions = models.BooleanField(verbose_name="Have you been asking questions about your first tasks?")

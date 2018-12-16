@@ -37,6 +37,14 @@ Initial mentor feedback
 		<p>We will discuss your feedback and the extension with you before we contact your intern. We will come up with a plan of action to get the internship back on track, draft a response to your intern together, and then we will contact your intern.</p>
 
 	{% endif %}
+	{% if 'Do you believe the internship should be terminated' in field.label_tag %}
+		<h2>Internship Termination</h2>
+
+		<p>Outreachy organizers prefer not to terminate an internship unless the intern has been given an extension and is still not putting in a full-time, 40 hours a week effort. Outreachy organizers view this internship as a fellowship. Mentors should not expect a certain project to be completed by the intern, but rather expect that the intern's work will be adjusted to the level of their ability, their interests, and the project's priorities throughout the internship. Outreachy organizers prefer not to fail people in the program as long as they are working full-time on the project.</p>
+
+		<p>We will discuss your request for this internship to be terminated with you before we contact your intern. We will work together to draft a response to your intern.</p>
+
+	{% endif %}
 	{% if 'On average' in field.label_tag %}
 		<div class="form-group card">
 			{{ field.errors }}
