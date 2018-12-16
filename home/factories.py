@@ -291,6 +291,7 @@ class InitialMentorFeedbackFactory(factory.django.DjangoModelFactory):
         round__start_from='initialfeedback',
     )
     allow_edits = False
+    ip_address = factory.Faker('ipv4_public')
 
     in_contact = True
     asking_questions = True
@@ -306,6 +307,9 @@ class InitialMentorFeedbackFactory(factory.django.DjangoModelFactory):
 
     progress_report = factory.Faker('paragraph')
     full_time_effort = True
+
     payment_approved = True
 
     request_extension = False
+
+    request_termination = False

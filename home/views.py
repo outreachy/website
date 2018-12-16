@@ -2311,8 +2311,11 @@ class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMi
                 'payment_approved',
                 'full_time_effort',
                 'progress_report',
+                'mentors_report',
                 'request_extension',
                 'extension_date',
+                'request_termination',
+                'termination_reason',
             ),
             field_classes = {
                 'in_contact': RadioBooleanField,
@@ -2322,6 +2325,7 @@ class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMi
                 'full_time_effort': RadioBooleanField,
                 'payment_approved': RadioBooleanField,
                 'request_extension': RadioBooleanField,
+                'request_termination': RadioBooleanField,
             },
         )
 
@@ -2344,6 +2348,7 @@ class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMi
     def form_valid(self, form):
         feedback = form.save(commit=False)
         feedback.allow_edits = False
+        feedback.ip_address = self.request.META.get('REMOTE_ADDR')
         feedback.save()
         return redirect(reverse('dashboard') + '#feedback')
 
@@ -2385,6 +2390,7 @@ class InitialInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMi
     def form_valid(self, form):
         feedback = form.save(commit=False)
         feedback.allow_edits = False
+        feedback.ip_address = self.request.META.get('REMOTE_ADDR')
         feedback.save()
         return redirect(reverse('dashboard') + '#feedback')
 

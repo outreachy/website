@@ -42,6 +42,8 @@ The types of personal data collected may include (but are not limited to):
 * your telephone number;
 * any other identifier that permits Outreachy to make physical or online contact with you;
 * information necessary to make payments to Outreachy interns and process sponsorship commitments;
+* feedback from mentors on the progress of their Outreachy intern(s) during payment milestones;
+* feedback from interns on the support of their Outreachy mentor(s) during payment milestones;
 * any errors or exceptions you triggered on the Outreachy website, including your username, IP address, and which URL triggered the error or exception.
 * any information that Outreachy collects online from you and maintains in association with your account, such as: 
     * your Outreachy Account System username, e-mail address, and password;
@@ -59,7 +61,7 @@ The types of personal data collected may include (but are not limited to):
     * (optional) your GitHub user profile URL;
     * (optional) your GitLab user profile URL;
     * (optional) your blog URL and RSS feed URL;
-    * (optional) your Twitter user profile URL; 
+    * (optional) your Twitter user profile URL;
 
 Publicly Available Personal Data
 ===
