@@ -250,16 +250,6 @@ def notify_survey(survey_tracker, request):
         request=request,
         recipient_list=[email])
 
-def notify_mentors_of_first_stipend(intern_selection, request, **kwargs):
-    emails = intern_selection.mentor_emails()
-    emails.append(organizers)
-    send_group_template_mail('home/email/menter-intern-start-reminder.txt', {
-        'intern': intern_selection,
-        },
-        request=request,
-        recipient_list=emails,
-        **kwargs)
-
 
 @override_settings(ALLOWED_HOSTS=['www.outreachy.org'], EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend')
 def message_samples():

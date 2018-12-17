@@ -2287,16 +2287,6 @@ class InternWeekOne(SendEmailView):
         for i in interns:
             email.week_one_email(i, self.request, connection=connection)
 
-class MentorFirstPaymentNotification(SendEmailView):
-    def generate_messages(self, connection):
-        if not self.request.user.is_staff:
-            raise PermissionDenied("You are not authorized to send reminder emails.")
-        current_round = RoundPage.objects.latest('internstarts')
-        interns = current_round.get_approved_intern_selections()
-
-        for i in interns:
-            email.notify_mentors_of_first_stipend(i, self.request, connection=connection)
-
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(InitialMentorFeedback,
             fields=(

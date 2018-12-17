@@ -77,7 +77,6 @@ urlpatterns = [
     url(r'^email/mentor-intern-selection-reminder/$', views.MentorInternSelectionReminder.as_view(), name='email-mentor-intern-selection-reminder'),
     url(r'^email/coordinator-intern-selection-reminder/$', views.CoordinatorInternSelectionReminder.as_view(), name='email-coordinator-intern-selection-reminder'),
     url(r'^email/intern-welcome/$', views.InternNotification.as_view(), name='email-intern-welcome'),
-    url(r'^email/mentor-intern-start-reminder/$', views.MentorFirstPaymentNotification.as_view(), name='email-mentor-intern-start-reminder'),
     url(r'^email/internship-week-one/$', views.InternWeekOne.as_view(), name='email-internship-week-one'),
     url(r'^longitudinal-survey/2018-initiate/$', views.Survey2018Notification.as_view(), name='longitudinal-survey-2018-initiate'),
     url(r'^longitudinal-survey/2018/(?P<survey_slug>[^/]+)/$', views.AlumSurveyUpdate.as_view(), name='longitudinal-survey-2018'),
