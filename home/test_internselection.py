@@ -108,14 +108,46 @@ class InternSelectionTestCase(TestCase):
                 self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
 
     def test_invalid_duplicate_mentor_feedback(self):
-        prior = InitialMentorFeedbackFactory(allow_edits=False)
+        today = datetime.date.today()
+        week = datetime.timedelta(weeks=1)
+        disallowed_when = (
+            { 'allow_edits': False, 'intern_selection__initial_feedback_opens': today - week },
+            { 'allow_edits': True, 'intern_selection__initial_feedback_opens': today + week },
+        )
+        for params in disallowed_when:
+            with self.subTest(params=params):
+                prior = InitialMentorFeedbackFactory(**params)
+                internselection = prior.intern_selection
+
+                answers = self._mentor_feedback_form(internselection)
+                response = self._submit_mentor_feedback_form(internselection, answers)
+
+                # permission denied
+                self.assertEqual(response.status_code, 403)
+
+    def test_mentor_can_resubmit_feedback(self):
+        prior = InitialMentorFeedbackFactory(allow_edits=True)
         internselection = prior.intern_selection
 
         answers = self._mentor_feedback_form(internselection)
         response = self._submit_mentor_feedback_form(internselection, answers)
+        self.assertEqual(response.status_code, 302)
 
-        # permission denied
-        self.assertEqual(response.status_code, 403)
+        # discard all cached objects and reload from database
+        internselection = models.InternSelection.objects.get(pk=internselection.pk)
+
+        # will raise DoesNotExist if the view destroyed this feedback
+        feedback = internselection.initialmentorfeedback
+
+        for key, expected in answers.items():
+            self.assertEqual(getattr(feedback, key), expected)
+
+        # only allow submitting once
+        self.assertFalse(feedback.allow_edits)
+
+        # we didn't create a version for the factory-generated object, so the
+        # only version should be the one that the view records
+        self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
 
     def test_invalid_mentor_extension_request(self):
         round = RoundPageFactory(start_from='initialfeedback')
