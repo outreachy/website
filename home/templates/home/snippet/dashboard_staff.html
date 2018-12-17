@@ -82,6 +82,14 @@ you can send an email to the announcements mailing list to remind applicants of 
 
 <p><a href="{% url 'email-intern-welcome' %}"><input class="btn btn-success" value="Intern Welcome Email" /></a>
 
+<p>A week after the interns have started, send the email asking for initial feedback. You may have to send it multiple times, if some interns have a delayed internship start date:
+<ul>
+	<li>Send the email after {{ current_round.intern_initial_feedback_opens }}.</li>
+</ul>
+</p>
+
+<p><a href="{% url 'email-initial-feedback-instructions' %}"><input class="btn btn-success" value="Initial Feedback Reminder" /></a>
+
 <hr>
 
 <h1>Statistics for sponsors</h1>

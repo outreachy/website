@@ -185,6 +185,9 @@ class RoundPage(Page):
     def intern_agreement_deadline(self):
         return(self.internannounce + datetime.timedelta(days=7))
 
+    def intern_initial_feedback_opens(self):
+        return(self.initialfeedback - datetime.timedelta(days=7))
+
     def intern_not_started_deadline(self):
         return(self.initialfeedback - datetime.timedelta(days=1))
 
@@ -307,6 +310,13 @@ class RoundPage(Page):
     def get_in_good_standing_intern_selections(self):
         return self.get_approved_intern_selections().filter(
                 in_good_standing=True)
+
+    def get_interns_with_open_initial_feedback(self):
+        interns = []
+        for i in self.get_in_good_standing_intern_selections():
+            if i.is_initial_feedback_on_intern_open() or i.is_initial_feedback_on_mentor_open():
+                interns.append(i)
+        return interns
 
     def get_communities_with_unused_funding(self):
         participations = Participation.objects.filter(
@@ -3521,6 +3531,9 @@ class InitialMentorFeedback(models.Model):
     allow_edits = models.BooleanField()
     ip_address = models.GenericIPAddressField(protocol="both")
 
+    # XXX - Make sure to change the questions in
+    # home/templates/home/email/initial-feedback-instructions.txt
+    # if you change these verbose names.
     in_contact = models.BooleanField(verbose_name="Has your intern been in contact to discuss how to approach their first tasks?")
     asking_questions = models.BooleanField(verbose_name="Has your intern been asking questions about their first tasks?")
     active_in_public = models.BooleanField(verbose_name="Has your intern been active on public project channels, such as the community's chat, forums, issue tracker, mailing list, etc?")
@@ -3624,6 +3637,9 @@ class InitialInternFeedback(models.Model):
     allow_edits = models.BooleanField()
     ip_address = models.GenericIPAddressField(protocol="both")
 
+    # XXX - Make sure to change the questions in
+    # home/templates/home/email/initial-feedback-instructions.txt
+    # if you change these verbose names.
     in_contact = models.BooleanField(verbose_name="Have you been in contact with your mentor to discuss how to approach your first tasks?")
     asking_questions = models.BooleanField(verbose_name="Have you been asking questions about your first tasks?")
     active_in_public = models.BooleanField(verbose_name="Have you been active on public project channels, such as the community's chat, forums, issue tracker, mailing list, etc?")

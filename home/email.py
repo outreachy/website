@@ -221,6 +221,19 @@ def week_one_email(intern_selection, request, **kwargs):
         recipient_list=emails,
         **kwargs)
 
+def initial_feedback_email(intern_selection, request, **kwargs):
+    emails = [intern_selection.applicant.applicant.email_address()]
+    for m in intern_selection.mentors.all():
+        emails.append(m.mentor.email_address())
+    emails = emails + intern_selection.project.project_round.community.get_coordinator_email_list()
+    send_group_template_mail('home/email/initial-feedback-instructions.txt', {
+        'intern_selection': intern_selection,
+        'current_round': intern_selection.project.project_round.participating_round,
+        },
+        request=request,
+        recipient_list=emails,
+        **kwargs)
+
 def notify_survey(survey_tracker, request):
     if survey_tracker.intern_info:
         name = survey_tracker.intern_info.applicant.applicant.public_name
