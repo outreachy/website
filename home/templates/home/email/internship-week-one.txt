@@ -65,4 +65,4 @@ Here's some prompts that could get you started writing this blog post:
 Again, if you have any questions, please contact us!
 
 Outreachy Organizers
-{% include 'home/email/footer-applicant.txt' %}
+{% include 'home/email/footer-mentor-intern-coordinator.txt' %}
