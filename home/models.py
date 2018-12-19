@@ -189,6 +189,9 @@ class RoundPage(Page):
     def intern_initial_feedback_opens(self):
         return(self.initialfeedback - datetime.timedelta(days=7))
 
+    def internship_week_three_email_deadline(self):
+        return(self.internstarts + datetime.timedelta(days=7*2))
+
     def intern_not_started_deadline(self):
         return(self.initialfeedback - datetime.timedelta(days=1))
 

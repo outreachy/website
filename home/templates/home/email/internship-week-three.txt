@@ -1,0 +1,72 @@
+Outreachy week 3: Assignments for mentors & interns
+
+Welcome to the third week of your Outreachy internship! We hope you're starting to get the hang of your internship. Please reach out to organizers@outreachy.org if you need additional help!
+
+We have some goals and assignments for both mentors and interns. Please read the sections below.
+
+For most interns, initial feedback is due on {{ current_round.initialfeedback }}. When your initial feedback is open, you'll see a button on your dashboard:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}#feedback
+
+Week 3 Theme
+------------
+
+The theme for this week is "Everybody Struggles." When newcomers are working with experienced contributors, their mentors may seem perfect to them. Interns often see their mentors' contributions once they are ready for review. Interns don't always see their mentors put in long hours hunting down subtle mistakes in their contributions. Interns don't see the days their mentors spent searching documentation and forums for why something isn't working.
+
+If we never acknowledge the effort and struggle we experience, other people may feel bad about getting stuck. They may hesitate to reach out when they need help. However, sometimes even the act of asking for help can solve your problem! Often when we start to write about what we're stuck on, or talk with another person about it, we end up figuring out something new to try or realizing what our issue was. Programmers often call this "rubber duck" debugging:
+
+https://en.wikipedia.org/wiki/Rubber_duck_debugging
+
+Part of the reason many people find free and open source software development intimidating is because they need to work in the open. The positive part of working in the open is that community contributors reach out to each other on public forums to get help when they're stuck. You can often learn a lot from watching two experienced contributors work through a tough problem together.
+
+This week, we want Outreachy mentors and their interns to have a longer conversation about what something they're currently stuck on. If you're not stuck on something, talk about a time in the past when you were so stuck you had to get help. Share what you tried, what didn't work, and how you found help to finally get unstuck.
+
+Optionally, both mentors and interns can share a brief version of what you're currently stuck on in the Outreachy chat:
+
+{{ current_round.week_three_stuck_chat_url }}
+
+Goals for Mentors
+-----------------
+
+Week 3 goals:
+
+ - Model to your intern that you're not perfect!
+ - If you're you're unsure or don't know how to tackle a task, tell your intern what you don't know
+ - Model how you would work through being stuck on a tough contribution
+ - Have a screen share with your intern to work through a problem together
+ - Introduce your intern to a new resource or a new person in the community they can ask questions
+ - Encourage your community members to talk about a time when they were really stuck
+
+Goals for Interns
+-----------------
+
+Week 3 goals:
+
+ - Write your blog post about a time you were stuck (see guidelines below)
+ - If you're stuck for more than a couple hours, ask your mentor
+ - Try asking a question on the public community forums or community chat
+ - Get your mentor to talk about a problem they've been stuck on
+
+Week 3 Blog
+-----------
+
+For this week's blog post, we'd like you to write a blog post about a time in the last three weeks you were stuck. The audience for this blog post is an Outreachy applicant or intern who stuck, and is hesitant to reach out to get help.
+
+When you model that you (a successful accepted Outreachy intern) get stuck, that helps the next round of Outreachy applicants and interns see that it's okay to get stuck. Everybody struggles!
+
+Here's some prompts that could get you started writing this blog post:
+
+ - What were you stuck on?
+ - Why was it confusing or hard?
+ - What did you try that didn't work?
+ - Where did you search for help?
+ - What resources did you find?
+ - Were any of those resources out of date or confusing?
+ - Were you hesitant to reach out for help, and if so, why were you hesitant?
+ - What happened when you reached out for help?
+ - What would you tell someone who is worried about asking for help? 
+
+Again, if you have any questions, please contact us!
+
+Outreachy Organizers
+{% include 'home/email/footer-mentor-intern-coordinator.txt' %}
