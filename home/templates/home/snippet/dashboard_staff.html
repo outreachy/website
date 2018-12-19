@@ -82,7 +82,17 @@ you can send an email to the announcements mailing list to remind applicants of 
 
 <p><a href="{% url 'email-intern-welcome' %}"><input class="btn btn-success" value="Intern Welcome Email" /></a>
 
-<p>A week after the interns have started, send the email asking for initial feedback. You may have to send it multiple times, if some interns have a delayed internship start date:
+<p>Week 1: Send a welcome email with information about the week 2 chat and a blog post prompt. Make sure the <a href="{{ current_round.week_two_chat_text_url }}">Outreachy week 2 text chat URL</a> works and the <a href="{{ current_round.week_two_chat_video_url }}">Outreachy week 2 video chat URL</a> works:
+<ul>
+	<li>Send the email on {{ current_round.internstarts }}.</li>
+</ul>
+</p>
+
+<p><a href="{% url 'email-internship-week-one' %}"><input class="btn btn-success" value="Week 1 Email" /></a>
+
+<hr>
+
+<p>Week 2: Send the email asking for initial feedback. You may have to send it multiple times, if some interns have a delayed internship start date:
 <ul>
 	<li>Send the email after {{ current_round.intern_initial_feedback_opens }}.</li>
 </ul>
