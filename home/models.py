@@ -189,6 +189,9 @@ class RoundPage(Page):
     def intern_initial_feedback_opens(self):
         return(self.initialfeedback - datetime.timedelta(days=7))
 
+    def has_intern_selection_display_date_passed(self):
+        return has_deadline_passed(self.intern_initial_feedback_opens())
+
     def internship_week_three_email_deadline(self):
         return(self.internstarts + datetime.timedelta(days=7*2))
 
@@ -3492,6 +3495,31 @@ class InternSelection(models.Model):
             'project_slug': self.project.slug,
             'applicant_username': self.applicant.applicant.account.username,
             })
+
+    SUBMITTED = 'SUB'
+    MISSING = 'MIS'
+    PAY = 'PAY'
+    EXTEND = 'EXT'
+    TERMINATE = 'TER'
+    def get_mentor_initial_feedback_status(self):
+        try:
+            if self.initialmentorfeedback.request_termination:
+                return self.TERMINATE
+            if self.initialmentorfeedback.request_extension:
+                return self.EXTEND
+            if self.initialmentorfeedback.payment_approved:
+                return self.PAY
+            # Validation should ensure this never happens?
+            return self.SUBMITTED
+        except InitialMentorFeedback.DoesNotExist:
+            return self.MISSING
+
+    def get_intern_initial_feedback_status(self):
+        try:
+            if self.initialinternfeedback:
+                return self.SUBMITTED
+        except InitialInternFeedback.DoesNotExist:
+            return self.MISSING
 
     def __str__(self):
         return self.mentor_names() + ' mentoring ' + self.applicant.applicant.public_name
