@@ -3432,6 +3432,11 @@ class InternSelection(models.Model):
         except InitialMentorFeedback.DoesNotExist:
             return True
 
+    def is_initial_feedback_on_intern_past_due(self):
+        if has_deadline_passed(self.initial_feedback_due):
+            return True
+        return False
+
     def is_initial_feedback_on_mentor_open(self):
         if not has_deadline_passed(self.initial_feedback_opens):
             return False
