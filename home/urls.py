@@ -44,6 +44,7 @@ urlpatterns = [
     url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/applicants/$', views.community_applicants, name='community-applicants'),
     url(r'^(?P<round_slug>[^/]+)/communities/(?P<slug>[^/]+)/$', views.community_landing_view, name='community-landing'),
     url(r'^(?P<round_slug>[^/]+)/contract-export/$', views.contract_export_view, name='contract-export'),
+    url(r'^(?P<round_slug>[^/]+)/initial-feedback-export/$', views.initial_mentor_feedback_export_view, name='initial-feedback-export'),
     url(r'^intern-contract-export/$', views.intern_contract_export_view, name='intern-contract-export'),
     url(r'^generic-intern-contract-export/$', views.generic_intern_contract_export_view, name='generic-intern-contract-export'),
     url(r'^generic-mentor-contract-export/$', views.generic_mentor_contract_export_view, name='generic-mentor-contract-export'),

@@ -311,7 +311,7 @@ you can send an email to the announcements mailing list to remind applicants of 
 	<h2>Intern Progress</h2>
 	<p>Standard mentor feedback dates:
 	<ul>
-		<li>{{ current_round.initialfeedback }} - Initial feedback is due</li>
+		<li>{{ current_round.initialfeedback }} - Initial feedback is due <a href="{% url 'initial-feedback-export' round_slug=current_round.slug %}"><button class="btn btn-success">Export Initial Feedback</button></a></li>
 		<li>{{ current_round.midfeedback }} - Mid-point feedback is due</li>
 		<li>{{ current_round.finalfeedback }} - Final feedback is due</li>
 	</ul>
