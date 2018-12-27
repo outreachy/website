@@ -320,8 +320,10 @@ class RoundPage(Page):
 
     def get_interns_with_open_initial_feedback(self):
         interns = []
+        # interns may not give feedback, but we only want to send a reminder email
+        # if their mentor hasn't given feedback yet.
         for i in self.get_in_good_standing_intern_selections():
-            if i.is_initial_feedback_on_intern_open() or i.is_initial_feedback_on_mentor_open():
+            if i.is_initial_feedback_on_intern_open():
                 interns.append(i)
         return interns
 
