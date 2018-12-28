@@ -49,6 +49,23 @@ Initial Feedback for current_round.official_name
 				</tr>
 				{% if initial_mentor_status == i.TERMINATE %}<tr><td colspan="3">Mentor's stated reasons for termination:<br><p>{{ i.initialmentorfeedback.termination_reason }}</p></td></tr>{% endif %}
 				{% if initial_mentor_status != i.MISSING or initial_intern_status != i.MISSING %}
+					<tr><td colspan="3"><b>Mentor support</b></td></tr>
+					<tr>
+						<td>{% if i.initialmentorfeedback %}{% if i.initialmentorfeedback.provided_onboarding %}<button class="btn btn-success">Resources provided</button>{% else %}<button class="btn btn-warning">No resources provided</button>{% endif %}{% endif %}</td>
+						<td>{% if i.initialinternfeedback %}{% if i.initialinternfeedback.provided_onboarding %}<button class="btn btn-success">Resources provided</button>{% else %}<button class="btn btn-warning">No resources provided</button>{% endif %}{% endif %}</td>
+						<td>Has the mentor provided documentation or other resources to help onboard the intern?</td>
+					</tr>
+					<tr>
+						<td>{% if i.initialmentorfeedback %}{% if i.initialmentorfeedback.checkin_frequency == i.initialmentorfeedback.ONCE_DAILY or i.initialmentorfeedback.checkin_frequency == i.initialmentorfeedback.MULTIPLE_WEEKLY %}<button class="btn btn-success">Frequent meetings</button>{% elif i.initialmentorfeedback.checkin_frequency == i.initialmentorfeedback.ONCE_WEEKLY or i.initialmentorfeedback.checkin_frequency == i.initialmentorfeedback.EVERY_OTHER_WEEK %}<button class="btn btn-warning">Infrequent meetings</button>{% else %}<button class="btn btn-danger">No meetings</button>{% endif %}<br>{{ i.initialmentorfeedback.get_checkin_frequency_display }}{% endif %}</td>
+						<td>{% if i.initialinternfeedback %}{% if i.initialinternfeedback.checkin_frequency == i.initialinternfeedback.ONCE_DAILY or i.initialinternfeedback.checkin_frequency == i.initialinternfeedback.MULTIPLE_WEEKLY %}<button class="btn btn-success">Frequent meetings</button>{% elif i.initialinternfeedback.checkin_frequency == i.initialinternfeedback.ONCE_WEEKLY or i.initialinternfeedback.checkin_frequency == i.initialinternfeedback.EVERY_OTHER_WEEK %}<button class="btn btn-warning">Infrequent meetings</button>{% else %}<button class="btn btn-danger">No meetings</button>{% endif %}<br>{{ i.initialinternfeedback.get_checkin_frequency_display }}{% endif %}</td>
+						<td>How often does the mentor have a real-time chat, video conference, or phone conversation to check in with the intern's progress on tasks?</td>
+					</tr>
+					<tr>
+						<td>{% if i.initialmentorfeedback %}{% if i.initialmentorfeedback.mentor_response_time == i.initialmentorfeedback.HOURS_1 or i.initialmentorfeedback.mentor_response_time == i.initialmentorfeedback.HOURS_3 or i.initialmentorfeedback.mentor_response_time == i.initialmentorfeedback.HOURS_6 %}<button class="btn btn-success">Prompt response</button>{% elif i.initialmentorfeedback.mentor_response_time == i.initialmentorfeedback.HOURS_12 or i.initialmentorfeedback.mentor_response_time == i.initialmentorfeedback.DAYS_1 %}<button class="btn btn-warning">Delayed response</button>{% else %}<button class="btn btn-danger">Very delayed response</button>{% endif %}<br>{{ i.initialmentorfeedback.get_mentor_response_time_display }}{% endif %}</td>
+						<td>{% if i.initialinternfeedback %}{% if i.initialinternfeedback.mentor_response_time == i.initialinternfeedback.HOURS_1 or i.initialinternfeedback.mentor_response_time == i.initialinternfeedback.HOURS_3 or i.initialinternfeedback.mentor_response_time == i.initialinternfeedback.HOURS_6 %}<button class="btn btn-success">Prompt response</button>{% elif i.initialinternfeedback.mentor_response_time == i.initialinternfeedback.HOURS_12 or i.initialinternfeedback.mentor_response_time == i.initialinternfeedback.DAYS_1 %}<button class="btn btn-warning">Delayed response</button>{% else %}<button class="btn btn-danger">Very delayed response</button>{% endif %}<br>{{ i.initialinternfeedback.get_mentor_response_time_display }}{% endif %}</td>
+						<td>On average, how long does it take the mentor to respond to intern questions or requests for feedback?</td>
+					</tr>
+					{% if initial_intern_status == i.SUBMITTED %}<tr><td colspan="3"><p>Intern's report on how the support they received from their mentor:</p><p>{{ i.initialinternfeedback.mentor_support|linebreaksbr }}</p></td></tr>{% endif %}
 					<tr><td colspan="3"><b>Intern progress</b></td></tr>
 					<tr>
 						<td>{% if i.initialmentorfeedback %}{% if i.initialmentorfeedback.in_contact %}<button class="btn btn-success">In contact</button></td>{% else %}<button class="btn btn-warning">Not in contact</button>{% endif %}{% else %}{% endif %}</td>
@@ -87,23 +104,6 @@ Initial Feedback for current_round.official_name
 					</tr>
 					<tr><td colspan="3"><p>Mentor's report on the intern's progress:</p><p>{{ i.initialmentorfeedback.progress_report }}</p></td></tr>
 					<tr><td colspan="3"><p>Intern's report on their own progress:</p><p>{{ i.initialinternfeedback.progress_report }}</p></td></tr>
-					<tr><td colspan="3"><b>Mentor support</b></td></tr>
-					<tr>
-						<td>{% if i.initialmentorfeedback %}{% if i.initialmentorfeedback.provided_onboarding %}<button class="btn btn-success">Resources provided</button>{% else %}<button class="btn btn-warning">No resources provided</button>{% endif %}{% endif %}</td>
-						<td>{% if i.initialinternfeedback %}{% if i.initialinternfeedback.provided_onboarding %}<button class="btn btn-success">Resources provided</button>{% else %}<button class="btn btn-warning">No resources provided</button>{% endif %}{% endif %}</td>
-						<td>Has the mentor provided documentation or other resources to help onboard the intern?</td>
-					</tr>
-					<tr>
-						<td>{% if i.initialmentorfeedback %}{% if i.initialmentorfeedback.checkin_frequency == i.initialmentorfeedback.ONCE_DAILY or i.initialmentorfeedback.checkin_frequency == i.initialmentorfeedback.MULTIPLE_WEEKLY %}<button class="btn btn-success">Frequent meetings</button>{% elif i.initialmentorfeedback.checkin_frequency == i.initialmentorfeedback.ONCE_WEEKLY or i.initialmentorfeedback.checkin_frequency == i.initialmentorfeedback.EVERY_OTHER_WEEK %}<button class="btn btn-warning">Infrequent meetings</button>{% else %}<button class="btn btn-danger">No meetings</button>{% endif %}<br>{{ i.initialmentorfeedback.get_checkin_frequency_display }}{% endif %}</td>
-						<td>{% if i.initialinternfeedback %}{% if i.initialinternfeedback.checkin_frequency == i.initialinternfeedback.ONCE_DAILY or i.initialinternfeedback.checkin_frequency == i.initialinternfeedback.MULTIPLE_WEEKLY %}<button class="btn btn-success">Frequent meetings</button>{% elif i.initialinternfeedback.checkin_frequency == i.initialinternfeedback.ONCE_WEEKLY or i.initialinternfeedback.checkin_frequency == i.initialinternfeedback.EVERY_OTHER_WEEK %}<button class="btn btn-warning">Infrequent meetings</button>{% else %}<button class="btn btn-danger">No meetings</button>{% endif %}<br>{{ i.initialinternfeedback.get_checkin_frequency_display }}{% endif %}</td>
-						<td>How often does the mentor have a real-time chat, video conference, or phone conversation to check in with the intern's progress on tasks?</td>
-					</tr>
-					<tr>
-						<td>{% if i.initialmentorfeedback %}{% if i.initialmentorfeedback.mentor_response_time == i.initialmentorfeedback.HOURS_1 or i.initialmentorfeedback.mentor_response_time == i.initialmentorfeedback.HOURS_3 or i.initialmentorfeedback.mentor_response_time == i.initialmentorfeedback.HOURS_6 %}<button class="btn btn-success">Prompt response</button>{% elif i.initialmentorfeedback.mentor_response_time == i.initialmentorfeedback.HOURS_12 or i.initialmentorfeedback.mentor_response_time == i.initialmentorfeedback.DAYS_1 %}<button class="btn btn-warning">Delayed response</button>{% else %}<button class="btn btn-danger">Very delayed response</button>{% endif %}<br>{{ i.initialmentorfeedback.get_mentor_response_time_display }}{% endif %}</td>
-						<td>{% if i.initialinternfeedback %}{% if i.initialinternfeedback.mentor_response_time == i.initialinternfeedback.HOURS_1 or i.initialinternfeedback.mentor_response_time == i.initialinternfeedback.HOURS_3 or i.initialinternfeedback.mentor_response_time == i.initialinternfeedback.HOURS_6 %}<button class="btn btn-success">Prompt response</button>{% elif i.initialinternfeedback.mentor_response_time == i.initialinternfeedback.HOURS_12 or i.initialinternfeedback.mentor_response_time == i.initialinternfeedback.DAYS_1 %}<button class="btn btn-warning">Delayed response</button>{% else %}<button class="btn btn-danger">Very delayed response</button>{% endif %}<br>{{ i.initialinternfeedback.get_mentor_response_time_display }}{% endif %}</td>
-						<td>On average, how long does it take the mentor to respond to intern questions or requests for feedback?</td>
-					</tr>
-					{% if initial_intern_status == i.SUBMITTED %}<tr><td colspan="3"><p>Intern's report on how the support they received from their mentor:</p><p>{{ i.initialinternfeedback.mentor_support|linebreaksbr }}</p></td></tr>{% endif %}
 				{% endif %}
 				{% endwith %}
 			</table>
