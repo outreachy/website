@@ -2429,7 +2429,7 @@ def initial_mentor_feedback_export_view(request, round_slug):
                 'payment approved': feedback.payment_approved,
                 'progress report': feedback.progress_report,
                 'extension requested': feedback.request_extension,
-                'extension date': feedback.extension_date,
+                'extension date': str(feedback.extension_date),
                 'termination requested': feedback.request_termination,
                 'termination reason': feedback.termination_reason,
                 }
