@@ -102,8 +102,8 @@ Initial Feedback for current_round.official_name
 						<td>{% if i.initialinternfeedback %}{{ i.initialinternfeedback.get_submission_date }}{% endif %}</td>
 						<td>Date latest feedback was submitted</td>
 					</tr>
-					<tr><td colspan="3"><p>Mentor's report on the intern's progress:</p><p>{{ i.initialmentorfeedback.progress_report }}</p></td></tr>
-					<tr><td colspan="3"><p>Intern's report on their own progress:</p><p>{{ i.initialinternfeedback.progress_report }}</p></td></tr>
+					{% if i.initialmentorfeedback %}<tr><td colspan="3"><p>Mentor's report on the intern's progress:</p><p>{{ i.initialmentorfeedback.progress_report }}</p></td></tr>{% endif %}
+					{% if i.initialinternfeedback %}<tr><td colspan="3"><p>Intern's report on their own progress:</p><p>{{ i.initialinternfeedback.progress_report }}</p></td></tr>{% endif %}
 				{% endif %}
 				{% endwith %}
 			</table>
