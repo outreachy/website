@@ -3650,6 +3650,9 @@ class InitialMentorFeedback(models.Model):
     def get_versions(self):
         return Version.objects.get_for_object(self)
 
+    def get_submission_date(self):
+        return Version.objects.get_for_object(self)[0].revision.date_created
+
     def can_edit(self):
         if not self.allow_edits:
             return False
@@ -3757,6 +3760,9 @@ class InitialInternFeedback(models.Model):
 
     def summary(self):
         return 'foo'
+
+    def get_submission_date(self):
+        return Version.objects.get_for_object(self)[0].revision.date_created
 
     def can_edit(self):
         if not self.allow_edits:

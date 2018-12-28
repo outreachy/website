@@ -2446,6 +2446,17 @@ def initial_mentor_feedback_export_view(request, round_slug):
     response['Content-Disposition'] = 'attachment; filename="' + round_slug + '-initial-feedback.json"'
     return response
 
+@login_required
+@staff_member_required
+def initial_feedback_summary(request, round_slug):
+    current_round = RoundPage.objects.get(slug=round_slug)
+
+    return render(request, 'home/initial_feedback.html',
+            {
+            'current_round' : current_round,
+            },
+            )
+
 
 def alums_page(request):
     # Get all the older AlumInfo models (before we had round pages)
