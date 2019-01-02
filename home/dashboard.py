@@ -52,8 +52,24 @@ def get_dashboard_sections(request):
 
 
 def intern_announcement(request):
-    current_round = RoundPage.objects.latest('internstarts')
-    if not current_round.has_intern_announcement_deadline_passed():
+    now = datetime.datetime.now(datetime.timezone.utc)
+    today = get_deadline_date_for(now)
+    try:
+        # Find the newest round whose intern announcement date has passed.
+        current_round = RoundPage.objects.filter(
+            internannounce__lte=today,
+        ).latest('internannounce')
+    except RoundPage.DoesNotExist:
+        return None
+
+    # Hide this message once the next round starts, where "starts" is defined
+    # by pingnew, and "next round" means it has a later intern announcement
+    # date than this one.
+    later_open_rounds = RoundPage.objects.filter(
+        pingnew__lte=today,
+        internannounce__gt=current_round.internannounce,
+    )
+    if later_open_rounds.exists():
         return None
 
     coordinator = Community.objects.filter(
@@ -102,7 +118,15 @@ def application_summary(request):
     except Comrade.DoesNotExist:
         return None
 
-    current_round = RoundPage.objects.latest('internstarts')
+    now = datetime.datetime.now(datetime.timezone.utc)
+    today = get_deadline_date_for(now)
+    try:
+        current_round = RoundPage.objects.get(
+            appsopen__lte=today,
+            internannounce__gt=today,
+        )
+    except RoundPage.DoesNotExist:
+        return None
 
     pending_revisions_count = ApplicantApproval.objects.filter(
             application_round = current_round,
