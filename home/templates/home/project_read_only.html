@@ -7,7 +7,7 @@
 
 {% block content %}
 
-<a href="{% url 'community-cfp' %}">Timeline, FAQ, & Participating Communities</a> &gt; <a href="{{ community.get_preview_url }}">{{ community.name }}</a> &gt; {{ project.get_approval_status_display }} Project
+<p><a href="{% url 'community-cfp' %}">Timeline and FAQ for Outreachy Communities</a> &gt; <a href="{{ community.get_preview_url }}">{{ community.name }}</a> &gt; {{ project.get_approval_status_display }} Project</p>
 
 {% if project.approval_status == project.APPROVED %}
 	<h1>Approved {{ community.name }} Project</h1>

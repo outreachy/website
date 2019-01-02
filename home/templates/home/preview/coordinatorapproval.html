@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-<a href="{% url 'community-cfp' %}">Timeline, FAQ, & Participating Communities</a> &gt; <a href="{{ coordinatorapproval.community.get_preview_url }}">{{ coordinatorapproval.community.name }}</a> &gt; {{ coordinatorapproval.get_approval_status_display }} Coordinator
+<p><a href="{% url 'community-cfp' %}">Timeline and FAQ for Outreachy Communities</a> &gt; <a href="{{ coordinatorapproval.community.get_preview_url }}">{{ coordinatorapproval.community.name }}</a> &gt; {{ coordinatorapproval.get_approval_status_display }} Coordinator</p>
 <h1>
 	{{ coordinatorapproval.get_approval_status_display }}
 	Coordinator for

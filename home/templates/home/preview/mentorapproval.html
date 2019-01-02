@@ -7,7 +7,7 @@
 
 {% block content %}
 {% with mentor=mentorapproval.mentor project=mentorapproval.project community=mentorapproval.project.project_round.community %}
-<a href="{% url 'community-cfp' %}">Timeline, FAQ, & Participating Communities</a> &gt; <a href="{{ community.get_preview_url }}">{{ community.name }}</a> &gt; {{ mentorapproval.get_approval_status_display }} Mentor
+<p><a href="{% url 'community-cfp' %}">Timeline and FAQ for Outreachy Communities</a> &gt; <a href="{{ community.get_preview_url }}">{{ community.name }}</a> &gt; {{ mentorapproval.get_approval_status_display }} Mentor</p>
 
 <h1>
 	{{ mentorapproval.get_approval_status_display }}

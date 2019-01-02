@@ -11,7 +11,7 @@ Past community participation in Outreachy
 {% endblock %}
 
 {% block content %}
-<a href="{% url 'community-cfp' %}">Timeline, FAQ, & Participating Communities</a> &gt; {{ community.name }}
+<p><a href="{% url 'community-cfp' %}">Timeline and FAQ for Outreachy Communities</a> &gt; {{ community.name }}</p>
 <h1>{{ community.name }}:
 {% if participation_info and participation_info.approval_status != participation_info.REJECTED and participation_info.approval_status != participation_info.WITHDRAWN %}
 Call for Outreachy mentors
