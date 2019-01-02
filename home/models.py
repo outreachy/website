@@ -1186,7 +1186,7 @@ class Comrade(models.Model):
                 applicant__applicant=self,
                 funding_source__in=(InternSelection.ORG_FUNDED, InternSelection.GENERAL_FUNDED),
                 organizer_approved=True)
-        except ApplicantApproval.DoesNotExist:
+        except InternSelection.DoesNotExist:
             return None
 
 class ApprovalStatusQuerySet(models.QuerySet):
