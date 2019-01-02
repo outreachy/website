@@ -1,0 +1,15 @@
+<div class="card border-info mb-3">
+	<div class="card-header text-white bg-warning">Project and community CFP is currently closed</div>
+	<div class="card-body">
+		<p class="card-text">
+		Outreachy is not currently accepting new participating communities or new intern projects.
+		{% if previous_round %}
+			The last round this community participated in was the {{ previous_round.official_name }}.
+		{% else %}
+			This community has never been approved to participate in an Outreachy round since December 2017.
+		{% endif %}
+		<p>Mentors are welcome to
+		<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">sign up for the Outreachy announcement list</a>
+		to receive a notification for next round.</p>
+	</div>
+</div>

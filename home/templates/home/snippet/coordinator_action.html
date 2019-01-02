@@ -4,11 +4,15 @@
 					<p class="card-text">
 					<a class="btn btn-primary" href="{% url 'community-update' community_slug=community.slug %}">Update Community Info</a>
 					</p>
-					<p class="card-text">
-					<a class="btn btn-primary" href="{{ participation_info.get_submit_url }}">Update Funding</a>
-					</p>
-					<p class="card-text">
-					<a class="btn btn-primary" href="{% url 'dashboard' %}#actions">Approve Projects</a>
-					</p>
+					{% if current_round and not current_round.has_intern_announcement_deadline_passed %}
+						<p class="card-text">
+						<a class="btn btn-primary" href="{{ participation_info.get_submit_url }}">Update Funding</a>
+						</p>
+					{% endif %}
+					{% if current_round and not current_round.has_project_submission_and_approval_deadline_passed %}
+						<p class="card-text">
+						<a class="btn btn-primary" href="{% url 'dashboard' %}#actions">Approve Projects</a>
+						</p>
+					{% endif %}
 				</div>
 			</div>

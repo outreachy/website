@@ -889,14 +889,30 @@ def community_cfp_view(request):
             },
             )
 
+def validate_is_time_to_show_project_editing(current_round):
+    # If the application period is closed, don't show projects from the current round
+    if has_deadline_passed(current_round.appslate):
+        return False
+    return True
+
 # This is the page for volunteers, mentors, and coordinators.
 # It's a read-only page that displays information about the community,
 # what projects are accepted, and how volunteers can help.
 # If the community isn't participating in this round, the page displays
 # instructions for being notified or signing the community up to participate.
 def community_read_only_view(request, community_slug):
-    current_round = RoundPage.objects.latest('internstarts')
     community = get_object_or_404(Community, slug=community_slug)
+
+    current_round = RoundPage.objects.latest('internstarts')
+    if validate_is_time_to_show_project_editing(current_round):
+        previous_round = None
+    else:
+        current_round = None
+        previous_participations = Participation.objects.filter(community__slug=community_slug, approval_status=ApprovalStatus.APPROVED).order_by('-participating_round__internstarts')
+        if not previous_participations:
+            previous_round = None
+        else:
+            previous_round = previous_participations[0].participating_round
 
     coordinator = None
     notification = None
@@ -925,6 +941,7 @@ def community_read_only_view(request, community_slug):
 
     context = {
             'current_round' : current_round,
+            'previous_round' : previous_round,
             'community': community,
             'coordinator': coordinator,
             'notification': notification,

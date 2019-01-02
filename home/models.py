@@ -162,6 +162,13 @@ class RoundPage(Page):
     def official_name(self):
         return(self.internstarts.strftime("%B %Y") + " to " + self.internends.strftime("%B %Y") + " Outreachy internships")
 
+    def is_application_period_open(self):
+        if has_deadline_passed(self.appslate):
+            return False
+        if has_deadline_passed(self.appsopen):
+            return True
+        return False
+
     def regular_deadline_reminder(self):
         return(self.appsclose - datetime.timedelta(days=7))
 
@@ -179,9 +186,15 @@ class RoundPage(Page):
 
     def LateApplicationsDeadline(self):
         return(self.appsclose + datetime.timedelta(days=7))
+
+    def has_application_deadline_passed(self):
+        return has_deadline_passed(self.appslate)
     
     def InternSelectionDeadline(self):
         return(self.mentor_intern_selection_deadline)
+
+    def has_intern_announcement_deadline_passed(self):
+        return has_deadline_passed(self.internannounce)
 
     def intern_agreement_deadline(self):
         return(self.internannounce + datetime.timedelta(days=7))
