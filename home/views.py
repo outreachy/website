@@ -1,5 +1,4 @@
 from betterforms.multiform import MultiModelForm
-from collections import defaultdict
 from datetime import datetime, timedelta, timezone, date
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -34,6 +33,8 @@ import reversion
 
 from . import email
 
+from .dashboard import get_dashboard_sections
+
 from .forms import RadioBooleanField
 
 from .mixins import ApprovalStatusAction
@@ -58,7 +59,6 @@ from .models import ContractorInformation
 from .models import Contribution
 from .models import CoordinatorApproval
 from .models import create_time_commitment_calendar
-from .models import DASHBOARD_MODELS
 from .models import EmploymentTimeCommitment
 from .models import FinalApplication
 from .models import InternSelection
@@ -2914,27 +2914,6 @@ class ReviewCommentUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
 
 @login_required
 def dashboard(request):
-    """
-    Find objects for which the current user is either an approver or a
-    submitter, and list them all on one page.
-    """
-    by_status = defaultdict(list)
-    for model in DASHBOARD_MODELS:
-        by_model = defaultdict(list)
-        for obj in model.objects_for_dashboard(request.user).distinct():
-            if obj.approval_status == ApprovalStatus.APPROVED or not has_deadline_passed(obj.submission_and_approval_deadline()):
-                by_model[obj.approval_status].append(obj)
-
-        label = model._meta.verbose_name
-        for status, objects in by_model.items():
-            by_status[status].append((label, objects))
-
-    groups = []
-    for status, label in ApprovalStatus.APPROVAL_STATUS_CHOICES:
-        group = by_status.get(status)
-        if group:
-            groups.append((label, group))
-
     current_round = RoundPage.objects.latest('internstarts')
     pending_participations = Participation.objects.filter(
             participating_round = current_round,
@@ -2965,10 +2944,12 @@ def dashboard(request):
 
     mentor_relationships = MentorRelationship.objects.filter(mentor__mentor__account=request.user)
 
+    sections = get_dashboard_sections(request)
+
     return render(request, 'home/dashboard.html', {
+        'sections': sections,
         'internship': intern_in_good_standing(request.user),
         'mentor_relationships': mentor_relationships,
-        'groups': groups,
         'current_round': current_round,
         'pending_participations': pending_participations,
         'approved_participations': approved_participations,

@@ -1,5 +1,4 @@
 {% extends "base.html" %} 
-{% load approval_status %}
 
 {% block title %}
 Dashboard
@@ -11,7 +10,7 @@ Dashboard
 
 <p><a href="{% url 'account' %}"><button type="button" class="btn btn-info">Edit Profile</button></a><a href="{% url 'logout' %}"><button type="button" class="btn btn-secondary ml-3">Log out</button></a></p>
 
-{% if groups %}
+{% if sections %}
 <p>You have actions you need to take. <a href="#actions">See all actions.</a></p>
 {% endif %}
 
@@ -64,45 +63,12 @@ Dashboard
 	{% endif %}
 {% endwith %}
 
-{% if groups %}
-	<h1 id="actions">Dashboard</h1>
+{% if sections %}
+<h1>Dashboard</h1>
 {% endif %}
-{% for status, status_group in groups %}
-	<h2>{{ status|title }}</h2>
-	{% for label, group in status_group %}
-		<h3>{{ label|title }}</h3>
-		{% for obj in group %}
-			<div class="card mb-3">
-			<div class="card-body">
-				<p class="card-text"><a href="{{ obj.get_preview_url }}">{{ obj }}</a></p>
-				<div class="mx-auto mr-sm-0" role="group" aria-label="Actions">
-				{% if obj.approval_status == obj.APPROVED %}
-					{% if obj|is_submitter:request.user %}
-					<a href="{{ obj.get_withdraw_url }}" class="btn btn-warning">Withdraw</a>
-					{% endif %}
-					{% if obj|is_approver:request.user %}
-					<a href="{{ obj.get_reject_url }}" class="btn btn-danger">Reject</a>
-					{% endif %}
-				{% elif obj.approval_status == obj.PENDING %}
-					{% if obj|is_approver:request.user %}
-					<a href="{{ obj.get_preview_url }}" class="btn btn-primary">Review</a>
-					{% endif %}
-					{% if obj|is_submitter:request.user %}
-					<a href="{{ obj.get_withdraw_url }}" class="btn btn-warning">Withdraw</a>
-					{% endif %}
-				{% elif obj.approval_status == obj.WITHDRAWN %}
-					{% if obj|is_submitter:request.user %}
-					<a href="{{ obj.get_submit_url }}" class="btn btn-success">Resubmit</a>
-					{% endif %}
-				{% elif obj.approval_status == obj.REJECTED %}
-					{% if obj|is_approver:request.user %}
-					<a href="{{ obj.get_approve_url }}" class="btn btn-success">Approve</a>
-					{% endif %}
-				{% endif %}
-				</div>
-			</div>
-			</div>
-		{% endfor %}
-	{% endfor %}
+{% for template_name, context in sections %}
+<div>
+{% include template_name with request=request section=context only %}
+</div>
 {% endfor %}
 {% endblock %}
