@@ -252,6 +252,12 @@ class RoundPage(Page):
     def has_internship_ended(self):
         return has_deadline_passed(self.internends + datetime.timedelta(days=7*5))
 
+    def is_internship_active(self):
+        if has_deadline_passed(self.internstarts):
+            if not self.has_internship_ended():
+                return True
+        return False
+
     def has_ontime_application_deadline_passed(self):
         return has_deadline_passed(self.appsclose)
 

@@ -2292,33 +2292,38 @@ class InternNotification(SendEmailView):
         for i in interns:
             email.notify_accepted_intern(i, self.request, connection=connection)
 
+# Only one internship will be active at a time
+def find_round_with_active_internships():
+    all_rounds = RoundPage.objects.all().order_by('-internstarts')
+
+    for r in all_rounds:
+        if r.is_internship_active():
+            return r
+    return None
+
 class InternWeekOne(SendEmailView):
     def generate_messages(self, connection):
         if not self.request.user.is_staff:
             raise PermissionDenied("You are not authorized to send reminder emails.")
 
-        # FIXME for future emails: How do we find the latest round with interns selected?
-        # We have to be careful when the rounds overlap
-        # (e.g. internship just ending while selection for next round has begun)
-        current_round = RoundPage.objects.latest('internstarts')
-        interns = current_round.get_approved_intern_selections()
+        current_round = find_round_with_active_internships()
+        if current_round:
+            interns = current_round.get_approved_intern_selections()
 
-        for i in interns:
-            email.week_one_email(i, self.request, connection=connection)
+            for i in interns:
+                email.week_one_email(i, self.request, connection=connection)
 
 class InternWeekThree(SendEmailView):
     def generate_messages(self, connection):
         if not self.request.user.is_staff:
             raise PermissionDenied("You are not authorized to send reminder emails.")
 
-        # FIXME for future emails: How do we find the latest round with interns selected?
-        # We have to be careful when the rounds overlap
-        # (e.g. internship just ending while selection for next round has begun)
-        current_round = RoundPage.objects.latest('internstarts')
-        interns = current_round.get_in_good_standing_intern_selections()
+        current_round = find_round_with_active_internships()
+        if current_round:
+            interns = current_round.get_in_good_standing_intern_selections()
 
-        for i in interns:
-            email.week_three_email(i, self.request, connection=connection)
+            for i in interns:
+                email.week_three_email(i, self.request, connection=connection)
 
 class InitialFeedbackInstructions(SendEmailView):
     def generate_messages(self, connection):
