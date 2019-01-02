@@ -1,3 +1,5 @@
+{# All projects are in the same round, so pick from one of them. #}
+{% with mentored_projects=section current_round=section.0.project_round.participating_round %}
 <h1>Your Mentored Project</h1>
 
 <p>
@@ -21,3 +23,4 @@ You can also <a href="{% url 'community-cfp' %}#mentor">submit another project</
 	{% endfor %}
 	</ul>
 {% endfor %}
+{% endwith %}

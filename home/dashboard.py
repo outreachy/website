@@ -27,8 +27,13 @@ The context value can be any type. Here are some examples:
 
 from collections import defaultdict
 
+from .models import ApplicantApproval
 from .models import ApprovalStatus
+from .models import Comrade
 from .models import DASHBOARD_MODELS
+from .models import MentorRelationship
+from .models import Participation
+from .models import RoundPage
 
 __all__ = ('get_dashboard_sections',)
 
@@ -40,6 +45,82 @@ def get_dashboard_sections(request):
             template_name = "home/dashboard/{}.html".format(section.__name__)
             sections.append((template_name, context))
     return sections
+
+
+def application_summary(request):
+    try:
+        if not request.user.is_staff and not request.user.comrade.approved_reviewer():
+            return None
+    except Comrade.DoesNotExist:
+        return None
+
+    current_round = RoundPage.objects.latest('internstarts')
+
+    pending_revisions_count = ApplicantApproval.objects.filter(
+            application_round = current_round,
+            approval_status = ApprovalStatus.PENDING,
+            barrierstoparticipation__applicant_should_update=True).count() + ApplicantApproval.objects.filter(
+                    application_round = current_round,
+                    approval_status = ApprovalStatus.PENDING,
+                    schoolinformation__applicant_should_update=True).count()
+
+    pending_applications_count = ApplicantApproval.objects.filter(
+            application_round = current_round,
+            approval_status = ApprovalStatus.PENDING).count() - pending_revisions_count
+
+    rejected_applications_count = ApplicantApproval.objects.filter(
+            application_round = current_round,
+            approval_status = ApprovalStatus.REJECTED).count()
+    approved_applications_count = ApplicantApproval.objects.filter(
+            application_round = current_round,
+            approval_status = ApprovalStatus.APPROVED).count()
+
+    return {
+        'pending_applications_count': pending_applications_count,
+        'pending_revisions_count': pending_revisions_count,
+        'rejected_applications_count': rejected_applications_count,
+        'approved_applications_count': approved_applications_count,
+    }
+
+
+def staff(request):
+    if not request.user.is_staff:
+        return None
+
+    current_round = RoundPage.objects.latest('internstarts')
+    pending_participations = Participation.objects.filter(
+            participating_round = current_round,
+            approval_status = ApprovalStatus.PENDING).order_by('community__name')
+    approved_participations = Participation.objects.filter(
+            participating_round = current_round,
+            approval_status = ApprovalStatus.APPROVED).order_by('community__name')
+    participations = list(pending_participations) + list(approved_participations)
+
+    return {
+        'current_round': current_round,
+        'pending_participations': pending_participations,
+        'approved_participations': approved_participations,
+        'participations': participations,
+    }
+
+
+def intern(request):
+    # XXX: move this function somewhere common
+    # This import can't be at top-level because views.py imports this
+    # file so that would be a circular dependency.
+    from .views import intern_in_good_standing
+    return intern_in_good_standing(request.user)
+
+
+def mentor(request):
+    return MentorRelationship.objects.filter(mentor__mentor__account=request.user)
+
+
+def mentor_projects(request):
+    try:
+        return request.user.comrade.get_editable_mentored_projects()
+    except Comrade.DoesNotExist:
+        return None
 
 
 def approval_status(request):
@@ -70,5 +151,10 @@ def approval_status(request):
 
 
 DASHBOARD_SECTIONS = (
+    application_summary,
+    staff,
+    intern,
+    mentor,
+    mentor_projects,
     approval_status,
 )

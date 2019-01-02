@@ -1,4 +1,4 @@
-{% if mentor_relationships %}
+{% with mentor_relationships=section %}
 	<h1>Your mentee{{ mentor_relationships|pluralize }}</h1>
 	{% for rel in mentor_relationships %}
 		{% ifchanged %}
@@ -13,7 +13,7 @@
 		{% endif %}
 
 		<p>You {% if rel.round.has_internship_ended %}mentored{% else %}are mentoring{% endif %} {{ rel.intern_name }} for the {{ rel.community_name }} project "<a href="{% url 'community-landing' round_slug=current_round.slug slug=rel.intern_selection.project.project_round.community.slug %}#{{ rel.intern_selection.project.slug }}">{{ rel.project_name }}</a>".{% if not rel.round.has_internship_ended %} Please <a href="/mentor/mentor-faq/#during-the-internship">review our tips</a> for ensuring your mentee is successful.{% endif %}</p>
-		
+
 		{% if not rel.round.has_internship_ended %}
 			<h3>Internship Dates</h3>
 			{% if not rel.intern_selection.intern_has_custom_dates %}
@@ -61,4 +61,4 @@
 		<p>{{ rel.intern_name }}'s travel stipend is valid for travel between {{ rel.round.travel_stipend_starts }} and {{ rel.round.travel_stipend_ends }}.{% else %} Your mentee's $500 USD travel stipend expired on {{ rel.round.travel_stipend_ends }}.{% endif %}</p>
 		<a href="{% url 'mentor-contract' round_slug=rel.round.slug community_slug=rel.intern_selection.project.project_round.community.slug project_slug=rel.intern_selection.project.slug applicant_username=rel.intern_selection.applicant.applicant.account.username %}"><button type="button" class="btn btn-info">Export Mentor Contract</button></a>
 	{% endfor %}
-{% endif %}
+{% endwith %}

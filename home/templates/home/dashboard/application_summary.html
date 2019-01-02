@@ -1,3 +1,5 @@
+{% with pending_applications_count=section.pending_applications_count pending_revisions_count=section.pending_revisions_count rejected_applications_count=section.rejected_applications_count approved_applications_count=section.approved_applications_count %}
+
 <h1>Application Status</h1>
 <ul>
 	{% if pending_applications_count %}
@@ -13,3 +15,4 @@
 		<li>No initial applications have been submitted</li>
 	{% endif %}
 </ul>
+{% endwith %}
