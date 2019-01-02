@@ -17,9 +17,11 @@ class RoundPageTestCase(TestCase):
         # Make an approved project in an approved community that is under that round
         past = datetime.now(timezone.utc) - timedelta(days=30)
         project_title = "AAAAAAAAHHHHHHH! This is a bug!!"
+        community_name = "AAAAAAAAHHHHHHH! This is a community name!!"
         past_project = ProjectFactory(
                 approval_status=models.ApprovalStatus.APPROVED,
                 project_round__approval_status=models.ApprovalStatus.APPROVED,
+                project_round__community__name=community_name,
                 short_title=project_title,
                 project_round__participating_round__start_from='internstarts',
                 project_round__participating_round__start_date=past)
@@ -29,6 +31,13 @@ class RoundPageTestCase(TestCase):
         # Page should return a normal status code of 200
         # Make sure that the contents don't include the approved project title from last round
         self.assertNotContains(response, project_title, status_code=200)
+
+        # Grab the community and project CFP page
+        response = self.client.post(reverse('community-cfp'))
+        # Make sure that the contents don't include the community as currently participating
+        self.assertNotContains(response, 'review the list of participating communities below who are looking for help', status_code=200)
+        # Make sure the page shows the community as a past approved community
+        self.assertContains(response, community_name, status_code=200)
 
     # XXX: FIXME - this test case looks fine when I recreate it in my local database
     # and log in as a mentor with a pending project.
@@ -91,9 +100,11 @@ class RoundPageTestCase(TestCase):
         # Make an approved project in an approved community
         open_date = datetime.now(timezone.utc) - timedelta(days=10)
         project_title = "AAAAAAAAHHHHHHH! The code works!!"
+        community_name = "AAAAAAAAHHHHHHH! This is a community name!!"
         past_project = ProjectFactory(
                 approval_status=models.ApprovalStatus.APPROVED,
                 project_round__approval_status=models.ApprovalStatus.APPROVED,
+                project_round__community__name=community_name,
                 short_title=project_title,
                 project_round__participating_round__start_from='appsopen',
                 project_round__participating_round__start_date=open_date)
@@ -105,3 +116,10 @@ class RoundPageTestCase(TestCase):
         self.assertContains(response, project_title, status_code=200)
         # Since the project has an on-time deadline it should still be open
         self.assertContains(response, '<h2 id="open-projects">Outreachy Open Projects</h2>', status_code=200)
+
+        # Grab the community and project CFP page
+        response = self.client.post(reverse('community-cfp'))
+        # Make sure it includes the community as currently participating
+        self.assertContains(response, 'review the list of participating communities below who are looking for help', status_code=200)
+        # Make sure the page shows the community
+        self.assertContains(response, community_name, status_code=200)

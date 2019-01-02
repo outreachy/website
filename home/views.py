@@ -793,6 +793,21 @@ def current_round_page(request):
             },
             )
 
+def validate_is_time_to_show_cfp(current_round):
+    # The problem here is the CFP page serves four (or more) purposes:
+    # - to provide mentors a way to submit new projects
+    # - to provide coordinators a way to submit new communities
+    # - to allow mentors to sign up to co-mentor a project
+    # - to allow mentors a way to edit their projects
+    #
+    # So, we close down the page after the interns are announced,
+    # when (hopefully) all mentors have signed up to co-mentor.
+    # Mentors can still be sent a manual link to sign up to co-mentor after that date,
+    # but their community page just won't show their project.
+    if has_deadline_passed(current_round.internstarts):
+        return False
+    return True
+
 # Call for communities, mentors, and volunteers page
 #
 # This is complex, so class-based views don't help us here.
@@ -826,36 +841,47 @@ def community_cfp_view(request):
     # Grab the most current round, based on the internship start date.
     # See https://docs.djangoproject.com/en/1.11/ref/models/querysets/#latest
     current_round = RoundPage.objects.latest('internstarts')
+    previous_round = None
 
-    # Now grab the community IDs of all communities participating in the current round
-    # https://docs.djangoproject.com/en/1.11/topics/db/queries/#following-relationships-backward
-    # https://docs.djangoproject.com/en/1.11/ref/models/querysets/#values-list
-    # https://docs.djangoproject.com/en/1.11/ref/models/querysets/#values
-    participating_communities = {
-            p.community_id: p
-            for p in current_round.participation_set.all()
-            }
     all_communities = Community.objects.all().order_by('name')
     approved_communities = []
     pending_communities = []
     rejected_communities = []
     not_participating_communities = []
-    for c in all_communities:
-        participation_info = participating_communities.get(c.id)
-        if participation_info is not None:
-            if participation_info.approval_status == ApprovalStatus.PENDING:
-                pending_communities.append(c)
-            elif participation_info.approval_status == ApprovalStatus.APPROVED:
-                approved_communities.append(c)
-            else: # either withdrawn or rejected
-                rejected_communities.append(c)
-        else:
-            not_participating_communities.append(c)
+    all_past_approved_communities = Community.objects.filter(participation__approval_status=ApprovalStatus.APPROVED).distinct()
+
+    if not validate_is_time_to_show_cfp(current_round):
+        previous_round = current_round
+        current_round = None
+        not_participating_communities = all_past_approved_communities
+    else:
+        # Now grab the community IDs of all communities participating in the current round
+        # https://docs.djangoproject.com/en/1.11/topics/db/queries/#following-relationships-backward
+        # https://docs.djangoproject.com/en/1.11/ref/models/querysets/#values-list
+        # https://docs.djangoproject.com/en/1.11/ref/models/querysets/#values
+        participating_communities = {
+                p.community_id: p
+                for p in current_round.participation_set.all()
+                }
+        for c in all_communities:
+            participation_info = participating_communities.get(c.id)
+            if participation_info is not None:
+                if participation_info.approval_status == ApprovalStatus.PENDING:
+                    pending_communities.append(c)
+                elif participation_info.approval_status == ApprovalStatus.APPROVED:
+                    approved_communities.append(c)
+                else: # either withdrawn or rejected
+                    rejected_communities.append(c)
+            # Hide communities that have never been approved to participate in Outreachy.
+            # Some may not pass our community rules, or they try to get funding and can't.
+            elif c in all_past_approved_communities:
+                not_participating_communities.append(c)
 
     # See https://docs.djangoproject.com/en/1.11/topics/http/shortcuts/
     return render(request, 'home/community_cfp.html',
             {
             'current_round' : current_round,
+            'previous_round' : previous_round,
             'pending_communities': pending_communities,
             'approved_communities': approved_communities,
             'rejected_communities': rejected_communities,

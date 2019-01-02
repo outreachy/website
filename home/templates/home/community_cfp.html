@@ -6,6 +6,7 @@ Call for Outreachy community coordinators and mentors
 {% block content %}
 
 <a href="{% url 'community-cfp' %}">Timeline, FAQ, & Participating Communities</a>
+{% include "home/snippet/cfp_closed_warning.html" %}
 <h1>Call for Outreachy Community Participation</h1>
 <p>Twice a year, Free and Open Source Software (FOSS) communities work with Outreachy organizers to offer remote internships. Outreachy's goal is to support <a href="/apply/eligibility/">people from groups underrepresented in the technology industry.</a> Interns work remotely with mentors from Free and Open Source Software (FOSS) communities on projects ranging from programming, user experience, documentation, illustration and graphical design, to data science.
 
@@ -53,20 +54,22 @@ Call for Outreachy community coordinators and mentors
 
 <p id="mentor">Outreachy intern projects will need to meet <a href="/mentor/mentor-faq/#define-a-project">additional Outreachy intern project requirements</a>.</p>
 
-<h2>Timeline for {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} internship round</h2>
-{% include "home/snippet/mentor-timeline.html" %}
+{% if current_round %}
+	<h2>Timeline for {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} internship round</h2>
+	{% include "home/snippet/mentor-timeline.html" %}
 
-{% if approved_communities or pending_communities %}
-	<h2>Mentor for a Participating FOSS Community</h2>
-
-	{% if current_round.has_project_submission_and_approval_deadline_passed %}
-		<p>The current Outreachy internship round is now closed to new intern project listings.
-		Mentors who missed the deadline are welcome to sign up for the
-		<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">Outreachy announcement list</a>
-		to receive a notification for next round. Mentors can still sign up to co-mentor a listed project.</p>
-	{% else %}
-		<p>If you would like to mentor with Outreachy, review the list of participating communities below who are looking for help. Make sure to <a href="/mentor/#mentor">review the duties and expections</a> for mentors before you sign up to help a community.</p>
+	{% if approved_communities or pending_communities %}
+		<h2>Mentor for a Participating FOSS Community</h2>
+		{% if current_round.has_project_submission_and_approval_deadline_passed %}
+			{% include "home/snippet/cfp_closed_warning.html" %}
+		{% else %}
+			<p>Outreachy internships run twice a year. You can look at community and project listing <a href="{% url 'past-rounds' %}">from all past Outreachy rounds</a> to understand what types of internships Outreachy typically offers.</p>
+			<p>If you would like to mentor with Outreachy, review the list of participating communities below who are looking for help. Make sure to <a href="/mentor/#mentor">review the duties and expections</a> for mentors before you sign up to help a community.</p>
+		{% endif %}
 	{% endif %}
+{% else %}
+	<h2>Timeline for Participating FOSS Communities</h2>
+	{% include "home/snippet/generic_mentor_coordinator_timeline.html" %}
 {% endif %}
 
 {% if approved_communities %}
@@ -115,10 +118,11 @@ Call for Outreachy community coordinators and mentors
 {% endfor %}
 </ul>
 
-<h2>Submit a New FOSS community for Organizer Review</h2>
-<p>First, double check that the community isn't listed in the above participating communities or past communities list. If the community is listed as a past Outreachy community, you can sign up to coordinate for that community. Coordinators will need to review the <a href="/mentor/#coordinator">coordinator duties</a> and <a href="/mentor/community-faq/">community requirements</a> for participating in internships. Then submit a new community for review.
-</p>
-<p><a class='btn btn-success' href="{% url 'community-add' %}">Submit a New Community</a></p>
-
+{% if current_round %}
+	<h2>Submit a New FOSS community for Organizer Review</h2>
+	<p>First, double check that the community isn't listed in the above participating communities or past communities list. If the community is listed as a past Outreachy community, you can sign up to coordinate for that community. Coordinators will need to review the <a href="/mentor/#coordinator">coordinator duties</a> and <a href="/mentor/community-faq/">community requirements</a> for participating in internships. Then submit a new community for review.
+	</p>
+	<p><a class='btn btn-success' href="{% url 'community-add' %}">Submit a New Community</a></p>
+{% endif %}
 
 {% endblock %}
