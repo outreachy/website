@@ -733,6 +733,12 @@ def past_rounds_page(request):
             },
             )
 
+def validate_is_time_to_show_project_selection(current_round):
+    # If the application period is closed, don't show projects from the current round
+    if has_deadline_passed(current_round.appslate):
+        return False
+    return True
+
 def current_round_page(request):
     current_round = RoundPage.objects.latest('internstarts')
     all_rounds = RoundPage.objects.all().order_by('-internstarts')
@@ -741,34 +747,39 @@ def current_round_page(request):
     else:
         previous_round = None
 
-    approved_participations = current_round.participation_set.approved().order_by('community__name')
-
     closed_approved_projects = []
     ontime_approved_projects = []
     late_approved_projects = []
-    if request.user.is_authenticated:
-        try:
-            mentors_pending_projects = request.user.comrade.get_pending_mentored_projects()
-        except Comrade.DoesNotExist:
-            mentors_pending_projects = []
-    else:
-        mentors_pending_projects = []
-    for p in approved_participations:
-        if not authorized_to_view_project_details(request, p):
-            continue
-        projects = p.project_set.approved().filter(deadline=Project.CLOSED,
-                approval_status=ApprovalStatus.APPROVED)
-        if projects:
-            closed_approved_projects.append((p.community, projects))
-        projects = p.project_set.approved().filter(deadline=Project.ONTIME,
-                approval_status=ApprovalStatus.APPROVED)
-        if projects:
-            ontime_approved_projects.append((p.community, projects))
-        projects = p.project_set.approved().filter(deadline=Project.LATE,
-                approval_status=ApprovalStatus.APPROVED)
-        if projects:
-            late_approved_projects.append((p.community, projects))
+    mentors_pending_projects = []
     example_skill = ProjectSkill
+
+    if not validate_is_time_to_show_project_selection(current_round):
+        previous_round = current_round
+        current_round = None
+    else:
+        approved_participations = current_round.participation_set.approved().order_by('community__name')
+
+        if request.user.is_authenticated:
+            try:
+                mentors_pending_projects = request.user.comrade.get_pending_mentored_projects()
+            except Comrade.DoesNotExist:
+                pass
+
+        for p in approved_participations:
+            if not authorized_to_view_project_details(request, p):
+                continue
+            projects = p.project_set.approved().filter(deadline=Project.CLOSED,
+                    approval_status=ApprovalStatus.APPROVED)
+            if projects:
+                closed_approved_projects.append((p.community, projects))
+            projects = p.project_set.approved().filter(deadline=Project.ONTIME,
+                    approval_status=ApprovalStatus.APPROVED)
+            if projects:
+                ontime_approved_projects.append((p.community, projects))
+            projects = p.project_set.approved().filter(deadline=Project.LATE,
+                    approval_status=ApprovalStatus.APPROVED)
+            if projects:
+                late_approved_projects.append((p.community, projects))
 
     return render(request, 'home/round_page_with_communities.html',
             {
