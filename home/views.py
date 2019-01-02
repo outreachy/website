@@ -386,6 +386,14 @@ def determine_eligibility(wizard, application_round):
 
     return (ApprovalStatus.PENDING, 'ESSAY')
 
+# People can only submit new initial applications or edit initial applications
+# when the application period is open.
+def validate_is_time_to_show_initial_application(current_round):
+    if not current_round.has_application_period_started():
+        raise PermissionDenied('The Outreachy application period is not yet open. Eligibility checking will become available when the next application period opens. Please sign up for the announcements mailing list for an email when the next application period opens: https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce')
+    if current_round.has_late_application_deadline_passed():
+        raise PermissionDenied('The Outreachy application period is closed. If you are an applicant who has submitted an application for an internship project and your time commitments have increased, please contact the Outreachy organizers (see contact link above). Eligibility checking will become available when the next application period opens. Please sign up for the announcements mailing list for an email when the next application period opens: https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce')
+
 class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, SessionWizardView):
     template_name = 'home/wizard_form.html'
     condition_dict = {
@@ -639,10 +647,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
 
     def get_current_round(self):
         current_round = RoundPage.objects.latest('internstarts')
-        if not current_round.has_application_period_started():
-            raise PermissionDenied('The Outreachy application period is not yet open. Eligibility checking will become available when the next application period opens. Please sign up for the announcements mailing list for an email when the next application period opens: https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce')
-        if current_round.has_late_application_deadline_passed():
-            raise PermissionDenied('The Outreachy application period is closed. If you are an applicant who has submitted an application for an internship project and your time commitments have increased, please contact the Outreachy organizers (see contact link above). Eligibility checking will become available when the next application period opens. Please sign up for the announcements mailing list for an email when the next application period opens: https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce')
+        validate_is_time_to_show_initial_application(current_round)
         return current_round
 
     def get_context_data(self, **kwargs):
@@ -693,6 +698,7 @@ class EligibilityResults(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
 
     def get_object(self):
         current_round = RoundPage.objects.latest('internstarts')
+        validate_is_time_to_show_initial_application(current_round)
         return get_object_or_404(ApplicantApproval,
                     applicant=self.request.user.comrade,
                     application_round=current_round)
@@ -710,10 +716,12 @@ class ViewInitialApplication(LoginRequiredMixin, ComradeRequiredMixin, DetailVie
     def get_context_data(self, **kwargs):
         context = super(ViewInitialApplication, self).get_context_data(**kwargs)
         context['current_round'] = RoundPage.objects.latest('internstarts')
+        validate_is_time_to_show_initial_application(current_round)
         return context
 
     def get_object(self):
         current_round = RoundPage.objects.latest('internstarts')
+        validate_is_time_to_show_initial_application(current_round)
         return get_object_or_404(ApplicantApproval,
                     applicant__account__username=self.kwargs['applicant_username'],
                     application_round=current_round)
@@ -725,6 +733,12 @@ def past_rounds_page(request):
             },
             )
 
+def validate_is_time_to_show_project_selection(current_round):
+    # If the application period is closed, don't show projects from the current round
+    if has_deadline_passed(current_round.appslate):
+        return False
+    return True
+
 def current_round_page(request):
     current_round = RoundPage.objects.latest('internstarts')
     all_rounds = RoundPage.objects.all().order_by('-internstarts')
@@ -733,34 +747,39 @@ def current_round_page(request):
     else:
         previous_round = None
 
-    approved_participations = current_round.participation_set.approved().order_by('community__name')
-
     closed_approved_projects = []
     ontime_approved_projects = []
     late_approved_projects = []
-    if request.user.is_authenticated:
-        try:
-            mentors_pending_projects = request.user.comrade.get_pending_mentored_projects()
-        except Comrade.DoesNotExist:
-            mentors_pending_projects = []
-    else:
-        mentors_pending_projects = []
-    for p in approved_participations:
-        if not authorized_to_view_project_details(request, p):
-            continue
-        projects = p.project_set.approved().filter(deadline=Project.CLOSED,
-                approval_status=ApprovalStatus.APPROVED)
-        if projects:
-            closed_approved_projects.append((p.community, projects))
-        projects = p.project_set.approved().filter(deadline=Project.ONTIME,
-                approval_status=ApprovalStatus.APPROVED)
-        if projects:
-            ontime_approved_projects.append((p.community, projects))
-        projects = p.project_set.approved().filter(deadline=Project.LATE,
-                approval_status=ApprovalStatus.APPROVED)
-        if projects:
-            late_approved_projects.append((p.community, projects))
+    mentors_pending_projects = []
     example_skill = ProjectSkill
+
+    if not validate_is_time_to_show_project_selection(current_round):
+        previous_round = current_round
+        current_round = None
+    else:
+        approved_participations = current_round.participation_set.approved().order_by('community__name')
+
+        if request.user.is_authenticated:
+            try:
+                mentors_pending_projects = request.user.comrade.get_pending_mentored_projects()
+            except Comrade.DoesNotExist:
+                pass
+
+        for p in approved_participations:
+            if not authorized_to_view_project_details(request, p):
+                continue
+            projects = p.project_set.approved().filter(deadline=Project.CLOSED,
+                    approval_status=ApprovalStatus.APPROVED)
+            if projects:
+                closed_approved_projects.append((p.community, projects))
+            projects = p.project_set.approved().filter(deadline=Project.ONTIME,
+                    approval_status=ApprovalStatus.APPROVED)
+            if projects:
+                ontime_approved_projects.append((p.community, projects))
+            projects = p.project_set.approved().filter(deadline=Project.LATE,
+                    approval_status=ApprovalStatus.APPROVED)
+            if projects:
+                late_approved_projects.append((p.community, projects))
 
     return render(request, 'home/round_page_with_communities.html',
             {

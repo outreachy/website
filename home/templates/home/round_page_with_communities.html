@@ -9,46 +9,53 @@ Outreachy Internships | Apply | Pick a Project
 
 {% comment %}Is the round not open yet, and this is a mentor or coordinator?{% endcomment %}
 {% with editable_projects=request.user.comrade.get_editable_mentored_projects approved_volunteer=request.user.comrade.approved_mentor_or_coordinator %}
-	{% if not current_round.has_application_period_started and not current_round.has_late_application_deadline_passed %}
+	{% if not current_round %}
+		{% include "home/snippet/round_closed.html" %}
+	{% elif not current_round.has_application_period_started and not current_round.has_late_application_deadline_passed %}
 		{% if editable_projects or approved_volunteer %}
 			{% include "home/snippet/round_not_open.html" %}
 		{% endif %}
 	{% endif %}
 
-	{% if not editable_projects and not approved_volunteer %}
+	{% if current_round and not editable_projects and not approved_volunteer %}
 		{% include "home/snippet/eligibility_prompts.html" %}
 	{% endif %}
 {% endwith %}
 
 <p><a href="/apply/">Why apply to Outreachy?</a> &gt;
-{% if not request.user.comrade or request.user.comrade.needs_application %}
+{% if current_round and not request.user.comrade or request.user.comrade.needs_application %}
 	<a href="{% url 'eligibility' %}">Start your initial application</a>
-{% elif request.user.comrade.ineligible_application or request.user.comrade.pending_application %}
+{% elif current_round and request.user.comrade.ineligible_application or request.user.comrade.pending_application %}
 	<a href="{% url 'eligibility-results' %}">Review your initial application</a>
 {% else %}
 	<a href="/apply/eligibility/">Outreachy Eligibility Rules</a>
 {% endif %}
 	 &gt; Find a Mentor and Internship Project</p>
 
-<h1>Outreachy {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} Internships</h1>
-<h2>Timeline</h2>
-<table class=table>
-	<tr><td>{{ current_round.appsopen }}</td><td>Applicants start making contributions to internship projects</td></tr>
-	<tr><td>{{ current_round.lateorgs }}</td><td>Last date for new mentoring community listings</td></tr>
-	<tr><td>{{ current_round.ProjectsDeadline }}</td><td>Last date for mentors to submit new internship project listings</td></tr>
-	<tr><td>{{ current_round.appsclose }} at 4pm UTC</td><td>Application deadline. Last day to finish any contributions to internship projects. Applications who made a contribution must submit the rest of their project application by this date.</td></tr>
-	<tr><td>{{ current_round.appslate }} at 4pm UTC</td><td>Late application deadline for specific projects (see below for which projects are accepting late applications)</td></tr>
-	<tr><td>{{ current_round.appsclose }} to {{ current_round.internannounce }}</td><td>Applicants are encouraged to continue making contributions</td></tr>
-	<tr><td>{{ current_round.internannounce }}</td><td>Accepted interns announced on <a href"/alums/">the alums page</a> at 4pm UTC</td></tr>
-	<tr><td>{{ current_round.internstarts }} to {{ current_round.internends }}</td><td>Internships period</td></tr>
-</table>
-{% include 'home/snippet/payment_schedule.html' %}
-{{ current_round.sponsordetails|safe }}
+{% if current_round %}
+	<h1>Outreachy {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} Internships</h1>
+	<h2>Timeline</h2>
+	<table class=table>
+		<tr><td>{{ current_round.appsopen }}</td><td>Applicants start making contributions to internship projects</td></tr>
+		<tr><td>{{ current_round.lateorgs }}</td><td>Last date for new mentoring community listings</td></tr>
+		<tr><td>{{ current_round.ProjectsDeadline }}</td><td>Last date for mentors to submit new internship project listings</td></tr>
+		<tr><td>{{ current_round.appsclose }} at 4pm UTC</td><td>Application deadline. Last day to finish any contributions to internship projects. Applications who made a contribution must submit the rest of their project application by this date.</td></tr>
+		<tr><td>{{ current_round.appslate }} at 4pm UTC</td><td>Late application deadline for specific projects (see below for which projects are accepting late applications)</td></tr>
+		<tr><td>{{ current_round.appsclose }} to {{ current_round.internannounce }}</td><td>Applicants are encouraged to continue making contributions</td></tr>
+		<tr><td>{{ current_round.internannounce }}</td><td>Accepted interns announced on <a href"/alums/">the alums page</a> at 4pm UTC</td></tr>
+		<tr><td>{{ current_round.internstarts }} to {{ current_round.internends }}</td><td>Internships period</td></tr>
+	</table>
+	{% include 'home/snippet/payment_schedule.html' %}
+	{{ current_round.sponsordetails|safe }}
+{% else %}
+	{% include 'home/snippet/generic_timeline.html' %}
+{% endif %}
 
 <h1>Preparing for the Application Process</h1>
 <p>You can read about what it's like to apply to Outreachy:
 <ul>
 	<li><a href="/apply/#how-to-apply">Outreachy's application process</a></li>
+	<li><a href="/blog/outreachy-interns-talk-about-application-process/">December 2018 Outreachy interns talk about the application process</a></li>
 	<li><a href="https://medium.freecodecamp.org/get-the-most-out-of-your-outreachy-application-process-937d4a8ab4bf">Get the most out of your Outreachy intern application process</a></li>
 	<li><a href="https://medium.freecodecamp.org/outreachy-what-how-why-4fb60d10a228">How I got into the Outreachy open source internship program</a></li>
 	<li><a href="https://blog.ihsavru.me/node/9">Application tips from an Outreachy intern who just completed their internship</a></li>
@@ -58,7 +65,7 @@ Outreachy Internships | Apply | Pick a Project
 </ul>
 </p>
 
-{% if previous_round and not current_round.has_application_period_started %}
+{% if previous_round %}
 	<p>You may want to brush up on your skills for contributing to free and open source software communities. Each project will use a different set of skills, and some mentors may be willing to teach you skills. Projects and the skills they use change each round. The most common skills used in projects last round were:
 	<ul>
 		{% for common_skill in previous_round.get_common_skills %}
@@ -69,8 +76,9 @@ Outreachy Internships | Apply | Pick a Project
 {% endif %}
 
 <p>You may also want to purchase a DRM-free copy of <a href="https://pragprog.com/book/vbopens/forge-your-future-with-open-source">"Forge Your Future With Open Source"</a> by VM (Vicky) Brasseur.</p>
-{% if not current_round.has_application_period_started %}
-	<p>The list of Outreachy projects will be available on {{ current_round.appsopen }}.</p>
+{% if current_round and not current_round.has_application_period_started %}
+	<h1>Projects will be listed soon!</h1>
+	<p>The list of Outreachy projects for the {{ current_round.official_name }} will be available to applicants on {{ current_round.appsopen }}.</p>
 {% endif %}
 
 {% if request.user.comrade.eligible_application %}
