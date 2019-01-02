@@ -605,11 +605,17 @@ class RoundPage(Page):
 
         return (eligible, contributed, applied, funded)
 
+    def validate_is_time_to_show_project_selection(self):
+        # If the application period is closed, don't show projects from the current round
+        if has_deadline_passed(self.appslate):
+            return False
+        return True
+
     def serve(self, request, *args, **kwargs):
-        # Only show this page if newer rounds exist.
-        if RoundPage.objects.filter(internstarts__gt=self.internstarts).exists():
+        # Only show this page if we shouldn't be showing the project selection page.
+        if not self.validate_is_time_to_show_project_selection():
             return super(RoundPage, self).serve(request, *args, **kwargs)
-        # Otherwise, this is the newest, so temporary-redirect to project selection view.
+        # Otherwise, the application period is open, so redirect to the project selection view.
         return redirect('project-selection')
 
 class CohortPage(Page):

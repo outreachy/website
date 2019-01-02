@@ -733,12 +733,6 @@ def past_rounds_page(request):
             },
             )
 
-def validate_is_time_to_show_project_selection(current_round):
-    # If the application period is closed, don't show projects from the current round
-    if has_deadline_passed(current_round.appslate):
-        return False
-    return True
-
 def current_round_page(request):
     current_round = RoundPage.objects.latest('internstarts')
     all_rounds = RoundPage.objects.all().order_by('-internstarts')
@@ -753,7 +747,7 @@ def current_round_page(request):
     mentors_pending_projects = []
     example_skill = ProjectSkill
 
-    if not validate_is_time_to_show_project_selection(current_round):
+    if not current_round.validate_is_time_to_show_project_selection():
         previous_round = current_round
         current_round = None
     else:
