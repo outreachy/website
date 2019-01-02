@@ -1,12 +1,12 @@
-{% with current_round=section %}
+{% with current_round=section announced=section.has_intern_announcement_deadline_passed interns=section.get_intern_selections %}
 <hr>
 <h2>Intern Selection</h2>
 
-{% if current_round.has_intern_announcement_deadline_passed %}
+{% if announced %}
 <p><a href="{% url 'contract-export' round_slug=current_round.slug %}"><input class="btn btn-info" value="Export Signed Contracts" /></a></p>
 {% endif %}
 
-<p>{{ current_round.get_intern_selections|length }} intern{{ current_round.get_intern_selections|pluralize:" has,s have" }} been selected by the Outreachy mentors{% if not current_round.has_intern_announcement_deadline_passed %}:
+<p>{{ interns|length }} intern{{ interns|pluralize:" has,s have" }} been selected by the Outreachy mentors{% if not announced %}:
 
 	{% with approved_interns=current_round.get_approved_intern_selections rejected_interns=current_round.get_rejected_intern_selections pending_interns=current_round.get_pending_intern_selections %}
 	<ul>
@@ -50,7 +50,7 @@
 	{% endwith %}
 {% endif %}
 
-{% if current_round.has_intern_announcement_deadline_passed %}
+{% if announced %}
 {% with unsigned_interns=current_round.get_approved_interns_with_unsigned_contracts %}
 <p>{{ unsigned_interns|length}} approved intern{{ unsigned_interns|pluralize:" has,have" }} not signed their contract{% if not unsigned_interns %}.{% else %}:
 	<ul>
@@ -65,7 +65,6 @@
 {% endwith %}
 {% endif %}
 
-{% with interns=current_round.get_intern_selections %}
 {% if interns %}
 	<form method="post">
 	{% csrf_token %}
@@ -127,5 +126,4 @@
 	</table>
 	</form>
 {% endif %}
-{% endwith %}
 {% endwith %}
