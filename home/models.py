@@ -157,6 +157,7 @@ class RoundPage(Page):
     week_two_chat_text_url = models.URLField(blank=True, verbose_name="URL of the real-time text chat")
     week_two_chat_video_url = models.URLField(blank=True, verbose_name="URL of the video chat")
     week_three_stuck_chat_url = models.URLField(blank=True, verbose_name="URL of the week three chat on what we're stuck on")
+    week_five_audience_chat_url = models.URLField(blank=True, verbose_name="URL of the week five chat to explain your project to a newcomer")
     initialfeedback = models.DateField("Date initial feedback is due", blank=True, default='2017-12-20')
     initialpayment = models.IntegerField(default=1000)
     midfeedback = models.DateField("Date mid-point feedback is due", blank=True, default='2018-01-31')
@@ -214,6 +215,9 @@ class RoundPage(Page):
     def intern_initial_feedback_opens(self):
         return(self.initialfeedback - datetime.timedelta(days=7))
 
+    def intern_midpoint_feedback_opens(self):
+        return(self.midfeedback - datetime.timedelta(days=7))
+
     def has_intern_selection_display_date_passed(self):
         return has_deadline_passed(self.intern_initial_feedback_opens())
 
@@ -228,6 +232,9 @@ class RoundPage(Page):
     
     def initial_stipend_payment_deadline(self):
         return self.initialfeedback + datetime.timedelta(days=30)
+
+    def internship_week_five_email_deadline(self):
+        return(self.internstarts + datetime.timedelta(days=7*4))
 
     def midpoint_stipend_payment_deadline(self):
         return self.midfeedback + datetime.timedelta(days=30)
