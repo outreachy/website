@@ -1,0 +1,82 @@
+Outreachy week 5: Assignments for mentors & interns
+
+Welcome to week five of your Outreachy internship! We hope you're making good progress on your project. Please reach out to organizers@outreachy.org if you need additional help or advice!
+
+We have some goals and assignments for both mentors and interns. Please read the sections below.
+
+For most interns, mid-point feedback is due on {{ current_round.midfeedback }}. The midpoint feedback form will be available on {{ current_round.intern_midpoint_feedback_opens }}, at which point you'll see a button on your dashboard:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}#feedback
+
+The goal of midpoint feedback is to ensure that interns are working full-time on their projects, communicating with their mentor(s), and revising their contributions based on feedback in a timely manner.
+
+Week 3 Theme
+------------
+
+The theme for this week is "Think About Your Audience". In this case, an "audience" means the people who are reading your blog posts. They may not have all the skills or knowledge that you do. You might share some skills, but they may not be familar with your community. They could be free software contributors or they could be newcomers.
+
+When your mentor wrote their project description for the Outreachy website, they had to consider the audience that would read it. They had to take into account that not all Outreachy applicants would have heard of their community or project. They may have needed to explain terms and concepts that applicants would be unfamiliar with. However, since mentors have been contributing to the project for some time, they may not remember which terms or concepts were unfamiliar to a newcomer.
+
+Your goal for this week's blog post is to explain your project to a newcomer to your community. If you think it's too hard to describe a very large project or community, try to describe one particular task you're currently working on. The audience for this blog post is an Outreachy applicant who has never heard of your community before, or doesn't have quite the same skills as you.
+
+For example, if you're improving a Firefox debugging tool for web developers, your goal would be to explain the tool to someone who is a beginner web developer but has never used the Firefox browser before. If you're improving documentation for the OpenStack server management system, your goal would be to explain your project to a Linux systems administrator who has never used OpenStack before. Another example would be if you're working on a user experience audit for a piece of Linux desktop software. The audience there would be someone who has developed applications before, but isn't versed in how to do a user experience audit.
+
+As you write this blog post, think about what terms or concepts were confusing to you when you were applying to the project, or even a year or two ago. How would you explain your project to past you? How would you explain it to someone who is your peer, but doesn't have experience with your particular community?
+
+See the detailed section below for more prompts.
+
+Mentor & Intern Assignment
+--------------------------
+
+This week, we want Outreachy mentors and interns to brainstorm interesting things about their project they could share with the other Outreachy interns and mentors. It could be a small success you've had, an interesting problem that was a challenge to solve, or a new tool you found useful. Then you should both try to identify which terms or concepts an intern from a different community might not understand. How could you explain make your story easier to understand? Do you have documentation or resources you could point them to help them understand a new concept?
+
+Once you and your mentor have talked through how to share your project with other Outreachy interns, go ahead and share it on the Zulip chat:
+
+{{ current_round.week_five_audience_chat_url }}
+
+When you see someone sharing their stories about their projects, try to ask questions about things you don't understand. This helps others learn what newcomers to their projects don't know.
+
+Goals for Mentors
+-----------------
+
+Week 5 goals:
+
+ - Keep your own explanations simple
+ - It's okay if your intern asks you to explain something again
+ - Trying explaining something a different way
+ - Make sure your intern understands foundational concepts
+ - Check whether your community's documentation of those concepts is up-to-date
+ - Ask your intern open-ended questions to check if they understand your explanation
+
+Goals for Interns
+-----------------
+
+Week 5 goals:
+
+ - Talk with your mentor about how to share your project with an Outreachy intern from another community
+ - Share that story on the Outreachy Zulip chat
+ - Write your blog post explaining your project to a newcomer to your community
+ - Ask an Outreachy intern from another community to review your blog post
+ - If you don't understand something your mentor said, ask them to explain it a different way
+ - Remember that it's not always obvious to your mentor what newcomers don't know
+ - It is perfectly okay to ask a question twice, or ask for more detail later!
+
+Week 5 Blog
+-----------
+
+For this week's blog post, we'd like you to explain your project to a newcomer in your community. The audience for this blog post is an Outreachy applicant who is thinking about applying to your community. They have similar basic skills as you, but they've never heard of your community before and have never worked on this type of project before.
+
+Here's some prompts that could get you started writing this blog post:
+
+ - What kind of people participate in your community?
+ - What problem is your community trying to solve?
+ - How does your project fit into the larger community?
+ - Why would people want to use your project?
+ - What makes you most excited to work on your project?
+ - What new terms or concepts have you learned in the past month?
+ - What was confusing to you about the project?
+
+Again, if you have any questions, please contact us!
+
+Outreachy Organizers
+{% include 'home/email/footer-mentor-intern-coordinator.txt' %}

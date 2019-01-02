@@ -2320,6 +2320,10 @@ class InternWeekThree(SendEmailView):
     def generate_messages(self, connection):
         send_biweekly_internship_email(self, connection, 'home/email/internship-week-three.txt')
 
+class InternWeekFive(SendEmailView):
+    def generate_messages(self, connection):
+        send_biweekly_internship_email(self, connection, 'home/email/internship-week-five.txt')
+
 class InitialFeedbackInstructions(SendEmailView):
     def generate_messages(self, connection):
         if not self.request.user.is_staff:
