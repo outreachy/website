@@ -2301,29 +2301,24 @@ def find_round_with_active_internships():
             return r
     return None
 
+def send_biweekly_internship_email(self, connection, template):
+    if not self.request.user.is_staff:
+        raise PermissionDenied("You are not authorized to send reminder emails.")
+
+    current_round = find_round_with_active_internships()
+    if current_round:
+        interns = current_round.get_in_good_standing_intern_selections()
+
+        for i in interns:
+            email.biweekly_internship_email(i, self.request, template, connection=connection)
+
 class InternWeekOne(SendEmailView):
     def generate_messages(self, connection):
-        if not self.request.user.is_staff:
-            raise PermissionDenied("You are not authorized to send reminder emails.")
-
-        current_round = find_round_with_active_internships()
-        if current_round:
-            interns = current_round.get_approved_intern_selections()
-
-            for i in interns:
-                email.week_one_email(i, self.request, connection=connection)
+        send_biweekly_internship_email(self, connection, 'home/email/internship-week-one.txt')
 
 class InternWeekThree(SendEmailView):
     def generate_messages(self, connection):
-        if not self.request.user.is_staff:
-            raise PermissionDenied("You are not authorized to send reminder emails.")
-
-        current_round = find_round_with_active_internships()
-        if current_round:
-            interns = current_round.get_in_good_standing_intern_selections()
-
-            for i in interns:
-                email.week_three_email(i, self.request, connection=connection)
+        send_biweekly_internship_email(self, connection, 'home/email/internship-week-three.txt')
 
 class InitialFeedbackInstructions(SendEmailView):
     def generate_messages(self, connection):

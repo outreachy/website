@@ -208,26 +208,12 @@ def notify_accepted_intern(intern_selection, request, **kwargs):
         recipient_list=emails,
         **kwargs)
 
-def week_one_email(intern_selection, request, **kwargs):
+def biweekly_internship_email(intern_selection, request, template, **kwargs):
     emails = [intern_selection.applicant.applicant.email_address()]
     for m in intern_selection.mentors.all():
         emails.append(m.mentor.email_address())
     emails = emails + intern_selection.project.project_round.community.get_coordinator_email_list()
-    send_group_template_mail('home/email/internship-week-one.txt', {
-        'intern_selection': intern_selection,
-        'current_round': intern_selection.project.project_round.participating_round,
-        },
-        request=request,
-        recipient_list=emails,
-        **kwargs)
-
-# FIXME: this should be refactored to take a string for the template name
-def week_three_email(intern_selection, request, **kwargs):
-    emails = [intern_selection.applicant.applicant.email_address()]
-    for m in intern_selection.mentors.all():
-        emails.append(m.mentor.email_address())
-    emails = emails + intern_selection.project.project_round.community.get_coordinator_email_list()
-    send_group_template_mail('home/email/internship-week-three.txt', {
+    send_group_template_mail(template, {
         'intern_selection': intern_selection,
         'current_round': intern_selection.project.project_round.participating_round,
         },
