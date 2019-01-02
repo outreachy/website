@@ -104,12 +104,37 @@ class BlogIndex(RoutablePageMixin, Page):
 # the given date at 4PM UTC.
 DEADLINE_TIME = datetime.time(hour=16, tzinfo=datetime.timezone.utc)
 
+def get_deadline_date_for(dt):
+    """
+    Takes a timezone-aware datetime and returns the date which is
+    comparable to dates in RoundPage deadlines. If the datetime has
+    not reached the deadline time of 4PM UTC, then this is the
+    previous day's date.
+
+    This is handy for comparing an arbitrary point in time against
+    any of the deadlines in RoundPage, like the following example to
+    find rounds where the intern announcement deadline has passed but
+    the internship end deadline has not:
+
+    >>> import datetime
+    >>> now = datetime.datetime.now(datetime.timezone.utc)
+    >>> today = get_deadline_date_for(now)
+    >>> RoundPage.objects.filter(
+    ...     internannounce__lte=today,
+    ...     internends__gt=today,
+    ... )
+    <PageQuerySet [...]>
+    """
+    if dt.timetz() < DEADLINE_TIME:
+        return dt.date() - datetime.timedelta(days=1)
+    return dt.date()
+
 def has_deadline_passed(deadline_date):
     if not deadline_date:
         return False
-    deadline = datetime.datetime.combine(deadline_date, DEADLINE_TIME)
-    now = datetime.datetime.now(deadline.tzinfo)
-    return deadline < now
+    now = datetime.datetime.now(DEADLINE_TIME.tzinfo)
+    today = get_deadline_date_for(now)
+    return deadline_date < today
 
 class RoundPage(Page):
     roundnumber = models.IntegerField()
@@ -940,6 +965,9 @@ class Comrade(models.Model):
     # if they haven't already.
     # Don't advertise this for mentors or coordinators (pending or approved) in this current round
     def needs_application(self):
+        if self.account.is_staff:
+            return False
+
         if self.has_application():
             return False
 
@@ -1174,7 +1202,7 @@ class Comrade(models.Model):
                 applicant__applicant=self,
                 funding_source__in=(InternSelection.ORG_FUNDED, InternSelection.GENERAL_FUNDED),
                 organizer_approved=True)
-        except ApplicantApproval.DoesNotExist:
+        except InternSelection.DoesNotExist:
             return None
 
 class ApprovalStatusQuerySet(models.QuerySet):

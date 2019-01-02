@@ -1,5 +1,4 @@
 {% extends "base.html" %} 
-{% load approval_status %}
 
 {% block title %}
 Dashboard
@@ -11,98 +10,12 @@ Dashboard
 
 <p><a href="{% url 'account' %}"><button type="button" class="btn btn-info">Edit Profile</button></a><a href="{% url 'logout' %}"><button type="button" class="btn btn-secondary ml-3">Log out</button></a></p>
 
-{% if groups %}
-<p>You have actions you need to take. <a href="#actions">See all actions.</a></p>
+{% if sections %}
+<h1>Dashboard</h1>
 {% endif %}
-
-{% with intern_selection=request.user.comrade.get_intern_selection project_contributions=request.user.comrade.get_projects_contributed_to project_applications=request.user.comrade.get_projects_applied_to %}
-	{% if not current_round.has_intern_announcement_deadline_passed %}
-		{% if not request.user.comrade.get_approved_coordinator_communities and not request.user.comrade.get_editable_mentored_projects and not request.user.is_staff and not request.user.comrade.approved_reviewer %}
-			{% include "home/snippet/eligibility_prompts.html" %}
-		{% endif %}
-	{% elif intern_selection %}
-		{% with round=intern_selection.project.project_round.participating_round %}
-			<p>Congratulations, you've been selected as an intern for the {{ round.internstarts|date:"F Y" }} to {{ round.internends|date:"F Y" }} Outreachy internship round. You'll be interning with {{ intern_selection.community_name }} on the project "{{ intern_selection.project_name }}". Your mentor(s) are {{ intern_selection.mentor_names }}.</p>
-			{% if not intern_selection.intern_contract %}
-				<p>Please sign the intern agreement before {{ round.intern_agreement_deadline|date:"F d, Y" }} to acknowledge you have accepted your internship.</p>
-				<p><a href="{% url 'intern-agreement' round_slug=round.slug community_slug=intern_selection.project.project_round.community.slug project_slug=intern_selection.project.slug %}"><input class="btn btn-success" value="Sign Intern Agreement" /></a>
-			{% else %}
-				<p>You signed the intern agreement on {{ intern_selection.intern_contract.date_signed|date:"F d, Y" }}.</p>
-			{% endif %}
-		{% endwith %}
-	{% elif request.user.comrade.get_approved_coordinator_communities or request.user.comrade.get_approved_mentored_projects %}
-		<h1>Intern Announcement</h1>
-		<p>The Outreachy {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} interns have been <a href="/alums/">announced</a>! Thank you for participating as a mentor or coordinator.</p>
-		{% if request.user.comrade.get_approved_coordinator_communities %}
-		{% include "home/snippet/coordinator_reminder_prompt.html" %}
-		{% endif %}
-	{% else %}
-		<p>We're sorry to say that you were not selected as an intern for the {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round. The full list of accepted interns can be viewed <a href="/alums/">here</a>.</p>
-		<p>We encourage you to sign up for the
-		<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">announcements mailing list</a>
-		to get an email when the next round opens.</p>
-	{% endif %}
-{% endwith %}
-
-{% if request.user.is_staff %}
-	{% include "home/snippet/dashboard_staff.html" %}
-{% elif request.user.comrade.approved_reviewer %}
-	{% include 'home/snippet/dashboard_application_summary.html' %}
-{% endif %}
-
-{% if internship %}
-	{% include "home/snippet/dashboard_intern.html" %}
-{% endif %}
-
-{% if mentor_relationships %}
-	{% include "home/snippet/dashboard_mentor.html" %}
-{% endif %}
-
-{% with mentored_projects=request.user.comrade.get_editable_mentored_projects %}
-	{% if mentored_projects %}
-		{% include "home/snippet/dashboard_mentor_projects.html" %}
-	{% endif %}
-{% endwith %}
-
-{% if groups %}
-	<h1 id="actions">Dashboard</h1>
-{% endif %}
-{% for status, status_group in groups %}
-	<h2>{{ status|title }}</h2>
-	{% for label, group in status_group %}
-		<h3>{{ label|title }}</h3>
-		{% for obj in group %}
-			<div class="card mb-3">
-			<div class="card-body">
-				<p class="card-text"><a href="{{ obj.get_preview_url }}">{{ obj }}</a></p>
-				<div class="mx-auto mr-sm-0" role="group" aria-label="Actions">
-				{% if obj.approval_status == obj.APPROVED %}
-					{% if obj|is_submitter:request.user %}
-					<a href="{{ obj.get_withdraw_url }}" class="btn btn-warning">Withdraw</a>
-					{% endif %}
-					{% if obj|is_approver:request.user %}
-					<a href="{{ obj.get_reject_url }}" class="btn btn-danger">Reject</a>
-					{% endif %}
-				{% elif obj.approval_status == obj.PENDING %}
-					{% if obj|is_approver:request.user %}
-					<a href="{{ obj.get_preview_url }}" class="btn btn-primary">Review</a>
-					{% endif %}
-					{% if obj|is_submitter:request.user %}
-					<a href="{{ obj.get_withdraw_url }}" class="btn btn-warning">Withdraw</a>
-					{% endif %}
-				{% elif obj.approval_status == obj.WITHDRAWN %}
-					{% if obj|is_submitter:request.user %}
-					<a href="{{ obj.get_submit_url }}" class="btn btn-success">Resubmit</a>
-					{% endif %}
-				{% elif obj.approval_status == obj.REJECTED %}
-					{% if obj|is_approver:request.user %}
-					<a href="{{ obj.get_approve_url }}" class="btn btn-success">Approve</a>
-					{% endif %}
-				{% endif %}
-				</div>
-			</div>
-			</div>
-		{% endfor %}
-	{% endfor %}
+{% for template_name, context in sections %}
+<div>
+{% include template_name with request=request section=context only %}
+</div>
 {% endfor %}
 {% endblock %}
