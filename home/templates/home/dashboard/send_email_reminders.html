@@ -1,0 +1,93 @@
+{% with current_round=section %}
+<h1>Email Reminders</h1>
+
+<p>Two weeks before the application deadline, project mentors are either overloaded with applicants,
+or don't have enough applicants. Send a reminder email to either close their project to new applicants,
+or extend their project deadline by a week (and/or mark their project as needing more applicants).</p>
+
+<p><a href="{% url 'email-deadline-review' %}"><input class="btn btn-success" value="Mentor Deadlines Email" /></a>
+
+<p>Once mentors have had a couple days to mark their project as closed, late, or needs promotion,
+you can send an email to the announcements mailing list to remind applicants of the upcoming deadlines:</p>
+
+<p><a href="{% url 'email-deadline-reminder' %}"><input class="btn btn-success" value="Applicant Deadline Email" /></a>
+
+<p>You'll need to send reminder email to applicants who have recorded a contribution. The emails will only remind applicants who have made a contribution to a project whose deadline hasn't passed yet:
+<ul>
+	<li>A week before the regular deadline. Send the email on {{ current_round.regular_deadline_reminder }} at 4pm UTC.</li>
+	<li>A day before the regular deadline (which is a week and one day before the late deadline). Send the email on {{ current_round.regular_deadline_second_reminder }} at 4pm UTC.</li>
+	<li>A day before the late application deadline. Send the email on {{ current_round.late_deadline_reminder }} at 4pm UTC.</li>
+</ul>
+</p>
+
+<p><a href="{% url 'email-contributor-deadline-reminder' %}"><input class="btn btn-success" value="Contributor Deadline Email" /></a>
+
+<p>You'll need to send a reminder email to mentors who have an approved project to let them know about the application deadline, and to give them instructions on how to help applicants complete the timeline:
+<ul>
+	<li>Approximately a week before the regular deadline (Monday mornings are best). Send the email around {{ current_round.regular_deadline_reminder }}.</li>
+	<li>About a week before the late deadline, but after the regular application deadline. Send the email on {{ current_round.appsclose }} after 4pm UTC.</li>
+</ul>
+</p>
+
+<p><a href="{% url 'email-mentor-application-deadline-reminder' %}"><input class="btn btn-success" value="Mentor Deadline Email 2" /></a>
+
+<p>Once the first project deadline has passed, email mentors to remind them who has applied and that they can extend their project deadline:
+<ul>
+	<li>After the first application period deadline. Send the email on {{ current_round.appsclose }} after 4pm UTC.</li>
+</ul>
+</p>
+
+<p><a href="{% url 'email-mentor-intern-selection-reminder' %}"><input class="btn btn-success" value="Mentor Intern Selection Email" /></a>
+
+<p>Once the late project deadline has passed, email mentors and coordinators with instructions on how to select their intern:
+<ul>
+	<li>After the first application period deadline. Send the email on {{ current_round.appslate }} after 4pm UTC.</li>
+</ul>
+</p>
+
+<p><a href="{% url 'email-coordinator-intern-selection-reminder' %}"><input class="btn btn-success" value="Coordinator Intern Selection Email" /></a>
+
+<p>Once the late project deadline has passed, email contributors about the round ending:
+<ul>
+	<li>After the first application period deadline. Send the email on {{ current_round.appslate }} after 4pm UTC.</li>
+</ul>
+</p>
+
+<p><a href="{% url 'email-application-period-ended' %}"><input class="btn btn-success" value="Contributor Final Email" /></a>
+
+<p>On the intern announcement date, once the alums page reflects the accepted interns, send a welcome email to accepted interns:
+<ul>
+	<li>After the interns are announced. Send the email on {{ current_round.internannounce }} after 4pm UTC.</li>
+</ul>
+</p>
+
+<p><a href="{% url 'email-intern-welcome' %}"><input class="btn btn-success" value="Intern Welcome Email" /></a>
+
+<p>Week 1: Send a welcome email with information about the week 2 chat and a blog post prompt. Make sure the <a href="{{ current_round.week_two_chat_text_url }}">Outreachy week 2 text chat URL</a> works and the <a href="{{ current_round.week_two_chat_video_url }}">Outreachy week 2 video chat URL</a> works:
+<ul>
+	<li>Send the email on {{ current_round.internstarts }}.</li>
+</ul>
+</p>
+
+<p><a href="{% url 'email-internship-week-one' %}"><input class="btn btn-success" value="Week 1 Email" /></a>
+
+<hr>
+
+<p>Week 2: Send the email asking for initial feedback. You may have to send it multiple times, if some interns have a delayed internship start date:
+<ul>
+	<li>Send the email after {{ current_round.intern_initial_feedback_opens }}.</li>
+</ul>
+</p>
+
+<p><a href="{% url 'email-initial-feedback-instructions' %}"><input class="btn btn-success" value="Initial Feedback Reminder" /></a>
+
+<hr>
+
+<p>Week 3: Topic is "Everybody Struggles." Start a conversation on the <a href="{{ current_round.week_three_stuck_chat_url }}">Outreachy topic URL</a>. Send another blog post prompt:
+<ul>
+	<li>Send the email after {{ current_round.internship_week_three_email_deadline }}.</li>
+</ul>
+</p>
+
+<p><a href="{% url 'email-internship-week-three' %}"><input class="btn btn-success" value="Week 3 Email" /></a>
+{% endwith %}
