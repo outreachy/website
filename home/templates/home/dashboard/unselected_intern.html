@@ -1,0 +1,6 @@
+{% with current_round=section.application_round %}
+<p>We're sorry to say that you were not selected as an intern for the {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round. The full list of accepted interns can be viewed <a href="/alums/">here</a>.</p>
+<p>We encourage you to sign up for the
+<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">announcements mailing list</a>
+to get an email when the next round opens.</p>
+{% endwith %}

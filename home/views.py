@@ -2914,12 +2914,6 @@ class ReviewCommentUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
 
 @login_required
 def dashboard(request):
-    current_round = RoundPage.objects.latest('internstarts')
-
-    sections = get_dashboard_sections(request)
-
     return render(request, 'home/dashboard.html', {
-        'sections': sections,
-        'current_round': current_round,
-        'show_reminders': 1,
-        })
+        'sections': get_dashboard_sections(request),
+    })

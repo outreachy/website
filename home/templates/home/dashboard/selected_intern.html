@@ -1,0 +1,10 @@
+{# TODO: Display a different message if not in_good_standing? #}
+{% with round=section.round %}
+	<p>Congratulations, you've been selected as an intern for the {{ round.internstarts|date:"F Y" }} to {{ round.internends|date:"F Y" }} Outreachy internship round. You'll be interning with {{ section.community_name }} on the project "{{ section.project_name }}". Your mentor(s) are {{ section.mentor_names }}.</p>
+	{% if not section.intern_contract %}
+		<p>Please sign the intern agreement before {{ round.intern_agreement_deadline|date:"F d, Y" }} to acknowledge you have accepted your internship.</p>
+		<p><a href="{% url 'intern-agreement' round_slug=round.slug community_slug=section.project.project_round.community.slug project_slug=section.project.slug %}"><input class="btn btn-success" value="Sign Intern Agreement" /></a>
+	{% else %}
+		<p>You signed the intern agreement on {{ section.intern_contract.date_signed|date:"F d, Y" }}.</p>
+	{% endif %}
+{% endwith %}

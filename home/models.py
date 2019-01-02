@@ -952,6 +952,9 @@ class Comrade(models.Model):
     # if they haven't already.
     # Don't advertise this for mentors or coordinators (pending or approved) in this current round
     def needs_application(self):
+        if self.account.is_staff:
+            return False
+
         if self.has_application():
             return False
 

@@ -26,14 +26,18 @@ The context value can be any type. Here are some examples:
 """
 
 from collections import defaultdict
+import datetime
 
 from .models import ApplicantApproval
 from .models import ApprovalStatus
+from .models import Community
 from .models import Comrade
 from .models import DASHBOARD_MODELS
+from .models import MentorApproval
 from .models import MentorRelationship
 from .models import Participation
 from .models import RoundPage
+from .models import get_deadline_date_for
 
 __all__ = ('get_dashboard_sections',)
 
@@ -45,6 +49,50 @@ def get_dashboard_sections(request):
             template_name = "home/dashboard/{}.html".format(section.__name__)
             sections.append((template_name, context))
     return sections
+
+
+def intern_announcement(request):
+    current_round = RoundPage.objects.latest('internstarts')
+    if not current_round.has_intern_announcement_deadline_passed():
+        return None
+
+    coordinator = Community.objects.filter(
+        participation__participating_round = current_round,
+        participation__approval_status = ApprovalStatus.APPROVED,
+        coordinatorapproval__coordinator__account = request.user,
+        coordinatorapproval__approval_status = ApprovalStatus.APPROVED,
+    ).exists()
+
+    mentor = MentorApproval.objects.filter(
+        mentor__account = request.user,
+        approval_status = ApprovalStatus.APPROVED,
+        project__approval_status = ApprovalStatus.APPROVED,
+        project__project_round__participating_round = current_round,
+        project__project_round__approval_status = ApprovalStatus.APPROVED,
+    ).exists()
+
+    roles = []
+    if coordinator:
+        roles.append("coordinator")
+    if mentor:
+        roles.append("mentor")
+    if request.user.is_staff:
+        roles.append("organizer")
+
+    if not roles:
+        return None
+
+    return {
+        'current_round': current_round,
+        'role': ' and '.join(roles),
+    }
+
+
+def coordinator_reminder(request):
+    try:
+        return request.user.comrade.get_approved_coordinator_communities()
+    except Comrade.DoesNotExist:
+        return None
 
 
 def application_summary(request):
@@ -104,12 +152,65 @@ def staff(request):
     }
 
 
+def selected_intern(request):
+    try:
+        intern_selection = request.user.comrade.get_intern_selection()
+    except Comrade.DoesNotExist:
+        return None
+    if not intern_selection:
+        return None
+
+    # No peeking! Wait for the announcement!
+    if not intern_selection.round().has_intern_announcement_deadline_passed():
+        return None
+
+    # We could check here how long ago this intern's round was, and
+    # maybe remove this section from their dashboard, if desired.
+
+    return intern_selection
+
+
 def intern(request):
-    # XXX: move this function somewhere common
+    # TODO: move this function somewhere common
+    # or TODO: merge with selected_intern above
     # This import can't be at top-level because views.py imports this
     # file so that would be a circular dependency.
     from .views import intern_in_good_standing
     return intern_in_good_standing(request.user)
+
+
+def eligibility_prompts(request):
+    now = datetime.datetime.now(datetime.timezone.utc)
+    today = get_deadline_date_for(now)
+    try:
+        return RoundPage.objects.get(
+            appsopen__lte=today,
+            appslate__gt=today,
+        )
+    except RoundPage.DoesNotExist:
+        return None
+
+
+def unselected_intern(request):
+    """
+    Display a message for people who filled out the eligibility form
+    but didn't get selected. But only display it once the
+    internannounce deadline has passed, and make the sad message go
+    away a few weeks later when the selected interns start working on
+    their internships.
+    """
+    now = datetime.datetime.now(datetime.timezone.utc)
+    today = get_deadline_date_for(now)
+    try:
+        return ApplicantApproval.objects.exclude(
+            internselection__organizer_approved=True,
+        ).get(
+            applicant__account=request.user,
+            application_round__internannounce__lte=today,
+            application_round__internstarts__gte=today,
+        )
+    except ApplicantApproval.DoesNotExist:
+        return None
 
 
 def mentor(request):
@@ -151,9 +252,14 @@ def approval_status(request):
 
 
 DASHBOARD_SECTIONS = (
+    intern_announcement,
+    coordinator_reminder,
     application_summary,
     staff,
+    selected_intern,
     intern,
+    eligibility_prompts,
+    unselected_intern,
     mentor,
     mentor_projects,
     approval_status,

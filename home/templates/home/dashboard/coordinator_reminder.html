@@ -9,7 +9,7 @@
 	</p>
 	<p><a href="{% url 'account' %}">Edit your personal or coordinator information</a></p>
 
-	{% for c in request.user.comrade.get_approved_coordinator_communities %}
+	{% for c in section %}
 	<h4>Coordinator actions for {{ c.name }}</h4>
 	<ul>
 		<li><a href="{% url 'community-landing' round_slug=current_round.slug slug=c.slug %}">View the community projects page applicants see</a></li>
