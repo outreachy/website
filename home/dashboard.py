@@ -155,11 +155,56 @@ def application_summary(request):
     }
 
 
-def staff(request):
+def staff_subscriptions(request):
+    # This template doesn't need any data, it just needs to be
+    # hidden for non-staff.
+    return request.user.is_staff
+
+
+def send_email_reminders(request):
+    if not request.user.is_staff:
+        return None
+
+    return RoundPage.objects.latest('internstarts')
+
+
+def sponsor_statistics(request):
+    if not request.user.is_staff:
+        return None
+
+    return RoundPage.objects.latest('internstarts')
+
+
+def staff_intern_progress(request):
     if not request.user.is_staff:
         return None
 
     current_round = RoundPage.objects.latest('internstarts')
+    if not current_round.has_intern_selection_display_date_passed():
+        return None
+
+    return current_round
+
+
+def staff_intern_selection(request):
+    if not request.user.is_staff:
+        return None
+
+    current_round = RoundPage.objects.latest('internstarts')
+    if current_round.has_intern_selection_display_date_passed():
+        return None
+
+    return current_round
+
+
+def staff_community_progress(request):
+    if not request.user.is_staff:
+        return None
+
+    current_round = RoundPage.objects.latest('internstarts')
+    if current_round.has_intern_selection_display_date_passed():
+        return None
+
     pending_participations = Participation.objects.filter(
             participating_round = current_round,
             approval_status = ApprovalStatus.PENDING).order_by('community__name')
@@ -168,10 +213,11 @@ def staff(request):
             approval_status = ApprovalStatus.APPROVED).order_by('community__name')
     participations = list(pending_participations) + list(approved_participations)
 
+    if not participations:
+        return None
+
     return {
         'current_round': current_round,
-        'pending_participations': pending_participations,
-        'approved_participations': approved_participations,
         'participations': participations,
     }
 
@@ -279,7 +325,12 @@ DASHBOARD_SECTIONS = (
     intern_announcement,
     coordinator_reminder,
     application_summary,
-    staff,
+    staff_subscriptions,
+    send_email_reminders,
+    sponsor_statistics,
+    staff_intern_progress,
+    staff_intern_selection,
+    staff_community_progress,
     selected_intern,
     intern,
     eligibility_prompts,
