@@ -386,6 +386,14 @@ def determine_eligibility(wizard, application_round):
 
     return (ApprovalStatus.PENDING, 'ESSAY')
 
+# People can only submit new initial applications or edit initial applications
+# when the application period is open.
+def validate_is_time_to_show_initial_application(current_round):
+    if not current_round.has_application_period_started():
+        raise PermissionDenied('The Outreachy application period is not yet open. Eligibility checking will become available when the next application period opens. Please sign up for the announcements mailing list for an email when the next application period opens: https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce')
+    if current_round.has_late_application_deadline_passed():
+        raise PermissionDenied('The Outreachy application period is closed. If you are an applicant who has submitted an application for an internship project and your time commitments have increased, please contact the Outreachy organizers (see contact link above). Eligibility checking will become available when the next application period opens. Please sign up for the announcements mailing list for an email when the next application period opens: https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce')
+
 class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, SessionWizardView):
     template_name = 'home/wizard_form.html'
     condition_dict = {
@@ -639,10 +647,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
 
     def get_current_round(self):
         current_round = RoundPage.objects.latest('internstarts')
-        if not current_round.has_application_period_started():
-            raise PermissionDenied('The Outreachy application period is not yet open. Eligibility checking will become available when the next application period opens. Please sign up for the announcements mailing list for an email when the next application period opens: https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce')
-        if current_round.has_late_application_deadline_passed():
-            raise PermissionDenied('The Outreachy application period is closed. If you are an applicant who has submitted an application for an internship project and your time commitments have increased, please contact the Outreachy organizers (see contact link above). Eligibility checking will become available when the next application period opens. Please sign up for the announcements mailing list for an email when the next application period opens: https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce')
+        validate_is_time_to_show_initial_application(current_round)
         return current_round
 
     def get_context_data(self, **kwargs):
@@ -693,6 +698,7 @@ class EligibilityResults(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
 
     def get_object(self):
         current_round = RoundPage.objects.latest('internstarts')
+        validate_is_time_to_show_initial_application(current_round)
         return get_object_or_404(ApplicantApproval,
                     applicant=self.request.user.comrade,
                     application_round=current_round)
@@ -710,10 +716,12 @@ class ViewInitialApplication(LoginRequiredMixin, ComradeRequiredMixin, DetailVie
     def get_context_data(self, **kwargs):
         context = super(ViewInitialApplication, self).get_context_data(**kwargs)
         context['current_round'] = RoundPage.objects.latest('internstarts')
+        validate_is_time_to_show_initial_application(current_round)
         return context
 
     def get_object(self):
         current_round = RoundPage.objects.latest('internstarts')
+        validate_is_time_to_show_initial_application(current_round)
         return get_object_or_404(ApplicantApproval,
                     applicant__account__username=self.kwargs['applicant_username'],
                     application_round=current_round)
