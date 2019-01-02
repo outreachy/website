@@ -38,6 +38,7 @@ from .models import MentorRelationship
 from .models import Participation
 from .models import RoundPage
 from .models import get_deadline_date_for
+from .models import has_deadline_passed
 
 __all__ = ('get_dashboard_sections',)
 
