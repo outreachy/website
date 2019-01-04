@@ -6,18 +6,18 @@ Outreachy Travel Stipend
 
 {% block content %}
 
-<h1>What is the travel allowance?</h1>
+<h1>What is the travel stipend?</h1>
 
-<p>Attending talks, workshops, and meeting other contributors in person is fun and can help you get up to speed faster. As part of your internship, you have a $500 USD travel allowance. You will not be reimbursed for more than $500.</p>
+<p>Attending talks, workshops, and meeting other contributors in person is fun and can help you get up to speed faster. As part of your internship, you have a $500 USD travel stipend. You will not be reimbursed for more than $500.</p>
 
-<p>You can use the travel allowance to go to a conference, event, or meeting that is relevant to your internship project, or is a Free and Open Source Software (FOSS) conference.</p>
+<p>You can use the travel stipend to go to a conference, event, or meeting that is relevant to your internship project, or is a Free and Open Source Software (FOSS) conference.</p>
 
 <p>Please read the following page carefully before booking any travel.</p>
 
 <h1 id="steps">Steps to take before and after you travel</h1>
 
 <ol>
-	<li>Make sure your travel will start <a href="{% url 'travel-stipend' %}#timeframe">within the time that your travel allowance is active</a>.</li>
+	<li>Make sure your travel will start <a href="{% url 'travel-stipend' %}#timeframe">within the time that your travel stipend is active</a>.</li>
 
 	<li>Confirm with your mentor that the <a href="{% url 'travel-stipend' %}#events">event or conference meets our requirements</a>.</li>
 
@@ -38,16 +38,16 @@ Outreachy Travel Stipend
 
 <h1 id='timeframe'>When does the travel have to happen?</h1>
 
-<p>Outreachy's travel stipends are valid for two years. This ensures that the travel allowance can be used for travelling to events that happen once a year. We cannot provide exceptions for expired travel allowances.</p>
+<p>Outreachy's travel stipends are valid for two years. This ensures that the travel stipend can be used for travelling to events that happen once a year. We cannot provide exceptions for expired travel stipend.</p>
 
-<p>The travel allowance is valid for travel that starts between when your internship was announced and two years from the official internship start date. If you started your internship early or late, use the official start dates below.</p>
+<p>The travel stipend is valid for travel that starts between when your internship was announced and two years from the official internship start date. If you started your internship early or late, use the official start dates below.</p>
 
 <h2>Active</h2>
 
 <ul>
 	{% for r in rounds %}
 		{% if r.is_travel_stipend_active %}
-			<li>{{ r.official_name }}, the travel allowance is available for travel that begins any time between {{ r.internannounce }} and {{ r.travel_stipend_deadline }}</li>
+			<li>{{ r.official_name }}, the travel stipend is available for travel that begins any time between {{ r.internannounce }} and {{ r.travel_stipend_deadline }}</li>
 		{% endif %}
 	{% endfor %}
 </ul>
@@ -57,32 +57,32 @@ Outreachy Travel Stipend
 <ul>
 	{% for r in rounds %}
 		{% if not r.is_travel_stipend_active %}
-			<li>{{ r.official_name }}, the travel allowance is available for travel that begins any time between {{ r.internannounce }} and {{ r.travel_stipend_deadline }}</li>
+			<li>{{ r.official_name }}, the travel stipend is available for travel that begins any time between {{ r.internannounce }} and {{ r.travel_stipend_deadline }}</li>
 		{% endif %}
 	{% endfor %}
-	<li>May - August 2017 internship round, the travel allowance is available for travel that begins any time between April 28, 2017 and May 30, 2018</li>
-	<li>December 2016 - March 2017 internship round, the travel allowance is available for travel that begins any time between November 8, 2016 and December 6, 2017</li>
-	<li>May - August 2016 internship round, the travel allowance is available for travel that begins any time between April 22, 2016 and May 23, 2017</li>
-	<li>December 2015 - March 2016 internship round, the travel allowance is available for travel that begins any time between November 17, 2015 and December 7, 2016</li>
-	<li>May - August 2015 internship round, the travel allowance is available for travel that begins any time between April 27, 2015 and May 25, 2016</li>
-	<li>December 2014 - March 2015 internship round, the travel allowance is available for travel that begins any time between November 12, 2014 and December 9, 2015</li>
-	<li>May - August 2014 internship round, the travel allowance is available for travel that begins any time between April 21, 2014 and May 19, 2015</li>
-	<li>December 2013 - March 2014 internship round, the travel allowance is available for travel that begins any time between November 25, 2013 and December 10, 2014</li>
-	<li>June - September 2013 internship round, the travel allowance is available for travel that begins any time between May 27, 2013 and November 8, 2015 (extended because was not clearly communicated originally; travel allowance availability dates will not be extended for other rounds)</li>
+	<li>May - August 2017 internship round, the travel stipend is available for travel that begins any time between April 28, 2017 and May 30, 2018</li>
+	<li>December 2016 - March 2017 internship round, the travel stipend is available for travel that begins any time between November 8, 2016 and December 6, 2017</li>
+	<li>May - August 2016 internship round, the travel stipend is available for travel that begins any time between April 22, 2016 and May 23, 2017</li>
+	<li>December 2015 - March 2016 internship round, the travel stipend is available for travel that begins any time between November 17, 2015 and December 7, 2016</li>
+	<li>May - August 2015 internship round, the travel stipend is available for travel that begins any time between April 27, 2015 and May 25, 2016</li>
+	<li>December 2014 - March 2015 internship round, the travel stipend is available for travel that begins any time between November 12, 2014 and December 9, 2015</li>
+	<li>May - August 2014 internship round, the travel stipend is available for travel that begins any time between April 21, 2014 and May 19, 2015</li>
+	<li>December 2013 - March 2014 internship round, the travel stipend is available for travel that begins any time between November 25, 2013 and December 10, 2014</li>
+	<li>June - September 2013 internship round, the travel stipend is available for travel that begins any time between May 27, 2013 and November 8, 2015 (extended because was not clearly communicated originally; travel stipend availability dates will not be extended for other rounds)</li>
 </ul>
 
-<h2>Can the travel allowance be used for multiple events?</h2>
+<h2>Can the travel stipend be used for multiple events?</h2>
 
-<p>Yes, you can use your travel allowance for multiple trips, if the first trip doesn't use up the entire $500 USD travel stipend. You can combine multiple trips in one reimbursement request. However, please submit your reimbursement request within two weeks of the completion of the earliest trip. Note that Conservancy does not reimburse for trips that completed more than 90 days before the request was submitted.</p>
+<p>Yes, you can use your travel stipend for multiple trips, if the first trip doesn't use up the entire $500 USD travel stipend. You can combine multiple trips in one reimbursement request. However, please submit your reimbursement request within two weeks of the completion of the earliest trip. Note that Conservancy does not reimburse for trips that completed more than 90 days before the request was submitted.</p>
 
 <h1 id='events'>Event requirements</h1>
 
-<p>You can use the travel allowance to travel or gain admittance to conferences or meetings, which meet the following two requirements:</p>
+<p>You can use the travel stipend to travel or gain admittance to conferences or meetings, which meet the following two requirements:</p>
 
 <ol>
-	<li><b>Strong free and open source software component.</b> As the Software Freedom Conservancy is a 501(c)(3) charity in the United States, all activity supported by the travel allowance must forward the organization's mission to promote free and open source software in the public interest. The event you are attending or the material you are presenting must have a strong free and open source software component.</li>
+	<li><b>Strong free and open source software component.</b> As the Software Freedom Conservancy is a 501(c)(3) charity in the United States, all activity supported by the travel stipend must forward the organization's mission to promote free and open source software in the public interest. The event you are attending or the material you are presenting must have a strong free and open source software component.</li>
 
-	<li><b>Your mentor considers it most relevant.</b> Each community that participates in Outreachy has community events or events for the technologies it uses. Typically, community-specific events are relevant for interns to attend. Please consult with your mentor about what is the best and most relevant to your project and community way to use your travel allowance. In some cases, your mentor and you might agree that a generally themed FOSS event close to you is the most relevant use of your travel allowance due to geographical considerations. Do not book your travel before getting a confirmation from your mentor or community coordinator that they consider it most relevant and will want your travel allowance applied to it.</li>
+	<li><b>Your mentor considers it most relevant.</b> Each community that participates in Outreachy has community events or events for the technologies it uses. Typically, community-specific events are relevant for interns to attend. Please consult with your mentor about what is the best and most relevant to your project and community way to use your travel stipend. In some cases, your mentor and you might agree that a generally themed FOSS event close to you is the most relevant use of your travel stipend due to geographical considerations. Do not book your travel before getting a confirmation from your mentor or community coordinator that they consider it most relevant and will want your travel stipend applied to it.</li>
 </ol>
 
 <p>Here are some examples of generally themed FOSS events, along with their approximate dates:</p>
@@ -180,9 +180,9 @@ Outreachy Travel Stipend
 
 <p>If a pre-approval is required, it needs to be requested from the Outreachy organizers. ONLY in cases that you need to book travel that doesn't comply with the policy, <a href="https://www.outreachy.org/contact/contact-us/">contact Outreachy organizers</a> for a pre-approval. The e-mail should have a subject line of "[Round Year]-[Round Start Month]: [Your Last Name]: Travel pre-approval needed". For example, if you participated in the round of Outreachy that started in May 2016 and your last name is Smith, you would use the following subject: "2016-05: Smith: Travel pre-approval needed".</p>
 
-<h1>What can the travel allowance cover?</h1>
+<h1>What can the travel stipend cover?</h1>
 
-<p>Generally, the travel allowance can cover expenses like transportation, lodging, visa fees, event attendance fees, and meals. <a href="https://sfconservancy.org/projects/policies/conservancy-travel-policy.html">Read Conservancy's travel policy</a> carefully for full details. You can use your travel allowance to go to an office of the community you are working with, an event where other contributors from your community will be present, a place where you can work with your mentor in person, an event where you will present about your project, or any generally themed FOSS event.</p>
+<p>Generally, the travel stipend can cover expenses like transportation, lodging, visa fees, event attendance fees, and meals. <a href="https://sfconservancy.org/projects/policies/conservancy-travel-policy.html">Read Conservancy's travel policy</a> carefully for full details. You can use your travel stipend to go to an office of the community you are working with, an event where other contributors from your community will be present, a place where you can work with your mentor in person, an event where you will present about your project, or any generally themed FOSS event.</p>
 
 <h2 id='airfare'>Airfare</h2>
 <p>For air travel, please be sure to comply with Conservancy's <a href="https://sfconservancy.org/projects/policies/conservancy-travel-policy.html#low-fare">low fare policy</a> and be sure to save a screenshot or "print to file" version of your airfare search on a widely-recognized airfare comparison site, such as <a href="http://orbitz.com">Orbitz</a>, <a href="http://kayak.com">Kayak</a> or <a href="http://hipmunk.com/">Hipmunk</a>. Such low fare documentation is <a href="https://sfconservancy.org/projects/policies/conservancy-travel-policy.html#low-fare">required</a> for Conservancy to do an airfare reimbursement.</p>
@@ -193,13 +193,13 @@ Outreachy Travel Stipend
 
 <h1 id='scholarships'>What if my expenses are over $500?</h1>
 
-<a href="https://openhatch.org/wiki/Opportunities/Travel_Grants">Many conferences offer scholarships and reduced or waived admission fees</a> for low-income participants or diversity scholarships. Please investigate and use these in addition to relying on the travel allowance. Outreachy will not cover more than $500.
+<a href="https://openhatch.org/wiki/Opportunities/Travel_Grants">Many conferences offer scholarships and reduced or waived admission fees</a> for low-income participants or diversity scholarships. Please investigate and use these in addition to relying on the travel stipend. Outreachy will not cover more than $500.
 
 <p>If you wish to use scholarships or travel funding, most events require you to apply several months before the conference. Outreachy is not involved in travel funding for any particular conference or event, so you will need to work with the event organizer to submit a travel funding application. If in doubt, email the event organizers and ask when the deadline for submitting travel funding requests is.</p>
 
 <p>Each event will have a different travel policy than the Software Freedom Conservancy travel policy. You may need to provide additional documentation (such as meal receipts). Some events may not require you to write a blog post about the event. Please check with the event organizer for what documentation is needed for their travel reimbursements.</p>
 
-<h1 id='reimbursement'>How do I get reimbursed for the travel allowance by Conservancy?</h1>
+<h1 id='reimbursement'>How do I get reimbursed for the travel stipend by Conservancy?</h1>
 
 <p>Unless you were told otherwise, Conservancy is the organization that will reimburse your travel. </p>
 
@@ -232,8 +232,8 @@ I have not included receipts for things that fall under the Meals and Incidental
 
 <p>Within 30 days of your e-mail, Conservancy will send you the reimbursement or inform you if it requires additional information.</p>
 
-<h1>How do I get reimbursed for the travel allowance by my community?</h1>
+<h1>How do I get reimbursed for the travel stipend by my community?</h1>
 
-<p>If a participating community has a process for reimbursing travelling expenses of its contributors, it might choose to do so itself for its Outreachy interns. In that case the community will be the custodian of your travel allowance, and you will be notified about it. You will need to follow the reimbursement procedures of that community, and should ask your mentor or coordinator to let you know what they are.</p>
+<p>If a participating community has a process for reimbursing travelling expenses of its contributors, it might choose to do so itself for its Outreachy interns. In that case the community will be the custodian of your travel stipend, and you will be notified about it. You will need to follow the reimbursement procedures of that community, and should ask your mentor or coordinator to let you know what they are.</p>
 
 {% endblock %}
