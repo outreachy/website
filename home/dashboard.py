@@ -38,6 +38,7 @@ from .models import MentorRelationship
 from .models import Participation
 from .models import RoundPage
 from .models import get_deadline_date_for
+from .models import has_deadline_passed
 
 __all__ = ('get_dashboard_sections',)
 
@@ -52,8 +53,24 @@ def get_dashboard_sections(request):
 
 
 def intern_announcement(request):
-    current_round = RoundPage.objects.latest('internstarts')
-    if not current_round.has_intern_announcement_deadline_passed():
+    now = datetime.datetime.now(datetime.timezone.utc)
+    today = get_deadline_date_for(now)
+    try:
+        # Find the newest round whose intern announcement date has passed.
+        current_round = RoundPage.objects.filter(
+            internannounce__lte=today,
+        ).latest('internannounce')
+    except RoundPage.DoesNotExist:
+        return None
+
+    # Hide this message once the next round starts, where "starts" is defined
+    # by pingnew, and "next round" means it has a later intern announcement
+    # date than this one.
+    later_open_rounds = RoundPage.objects.filter(
+        pingnew__lte=today,
+        internannounce__gt=current_round.internannounce,
+    )
+    if later_open_rounds.exists():
         return None
 
     coordinator = Community.objects.filter(
@@ -102,7 +119,15 @@ def application_summary(request):
     except Comrade.DoesNotExist:
         return None
 
-    current_round = RoundPage.objects.latest('internstarts')
+    now = datetime.datetime.now(datetime.timezone.utc)
+    today = get_deadline_date_for(now)
+    try:
+        current_round = RoundPage.objects.get(
+            appsopen__lte=today,
+            internannounce__gt=today,
+        )
+    except RoundPage.DoesNotExist:
+        return None
 
     pending_revisions_count = ApplicantApproval.objects.filter(
             application_round = current_round,
@@ -131,11 +156,84 @@ def application_summary(request):
     }
 
 
-def staff(request):
+def staff_subscriptions(request):
+    # This template doesn't need any data, it just needs to be
+    # hidden for non-staff.
+    return request.user.is_staff
+
+
+def send_email_reminders(request):
     if not request.user.is_staff:
         return None
 
-    current_round = RoundPage.objects.latest('internstarts')
+    return RoundPage.objects.latest('internstarts')
+
+
+def sponsor_statistics(request):
+    if not request.user.is_staff:
+        return None
+
+    now = datetime.datetime.now(datetime.timezone.utc)
+    today = get_deadline_date_for(now)
+    try:
+        return RoundPage.objects.filter(
+            appsopen__lte=today,
+        ).latest('appsopen')
+    except RoundPage.DoesNotExist:
+        return None
+
+
+def staff_intern_progress(request):
+    if not request.user.is_staff:
+        return None
+
+    now = datetime.datetime.now(datetime.timezone.utc)
+    today = get_deadline_date_for(now)
+    try:
+        return RoundPage.objects.get(
+            # has_intern_selection_display_date_passed isn't a
+            # database field, so we have to rewrite the query based
+            # on the underlying fields that function uses.
+            initialfeedback__lte=today + datetime.timedelta(days=7),
+            # similarly for final_stipend_payment_deadline
+            finalfeedback__gt=today - datetime.timedelta(days=30),
+        )
+    except RoundPage.DoesNotExist:
+        return None
+
+
+def staff_intern_selection(request):
+    if not request.user.is_staff:
+        return None
+
+    now = datetime.datetime.now(datetime.timezone.utc)
+    today = get_deadline_date_for(now)
+    try:
+        return RoundPage.objects.get(
+            appsopen__lte=today,
+            # has_intern_selection_display_date_passed isn't a
+            # database field, so we have to rewrite the query based
+            # on the underlying fields that function uses.
+            initialfeedback__gt=today + datetime.timedelta(days=7),
+        )
+    except RoundPage.DoesNotExist:
+        return None
+
+
+def staff_community_progress(request):
+    if not request.user.is_staff:
+        return None
+
+    now = datetime.datetime.now(datetime.timezone.utc)
+    today = get_deadline_date_for(now)
+    try:
+        current_round = RoundPage.objects.get(
+            appsopen__lte=today,
+            internannounce__gt=today,
+        )
+    except RoundPage.DoesNotExist:
+        return None
+
     pending_participations = Participation.objects.filter(
             participating_round = current_round,
             approval_status = ApprovalStatus.PENDING).order_by('community__name')
@@ -144,10 +242,11 @@ def staff(request):
             approval_status = ApprovalStatus.APPROVED).order_by('community__name')
     participations = list(pending_participations) + list(approved_participations)
 
+    if not participations:
+        return None
+
     return {
         'current_round': current_round,
-        'pending_participations': pending_participations,
-        'approved_participations': approved_participations,
         'participations': participations,
     }
 
@@ -255,7 +354,12 @@ DASHBOARD_SECTIONS = (
     intern_announcement,
     coordinator_reminder,
     application_summary,
-    staff,
+    staff_subscriptions,
+    send_email_reminders,
+    sponsor_statistics,
+    staff_intern_progress,
+    staff_intern_selection,
+    staff_community_progress,
     selected_intern,
     intern,
     eligibility_prompts,

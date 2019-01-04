@@ -157,6 +157,7 @@ class RoundPage(Page):
     week_two_chat_text_url = models.URLField(blank=True, verbose_name="URL of the real-time text chat")
     week_two_chat_video_url = models.URLField(blank=True, verbose_name="URL of the video chat")
     week_three_stuck_chat_url = models.URLField(blank=True, verbose_name="URL of the week three chat on what we're stuck on")
+    week_five_audience_chat_url = models.URLField(blank=True, verbose_name="URL of the week five chat to explain your project to a newcomer")
     initialfeedback = models.DateField("Date initial feedback is due", blank=True, default='2017-12-20')
     initialpayment = models.IntegerField(default=1000)
     midfeedback = models.DateField("Date mid-point feedback is due", blank=True, default='2018-01-31')
@@ -227,6 +228,9 @@ class RoundPage(Page):
     def intern_initial_feedback_opens(self):
         return(self.initialfeedback - datetime.timedelta(days=7))
 
+    def intern_midpoint_feedback_opens(self):
+        return(self.midfeedback - datetime.timedelta(days=7))
+
     def has_intern_selection_display_date_passed(self):
         return has_deadline_passed(self.intern_initial_feedback_opens())
 
@@ -241,6 +245,9 @@ class RoundPage(Page):
     
     def initial_stipend_payment_deadline(self):
         return self.initialfeedback + datetime.timedelta(days=30)
+
+    def internship_week_five_email_deadline(self):
+        return(self.internstarts + datetime.timedelta(days=7*4))
 
     def midpoint_stipend_payment_deadline(self):
         return self.midfeedback + datetime.timedelta(days=30)
@@ -264,6 +271,12 @@ class RoundPage(Page):
     # Interns get a five week extension at most.
     def has_internship_ended(self):
         return has_deadline_passed(self.internends + datetime.timedelta(days=7*5))
+
+    def is_internship_active(self):
+        if has_deadline_passed(self.internstarts):
+            if not self.has_internship_ended():
+                return True
+        return False
 
     def has_ontime_application_deadline_passed(self):
         return has_deadline_passed(self.appsclose)
@@ -3697,8 +3710,44 @@ class InitialMentorFeedback(models.Model):
     def get_versions(self):
         return Version.objects.get_for_object(self)
 
+    def find_version_mentor_edited(self):
+        # When a staff member modifies the initial feedback to approve payment or change internship dates,
+        # it counts as a revision. Look for the latest feedback from an approved mentor.
+        # (Note: this may not won't work if we switch mentors.
+        # we could ignore all revisions made by staff, but staff can be mentors too.)
+        versions = Version.objects.get_for_object(self)
+        for v in versions:
+            try:
+                if self.intern_selection.mentors.all().approved().filter(mentor__account=v.revision.user).exists():
+                    return v
+            except MentorApproval.DoesNotExist:
+                return None
+        return None
+
     def get_submission_date(self):
-        return Version.objects.get_for_object(self)[0].revision.date_created
+        version = self.find_version_mentor_edited()
+        if version:
+            return version.revision.date_created
+
+    def get_mentor_public_name(self):
+        version = self.find_version_mentor_edited()
+        if version:
+            return version.revision.user.comrade.public_name
+
+    def get_mentor_legal_name(self):
+        version = self.find_version_mentor_edited()
+        if version:
+            return version.revision.user.comrade.legal_name
+
+    def get_mentor_email(self):
+        version = self.find_version_mentor_edited()
+        if version:
+            return version.revision.user.email
+
+    def get_date_submitted(self):
+        version = self.find_version_mentor_edited()
+        if version:
+            return version.revision.date_created
 
     def can_edit(self):
         if not self.allow_edits:

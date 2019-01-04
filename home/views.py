@@ -2329,33 +2329,37 @@ class InternNotification(SendEmailView):
         for i in interns:
             email.notify_accepted_intern(i, self.request, connection=connection)
 
-class InternWeekOne(SendEmailView):
-    def generate_messages(self, connection):
-        if not self.request.user.is_staff:
-            raise PermissionDenied("You are not authorized to send reminder emails.")
+# Only one internship will be active at a time
+def find_round_with_active_internships():
+    all_rounds = RoundPage.objects.all().order_by('-internstarts')
 
-        # FIXME for future emails: How do we find the latest round with interns selected?
-        # We have to be careful when the rounds overlap
-        # (e.g. internship just ending while selection for next round has begun)
-        current_round = RoundPage.objects.latest('internstarts')
-        interns = current_round.get_approved_intern_selections()
+    for r in all_rounds:
+        if r.is_internship_active():
+            return r
+    return None
 
-        for i in interns:
-            email.week_one_email(i, self.request, connection=connection)
+def send_biweekly_internship_email(self, connection, template):
+    if not self.request.user.is_staff:
+        raise PermissionDenied("You are not authorized to send reminder emails.")
 
-class InternWeekThree(SendEmailView):
-    def generate_messages(self, connection):
-        if not self.request.user.is_staff:
-            raise PermissionDenied("You are not authorized to send reminder emails.")
-
-        # FIXME for future emails: How do we find the latest round with interns selected?
-        # We have to be careful when the rounds overlap
-        # (e.g. internship just ending while selection for next round has begun)
-        current_round = RoundPage.objects.latest('internstarts')
+    current_round = find_round_with_active_internships()
+    if current_round:
         interns = current_round.get_in_good_standing_intern_selections()
 
         for i in interns:
-            email.week_three_email(i, self.request, connection=connection)
+            email.biweekly_internship_email(i, self.request, template, connection=connection)
+
+class InternWeekOne(SendEmailView):
+    def generate_messages(self, connection):
+        send_biweekly_internship_email(self, connection, 'home/email/internship-week-one.txt')
+
+class InternWeekThree(SendEmailView):
+    def generate_messages(self, connection):
+        send_biweekly_internship_email(self, connection, 'home/email/internship-week-three.txt')
+
+class InternWeekFive(SendEmailView):
+    def generate_messages(self, connection):
+        send_biweekly_internship_email(self, connection, 'home/email/internship-week-five.txt')
 
 class InitialFeedbackInstructions(SendEmailView):
     def generate_messages(self, connection):
@@ -2477,10 +2481,10 @@ def initial_mentor_feedback_export_view(request, round_slug):
                 'intern legal name': feedback.intern_selection.applicant.applicant.legal_name,
                 'intern email address': feedback.intern_selection.applicant.applicant.account.email,
                 'community': feedback.intern_selection.community_name(),
-                'mentor public name': feedback.get_versions()[0].revision.user.comrade.public_name,
-                'mentor legal name': feedback.get_versions()[0].revision.user.comrade.legal_name,
-                'mentor email address': feedback.get_versions()[0].revision.user.email,
-                'feedback submitted on': str(feedback.get_versions()[0].revision.date_created),
+                'mentor public name': feedback.get_mentor_public_name(),
+                'mentor legal name': feedback.get_mentor_legal_name(),
+                'mentor email address': feedback.get_mentor_email(),
+                'feedback submitted on': str(feedback.get_date_submitted()),
                 'feedback submitted from': feedback.ip_address,
                 'payment approved': feedback.payment_approved,
                 'progress report': feedback.progress_report,
