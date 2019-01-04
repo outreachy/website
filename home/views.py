@@ -2973,7 +2973,9 @@ class ReviewCommentUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
             })
 
 def travel_stipend(request):
+    rounds = RoundPage.objects.all().order_by('-internstarts')
     return render(request, 'home/travel_stipend.html', {
+        'rounds': rounds,
         })
 
 @login_required

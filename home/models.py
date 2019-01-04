@@ -278,6 +278,17 @@ class RoundPage(Page):
                 return True
         return False
 
+    # The travel stipend policy changed for the December 2017 round
+    # so that the travel stipend would be good for two years.
+    # Rounds older than that are no longer valid.
+    # Find the set of rounds after December 2017 where
+    # the intern start date + 2 years is greater than or equal to today's date.
+    def travel_stipend_deadline(self):
+        return self.internstarts + datetime.timedelta(days=365*2)
+
+    def is_travel_stipend_active(self):
+        return not has_deadline_passed(self.travel_stipend_deadline())
+
     def has_ontime_application_deadline_passed(self):
         return has_deadline_passed(self.appsclose)
 

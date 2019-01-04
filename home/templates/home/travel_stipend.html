@@ -43,13 +43,21 @@ Outreachy Travel Stipend
 <h2>Active</h2>
 
 <ul>
-	<li>December 2017 - March 2018 internship round, the travel allowance is available for travel that begins any time between November 9, 2017 and December 5, 2019</li>
-	<li>May 2018 - August 2018 internship round, the travel allowance is available for travel that begins any time between April 23, 2018 and May 14, 2020</li>
+	{% for r in rounds %}
+		{% if r.is_travel_stipend_active %}
+			<li>{{ r.official_name }}, the travel allowance is available for travel that begins any time between {{ r.internannounce }} and {{ r.travel_stipend_deadline }}</li>
+		{% endif %}
+	{% endfor %}
 </ul>
 
 <h2>Expired</h2>
 
 <ul>
+	{% for r in rounds %}
+		{% if not r.is_travel_stipend_active %}
+			<li>{{ r.official_name }}, the travel allowance is available for travel that begins any time between {{ r.internannounce }} and {{ r.travel_stipend_deadline }}</li>
+		{% endif %}
+	{% endfor %}
 	<li>May - August 2017 internship round, the travel allowance is available for travel that begins any time between April 28, 2017 and May 30, 2018</li>
 	<li>December 2016 - March 2017 internship round, the travel allowance is available for travel that begins any time between November 8, 2016 and December 6, 2017</li>
 	<li>May - August 2016 internship round, the travel allowance is available for travel that begins any time between April 22, 2016 and May 23, 2017</li>
