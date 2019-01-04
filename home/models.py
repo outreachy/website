@@ -3691,8 +3691,44 @@ class InitialMentorFeedback(models.Model):
     def get_versions(self):
         return Version.objects.get_for_object(self)
 
+    def find_version_mentor_edited(self):
+        # When a staff member modifies the initial feedback to approve payment or change internship dates,
+        # it counts as a revision. Look for the latest feedback from an approved mentor.
+        # (Note: this may not won't work if we switch mentors.
+        # we could ignore all revisions made by staff, but staff can be mentors too.)
+        versions = Version.objects.get_for_object(self)
+        for v in versions:
+            try:
+                if self.intern_selection.mentors.all().approved().filter(mentor__account=v.revision.user).exists():
+                    return v
+            except MentorApproval.DoesNotExist:
+                return None
+        return None
+
     def get_submission_date(self):
-        return Version.objects.get_for_object(self)[0].revision.date_created
+        version = self.find_version_mentor_edited()
+        if version:
+            return version.revision.date_created
+
+    def get_mentor_public_name(self):
+        version = self.find_version_mentor_edited()
+        if version:
+            return version.revision.user.comrade.public_name
+
+    def get_mentor_legal_name(self):
+        version = self.find_version_mentor_edited()
+        if version:
+            return version.revision.user.comrade.legal_name
+
+    def get_mentor_email(self):
+        version = self.find_version_mentor_edited()
+        if version:
+            return version.revision.user.email
+
+    def get_date_submitted(self):
+        version = self.find_version_mentor_edited()
+        if version:
+            return version.revision.date_created
 
     def can_edit(self):
         if not self.allow_edits:
