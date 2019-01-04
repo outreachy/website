@@ -2972,6 +2972,10 @@ class ReviewCommentUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
             'applicant_username': self.kwargs['applicant_username'],
             })
 
+def travel_stipend(request):
+    return render(request, 'home/travel_stipend.html', {
+        })
+
 @login_required
 def dashboard(request):
     return render(request, 'home/dashboard.html', {
