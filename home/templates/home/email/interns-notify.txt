@@ -54,11 +54,11 @@ Depending on the country you reside in, you will be asked to provide either a W-
 Travel Allowance
 ----------------
 
-You have $500 travel allowance available to you for travel relevant to Outreachy. The travel allowance is good for one year from the date your internship starts. Please review the information at https://wiki.gnome.org/Outreachy/TravelAllowance 
+You have $500 travel allowance available to you for travel relevant to Outreachy. The travel allowance is good for one year from the date your internship starts. Please review the information at https://www.outreachy.org/travel-stipend
 
 You will need to discuss the travel stipend with your mentor to determine which conference or event is most relevant to your internship. You mentor will need to approve the conference or event before you book your travel.
 
-Please note that before you book any flights, you will need to take a screenshot of your flight search using a widely-recognized airfare comparison site, such as Orbitz, Kayak or Hipmunk. You should also double check before booking travel if you will need to seek pre-approval from the Outreachy organizers for the travel. https://wiki.gnome.org/Outreachy/TravelAllowance#preapproval If you don't need pre-approval, and your mentor approves the travel as relevant to your internship, there is no need to email the organizers before your travel.
+Please note that before you book any flights, you will need to take a screenshot of your flight search using a widely-recognized airfare comparison site, such as Orbitz, Kayak or Hipmunk. You should also double check before booking travel if you will need to seek pre-approval from the Outreachy organizers for the travel. https://www.outreachy.org/travel-stipend#preapproval If you don't need pre-approval, and your mentor approves the travel as relevant to your internship, there is no need to email the organizers before your travel.
 
 Intern Blog
 -----------
