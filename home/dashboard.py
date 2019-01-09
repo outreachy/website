@@ -166,7 +166,19 @@ def send_email_reminders(request):
     if not request.user.is_staff:
         return None
 
-    return RoundPage.objects.latest('internstarts')
+    all_rounds = list(RoundPage.objects.all().order_by('-internstarts'))
+
+    # Only one internship will be active at a time
+    active_round = None
+    for r in all_rounds:
+        if r.is_internship_active():
+            active_round = r
+            break
+
+    return {
+        'current_round': all_rounds[0],
+        'active_round': active_round,
+    }
 
 
 def sponsor_statistics(request):
