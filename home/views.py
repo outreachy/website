@@ -986,12 +986,12 @@ def authorized_to_view_project_details(request, participation_info):
             approved_to_see_all_project_details = False
     return approved_to_see_all_project_details
 
-def community_landing_view(request, round_slug, slug):
+def community_landing_view(request, round_slug, community_slug):
     # Try to see if this community is participating in that round
     # and if so, get the Participation object and related objects.
     participation_info = get_object_or_404(
             Participation.objects.select_related('community', 'participating_round'),
-            community__slug=slug,
+            community__slug=community_slug,
             participating_round__slug=round_slug,
             )
     projects = participation_info.project_set.approved()

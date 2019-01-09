@@ -3,6 +3,11 @@ from django.views.generic import TemplateView
 
 from django.conf.urls import include, url
 
+# To see all URL patterns at once, run:
+#   ./manage.py show_urls
+# or to see just the patterns from this file:
+#   ./manage.py show_urls | grep -Fw home.urls
+
 # These views all take both a community_slug and a project_slug.
 project_cfp_patterns = [
     url(r'^mentor/preview/(?P<username>[^/]+)/$', views.MentorApprovalPreview.as_view(), name='mentorapproval-preview'),
@@ -24,33 +29,48 @@ community_cfp_patterns = [
     url(r'^$', views.community_read_only_view, name='community-read-only'),
 ]
 
+# These views all take a round_slug, a community_slug, and a project_slug.
+round_community_project_patterns = [
+    url(r'^intern-agreement/$', views.InternAgreementSign.as_view(), name='intern-agreement'),
+    url(r'^alum-standing/(?P<applicant_username>[^/]+)/(?P<standing>[^/]+)$', views.AlumStanding.as_view(), name='alum-standing'),
+    url(r'^final-application/(?P<applicant_username>[^/]+)/select/?$', views.InternSelectionUpdate.as_view(), name='select-intern'),
+    url(r'^final-application/(?P<applicant_username>[^/]+)/remove/?$', views.InternRemoval.as_view(), name='remove-intern'),
+    url(r'^final-application/(?P<applicant_username>[^/]+)/resign/?$', views.MentorResignation.as_view(), name='resign-as-mentor'),
+    url(r'^mentor-contract-export/(?P<applicant_username>[^/]+)/?$', views.MentorContractExport.as_view(), name='mentor-contract'),
+    url(r'^final-application/fund/(?P<applicant_username>[^/]+)/(?P<funding>[^/]+)$', views.InternFund.as_view(), name='intern-fund'),
+    url(r'^final-application/organizer-approval/(?P<applicant_username>[^/]+)/(?P<approval>[^/]+)$', views.InternApprove.as_view(), name='intern-approval'),
+    url(r'^final-application/(?P<action>[^/]+)/(?:(?P<username>[^/]+)/)?$', views.FinalApplicationAction.as_view(), name='application-action'),
+    url(r'^final-application/rate/(?P<username>[^/]+)/(?P<rating>[^/]+)$', views.FinalApplicationRate.as_view(), name='application-rate'),
+    url(r'^contributions/add/$', views.ContributionUpdate.as_view(), name='contributions-add'),
+    url(r'^contributions/(?P<contribution_slug>[^/]+)/$', views.ContributionUpdate.as_view(), name='contributions-edit'),
+    url(r'^contributions/$', views.ProjectContributions.as_view(), name='contributions'),
+    url(r'^applicants/$', views.ProjectApplicants.as_view(), name='project-applicants'),
+]
+
+# These views all take a round_slug and a community_slug.
+round_community_patterns = [
+    url(r'^(?P<project_slug>[^/]+)/', include(round_community_project_patterns)),
+    url(r'^applicants/$', views.community_applicants, name='community-applicants'),
+    url(r'^$', views.community_landing_view, name='community-landing'),
+]
+
+# These views all take a round_slug.
+round_patterns = [
+    url(r'^communities/(?P<community_slug>[^/]+)/', include(round_community_patterns)),
+    url(r'^contract-export/$', views.contract_export_view, name='contract-export'),
+    url(r'^initial-feedback-export/$', views.initial_mentor_feedback_export_view, name='initial-feedback-export'),
+    url(r'^initial-feedback-summary/$', views.initial_feedback_summary, name='initial-feedback-summary'),
+]
+
 urlpatterns = [
     url(r'^communities/cfp/add/$', views.CommunityCreate.as_view(), name='community-add'),
     url(r'^communities/cfp/(?P<community_slug>[^/]+)/', include(community_cfp_patterns)),
-    url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/intern-agreement/$', views.InternAgreementSign.as_view(), name='intern-agreement'),
-    url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/alum-standing/(?P<applicant_username>[^/]+)/(?P<standing>[^/]+)$', views.AlumStanding.as_view(), name='alum-standing'),
-    url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/final-application/(?P<applicant_username>[^/]+)/select/?$', views.InternSelectionUpdate.as_view(), name='select-intern'),
-    url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/final-application/(?P<applicant_username>[^/]+)/remove/?$', views.InternRemoval.as_view(), name='remove-intern'),
-    url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/final-application/(?P<applicant_username>[^/]+)/resign/?$', views.MentorResignation.as_view(), name='resign-as-mentor'),
-    url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/mentor-contract-export/(?P<applicant_username>[^/]+)/?$', views.MentorContractExport.as_view(), name='mentor-contract'),
-    url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/final-application/fund/(?P<applicant_username>[^/]+)/(?P<funding>[^/]+)$', views.InternFund.as_view(), name='intern-fund'),
-    url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/final-application/organizer-approval/(?P<applicant_username>[^/]+)/(?P<approval>[^/]+)$', views.InternApprove.as_view(), name='intern-approval'),
-    url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/final-application/(?P<action>[^/]+)/(?:(?P<username>[^/]+)/)?$', views.FinalApplicationAction.as_view(), name='application-action'),
-    url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/final-application/rate/(?P<username>[^/]+)/(?P<rating>[^/]+)$', views.FinalApplicationRate.as_view(), name='application-rate'),
-    url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/contributions/add/$', views.ContributionUpdate.as_view(), name='contributions-add'),
-    url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/contributions/(?P<contribution_slug>[^/]+)/$', views.ContributionUpdate.as_view(), name='contributions-edit'),
-    url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/contributions/$', views.ProjectContributions.as_view(), name='contributions'),
-    url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/(?P<project_slug>[^/]+)/applicants/$', views.ProjectApplicants.as_view(), name='project-applicants'),
-    url(r'^(?P<round_slug>[^/]+)/communities/(?P<community_slug>[^/]+)/applicants/$', views.community_applicants, name='community-applicants'),
-    url(r'^(?P<round_slug>[^/]+)/communities/(?P<slug>[^/]+)/$', views.community_landing_view, name='community-landing'),
-    url(r'^(?P<round_slug>[^/]+)/contract-export/$', views.contract_export_view, name='contract-export'),
-    url(r'^(?P<round_slug>[^/]+)/initial-feedback-export/$', views.initial_mentor_feedback_export_view, name='initial-feedback-export'),
-    url(r'^(?P<round_slug>[^/]+)/initial-feedback-summary/$', views.initial_feedback_summary, name='initial-feedback-summary'),
+    url(r'^communities/cfp/$', views.community_cfp_view, name='community-cfp'),
+    url(r'^(?P<round_slug>[^/]+)/', include(round_patterns)),
     url(r'^intern-contract-export/$', views.intern_contract_export_view, name='intern-contract-export'),
     url(r'^generic-intern-contract-export/$', views.generic_intern_contract_export_view, name='generic-intern-contract-export'),
     url(r'^generic-mentor-contract-export/$', views.generic_mentor_contract_export_view, name='generic-mentor-contract-export'),
     url(r'^alums/$', views.alums_page, name='alums'),
-    url(r'^communities/cfp/$', views.community_cfp_view, name='community-cfp'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
     url(r'^dashboard/pending-applications/$', views.applicant_review_summary, name='pending-applicants-summary'),
     url(r'^dashboard/rejected-applications/$', views.rejected_applicants_summary, name='rejected-applicants-summary'),
