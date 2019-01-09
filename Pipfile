@@ -52,6 +52,7 @@ wagtail = "==1.13.1"
 webencodings = "==0.5.1"
 whitenoise = "==3.3.1"
 willow = "==1.0"
+django-extensions = "*"
 
 [dev-packages]
 

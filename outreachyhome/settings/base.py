@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'compressor',
     'debug_toolbar',
+    'django_extensions',
 ]
 
 if 'SENTRY_DSN' in os.environ:
