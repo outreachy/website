@@ -1515,8 +1515,7 @@ class ApplicantsDeadlinesReminder(SendEmailView):
                 deadline=Project.CLOSED).order_by('project_round__community__name')
         email.applicant_deadline_reminder(late_projects, promoted_projects, closed_projects, current_round, self.request, connection=connection)
 
-def get_contributors_with_upcoming_deadlines():
-    current_round = RoundPage.objects.latest('internstarts')
+def get_contributors_with_upcoming_deadlines(current_round):
     ontime_deadline = current_round.appsclose
     late_deadline = current_round.appslate
     if not has_deadline_passed(ontime_deadline):
@@ -1551,7 +1550,7 @@ class ContributorsDeadlinesReminder(SendEmailView):
     def generate_messages(self, current_round, connection):
         if not self.request.user.is_staff:
             raise PermissionDenied("You are not authorized to send reminder emails.")
-        contributors = get_contributors_with_upcoming_deadlines()
+        contributors = get_contributors_with_upcoming_deadlines(current_round)
 
         for c in contributors:
             email.contributor_deadline_reminder(
