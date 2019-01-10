@@ -1559,15 +1559,19 @@ class ProjectContributions(LoginRequiredMixin, ComradeRequiredMixin, EligibleApp
     template_name = 'home/project_contributions.html'
 
     def get_context_data(self, **kwargs):
-        current_round = RoundPage.objects.latest('internstarts')
-
         # Make sure both the Community and Project are approved
         project = get_object_or_404(Project,
                 slug=self.kwargs['project_slug'],
                 approval_status=ApprovalStatus.APPROVED,
                 project_round__community__slug=self.kwargs['community_slug'],
-                project_round__participating_round=current_round,
+                project_round__participating_round__slug=self.kwargs['round_slug'],
                 project_round__approval_status=ApprovalStatus.APPROVED)
+
+        current_round = project.project_round.participating_round
+
+        # Note that there's no reason to ever keep a past applicant from
+        # looking at their old contributions.
+
         applicant = get_object_or_404(ApplicantApproval,
                 applicant=self.request.user.comrade,
                 application_round=current_round,
@@ -1605,15 +1609,18 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
         if not self.request.user.comrade.eligible_application():
             raise PermissionDenied("You are not an eligible applicant or you have not filled out the eligibility check.")
 
-        current_round = RoundPage.objects.latest('internstarts')
-
         # Make sure both the Community and Project are approved
         project = get_object_or_404(Project,
                 slug=self.kwargs['project_slug'],
                 approval_status=ApprovalStatus.APPROVED,
                 project_round__community__slug=self.kwargs['community_slug'],
-                project_round__participating_round=current_round,
+                project_round__participating_round__slug=self.kwargs['round_slug'],
                 project_round__approval_status=ApprovalStatus.APPROVED)
+
+        current_round = project.project_round.participating_round
+        # FIXME: Which round deadline ends recording applicant contributions?
+        # Something between appslate and internannounce I assume?
+
         applicant = get_object_or_404(ApplicantApproval,
                 applicant=self.request.user.comrade,
                 application_round=current_round)
@@ -1643,27 +1650,30 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
 
 class FinalApplicationRate(LoginRequiredMixin, ComradeRequiredMixin, View):
     def post(self, request, *args, **kwargs):
-        username = kwargs['username']
-        current_round = RoundPage.objects.latest('internstarts')
-        if current_round.slug != kwargs['round_slug']:
-            raise PermissionDenied("You can only rate applicants for the current round.")
-
         # Make sure both the Community and Project are approved
         project = get_object_or_404(Project,
                 slug=kwargs['project_slug'],
                 approval_status=ApprovalStatus.APPROVED,
                 project_round__community__slug=kwargs['community_slug'],
-                project_round__participating_round=current_round,
+                project_round__participating_round__slug=kwargs['round_slug'],
                 project_round__approval_status=ApprovalStatus.APPROVED)
-        applicant = get_object_or_404(ApplicantApproval,
-                applicant__account__username=username,
-                application_round=current_round,
-                approval_status=ApprovalStatus.APPROVED)
 
         # Only allow approved mentors to rank applicants
         approved_mentors = project.get_approved_mentors()
         if request.user.comrade not in [m.mentor for m in approved_mentors]:
             raise PermissionDenied("You are not an approved mentor for this project.")
+
+        current_round = project.project_round.participating_round
+
+        # FIXME: Which round deadline ends applicant rating?
+        # Something between mentor_intern_selection_deadline and internannounce I assume?
+        #if current_round.slug != kwargs['round_slug']:
+        #    raise PermissionDenied("You can only rate applicants for the current round.")
+
+        applicant = get_object_or_404(ApplicantApproval,
+                applicant__account__username=kwargs['username'],
+                application_round=current_round,
+                approval_status=ApprovalStatus.APPROVED)
 
         application = get_object_or_404(FinalApplication, applicant=applicant, project=project)
         rating = kwargs['rating']
@@ -1698,15 +1708,18 @@ class FinalApplicationAction(ApprovalStatusAction):
         if not comrade.eligible_application():
             raise PermissionDenied("You are not an eligible applicant or you have not filled out the eligibility check.")
 
-        current_round = RoundPage.objects.latest('internstarts')
-
         # Make sure both the Community and Project are approved
         project = get_object_or_404(Project,
                 slug=self.kwargs['project_slug'],
                 approval_status=ApprovalStatus.APPROVED,
                 project_round__community__slug=self.kwargs['community_slug'],
-                project_round__participating_round=current_round,
+                project_round__participating_round__slug=self.kwargs['round_slug'],
                 project_round__approval_status=ApprovalStatus.APPROVED)
+
+        current_round = project.project_round.participating_round
+        # FIXME: Which round deadline ends final applications?
+        # Something between appslate and internannounce I assume?
+
         applicant = get_object_or_404(ApplicantApproval,
                 applicant=comrade,
                 application_round=current_round)
@@ -1726,8 +1739,6 @@ class ProjectApplicants(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
     template_name = 'home/project_applicants.html'
 
     def get_context_data(self, **kwargs):
-        current_round = RoundPage.objects.latest('internstarts')
-
         # Make sure both the Community, Project, and mentor are approved
         # Note that accessing URL parameters like project_slug off kwargs only
         # works because this is a TemplateView. For the various kinds of
@@ -1736,8 +1747,14 @@ class ProjectApplicants(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
                 slug=kwargs['project_slug'],
                 approval_status=ApprovalStatus.APPROVED,
                 project_round__community__slug=kwargs['community_slug'],
-                project_round__participating_round=current_round,
+                project_round__participating_round__slug=kwargs['round_slug'],
                 project_round__approval_status=ApprovalStatus.APPROVED)
+
+        current_round = project.project_round.participating_round
+
+        # Note that there's no reason to ever keep someone who was a
+        # coordinator or mentor in a past round from looking at who applied in
+        # that round.
 
         if not self.request.user.is_staff and not project.project_round.community.is_coordinator(self.request.user) and not project.project_round.participating_round.is_mentor(self.request.user):
             raise PermissionDenied("You are not an approved mentor for this project.")
@@ -1768,13 +1785,16 @@ class ProjectApplicants(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
 
 @login_required
 def community_applicants(request, round_slug, community_slug):
-    current_round = RoundPage.objects.latest('internstarts')
-
     # Make sure both the Community and mentor are approved
     participation = get_object_or_404(Participation,
             community__slug=community_slug,
-            participating_round=current_round,
+            participating_round__slug=round_slug,
             approval_status=ApprovalStatus.APPROVED)
+
+    current_round = participation.participating_round
+
+    # Note that there's no reason to ever keep someone who was a coordinator or
+    # mentor in a past round from looking at who applied in that round.
 
     user_is_coordinator = participation.community.is_coordinator(request.user)
     user_is_staff = request.user.is_staff
@@ -1960,10 +1980,11 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.
     def get_form_kwargs(self):
         kwargs = super(InternSelectionUpdate, self).get_form_kwargs()
 
-        current_round = RoundPage.objects.latest('internstarts')
-        this_round = RoundPage.objects.get(slug=self.kwargs['round_slug'])
-        if this_round != current_round:
-            raise PermissionDenied("You cannot select an intern for a past Outreachy round.")
+        current_round = get_object_or_404(RoundPage, slug=self.kwargs['round_slug'])
+        # FIXME: Which round deadline ends intern selection?
+        # Something between mentor_intern_selection_deadline and internannounce I assume?
+        #if this_round != current_round:
+        #    raise PermissionDenied("You cannot select an intern for a past Outreachy round.")
 
         set_project_and_applicant(self, current_round)
         application = get_object_or_404(FinalApplication,
@@ -2054,10 +2075,11 @@ class InternRemoval(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Re
     template_name = 'home/intern_removal_form.html'
 
     def get_object(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        this_round = RoundPage.objects.get(slug=self.kwargs['round_slug'])
-        if this_round != current_round:
-            raise PermissionDenied("You cannot remove an intern from a past Outreachy round.")
+        current_round = get_object_or_404(RoundPage, slug=self.kwargs['round_slug'])
+        # FIXME: Which round deadline ends intern removal?
+        # Something between mentor_intern_selection_deadline and internannounce I assume?
+        #if this_round != current_round:
+        #    raise PermissionDenied("You cannot remove an intern from a past Outreachy round.")
 
         set_project_and_applicant(self, current_round)
         self.intern_selection = get_object_or_404(InternSelection,
@@ -2148,9 +2170,11 @@ class MentorResignation(LoginRequiredMixin, ComradeRequiredMixin, DeleteView):
 class InternFund(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, View):
     def post(self, request, *args, **kwargs):
         username = kwargs['applicant_username']
-        current_round = RoundPage.objects.latest('internstarts')
-        if current_round.slug != kwargs['round_slug']:
-            raise PermissionDenied("You can only select funding sources for interns in the current round.")
+        current_round = get_object_or_404(RoundPage, slug=kwargs['round_slug'])
+        # FIXME: Which round deadline ends applicant funding selection?
+        # Something between coordinator_funding_deadline and internannounce I assume?
+        #if current_round.slug != kwargs['round_slug']:
+        #    raise PermissionDenied("You can only select funding sources for interns in the current round.")
 
         set_project_and_applicant(self, current_round)
         self.intern_selection = get_object_or_404(InternSelection,
@@ -2191,9 +2215,11 @@ class InternFund(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Revis
 class InternApprove(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, View):
     def post(self, request, *args, **kwargs):
         username = kwargs['applicant_username']
-        current_round = RoundPage.objects.latest('internstarts')
-        if current_round.slug != kwargs['round_slug']:
-            raise PermissionDenied("You can only approve interns in the current round.")
+        current_round = get_object_or_404(RoundPage, slug=kwargs['round_slug'])
+        # FIXME: Which round deadline ends applicant approval?
+        # Something between internapproval and internannounce I assume?
+        #if current_round.slug != kwargs['round_slug']:
+        #    raise PermissionDenied("You can only approve interns in the current round.")
 
         set_project_and_applicant(self, current_round)
         self.intern_selection = get_object_or_404(InternSelection,
@@ -2250,12 +2276,14 @@ class InternAgreementSign(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
     fields = ('legal_name',)
 
     def set_project_and_intern_selection(self):
-        self.current_round = RoundPage.objects.latest('internstarts')
-        this_round = RoundPage.objects.get(slug=self.kwargs['round_slug'])
-        if this_round != self.current_round:
-            raise PermissionDenied("You cannot sign an intern agreement for a past Outreachy round.")
+        self.current_round = get_object_or_404(RoundPage, slug=self.kwargs['round_slug'])
         if not self.current_round.has_intern_announcement_deadline_passed():
             raise PermissionDenied("Intern agreements cannot be signed before the interns are announced.")
+
+        # Since interns can't sign the contract twice, the only people who
+        # could sign a contract for a past round are people who never signed it
+        # when they were supposed to. If somehow that happens (it shouldn't!),
+        # let's not limit which round an intern can sign a contract for.
 
         self.project = get_object_or_404(Project,
                 slug=self.kwargs['project_slug'],
