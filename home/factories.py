@@ -200,6 +200,28 @@ class ApplicantApprovalFactory(factory.django.DjangoModelFactory):
     submission_date = factory.Faker('past_date')
     ip_address = factory.Faker('ipv4_public')
 
+class ContributionFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.Contribution
+        django_get_or_create = ('applicant', 'project')
+
+    class Params:
+        round = factory.SubFactory(RoundPageFactory, start_from='appsclose')
+
+    applicant = factory.SubFactory(ApplicantApprovalFactory,
+        application_round=factory.SelfAttribute('..round'),
+        approval_status=models.ApprovalStatus.APPROVED,
+    )
+    project = factory.SubFactory(ProjectFactory,
+        project_round__participating_round=factory.SelfAttribute('...round'),
+        approval_status=models.ApprovalStatus.APPROVED,
+        project_round__approval_status=models.ApprovalStatus.APPROVED,
+    )
+
+    date_started = factory.Faker('past_date')
+    url = factory.Faker('url')
+    description = factory.Faker('paragraph')
+
 class SignedContractFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.SignedContract
