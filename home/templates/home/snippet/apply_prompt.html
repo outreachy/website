@@ -48,7 +48,7 @@
 					{% if not p.has_application_deadline_passed %}
 						<li><a href="{{ p.get_contributions_url }}">Record your contributions</a></li>
 						<li><a href="{{ p.get_contributions_url }}">Edit or create a final application</a></li>
-						<li><a href="{% url 'community-landing' round_slug=current_round.slug slug=p.project_round.community.slug  %}">View project information</a></li>
+						<li><a href="{% url 'community-landing' round_slug=current_round.slug community_slug=p.project_round.community.slug %}">View project information</a></li>
 					{% else %}
 						{% if p in project_applications %}
 							<li><a href="{{ p.get_contributions_url }}">Record your contributions</a></li>
@@ -58,7 +58,7 @@
 								you are not eligible to be selected as an intern for this project.</li>
 							<li><a href="{{ p.get_contributions_url }}">View your contributions</a></li>
 						{% endif %}
-						<li><a href="{% url 'community-landing' round_slug=current_round.slug slug=p.project_round.community.slug  %}">View project information</a></li>
+						<li><a href="{% url 'community-landing' round_slug=current_round.slug community_slug=p.project_round.community.slug %}">View project information</a></li>
 					{% endif %}
 				</ul>
 			</li>

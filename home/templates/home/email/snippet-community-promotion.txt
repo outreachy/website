@@ -5,4 +5,4 @@ Once the Outreachy round opens on {{ current_round.appsopen }}, you can promote 
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
 
-{{ request.scheme }}://{{ request.get_host }}{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}
+{{ request.scheme }}://{{ request.get_host }}{% url 'community-landing' round_slug=current_round.slug community_slug=community.slug %}

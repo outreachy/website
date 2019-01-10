@@ -46,7 +46,7 @@
 			<h4>{{ community.name }}</h4>
 			<p>{{ community.description }}</p>
 			{% if page.has_intern_announcement_deadline_passed %}
-				<p>Learn more on the <a href="{% url 'community-landing' round_slug=page.slug slug=community.slug %}">{{ community.name }} community landing page</a>.</p>
+				<p>Learn more on the <a href="{% url 'community-landing' round_slug=page.slug community_slug=community.slug %}">{{ community.name }} community landing page</a>.</p>
 			{% endif %}
 		{% endfor %}
 	{% endif %}

@@ -1463,7 +1463,7 @@ class Participation(ApprovalStatus):
         return details
 
     def get_absolute_url(self):
-        return reverse('community-landing', kwargs={'round_slug': self.participating_round.slug, 'slug': self.community.slug})
+        return reverse('community-landing', kwargs={'round_slug': self.participating_round.slug, 'community_slug': self.community.slug})
 
     def get_preview_url(self):
         return self.community.get_preview_url()
@@ -1750,7 +1750,7 @@ class Project(ApprovalStatus):
         return reverse('project-selection') + '#' + self.project_round.community.slug + '-' + self.slug
 
     def get_landing_url(self):
-        return reverse('community-landing', kwargs={'round_slug': self.project_round.participating_round.slug, 'slug': self.project_round.community.slug}) + '#' + self.slug
+        return reverse('community-landing', kwargs={'round_slug': self.project_round.participating_round.slug, 'community_slug': self.project_round.community.slug}) + '#' + self.slug
 
     def get_contributions_url(self):
         return reverse('contributions', kwargs={'round_slug': self.project_round.participating_round.slug, 'community_slug': self.project_round.community.slug, 'project_slug': self.slug})

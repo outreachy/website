@@ -5,7 +5,7 @@
 			{% if project.project_round.participating_round.has_application_period_started %}
 				<p class="card-text">This project is approved.
 				You should
-				<a href="{% url 'community-landing' round_slug=project.project_round.participating_round.slug slug=project.project_round.community.slug %}#{{ project.slug }}">promote your project listing</a>.</p>
+				<a href="{% url 'community-landing' round_slug=project.project_round.participating_round.slug community_slug=project.project_round.community.slug %}#{{ project.slug }}">promote your project listing</a>.</p>
 				</p>
 				<p>
 				{{ project.get_applicants_and_contributions_list|length }} applicant{{ project.get_applicants_and_contributions_list|pluralize }} recorded their contributions
@@ -20,7 +20,7 @@
 			{% else %}
 				<p class="card-text">This project is approved.
 				Once applications are open, you can
-				<a href="{% url 'community-landing' round_slug=project.project_round.participating_round.slug slug=project.project_round.community.slug %}#{{ project.slug }}">promote your project listing</a>.</p>
+				<a href="{% url 'community-landing' round_slug=project.project_round.participating_round.slug community_slug=project.project_round.community.slug %}#{{ project.slug }}">promote your project listing</a>.</p>
 			{% endif %}
 			{% if project.project_round.approval_status == project.project_round.APPROVED %}
 				<p class="card-text">
@@ -43,7 +43,7 @@
 		{% elif project.approval_status == project.PENDING %}
 			<p class="card-text">This project is pending.
 				Once applications are open and your project is approved, you can
-				<a href="{% url 'community-landing' round_slug=project.project_round.participating_round.slug slug=project.project_round.community.slug %}#{{ project.slug }}">promote your project listing</a>.</p>
+				<a href="{% url 'community-landing' round_slug=project.project_round.participating_round.slug community_slug=project.project_round.community.slug %}#{{ project.slug }}">promote your project listing</a>.</p>
 			<p class="card-text">After your project is approved, you will be able to review project applicants.
 				</p>
 		{% endif %}

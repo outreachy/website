@@ -179,7 +179,7 @@ Past community participation in Outreachy
 		<h2>Approved Projects for {{ community.name}}</h2>
 		{% if participation_info.approval_status == participation_info.APPROVED and participation_info.participating_round.has_application_period_started %}
 			<p>After the Outreachy round opens on {{ current_round.appsopen }}, you can promote this community to applicants by linking to the community landing page:</p>
-			<p><pre>{{ request.scheme }}://{{ request.get_host }}{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}</pre></p>
+			<p><pre>{{ request.scheme }}://{{ request.get_host }}{% url 'community-landing' round_slug=current_round.slug community_slug=community.slug %}</pre></p>
 		{% endif %}
 		<p>The links below will take you to the {{ community.name }} project page for Outreachy applicants. The project details will be hidden from applicants unless the application period is open{% if participation_info.approval_status != participation_info.APPROVED %} and your community is approved{% endif %}.</p>
 
@@ -362,7 +362,7 @@ Past community participation in Outreachy
 				{% if community.newcommunity.cla %}<li>Code Licensing Agreement: {{ community.newcommunity.cla }}</li>{% endif %}
 				{% if community.newcommunity.dco %}<li>Developer Certificate of Origin: {{ community.newcommunity.dco }}</li>{% endif %}
 			{% endif %}
-			<li><a href="{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}">Community landing page</a></li>
+			<li><a href="{% url 'community-landing' round_slug=current_round.slug community_slug=community.slug %}">Community landing page</a></li>
 		</ul>
 		{% if participation_info.approval_status != participation_info.APPROVED and not current_round.has_project_submission_and_approval_deadline_passed %}
 			<a href="{{ participation_info.get_approve_url }}" class="btn btn-success">Approve Community</a>

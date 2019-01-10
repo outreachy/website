@@ -12,7 +12,7 @@
 	{% for c in section %}
 	<h4>Coordinator actions for {{ c.name }}</h4>
 	<ul>
-		<li><a href="{% url 'community-landing' round_slug=current_round.slug slug=c.slug %}">View the community projects page applicants see</a></li>
+		<li><a href="{% url 'community-landing' round_slug=current_round.slug community_slug=c.slug %}">View the community projects page applicants see</a></li>
 		<li><a href="{% url 'community-read-only' community_slug=c.slug %}">Edit the community info</a></li>
 		<li><a href="{% url 'community-applicants' round_slug=current_round.slug community_slug=c.slug %}">Review community applicants</a></li>
 	</ul>

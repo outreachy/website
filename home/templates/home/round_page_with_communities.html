@@ -222,7 +222,7 @@ Outreachy Internships | Apply | Pick a Project
 			{% else %}
 				<p>Learn more on the
 			{% endif %}
-			<a href="{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}">{{ community.name }} community landing page</a>.</p>
+			<a href="{% url 'community-landing' round_slug=current_round.slug community_slug=community.slug %}">{{ community.name }} community landing page</a>.</p>
 		{% else %}
 			{% include 'home/snippet/project_hidden.html' %}
 		{% endif %}
@@ -251,7 +251,7 @@ Outreachy Internships | Apply | Pick a Project
 			{% else %}
 				<p>Learn more about the {{ community.name }} on the
 			{% endif %}
-			<a href="{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}">{{ community.name }} community landing page</a>.</p>
+			<a href="{% url 'community-landing' round_slug=current_round.slug community_slug=community.slug %}">{{ community.name }} community landing page</a>.</p>
 		{% else %}
 			{% include 'home/snippet/project_hidden.html' %}
 		{% endif %}
@@ -302,7 +302,7 @@ Outreachy Internships | Apply | Pick a Project
 		<p>{{ community.description }}</p>
 		{% if request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator or request.user.comrade.approved_reviewer %}
 			<p>Document your contributions to these internship projects on the
-			<a href="{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}">{{ community.name }} community landing page</a>.</p>
+			<a href="{% url 'community-landing' round_slug=current_round.slug community_slug=community.slug %}">{{ community.name }} community landing page</a>.</p>
 		{% endif %}
 		{% with project_status="closed " %}
 			{% include 'home/snippet/projects_for_round_page.html' %}

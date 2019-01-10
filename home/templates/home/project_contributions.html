@@ -27,7 +27,7 @@
 	<a href="/apply/eligibility/">Outreachy Eligibility Rules</a>
 {% endif %}
 &gt; <a href="/apply/project-selection/">Find a Mentor and Internship Project</a>
-&gt; <a href="{% url 'community-landing' round_slug=current_round.slug slug=community.slug %}">{{ community.name }}</a>
+&gt; <a href="{% url 'community-landing' round_slug=current_round.slug community_slug=community.slug %}">{{ community.name }}</a>
 {% if not project.has_application_deadline_passed %}
 	&gt; Record a Contribution and Apply</p>
 {% else %}
