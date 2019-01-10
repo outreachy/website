@@ -715,8 +715,7 @@ class ViewInitialApplication(LoginRequiredMixin, ComradeRequiredMixin, DetailVie
 
     def get_context_data(self, **kwargs):
         context = super(ViewInitialApplication, self).get_context_data(**kwargs)
-        context['current_round'] = RoundPage.objects.latest('internstarts')
-        validate_is_time_to_show_initial_application(current_round)
+        context['current_round'] = self.object.application_round
         return context
 
     def get_object(self):
