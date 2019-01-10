@@ -201,6 +201,12 @@ class RoundPage(Page):
     def has_project_submission_and_approval_deadline_passed(self):
         return has_deadline_passed(self.ProjectsDeadline())
 
+    def application_deadline(self):
+        return datetime.datetime.combine(self.appsclose, DEADLINE_TIME)
+
+    def late_application_deadline(self):
+        return datetime.datetime.combine(self.appslate, DEADLINE_TIME)
+
     def LateApplicationsDeadline(self):
         return(self.appsclose + datetime.timedelta(days=7))
 
@@ -949,20 +955,6 @@ class Comrade(models.Model):
                 country = 'usa'
 
         return (city.title(), country.title())
-
-    def get_local_application_deadline(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        utc = datetime.datetime.combine(current_round.appsclose, DEADLINE_TIME)
-        if not self.timezone:
-            return utc
-        return utc.astimezone(self.timezone)
-
-    def get_local_late_application_deadline(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        utc = datetime.datetime.combine(current_round.appslate, DEADLINE_TIME)
-        if not self.timezone:
-            return utc
-        return utc.astimezone(self.timezone)
 
     def has_application(self, **filters):
         # Does this Comrade have an ApplicantApproval for this round?

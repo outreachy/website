@@ -1,3 +1,6 @@
+{% load tz %}
+{% timezone comrade.timezone %}
+{% with normal_deadline=current_round.application_deadline late_deadline=current_round.late_application_deadline %}
 Complete your Outreachy internship applications
 
 In order to be eligible to be selected as an Outreachy intern, you must:
@@ -10,7 +13,7 @@ In order to be eligible to be selected as an Outreachy intern, you must:
 ------------------
 {% for project in upcoming_deadlines %}
 {{ project.project_round.community.name }} project "{{ project.short_title }}"
-Application deadline: {% if project.deadline == project.LATE %}{{ current_round.appslate }} 4pm UTC{% if comrade.timezone %} / {% load tz %}{% timezone comrade.timezone %}{{ comrade.get_local_late_application_deadline }}{% endtimezone %} {{ comrade.timezone }}{% endif %}{% else %}{{ current_round.appsclose }} 4pm UTC{% if comrade.timezone %} / {% load tz %}{% timezone comrade.timezone %}{{ comrade.get_local_application_deadline }}{% endtimezone %} {{ comrade.timezone }}{% endif %}{% endif %}
+Application deadline: {% if project.deadline == project.LATE %}{{ current_round.appslate }} 4pm UTC{% if comrade.timezone %} / {{ late_deadline }} {{ comrade.timezone }}{% endif %}{% else %}{{ current_round.appsclose }} 4pm UTC{% if comrade.timezone %} / {{ normal_deadline }} {{ comrade.timezone }}{% endif %}{% endif %}
 {% if project in comrade.get_projects_applied_to %}Your internship application will be reviewed: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% else %}You have NOT submitted an application for this project. Create one here: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% endif %}{% if not forloop.last %}
 {% endif %}{% endfor %}
 
@@ -22,7 +25,7 @@ The project application will ask you to fill out a timeline for the internship p
 ----------------
 {% for project in passed_deadlines %}
 {{ project.project_round.community.name }} project "{{ project.short_title }}"
-Application deadline was {% if project.deadline == project.LATE %}{{ current_round.appslate }} 4pm UTC{% if comrade.timezone %} / {% load tz %}{% timezone comrade.timezone %}{{ comrade.get_local_late_application_deadline }}{% endtimezone %} {{ comrade.timezone }}{% endif %}{% else %}{{ current_round.appsclose }} 4pm UTC{% if comrade.timezone %} / {% load tz %}{% timezone comrade.timezone %}{{ comrade.get_local_application_deadline }}{% endtimezone %} {{ comrade.timezone }}{% endif %}{% endif %}
+Application deadline was {% if project.deadline == project.LATE %}{{ current_round.appslate }} 4pm UTC{% if comrade.timezone %} / {{ late_deadline }} {{ comrade.timezone }}{% endif %}{% else %}{{ current_round.appsclose }} 4pm UTC{% if comrade.timezone %} / {{ normal_deadline }} {{ comrade.timezone }}{% endif %}{% endif %}
 {% if project in comrade.get_projects_applied_to %}Your internship application will be reviewed: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% else %}You did not submit an application for this project, and are ineligible for being selected as an intern for this project.{% endif %}{% if not forloop.last %}
 {% endif %}{% endfor %}
 {% endif %}Don't see your project listed?
@@ -39,3 +42,5 @@ As an Outreachy project applicant, you'll receive emailed reminders:
 
 Outreachy Organizers
 {% include 'home/email/footer-applicant.txt' %}
+{% endwith %}
+{% endtimezone %}
