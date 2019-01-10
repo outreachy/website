@@ -1347,12 +1347,6 @@ class Community(models.Model):
         return [ca.coordinator.public_name
                 for ca in self.coordinatorapproval_set.approved()]
 
-    def get_number_of_funded_interns(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        return Participation.objects.get(
-                participating_round=current_round,
-                community=self).interns_funded()
-
 class Notification(models.Model):
     community = models.ForeignKey(Community)
     comrade = models.ForeignKey(Comrade)

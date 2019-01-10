@@ -762,18 +762,15 @@ def current_round_page(request):
         for p in approved_participations:
             if not authorized_to_view_project_details(request, p):
                 continue
-            projects = p.project_set.approved().filter(deadline=Project.CLOSED,
-                    approval_status=ApprovalStatus.APPROVED)
+            projects = p.project_set.approved().filter(deadline=Project.CLOSED)
             if projects:
                 closed_approved_projects.append((p.community, projects))
-            projects = p.project_set.approved().filter(deadline=Project.ONTIME,
-                    approval_status=ApprovalStatus.APPROVED)
+            projects = p.project_set.approved().filter(deadline=Project.ONTIME)
             if projects:
-                ontime_approved_projects.append((p.community, projects))
-            projects = p.project_set.approved().filter(deadline=Project.LATE,
-                    approval_status=ApprovalStatus.APPROVED)
+                ontime_approved_projects.append((p.community, p.interns_funded(), projects))
+            projects = p.project_set.approved().filter(deadline=Project.LATE)
             if projects:
-                late_approved_projects.append((p.community, projects))
+                late_approved_projects.append((p.community, p.interns_funded(), projects))
 
     return render(request, 'home/round_page_with_communities.html',
             {
