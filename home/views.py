@@ -837,17 +837,19 @@ def community_cfp_view(request):
     current_round = RoundPage.objects.latest('internstarts')
     previous_round = None
 
-    all_communities = Community.objects.all().order_by('name')
+    # Cheap trick for case-insensitive sorting: the slug is always lower-cased.
+    all_communities = Community.objects.all().order_by('slug')
     approved_communities = []
     pending_communities = []
     rejected_communities = []
     not_participating_communities = []
-    all_past_approved_communities = Community.objects.filter(participation__approval_status=ApprovalStatus.APPROVED).distinct()
 
     if not validate_is_time_to_show_cfp(current_round):
         previous_round = current_round
         current_round = None
-        not_participating_communities = all_past_approved_communities
+        not_participating_communities = all_communities.filter(
+            participation__approval_status=ApprovalStatus.APPROVED,
+        ).distinct()
     else:
         # Now grab the community IDs of all communities participating in the current round
         # https://docs.djangoproject.com/en/1.11/topics/db/queries/#following-relationships-backward
@@ -866,9 +868,7 @@ def community_cfp_view(request):
                     approved_communities.append(c)
                 else: # either withdrawn or rejected
                     rejected_communities.append(c)
-            # Hide communities that have never been approved to participate in Outreachy.
-            # Some may not pass our community rules, or they try to get funding and can't.
-            elif c in all_past_approved_communities:
+            else:
                 not_participating_communities.append(c)
 
     # See https://docs.djangoproject.com/en/1.11/topics/http/shortcuts/
