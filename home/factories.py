@@ -1,5 +1,6 @@
 import datetime
 import factory
+from wagtail.wagtailcore.models import Page
 from . import models
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -37,9 +38,9 @@ class ComradeFactory(factory.django.DjangoModelFactory):
 
 class PageFactory(factory.Factory):
     """
-    Base factory for constructing Wagtail pages. By default the page will be a
-    new root page, but you can make it a child of an existing page instead by
-    setting ``child_of``.
+    Base factory for constructing Wagtail pages. By default the page will be
+    placed immediately under the existing home page, but you can make it a
+    child of another page instead by setting ``child_of``.
     """
 
     class Meta:
@@ -56,12 +57,9 @@ class PageFactory(factory.Factory):
 
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
-        child_of = kwargs.pop('child_of')
+        parent = kwargs.pop('child_of') or Page.objects.get(sites_rooted_here__isnull=False)
         obj = model_class(*args, **kwargs)
-        if child_of:
-            return child_of.add_child(instance=obj)
-        else:
-            return model_class.add_root(instance=obj)
+        return parent.add_child(instance=obj)
 
 round_dates = (
     'pingold',
