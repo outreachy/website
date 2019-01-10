@@ -1729,6 +1729,9 @@ class ProjectApplicants(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
         current_round = RoundPage.objects.latest('internstarts')
 
         # Make sure both the Community, Project, and mentor are approved
+        # Note that accessing URL parameters like project_slug off kwargs only
+        # works because this is a TemplateView. For the various kinds of
+        # DetailViews, you have to use self.kwargs instead.
         project = get_object_or_404(Project,
                 slug=kwargs['project_slug'],
                 approval_status=ApprovalStatus.APPROVED,
@@ -2007,7 +2010,7 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.
         context['community'] = self.project.project_round.community
         context['applicant'] = self.applicant
         context['intern_selection'] = intern_selection
-        context['current_round'] = RoundPage.objects.latest('internstarts')
+        context['current_round'] = self.project.project_round.participating_round
         return context
 
     def form_valid(self, form):
@@ -2079,7 +2082,7 @@ class InternRemoval(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Re
         context['project'] = self.project
         context['community'] = self.project.project_round.community
         context['applicant'] = self.applicant
-        context['current_round'] = RoundPage.objects.latest('internstarts')
+        context['current_round'] = self.project.project_round.participating_round
         return context
 
     # get_success_url is called before the object is deleted in DeleteView.delete()
@@ -2778,10 +2781,8 @@ class SchoolInformationUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversio
         return school_info
 
     def get_context_data(self, **kwargs):
-        current_round = RoundPage.objects.latest('internstarts')
-        school_terms = SchoolTimeCommitment.objects.filter(
-                applicant__applicant__account__username=self.kwargs['applicant_username'],
-                applicant__application_round=current_round)
+        current_round = self.object.applicant.application_round
+        school_terms = self.object.applicant.schooltimecommitment_set.all()
         context = super(SchoolInformationUpdate, self).get_context_data(**kwargs)
         context.update({
             'current_round': current_round,
@@ -2819,23 +2820,15 @@ def get_or_create_application_reviewer_and_review(self):
 class SetReviewOwner(LoginRequiredMixin, ComradeRequiredMixin, View):
     def post(self, request, *args, **kwargs):
 
-        application, reviewer, review = get_or_create_application_reviewer_and_review(self)
+        application, requester, review = get_or_create_application_reviewer_and_review(self)
         # Only allow approved reviewers to change review owners
-        current_round = RoundPage.objects.latest('internstarts')
-        requester = get_object_or_404(ApplicationReviewer,
-                comrade=self.request.user.comrade,
-                reviewing_round=current_round,
-                approval_status=ApprovalStatus.APPROVED)
         if self.kwargs['owner'] == 'None':
             reviewer = None
         else:
             reviewer = get_object_or_404(ApplicationReviewer,
                     comrade__account__username=self.kwargs['owner'],
-                    reviewing_round=current_round,
+                    reviewing_round=application.application_round,
                     approval_status=ApprovalStatus.APPROVED)
-        application = get_object_or_404(ApplicantApproval,
-                applicant__account__username=self.kwargs['applicant_username'],
-                application_round=current_round)
 
         application.review_owner = reviewer
         application.save()
