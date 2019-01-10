@@ -1,0 +1,14 @@
+<h1>Email Reminders</h1>
+
+{% for event in section.events %}
+<h4>{{ event.due }} -
+{% if section.today == event.due %}
+	today!
+{% elif section.today > event.due %}
+	passed: {{ event.due|timesince:section.today }} ago
+{% else %}
+	{{ event.due|timeuntil:section.today }} from now
+{% endif %}</h4>
+{% include event.template with current_round=event.current_round due=event.due only %}
+{% if not forloop.last %}<hr>{% endif %}
+{% endfor %}

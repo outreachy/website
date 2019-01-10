@@ -1,0 +1,7 @@
+<p>Once the late project deadline has passed, email contributors about the round ending:
+<ul>
+	<li>After the first application period deadline. Send the email on {{ due }} after 4pm UTC.</li>
+</ul>
+</p>
+
+<p><a href="{% url 'email-application-period-ended' round_slug=current_round.slug %}"><input class="btn btn-success" value="Contributor Final Email" /></a>

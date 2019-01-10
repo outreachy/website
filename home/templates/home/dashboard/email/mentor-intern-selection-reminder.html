@@ -1,0 +1,7 @@
+<p>Once the first project deadline has passed, email mentors to remind them who has applied and that they can extend their project deadline:
+<ul>
+	<li>After the first application period deadline. Send the email on {{ due }} after 4pm UTC.</li>
+</ul>
+</p>
+
+<p><a href="{% url 'email-mentor-intern-selection-reminder' round_slug=current_round.slug %}"><input class="btn btn-success" value="Mentor Intern Selection Email" /></a>

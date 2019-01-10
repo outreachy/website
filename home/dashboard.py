@@ -162,23 +162,72 @@ def staff_subscriptions(request):
     return request.user.is_staff
 
 
-def send_email_reminders(request):
+# This is a list of all reminders that staff need at different times in the
+# round. Each entry is of the form:
+#   (field, delta, template)
+# where field is the name of a DateField on a RoundPage, delta is a
+# datetime.timedelta, and the template is supposed to be displayed on the date
+# of field + delta.
+#
+# These templates are in home/dashboard/email/{name}.html
+#
+# It doesn't matter what order this list is in, but I think it's less confusing
+# if we keep it sorted by when in the round each event occurs.
+all_round_events = (
+    ('appsclose', datetime.timedelta(weeks=-2), 'deadline-review'),
+    ('appsclose', datetime.timedelta(weeks=-2, days=3), 'deadline-reminder'),
+    ('appsclose', datetime.timedelta(weeks=-1), 'contributor-deadline-reminder'),
+    ('appsclose', datetime.timedelta(weeks=-1), 'mentor-application-deadline-reminder-early'),
+    ('appsclose', datetime.timedelta(days=-1), 'contributor-deadline-reminder'),
+    ('appsclose', datetime.timedelta(), 'mentor-application-deadline-reminder-final'),
+    ('appsclose', datetime.timedelta(), 'mentor-intern-selection-reminder'),
+    ('appslate', datetime.timedelta(days=-1), 'contributor-deadline-reminder'),
+    ('appslate', datetime.timedelta(), 'coordinator-intern-selection-reminder'),
+    ('appslate', datetime.timedelta(), 'application-period-ended'),
+    ('internannounce', datetime.timedelta(), 'intern-welcome'),
+    ('internstarts', datetime.timedelta(weeks=0), 'internship-week-one'),
+    ('initialfeedback', datetime.timedelta(weeks=-1), 'initial-feedback-instructions'),
+    ('internstarts', datetime.timedelta(weeks=2), 'internship-week-three'),
+    ('internstarts', datetime.timedelta(weeks=4), 'internship-week-five'),
+)
+
+def round_events(request):
     if not request.user.is_staff:
         return None
 
-    all_rounds = list(RoundPage.objects.all().order_by('-internstarts'))
+    now = datetime.datetime.now(datetime.timezone.utc)
+    today = get_deadline_date_for(now)
 
-    # Only one internship will be active at a time
-    active_round = None
-    for r in all_rounds:
-        if r.is_internship_active():
-            active_round = r
-            break
+    # How long before and after the ideal date should we display each reminder?
+    early = datetime.timedelta(weeks=2)
+    late = datetime.timedelta(weeks=1)
 
-    return {
-        'current_round': all_rounds[0],
-        'active_round': active_round,
-    }
+    events = []
+    for field, delta, template in all_round_events:
+        # We're looking for rounds where:
+        #   target = field + delta
+        #   target >= today - early
+        #   target <= today + late
+        # but we can only query against field, so we do a little algebra to
+        # shift the rest of each left-hand side over to the right.
+        rounds = RoundPage.objects.filter(**{
+            field + '__gte': today - delta - early,
+            field + '__lte': today - delta + late,
+        })
+
+        for current_round in rounds:
+            events.append({
+                'template': 'home/dashboard/email/{}.html'.format(template),
+                'current_round': current_round,
+                'due': getattr(current_round, field) + delta,
+            })
+
+    if events:
+        events.sort(key=lambda d: d['due'])
+        return {
+            'events': events,
+            'today': today,
+        }
 
 
 def sponsor_statistics(request):
@@ -203,11 +252,7 @@ def staff_intern_progress(request):
     today = get_deadline_date_for(now)
     try:
         return RoundPage.objects.get(
-            # has_intern_selection_display_date_passed isn't a
-            # database field, so we have to rewrite the query based
-            # on the underlying fields that function uses.
             initialfeedback__lte=today + datetime.timedelta(days=7),
-            # similarly for final_stipend_payment_deadline
             finalfeedback__gt=today - datetime.timedelta(days=30),
         )
     except RoundPage.DoesNotExist:
@@ -223,9 +268,6 @@ def staff_intern_selection(request):
     try:
         return RoundPage.objects.get(
             appsopen__lte=today,
-            # has_intern_selection_display_date_passed isn't a
-            # database field, so we have to rewrite the query based
-            # on the underlying fields that function uses.
             initialfeedback__gt=today + datetime.timedelta(days=7),
         )
     except RoundPage.DoesNotExist:
@@ -367,7 +409,7 @@ DASHBOARD_SECTIONS = (
     coordinator_reminder,
     application_summary,
     staff_subscriptions,
-    send_email_reminders,
+    round_events,
     sponsor_statistics,
     staff_intern_progress,
     staff_intern_selection,

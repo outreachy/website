@@ -1,0 +1,7 @@
+<p>Week 5: Topic is "Think About Your Audience." Start a conversation on the <a href="{{ current_round.week_five_audience_chat_url }}">Outreachy topic URL</a>. Send another blog post prompt:
+<ul>
+	<li>Send the email after {{ due }}.</li>
+</ul>
+</p>
+
+<p><a href="{% url 'email-internship-week' round_slug=current_round.slug week='five' %}"><input class="btn btn-success" value="Week 5 Email" /></a>

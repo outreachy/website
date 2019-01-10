@@ -1,0 +1,7 @@
+<p>On the intern announcement date, once the alums page reflects the accepted interns, send a welcome email to accepted interns:
+<ul>
+	<li>After the interns are announced. Send the email on {{ due }} after 4pm UTC.</li>
+</ul>
+</p>
+
+<p><a href="{% url 'email-intern-welcome' round_slug=current_round.slug %}"><input class="btn btn-success" value="Intern Welcome Email" /></a>

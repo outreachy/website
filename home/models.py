@@ -195,15 +195,6 @@ class RoundPage(Page):
             return True
         return False
 
-    def regular_deadline_reminder(self):
-        return(self.appsclose - datetime.timedelta(days=7))
-
-    def regular_deadline_second_reminder(self):
-        return(self.appsclose - datetime.timedelta(days=1))
-
-    def late_deadline_reminder(self):
-        return(self.appslate - datetime.timedelta(days=1))
-
     def ProjectsDeadline(self):
         return(self.lateprojects)
 
@@ -231,12 +222,6 @@ class RoundPage(Page):
     def intern_midpoint_feedback_opens(self):
         return(self.midfeedback - datetime.timedelta(days=7))
 
-    def has_intern_selection_display_date_passed(self):
-        return has_deadline_passed(self.intern_initial_feedback_opens())
-
-    def internship_week_three_email_deadline(self):
-        return(self.internstarts + datetime.timedelta(days=7*2))
-
     def intern_not_started_deadline(self):
         return(self.initialfeedback - datetime.timedelta(days=1))
 
@@ -245,9 +230,6 @@ class RoundPage(Page):
     
     def initial_stipend_payment_deadline(self):
         return self.initialfeedback + datetime.timedelta(days=30)
-
-    def internship_week_five_email_deadline(self):
-        return(self.internstarts + datetime.timedelta(days=7*4))
 
     def midpoint_stipend_payment_deadline(self):
         return self.midfeedback + datetime.timedelta(days=30)
