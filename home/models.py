@@ -1528,13 +1528,11 @@ class Participation(ApprovalStatus):
     # They should be able to see all their project details
     # And have the link to edit the project
     def mentors_pending_projects(self, comrade):
-        current_round = RoundPage.objects.latest('internstarts')
         # Get all projects where they're an approved mentor.
         # It's ok if the community is pending and the project isn't approved.
         mentor_approvals = MentorApproval.objects.filter(
                 mentor = comrade,
                 approval_status = ApprovalStatus.APPROVED,
-                project__project_round__participating_round = current_round,
                 project__project_round = self,
                 )
         return [m.project for m in mentor_approvals]
