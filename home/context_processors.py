@@ -11,6 +11,5 @@ def header(request):
         pending_approvals = 0
 
     return {
-            'header_pages': Page.objects.live().in_menu(),
             'pending_approvals': pending_approvals,
             }
