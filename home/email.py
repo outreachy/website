@@ -1,23 +1,29 @@
 from django.core.mail import send_mail
 from django.core.signing import TimestampSigner
-from django.template.loader import render_to_string
+from django.template.loader import get_template
 from django.test import override_settings, RequestFactory
 from email.headerregistry import Address
 
 organizers = Address("Outreachy Organizers", "organizers", "outreachy.org")
 applicant_help = Address("Outreachy Applicant Helpers", "applicant-help", "outreachy.org")
 
-def send_template_mail(template, context, recipient_list, request=None, **kwargs):
+def send_template_mail(template_name, context, recipient_list, request=None, **kwargs):
+    # Only load the template once, no matter how many messages we're sending.
+    template = get_template(template_name, using='plaintext')
     for recipient in recipient_list:
+        # Templates used with this function expect the 'recipient' context
+        # variable to contain a single address, not a list, so override
+        # send_group_template_mail's default.
         context['recipient'] = recipient
-        message = render_to_string(template, context, request=request, using='plaintext').strip()
-        subject, body = message.split('\n', 1)
-        kwargs.setdefault('from_email', organizers)
-        send_mail(message=body.strip(), subject=subject.strip(), recipient_list=[recipient], **kwargs)
+        send_group_template_mail(template, context, [recipient], request, **kwargs)
 
 def send_group_template_mail(template, context, recipient_list, request=None, **kwargs):
-    context['recipient'] = recipient_list
-    message = render_to_string(template, context, request=request, using='plaintext').strip()
+    # Load the specified template name unless it's already a Template object.
+    if not hasattr(template, 'render'):
+        template = get_template(template, using='plaintext')
+
+    context.setdefault('recipient', recipient_list)
+    message = template.render(context, request).strip()
     subject, body = message.split('\n', 1)
     kwargs.setdefault('from_email', organizers)
     send_mail(message=body.strip(), subject=subject.strip(), recipient_list=recipient_list, **kwargs)
