@@ -158,6 +158,14 @@ class CommunityFactory(factory.django.DjangoModelFactory):
     slug = factory.Faker('slug')
     description = factory.Faker('paragraph')
 
+class NotificationFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.Notification
+        django_get_or_create = ('community', 'comrade')
+
+    community = factory.SubFactory(CommunityFactory)
+    comrade = factory.SubFactory(ComradeFactory)
+
 class ParticipationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.Participation
@@ -187,6 +195,14 @@ class MentorApprovalFactory(factory.django.DjangoModelFactory):
 
     mentor_foss_contributions = factory.Faker('paragraph')
     mentorship_style = factory.Faker('paragraph')
+
+class CoordinatorApprovalFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.CoordinatorApproval
+        django_get_or_create = ('coordinator', 'community')
+
+    coordinator = factory.SubFactory(ComradeFactory)
+    community = factory.SubFactory(CommunityFactory)
 
 class ApplicantApprovalFactory(factory.django.DjangoModelFactory):
     class Meta:

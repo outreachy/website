@@ -280,20 +280,18 @@ def notify_survey(survey_tracker, request):
 def message_samples():
     """
     This function is meant for testing: It fakes sending every type of
-    email using an arbitary object from your current database, so make
-    sure you have created some test data first. Run it using this
-    command:
+    email using randomly-generated objects. Run it using this command:
 
     ./manage.py shell -c 'import home.email; home.email.message_samples()'
     """
 
-    from . import models
-    request = RequestFactory().get('/', HTTP_HOST='www.outreachy.org')
+    from . import factories
+    request = RequestFactory().get('/', secure=True, HTTP_HOST='www.outreachy.org')
 
-    coordinatorapproval = models.CoordinatorApproval.objects.all()[0]
-    participation = models.Participation.objects.all()[0]
-    project = models.Project.objects.all()[0]
-    mentorapproval = models.MentorApproval.objects.all()[0]
+    coordinatorapproval = factories.CoordinatorApprovalFactory.build()
+    participation = factories.ParticipationFactory.build()
+    project = factories.ProjectFactory.build()
+    mentorapproval = factories.MentorApprovalFactory.build()
 
     objects = (
             coordinatorapproval,
@@ -303,11 +301,11 @@ def message_samples():
             )
 
     for obj in objects:
-        for status, label in models.ApprovalStatus.APPROVAL_STATUS_CHOICES:
+        for status, label in obj.APPROVAL_STATUS_CHOICES:
             obj.approval_status = status
             approval_status_changed(obj, request)
 
     project_nonfree_warning(project, request)
 
-    notification = models.Notification.objects.all()[0]
+    notification = factories.NotificationFactory.build()
     notify_mentor(participation, notification, request)
