@@ -1,5 +1,6 @@
 from django.core.mail import send_mail
 from django.core.signing import TimestampSigner
+from django.db import transaction
 from django.template import TemplateDoesNotExist
 from django.template.loader import get_template
 from django.test import override_settings, RequestFactory
@@ -273,6 +274,8 @@ def notify_survey(survey_tracker, request):
 
 
 @override_settings(ALLOWED_HOSTS=['www.outreachy.org'], EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend')
+# Run in a transaction so none of the sample objects are saved
+@transaction.atomic
 def message_samples():
     """
     This function is meant for testing: It fakes sending every type of
@@ -287,11 +290,19 @@ def message_samples():
 
     request = RequestFactory().get('/', secure=True, HTTP_HOST='www.outreachy.org')
 
-    coordinatorapproval = factories.CoordinatorApprovalFactory.build()
-    participation = factories.ParticipationFactory.build()
-    project = factories.ProjectFactory.build()
-    mentorapproval = factories.MentorApprovalFactory.build()
-    applicantapproval = factories.ApplicantApprovalFactory.build()
+    intern_selection = factories.InternSelectionFactory(active=True)
+    mentorapproval = intern_selection.mentors.get()
+    project = mentorapproval.project
+    # add a co-mentor who hasn't signed the contract
+    factories.MentorApprovalFactory(project=project, approval_status='A')
+    participation = project.project_round
+    current_round = participation.participating_round
+    community = participation.community
+    coordinatorapproval = factories.CoordinatorApprovalFactory(community=community)
+    applicantapproval = intern_selection.applicant
+    applicant = applicantapproval.applicant
+    factories.ContributionFactory(round=current_round, applicant=applicantapproval, project=project)
+    contributor = applicant
 
     objects = (
         (coordinatorapproval, {}),
@@ -304,9 +315,35 @@ def message_samples():
     for obj, kwargs in objects:
         for status, label in obj.APPROVAL_STATUS_CHOICES:
             obj.approval_status = status
+            obj.save()
             approval_status_changed(obj, request, **kwargs)
 
-    project_nonfree_warning(project, request)
+    # For further examples, let's say everything's approved.
+    for obj, kwargs in objects:
+        obj.approval_status = obj.APPROVED
+        obj.save()
 
-    notification = factories.NotificationFactory.build()
+    notification = factories.NotificationFactory(community=community)
     notify_mentor(participation, notification, request)
+
+    project_nonfree_warning(project, request)
+    project_applicant_review(project, request)
+    mentor_application_deadline_reminder(project, request)
+    mentor_intern_selection_reminder(project, request)
+    coordinator_intern_selection_reminder(participation, request)
+    co_mentor_intern_selection_notification(intern_selection, request)
+    intern_selection_conflict_notification(intern_selection, request)
+    # TODO: applicant_deadline_reminder
+    applicant_essay_needs_updated(applicant, request)
+    applicant_school_info_needs_updated(applicant, request)
+    contributor_deadline_reminder(contributor, current_round, request)
+    contributor_application_period_ended(contributor, current_round, request)
+    notify_accepted_intern(intern_selection, request)
+    for week in ('one', 'three', 'five'):
+        template = 'home/email/internship-week-{}.txt'.format(week)
+        biweekly_internship_email(intern_selection, request, template)
+    initial_feedback_email(intern_selection, request)
+    # TODO: notify_survey
+
+    # An easy way to abort the current transaction
+    raise SystemExit(0)
