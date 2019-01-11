@@ -1128,7 +1128,7 @@ class Comrade(models.Model):
             applicant = ApplicantApproval.objects.get(applicant = self,
                     application_round = current_round)
         except ApplicantApproval.DoesNotExist:
-            return None
+            return ()
         contributions = Contribution.objects.filter(applicant=applicant).order_by('-project__deadline').order_by('project__community__name').order_by('project__short_title')
         projects = []
         for c in contributions:
