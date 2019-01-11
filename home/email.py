@@ -12,10 +12,7 @@ def send_template_mail(template, context, recipient_list, request=None, **kwargs
         context['recipient'] = recipient
         message = render_to_string(template, context, request=request, using='plaintext').strip()
         subject, body = message.split('\n', 1)
-        if 'initial application' in subject:
-            kwargs.setdefault('from_email', applicant_help)
-        else:
-            kwargs.setdefault('from_email', organizers)
+        kwargs.setdefault('from_email', organizers)
         send_mail(message=body.strip(), subject=subject.strip(), recipient_list=[recipient], **kwargs)
 
 def send_group_template_mail(template, context, recipient_list, request=None, **kwargs):
@@ -41,8 +38,12 @@ def applicant_approval_status_changed(obj, request):
             obj._meta.app_label,
             obj._meta.model_name,
             obj.get_approval_status_display().lower())
-    context = { obj._meta.model_name: obj }
-    send_template_mail(template, context, request=request, recipient_list=recipients)
+    send_template_mail(template, {
+            obj._meta.model_name: obj,
+        },
+        request=request,
+        from_email=applicant_help,
+        recipient_list=recipients)
 
 def approval_status_changed(obj, request):
     if obj.approval_status == obj.PENDING:
@@ -160,6 +161,7 @@ def applicant_essay_needs_updated(applicant, request):
         'comrade': applicant,
         },
         request=request,
+        from_email=applicant_help,
         recipient_list=[applicant.email_address()])
 
 def applicant_school_info_needs_updated(applicant, request):
@@ -167,6 +169,7 @@ def applicant_school_info_needs_updated(applicant, request):
         'comrade': applicant,
         },
         request=request,
+        from_email=applicant_help,
         recipient_list=[applicant.email_address()])
 
 def contributor_deadline_reminder(contributor, current_round, request, **kwargs):
