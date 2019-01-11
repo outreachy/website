@@ -2669,7 +2669,8 @@ class ApplicantApprovalUpdate(ApprovalStatusAction):
     def notify(self):
         if self.prior_status != self.target_status:
             # email applicant about their change in status
-            email.applicant_approval_status_changed(self.object, self.request)
+            email.approval_status_changed(self.object, self.request,
+                from_email=email.applicant_help)
 
     def get_success_url(self):
         return reverse('applicant-review-detail', kwargs={

@@ -1,8 +1,12 @@
 from django.core.mail import send_mail
 from django.core.signing import TimestampSigner
+from django.template import TemplateDoesNotExist
 from django.template.loader import get_template
 from django.test import override_settings, RequestFactory
 from email.headerregistry import Address
+import logging
+
+logger = logging.getLogger(__name__)
 
 organizers = Address("Outreachy Organizers", "organizers", "outreachy.org")
 applicant_help = Address("Outreachy Applicant Helpers", "applicant-help", "outreachy.org")
@@ -28,45 +32,31 @@ def send_group_template_mail(template, context, recipient_list, request=None, **
     kwargs.setdefault('from_email', organizers)
     send_mail(message=body.strip(), subject=subject.strip(), recipient_list=recipient_list, **kwargs)
 
-def applicant_approval_status_changed(obj, request):
-    if obj.approval_status == obj.PENDING:
-        recipients = obj.get_approver_email_list()
-    elif obj.approval_status == obj.APPROVED:
-        recipients = obj.get_submitter_email_list()
-    elif obj.approval_status == obj.REJECTED:
-        recipients = obj.get_submitter_email_list()
-    else:
-        # FIXME: write emails for other states
-        return
+def approval_status_changed(obj, request, **kwargs):
+    get_recipients = {
+        obj.PENDING: obj.get_approver_email_list,
+        obj.WITHDRAWN: obj.get_approver_email_list,
+        obj.APPROVED: obj.get_submitter_email_list,
+        obj.REJECTED: obj.get_submitter_email_list,
+    }[obj.approval_status]
 
     # produces template names like "home/email/project-pending.txt"
     template = "{}/email/{}-{}.txt".format(
             obj._meta.app_label,
             obj._meta.model_name,
             obj.get_approval_status_display().lower())
-    send_template_mail(template, {
-            obj._meta.model_name: obj,
-        },
-        request=request,
-        from_email=applicant_help,
-        recipient_list=recipients)
 
-def approval_status_changed(obj, request):
-    if obj.approval_status == obj.PENDING:
-        recipients = obj.get_approver_email_list()
-    elif obj.approval_status == obj.APPROVED:
-        recipients = obj.get_submitter_email_list()
-    else:
-        # FIXME: write emails for other states
-        return
-
-    # produces template names like "home/email/project-pending.txt"
-    template = "{}/email/{}-{}.txt".format(
-            obj._meta.app_label,
-            obj._meta.model_name,
-            obj.get_approval_status_display().lower())
-    context = { obj._meta.model_name: obj }
-    send_template_mail(template, context, request=request, recipient_list=recipients)
+    try:
+        send_template_mail(template, {
+                obj._meta.model_name: obj,
+            },
+            request=request,
+            recipient_list=get_recipients(),
+            **kwargs)
+    except TemplateDoesNotExist:
+        logger.info(
+            "not sending approval status change email because %s does not exist",
+            template, exc_info=True)
 
 def notify_mentor(participation, notification, request):
     send_template_mail('home/email/notify-mentors.txt', {
@@ -292,24 +282,29 @@ def message_samples():
     """
 
     from . import factories
+
+    logging.basicConfig(level=logging.INFO)
+
     request = RequestFactory().get('/', secure=True, HTTP_HOST='www.outreachy.org')
 
     coordinatorapproval = factories.CoordinatorApprovalFactory.build()
     participation = factories.ParticipationFactory.build()
     project = factories.ProjectFactory.build()
     mentorapproval = factories.MentorApprovalFactory.build()
+    applicantapproval = factories.ApplicantApprovalFactory.build()
 
     objects = (
-            coordinatorapproval,
-            participation,
-            project,
-            mentorapproval,
-            )
+        (coordinatorapproval, {}),
+        (participation, {}),
+        (project, {}),
+        (mentorapproval, {}),
+        (applicantapproval, {'from_email': applicant_help}),
+    )
 
-    for obj in objects:
+    for obj, kwargs in objects:
         for status, label in obj.APPROVAL_STATUS_CHOICES:
             obj.approval_status = status
-            approval_status_changed(obj, request)
+            approval_status_changed(obj, request, **kwargs)
 
     project_nonfree_warning(project, request)
 
