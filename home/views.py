@@ -771,6 +771,15 @@ def current_round_page(request):
             if projects:
                 late_approved_projects.append((p.community, p.interns_funded(), projects))
 
+    application = None
+    if current_round and request.user.is_authenticated:
+        try:
+            application = current_round.applicantapproval_set.get(
+                applicant__account=request.user,
+            )
+        except ApplicantApproval.DoesNotExist:
+            pass
+
     return render(request, 'home/round_page_with_communities.html',
             {
             'current_round' : current_round,
@@ -780,6 +789,7 @@ def current_round_page(request):
             'late_projects': late_approved_projects,
             'mentors_pending_projects': mentors_pending_projects,
             'example_skill': example_skill,
+            'application': application,
             },
             )
 
@@ -995,8 +1005,17 @@ def community_landing_view(request, round_slug, community_slug):
     late_projects = [p for p in projects if p.deadline == Project.LATE]
     closed_projects = [p for p in projects if p.deadline == Project.CLOSED]
     example_skill = ProjectSkill
+    current_round = participation_info.participating_round
 
+    application = None
     if request.user.is_authenticated:
+        try:
+            application = current_round.applicantapproval_set.get(
+                applicant__account=request.user,
+            )
+        except ApplicantApproval.DoesNotExist:
+            pass
+
         try:
             # Although the current user is authenticated, don't assume
             # that they have a Comrade instance. Instead check that the
@@ -1035,8 +1054,9 @@ def community_landing_view(request, round_slug, community_slug):
             'ontime_projects': ontime_projects,
             'late_projects': late_projects,
             'closed_projects': closed_projects,
+            'application': application,
             # TODO: make the template get these off the participation_info instead of passing them in the context
-            'current_round' : participation_info.participating_round,
+            'current_round' : current_round,
             'community': participation_info.community,
             'approved_coordinator_list': approved_coordinator_list,
             'approved_to_see_all_project_details': approved_to_see_all_project_details,
@@ -1690,10 +1710,6 @@ class FinalApplicationAction(ApprovalStatusAction):
         else:
             comrade = self.request.user.comrade
 
-        # Only allow eligible applicants to add contributions
-        if not comrade.eligible_application():
-            raise PermissionDenied("You are not an eligible applicant or you have not filled out the eligibility check.")
-
         current_round = RoundPage.objects.latest('internstarts')
 
         # Make sure both the Community and Project are approved
@@ -1706,6 +1722,11 @@ class FinalApplicationAction(ApprovalStatusAction):
         applicant = get_object_or_404(ApplicantApproval,
                 applicant=comrade,
                 application_round=current_round)
+
+        # Only allow eligible applicants to apply
+        if not applicant.is_approved():
+            raise PermissionDenied("You are not an eligible applicant or you have not filled out the eligibility check.")
+
         try:
             return FinalApplication.objects.get(applicant=applicant, project=project)
         except FinalApplication.DoesNotExist:
@@ -1787,8 +1808,19 @@ def community_applicants(request, round_slug, community_slug):
 
 def contribution_tips(request):
     current_round = RoundPage.objects.latest('internstarts')
+
+    application = None
+    if request.user.is_authenticated:
+        try:
+            application = current_round.applicantapproval_set.get(
+                applicant__account=request.user,
+            )
+        except ApplicantApproval.DoesNotExist:
+            pass
+
     return render(request, 'home/contribution_tips.html', {
         'current_round': current_round,
+        'application': application,
         })
 
 def eligibility_information(request):

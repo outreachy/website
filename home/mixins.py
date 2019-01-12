@@ -10,6 +10,7 @@ from django.views.generic.edit import UpdateView
 
 import reversion
 
+from .models import ApplicantApproval
 from .models import ApprovalStatus
 from .models import Comrade
 from .models import has_deadline_passed
@@ -43,11 +44,16 @@ class ComradeRequiredMixin(object):
 # view's list of parent classes, and the base View must be to the right.
 class EligibleApplicantRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
-        if request.user.comrade.eligible_application():
+        current_round = RoundPage.objects.latest('internstarts')
+        try:
+            application = current_round.applicantapproval_set.get(
+                applicant__account=request.user,
+            )
+            if not application.is_approved():
+                return redirect('eligibility-results')
             return super(EligibleApplicantRequiredMixin, self).dispatch(request, *args, **kwargs)
-        if request.user.comrade.ineligible_application() or request.user.comrade.pending_application():
-            return redirect('eligibility-results')
-        return HttpResponseRedirect(
+        except ApplicantApproval.DoesNotExist:
+            return HttpResponseRedirect(
                 '{url}?{query_string}'.format(
                     url=reverse('eligibility'),
                     query_string=urlencode({'next': request.path})))

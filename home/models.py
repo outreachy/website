@@ -630,6 +630,17 @@ class RoundPage(Page):
         # Otherwise, the application period is open, so redirect to the project selection view.
         return redirect('project-selection')
 
+    def get_context(self, request, *args, **kwargs):
+        context = super(RoundPage, self).get_context(request, *args, **kwargs)
+        if request.user.is_authenticated:
+            try:
+                context['application'] = self.applicantapproval_set.get(
+                    applicant__account=request.user,
+                )
+            except ApplicantApproval.DoesNotExist:
+                pass
+        return context
+
 class CohortPage(Page):
     round_start = models.DateField("Round start date")
     round_end = models.DateField("Round end date")
@@ -956,15 +967,6 @@ class Comrade(models.Model):
 
         return (city.title(), country.title())
 
-    def has_application(self, **filters):
-        # Does this Comrade have an ApplicantApproval for this round?
-        current_round = RoundPage.objects.latest('internstarts')
-        applications = ApplicantApproval.objects.filter(
-                applicant=self, application_round=current_round, 
-                **filters)
-        return applications.exists()
-
-
     # We want to prompt the Comrade to fill out an ApplicantApproval
     # if they haven't already.
     # Don't advertise this for mentors or coordinators (pending or approved) in this current round
@@ -972,7 +974,10 @@ class Comrade(models.Model):
         if self.account.is_staff:
             return False
 
-        if self.has_application():
+        # Does this Comrade have an ApplicantApproval for this round?
+        current_round = RoundPage.objects.latest('internstarts')
+        applications = self.applicantapproval_set.filter(application_round=current_round)
+        if applications.exists():
             return False
 
         # Is this Comrade an approved mentor or coordinator?
@@ -980,15 +985,6 @@ class Comrade(models.Model):
             return False
         return True
 
-
-    def ineligible_application(self):
-        return self.has_application(approval_status=ApprovalStatus.REJECTED)
-
-    def pending_application(self):
-        return self.has_application(approval_status=ApprovalStatus.PENDING)
-
-    def eligible_application(self):
-        return self.has_application(approval_status=ApprovalStatus.APPROVED)
 
     def alum_in_good_standing(self):
         # Search all rounds for an intern selection
@@ -1296,6 +1292,18 @@ class ApprovalStatus(models.Model):
 
     def get_reject_url(self, **kwargs):
         return self.get_action_url('reject', **kwargs)
+
+    def is_pending(self):
+        return self.approval_status == self.PENDING
+
+    def is_approved(self):
+        return self.approval_status == self.APPROVED
+
+    def is_withdrawn(self):
+        return self.approval_status == self.WITHDRAWN
+
+    def is_rejected(self):
+        return self.approval_status == self.REJECTED
 
 class Community(models.Model):
     name = models.CharField(

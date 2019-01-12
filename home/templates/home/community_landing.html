@@ -17,17 +17,17 @@ Outreachy internships working with {{ community.name }}
 		Outreachy application period starts on {{ current_round.appsopen }} at 4pm UTC.
 		You can sign up for an email notification when the round opens by
 		<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">subscribing to the Outreachy announcements mailing list</a>.</p>
-	{% elif not user.comrade.eligible_application and not mentors_pending_projects and not approved_coordinator and not user.comrade.approved_reviewer %}
+	{% elif not application.is_approved and not mentors_pending_projects and not approved_coordinator and not user.comrade.approved_reviewer %}
 		{% if not user.comrade %}
 			You may need to <a href="{% url 'login' %}?next={{ request.path|urlencode }}">log in</a> to see this information.</p>
 		{% elif user.comrade.needs_application %}
 			<p>This information is only available to applicants who have their initial application approved.
 			Please <a href="{% url 'eligibility' %}">fill out an initial application</a>.</p>
-		{% elif user.comrade.ineligible_application %}
+		{% elif application.is_rejected %}
 			<p>This information is only available to applicants who have their initial application approved.
 			Unfortunately, your initial application is not approved.
 			</p>
-		{% elif user.comrade.pending_application %}
+		{% elif application.is_pending %}
 			<p>This information is only available to applicants who have their initial application approved.
 			Your initial application is currently pending review by Outreachy organizers.
 			</p>
@@ -60,7 +60,7 @@ Outreachy internships working with {{ community.name }}
 		<p><a href="/apply/">Why apply to Outreachy?</a> &gt;
 		{% if not request.user.comrade or request.user.comrade.needs_application %}
 			<a href="{% url 'eligibility' %}">Start your initial application</a>
-		{% elif request.user.comrade.ineligible_application or request.user.comrade.pending_application %}
+		{% elif application.is_rejected or application.is_pending %}
 			<a href="{% url 'eligibility-results' %}">Review your initial application</a>
 		{% else %}
 			<a href="/apply/eligibility/">Outreachy Eligibility Rules</a>
@@ -154,14 +154,14 @@ Outreachy internships working with {{ community.name }}
 						{% include 'home/snippet/mentor_action.html' %}
 					{% endif %}
 					{% include "home/snippet/project_deadline.html" %}
-					{% if request.user.comrade.eligible_application %}
+					{% if application.is_approved %}
 						{% if project in contributions %}
 							<p><a class='btn btn-success' href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Update Contibutions and Apply to This Project</a></p>
 						{% else %}
 							<p><a class='btn btn-success' href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Record Contibutions and Apply to This Project</a></p>
 						{% endif %}
 					{% endif %}
-					{% if request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator or request.user.comrade.approved_reviewer %}
+					{% if application.is_approved or request.user.comrade.approved_mentor_or_coordinator or request.user.comrade.approved_reviewer %}
 							<div class="card">
 								<div class="card-header">
 									<h4 class="mb-0">Detailed Project Information</h4>
@@ -187,14 +187,14 @@ Outreachy internships working with {{ community.name }}
 				<hr id="{{ project.slug }}">
 				<h2>{{ project.short_title }}</h2>
 				{% include "home/snippet/project_deadline.html" %}
-				{% if request.user.comrade.eligible_application %}
+				{% if application.is_approved %}
 					{% if project in contributions %}
 						<p><a class='btn btn-success' href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Update Contibutions and Apply to This Project</a></p>
 					{% else %}
 						<p><a class='btn btn-success' href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Record Contibutions and Apply to This Project</a></p>
 					{% endif %}
 				{% endif %}
-				{% if request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator or request.user.comrade.approved_reviewer %}
+				{% if application.is_approved or request.user.comrade.approved_mentor_or_coordinator or request.user.comrade.approved_reviewer %}
 					<div id="project-closed-accordion-{{ forloop.counter }}" class="accordion">
 						<div class="card">
 							<div class="card-header" role="tab" id="project-closed-heading-{{ forloop.counter }}">

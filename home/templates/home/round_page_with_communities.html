@@ -25,7 +25,7 @@ Outreachy Internships | Apply | Pick a Project
 <p><a href="/apply/">Why apply to Outreachy?</a> &gt;
 {% if current_round and not request.user.comrade or request.user.comrade.needs_application %}
 	<a href="{% url 'eligibility' %}">Start your initial application</a>
-{% elif current_round and request.user.comrade.ineligible_application or request.user.comrade.pending_application %}
+{% elif current_round and application.is_rejected or application.is_pending %}
 	<a href="{% url 'eligibility-results' %}">Review your initial application</a>
 {% else %}
 	<a href="/apply/eligibility/">Outreachy Eligibility Rules</a>
@@ -81,7 +81,7 @@ Outreachy Internships | Apply | Pick a Project
 	<p>The list of Outreachy projects for the {{ current_round.official_name }} will be available to applicants on {{ current_round.appsopen }}.</p>
 {% endif %}
 
-{% if request.user.comrade.eligible_application %}
+{% if application.is_approved %}
 	{% if not current_round.has_application_deadline_passed %}
 		<h2>Finding a Mentor and an Internship Project</h2>
 		<p><img src="{% static 'bot-find-a-mentor.png' %}"></p>
@@ -216,7 +216,7 @@ Outreachy Internships | Apply | Pick a Project
 	{% for community, funded_interns, projects in late_projects %}
 		<h4>{{ community.name }} - {{ funded_interns }} intern{{ funded_interns|pluralize }}</h4>
 		<p>{{ community.description }}</p>
-		{% if request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator or request.user.comrade.approved_reviewer %}
+		{% if application.is_approved or request.user.comrade.approved_mentor_or_coordinator or request.user.comrade.approved_reviewer %}
 			{% if not current_round.has_late_application_deadline_passed %}
 				<p>Learn how to make a contribution to these internship projects on the
 			{% else %}
@@ -245,7 +245,7 @@ Outreachy Internships | Apply | Pick a Project
 	{% for community, funded_interns, projects in ontime_projects %}
 		<h4>{{ community.name }} - {{ funded_interns }} intern{{ funded_interns|pluralize }}</h4>
 		<p>{{ community.description }}</p>
-		{% if request.user.comrade.approved_reviewer or request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator %}
+		{% if request.user.comrade.approved_reviewer or application.is_approved or request.user.comrade.approved_mentor_or_coordinator %}
 			{% if not current_round.has_ontime_application_deadline_passed %}
 				<p>Learn how to make a contribution to these internship projects on the
 			{% else %}
@@ -300,7 +300,7 @@ Outreachy Internships | Apply | Pick a Project
 	{% for community, projects in closed_projects %}
 		<h3>{{ community.name }}</h3>
 		<p>{{ community.description }}</p>
-		{% if request.user.comrade.eligible_application or request.user.comrade.approved_mentor_or_coordinator or request.user.comrade.approved_reviewer %}
+		{% if application.is_approved or request.user.comrade.approved_mentor_or_coordinator or request.user.comrade.approved_reviewer %}
 			<p>Document your contributions to these internship projects on the
 			<a href="{% url 'community-landing' round_slug=current_round.slug community_slug=community.slug %}">{{ community.name }} community landing page</a>.</p>
 		{% endif %}

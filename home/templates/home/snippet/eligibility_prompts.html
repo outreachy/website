@@ -4,13 +4,13 @@
 
 {% if not request.user.comrade or request.user.comrade.needs_application %}
 {% include "home/snippet/eligibility_prompt.html" %}
-{% elif request.user.comrade.ineligible_application %}
+{% elif application.is_rejected %}
 {% include "home/snippet/ineligible_prompt.html" %}
-{% elif request.user.comrade.pending_application %}
+{% elif application.is_pending %}
 {% include "home/snippet/pending_prompt.html" %}
-{% elif request.user.comrade.eligible_application and not request.user.comrade.get_projects_contributed_to %}
+{% elif application.is_approved and not request.user.comrade.get_projects_contributed_to %}
 {% include "home/snippet/contribute_prompt.html" %}
-{% elif request.user.comrade.eligible_application and request.user.comrade.get_projects_contributed_to %}
+{% elif application.is_approved and request.user.comrade.get_projects_contributed_to %}
 {% include "home/snippet/apply_prompt.html" %}
 {% endif %}
 {% if request.user.comrade.get_approved_coordinator_communities %}

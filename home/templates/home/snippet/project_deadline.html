@@ -7,7 +7,8 @@
 	{% if not project.has_application_deadline_passed %}is{% else %}was{% endif %}
 	{{ current_round.appsclose }}
 {% endif %}
-{% if request.user.comrade.eligible_application and not project.has_application_deadline_passed %}to <a href="{{ project.get_contributions_url }}">{% endif %}
+to
+{% if application.is_approved and not project.has_application_deadline_passed %}<a href="{{ project.get_contributions_url }}">{% endif %}
 	record your contributions and create a final application.
-{% if request.user.comrade.eligible_application %}</a>{% endif %}
+{% if application.is_approved and not project.has_application_deadline_passed %}</a>{% endif %}
 	</p>

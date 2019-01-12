@@ -336,12 +336,25 @@ def eligibility_prompts(request):
     now = datetime.datetime.now(datetime.timezone.utc)
     today = get_deadline_date_for(now)
     try:
-        return RoundPage.objects.get(
+        current_round = RoundPage.objects.get(
             appsopen__lte=today,
             appslate__gt=today,
         )
     except RoundPage.DoesNotExist:
         return None
+
+    application = None
+    try:
+        application = current_round.applicantapproval_set.get(
+            applicant__account=request.user,
+        )
+    except ApplicantApproval.DoesNotExist:
+        pass
+
+    return {
+        'current_round': current_round,
+        'application': application,
+    }
 
 
 def unselected_intern(request):
