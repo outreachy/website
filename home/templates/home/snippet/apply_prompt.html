@@ -81,7 +81,7 @@
 
 		<ul class="card-text">
 			{% for p in project_applications %}
-				<li>{% if p.withdrawn %}(Withdrawn application) {% endif %}<a href="{{ p.get_contributions_url }}">{{ p.short_title }}</a></li>
+				<li>{% if p.is_withdrawn %}(Withdrawn application) {% endif %}<a href="{{ p.get_contributions_url }}">{{ p.short_title }}</a></li>
 			{% endfor %}
 		</ul>
 	{% endif %}

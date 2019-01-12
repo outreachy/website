@@ -1180,10 +1180,6 @@ class Comrade(models.Model):
         projects = []
         for a in applications:
             if not a.project in projects:
-                if a.approval_status == ApprovalStatus.WITHDRAWN:
-                    a.project.withdrawn = True
-                else:
-                    a.project.withdrawn = False
                 projects.append(a.project)
         return projects
 
