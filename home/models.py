@@ -1420,15 +1420,11 @@ class Participation(ApprovalStatus):
     def is_submitter(self, user):
         return self.community.is_coordinator(user)
 
-    def is_approved_coordinator(self, comrade):
-        coordinators = CoordinatorApproval.objects.filter(
-                coordinator=comrade,
-                approval_status=ApprovalStatus.APPROVED,
-                community__participation=self,
-                )
-        if coordinators.exists():
-            return True
-        return False
+    def is_approved_coordinator(self, user):
+        return self.community.coordinatorapproval_set.filter(
+            coordinator__account=user,
+            approval_status=ApprovalStatus.APPROVED,
+        ).exists()
 
     # This function should only be used before applications are open
     # There are a few people who should be approved to see
@@ -1452,7 +1448,7 @@ class Participation(ApprovalStatus):
         if mentors.exists():
             return True
         # - an approved coordinator for this pending community
-        return self.is_approved_coordinator(comrade)
+        return self.is_approved_coordinator(comrade.account)
 
     # This function should only be used before applications are open
     # If a mentor has submitted a project, but it's not approved,
