@@ -1024,16 +1024,16 @@ def community_landing_view(request, round_slug, community_slug):
     approved_to_see_all_project_details = participation_info.approved_to_see_all_project_details(request.user)
 
     if request.user.is_authenticated:
-        try:
-            mentors_pending_projects = participation_info.mentors_pending_projects(request.user.comrade)
-
-            approved_coordinator = participation_info.is_approved_coordinator(request.user)
-        # Even though the user is authenticated, they may not have a Comrade
-        except Comrade.DoesNotExist:
-            mentors_pending_projects = None
-            approved_coordinator = False
+        # If a mentor has submitted a project, they should be able to see all
+        # their project details and have the link to edit the project, even if
+        # the community is pending or the project isn't approved.
+        mentors_pending_projects = participation_info.project_set.filter(
+            mentorapproval__mentor__account=request.user,
+            mentorapproval__approval_status=ApprovalStatus.APPROVED,
+        )
+        approved_coordinator = participation_info.is_approved_coordinator(request.user)
     else:
-        mentors_pending_projects = None
+        mentors_pending_projects = Project.objects.none()
         approved_coordinator = False
 
     return render(request, 'home/community_landing.html',

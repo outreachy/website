@@ -1469,20 +1469,6 @@ class Participation(ApprovalStatus):
         # - an approved coordinator for this pending community
         return self.is_approved_coordinator(user)
 
-    # This function should only be used before applications are open
-    # If a mentor has submitted a project, but it's not approved,
-    # They should be able to see all their project details
-    # And have the link to edit the project
-    def mentors_pending_projects(self, comrade):
-        # Get all projects where they're an approved mentor.
-        # It's ok if the community is pending and the project isn't approved.
-        mentor_approvals = MentorApproval.objects.filter(
-                mentor = comrade,
-                approval_status = ApprovalStatus.APPROVED,
-                project__project_round = self,
-                )
-        return [m.project for m in mentor_approvals]
-
     def is_pending_co_mentor(self, comrade):
         mentors = MentorApproval.objects.filter(
                 mentor=comrade,
