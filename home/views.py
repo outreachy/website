@@ -1990,10 +1990,12 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.
         kwargs = super(InternSelectionUpdate, self).get_form_kwargs()
 
         current_round = get_object_or_404(RoundPage, slug=self.kwargs['round_slug'])
-        # FIXME: Which round deadline ends intern selection?
-        # Something between mentor_intern_selection_deadline and internannounce I assume?
-        #if this_round != current_round:
-        #    raise PermissionDenied("You cannot select an intern for a past Outreachy round.")
+
+        if not current_round.has_application_period_started():
+            raise PermissionDenied("You can't select an intern until the Outreachy application period opens.")
+
+        if current_round.has_last_day_to_add_intern_passed():
+            raise PermissionDenied("Intern selection is closed for this round.")
 
         set_project_and_applicant(self, current_round)
         application = get_object_or_404(FinalApplication,
