@@ -1592,7 +1592,7 @@ class ProjectContributions(LoginRequiredMixin, ComradeRequiredMixin, EligibleApp
         return context
 
 # Only submit one contribution at a time
-class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
+class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, EligibleApplicantRequiredMixin, UpdateView):
     fields = [
             'date_started',
             'date_merged',
@@ -1601,10 +1601,6 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
             ]
 
     def get_object(self):
-        # Only allow eligible applicants to add contributions
-        if not self.request.user.comrade.eligible_application():
-            raise PermissionDenied("You are not an eligible applicant or you have not filled out the eligibility check.")
-
         current_round = RoundPage.objects.latest('internstarts')
 
         # Make sure both the Community and Project are approved
