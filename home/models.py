@@ -1051,7 +1051,7 @@ class Comrade(models.Model):
         # after the intern announcement date.
         # Show their project until the day after their intern starts.
         if current_round.has_internship_start_date_passed():
-            return ()
+            return Project.objects.none()
 
         # Get all projects where they're an approved mentor
         # where the project is pending,

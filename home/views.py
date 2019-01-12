@@ -780,6 +780,13 @@ def current_round_page(request):
         except ApplicantApproval.DoesNotExist:
             pass
 
+    approved_volunteer = False
+    if request.user.is_authenticated:
+        try:
+            approved_volunteer = request.user.comrade.get_editable_mentored_projects().exists() or request.user.comrade.approved_mentor_or_coordinator()
+        except Comrade.DoesNotExist:
+            pass
+
     return render(request, 'home/round_page_with_communities.html',
             {
             'current_round' : current_round,
@@ -790,6 +797,7 @@ def current_round_page(request):
             'mentors_pending_projects': mentors_pending_projects,
             'example_skill': example_skill,
             'application': application,
+            'approved_volunteer': approved_volunteer,
             },
             )
 
