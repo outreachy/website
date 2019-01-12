@@ -926,7 +926,7 @@ def community_read_only_view(request, community_slug):
 
     coordinator = None
     notification = None
-    mentors_pending_projects = None
+    mentors_pending_projects = ()
     if request.user.is_authenticated:
         try:
             # Although the current user is authenticated, don't assume
@@ -941,11 +941,9 @@ def community_read_only_view(request, community_slug):
         except Notification.DoesNotExist:
             pass
         try:
-            all_pending_projects = request.user.comrade.get_pending_mentored_projects()
-            if all_pending_projects:
-                mentors_pending_projects = [p for p in all_pending_projects if p.project_round.community == community]
-            else:
-                mentors_pending_projects = None
+            mentors_pending_projects = request.user.comrade.get_pending_mentored_projects().filter(
+                project_round__community=community,
+            )
         except Comrade.DoesNotExist:
             pass
 
