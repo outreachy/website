@@ -747,18 +747,14 @@ def current_round_page(request):
     late_approved_projects = []
     mentors_pending_projects = []
     example_skill = ProjectSkill
+    application = None
+    approved_volunteer = False
 
     if not current_round.validate_is_time_to_show_project_selection():
         previous_round = current_round
         current_round = None
     else:
         approved_participations = current_round.participation_set.approved().order_by('community__name')
-
-        if request.user.is_authenticated:
-            try:
-                mentors_pending_projects = request.user.comrade.get_pending_mentored_projects()
-            except Comrade.DoesNotExist:
-                pass
 
         for p in approved_participations:
             if not p.approved_to_see_all_project_details(request.user):
@@ -773,21 +769,20 @@ def current_round_page(request):
             if projects:
                 late_approved_projects.append((p.community, p.interns_funded(), projects))
 
-    application = None
-    if current_round and request.user.is_authenticated:
-        try:
-            application = current_round.applicantapproval_set.get(
-                applicant__account=request.user,
-            )
-        except ApplicantApproval.DoesNotExist:
-            pass
+        if request.user.is_authenticated:
+            try:
+                application = current_round.applicantapproval_set.get(
+                    applicant__account=request.user,
+                )
+            except ApplicantApproval.DoesNotExist:
+                pass
 
-    approved_volunteer = False
-    if request.user.is_authenticated:
-        try:
-            approved_volunteer = request.user.comrade.get_editable_mentored_projects().exists() or request.user.comrade.approved_mentor_or_coordinator()
-        except Comrade.DoesNotExist:
-            pass
+            try:
+                mentors_pending_projects = request.user.comrade.get_pending_mentored_projects()
+
+                approved_volunteer = request.user.comrade.get_editable_mentored_projects().exists() or request.user.comrade.approved_mentor_or_coordinator()
+            except Comrade.DoesNotExist:
+                pass
 
     return render(request, 'home/round_page_with_communities.html',
             {
