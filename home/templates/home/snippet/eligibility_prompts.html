@@ -8,10 +8,14 @@
 {% include "home/snippet/ineligible_prompt.html" %}
 {% elif application.is_pending %}
 {% include "home/snippet/pending_prompt.html" %}
-{% elif application.is_approved and not request.user.comrade.get_projects_contributed_to %}
-{% include "home/snippet/contribute_prompt.html" %}
-{% elif application.is_approved and request.user.comrade.get_projects_contributed_to %}
-{% include "home/snippet/apply_prompt.html" %}
+{% elif application.is_approved %}
+	{% with project_contributions=application.get_projects_contributed_to %}
+	{% if not project_contributions %}
+	{% include "home/snippet/contribute_prompt.html" %}
+	{% else %}
+	{% include "home/snippet/apply_prompt.html" %}
+	{% endif %}
+	{% endwith %}
 {% endif %}
 {% if request.user.comrade.get_approved_coordinator_communities %}
 {% include "home/snippet/coordinator_reminder_prompt.html" %}

@@ -1605,7 +1605,7 @@ class ProjectContributions(LoginRequiredMixin, ComradeRequiredMixin, EligibleApp
             'current_round' : current_round,
             'community': project.project_round.community,
             'project': project,
-            'applicant': applicant,
+            'application': applicant,
             'contributions': contributions,
             'final_application': final_application,
             })

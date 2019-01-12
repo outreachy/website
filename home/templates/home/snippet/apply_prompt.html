@@ -1,5 +1,4 @@
-{% with project_contributions=request.user.comrade.get_projects_contributed_to %}
-{% with project_applications=request.user.comrade.get_projects_applied_to %}
+{% with project_applications=application.get_projects_applied_to %}
 
 {% if project_applications %}
 	<div class="card border-info mb-3">
@@ -88,5 +87,4 @@
 	{% if project_applications %}</div>{% endif %}
     </div>
 </div>
-{% endwith %}
 {% endwith %}

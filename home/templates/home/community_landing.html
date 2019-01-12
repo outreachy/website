@@ -6,7 +6,7 @@ Outreachy internships working with {{ community.name }}
 
 {% block content %}
 
-{% with contributions=request.user.comrade.get_projects_contributed_to %}
+{% with contributions=application.get_projects_contributed_to %}
 
 	{% comment %}This will always show past rounds, since the application period will always be passed.{% endcomment %}
 	{% if not approved_to_see_all_project_details and not mentors_pending_projects %}

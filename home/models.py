@@ -1098,16 +1098,6 @@ class Comrade(models.Model):
                 coordinatorapproval__approval_status = ApprovalStatus.APPROVED,
                 )
 
-    # Deprecated: call the corresponding method on ApplicantApproval instead.
-    def get_projects_contributed_to(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        try:
-            return self.applicantapproval_set.get(
-                application_round=current_round,
-            ).get_projects_contributed_to()
-        except ApplicantApproval.DoesNotExist:
-            return ()
-
     def get_projects_with_upcoming_and_passed_deadlines(self):
         current_round = RoundPage.objects.latest('internstarts')
         try:
@@ -1139,16 +1129,6 @@ class Comrade(models.Model):
     def get_projects_with_passed_deadlines(self):
         upcoming, passed = self.get_projects_with_upcoming_and_passed_deadlines()
         return passed
-
-    # Deprecated: call the corresponding method on ApplicantApproval instead.
-    def get_projects_applied_to(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        try:
-            return self.applicantapproval_set.get(
-                application_round=current_round,
-            ).get_projects_applied_to()
-        except ApplicantApproval.DoesNotExist:
-            return ()
 
     def get_passed_projects_not_applied_to(self):
         passed_deadlines = self.get_projects_with_passed_deadlines()
