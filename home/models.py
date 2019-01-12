@@ -1430,14 +1430,24 @@ class Participation(ApprovalStatus):
     # There are a few people who should be approved to see
     # all the details of all projects for a community
     # before the applications open:
-    def approved_to_see_all_project_details(self, comrade):
+    def approved_to_see_all_project_details(self, user):
         # - staff
-        if comrade.account.is_staff:
+        if user.is_staff:
             return True
+
+        # Are applications open and everyone should see the projects?
+        # Note in the template, links are still hidden if the
+        # initial application is pending or rejected
+        if self.participating_round.has_application_period_started():
+            return True
+
+        # Remaining conditions all require this person to be logged in
+        if not user.is_authenticated:
+            return False
 
         # - an approved coordinator for any approved community
         coordinators = CoordinatorApproval.objects.filter(
-                coordinator=comrade,
+                coordinator__account=user,
                 approval_status=ApprovalStatus.APPROVED,
                 community__participation__approval_status=ApprovalStatus.APPROVED,
                 community__participation__participating_round=self.participating_round,
@@ -1447,7 +1457,7 @@ class Participation(ApprovalStatus):
 
         # - an approved mentor with an approved project for a different approved community
         mentors = MentorApproval.objects.filter(
-                mentor=comrade,
+                mentor__account=user,
                 approval_status=ApprovalStatus.APPROVED,
                 project__approval_status=ApprovalStatus.APPROVED,
                 project__project_round__approval_status=ApprovalStatus.APPROVED,
@@ -1458,7 +1468,7 @@ class Participation(ApprovalStatus):
 
         # - an approved mentor with an approved project for this community (pending or approved)
         mentors = MentorApproval.objects.filter(
-                mentor=comrade,
+                mentor__account=user,
                 approval_status=ApprovalStatus.APPROVED,
                 project__project_round=self,
                 project__approval_status=ApprovalStatus.APPROVED,
@@ -1467,7 +1477,7 @@ class Participation(ApprovalStatus):
             return True
 
         # - an approved coordinator for this pending community
-        return self.is_approved_coordinator(comrade.account)
+        return self.is_approved_coordinator(user)
 
     # This function should only be used before applications are open
     # If a mentor has submitted a project, but it's not approved,

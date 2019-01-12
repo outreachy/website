@@ -761,7 +761,7 @@ def current_round_page(request):
                 pass
 
         for p in approved_participations:
-            if not authorized_to_view_project_details(request, p):
+            if not p.approved_to_see_all_project_details(request.user):
                 continue
             projects = p.project_set.approved().filter(deadline=Project.CLOSED)
             if projects:
@@ -983,22 +983,6 @@ class CommunityNotificationUpdate(LoginRequiredMixin, ComradeRequiredMixin, Upda
     def get_success_url(self):
         return self.object.community.get_preview_url()
 
-def authorized_to_view_project_details(request, participation_info):
-    # Are applications open and everyone should see the projects?
-    # Note in the template, links are still hidden if the
-    # initial application is pending or rejected
-    if participation_info.participating_round.has_application_period_started():
-        return True
-
-    if request.user.is_authenticated:
-        try:
-            # Is the person an approved mentor or coordinator?
-            return participation_info.approved_to_see_all_project_details(request.user.comrade)
-        except Comrade.DoesNotExist:
-            pass
-
-    return False
-
 def community_landing_view(request, round_slug, community_slug):
     # Try to see if this community is participating in that round
     # and if so, get the Participation object and related objects.
@@ -1037,7 +1021,7 @@ def community_landing_view(request, round_slug, community_slug):
     else:
             approved_coordinator_list = None
 
-    approved_to_see_all_project_details = authorized_to_view_project_details(request, participation_info)
+    approved_to_see_all_project_details = participation_info.approved_to_see_all_project_details(request.user)
 
     if request.user.is_authenticated:
         try:
