@@ -10,14 +10,10 @@ Outreachy Internships | Apply | Pick a Project
 {% comment %}Is the round not open yet, and this is a mentor or coordinator?{% endcomment %}
 	{% if not current_round %}
 		{% include "home/snippet/round_closed.html" %}
-	{% elif not current_round.has_application_period_started and not current_round.has_late_application_deadline_passed %}
-		{% if approved_volunteer %}
-			{% include "home/snippet/round_not_open.html" %}
-		{% endif %}
-	{% endif %}
-
-	{% if current_round and not approved_volunteer %}
+	{% elif not approved_volunteer %}
 		{% include "home/snippet/eligibility_prompts.html" %}
+	{% elif not current_round.has_application_period_started %}
+		{% include "home/snippet/round_not_open.html" %}
 	{% endif %}
 
 <p><a href="/apply/">Why apply to Outreachy?</a> &gt;
