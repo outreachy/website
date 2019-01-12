@@ -385,9 +385,34 @@ def mentor(request):
 
 def mentor_projects(request):
     try:
-        return request.user.comrade.get_editable_mentored_projects()
+        comrade = request.user.comrade
     except Comrade.DoesNotExist:
         return None
+
+    mentored_projects = comrade.get_editable_mentored_projects()
+    if not mentored_projects:
+        return None
+
+    # All projects are in the same round, so pick from one of them.
+    current_round = mentored_projects[0].project_round.participating_round,
+
+    # Communities where this person is an approved mentor for at least one
+    # approved project, and the community is approved to participate in the
+    # current round.
+
+    mentored_communities = Community.objects.filter(
+        participation__participating_round=current_round,
+        participation__approval_status=ApprovalStatus.APPROVED,
+        participation__project__approval_status=ApprovalStatus.APPROVED,
+        participation__project__mentorapproval__mentor=comrade,
+        participation__project__mentorapproval__approval_status=ApprovalStatus.APPROVED,
+    ).distinct()
+
+    return {
+        'current_round': current_round,
+        'mentored_projects': mentored_projects,
+        'mentored_communities': mentored_communities,
+    }
 
 
 def approval_status(request):

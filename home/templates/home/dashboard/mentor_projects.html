@@ -1,5 +1,4 @@
-{# All projects are in the same round, so pick from one of them. #}
-{% with mentored_projects=section current_round=section.0.project_round.participating_round %}
+{% with current_round=section.current_round mentored_projects=section.mentored_projects communities=section.mentored_communities %}
 <h1>Your Mentored Project</h1>
 
 <p>
@@ -11,14 +10,13 @@ You can also <a href="{% url 'community-cfp' %}#mentor">submit another project</
 
 	<h4 id="{{ project.slug }}">{{ project.short_title }}</h4>
 	{% include 'home/snippet/mentor_action.html' %}
-	{% regroup request.user.comrade.get_approved_mentored_projects by project_round.community as communities %}
 	{% if communities %}
 	<p>
 	You can also see the list of all applicants to the communities you're mentoring for:
 	</p>
 	{% endif %}
 	<ul>
-	{% for c, projects_list in communities %}
+	{% for c in communities %}
 		<li>{{ c.name }}: <a href="{% url 'community-applicants' round_slug=current_round.slug community_slug=c.slug  %}">see applicants</a> or <a href="{% url 'community-read-only' community_slug=c.slug %}">submit another project</a> or <a href="{% url 'community-landing' round_slug=current_round.slug community_slug=c.slug %}">view the community projects page applicants see</a></li>
 	{% endfor %}
 	</ul>
