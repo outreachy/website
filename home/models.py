@@ -1034,13 +1034,13 @@ class Comrade(models.Model):
         # Get all projects where they're an approved mentor
         # where the project is approved,
         # and the community is approved to participate in the current round.
-        mentor_approvals = MentorApproval.objects.filter(mentor = self,
-                approval_status = ApprovalStatus.APPROVED,
-                project__approval_status = ApprovalStatus.APPROVED,
-                project__project_round__participating_round = current_round,
-                project__project_round__approval_status = ApprovalStatus.APPROVED,
-                )
-        return [m.project for m in mentor_approvals]
+        return Project.objects.filter(
+            approval_status=ApprovalStatus.APPROVED,
+            mentorapproval__mentor=self,
+            mentorapproval__approval_status=ApprovalStatus.APPROVED,
+            project_round__participating_round=current_round,
+            project_round__approval_status=ApprovalStatus.APPROVED,
+        )
 
     def get_pending_mentored_projects(self):
         current_round = RoundPage.objects.latest('internstarts')
@@ -1048,19 +1048,13 @@ class Comrade(models.Model):
         # where the project is pending,
         # and the community is approved or pending for the current round.
         # Don't count withdrawn or rejected communities.
-        mentor_approvals = MentorApproval.objects.filter(mentor = self,
-                approval_status = ApprovalStatus.APPROVED,
-                project__approval_status = ApprovalStatus.PENDING,
-                project__project_round__participating_round = current_round,
-                ).exclude(
-                        project__project_round__approval_status = ApprovalStatus.WITHDRAWN
-                        ).exclude(
-                                project__project_round__approval_status = ApprovalStatus.REJECTED
-                        )
-        if not mentor_approvals:
-            return None
-
-        return [m.project for m in mentor_approvals]
+        return Project.objects.filter(
+            approval_status=ApprovalStatus.PENDING,
+            mentorapproval__mentor=self,
+            mentorapproval__approval_status=ApprovalStatus.APPROVED,
+            project_round__participating_round=current_round,
+            project_round__approval_status__in=(ApprovalStatus.PENDING, ApprovalStatus.APPROVED),
+        )
 
     def get_editable_mentored_projects(self):
         current_round = RoundPage.objects.latest('internstarts')
@@ -1070,42 +1064,28 @@ class Comrade(models.Model):
         # after the intern announcement date.
         # Show their project until the day after their intern starts.
         if current_round.has_internship_start_date_passed():
-            return None
+            return ()
 
         # Get all projects where they're an approved mentor
         # where the project is pending,
         # and the community is approved or pending for the current round.
         # Don't count withdrawn or rejected communities.
-        mentor_approvals = MentorApproval.objects.filter(
-                mentor = self,
-                approval_status = ApprovalStatus.APPROVED,
-                project__project_round__participating_round = current_round,
-                ).exclude(
-                        project__project_round__approval_status = ApprovalStatus.WITHDRAWN
-                        ).exclude(
-                                project__project_round__approval_status = ApprovalStatus.REJECTED
-                        )
-        if not mentor_approvals:
-            return None
-
-        return [m.project for m in mentor_approvals]
+        return Project.objects.filter(
+            mentorapproval__mentor=self,
+            mentorapproval__approval_status=ApprovalStatus.APPROVED,
+            project_round__participating_round=current_round,
+            project_round__approval_status__in=(ApprovalStatus.PENDING, ApprovalStatus.APPROVED),
+        )
 
     def get_all_mentored_projects(self):
         current_round = RoundPage.objects.latest('internstarts')
         # Get all projects where they're a mentor
         # Don't count withdrawn or rejected communities.
-        mentor_approvals = MentorApproval.objects.filter(
-                mentor = self,
-                project__project_round__participating_round = current_round,
-                ).exclude(
-                        project__project_round__approval_status = ApprovalStatus.WITHDRAWN
-                        ).exclude(
-                                project__project_round__approval_status = ApprovalStatus.REJECTED
-                        )
-        if not mentor_approvals:
-            return None
-
-        return [m.project for m in mentor_approvals]
+        return Project.objects.filter(
+            mentorapproval__mentor=self,
+            project_round__participating_round=current_round,
+            project_round__approval_status__in=(ApprovalStatus.PENDING, ApprovalStatus.APPROVED),
+        )
 
     def get_approved_coordinator_communities(self):
         current_round = RoundPage.objects.latest('internstarts')
@@ -1120,17 +1100,14 @@ class Comrade(models.Model):
 
     def get_projects_contributed_to(self):
         current_round = RoundPage.objects.latest('internstarts')
-        try:
-            applicant = ApplicantApproval.objects.get(applicant = self,
-                    application_round = current_round)
-        except ApplicantApproval.DoesNotExist:
-            return ()
-        contributions = Contribution.objects.filter(applicant=applicant).order_by('-project__deadline').order_by('project__community__name').order_by('project__short_title')
-        projects = []
-        for c in contributions:
-            if not c.project in projects:
-                projects.append(c.project)
-        return projects
+        return Project.objects.filter(
+            contribution__applicant__applicant=self,
+            contribution__applicant__application_round=current_round,
+        ).distinct().order_by(
+            '-deadline',
+            'project_round__community__name',
+            'short_title',
+        )
 
     def get_projects_with_upcoming_and_passed_deadlines(self):
         current_round = RoundPage.objects.latest('internstarts')
@@ -1144,8 +1121,7 @@ class Comrade(models.Model):
                 upcoming_deadlines.append(project)
             else:
                 passed_deadlines.append(project)
-        upcoming_deadlines.sort(key=lambda x: x.deadline, reverse=True)
-        passed_deadlines.sort(key=lambda x: x.deadline, reverse=True)
+
         passed_deadlines.sort(key=lambda x: x in applied_projects, reverse=True)
         return upcoming_deadlines, passed_deadlines
 
@@ -1159,17 +1135,10 @@ class Comrade(models.Model):
 
     def get_projects_applied_to(self):
         current_round = RoundPage.objects.latest('internstarts')
-        try:
-            applicant = ApplicantApproval.objects.get(applicant = self,
-                    application_round = current_round)
-        except ApplicantApproval.DoesNotExist:
-            return []
-        applications = FinalApplication.objects.filter(applicant=applicant)
-        projects = []
-        for a in applications:
-            if not a.project in projects:
-                projects.append(a.project)
-        return projects
+        return Project.objects.filter(
+            finalapplication__applicant__applicant=self,
+            finalapplication__applicant__application_round=current_round,
+        ).distinct()
 
     def get_passed_projects_not_applied_to(self):
         passed_deadlines = self.get_projects_with_passed_deadlines()
