@@ -1722,8 +1722,12 @@ class FinalApplicationAction(ApprovalStatusAction):
                 project_round__approval_status=ApprovalStatus.APPROVED)
 
         current_round = project.project_round.participating_round
-        # FIXME: Which round deadline ends final applications?
-        # Something between appslate and internannounce I assume?
+
+        if not current_round.has_application_period_started():
+            raise PermissionDenied("You can't submit a final application until the Outreachy application period opens.")
+
+        if project.has_application_deadline_passed():
+            raise PermissionDenied("This project is closed to final applications.")
 
         applicant = get_object_or_404(ApplicantApproval,
                 applicant=comrade,
