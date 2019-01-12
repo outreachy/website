@@ -390,10 +390,16 @@ def determine_eligibility(wizard, application_round):
 
 # People can only submit new initial applications or edit initial applications
 # when the application period is open.
-def validate_is_time_to_show_initial_application(current_round):
-    if not current_round.has_application_period_started():
-        raise PermissionDenied('The Outreachy application period is not yet open. Eligibility checking will become available when the next application period opens. Please sign up for the announcements mailing list for an email when the next application period opens: https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce')
-    if current_round.has_late_application_deadline_passed():
+def get_current_round_for_initial_application():
+    now = datetime.datetime.now(datetime.timezone.utc)
+    today = get_deadline_date_for(now)
+
+    try:
+        return RoundPage.objects.get(
+            appsopen__lte=today,
+            appslate__gt=today,
+        )
+    except RoundPage.DoesNotExist:
         raise PermissionDenied('The Outreachy application period is closed. If you are an applicant who has submitted an application for an internship project and your time commitments have increased, please contact the Outreachy organizers (see contact link above). Eligibility checking will become available when the next application period opens. Please sign up for the announcements mailing list for an email when the next application period opens: https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce')
 
 class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, SessionWizardView):
@@ -648,9 +654,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
         return [self.TEMPLATES[self.steps.current]]
 
     def get_current_round(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        validate_is_time_to_show_initial_application(current_round)
-        return current_round
+        return get_current_round_for_initial_application()
 
     def get_context_data(self, **kwargs):
         context = super(EligibilityUpdateView, self).get_context_data(**kwargs)
@@ -699,8 +703,7 @@ class EligibilityResults(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
     context_object_name = 'application'
 
     def get_object(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        validate_is_time_to_show_initial_application(current_round)
+        current_round = get_current_round_for_initial_application()
         return get_object_or_404(ApplicantApproval,
                     applicant=self.request.user.comrade,
                     application_round=current_round)
@@ -721,8 +724,7 @@ class ViewInitialApplication(LoginRequiredMixin, ComradeRequiredMixin, DetailVie
         return context
 
     def get_object(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        validate_is_time_to_show_initial_application(current_round)
+        current_round = get_current_round_for_initial_application()
         return get_object_or_404(ApplicantApproval,
                     applicant__account__username=self.kwargs['applicant_username'],
                     application_round=current_round)
@@ -735,13 +737,6 @@ def past_rounds_page(request):
             )
 
 def current_round_page(request):
-    current_round = RoundPage.objects.latest('internstarts')
-    all_rounds = RoundPage.objects.all().order_by('-internstarts')
-    if len(all_rounds) > 1:
-        previous_round = all_rounds[1]
-    else:
-        previous_round = None
-
     closed_approved_projects = []
     ontime_approved_projects = []
     late_approved_projects = []
@@ -750,10 +745,27 @@ def current_round_page(request):
     application = None
     approved_volunteer = False
 
-    if not current_round.validate_is_time_to_show_project_selection():
-        previous_round = current_round
+    now = datetime.datetime.now(datetime.timezone.utc)
+    today = get_deadline_date_for(now)
+
+    try:
+        previous_round = RoundPage.objects.filter(
+            appslate__lte=today,
+        ).latest('internstarts')
+    except RoundPage.DoesNotExist:
+        previous_round = None
+
+    try:
+        # Keep RoundPage.serve() in sync with this.
+        current_round = RoundPage.objects.get(
+            pingnew__lte=today,
+            # If the application period is closed, don't show projects from the current round
+            appslate__gt=today,
+        )
+    except RoundPage.DoesNotExist:
         current_round = None
     else:
+        # No exception caught, so we have a current_round
         approved_participations = current_round.participation_set.approved().order_by('community__name')
 
         for p in approved_participations:
@@ -798,21 +810,6 @@ def current_round_page(request):
             },
             )
 
-def validate_is_time_to_show_cfp(current_round):
-    # The problem here is the CFP page serves four (or more) purposes:
-    # - to provide mentors a way to submit new projects
-    # - to provide coordinators a way to submit new communities
-    # - to allow mentors to sign up to co-mentor a project
-    # - to allow mentors a way to edit their projects
-    #
-    # So, we close down the page after the interns are announced,
-    # when (hopefully) all mentors have signed up to co-mentor.
-    # Mentors can still be sent a manual link to sign up to co-mentor after that date,
-    # but their community page just won't show their project.
-    if has_deadline_passed(current_round.internstarts):
-        return False
-    return True
-
 # Call for communities, mentors, and volunteers page
 #
 # This is complex, so class-based views don't help us here.
@@ -842,12 +839,6 @@ def validate_is_time_to_show_cfp(current_round):
 #    * If not, put it in a not participating communities set
 
 def community_cfp_view(request):
-    # FIXME: Grab data to display about communities and substitute into the template
-    # Grab the most current round, based on the internship start date.
-    # See https://docs.djangoproject.com/en/1.11/ref/models/querysets/#latest
-    current_round = RoundPage.objects.latest('internstarts')
-    previous_round = None
-
     # Cheap trick for case-insensitive sorting: the slug is always lower-cased.
     all_communities = Community.objects.all().order_by('slug')
     approved_communities = []
@@ -855,13 +846,40 @@ def community_cfp_view(request):
     rejected_communities = []
     not_participating_communities = []
 
-    if not validate_is_time_to_show_cfp(current_round):
-        previous_round = current_round
+    # The problem here is the CFP page serves four (or more) purposes:
+    # - to provide mentors a way to submit new projects
+    # - to provide coordinators a way to submit new communities
+    # - to allow mentors to sign up to co-mentor a project
+    # - to allow mentors a way to edit their projects
+    #
+    # So, we close down the page after the interns are announced,
+    # when (hopefully) all mentors have signed up to co-mentor.
+    # Mentors can still be sent a manual link to sign up to co-mentor after that date,
+    # but their community page just won't show their project.
+
+    now = datetime.datetime.now(datetime.timezone.utc)
+    today = get_deadline_date_for(now)
+
+    try:
+        previous_round = RoundPage.objects.filter(
+            internstarts__lte=today,
+        ).latest('internstarts')
+    except RoundPage.DoesNotExist:
+        previous_round = None
+
+    try:
+        current_round = RoundPage.objects.get(
+            pingnew__lte=today,
+            internstarts__gt=today,
+        )
+    except RoundPage.DoesNotExist:
         current_round = None
         not_participating_communities = all_communities.filter(
             participation__approval_status=ApprovalStatus.APPROVED,
         ).distinct()
     else:
+        # No exception caught, so we have a current_round
+
         # Now grab the community IDs of all communities participating in the current round
         # https://docs.djangoproject.com/en/1.11/topics/db/queries/#following-relationships-backward
         # https://docs.djangoproject.com/en/1.11/ref/models/querysets/#values-list
@@ -894,12 +912,6 @@ def community_cfp_view(request):
             },
             )
 
-def validate_is_time_to_show_project_editing(current_round):
-    # If the application period is closed, don't show projects from the current round
-    if has_deadline_passed(current_round.appslate):
-        return False
-    return True
-
 # This is the page for volunteers, mentors, and coordinators.
 # It's a read-only page that displays information about the community,
 # what projects are accepted, and how volunteers can help.
@@ -908,16 +920,25 @@ def validate_is_time_to_show_project_editing(current_round):
 def community_read_only_view(request, community_slug):
     community = get_object_or_404(Community, slug=community_slug)
 
-    current_round = RoundPage.objects.latest('internstarts')
-    if validate_is_time_to_show_project_editing(current_round):
+    now = datetime.datetime.now(datetime.timezone.utc)
+    today = get_deadline_date_for(now)
+
+    try:
+        current_round = RoundPage.objects.get(
+            pingnew__lte=today,
+            # If the application period is closed, don't show projects from the current round
+            appslate__gt=today,
+        )
         previous_round = None
-    else:
+    except RoundPage.DoesNotExist:
         current_round = None
-        previous_participations = Participation.objects.filter(community__slug=community_slug, approval_status=ApprovalStatus.APPROVED).order_by('-participating_round__internstarts')
-        if not previous_participations:
+        try:
+            previous_round = community.rounds.filter(
+                appslate__lte=today,
+                participation__approval_status=ApprovalStatus.APPROVED,
+            ).latest('internstarts')
+        except RoundPage.DoesNotExist:
             previous_round = None
-        else:
-            previous_round = previous_participations[0].participating_round
 
     coordinator = None
     notification = None
