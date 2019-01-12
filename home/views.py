@@ -1669,10 +1669,11 @@ class FinalApplicationRate(LoginRequiredMixin, ComradeRequiredMixin, View):
 
         current_round = project.project_round.participating_round
 
-        # FIXME: Which round deadline ends applicant rating?
-        # Something between mentor_intern_selection_deadline and internannounce I assume?
-        #if current_round.slug != kwargs['round_slug']:
-        #    raise PermissionDenied("You can only rate applicants for the current round.")
+        if not current_round.has_application_period_started():
+            raise PermissionDenied("You cannot rate an applicant until the Outreachy application period opens.")
+
+        if current_round.has_last_day_to_add_intern_passed():
+            raise PermissionDenied("Outreachy interns cannot be rated at this time.")
 
         applicant = get_object_or_404(ApplicantApproval,
                 applicant__account__username=kwargs['username'],
