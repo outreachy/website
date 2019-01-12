@@ -1098,21 +1098,27 @@ class Comrade(models.Model):
                 coordinatorapproval__approval_status = ApprovalStatus.APPROVED,
                 )
 
+    # Deprecated: call the corresponding method on ApplicantApproval instead.
     def get_projects_contributed_to(self):
         current_round = RoundPage.objects.latest('internstarts')
-        return Project.objects.filter(
-            contribution__applicant__applicant=self,
-            contribution__applicant__application_round=current_round,
-        ).distinct().order_by(
-            '-deadline',
-            'project_round__community__name',
-            'short_title',
-        )
+        try:
+            return self.applicantapproval_set.get(
+                application_round=current_round,
+            ).get_projects_contributed_to()
+        except ApplicantApproval.DoesNotExist:
+            return ()
 
     def get_projects_with_upcoming_and_passed_deadlines(self):
         current_round = RoundPage.objects.latest('internstarts')
-        all_projects = self.get_projects_contributed_to()
-        applied_projects = self.get_projects_applied_to()
+        try:
+            applicant = self.applicantapproval_set.get(
+                application_round=current_round,
+            )
+        except ApplicantApproval.DoesNotExist:
+            return [], []
+
+        all_projects = applicant.get_projects_contributed_to()
+        applied_projects = applicant.get_projects_applied_to()
 
         upcoming_deadlines = []
         passed_deadlines = []
@@ -1133,12 +1139,15 @@ class Comrade(models.Model):
         upcoming, passed = self.get_projects_with_upcoming_and_passed_deadlines()
         return passed
 
+    # Deprecated: call the corresponding method on ApplicantApproval instead.
     def get_projects_applied_to(self):
         current_round = RoundPage.objects.latest('internstarts')
-        return Project.objects.filter(
-            finalapplication__applicant__applicant=self,
-            finalapplication__applicant__application_round=current_round,
-        ).distinct()
+        try:
+            return self.applicantapproval_set.get(
+                application_round=current_round,
+            ).get_projects_applied_to()
+        except ApplicantApproval.DoesNotExist:
+            return ()
 
     def get_passed_projects_not_applied_to(self):
         passed_deadlines = self.get_projects_with_passed_deadlines()
@@ -2377,6 +2386,20 @@ class ApplicantApproval(ApprovalStatus):
         return ApplicationReviewer.objects.filter(
                 reviewing_round=self.application_round,
                 approval_status=ApprovalStatus.APPROVED)
+
+    def get_projects_contributed_to(self):
+        return self.project_contributions.distinct().order_by(
+            '-deadline',
+            'project_round__community__name',
+            'short_title',
+        )
+
+    def get_projects_applied_to(self):
+        # FinalApplication sets the combination of applicant and project to be
+        # unique. Since we've restricted results to a single applicant, each
+        # matching FinalApplication will contribute exactly one Project. As a
+        # result, this query does not need distinct().
+        return Project.objects.filter(finalapplication__applicant=self)
 
     def __str__(self):
         return "{name} <{email}> - {status}".format(
