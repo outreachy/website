@@ -162,17 +162,26 @@ class ActivationCompleteView(TemplateView):
     template_name = 'registration/activation_complete.html'
 
 class ComradeUpdate(LoginRequiredMixin, UpdateView):
-    model = Comrade
-
     # FIXME - we need a way for comrades to change their passwords
     # and update and re-verify their email address.
-    fields = [
+
+    def get_form_class(self):
+        # We want to have different fields for different comrades, but
+        # self.fields is shared across all instances of this view, so we can't
+        # use that. There's no get_fields() method we can override, either, so
+        # the only hook we can use is overriding this method of ModelFormMixin.
+        fields = [
             'public_name',
             'nick_name',
             'legal_name',
             'pronouns',
             'pronouns_to_participants',
             'pronouns_public',
+        ]
+        comrade = self.object
+        if comrade.approved_reviewer() or comrade.approved_mentor_or_coordinator() or comrade.alum_in_good_standing():
+            fields.append('photo')
+        fields.extend([
             'timezone',
             'location',
             'nick',
@@ -182,22 +191,15 @@ class ComradeUpdate(LoginRequiredMixin, UpdateView):
             'blog_rss_url',
             'twitter_url',
             'agreed_to_code_of_conduct',
-            ]
+        ])
+        return modelform_factory(comrade.__class__, fields=fields)
 
-    # FIXME - we need to migrate any existing staff users who aren't a Comrade
-    # to the Comrade model instead of the User model.
     def get_object(self):
         # Either grab the current comrade to update, or make a new one
-        comrade = None
         try:
-            comrade = self.request.user.comrade
-            # Is this an Outreachy organizer or an approved mentor or coordinator?
-            # Is this an intern in good standing from a past round?
-            if (self.request.user.is_staff or comrade.approved_reviewer() or comrade.approved_mentor_or_coordinator() or comrade.alum_in_good_standing()):
-                self.fields.insert(6, 'photo')
+            return self.request.user.comrade
         except Comrade.DoesNotExist:
-            comrade = Comrade(account=self.request.user)
-        return comrade
+            return Comrade(account=self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super(ComradeUpdate, self).get_context_data(**kwargs)
