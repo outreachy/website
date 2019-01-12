@@ -1064,16 +1064,6 @@ class Comrade(models.Model):
             project_round__approval_status__in=(ApprovalStatus.PENDING, ApprovalStatus.APPROVED),
         )
 
-    def get_all_mentored_projects(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        # Get all projects where they're a mentor
-        # Don't count withdrawn or rejected communities.
-        return Project.objects.filter(
-            mentorapproval__mentor=self,
-            project_round__participating_round=current_round,
-            project_round__approval_status__in=(ApprovalStatus.PENDING, ApprovalStatus.APPROVED),
-        )
-
     def get_approved_coordinator_communities(self):
         current_round = RoundPage.objects.latest('internstarts')
         # Get all communities where they're an approved community
