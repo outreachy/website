@@ -1618,8 +1618,6 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
                 project_round__approval_status=ApprovalStatus.APPROVED)
 
         current_round = project.project_round.participating_round
-        # FIXME: Which round deadline ends recording applicant contributions?
-        # Something between appslate and internannounce I assume?
 
         applicant = get_object_or_404(ApplicantApproval,
                 applicant=self.request.user.comrade,
@@ -1631,8 +1629,14 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
         except FinalApplication.DoesNotExist:
             application = None
 
+        if not current_round.has_application_period_started():
+            raise PermissionDenied("You cannot record a contribution until the Outreachy application period opens.")
+
         if project.has_application_deadline_passed() and application == None:
             raise PermissionDenied("Editing or recording new contributions is closed at this time to applicants who have not created a final application.")
+
+        if current_round.has_intern_announcement_deadline_passed():
+            raise PermissionDenied("Editing or recording new contributions is closed at this time.")
 
         if 'contribution_slug' not in self.kwargs:
             return Contribution(applicant=applicant, project=project)
