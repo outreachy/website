@@ -2334,7 +2334,7 @@ class ApplicantApproval(ApprovalStatus):
                 }
 
     def get_time_commitments(self):
-        current_round = RoundPage.objects.latest('internstarts')
+        current_round = self.application_round
         noncollege_school_time_commitments = NonCollegeSchoolTimeCommitment.objects.filter(applicant=self)
         school_time_commitments = SchoolTimeCommitment.objects.filter(applicant=self)
         volunteer_time_commitments = VolunteerTimeCommitment.objects.filter(applicant=self)
@@ -2897,7 +2897,7 @@ class SchoolTimeCommitment(models.Model):
         # Look for people which list Outreachy project credit for a term that is
         # already underway - people often think we mean the number of hours they'll spend
         # on Outreachy.
-        current_round = RoundPage.objects.latest('internstarts')
+        current_round = self.applicant.application_round
         if self.outreachy_credits and self.start_date and self.start_date < current_round.internstarts:
             error_string = 'You cannot receive school course credits for an Outreachy internship for a term that starts before the Outreachy internship starts.'
             raise ValidationError({'outreachy_credits': error_string})
@@ -3382,12 +3382,11 @@ class FinalApplication(ApprovalStatus):
             return None
 
     def get_intern_selection_conflicts(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        return InternSelection.objects.filter(
-                applicant=self.applicant,
-                project__project_round__participating_round=current_round).exclude(
-                        funding_source=InternSelection.NOT_FUNDED).exclude(
-                                project=self.project)
+        return self.applicant.internselection_set.exclude(
+            funding_source=InternSelection.NOT_FUNDED,
+        ).exclude(
+            project=self.project,
+        )
 
     def __str__(self):
         return '{applicant} application for {community} - {project} - {id}'.format(
