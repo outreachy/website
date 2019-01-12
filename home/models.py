@@ -299,6 +299,12 @@ class RoundPage(Page):
     def has_internship_start_date_passed(self):
         return has_deadline_passed(self.internstarts)
 
+    # Outreachy internships can be extended for up to five weeks past the official end date.
+    # In some cases, we've changed or added an intern after the official announcement date.
+    # The very latest we could do that would be five weeks after the official start date.
+    def has_last_day_to_add_intern_passed(self):
+        return has_deadline_passed(self.internstarts + datetime.timedelta(days=5*7))
+
     def gsoc_round(self):
         # The internships would start before August
         # for rounds aligned with GSoC
