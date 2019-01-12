@@ -1434,10 +1434,28 @@ class Participation(ApprovalStatus):
         # - staff
         if comrade.account.is_staff:
             return True
+
         # - an approved coordinator for any approved community
-        # - an approved mentor with an approved project for a different approved community
-        if comrade.approved_mentor_or_coordinator():
+        coordinators = CoordinatorApproval.objects.filter(
+                coordinator=comrade,
+                approval_status=ApprovalStatus.APPROVED,
+                community__participation__approval_status=ApprovalStatus.APPROVED,
+                community__participation__participating_round=self.participating_round,
+                )
+        if coordinators.exists():
             return True
+
+        # - an approved mentor with an approved project for a different approved community
+        mentors = MentorApproval.objects.filter(
+                mentor=comrade,
+                approval_status=ApprovalStatus.APPROVED,
+                project__approval_status=ApprovalStatus.APPROVED,
+                project__project_round__approval_status=ApprovalStatus.APPROVED,
+                project__project_round__participating_round=self.participating_round,
+                )
+        if mentors.exists():
+            return True
+
         # - an approved mentor with an approved project for this community (pending or approved)
         mentors = MentorApproval.objects.filter(
                 mentor=comrade,
@@ -1447,6 +1465,7 @@ class Participation(ApprovalStatus):
                 )
         if mentors.exists():
             return True
+
         # - an approved coordinator for this pending community
         return self.is_approved_coordinator(comrade.account)
 
