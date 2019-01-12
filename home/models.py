@@ -1126,9 +1126,10 @@ class Comrade(models.Model):
             if not project.has_application_deadline_passed():
                 upcoming_deadlines.append(project)
             else:
+                project.did_apply = project in applied_projects
                 passed_deadlines.append(project)
 
-        passed_deadlines.sort(key=lambda x: x in applied_projects, reverse=True)
+        passed_deadlines.sort(key=lambda x: x.did_apply, reverse=True)
         return upcoming_deadlines, passed_deadlines
 
     def get_projects_with_upcoming_deadlines(self):
@@ -1151,10 +1152,9 @@ class Comrade(models.Model):
 
     def get_passed_projects_not_applied_to(self):
         passed_deadlines = self.get_projects_with_passed_deadlines()
-        projects_applied_to = self.get_projects_applied_to()
         really_passed_deadlines = []
         for p in passed_deadlines:
-            if p not in projects_applied_to:
+            if not p.did_apply:
                 really_passed_deadlines.append(p)
         return really_passed_deadlines
 
