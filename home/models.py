@@ -1132,18 +1132,10 @@ class Comrade(models.Model):
                 projects.append(c.project)
         return projects
 
-    def project_applied_to_for_sort(self, project):
-        try:
-            finalapplication = FinalApplication.objects.get(
-                    applicant__applicant=self,
-                    project=project)
-        except FinalApplication.DoesNotExist:
-            return 0
-        return 1
-
     def get_projects_with_upcoming_and_passed_deadlines(self):
         current_round = RoundPage.objects.latest('internstarts')
         all_projects = self.get_projects_contributed_to()
+        applied_projects = self.get_projects_applied_to()
 
         upcoming_deadlines = []
         passed_deadlines = []
@@ -1158,7 +1150,7 @@ class Comrade(models.Model):
                 passed_deadlines.append(project)
         upcoming_deadlines.sort(key=lambda x: x.deadline, reverse=True)
         passed_deadlines.sort(key=lambda x: x.deadline, reverse=True)
-        passed_deadlines.sort(key=lambda x: self.project_applied_to_for_sort(x), reverse=True)
+        passed_deadlines.sort(key=lambda x: x in applied_projects, reverse=True)
         return upcoming_deadlines, passed_deadlines
 
     def get_projects_with_upcoming_deadlines(self):
