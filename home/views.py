@@ -932,7 +932,7 @@ def community_read_only_view(request, community_slug):
         except CoordinatorApproval.DoesNotExist:
             pass
         try:
-            notification = Notification.objects.get(comrade__account=request.user, community=community)
+            notification = community.notification_set.get(comrade__account=request.user)
         except Notification.DoesNotExist:
             pass
         try:
@@ -942,23 +942,22 @@ def community_read_only_view(request, community_slug):
         except Comrade.DoesNotExist:
             pass
 
-    context = {
-            'current_round' : current_round,
-            'previous_round' : previous_round,
-            'community': community,
-            'coordinator': coordinator,
-            'notification': notification,
-            'mentors_pending_projects': mentors_pending_projects,
-            }
-
     # Try to see if this community is participating in the current round
     # and get the Participation object if so.
     try:
-        context['participation_info'] = Participation.objects.get(community=community, participating_round=current_round)
+        participation_info = community.participation_set.get(participating_round=current_round)
     except Participation.DoesNotExist:
-        pass
+        participation_info = None
 
-    return render(request, 'home/community_read_only.html', context)
+    return render(request, 'home/community_read_only.html', {
+        'current_round' : current_round,
+        'previous_round' : previous_round,
+        'community': community,
+        'coordinator': coordinator,
+        'notification': notification,
+        'mentors_pending_projects': mentors_pending_projects,
+        'participation_info': participation_info,
+    })
 
 # A Comrade wants to sign up to be notified when a community coordinator
 # says this community is participating in a new round
