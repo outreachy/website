@@ -1139,12 +1139,8 @@ class Comrade(models.Model):
 
         upcoming_deadlines = []
         passed_deadlines = []
-        ontime_deadline = current_round.appsclose
-        late_deadline = current_round.appslate
         for project in all_projects:
-            if not has_deadline_passed(ontime_deadline) and (project.deadline == Project.ONTIME or project.deadline == Project.CLOSED):
-                upcoming_deadlines.append(project)
-            elif not has_deadline_passed(late_deadline) and project.deadline == Project.LATE:
+            if not project.has_application_deadline_passed():
                 upcoming_deadlines.append(project)
             else:
                 passed_deadlines.append(project)
