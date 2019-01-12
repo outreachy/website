@@ -1469,15 +1469,6 @@ class Participation(ApprovalStatus):
         # - an approved coordinator for this pending community
         return self.is_approved_coordinator(user)
 
-    def is_pending_co_mentor(self, comrade):
-        mentors = MentorApproval.objects.filter(
-                mentor=comrade,
-                approval_status=ApprovalStatus.PENDING,
-                project__project_round=self,
-                )
-        if mentors.exists():
-            return True
-
     # Note that is is more than just the submitter!
     # We want to notify mentors as well as coordinators
     def get_submitter_email_list(self):
