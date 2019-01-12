@@ -1026,17 +1026,14 @@ def community_landing_view(request, round_slug, community_slug):
     if request.user.is_authenticated:
         try:
             mentors_pending_projects = participation_info.mentors_pending_projects(request.user.comrade)
-            mentored_projects = [p for p in projects if p.is_submitter(request.user)]
 
             approved_coordinator = participation_info.is_approved_coordinator(request.user)
         # Even though the user is authenticated, they may not have a Comrade
         except Comrade.DoesNotExist:
             mentors_pending_projects = None
-            mentored_projects = None
             approved_coordinator = False
     else:
         mentors_pending_projects = None
-        mentored_projects = None
         approved_coordinator = False
 
     return render(request, 'home/community_landing.html',
