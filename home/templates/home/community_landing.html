@@ -32,7 +32,7 @@ Outreachy internships working with {{ community.name }}
 			Your initial application is currently pending review by Outreachy organizers.
 			</p>
 		{% endif %}
-	{% elif approved_to_see_all_project_details or mentors_pending_projects %}
+	{% else %}{# allowed to see project details #}
 
 		{% if not current_round.has_application_period_started %}
 			{% include "home/snippet/round_not_open.html" %}
@@ -213,10 +213,6 @@ Outreachy internships working with {{ community.name }}
 				{% endif %}
 			{% endfor %}
 		{% endif %}
-	{% elif is_pending_coordinator %}
-		<p>Your request to coordinate this community is under review.</p>
-	{% elif is_pending_mentor %}
-		<p>Your request to mentor for this community is under review.</p>
 	{% endif %}
 {% endwith %}
 
