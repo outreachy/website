@@ -14,8 +14,6 @@ community_cfp_patterns = [
     url(r'^notify/$', views.CommunityNotificationUpdate.as_view(), name='notify-me'),
     url(r'^coordinator/preview/(?P<username>[^/]+)/$', views.CoordinatorApprovalPreview.as_view(), name='coordinatorapproval-preview'),
     url(r'^coordinator/(?P<action>[^/]+)/(?:(?P<username>[^/]+)/)?$', views.CoordinatorApprovalAction.as_view(), name='coordinatorapproval-action'),
-    url(r'^(?P<action>[^/]+)-project/(?:(?P<project_slug>[^/]+)/)?$', views.ProjectAction.as_view(), name='project-action'),
-    url(r'^(?P<action>[^/]+)/$', views.ParticipationAction.as_view(), name='participation-action'),
     url(r'^$', views.community_read_only_view, name='community-read-only'),
 ]
 
@@ -46,6 +44,8 @@ round_community_project_patterns = [
 round_community_patterns = [
     url(r'^(?P<project_slug>[^/]+)/', include(round_community_project_patterns)),
     url(r'^applicants/$', views.community_applicants, name='community-applicants'),
+    url(r'^(?P<action>[^/]+)-project/(?:(?P<project_slug>[^/]+)/)?$', views.ProjectAction.as_view(), name='project-action'),
+    url(r'^(?P<action>[^/]+)/$', views.ParticipationAction.as_view(), name='participation-action'),
     url(r'^$', views.community_landing_view, name='community-landing'),
 ]
 

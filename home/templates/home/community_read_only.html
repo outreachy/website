@@ -123,10 +123,10 @@ Past community participation in Outreachy
 <hr />
 	<h2>Participate in This Round</h2>
 	<p>You can sign the community up to participate in the current round.</p>
-	<p><a class="btn btn-success" href="{% url 'participation-action' action='submit' community_slug=community.slug %}">Community will participate</a></p>
+	<p><a class="btn btn-success" href="{% url 'participation-action' action='submit' round_slug=current_round.slug community_slug=community.slug %}">Community will participate</a></p>
 	<p>If you don't have sponsorship funds or you can't find mentors for this round, you can indicate your community won't participate.
 	This will help direct mentors to communities that are participating.</p>
-	<p><a class="btn btn-warning" href="{% url 'participation-action' action='withdraw' community_slug=community.slug %}">Community will not participate</a></p>
+	<p><a class="btn btn-warning" href="{% url 'participation-action' action='withdraw' round_slug=current_round.slug community_slug=community.slug %}">Community will not participate</a></p>
 {% endif %}
 
 {% if not participation_info %}
@@ -155,7 +155,7 @@ Past community participation in Outreachy
 
 		<p><strong>Outreachy applicants should not submit project proposals through this form.</strong> You need to look over the <a href="{% url 'project-selection' %}">list of projects</a> and pick a project from that list.</p>
 
-		<p><a class='btn btn-success' href="{% url 'project-action' action='submit' community_slug=community.slug %}">Submit a Project Proposal</a></p>
+		<p><a class='btn btn-success' href="{% url 'project-action' action='submit' round_slug=current_round.slug community_slug=community.slug %}">Submit a Project Proposal</a></p>
 	{% else %}
 		<h2>Project Submission Deadline Passed</h2>
 		<p>Unfortunately, the deadline to submit new Outreachy internship projects has closed.

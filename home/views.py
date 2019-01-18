@@ -1126,7 +1126,7 @@ class ParticipationAction(ApprovalStatusAction):
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     def get_object(self):
         community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
-        participating_round = RoundPage.objects.latest('internstarts')
+        participating_round = get_object_or_404(RoundPage, slug=self.kwargs['round_slug'])
         try:
             return Participation.objects.get(
                     community=community,
@@ -1309,10 +1309,9 @@ class ProjectAction(ApprovalStatusAction):
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     def get_object(self):
-        participating_round = RoundPage.objects.latest('internstarts')
         participation = get_object_or_404(Participation,
                     community__slug=self.kwargs['community_slug'],
-                    participating_round=participating_round)
+                    participating_round__slug=self.kwargs['round_slug'])
 
         project_slug = self.kwargs.get('project_slug')
         if project_slug:
