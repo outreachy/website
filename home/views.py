@@ -1012,6 +1012,7 @@ def community_landing_view(request, round_slug, community_slug):
     current_round = participation_info.participating_round
 
     application = None
+    approved_coordinator_list = CoordinatorApproval.objects.none()
     if request.user.is_authenticated:
         try:
             application = current_round.applicantapproval_set.get(
@@ -1020,19 +1021,7 @@ def community_landing_view(request, round_slug, community_slug):
         except ApplicantApproval.DoesNotExist:
             pass
 
-        try:
-            # Although the current user is authenticated, don't assume
-            # that they have a Comrade instance. Instead check that the
-            # approval's coordinator is attached to a User that matches
-            # this one.
-            approved_coordinator_list = participation_info.community.coordinatorapproval_set.filter(
-                    approval_status=ApprovalStatus.APPROVED)
-            approved_mentor_list = participation_info.community.coordinatorapproval_set.filter(
-                    approval_status=ApprovalStatus.APPROVED)
-        except CoordinatorApproval.DoesNotExist:
-            approved_coordinator_list = None
-    else:
-            approved_coordinator_list = None
+        approved_coordinator_list = participation_info.community.coordinatorapproval_set.approved()
 
     approved_to_see_all_project_details = participation_info.approved_to_see_all_project_details(request.user)
 
