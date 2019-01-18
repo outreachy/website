@@ -61,6 +61,7 @@ from .models import CoordinatorApproval
 from .models import create_time_commitment_calendar
 from .models import EmploymentTimeCommitment
 from .models import FinalApplication
+from .models import get_deadline_date_for
 from .models import InternSelection
 from .models import InitialApplicationReview
 from .models import InitialMentorFeedback
@@ -391,7 +392,7 @@ def determine_eligibility(wizard, application_round):
 # People can only submit new initial applications or edit initial applications
 # when the application period is open.
 def get_current_round_for_initial_application():
-    now = datetime.datetime.now(datetime.timezone.utc)
+    now = datetime.now(timezone.utc)
     today = get_deadline_date_for(now)
 
     try:
@@ -745,7 +746,7 @@ def current_round_page(request):
     application = None
     approved_volunteer = False
 
-    now = datetime.datetime.now(datetime.timezone.utc)
+    now = datetime.now(timezone.utc)
     today = get_deadline_date_for(now)
 
     try:
@@ -857,7 +858,7 @@ def community_cfp_view(request):
     # Mentors can still be sent a manual link to sign up to co-mentor after that date,
     # but their community page just won't show their project.
 
-    now = datetime.datetime.now(datetime.timezone.utc)
+    now = datetime.now(timezone.utc)
     today = get_deadline_date_for(now)
 
     try:
@@ -920,7 +921,7 @@ def community_cfp_view(request):
 def community_read_only_view(request, community_slug):
     community = get_object_or_404(Community, slug=community_slug)
 
-    now = datetime.datetime.now(datetime.timezone.utc)
+    now = datetime.now(timezone.utc)
     today = get_deadline_date_for(now)
 
     try:
@@ -2080,7 +2081,7 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 applicant=self.applicant,
                 project=self.project,
                 intern_starts=self.project.project_round.participating_round.internstarts,
-                initial_feedback_opens=self.project.project_round.participating_round.initialfeedback - datetime.timedelta(days=7),
+                initial_feedback_opens=self.project.project_round.participating_round.initialfeedback - timedelta(days=7),
                 initial_feedback_due=self.project.project_round.participating_round.initialfeedback,
                 intern_ends=self.project.project_round.participating_round.internends,
                 )
