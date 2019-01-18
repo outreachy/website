@@ -961,7 +961,6 @@ def community_read_only_view(request, community_slug):
 
 # A Comrade wants to sign up to be notified when a community coordinator
 # says this community is participating in a new round
-# FIXME we need to deal with deleting these once a community signs up.
 class CommunityNotificationUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     fields = []
 
