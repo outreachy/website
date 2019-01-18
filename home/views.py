@@ -2103,7 +2103,7 @@ class InternRemoval(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Re
             }) + "#rating"
 
 @login_required
-def intern_timeline(request, round_slug, community_slug, project_slug, applicant_username):
+def project_timeline(request, round_slug, community_slug, project_slug, applicant_username):
 
     if not request.user:
         raise PermissionDenied("You must be logged in to view an intern project timeline.")
