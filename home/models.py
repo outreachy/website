@@ -623,18 +623,16 @@ class RoundPage(Page):
 
         return (eligible, contributed, applied, funded)
 
-    def validate_is_time_to_show_project_selection(self):
-        # If the application period is closed, don't show projects from the current round
-        if has_deadline_passed(self.appslate):
-            return False
-        return True
-
     def serve(self, request, *args, **kwargs):
+        # If the project selection page (views.current_round_page) would
+        # consider this a current_round, redirect there.
+        now = datetime.datetime.now(datetime.timezone.utc)
+        today = get_deadline_date_for(now)
+        if self.pingnew <= today && self.appslate > today:
+            return redirect('project-selection')
+
         # Only show this page if we shouldn't be showing the project selection page.
-        if not self.validate_is_time_to_show_project_selection():
-            return super(RoundPage, self).serve(request, *args, **kwargs)
-        # Otherwise, the application period is open, so redirect to the project selection view.
-        return redirect('project-selection')
+        return super(RoundPage, self).serve(request, *args, **kwargs)
 
     def get_context(self, request, *args, **kwargs):
         context = super(RoundPage, self).get_context(request, *args, **kwargs)
