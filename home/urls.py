@@ -36,6 +36,7 @@ round_community_project_patterns = [
     url(r'^final-application/(?P<applicant_username>[^/]+)/select/?$', views.InternSelectionUpdate.as_view(), name='select-intern'),
     url(r'^final-application/(?P<applicant_username>[^/]+)/remove/?$', views.InternRemoval.as_view(), name='remove-intern'),
     url(r'^final-application/(?P<applicant_username>[^/]+)/resign/?$', views.MentorResignation.as_view(), name='resign-as-mentor'),
+    url(r'^final-application/(?P<applicant_username>[^/]+)/project-timeline/?$', views.intern_timeline, name='project-timeline'),
     url(r'^mentor-contract-export/(?P<applicant_username>[^/]+)/?$', views.MentorContractExport.as_view(), name='mentor-contract'),
     url(r'^final-application/fund/(?P<applicant_username>[^/]+)/(?P<funding>[^/]+)$', views.InternFund.as_view(), name='intern-fund'),
     url(r'^final-application/organizer-approval/(?P<applicant_username>[^/]+)/(?P<approval>[^/]+)$', views.InternApprove.as_view(), name='intern-approval'),

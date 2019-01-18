@@ -2102,6 +2102,41 @@ class InternRemoval(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Re
             'project_slug': self.kwargs['project_slug'],
             }) + "#rating"
 
+@login_required
+def intern_timeline(request, round_slug, community_slug, project_slug, applicant_username):
+
+    if not request.user:
+        raise PermissionDenied("You must be logged in to view an intern project timeline.")
+
+    intern_selection = InternSelection.objects.get(
+            applicant__applicant__account__username=applicant_username,
+            project__slug=project_slug,
+            project__project_round__community__slug=community_slug,
+            project__project_round__participating_round__slug=round_slug)
+
+    final_application = FinalApplication.objects.get(
+            applicant__applicant__account__username=applicant_username,
+            project__slug=project_slug,
+            project__project_round__community__slug=community_slug,
+            project__project_round__participating_round__slug=round_slug)
+
+    # Verify that this is either:
+    # the intern,
+    # staff,
+    # an approved mentor for the project, or
+    # an approved coordinator for the community.
+    # The last two cases are covered by is_submitter()
+    if not request.user.is_staff and not request.user == intern_selection.applicant.applicant.account and not intern_selection.is_submitter(request.user):
+        raise PermissionDenied("You are not authorized to view this intern project timeline.")
+
+    return render(request, 'home/intern_timeline.html', {
+        'intern_selection': intern_selection,
+        'project': intern_selection.project,
+        'community': intern_selection.project.project_round.community,
+        'current_round': intern_selection.project.project_round.participating_round,
+        'final_application': final_application,
+        })
+
 # Passed round_slug, community_slug, project_slug, applicant_username
 # Even if someone resigns as a mentor, we still want to keep their signed mentor agreement
 class MentorResignation(LoginRequiredMixin, ComradeRequiredMixin, DeleteView):
