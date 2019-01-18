@@ -628,7 +628,7 @@ class RoundPage(Page):
         # consider this a current_round, redirect there.
         now = datetime.datetime.now(datetime.timezone.utc)
         today = get_deadline_date_for(now)
-        if self.pingnew <= today && self.appslate > today:
+        if self.pingnew <= today and self.appslate > today:
             return redirect('project-selection')
 
         # Only show this page if we shouldn't be showing the project selection page.
