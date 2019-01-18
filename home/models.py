@@ -1677,7 +1677,11 @@ class Project(ApprovalStatus):
                 )
 
     def get_preview_url(self):
-        return reverse('project-read-only', kwargs={'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
+        return reverse('project-read-only', kwargs={
+            'round_slug': self.project_round.participating_round.slug,
+            'community_slug': self.project_round.community.slug,
+            'project_slug': self.slug,
+        })
 
     def get_project_selection_url(self):
         return reverse('project-selection') + '#' + self.project_round.community.slug + '-' + self.slug
@@ -1989,6 +1993,7 @@ class MentorApproval(ApprovalStatus):
 
     def get_preview_url(self):
         return reverse('mentorapproval-preview', kwargs={
+            'round_slug': self.project.project_round.participating_round.slug,
             'community_slug': self.project.project_round.community.slug,
             'project_slug': self.project.slug,
             'username': self.mentor.account.username,
@@ -1996,10 +2001,11 @@ class MentorApproval(ApprovalStatus):
 
     def get_action_url(self, action, current_user=None):
         kwargs = {
-                'community_slug': self.project.project_round.community.slug,
-                'project_slug': self.project.slug,
-                'action': action,
-                }
+            'round_slug': self.project.project_round.participating_round.slug,
+            'community_slug': self.project.project_round.community.slug,
+            'project_slug': self.project.slug,
+            'action': action,
+            }
         if self.mentor.account != current_user:
             kwargs['username'] = self.mentor.account.username
         return reverse('mentorapproval-action', kwargs=kwargs)

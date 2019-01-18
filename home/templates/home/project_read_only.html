@@ -45,11 +45,11 @@
 		{% if not current_round.has_late_application_deadline_passed %}
 			<p>Each co-mentor for your project will need to sign up, so that they can view applicant's recorded contributions and application.
 			You can send them this link to sign up as a co-mentor:
-			<a href="{% url 'mentorapproval-action' community_slug=community.slug project_slug=project.slug action='submit' %}">{{ request.scheme }}://{{ request.get_host }}{% url 'mentorapproval-action' community_slug=community.slug project_slug=project.slug action='submit' %}</a>
+			<a href="{% url 'mentorapproval-action' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' %}">{{ request.scheme }}://{{ request.get_host }}{% url 'mentorapproval-action' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' %}</a>
 		{% endif %}
 	{% else %}
 		<p>If you need to sign up to co-mentor this project, please click the button below to create an account. Once you're approved by the coordinator, you will receive instructions on how to sign the mentor agreement for the selected intern.</p>
-		<p><a href="{% url 'mentorapproval-action' community_slug=community.slug project_slug=project.slug action='submit' %}" class="btn btn-success">Co-mentor This Project</a></p>
+		<p><a href="{% url 'mentorapproval-action' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' %}" class="btn btn-success">Co-mentor This Project</a></p>
 	{% endif %}
 {% else %}
 	<h3>Co-mentor</h3>

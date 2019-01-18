@@ -51,10 +51,10 @@
 		<a class="btn btn-primary" href="{% url 'project-action' community_slug=project.project_round.community.slug project_slug=project.slug action='submit' %}">Update Project Details</a>
 		</p>
 		<p class="card-text">
-		<a class="btn btn-primary" href="{% url 'project-skills-edit' community_slug=project.project_round.community.slug project_slug=project.slug %}">Update Project Skills</a>
+		<a class="btn btn-primary" href="{% url 'project-skills-edit' round_slug=project.project_round.participating_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}">Update Project Skills</a>
 		</p>
 		<p class="card-text">
-		<a class="btn btn-primary" href="{% url 'communication-channels-edit' community_slug=project.project_round.community.slug project_slug=project.slug %}">Update Communication Channels</a>
+		<a class="btn btn-primary" href="{% url 'communication-channels-edit' round_slug=project.project_round.participating_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}">Update Communication Channels</a>
 		</p>
 		<p class="card-text">
 		<a class="btn btn-warning" href="{% url 'project-action' community_slug=project.project_round.community.slug project_slug=project.slug action='withdraw' %}">Withdraw Project</a>

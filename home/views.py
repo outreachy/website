@@ -1167,12 +1167,11 @@ class ParticipationAction(ApprovalStatusAction):
                 notification.delete()
 
 # This view is for mentors and coordinators to review project information and approve it
-def project_read_only_view(request, community_slug, project_slug):
-    current_round = RoundPage.objects.latest('internstarts')
+def project_read_only_view(request, round_slug, community_slug, project_slug):
     project = get_object_or_404(
             Project.objects.select_related('project_round__participating_round', 'project_round__community'),
             slug=project_slug,
-            project_round__participating_round=current_round,
+            project_round__participating_round__slug=round_slug,
             project_round__community__slug=community_slug,
             )
 
@@ -1260,10 +1259,9 @@ class MentorApprovalAction(ApprovalStatusAction):
             ]
 
     def get_object(self):
-        participating_round = RoundPage.objects.latest('internstarts')
         project = get_object_or_404(Project,
                 project_round__community__slug=self.kwargs['community_slug'],
-                project_round__participating_round=participating_round,
+                project_round__participating_round__slug=self.kwargs['round_slug'],
                 slug=self.kwargs['project_slug'])
 
         username = self.kwargs.get('username')
@@ -1290,6 +1288,7 @@ class MentorApprovalAction(ApprovalStatusAction):
         # project yet when they first sign up.
         if self.kwargs['action'] == 'submit' and self.object.project.is_submitter(self.request.user):
             return reverse('project-skills-edit', kwargs={
+                'round_slug': self.object.project.project_round.participating_round.slug,
                 'community_slug': self.object.project.project_round.community.slug,
                 'project_slug': self.object.project.slug,
                 })
@@ -1342,6 +1341,7 @@ class ProjectAction(ApprovalStatusAction):
             return mentor.get_action_url('submit', self.request.user)
         elif self.kwargs['action'] == 'submit':
             return reverse('project-skills-edit', kwargs={
+                'round_slug': self.object.project_round.participating_round.slug,
                 'community_slug': self.object.project_round.community.slug,
                 'project_slug': self.object.slug,
                 })
@@ -1359,11 +1359,10 @@ class ProjectAction(ApprovalStatusAction):
 
 class BaseProjectEditPage(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     def get_object(self):
-        participating_round = RoundPage.objects.latest('internstarts')
         project = get_object_or_404(Project,
                 slug=self.kwargs['project_slug'],
                 project_round__community__slug=self.kwargs['community_slug'],
-                project_round__participating_round=participating_round)
+                project_round__participating_round__slug=self.kwargs['round_slug'])
         if not project.is_submitter(self.request.user):
             raise PermissionDenied("You are not an approved mentor for this project")
         # Only allow adding new project communication channels or skills
@@ -1388,11 +1387,10 @@ class CommunicationChannelsEditPage(BaseProjectEditPage):
 
 class MentorApprovalPreview(Preview):
     def get_object(self):
-        current_round = RoundPage.objects.latest('internstarts')
         return get_object_or_404(
                 MentorApproval,
                 project__slug=self.kwargs['project_slug'],
-                project__project_round__participating_round=current_round,
+                project__project_round__participating_round__slug=self.kwargs['round_slug'],
                 project__project_round__community__slug=self.kwargs['community_slug'],
                 mentor__account__username=self.kwargs['username'])
 
