@@ -2217,10 +2217,12 @@ class InternFund(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Revis
     def post(self, request, *args, **kwargs):
         username = kwargs['applicant_username']
         current_round = get_object_or_404(RoundPage, slug=kwargs['round_slug'])
-        # FIXME: Which round deadline ends applicant funding selection?
-        # Something between coordinator_funding_deadline and internannounce I assume?
-        #if current_round.slug != kwargs['round_slug']:
-        #    raise PermissionDenied("You can only select funding sources for interns in the current round.")
+
+        if not current_round.has_application_period_started():
+            raise PermissionDenied("You cannot set a funding source for an Outreachy intern until the application period opens.")
+
+        if current_round.has_last_day_to_add_intern_passed():
+            raise PermissionDenied("Funding sources for Outreachy interns cannot be changed at this time.")
 
         set_project_and_applicant(self, current_round)
         self.intern_selection = get_object_or_404(InternSelection,
