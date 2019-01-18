@@ -40,11 +40,13 @@ class ComradeRequiredMixin(object):
 # If the logged-in user has an ApplicantApproval object that isn't approved,
 # redirect them to the eligibility results page.
 #
+# This mixin requires a 'round_slug' view keyword argument.
+#
 # Note that LoginRequiredMixin must be to the left of this class in the
 # view's list of parent classes, and the base View must be to the right.
 class EligibleApplicantRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
-        current_round = RoundPage.objects.latest('internstarts')
+        current_round = get_object_or_404(RoundPage, slug=self.kwargs['round_slug'])
         try:
             application = current_round.applicantapproval_set.get(
                 applicant__account=request.user,
