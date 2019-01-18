@@ -158,6 +158,7 @@ class RoundPage(Page):
     week_two_chat_video_url = models.URLField(blank=True, verbose_name="URL of the video chat")
     week_three_stuck_chat_url = models.URLField(blank=True, verbose_name="URL of the week three chat on what we're stuck on")
     week_five_audience_chat_url = models.URLField(blank=True, verbose_name="URL of the week five chat to explain your project to a newcomer")
+    week_seven_timeline_chat_url = models.URLField(blank=True, verbose_name="URL of the week seven chat to talk about project timeline modifications")
     initialfeedback = models.DateField("Date initial feedback is due", blank=True, default='2017-12-20')
     initialpayment = models.IntegerField(default=1000)
     midfeedback = models.DateField("Date mid-point feedback is due", blank=True, default='2018-01-31')
