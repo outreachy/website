@@ -3455,7 +3455,7 @@ class InternSelection(models.Model):
         if self.project.project_round.community.is_coordinator(user):
             return True
         # Allow any approved mentor to withdraw an intern
-        return self.mentorapproval_set.approved().filter(
+        return self.mentors.approved().filter(
                 mentor__account=user).exists()
 
     def intern_has_custom_dates(self):
