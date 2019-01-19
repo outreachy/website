@@ -728,10 +728,7 @@ class ViewInitialApplication(LoginRequiredMixin, ComradeRequiredMixin, DetailVie
     def get_object(self):
         current_round = get_current_round_for_initial_application()
 
-        self.can_review = ApplicationReviewer.objects.approved().filter(
-            comrade__account=self.request.user,
-            reviewing_round=current_round,
-        ).exists()
+        self.can_review = current_round.is_reviewer(self.request.user)
 
         if not self.request.user.is_staff and not self.can_review:
             raise PermissionDenied("You are not authorized to review applications.")
@@ -2698,12 +2695,7 @@ def applicant_review_summary(request, status):
     """
     current_round = get_current_round_for_initial_application()
 
-    reviewer = ApplicationReviewer.objects.approved().filter(
-        comrade__account=request.user,
-        reviewing_round=current_round,
-    )
-
-    if not request.user.is_staff and not reviewer.exists():
+    if not request.user.is_staff and not current_round.is_reviewer(request.user):
         raise PermissionDenied("You are not authorized to review applications.")
 
     applications = ApplicantApproval.objects.filter(

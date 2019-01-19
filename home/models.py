@@ -335,6 +335,14 @@ class RoundPage(Page):
             funded += p.interns_funded()
         return funded
 
+    def is_coordinator(self, user):
+        return CoordinatorApproval.objects.filter(
+            coordinator__account=user,
+            approval_status=ApprovalStatus.APPROVED,
+            community__participation__approval_status=ApprovalStatus.APPROVED,
+            community__participation__participating_round=self,
+        ).exists()
+
     def is_mentor(self, user):
         return MentorApproval.objects.filter(
                 mentor__account=user,
@@ -342,6 +350,11 @@ class RoundPage(Page):
                 project__project_round__approval_status=ApprovalStatus.APPROVED,
                 project__approval_status=ApprovalStatus.APPROVED,
                 approval_status=ApprovalStatus.APPROVED).exists()
+
+    def is_reviewer(self, user):
+        return self.applicationreviewer_set.approved().filter(
+            comrade__account=user,
+        ).exists()
 
     def get_intern_selections(self):
         return InternSelection.objects.filter(
@@ -1008,23 +1021,14 @@ class Comrade(models.Model):
         if current_round.is_mentor(self.account):
             return True
 
-        coordinators = CoordinatorApproval.objects.filter(
-                coordinator=self,
-                approval_status=ApprovalStatus.APPROVED,
-                community__participation__approval_status=ApprovalStatus.APPROVED,
-                community__participation__participating_round=current_round,
-                )
-        if coordinators.exists():
+        if current_round.is_coordinator(self.account):
             return True
 
-        return self.approved_reviewer()
+        return current_round.is_reviewer(self.account)
 
     def approved_reviewer(self):
         current_round = RoundPage.objects.latest('internstarts')
-        return ApplicationReviewer.objects.filter(
-                comrade=self,
-                reviewing_round=current_round,
-                approval_status=ApprovalStatus.APPROVED).exists()
+        return current_round.is_reviewer(self.account)
 
     def get_pending_mentored_projects(self):
         current_round = RoundPage.objects.latest('internstarts')
@@ -1431,13 +1435,7 @@ class Participation(ApprovalStatus):
             return False
 
         # - an approved coordinator for any approved community
-        coordinators = CoordinatorApproval.objects.filter(
-                coordinator__account=user,
-                approval_status=ApprovalStatus.APPROVED,
-                community__participation__approval_status=ApprovalStatus.APPROVED,
-                community__participation__participating_round=self.participating_round,
-                )
-        if coordinators.exists():
+        if self.participating_round.is_coordinator(user):
             return True
 
         # - an approved mentor with an approved project for a different approved community

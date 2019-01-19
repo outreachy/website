@@ -73,15 +73,8 @@ def intern_announcement(request):
     if later_open_rounds.exists():
         return None
 
-    coordinator = Community.objects.filter(
-        participation__participating_round = current_round,
-        participation__approval_status = ApprovalStatus.APPROVED,
-        coordinatorapproval__coordinator__account = request.user,
-        coordinatorapproval__approval_status = ApprovalStatus.APPROVED,
-    ).exists()
-
     roles = []
-    if coordinator:
+    if current_round.is_coordinator(request.user):
         roles.append("coordinator")
     if current_round.is_mentor(request.user):
         roles.append("mentor")
@@ -105,12 +98,6 @@ def coordinator_reminder(request):
 
 
 def application_summary(request):
-    try:
-        if not request.user.is_staff and not request.user.comrade.approved_reviewer():
-            return None
-    except Comrade.DoesNotExist:
-        return None
-
     now = datetime.datetime.now(datetime.timezone.utc)
     today = get_deadline_date_for(now)
     try:
@@ -119,6 +106,12 @@ def application_summary(request):
             internannounce__gt=today,
         )
     except RoundPage.DoesNotExist:
+        return None
+
+    try:
+        if not request.user.is_staff and not current_round.is_reviewer(request.user):
+            return None
+    except Comrade.DoesNotExist:
         return None
 
     pending_revisions_count = ApplicantApproval.objects.filter(
