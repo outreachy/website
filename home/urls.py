@@ -1,6 +1,7 @@
 from . import views
-from django.views.generic import TemplateView
+from .models import ApprovalStatus
 
+from django.views.generic import TemplateView
 from django.conf.urls import include, url
 
 # To see all URL patterns at once, run:
@@ -77,9 +78,9 @@ urlpatterns = [
     url(r'^generic-mentor-contract-export/$', views.generic_mentor_contract_export_view, name='generic-mentor-contract-export'),
     url(r'^alums/$', views.alums_page, name='alums'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
-    url(r'^dashboard/pending-applications/$', views.applicant_review_summary, name='pending-applicants-summary'),
-    url(r'^dashboard/rejected-applications/$', views.rejected_applicants_summary, name='rejected-applicants-summary'),
-    url(r'^dashboard/approved-applications/$', views.approved_applicants_summary, name='approved-applicants-summary'),
+    url(r'^dashboard/pending-applications/$', views.applicant_review_summary, name='pending-applicants-summary', kwargs={'status': ApprovalStatus.PENDING}),
+    url(r'^dashboard/rejected-applications/$', views.applicant_review_summary, name='rejected-applicants-summary', kwargs={'status': ApprovalStatus.REJECTED}),
+    url(r'^dashboard/approved-applications/$', views.applicant_review_summary, name='approved-applicants-summary', kwargs={'status': ApprovalStatus.APPROVED}),
     url(r'^dashboard/delete-application/(?P<applicant_username>[^/]+)/$', views.DeleteApplication.as_view(), name='delete-application'),
     url(r'^dashboard/review-applications/(?P<applicant_username>[^/]+)/$', views.ViewInitialApplication.as_view(), name='applicant-review-detail'),
     url(r'^dashboard/review-applications/update-comment/(?P<applicant_username>[^/]+)/$', views.ReviewCommentUpdate.as_view(), name='update-comment'),

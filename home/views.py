@@ -2679,46 +2679,27 @@ class Survey2018Notification(LoginRequiredMixin, ComradeRequiredMixin, TemplateV
         return redirect(reverse('dashboard'))
 
 @login_required
-def applicant_review_summary(request):
+def applicant_review_summary(request, status):
     """
-    For applicant reviewers and staff, show the status of pending applications.
-    """
-    current_round = RoundPage.objects.latest('internstarts')
-    pending_applications = ApplicantApproval.objects.filter(
-            application_round = current_round,
-            approval_status = ApprovalStatus.PENDING).order_by('applicant__account__username').order_by('submission_date')
-
-    return render(request, 'home/applicant_review_summary.html', {
-        'pending_applications': pending_applications,
-        })
-
-@login_required
-def rejected_applicants_summary(request):
-    """
-    For applicant reviewers and staff, show the status of rejected applications.
+    For applicant reviewers and staff, show the status of applications that
+    have the specified approval status.
     """
     current_round = RoundPage.objects.latest('internstarts')
-    rejected_applications = ApplicantApproval.objects.filter(
-            application_round = current_round,
-            approval_status = ApprovalStatus.REJECTED).order_by('applicant__account__username').order_by('submission_date')
+    applications = ApplicantApproval.objects.filter(
+        application_round=current_round,
+        approval_status=status,
+    ).order_by('applicant__account__username').order_by('submission_date')
+
+    if status == ApprovalStatus.PENDING:
+        context_name = 'pending_applications'
+    elif status == ApprovalStatus.REJECTED:
+        context_name = 'rejected_applications'
+    elif status == ApprovalStatus.APPROVED:
+        context_name = 'approved_applications'
 
     return render(request, 'home/applicant_review_summary.html', {
-        'rejected_applications': rejected_applications,
-        })
-
-@login_required
-def approved_applicants_summary(request):
-    """
-    For applicant reviewers and staff, show the status of approved applications.
-    """
-    current_round = RoundPage.objects.latest('internstarts')
-    approved_applications = ApplicantApproval.objects.filter(
-            application_round = current_round,
-            approval_status = ApprovalStatus.APPROVED).order_by('applicant__account__username').order_by('submission_date')
-
-    return render(request, 'home/applicant_review_summary.html', {
-        'approved_applications': approved_applications,
-        })
+        context_name: applications,
+    })
 
 # Passed action, applicant_username
 class ApplicantApprovalUpdate(ApprovalStatusAction):
