@@ -1005,14 +1005,7 @@ class Comrade(models.Model):
             return True
 
         current_round = RoundPage.objects.latest('internstarts')
-        mentors = MentorApproval.objects.filter(
-                mentor=self,
-                approval_status=ApprovalStatus.APPROVED,
-                project__approval_status=ApprovalStatus.APPROVED,
-                project__project_round__approval_status=ApprovalStatus.APPROVED,
-                project__project_round__participating_round=current_round,
-                )
-        if mentors.exists():
+        if current_round.is_mentor(self.account):
             return True
 
         coordinators = CoordinatorApproval.objects.filter(
@@ -1454,24 +1447,11 @@ class Participation(ApprovalStatus):
             return True
 
         # - an approved mentor with an approved project for a different approved community
-        mentors = MentorApproval.objects.filter(
-                mentor__account=user,
-                approval_status=ApprovalStatus.APPROVED,
-                project__approval_status=ApprovalStatus.APPROVED,
-                project__project_round__approval_status=ApprovalStatus.APPROVED,
-                project__project_round__participating_round=self.participating_round,
-                )
-        if mentors.exists():
+        if self.participating_round.is_mentor(user):
             return True
 
         # - an approved mentor with an approved project for this community (pending or approved)
-        mentors = MentorApproval.objects.filter(
-                mentor__account=user,
-                approval_status=ApprovalStatus.APPROVED,
-                project__project_round=self,
-                project__approval_status=ApprovalStatus.APPROVED,
-                )
-        if mentors.exists():
+        if self.is_mentor(user):
             return True
 
         # - an approved coordinator for this pending community

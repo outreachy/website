@@ -80,18 +80,10 @@ def intern_announcement(request):
         coordinatorapproval__approval_status = ApprovalStatus.APPROVED,
     ).exists()
 
-    mentor = MentorApproval.objects.filter(
-        mentor__account = request.user,
-        approval_status = ApprovalStatus.APPROVED,
-        project__approval_status = ApprovalStatus.APPROVED,
-        project__project_round__participating_round = current_round,
-        project__project_round__approval_status = ApprovalStatus.APPROVED,
-    ).exists()
-
     roles = []
     if coordinator:
         roles.append("coordinator")
-    if mentor:
+    if current_round.is_mentor(request.user):
         roles.append("mentor")
     if request.user.is_staff:
         roles.append("organizer")
