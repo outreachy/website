@@ -722,17 +722,18 @@ class ViewInitialApplication(LoginRequiredMixin, ComradeRequiredMixin, DetailVie
     def get_context_data(self, **kwargs):
         context = super(ViewInitialApplication, self).get_context_data(**kwargs)
         context['current_round'] = self.object.application_round
+        context['can_review'] = self.can_review
         return context
 
     def get_object(self):
         current_round = get_current_round_for_initial_application()
 
-        reviewer = ApplicationReviewer.objects.approved().filter(
+        self.can_review = ApplicationReviewer.objects.approved().filter(
             comrade__account=self.request.user,
             reviewing_round=current_round,
-        )
+        ).exists()
 
-        if not self.request.user.is_staff and not reviewer.exists():
+        if not self.request.user.is_staff and not self.can_review:
             raise PermissionDenied("You are not authorized to review applications.")
 
         return get_object_or_404(ApplicantApproval,

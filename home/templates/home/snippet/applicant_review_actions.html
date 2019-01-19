@@ -25,7 +25,7 @@
 		</td>
 	</table>
 {% endif %}
-{% if user.comrade.approved_reviewer %}
+{% if can_review %}
 	<h2>Initial Application Review Owner</h2>
 	{% if application.review_owner %}
 		<p>Owner for this application: {{ application.review_owner.comrade.public_name }}.</p>
