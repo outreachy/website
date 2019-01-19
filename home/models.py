@@ -3780,8 +3780,19 @@ class BaseInternFeedback(BaseFeedback):
     )
     hours_worked = models.CharField(max_length=3, choices=WORK_HOURS_CHOICES, verbose_name="What is the average number of hours per week you spend on your Outreachy internship?", help_text="Include time you spend researching questions, communicating with your mentor and the community, reading about the project and the community, working on skills you need in order to complete your tasks, and working on the tasks themselves. Please be honest about the number of hours you are putting in.")
 
+    def find_version_intern_edited(self):
+        # When a staff member modifies the initial feedback to approve payment or change internship dates,
+        # it counts as a revision. Look for the latest feedback from the intern.
+        versions = Version.objects.get_for_object(self)
+        for v in versions:
+            if self.intern_selection.applicant.applicant.account == v.revision.user:
+                return v
+        return None
+
     def get_submission_date(self):
-        return Version.objects.get_for_object(self)[0].revision.date_created
+        version = self.find_version_intern_edited()
+        if version:
+            return version.revision.date_created
 
     class Meta:
         abstract = True
