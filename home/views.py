@@ -1045,7 +1045,7 @@ def community_landing_view(request, round_slug, community_slug):
             mentorapproval__mentor__account=request.user,
             mentorapproval__approval_status=ApprovalStatus.APPROVED,
         )
-        approved_coordinator = participation_info.is_approved_coordinator(request.user)
+        approved_coordinator = participation_info.community.is_coordinator(request.user)
     else:
         mentors_pending_projects = Project.objects.none()
         approved_coordinator = False
