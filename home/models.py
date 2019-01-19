@@ -3651,11 +3651,8 @@ class BaseMentorFeedback(BaseFeedback):
         # we could ignore all revisions made by staff, but staff can be mentors too.)
         versions = Version.objects.get_for_object(self)
         for v in versions:
-            try:
-                if self.intern_selection.mentors.all().approved().filter(mentor__account=v.revision.user).exists():
-                    return v
-            except MentorApproval.DoesNotExist:
-                return None
+            if self.intern_selection.mentors.all().approved().filter(mentor__account=v.revision.user).exists():
+                return v
         return None
 
     def get_submission_date(self):
