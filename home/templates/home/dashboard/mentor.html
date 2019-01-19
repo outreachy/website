@@ -32,7 +32,7 @@
 
 			{% if rel.intern_selection.is_initial_feedback_on_intern_open %}
 				<p><a href="{% url 'initial-mentor-feedback' username=rel.intern_selection.applicant.applicant.account.username %}"><button type="button" class="btn btn-info">Submit Initial Feedback</button></a></p>
-			{% elif rel.intern_selection.initialmentorfeedback.summary %}
+			{% elif rel.intern_selection.initialmentorfeedback %}
 				<p>Submitted feedback:</p>
 				<ul>
 					<li>Initial feedback: {% if rel.intern_selection.initialmentorfeedback.payment_approved %}<button type="button" class="btn btn-info">Payment approved</button>{% else %}<button type="button" class="btn btn-warning">Payment Not Aproved</button>{% endif %}{% if rel.intern_selection.initialmentorfeedback.request_extension %} Extension requested for initial feedback until {{ rel.intern_selection.initialmentorfeedback.extension_date|date:"M d, Y" }}.{% endif %}{% if rel.intern_selection.initialmentorfeedback.request_termination %} Termination requested for this internship.{% endif %}</li>

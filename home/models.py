@@ -3610,9 +3610,6 @@ class BaseFeedback(models.Model):
     def project_name(self):
         return self.intern_selection.project_name()
 
-    def summary(self):
-        return 'foo'
-
     def can_edit(self):
         if not self.allow_edits:
             return False
