@@ -5,10 +5,6 @@ Applicant Review Summary
 {% endblock %}
 
 {% block content %}
-{% comment %}FIXME: create new class for applicant reviewers and deny people access if they aren't staff or an approved applicant reviewer{% endcomment %}
-{% if not user.is_staff and not user.comrade.approved_reviewer %}
-	<p>You are not authorized to review applications.</p>
-{% else %}
 	{% if pending_applications %}
 		<h1>Pending Applications</h1>
 		<table class="table table-striped table-bordered">
@@ -49,5 +45,4 @@ Applicant Review Summary
 			{% endfor %}
 		</table>
 	{% endif %}
-{% endif %}
 {% endblock %}

@@ -726,6 +726,15 @@ class ViewInitialApplication(LoginRequiredMixin, ComradeRequiredMixin, DetailVie
 
     def get_object(self):
         current_round = get_current_round_for_initial_application()
+
+        reviewer = ApplicationReviewer.objects.approved().filter(
+            comrade__account=self.request.user,
+            reviewing_round=current_round,
+        )
+
+        if not self.request.user.is_staff and not reviewer.exists():
+            raise PermissionDenied("You are not authorized to review applications.")
+
         return get_object_or_404(ApplicantApproval,
                     applicant__account__username=self.kwargs['applicant_username'],
                     application_round=current_round)
@@ -2685,6 +2694,15 @@ def applicant_review_summary(request, status):
     have the specified approval status.
     """
     current_round = RoundPage.objects.latest('internstarts')
+
+    reviewer = ApplicationReviewer.objects.approved().filter(
+        comrade__account=request.user,
+        reviewing_round=current_round,
+    )
+
+    if not request.user.is_staff and not reviewer.exists():
+        raise PermissionDenied("You are not authorized to review applications.")
+
     applications = ApplicantApproval.objects.filter(
         application_round=current_round,
         approval_status=status,
