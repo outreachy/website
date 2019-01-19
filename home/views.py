@@ -2693,7 +2693,7 @@ def applicant_review_summary(request, status):
     For applicant reviewers and staff, show the status of applications that
     have the specified approval status.
     """
-    current_round = RoundPage.objects.latest('internstarts')
+    current_round = get_current_round_for_initial_application()
 
     reviewer = ApplicationReviewer.objects.approved().filter(
         comrade__account=request.user,
