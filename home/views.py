@@ -180,7 +180,7 @@ class ComradeUpdate(LoginRequiredMixin, UpdateView):
             'pronouns_public',
         ]
         comrade = self.object
-        if comrade.approved_reviewer() or comrade.approved_mentor_or_coordinator() or comrade.alum_in_good_standing():
+        if comrade.approved_volunteer() or comrade.alum_in_good_standing():
             fields.append('photo')
         fields.extend([
             'timezone',
@@ -793,7 +793,7 @@ def current_round_page(request):
             try:
                 mentors_pending_projects = request.user.comrade.get_pending_mentored_projects()
 
-                approved_volunteer = request.user.comrade.get_editable_mentored_projects().exists() or request.user.comrade.approved_mentor_or_coordinator()
+                approved_volunteer = request.user.comrade.get_editable_mentored_projects().exists() or request.user.comrade.approved_volunteer()
             except Comrade.DoesNotExist:
                 pass
 

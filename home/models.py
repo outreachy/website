@@ -985,7 +985,7 @@ class Comrade(models.Model):
             return False
 
         # Is this Comrade an approved mentor or coordinator?
-        if self.approved_mentor_or_coordinator() or self.approved_reviewer():
+        if self.approved_volunteer():
             return False
         return True
 
@@ -1000,7 +1000,7 @@ class Comrade(models.Model):
                 return True
         return False
 
-    def approved_mentor_or_coordinator(self):
+    def approved_volunteer(self):
         if self.account.is_staff:
             return True
 
@@ -1024,7 +1024,7 @@ class Comrade(models.Model):
         if coordinators.exists():
             return True
 
-        return False
+        return self.approved_reviewer()
 
     def approved_reviewer(self):
         current_round = RoundPage.objects.latest('internstarts')
