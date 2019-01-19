@@ -798,7 +798,10 @@ def current_round_page(request):
                 pass
 
             try:
-                mentors_pending_projects = request.user.comrade.get_pending_mentored_projects()
+                mentors_pending_projects = request.user.comrade.get_mentored_projects().pending().filter(
+                    project_round__participating_round=current_round,
+                    project_round__approval_status__in=(ApprovalStatus.PENDING, ApprovalStatus.APPROVED),
+                )
 
                 approved_volunteer = request.user.comrade.get_editable_mentored_projects().exists() or request.user.comrade.approved_volunteer()
             except Comrade.DoesNotExist:
@@ -973,12 +976,14 @@ def community_read_only_view(request, community_slug):
             notification = community.notification_set.get(comrade__account=request.user)
         except Notification.DoesNotExist:
             pass
-        try:
-            mentors_pending_projects = request.user.comrade.get_pending_mentored_projects().filter(
-                project_round__community=community,
-            )
-        except Comrade.DoesNotExist:
-            pass
+
+        if participation_info is not None and participation_info.approval_status in (ApprovalStatus.PENDING, ApprovalStatus.APPROVED):
+            try:
+                mentors_pending_projects = request.user.comrade.get_mentored_projects().pending().filter(
+                    project_round=participation_info,
+                )
+            except Comrade.DoesNotExist:
+                pass
 
     return render(request, 'home/community_read_only.html', {
         'current_round' : current_round,
@@ -1034,18 +1039,21 @@ def community_landing_view(request, round_slug, community_slug):
 
     approved_to_see_all_project_details = participation_info.approved_to_see_all_project_details(request.user)
 
+    mentors_pending_projects = Project.objects.none()
+    approved_coordinator = False
     if request.user.is_authenticated:
         # If a mentor has submitted a project, they should be able to see all
         # their project details and have the link to edit the project, even if
         # the community is pending or the project isn't approved.
-        mentors_pending_projects = participation_info.project_set.filter(
-            mentorapproval__mentor__account=request.user,
-            mentorapproval__approval_status=ApprovalStatus.APPROVED,
-        )
+        try:
+            # XXX: Despite the name, this is not limited to pending projects. Should it be?
+            mentors_pending_projects = request.user.comrade.get_mentored_projects().filter(
+                project_round=participation_info,
+            )
+        except Comrade.DoesNotExist:
+            pass
+
         approved_coordinator = participation_info.community.is_coordinator(request.user)
-    else:
-        mentors_pending_projects = Project.objects.none()
-        approved_coordinator = False
 
     return render(request, 'home/community_landing.html',
             {

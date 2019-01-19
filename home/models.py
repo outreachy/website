@@ -344,12 +344,13 @@ class RoundPage(Page):
         ).exists()
 
     def is_mentor(self, user):
-        return MentorApproval.objects.filter(
-                mentor__account=user,
-                project__project_round__participating_round=self,
-                project__project_round__approval_status=ApprovalStatus.APPROVED,
-                project__approval_status=ApprovalStatus.APPROVED,
-                approval_status=ApprovalStatus.APPROVED).exists()
+        try:
+            return user.comrade.get_mentored_projects().approved().filter(
+                project_round__participating_round=self,
+                project_round__approval_status=ApprovalStatus.APPROVED,
+            ).exists()
+        except Comrade.DoesNotExist:
+            return False
 
     def is_reviewer(self, user):
         return self.applicationreviewer_set.approved().filter(
@@ -1036,10 +1037,7 @@ class Comrade(models.Model):
         # where the project is pending,
         # and the community is approved or pending for the current round.
         # Don't count withdrawn or rejected communities.
-        return Project.objects.filter(
-            approval_status=ApprovalStatus.PENDING,
-            mentorapproval__mentor=self,
-            mentorapproval__approval_status=ApprovalStatus.APPROVED,
+        return self.get_mentored_projects().pending().filter(
             project_round__participating_round=current_round,
             project_round__approval_status__in=(ApprovalStatus.PENDING, ApprovalStatus.APPROVED),
         )
@@ -1058,11 +1056,21 @@ class Comrade(models.Model):
         # where the project is pending,
         # and the community is approved or pending for the current round.
         # Don't count withdrawn or rejected communities.
+        return self.get_mentored_projects().filter(
+            project_round__participating_round=current_round,
+            project_round__approval_status__in=(ApprovalStatus.PENDING, ApprovalStatus.APPROVED),
+        )
+
+    def get_mentored_projects(self):
+        """
+        Returns all projects for which this person has ever been approved as a
+        mentor, regardless of whether the project itself or its community were
+        approved. You can apply additional filters to the return value if you
+        want to be more specific.
+        """
         return Project.objects.filter(
             mentorapproval__mentor=self,
             mentorapproval__approval_status=ApprovalStatus.APPROVED,
-            project_round__participating_round=current_round,
-            project_round__approval_status__in=(ApprovalStatus.PENDING, ApprovalStatus.APPROVED),
         )
 
     def get_approved_coordinator_communities(self):
@@ -1473,11 +1481,12 @@ class Participation(ApprovalStatus):
                 )
 
     def is_mentor(self, user):
-        return MentorApproval.objects.filter(
-                mentor__account=user,
-                project__project_round=self,
-                project__approval_status=ApprovalStatus.APPROVED,
-                approval_status=ApprovalStatus.APPROVED).exists()
+        try:
+            return user.comrade.get_mentored_projects().approved().filter(
+                project_round=self,
+            ).exists()
+        except Comrade.DoesNotExist:
+            return False
 
 class Sponsorship(models.Model):
     participation = models.ForeignKey(Participation, on_delete=models.CASCADE)
