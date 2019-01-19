@@ -934,6 +934,8 @@ def community_read_only_view(request, community_slug):
     now = datetime.now(timezone.utc)
     today = get_deadline_date_for(now)
 
+    participation_info = None
+
     try:
         current_round = RoundPage.objects.get(
             pingnew__lte=today,
@@ -950,6 +952,13 @@ def community_read_only_view(request, community_slug):
             ).latest('internstarts')
         except RoundPage.DoesNotExist:
             previous_round = None
+    else:
+        # Try to see if this community is participating in the current round
+        # and get the Participation object if so.
+        try:
+            participation_info = community.participation_set.get(participating_round=current_round)
+        except Participation.DoesNotExist:
+            pass
 
     coordinator = None
     notification = None
@@ -973,13 +982,6 @@ def community_read_only_view(request, community_slug):
             )
         except Comrade.DoesNotExist:
             pass
-
-    # Try to see if this community is participating in the current round
-    # and get the Participation object if so.
-    try:
-        participation_info = community.participation_set.get(participating_round=current_round)
-    except Participation.DoesNotExist:
-        participation_info = None
 
     return render(request, 'home/community_read_only.html', {
         'current_round' : current_round,
