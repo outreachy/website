@@ -798,12 +798,17 @@ def current_round_page(request):
                 pass
 
             try:
-                mentors_pending_projects = request.user.comrade.get_mentored_projects().pending().filter(
+                current_mentored_projects = request.user.comrade.get_mentored_projects().filter(
                     project_round__participating_round=current_round,
                     project_round__approval_status__in=(ApprovalStatus.PENDING, ApprovalStatus.APPROVED),
                 )
 
-                approved_volunteer = request.user.comrade.get_editable_mentored_projects().exists() or request.user.comrade.approved_volunteer()
+                mentors_pending_projects = current_mentored_projects.pending()
+
+                if current_round.has_internship_start_date_passed():
+                    current_mentored_projects = Project.objects.none()
+
+                approved_volunteer = current_mentored_projects.exists() or request.user.comrade.approved_volunteer()
             except Comrade.DoesNotExist:
                 pass
 

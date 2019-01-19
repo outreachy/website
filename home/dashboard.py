@@ -374,12 +374,25 @@ def mentor_projects(request):
     except Comrade.DoesNotExist:
         return None
 
-    mentored_projects = comrade.get_editable_mentored_projects()
-    if not mentored_projects:
+    current_round = RoundPage.objects.latest('internstarts')
+
+    # It's possible that some intern selections may not work out,
+    # and a mentor will have to select another intern
+    # after the intern announcement date.
+    # Show their project until the day after their intern starts.
+    if current_round.has_internship_start_date_passed():
         return None
 
-    # All projects are in the same round, so pick from one of them.
-    current_round = mentored_projects[0].project_round.participating_round,
+    # Get all projects where they're an approved mentor
+    # XXX: previous comment said "where the project is pending," but this is not true; should it be?
+    # and the community is approved or pending for the current round.
+    # Don't count withdrawn or rejected communities.
+    mentored_projects = comrade.get_mentored_projects().filter(
+        project_round__participating_round=current_round,
+        project_round__approval_status__in=(ApprovalStatus.PENDING, ApprovalStatus.APPROVED),
+    )
+    if not mentored_projects:
+        return None
 
     # Communities where this person is an approved mentor for at least one
     # approved project, and the community is approved to participate in the
