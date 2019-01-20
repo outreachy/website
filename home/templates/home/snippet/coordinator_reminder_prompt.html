@@ -1,0 +1,22 @@
+<div class="card border-info mb-3">
+	<div class="card-header bg-warning"><a data-toggle="collapse" data-parent="coordinator-action-accordion" {% if show_reminders == 1 %}aria-expanded="true"{% else %}aria-expanded="false"{% endif %} aria-controls="#coordinator-action-accordion" href="#coordinator-action-accordion">+ Coordinator Actions</a></div>
+	<div class="collapse{% if show_reminders == 1 %} show{% endif %}" id="coordinator-action-accordion">
+    <div class="card-body">
+	<p class="card-text">
+	Below is a list of all communities you are approved to be a coordinator for,
+	where the community is also approved to participate in this round.
+	You can find unapproved communities linked from the <a href="{% url 'community-cfp' %}">community CFP page</a>.
+	</p>
+	<p><a href="{% url 'account' %}">Edit your personal or coordinator information</a></p>
+
+	{% for c in communities %}
+	<h4>Coordinator actions for {{ c.name }}</h4>
+	<ul>
+		<li><a href="{% url 'community-landing' round_slug=current_round.slug community_slug=c.slug %}">View the community projects page applicants see</a></li>
+		<li><a href="{% url 'community-read-only' community_slug=c.slug %}">Edit the community info</a></li>
+		<li><a href="{% url 'community-applicants' round_slug=current_round.slug community_slug=c.slug %}">Review community applicants</a></li>
+	</ul>
+	{% endfor %}
+    </div>
+    </div>
+</div>
