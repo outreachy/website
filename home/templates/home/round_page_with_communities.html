@@ -6,13 +6,14 @@ Outreachy Internships | Apply | Pick a Project
 {% endblock %}
 
 {% block content %}
+{% with mentors_pending_projects=role.pending_mentored_projects %}
 
 {% comment %}Is the round not open yet, and this is a mentor or coordinator?{% endcomment %}
 	{% if not current_round %}
 		{% include "home/snippet/round_closed.html" %}
 	{% elif not current_round.has_application_period_started %}
 		{% include "home/snippet/round_not_open.html" %}
-	{% elif not approved_volunteer %}
+	{% elif not role.is_volunteer and not mentors_pending_projects %}
 		{% include "home/snippet/eligibility_prompts.html" %}
 	{% endif %}
 
@@ -303,4 +304,5 @@ Outreachy Internships | Apply | Pick a Project
 		{% endwith %}
 	{% endfor %}
 {% endif %}
+{% endwith %}
 {% endblock %}

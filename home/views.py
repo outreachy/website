@@ -180,9 +180,24 @@ class ComradeUpdate(LoginRequiredMixin, UpdateView):
             'pronouns_to_participants',
             'pronouns_public',
         ]
+
         comrade = self.object
-        if comrade.approved_volunteer() or comrade.alum_in_good_standing():
+
+        # was an approved coordinator for a community that had at least one approved participation
+        coordinatored = comrade.coordinatorapproval_set.approved().filter(
+            community__participation__approval_status=ApprovalStatus.APPROVED,
+        )
+        # was an approved mentor for some approved project in an approved community
+        mentored = comrade.get_mentored_projects().approved().filter(
+            participation__approval_status=ApprovalStatus.APPROVED,
+        )
+        # was an approved application reviewer at some point
+        reviewered = comrade.applicationreviewer_set.approved()
+
+        # people who participated in some way at some time can set a photo of themselves
+        if comrade.account.is_staff or comrade.get_intern_selection() is not None or coordinatored.exists() or mentored.exists() or reviewered.exists():
             fields.append('photo')
+
         fields.extend([
             'timezone',
             'location',
@@ -749,9 +764,7 @@ def current_round_page(request):
     closed_approved_projects = []
     ontime_approved_projects = []
     late_approved_projects = []
-    mentors_pending_projects = []
     example_skill = ProjectSkill
-    approved_volunteer = False
 
     now = datetime.now(timezone.utc)
     today = get_deadline_date_for(now)
@@ -790,22 +803,6 @@ def current_round_page(request):
             if projects:
                 late_approved_projects.append((p.community, p.interns_funded(), projects))
 
-        if request.user.is_authenticated:
-            try:
-                current_mentored_projects = request.user.comrade.get_mentored_projects().filter(
-                    project_round__participating_round=current_round,
-                    project_round__approval_status__in=(ApprovalStatus.PENDING, ApprovalStatus.APPROVED),
-                )
-
-                mentors_pending_projects = current_mentored_projects.pending()
-
-                if current_round.has_internship_start_date_passed():
-                    current_mentored_projects = Project.objects.none()
-
-                approved_volunteer = current_mentored_projects.exists() or role.is_volunteer
-            except Comrade.DoesNotExist:
-                pass
-
     return render(request, 'home/round_page_with_communities.html',
             {
             'current_round' : current_round,
@@ -813,10 +810,8 @@ def current_round_page(request):
             'closed_projects': closed_approved_projects,
             'ontime_projects': ontime_approved_projects,
             'late_projects': late_approved_projects,
-            'mentors_pending_projects': mentors_pending_projects,
             'example_skill': example_skill,
             'role': role,
-            'approved_volunteer': approved_volunteer,
             },
             )
 

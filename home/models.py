@@ -981,40 +981,6 @@ class Comrade(models.Model):
 
         return (city.title(), country.title())
 
-    def alum_in_good_standing(self):
-        # Search all rounds for an intern selection
-        rounds = RoundPage.objects.all()
-        for r in rounds:
-            intern_selection = r.get_in_good_standing_intern_selections().filter(
-                    applicant__applicant=self)
-            if intern_selection:
-                return True
-        return False
-
-    def approved_volunteer(self):
-        if self.account.is_staff:
-            return True
-
-        current_round = RoundPage.objects.latest('internstarts')
-        if current_round.is_mentor(self.account):
-            return True
-
-        if current_round.is_coordinator(self.account):
-            return True
-
-        return current_round.is_reviewer(self.account)
-
-    def get_pending_mentored_projects(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        # Get all projects where they're an approved mentor
-        # where the project is pending,
-        # and the community is approved or pending for the current round.
-        # Don't count withdrawn or rejected communities.
-        return self.get_mentored_projects().pending().filter(
-            project_round__participating_round=current_round,
-            project_round__approval_status__in=(ApprovalStatus.PENDING, ApprovalStatus.APPROVED),
-        )
-
     def get_mentored_projects(self):
         """
         Returns all projects for which this person has ever been approved as a
@@ -1026,17 +992,6 @@ class Comrade(models.Model):
             mentorapproval__mentor=self,
             mentorapproval__approval_status=ApprovalStatus.APPROVED,
         )
-
-    def get_approved_coordinator_communities(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        # Get all communities where they're an approved community
-        # and the community is approved to participate in the current round.
-        return Community.objects.filter(
-                participation__participating_round = current_round,
-                participation__approval_status = ApprovalStatus.APPROVED,
-                coordinatorapproval__coordinator = self,
-                coordinatorapproval__approval_status = ApprovalStatus.APPROVED,
-                )
 
     def get_intern_selection(self):
         try:
@@ -4087,6 +4042,37 @@ class Role(object):
         if self.current_round is not None and self.user.is_authenticated:
             return self.current_round.is_reviewer(self.user)
         return False
+
+    @cached_property
+    def pending_mentored_projects(self):
+        # Get all projects where they're an approved mentor
+        # where the project is pending,
+        # and the community is approved or pending for the current round.
+        # Don't count withdrawn or rejected communities.
+        if self.current_round is not None and self.user.is_authenticated:
+            try:
+                return self.user.comrade.get_mentored_projects().pending().filter(
+                    project_round__participating_round=self.current_round,
+                    project_round__approval_status__in=(ApprovalStatus.PENDING, ApprovalStatus.APPROVED),
+                )
+            except Comrade.DoesNotExist:
+                pass
+        return Project.objects.none()
+
+    @cached_property
+    def approved_coordinator_communities(self):
+        """
+        Get all communities where this person is an approved coordinator
+        and the community is approved to participate in the current round.
+        """
+        if self.current_round is not None and self.user.is_authenticated:
+            return Community.objects.filter(
+                participation__participating_round=self.current_round,
+                participation__approval_status=ApprovalStatus.APPROVED,
+                coordinatorapproval__coordinator__account=self.user,
+                coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+            )
+        return Community.objects.none()
 
     @cached_property
     def projects_with_upcoming_and_passed_deadlines(self):

@@ -92,10 +92,9 @@ def intern_announcement(request):
 
 
 def coordinator_reminder(request):
-    try:
-        return request.user.comrade.get_approved_coordinator_communities()
-    except Comrade.DoesNotExist:
-        return None
+    current_round = RoundPage.objects.latest('internstarts')
+    role = Role(request.user, current_round)
+    return role.approved_coordinator_communities
 
 
 def application_summary(request):
