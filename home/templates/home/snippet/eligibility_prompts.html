@@ -17,6 +17,8 @@
 	{% endif %}
 	{% endwith %}
 {% endif %}
-{% if request.user.comrade.get_approved_coordinator_communities %}
+{% with communities=request.user.comrade.get_approved_coordinator_communities %}
+{% if communities %}
 {% include "home/snippet/coordinator_reminder_prompt.html" %}
 {% endif %}
+{% endwith %}

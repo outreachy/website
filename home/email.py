@@ -219,6 +219,8 @@ def biweekly_internship_email(intern_selection, request, template, **kwargs):
     emails = emails + intern_selection.project.project_round.community.get_coordinator_email_list()
     send_group_template_mail(template, {
         'intern_selection': intern_selection,
+        'project': intern_selection.project,
+        'community': intern_selection.project.project_round.community,
         'current_round': intern_selection.project.project_round.participating_round,
         },
         request=request,

@@ -1,0 +1,18 @@
+{% extends "base.html" %} 
+{% block title %}
+Project timeline for INTERN participating with COMMUNITY
+{% endblock %}
+
+{% block content %}
+<h1>Project Details</h1>
+
+<p>Intern: {{ intern_selection.applicant.applicant.public_name }}</p>
+<p>Community: {{ community.name }}</p>
+<p>Project: {{ project.short_title }}</p>
+<p>Internship round: {{ current_round.official_name }}</p>
+
+<h1>Project Timeline</h1>
+
+<pre>{% if final_application.timeline %}{{ final_application.timeline }}{% else %}No project timeline was submitted.{% endif %}</pre>
+
+{% endblock %}
