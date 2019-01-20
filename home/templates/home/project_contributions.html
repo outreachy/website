@@ -14,7 +14,7 @@
 
 {% block content %}
 
-{% with project_contributions=application.get_projects_contributed_to %}
+{% with project_contributions=role.application.get_projects_contributed_to %}
 {% if project_contributions %}
 {% include "home/snippet/apply_prompt.html" %}
 {% endif %}

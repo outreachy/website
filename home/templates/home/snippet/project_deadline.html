@@ -8,7 +8,7 @@
 	{{ current_round.appsclose }}
 {% endif %}
 to
-{% if application.is_approved and not project.has_application_deadline_passed %}<a href="{{ project.get_contributions_url }}">{% endif %}
+{% if role.application.is_approved and not project.has_application_deadline_passed %}<a href="{{ project.get_contributions_url }}">{% endif %}
 	record your contributions and create a final application.
-{% if application.is_approved and not project.has_application_deadline_passed %}</a>{% endif %}
+{% if role.application.is_approved and not project.has_application_deadline_passed %}</a>{% endif %}
 	</p>

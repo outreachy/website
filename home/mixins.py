@@ -14,6 +14,7 @@ from .models import ApplicantApproval
 from .models import ApprovalStatus
 from .models import Comrade
 from .models import has_deadline_passed
+from .models import Role
 
 # If the logged-in user doesn't have a Comrade object, redirect them to
 # create one and then come back to the current page.
@@ -47,18 +48,18 @@ class ComradeRequiredMixin(object):
 class EligibleApplicantRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
         current_round = get_object_or_404(RoundPage, slug=self.kwargs['round_slug'])
-        try:
-            application = current_round.applicantapproval_set.get(
-                applicant__account=request.user,
-            )
-            if not application.is_approved():
-                return redirect('eligibility-results')
-            return super(EligibleApplicantRequiredMixin, self).dispatch(request, *args, **kwargs)
-        except ApplicantApproval.DoesNotExist:
+        role = Role(request.user, current_round)
+
+        if not role.is_applicant:
             return HttpResponseRedirect(
                 '{url}?{query_string}'.format(
                     url=reverse('eligibility'),
                     query_string=urlencode({'next': request.path})))
+
+        if role.needs_review:
+            return redirect('eligibility-results')
+
+        return super(EligibleApplicantRequiredMixin, self).dispatch(request, *args, **kwargs)
 
 class Preview(DetailView):
     template_name_suffix = ""

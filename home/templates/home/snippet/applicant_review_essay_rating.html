@@ -1,4 +1,4 @@
-{% if can_review %}
+{% if role.is_reviewer %}
 	<div class="card border mt-3" id="essay-rating">
 		<div class="card-header bg-info text-white">Review Essay Answers</div>
 		<div class="card-body">
@@ -10,7 +10,7 @@
 						<p>{% include 'home/snippet/essay_rating.html' %}</p>
 					{% endfor %}
 				{% endif %}
-				{% if user.is_staff %}
+				{% if role.is_organizer %}
 					<h2>Request an Essay Revision?</h2>
 					<p>If the applicant provided one-word answers, junk answers, or their essay was unclear, then you can ask the applicant to revise their essay.
 					They can revise their essay once after you click the button below.

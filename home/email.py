@@ -170,13 +170,10 @@ def applicant_school_info_needs_updated(applicant, request):
         recipient_list=[applicant.email_address()])
 
 def contributor_deadline_reminder(contributor, current_round, request, **kwargs):
-    upcoming_deadlines, passed_deadlines = contributor.get_projects_with_upcoming_and_passed_deadlines()
-    application = contributor.applicantapproval_set.filter(application_round=current_round)
+    from .models import Role # oops, circular import dependency :-(
     send_template_mail('home/email/contributors-deadline-reminder.txt', {
         'current_round': current_round,
-        'application': application,
-        'upcoming_deadlines': upcoming_deadlines,
-        'passed_deadlines': passed_deadlines,
+        'role': Role(contributor.account, current_round),
         'timezone': contributor.timezone,
         'comrade': contributor,
         },
@@ -185,12 +182,10 @@ def contributor_deadline_reminder(contributor, current_round, request, **kwargs)
         **kwargs)
 
 def contributor_application_period_ended(contributor, current_round, request, **kwargs):
-    passed_deadlines = contributor.get_passed_projects_not_applied_to()
-    application = contributor.applicantapproval_set.filter(application_round=current_round)
+    from .models import Role # oops, circular import dependency :-(
     send_template_mail('home/email/contributors_application_period_ended.txt', {
         'current_round': current_round,
-        'application': application,
-        'passed_deadlines': passed_deadlines,
+        'role': Role(contributor.account, current_round),
         'timezone': contributor.timezone,
         'comrade': contributor,
         },

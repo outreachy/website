@@ -1,4 +1,4 @@
-{% if can_review %}
+{% if role.is_reviewer %}
 		<div class="card border mt-3" id="essay-rating">
 			<div class="card-header bg-info text-white">Review Time Commitments</div>
 			<div class="card-body">
@@ -10,7 +10,7 @@
 							<p>{% include 'home/snippet/red_flags_display.html' %}</p>
 						{% endfor %}
 					{% endif %}
-					{% if user.is_staff %}
+					{% if role.is_organizer %}
 						<h2>Request School Information Revision?</h2>
 						<p>If the applicant is missing school terms or you suspect the information they provided is incorrect, then you can ask the applicant to revise their school information.
 						They can revise their school information once after you click the button below.

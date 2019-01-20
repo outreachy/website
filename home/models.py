@@ -15,6 +15,7 @@ from django.db import models
 from django.forms import ValidationError
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.utils.functional import cached_property
 from itertools import chain, groupby
 from urllib.parse import urlsplit, urlparse
 
@@ -651,13 +652,7 @@ class RoundPage(Page):
 
     def get_context(self, request, *args, **kwargs):
         context = super(RoundPage, self).get_context(request, *args, **kwargs)
-        if request.user.is_authenticated:
-            try:
-                context['application'] = self.applicantapproval_set.get(
-                    applicant__account=request.user,
-                )
-            except ApplicantApproval.DoesNotExist:
-                pass
+        context['role'] = Role(request.user, self)
         return context
 
 class CohortPage(Page):
@@ -986,25 +981,6 @@ class Comrade(models.Model):
 
         return (city.title(), country.title())
 
-    # We want to prompt the Comrade to fill out an ApplicantApproval
-    # if they haven't already.
-    # Don't advertise this for mentors or coordinators (pending or approved) in this current round
-    def needs_application(self):
-        if self.account.is_staff:
-            return False
-
-        # Does this Comrade have an ApplicantApproval for this round?
-        current_round = RoundPage.objects.latest('internstarts')
-        applications = self.applicantapproval_set.filter(application_round=current_round)
-        if applications.exists():
-            return False
-
-        # Is this Comrade an approved mentor or coordinator?
-        if self.approved_volunteer():
-            return False
-        return True
-
-
     def alum_in_good_standing(self):
         # Search all rounds for an intern selection
         rounds = RoundPage.objects.all()
@@ -1026,10 +1002,6 @@ class Comrade(models.Model):
         if current_round.is_coordinator(self.account):
             return True
 
-        return current_round.is_reviewer(self.account)
-
-    def approved_reviewer(self):
-        current_round = RoundPage.objects.latest('internstarts')
         return current_round.is_reviewer(self.account)
 
     def get_pending_mentored_projects(self):
@@ -1065,46 +1037,6 @@ class Comrade(models.Model):
                 coordinatorapproval__coordinator = self,
                 coordinatorapproval__approval_status = ApprovalStatus.APPROVED,
                 )
-
-    def get_projects_with_upcoming_and_passed_deadlines(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        try:
-            applicant = self.applicantapproval_set.get(
-                application_round=current_round,
-            )
-        except ApplicantApproval.DoesNotExist:
-            return [], []
-
-        all_projects = applicant.get_projects_contributed_to()
-        applied_projects = applicant.get_projects_applied_to()
-
-        upcoming_deadlines = []
-        passed_deadlines = []
-        for project in all_projects:
-            if not project.has_application_deadline_passed():
-                upcoming_deadlines.append(project)
-            else:
-                project.did_apply = project in applied_projects
-                passed_deadlines.append(project)
-
-        passed_deadlines.sort(key=lambda x: x.did_apply, reverse=True)
-        return upcoming_deadlines, passed_deadlines
-
-    def get_projects_with_upcoming_deadlines(self):
-        upcoming, passed = self.get_projects_with_upcoming_and_passed_deadlines()
-        return upcoming
-
-    def get_projects_with_passed_deadlines(self):
-        upcoming, passed = self.get_projects_with_upcoming_and_passed_deadlines()
-        return passed
-
-    def get_passed_projects_not_applied_to(self):
-        passed_deadlines = self.get_projects_with_passed_deadlines()
-        really_passed_deadlines = []
-        for p in passed_deadlines:
-            if not p.did_apply:
-                really_passed_deadlines.append(p)
-        return really_passed_deadlines
 
     def get_intern_selection(self):
         try:
@@ -4101,6 +4033,133 @@ class AlumSurvey(models.Model):
         if self.survey_tracker.alumni_info != None:
             return self.survey_tracker.alumni_info.community
         return None
+
+class Role(object):
+    """
+    Compute the role which the current visitor most likely is interested in for
+    a given round, and encapsulate that information in a single object that we
+    can pass to templates.
+
+    This is not a Django model and does not have a database representation, but
+    it's too easy to get into circular import dependencies if this class lives
+    anywhere outside models.py.
+    """
+
+    def __init__(self, user, current_round, today=None):
+        self.user = user
+        self.current_round = current_round
+
+        if today is not None:
+            self.__dict__['today'] = today
+
+    # Any properties that do database queries should be cached:
+
+    @cached_property
+    def today(self):
+        now = datetime.datetime.now(datetime.timezone.utc)
+        return get_deadline_date_for(now)
+
+    @cached_property
+    def application(self):
+        if self.current_round is not None and self.user.is_authenticated:
+            try:
+                return self.current_round.applicantapproval_set.get(
+                    applicant__account=self.user,
+                )
+            except ApplicantApproval.DoesNotExist:
+                pass
+        return None
+
+    @cached_property
+    def is_coordinator(self):
+        if self.current_round is not None and self.user.is_authenticated:
+            return self.current_round.is_coordinator(self.user)
+        return False
+
+    @cached_property
+    def is_mentor(self):
+        if self.current_round is not None and self.user.is_authenticated:
+            return self.current_round.is_mentor(self.user)
+        return False
+
+    @cached_property
+    def is_reviewer(self):
+        if self.current_round is not None and self.user.is_authenticated:
+            return self.current_round.is_reviewer(self.user)
+        return False
+
+    @cached_property
+    def projects_with_upcoming_and_passed_deadlines(self):
+        applicant = self.application
+        if applicant is None:
+            return (), ()
+
+        all_projects = applicant.get_projects_contributed_to()
+        applied_projects = set(applicant.get_projects_applied_to().values_list('pk', flat=True))
+
+        upcoming_deadlines = []
+        passed_deadlines = []
+        for project in all_projects:
+            project.did_apply = project.pk in applied_projects
+            if not project.has_application_deadline_passed():
+                upcoming_deadlines.append(project)
+            else:
+                passed_deadlines.append(project)
+
+        passed_deadlines.sort(key=lambda x: x.did_apply, reverse=True)
+        return upcoming_deadlines, passed_deadlines
+
+    # Anything that just uses other properties does not need to be cached:
+
+    @property
+    def is_organizer(self):
+        return self.user.is_staff
+
+    @property
+    def is_applicant(self):
+        return self.application is not None
+
+    @property
+    def is_volunteer(self):
+        """
+        Coordinators, mentors, reviewers, and organizers often are interested
+        in seeing the same things, so lump them all together. "Volunteer" isn't
+        necessarily the right name for this but it's good enough.
+        """
+        return self.is_organizer or self.is_mentor or self.is_coordinator or self.is_reviewer
+
+    @property
+    def needs_application(self):
+        """
+        Volunteers don't need to see prompts for eligibility checks and such;
+        and if someone has already done the eligibility check we shouldn't
+        prompt them to do it again.
+        """
+        if self.current_round is None:
+            return False
+        if not (self.current_round.appsopen <= self.today < self.current_round.appslate):
+            return False
+        return not self.is_volunteer and not self.is_applicant
+
+    @property
+    def needs_review(self):
+        if self.application is not None:
+            return self.application.approval_status in (ApprovalStatus.PENDING, ApprovalStatus.REJECTED)
+        return False
+
+    @property
+    def projects_with_upcoming_deadlines(self):
+        upcoming, passed = self.projects_with_upcoming_and_passed_deadlines
+        return upcoming
+
+    @property
+    def projects_with_passed_deadlines(self):
+        upcoming, passed = self.projects_with_upcoming_and_passed_deadlines
+        return passed
+
+    @property
+    def passed_projects_not_applied_to(self):
+        return [ p for p in self.projects_with_passed_deadlines if not p.did_apply ]
 
 # Please keep this at the end of this file; it has to come after the
 # models it mentions, so just keep it after all other definitions.

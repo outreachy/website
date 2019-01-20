@@ -78,6 +78,7 @@ from .models import PriorFOSSExperience
 from .models import Project
 from .models import ProjectSkill
 from .models import PromotionTracking
+from .models import Role
 from .models import RoundPage
 from .models import SchoolInformation
 from .models import SchoolTimeCommitment
@@ -722,15 +723,15 @@ class ViewInitialApplication(LoginRequiredMixin, ComradeRequiredMixin, DetailVie
     def get_context_data(self, **kwargs):
         context = super(ViewInitialApplication, self).get_context_data(**kwargs)
         context['current_round'] = self.object.application_round
-        context['can_review'] = self.can_review
+        context['role'] = self.role
         return context
 
     def get_object(self):
         current_round = get_current_round_for_initial_application()
 
-        self.can_review = current_round.is_reviewer(self.request.user)
+        self.role = Role(self.request.user, current_round)
 
-        if not self.request.user.is_staff and not self.can_review:
+        if not self.role.is_organizer and not self.role.is_reviewer:
             raise PermissionDenied("You are not authorized to review applications.")
 
         return get_object_or_404(ApplicantApproval,
@@ -750,7 +751,6 @@ def current_round_page(request):
     late_approved_projects = []
     mentors_pending_projects = []
     example_skill = ProjectSkill
-    application = None
     approved_volunteer = False
 
     now = datetime.now(timezone.utc)
@@ -772,8 +772,9 @@ def current_round_page(request):
         )
     except RoundPage.DoesNotExist:
         current_round = None
-    else:
-        # No exception caught, so we have a current_round
+
+    role = Role(request.user, current_round, today=today)
+    if current_round is not None:
         approved_participations = current_round.participation_set.approved().order_by('community__name')
 
         for p in approved_participations:
@@ -791,13 +792,6 @@ def current_round_page(request):
 
         if request.user.is_authenticated:
             try:
-                application = current_round.applicantapproval_set.get(
-                    applicant__account=request.user,
-                )
-            except ApplicantApproval.DoesNotExist:
-                pass
-
-            try:
                 current_mentored_projects = request.user.comrade.get_mentored_projects().filter(
                     project_round__participating_round=current_round,
                     project_round__approval_status__in=(ApprovalStatus.PENDING, ApprovalStatus.APPROVED),
@@ -808,7 +802,7 @@ def current_round_page(request):
                 if current_round.has_internship_start_date_passed():
                     current_mentored_projects = Project.objects.none()
 
-                approved_volunteer = current_mentored_projects.exists() or request.user.comrade.approved_volunteer()
+                approved_volunteer = current_mentored_projects.exists() or role.is_volunteer
             except Comrade.DoesNotExist:
                 pass
 
@@ -821,7 +815,7 @@ def current_round_page(request):
             'late_projects': late_approved_projects,
             'mentors_pending_projects': mentors_pending_projects,
             'example_skill': example_skill,
-            'application': application,
+            'role': role,
             'approved_volunteer': approved_volunteer,
             },
             )
@@ -1030,16 +1024,10 @@ def community_landing_view(request, round_slug, community_slug):
     example_skill = ProjectSkill
     current_round = participation_info.participating_round
 
-    application = None
+    role = Role(request.user, current_round)
+
     approved_coordinator_list = CoordinatorApproval.objects.none()
     if request.user.is_authenticated:
-        try:
-            application = current_round.applicantapproval_set.get(
-                applicant__account=request.user,
-            )
-        except ApplicantApproval.DoesNotExist:
-            pass
-
         approved_coordinator_list = participation_info.community.coordinatorapproval_set.approved()
 
     approved_to_see_all_project_details = participation_info.approved_to_see_all_project_details(request.user)
@@ -1066,7 +1054,7 @@ def community_landing_view(request, round_slug, community_slug):
             'ontime_projects': ontime_projects,
             'late_projects': late_projects,
             'closed_projects': closed_projects,
-            'application': application,
+            'role': role,
             # TODO: make the template get these off the participation_info instead of passing them in the context
             'current_round' : current_round,
             'community': participation_info.community,
@@ -1597,14 +1585,15 @@ class ProjectContributions(LoginRequiredMixin, ComradeRequiredMixin, EligibleApp
                 project_round__approval_status=ApprovalStatus.APPROVED)
 
         current_round = project.project_round.participating_round
+        role = Role(self.request.user, current_round)
 
         # Note that there's no reason to ever keep a past applicant from
         # looking at their old contributions.
 
-        applicant = get_object_or_404(ApplicantApproval,
-                applicant=self.request.user.comrade,
-                application_round=current_round,
-                approval_status=ApprovalStatus.APPROVED)
+        applicant = role.application
+        if applicant is None or not applicant.is_approved():
+            raise Http404("No approved initial application in this round.")
+
         contributions = applicant.contribution_set.filter(
                 project=project)
         try:
@@ -1618,7 +1607,7 @@ class ProjectContributions(LoginRequiredMixin, ComradeRequiredMixin, EligibleApp
             'current_round' : current_round,
             'community': project.project_round.community,
             'project': project,
-            'application': applicant,
+            'role': role,
             'contributions': contributions,
             'final_application': final_application,
             })
@@ -1846,19 +1835,11 @@ def community_applicants(request, round_slug, community_slug):
 
 def contribution_tips(request):
     current_round = RoundPage.objects.latest('internstarts')
-
-    application = None
-    if request.user.is_authenticated:
-        try:
-            application = current_round.applicantapproval_set.get(
-                applicant__account=request.user,
-            )
-        except ApplicantApproval.DoesNotExist:
-            pass
+    role = Role(request.user, current_round)
 
     return render(request, 'home/contribution_tips.html', {
         'current_round': current_round,
-        'application': application,
+        'role': role,
         })
 
 def eligibility_information(request):

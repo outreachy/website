@@ -1,4 +1,4 @@
-{% with project_applications=application.get_projects_applied_to %}
+{% with project_applications=role.application.get_projects_applied_to %}
 
 {% if project_applications %}
 	<div class="card border-info mb-3">

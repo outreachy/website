@@ -1,4 +1,4 @@
-{% if user.is_staff %}
+{% if role.is_organizer %}
 	<h1>Staff Actions</h1>
 
 	<table class="table table-striped table-bordered">
@@ -25,7 +25,7 @@
 		</td>
 	</table>
 {% endif %}
-{% if can_review %}
+{% if role.is_reviewer %}
 	<h2>Initial Application Review Owner</h2>
 	{% if application.review_owner %}
 		<p>Owner for this application: {{ application.review_owner.comrade.public_name }}.</p>

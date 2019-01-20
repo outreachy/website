@@ -7,9 +7,9 @@
 {% block content %}
 
 <p><a href="/apply/">Why apply to Outreachy?</a> &gt;
-{% if not request.user.comrade or request.user.comrade.needs_application %}
+{% if role.needs_application %}
 	<a href="{% url 'eligibility' %}">Start your initial application</a>
-{% elif application.is_rejected or application.is_pending %}
+{% elif role.needs_review %}
 	<a href="{% url 'eligibility-results' %}">Review your initial application</a>
 {% else %}
 	<a href="/apply/eligibility/">Outreachy Eligibility Rules</a>

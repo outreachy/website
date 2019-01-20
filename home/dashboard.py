@@ -36,6 +36,7 @@ from .models import DASHBOARD_MODELS
 from .models import MentorApproval
 from .models import MentorRelationship
 from .models import Participation
+from .models import Role
 from .models import RoundPage
 from .models import get_deadline_date_for
 from .models import has_deadline_passed
@@ -329,17 +330,11 @@ def eligibility_prompts(request):
     except RoundPage.DoesNotExist:
         return None
 
-    application = None
-    try:
-        application = current_round.applicantapproval_set.get(
-            applicant__account=request.user,
-        )
-    except ApplicantApproval.DoesNotExist:
-        pass
+    role = Role(request.user, current_round)
 
     return {
         'current_round': current_round,
-        'application': application,
+        'role': role,
     }
 
 

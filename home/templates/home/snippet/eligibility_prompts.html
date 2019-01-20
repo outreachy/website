@@ -2,14 +2,14 @@
 {% include "home/snippet/coc_prompt.html" %}
 {% endif %}
 
-{% if not request.user.comrade or request.user.comrade.needs_application %}
+{% if role.needs_application %}
 {% include "home/snippet/eligibility_prompt.html" %}
-{% elif application.is_rejected %}
+{% elif role.application.is_rejected %}
 {% include "home/snippet/ineligible_prompt.html" %}
-{% elif application.is_pending %}
+{% elif role.application.is_pending %}
 {% include "home/snippet/pending_prompt.html" %}
-{% elif application.is_approved %}
-	{% with project_contributions=application.get_projects_contributed_to %}
+{% elif role.application.is_approved %}
+	{% with project_contributions=role.application.get_projects_contributed_to %}
 	{% if not project_contributions %}
 	{% include "home/snippet/contribute_prompt.html" %}
 	{% else %}
