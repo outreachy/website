@@ -2479,34 +2479,34 @@ class InitialInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMi
         feedback.save()
         return redirect(reverse('dashboard') + '#feedback')
 
+def export_feedback(feedback):
+    return {
+            'intern public name': feedback.intern_selection.applicant.applicant.public_name,
+            'intern legal name': feedback.intern_selection.applicant.applicant.legal_name,
+            'intern email address': feedback.intern_selection.applicant.applicant.account.email,
+            'community': feedback.intern_selection.community_name(),
+            'mentor public name': feedback.get_mentor_public_name(),
+            'mentor legal name': feedback.get_mentor_legal_name(),
+            'mentor email address': feedback.get_mentor_email(),
+            'feedback submitted on': str(feedback.get_date_submitted()),
+            'feedback submitted from': feedback.ip_address,
+            'payment approved': feedback.payment_approved,
+            'progress report': feedback.progress_report,
+            'extension requested': feedback.request_extension,
+            'extension date': str(feedback.extension_date),
+            'termination requested': feedback.request_termination,
+            'termination reason': feedback.termination_reason,
+            }
+
 @login_required
 @staff_member_required
 def initial_mentor_feedback_export_view(request, round_slug):
-    def export_initial_feedback(feedback):
-        return {
-                'intern public name': feedback.intern_selection.applicant.applicant.public_name,
-                'intern legal name': feedback.intern_selection.applicant.applicant.legal_name,
-                'intern email address': feedback.intern_selection.applicant.applicant.account.email,
-                'community': feedback.intern_selection.community_name(),
-                'mentor public name': feedback.get_mentor_public_name(),
-                'mentor legal name': feedback.get_mentor_legal_name(),
-                'mentor email address': feedback.get_mentor_email(),
-                'feedback submitted on': str(feedback.get_date_submitted()),
-                'feedback submitted from': feedback.ip_address,
-                'payment approved': feedback.payment_approved,
-                'progress report': feedback.progress_report,
-                'extension requested': feedback.request_extension,
-                'extension date': str(feedback.extension_date),
-                'termination requested': feedback.request_termination,
-                'termination reason': feedback.termination_reason,
-                }
-
     this_round = get_object_or_404(RoundPage, slug=round_slug)
     interns = this_round.get_approved_intern_selections()
     dictionary_list = []
     for i in interns:
         try:
-            dictionary_list.append(export_initial_feedback(i.initialmentorfeedback))
+            dictionary_list.append(export_feedback(i.initialmentorfeedback))
         except InitialMentorFeedback.DoesNotExist:
             continue
     response = JsonResponse(dictionary_list, safe=False)
