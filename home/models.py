@@ -3891,7 +3891,7 @@ class MidpointMentorFeedback(BaseMentorFeedback):
         (DAYS_6, '6-7 days'),
         (LONGER, '> 7 days'),
     )
-    mentor_help_response_time = models.CharField(max_length=1, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>you</b> to respond to your intern's request for help?")
+    mentor_help_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>you</b> to respond to your intern's request for help?")
 
     CONTRIBUTION_FREQUENCY_CHOICES = (
         (NEVER, 'Intern has not submitted a contribution'),
@@ -3904,7 +3904,7 @@ class MidpointMentorFeedback(BaseMentorFeedback):
 
     mentor_review_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>you</b> to give feedback on your intern's contributions?")
 
-    intern_contribution_revision_time = models.CharField(max_length=1, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>your intern</b> to incorporate feedback and resubmit a contribution?")
+    intern_contribution_revision_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>your intern</b> to incorporate feedback and resubmit a contribution?")
 
     progress_report = models.TextField(verbose_name="Please provide a paragraph describing your intern's progress on their project. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.")
 
@@ -3960,7 +3960,7 @@ class MidpointInternFeedback(BaseInternFeedback):
         (DAYS_6, '6-7 days'),
         (LONGER, '> 7 days'),
     )
-    mentor_help_response_time = models.CharField(max_length=1, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>your mentor</b> to respond to your requests for help?")
+    mentor_help_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>your mentor</b> to respond to your requests for help?")
 
     CONTRIBUTION_FREQUENCY_CHOICES = (
         (NEVER, 'I have not submitted a contribution'),
@@ -3973,7 +3973,7 @@ class MidpointInternFeedback(BaseInternFeedback):
 
     mentor_review_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>your mentor</b> to give feedback on your contributions?")
 
-    intern_contribution_revision_time = models.CharField(max_length=1, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>you</b> to incorporate your mentor's feedback and resubmit a contribution?")
+    intern_contribution_revision_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>you</b> to incorporate your mentor's feedback and resubmit a contribution?")
 
     progress_report = models.TextField(verbose_name="Please provide a paragraph describing your progress on your project. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.")
 
