@@ -3610,15 +3610,6 @@ class BaseFeedback(models.Model):
     def project_name(self):
         return self.intern_selection.project_name()
 
-    def can_edit(self):
-        if not self.allow_edits:
-            return False
-
-        # XXX: I guess we open the feedback form at 4pm UTC?
-        if has_deadline_passed(self.intern_selection.initial_feedback_opens):
-            return True
-        return False
-
     class Meta:
         abstract = True
 
@@ -3756,6 +3747,15 @@ class InitialMentorFeedback(BaseMentorFeedback):
 
     extension_date = models.DateField(help_text="If you want to extend the internship, please pick a date when you will be asked to update your intern's initial feedback and authorize payment. Internships can be extended for up to five weeks. We don't recommend extending an internship for more than 1 week at initial feedback. Please leave this field blank if you are not asking for an extension.", blank=True, null=True)
 
+    def can_edit(self):
+        if not self.allow_edits:
+            return False
+
+        # XXX: I guess we open the feedback form at 4pm UTC?
+        if has_deadline_passed(self.intern_selection.initial_feedback_opens):
+            return True
+        return False
+
 class BaseInternFeedback(BaseFeedback):
     last_contact = models.DateField(verbose_name="What was the last date you were in contact with your mentor?")
 
@@ -3843,6 +3843,14 @@ class InitialInternFeedback(BaseInternFeedback):
 
     progress_report = models.TextField(verbose_name="Please provide a paragraph describing your progress on establishing communication with your mentor, and ramping up on your first tasks. This information will only be seen by Outreachy mentors. If you are having any difficulties or facing any barriers, please let us know, so we can help you.")
 
+    def can_edit(self):
+        if not self.allow_edits:
+            return False
+
+        if has_deadline_passed(self.intern_selection.initial_feedback_opens):
+            return True
+        return False
+
 class MidpointMentorFeedback(BaseMentorFeedback):
     # XXX - Make sure to change the questions in
     # home/templates/home/email/midpoint-feedback-instructions.txt
@@ -3914,6 +3922,14 @@ class MidpointMentorFeedback(BaseMentorFeedback):
 
     extension_date = models.DateField(help_text="If you want to extend the internship, please pick a date when you will be asked to update your intern's mid-point feedback and authorize payment. Internships can be extended for up to five weeks. We don't recommend extending an internship for more than 3 weeks at mid-point feedback. Please leave this field blank if you are not asking for an extension.", blank=True, null=True)
 
+    def can_edit(self):
+        if not self.allow_edits:
+            return False
+
+        if has_deadline_passed(self.intern_selection.midpoint_feedback_opens):
+            return True
+        return False
+
 class MidpointInternFeedback(BaseInternFeedback):
     # XXX - Make sure to change the questions in
     # home/templates/home/email/midpoint-feedback-instructions.txt
@@ -3980,6 +3996,14 @@ class MidpointInternFeedback(BaseInternFeedback):
     intern_contribution_revision_time = models.CharField(max_length=1, choices=RESPONSE_TIME_CHOICES, verbose_name="How long does it take for <b>you</b> to incorporate your mentor's feedback and resubmit a contribution?")
 
     progress_report = models.TextField(verbose_name="Please provide a paragraph describing your progress on your project. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.")
+
+    def can_edit(self):
+        if not self.allow_edits:
+            return False
+
+        if has_deadline_passed(self.intern_selection.midpoint_feedback_opens):
+            return True
+        return False
 
 
 # Track each person we sent a survey to
