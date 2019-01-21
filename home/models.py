@@ -3856,12 +3856,14 @@ class MidpointMentorFeedback(BaseMentorFeedback):
     # home/templates/home/email/midpoint-feedback-instructions.txt
     # if you change these verbose names.
     NEVER = '0'
+    MULTIPLE_DAILY = 'U'
     ONCE_DAILY = 'D'
     MULTIPLE_WEEKLY = 'M'
     ONCE_WEEKLY = 'W'
     EVERY_OTHER_WEEK = 'B'
     ASKING_FOR_HELP_FREQUENCY_CHOICES = (
         (NEVER, 'Intern has not asked for help'),
+        (MULTIPLE_DAILY, 'Multiple times per day'),
         (ONCE_DAILY, 'Once per day'),
         (MULTIPLE_WEEKLY, 'Multiple times per week'),
         (ONCE_WEEKLY, 'Once per week'),
@@ -3923,12 +3925,14 @@ class MidpointInternFeedback(BaseInternFeedback):
     # home/templates/home/email/midpoint-feedback-instructions.txt
     # if you change these verbose names.
     NEVER = '0'
+    MULTIPLE_DAILY = 'U'
     ONCE_DAILY = 'D'
     MULTIPLE_WEEKLY = 'M'
     ONCE_WEEKLY = 'W'
     EVERY_OTHER_WEEK = 'B'
     ASKING_FOR_HELP_FREQUENCY_CHOICES = (
         (NEVER, 'I have not asked for help'),
+        (MULTIPLE_DAILY, 'Multiple times per day'),
         (ONCE_DAILY, 'Once per day'),
         (MULTIPLE_WEEKLY, 'Multiple times per week'),
         (ONCE_WEEKLY, 'Once per week'),
