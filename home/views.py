@@ -2254,7 +2254,6 @@ class InternApprove(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Re
 
 class AlumStanding(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, View):
     def post(self, request, *args, **kwargs):
-        print("AlumStanding", kwargs['standing'])
         # Only allow approved organizers to approve interns
         if not request.user.is_staff:
             raise PermissionDenied("Only organizers can approve interns.")
@@ -2626,7 +2625,6 @@ class Survey2018Notification(LoginRequiredMixin, ComradeRequiredMixin, TemplateV
 
         alums, alums_opt_out, past_interns, past_interns_opt_out = self.get_alums_and_opt_outs()
         len_queued_surveys = AlumSurveyTracker.objects.filter(survey_date__isnull=True).count()
-        print("Survey: ", len(alums), len(past_interns))
 
         context = super(Survey2018Notification, self).get_context_data(**kwargs)
         context.update({
