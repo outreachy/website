@@ -56,20 +56,19 @@
 		{% if internship.is_initial_feedback_on_mentor_open %}
 			<p><a href="{% url 'initial-intern-feedback' %}"><button type="button" class="btn btn-info">Submit Initial Feedback</button></a></p>
 		{% endif %}
-		<p>Submitted feedback:</p>
+		<p>Feedback and payment status:</p>
 		<ul>
 			{% if internship.initialinternfeedback %}
 				<li>Your initial feedback was submitted.</li>
 			{% endif %}
 			{% if internship.initialmentorfeedback %}
-				<li>Your mentor has submitted initial feedback on
-					{% for v in internship.initialmentorfeedback.get_versions %}
-						{{ v.revision.date_created }}
-					{% endfor %}
-				</li>
+				<li>Your mentor most recently submitted initial feedback on {{ internship.initialmentorfeedback.find_version_mentor_edited.revision.date_created }}</li>
 			{% endif %}
 			{% if not internship.initialinternfeedback and not internship.initialmentorfeedback %}
 				<li>Neither you nor your mentor have submitted initial feedback.</li>
+			{% endif %}
+			{% if internship.initialmentorfeedback.organizer_payment_approved %}
+				<li>The Outreachy organizers have requested that the Software Freedom Conservancy pay your initial stipend.</li>
 			{% endif %}
 		</ul>
 
