@@ -240,6 +240,30 @@ class ContributionFactory(factory.django.DjangoModelFactory):
     url = factory.Faker('url')
     description = factory.Faker('paragraph')
 
+class FinalApplicationFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.FinalApplication
+        django_get_or_create = ('applicant', 'project')
+
+    class Params:
+        round = factory.SubFactory(RoundPageFactory, start_from='internannounce')
+
+    applicant = factory.SubFactory(ApplicantApprovalFactory,
+        application_round=factory.SelfAttribute('..round'),
+        approval_status=models.ApprovalStatus.APPROVED,
+    )
+    project = factory.SubFactory(ProjectFactory,
+        project_round__participating_round=factory.SelfAttribute('...round'),
+        approval_status=models.ApprovalStatus.APPROVED,
+        project_round__approval_status=models.ApprovalStatus.APPROVED,
+    )
+
+    experience = factory.Faker('paragraph')
+    foss_experience = factory.Faker('paragraph')
+    relevant_projects = factory.Faker('paragraph')
+
+    spread_the_word = factory.Iterator(models.FinalApplication.HEARD_CHOICES, getter=lambda c: c[0])
+
 class SignedContractFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.SignedContract
