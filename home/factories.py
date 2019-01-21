@@ -100,7 +100,11 @@ class RoundPageFactory(PageFactory):
 
     class Params:
         start_from = 'pingnew'
-        start_date = factory.LazyFunction(datetime.date.today)
+        start_date = factory.LazyFunction(lambda:
+            models.get_deadline_date_for(
+                datetime.datetime.now(datetime.timezone.utc)
+            )
+        )
 
     roundnumber = factory.Sequence(int)
 
