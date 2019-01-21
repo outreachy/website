@@ -2104,21 +2104,13 @@ class InternRemoval(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Re
 
 @login_required
 def project_timeline(request, round_slug, community_slug, project_slug, applicant_username):
-
-    if not request.user:
-        raise PermissionDenied("You must be logged in to view an intern project timeline.")
-
-    intern_selection = InternSelection.objects.get(
+    intern_selection = get_object_or_404(InternSelection,
             applicant__applicant__account__username=applicant_username,
             project__slug=project_slug,
             project__project_round__community__slug=community_slug,
             project__project_round__participating_round__slug=round_slug)
 
-    final_application = FinalApplication.objects.get(
-            applicant__applicant__account__username=applicant_username,
-            project__slug=project_slug,
-            project__project_round__community__slug=community_slug,
-            project__project_round__participating_round__slug=round_slug)
+    final_application = intern_selection.get_application()
 
     # Verify that this is either:
     # the intern,
