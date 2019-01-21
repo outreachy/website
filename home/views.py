@@ -1829,7 +1829,11 @@ def community_applicants(request, round_slug, community_slug):
         })
 
 def contribution_tips(request):
-    current_round = RoundPage.objects.latest('internstarts')
+    try:
+        current_round = get_current_round_for_initial_application()
+    except PermissionDenied:
+        current_round = None # don't display any eligibility prompts
+
     role = Role(request.user, current_round)
 
     return render(request, 'home/contribution_tips.html', {
@@ -1838,7 +1842,24 @@ def contribution_tips(request):
         })
 
 def eligibility_information(request):
-    current_round = RoundPage.objects.latest('internstarts')
+    now = datetime.now(timezone.utc)
+    today = get_deadline_date_for(now)
+
+    try:
+        # The most relevant dates come from the soonest round where internships
+        # haven't started yet...
+        current_round = RoundPage.objects.filter(
+            internstarts__gt=today,
+        ).earliest('internstarts')
+    except RoundPage.DoesNotExist:
+        try:
+            # ...but if there aren't any, use the round that started most
+            # recently, so people get some idea of what the timeline looks like
+            # even when the next round isn't announced yet.
+            current_round = RoundPage.objects.latest('internstarts')
+        except RoundPage.DoesNotExist:
+            raise Http404("No internship rounds configured yet!")
+
     return render(request, 'home/eligibility.html', {
         'current_round': current_round,
         })
@@ -1847,17 +1868,23 @@ class TrustedVolunteersListView(UserPassesTestMixin, ListView):
     template_name = 'home/trusted_volunteers.html'
 
     def get_queryset(self):
-        current_round = RoundPage.objects.latest('internstarts')
+        now = datetime.now(timezone.utc)
+        today = get_deadline_date_for(now)
+
+        # Find all mentors and coordinators who are active in any round that is
+        # currently running (anywhere from pingnew to finalfeedback).
         return Comrade.objects.filter(
                 models.Q(
                     mentorapproval__approval_status=ApprovalStatus.APPROVED,
                     mentorapproval__project__approval_status=ApprovalStatus.APPROVED,
                     mentorapproval__project__project_round__approval_status=ApprovalStatus.APPROVED,
-                    mentorapproval__project__project_round__participating_round=current_round,
+                    mentorapproval__project__project_round__participating_round__pingnew__lte=today,
+                    mentorapproval__project__project_round__participating_round__finalfeedback__gt=today,
                 ) | models.Q(
                     coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
                     coordinatorapproval__community__participation__approval_status=ApprovalStatus.APPROVED,
-                    coordinatorapproval__community__participation__participating_round=current_round,
+                    coordinatorapproval__community__participation__participating_round__pingnew__lte=today,
+                    coordinatorapproval__community__participation__participating_round__finalfeedback__gt=today,
                 )
             ).order_by('public_name').distinct()
 
