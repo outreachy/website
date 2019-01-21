@@ -1,7 +1,6 @@
-from datetime import datetime, timedelta, timezone, date
-from django.test import Client, TestCase, override_settings
+from datetime import datetime, timedelta, timezone
+from django.test import TestCase, override_settings
 from django.urls import reverse
-from reversion.models import Version
 import unittest
 
 from . import models
