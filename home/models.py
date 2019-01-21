@@ -3843,6 +3843,144 @@ class InitialInternFeedback(BaseInternFeedback):
 
     progress_report = models.TextField(verbose_name="Please provide a paragraph describing your progress on establishing communication with your mentor, and ramping up on your first tasks. This information will only be seen by Outreachy mentors. If you are having any difficulties or facing any barriers, please let us know, so we can help you.")
 
+class MidpointMentorFeedback(BaseMentorFeedback):
+    # XXX - Make sure to change the questions in
+    # home/templates/home/email/midpoint-feedback-instructions.txt
+    # if you change these verbose names.
+    NEVER = '0'
+    ONCE_DAILY = 'D'
+    MULTIPLE_WEEKLY = 'M'
+    ONCE_WEEKLY = 'W'
+    EVERY_OTHER_WEEK = 'B'
+    ASKING_FOR_HELP_FREQUENCY_CHOICES = (
+        (NEVER, 'Intern has not asked for help or feedback'),
+        (ONCE_DAILY, 'Once per day'),
+        (MULTIPLE_WEEKLY, 'Multiple times per week'),
+        (ONCE_WEEKLY, 'Once per week'),
+        (EVERY_OTHER_WEEK, 'Every other week'),
+    )
+    intern_help_requests_frequency = models.CharField(max_length=1, choices=ASKING_FOR_HELP_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often does <b>your intern</b> ask for your help or feedback?")
+
+    NEVER = '0'
+    ONCE_DAILY = 'D'
+    MULTIPLE_WEEKLY = 'M'
+    ONCE_WEEKLY = 'W'
+    EVERY_OTHER_WEEK = 'B'
+    ASKING_FOR_HELP_FREQUENCY_CHOICES = (
+        (NEVER, 'I have not responded to requests for help or feedback'),
+        (ONCE_DAILY, 'Once per day'),
+        (MULTIPLE_WEEKLY, 'Multiple times per week'),
+        (ONCE_WEEKLY, 'Once per week'),
+        (EVERY_OTHER_WEEK, 'Every other week'),
+    )
+    mentor_response_frequency = models.CharField(max_length=1, choices=ASKING_FOR_HELP_FREQUENCY_CHOICES, default=NEVER, verbose_name="How long does it take for <b>you</b> to respond to your intern's request for help or feedback?")
+
+    CONTRIBUTION_FREQUENCY_CHOICES = (
+        (NEVER, 'Intern has not submitted a contribution'),
+        (ONCE_DAILY, 'Once per day'),
+        (MULTIPLE_WEEKLY, 'Multiple times per week'),
+        (ONCE_WEEKLY, 'Once per week'),
+        (EVERY_OTHER_WEEK, 'Every other week'),
+    )
+    intern_contribution_frequency = models.CharField(max_length=1, choices=CONTRIBUTION_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often does <b>your intern</b> submit a project contribution?")
+
+    HOURS_1 = '1H'
+    HOURS_3 = '3H'
+    HOURS_6 = '6H'
+    HOURS_12 = '12H'
+    DAYS_1 = '1D'
+    DAYS_2 = '2D'
+    DAYS_4 = '4D'
+    DAYS_6 = '6D'
+    LONGER = '>7D'
+    RESPONSE_TIME_CHOICES = (
+        (HOURS_1, '1 hour'),
+        (HOURS_3, '3 hours'),
+        (HOURS_6, '6 hours'),
+        (HOURS_12, '12 hours'),
+        (DAYS_1, '1 day'),
+        (DAYS_2, '2-3 days'),
+        (DAYS_4, '4-5 days'),
+        (DAYS_6, '6-7 days'),
+        (LONGER, '> 7 days'),
+    )
+    mentor_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="How long does it take for <b>you</b> to give feedback on your intern's contributions?")
+
+    intern_contribution_revision_time = models.CharField(max_length=1, choices=RESPONSE_TIME_CHOICES, verbose_name="How long does it take for <b>your intern</b> to incorporate feedback and resubmit a contribution?")
+
+    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your intern's progress on their project. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.")
+
+    payment_approved = models.BooleanField(verbose_name="Should your Outreachy intern be paid the mid-point $2,000 payment?", help_text="Please base your answer on whether your intern has put in a full-time, 40 hours a week effort. They should have made project contributions, promptly responded to feedback on those contributions, and resubmitted their revised contributions. If they were stuck, they should have reached out to you or the community for help. If you are going to ask for an internship extension, please say no to this question.")
+
+    extension_date = models.DateField(help_text="If you want to extend the internship, please pick a date when you will be asked to update your intern's mid-point feedback and authorize payment. Internships can be extended for up to five weeks. We don't recommend extending an internship for more than 3 weeks at mid-point feedback. Please leave this field blank if you are not asking for an extension.", blank=True, null=True)
+
+class MidpointInternFeedback(BaseInternFeedback):
+    # XXX - Make sure to change the questions in
+    # home/templates/home/email/midpoint-feedback-instructions.txt
+    # if you change these verbose names.
+    NEVER = '0'
+    ONCE_DAILY = 'D'
+    MULTIPLE_WEEKLY = 'M'
+    ONCE_WEEKLY = 'W'
+    EVERY_OTHER_WEEK = 'B'
+    ASKING_FOR_HELP_FREQUENCY_CHOICES = (
+        (NEVER, 'I have not asked for help or feedback'),
+        (ONCE_DAILY, 'Once per day'),
+        (MULTIPLE_WEEKLY, 'Multiple times per week'),
+        (ONCE_WEEKLY, 'Once per week'),
+        (EVERY_OTHER_WEEK, 'Every other week'),
+    )
+    intern_help_requests_frequency = models.CharField(max_length=1, choices=ASKING_FOR_HELP_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often do <b>you</b> ask for your mentor's help or feedback?")
+
+    NEVER = '0'
+    ONCE_DAILY = 'D'
+    MULTIPLE_WEEKLY = 'M'
+    ONCE_WEEKLY = 'W'
+    EVERY_OTHER_WEEK = 'B'
+    ASKING_FOR_HELP_FREQUENCY_CHOICES = (
+        (NEVER, 'Mentor has not responded to requests for help or feedback'),
+        (ONCE_DAILY, 'Once per day'),
+        (MULTIPLE_WEEKLY, 'Multiple times per week'),
+        (ONCE_WEEKLY, 'Once per week'),
+        (EVERY_OTHER_WEEK, 'Every other week'),
+    )
+    mentor_response_frequency = models.CharField(max_length=1, choices=ASKING_FOR_HELP_FREQUENCY_CHOICES, default=NEVER, verbose_name="How long does it take for <b>your mentor</b> to respond to your intern's request for help or feedback?")
+
+    CONTRIBUTION_FREQUENCY_CHOICES = (
+        (NEVER, 'I have not submitted a contribution'),
+        (ONCE_DAILY, 'Once per day'),
+        (MULTIPLE_WEEKLY, 'Multiple times per week'),
+        (ONCE_WEEKLY, 'Once per week'),
+        (EVERY_OTHER_WEEK, 'Every other week'),
+    )
+    intern_contribution_frequency = models.CharField(max_length=1, choices=CONTRIBUTION_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often do <b>you</b> submit a project contribution?")
+
+    HOURS_1 = '1H'
+    HOURS_3 = '3H'
+    HOURS_6 = '6H'
+    HOURS_12 = '12H'
+    DAYS_1 = '1D'
+    DAYS_2 = '2D'
+    DAYS_4 = '4D'
+    DAYS_6 = '6D'
+    LONGER = '>7D'
+    RESPONSE_TIME_CHOICES = (
+        (HOURS_1, '1 hour'),
+        (HOURS_3, '3 hours'),
+        (HOURS_6, '6 hours'),
+        (HOURS_12, '12 hours'),
+        (DAYS_1, '1 day'),
+        (DAYS_2, '2-3 days'),
+        (DAYS_4, '4-5 days'),
+        (DAYS_6, '6-7 days'),
+        (LONGER, '> 7 days'),
+    )
+    mentor_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="How long does it take for <b>your mentor</b> to give feedback on your contributions?")
+
+    intern_contribution_revision_time = models.CharField(max_length=1, choices=RESPONSE_TIME_CHOICES, verbose_name="How long does it take for <b>you</b> to incorporate your mentor's feedback and resubmit a contribution?")
+
+    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your progress on your project. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.")
+
 
 # Track each person we sent a survey to
 class AlumSurveyTracker(models.Model):
