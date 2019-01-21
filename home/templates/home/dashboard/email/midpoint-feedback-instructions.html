@@ -1,0 +1,7 @@
+<p>Week 7: Send the email asking for midpoint feedback. You may have to send it multiple times, if some interns have a delayed internship start date:
+<ul>
+	<li>Send the email after {{ due }}.</li>
+</ul>
+</p>
+
+<p><a href="{% url 'email-midpoint-feedback-instructions' round_slug=current_round.slug %}"><input class="btn btn-success" value="Midpoint Feedback Reminder" /></a>

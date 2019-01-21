@@ -3490,6 +3490,27 @@ class InternSelection(models.Model):
         except InitialInternFeedback.DoesNotExist:
             return True
 
+    def is_midpoint_feedback_on_intern_open(self):
+        if not has_deadline_passed(self.midpoint_feedback_opens):
+            return False
+        try:
+            return self.midpointmentorfeedback.can_edit()
+        except MidpointMentorFeedback.DoesNotExist:
+            return True
+
+    def is_midpoint_feedback_on_intern_past_due(self):
+        if has_deadline_passed(self.midpoint_feedback_due):
+            return True
+        return False
+
+    def is_midpoint_feedback_on_mentor_open(self):
+        if not has_deadline_passed(self.midpoint_feedback_opens):
+            return False
+        try:
+            return self.midpointinternfeedback.can_edit()
+        except MidpointInternFeedback.DoesNotExist:
+            return True
+
     def intern_name(self):
         return self.applicant.applicant.public_name
 
@@ -3559,6 +3580,26 @@ class InternSelection(models.Model):
     def get_intern_initial_feedback_status(self):
         try:
             if self.initialinternfeedback:
+                return self.SUBMITTED
+        except InitialInternFeedback.DoesNotExist:
+            return self.MISSING
+
+    def get_mentor_midpoint_feedback_status(self):
+        try:
+            if self.midpointmentorfeedback.request_termination:
+                return self.TERMINATE
+            if self.midpointmentorfeedback.request_extension:
+                return self.EXTEND
+            if self.midpointmentorfeedback.payment_approved:
+                return self.PAY
+            # Validation should ensure this never happens?
+            return self.SUBMITTED
+        except InitialMentorFeedback.DoesNotExist:
+            return self.MISSING
+
+    def get_intern_midpoint_feedback_status(self):
+        try:
+            if self.midpointinternfeedback:
                 return self.SUBMITTED
         except InitialInternFeedback.DoesNotExist:
             return self.MISSING

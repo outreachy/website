@@ -65,6 +65,8 @@ from .models import InternSelection
 from .models import InitialApplicationReview
 from .models import InitialMentorFeedback
 from .models import InitialInternFeedback
+from .models import MidpointMentorFeedback
+from .models import MidpointInternFeedback
 from .models import has_deadline_passed
 from .models import MentorApproval
 from .models import MentorRelationship
@@ -2524,6 +2526,127 @@ def initial_feedback_summary(request, round_slug):
             },
             )
 
+class MidpointFeedbackInstructions(SendEmailView):
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+
+        # Only get interns that are in good standing and
+        # where a mentor or intern hasn't submitted feedback.
+        interns = current_round.get_interns_with_open_initial_feedback()
+
+        for i in interns:
+            email.initial_feedback_email(i, self.request, "midpoint", connection=connection)
+
+class MidpointMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
+    form_class = modelform_factory(MidpointMentorFeedback,
+            fields=(
+                'intern_help_requests_frequency',
+                'mentor_help_response_time',
+                'last_contact',
+                'intern_contribution_frequency',
+                'mentor_review_response_time',
+                'intern_contribution_revision_time',
+                'payment_approved',
+                'full_time_effort',
+                'progress_report',
+                'request_extension',
+                'extension_date',
+                'request_termination',
+                'termination_reason',
+            ),
+            field_classes = {
+                'in_contact': RadioBooleanField,
+                'full_time_effort': RadioBooleanField,
+                'payment_approved': RadioBooleanField,
+                'request_extension': RadioBooleanField,
+                'request_termination': RadioBooleanField,
+            },
+        )
+
+    def get_object(self):
+        internship = intern_in_good_standing(get_object_or_404(User, username=self.kwargs['username']))
+        if not internship:
+            raise Http404("{} is not an intern in good standing".format(self.kwargs['username']))
+
+        if not internship.mentorrelationship_set.filter(mentor__mentor__account=self.request.user).exists():
+            raise PermissionDenied("You are not a mentor for this intern.")
+
+        try:
+            feedback = MidpointMentorFeedback.objects.get(intern_selection=internship)
+            if not feedback.can_edit():
+                raise PermissionDenied("This feedback is already submitted and can't be updated right now.")
+            return feedback
+        except MidpointMentorFeedback.DoesNotExist:
+            return MidpointMentorFeedback(intern_selection=internship)
+
+    def form_valid(self, form):
+        feedback = form.save(commit=False)
+        feedback.allow_edits = False
+        feedback.ip_address = self.request.META.get('REMOTE_ADDR')
+        feedback.save()
+        return redirect(reverse('dashboard') + '#feedback')
+
+class MidpointInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
+    form_class = modelform_factory(MidpointInternFeedback,
+            fields=(
+                'intern_help_requests_frequency',
+                'mentor_help_response_time',
+                'intern_contribution_frequency',
+                'mentor_review_response_time',
+                'intern_contribution_revision_time',
+                'last_contact',
+                'mentor_support',
+                'hours_worked',
+                'progress_report',
+                ),
+            )
+
+    def get_object(self):
+        internship = intern_in_good_standing(self.request.user)
+        if not internship:
+            raise Http404("The account for {} is not associated with an intern in good standing".format(self.request.user.username))
+
+        try:
+            feedback = MidpointInternFeedback.objects.get(intern_selection=internship)
+            if not feedback.can_edit():
+                raise PermissionDenied("This feedback is already submitted and can't be updated right now.")
+            return feedback
+        except MidpointInternFeedback.DoesNotExist:
+            return MidpointInternFeedback(intern_selection=internship)
+
+    def form_valid(self, form):
+        feedback = form.save(commit=False)
+        feedback.allow_edits = False
+        feedback.ip_address = self.request.META.get('REMOTE_ADDR')
+        feedback.save()
+        return redirect(reverse('dashboard') + '#feedback')
+
+@login_required
+@staff_member_required
+def midpoint_mentor_feedback_export_view(request, round_slug):
+    this_round = get_object_or_404(RoundPage, slug=round_slug)
+    interns = this_round.get_approved_intern_selections()
+    dictionary_list = []
+    for i in interns:
+        try:
+            dictionary_list.append(export_feedback(i.midpointmentorfeedback))
+        except MidpointMentorFeedback.DoesNotExist:
+            continue
+    response = JsonResponse(dictionary_list, safe=False)
+    response['Content-Disposition'] = 'attachment; filename="' + round_slug + '-midpoint-feedback.json"'
+    return response
+
+@login_required
+@staff_member_required
+def midpoint_feedback_summary(request, round_slug):
+    current_round = RoundPage.objects.get(slug=round_slug)
+
+    return render(request, 'home/midpoint_feedback.html',
+            {
+            'current_round' : current_round,
+            },
+            )
 
 def alums_page(request):
     # Get all the older AlumInfo models (before we had round pages)

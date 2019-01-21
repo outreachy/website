@@ -56,6 +56,9 @@
 		{% if internship.is_initial_feedback_on_mentor_open %}
 			<p><a href="{% url 'initial-intern-feedback' %}"><button type="button" class="btn btn-info">Submit Initial Feedback</button></a></p>
 		{% endif %}
+		{% if internship.is_midpoint_feedback_on_mentor_open %}
+			<p><a href="{% url 'midpoint-intern-feedback' %}"><button type="button" class="btn btn-info">Submit Midpoint Feedback</button></a></p>
+		{% endif %}
 		<p>Feedback and payment status:</p>
 		<ul>
 			{% if internship.initialinternfeedback %}
@@ -69,6 +72,18 @@
 			{% endif %}
 			{% if internship.initialmentorfeedback.organizer_payment_approved %}
 				<li>The Outreachy organizers have requested that the Software Freedom Conservancy pay your initial stipend.</li>
+			{% endif %}
+			{% if internship.midpointinternfeedback %}
+				<li>Your midpoint feedback was submitted.</li>
+			{% endif %}
+			{% if internship.midpointmentorfeedback %}
+				<li>Your mentor most recently submitted midpoint feedback on {{ internship.midpointmentorfeedback.find_version_mentor_edited.revision.date_created }}</li>
+			{% endif %}
+			{% if not internship.midpointinternfeedback and not internship.midpointmentorfeedback %}
+				<li>Neither you nor your mentor have submitted midpoint feedback.</li>
+			{% endif %}
+			{% if internship.midpointmentorfeedback.organizer_payment_approved %}
+				<li>The Outreachy organizers have requested that the Software Freedom Conservancy pay your midpoint stipend.</li>
 			{% endif %}
 		</ul>
 

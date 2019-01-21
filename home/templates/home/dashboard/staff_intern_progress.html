@@ -3,9 +3,9 @@
 <h2>Intern Progress</h2>
 <p>Standard mentor feedback dates:
 <ul>
-	<li>{{ current_round.initialfeedback }} - Initial feedback is due. <a href="{% url 'initial-feedback-summary' round_slug=current_round.slug %}"><button class="btn btn-secondary">View Initial Feedback</button></a> <a href="{% url 'initial-feedback-export' round_slug=current_round.slug %}"><button class="btn btn-success">Export Initial Feedback</button></a></li>
-	<li>{{ current_round.midfeedback }} - Mid-point feedback is due</li>
-	<li>{{ current_round.finalfeedback }} - Final feedback is due</li>
+	<li><p>{{ current_round.initialfeedback }} - Initial feedback is due. <a href="{% url 'initial-feedback-summary' round_slug=current_round.slug %}"><button class="btn btn-secondary">View Initial Feedback</button></a> <a href="{% url 'initial-feedback-export' round_slug=current_round.slug %}"><button class="btn btn-success">Export Initial Feedback</button></a></p></li>
+	<li><p>{{ current_round.midfeedback }} - Mid-point feedback is due. <a href="{% url 'midpoint-feedback-summary' round_slug=current_round.slug %}"><button class="btn btn-secondary">View Midpoint Feedback</button></a> <a href="{% url 'midpoint-feedback-export' round_slug=current_round.slug %}"><button class="btn btn-success">Export Midpoint Feedback</button></a></p></li>
+	<li><p>{{ current_round.finalfeedback }} - Final feedback is due</p></li>
 </ul>
 {% with interns=current_round.get_approved_intern_selections %}
 	<table class="table table-striped table-bordered">
@@ -23,18 +23,18 @@
 		{% for intern in interns %}
 			<tr>
 				<td>{{ intern.applicant.applicant.public_name }}</td>
-				{% with initial_mentor_status=intern.get_mentor_initial_feedback_status %}
 				<td>
-					{% include 'home/snippet/mentor-feedback-status.html' with mentor_status=initial_mentor_status extension_date=intern.initialmentorfeedback.extension_date %}
+					{% include 'home/snippet/mentor-feedback-status.html' with mentor_status=intern.get_mentor_initial_feedback_status extension_date=intern.initialmentorfeedback.extension_date %}
 				</td>
-				{% endwith %}
-				{% with initial_intern_status=intern.get_intern_initial_feedback_status %}
 				<td>
-					{% include 'home/snippet/intern-feedback-status.html' with intern_status=initial_intern_status %}
+					{% include 'home/snippet/intern-feedback-status.html' with intern_status=intern.get_intern_initial_feedback_status %}
 				</td>
-				{% endwith %}
-				<td></td>
-				<td></td>
+				<td>
+					{% include 'home/snippet/mentor-feedback-status.html' with mentor_status=intern.get_mentor_midpoint_feedback_status extension_date=intern.midpointmentorfeedback.extension_date %}
+				</td>
+				<td>
+					{% include 'home/snippet/intern-feedback-status.html' with intern_status=intern.get_intern_midpoint_feedback_status %}
+				</td>
 				<td></td>
 				<td></td>
 			</tr>

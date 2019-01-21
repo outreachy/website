@@ -1,4 +1,4 @@
-{% if mentor_status == intern.MISSING %}
+{% if not mentor_status or mentor_status == intern.MISSING %}
 <button class="btn btn-secondary">missing</button>
 {% elif mentor_status == intern.PAY %}
 <button class="btn btn-success">pay</button>
