@@ -2743,7 +2743,7 @@ class ApplicantApprovalUpdate(ApprovalStatusAction):
     model = ApplicantApproval
 
     def get_object(self):
-        current_round = RoundPage.objects.latest('internstarts')
+        current_round = get_current_round_for_initial_application()
         return get_object_or_404(ApplicantApproval,
                 applicant__account__username=self.kwargs['applicant_username'],
                 application_round=current_round)
@@ -2766,7 +2766,7 @@ class DeleteApplication(LoginRequiredMixin, ComradeRequiredMixin, View):
         if not request.user.is_staff:
             raise PermissionDenied("Only Outreachy organizers can delete initial applications.")
 
-        current_round = RoundPage.objects.latest('internstarts')
+        current_round = get_current_round_for_initial_application()
         application = get_object_or_404(ApplicantApproval,
                 applicant__account__username=self.kwargs['applicant_username'],
                 application_round=current_round)
@@ -2779,7 +2779,7 @@ class DeleteApplication(LoginRequiredMixin, ComradeRequiredMixin, View):
 class NotifyEssayNeedsUpdating(LoginRequiredMixin, ComradeRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
-        current_round = RoundPage.objects.latest('internstarts')
+        current_round = get_current_round_for_initial_application()
         # Allow staff to ask applicants to revise their essays
         if not request.user.is_staff:
             raise PermissionDenied("Only Outreachy organizers can ask applicants to revise their essays.")
@@ -2806,7 +2806,7 @@ class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, re
             ]
 
     def get_object(self):
-        current_round = RoundPage.objects.latest('internstarts')
+        current_round = get_current_round_for_initial_application()
         # Only allow applicants to revise their own essays
         if self.request.user.comrade.account.username != self.kwargs['applicant_username']:
             raise PermissionDenied('You can only edit your own essay.')
@@ -2827,7 +2827,7 @@ class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, re
 class NotifySchoolInformationUpdating(LoginRequiredMixin, ComradeRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
-        current_round = RoundPage.objects.latest('internstarts')
+        current_round = get_current_round_for_initial_application()
         if not request.user.is_staff:
             raise PermissionDenied("Only Outreachy organizers can ask applicants to revise their school information.")
 
@@ -2853,7 +2853,7 @@ class SchoolInformationUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversio
             ]
 
     def get_object(self):
-        current_round = RoundPage.objects.latest('internstarts')
+        current_round = get_current_round_for_initial_application()
         # Only allow applicants to revise their own essays
         if self.request.user.comrade.account.username != self.kwargs['applicant_username']:
             raise PermissionDenied('You can only edit your own school information.')
@@ -2881,7 +2881,7 @@ class SchoolInformationUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversio
 
 def get_or_create_application_reviewer_and_review(self):
     # Only allow approved reviewers to rate applications for the current round
-    current_round = RoundPage.objects.latest('internstarts')
+    current_round = get_current_round_for_initial_application()
     reviewer = get_object_or_404(ApplicationReviewer,
             comrade=self.request.user.comrade,
             reviewing_round=current_round,
