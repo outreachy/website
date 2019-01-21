@@ -2380,7 +2380,7 @@ class InitialFeedbackInstructions(SendEmailView):
         interns = current_round.get_interns_with_open_initial_feedback()
 
         for i in interns:
-            email.initial_feedback_email(i, self.request, connection=connection)
+            email.feedback_email(i, self.request, "initial", connection=connection)
 
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(InitialMentorFeedback,

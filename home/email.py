@@ -223,20 +223,20 @@ def biweekly_internship_email(intern_selection, request, template, **kwargs):
         recipient_list=emails,
         **kwargs)
 
-def initial_feedback_email(intern_selection, request, **kwargs):
+def feedback_email(intern_selection, request, stage, **kwargs):
     emails = []
     if intern_selection.is_initial_feedback_on_intern_past_due():
         emails.append(organizers)
         for m in intern_selection.mentors.all():
             emails.append(m.mentor.email_address())
         emails = emails + intern_selection.project.project_round.community.get_coordinator_email_list()
-        template = 'home/email/initial-feedback-reminder.txt'
+        template = 'home/email/' + stage + '-feedback-reminder.txt'
     else:
         emails.append(intern_selection.applicant.applicant.email_address())
         for m in intern_selection.mentors.all():
             emails.append(m.mentor.email_address())
         emails = emails + intern_selection.project.project_round.community.get_coordinator_email_list()
-        template = 'home/email/initial-feedback-instructions.txt'
+        template = 'home/email/' + stage + '-feedback-instructions.txt'
     send_group_template_mail(template, {
         'intern_selection': intern_selection,
         'current_round': intern_selection.project.project_round.participating_round,
