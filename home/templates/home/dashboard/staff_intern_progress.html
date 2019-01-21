@@ -25,26 +25,12 @@
 				<td>{{ intern.applicant.applicant.public_name }}</td>
 				{% with initial_mentor_status=intern.get_mentor_initial_feedback_status %}
 				<td>
-					{% if initial_mentor_status == intern.MISSING %}
-					<button class="btn btn-secondary">missing</button>
-					{% elif initial_mentor_status == intern.PAY %}
-					<button class="btn btn-success">pay</button>
-					{% elif initial_mentor_status == intern.EXTEND %}
-					<button class="btn btn-warning">extend</button> to {{ intern.initialmentorfeedback.extension_date|date:"M d, Y" }}
-					{% elif initial_mentor_status == intern.TERMINATE %}
-					<button class="btn btn-danger">terminate</button>
-					{% elif initial_mentor_status == intern.SUBMITTED %}
-					<button class="btn btn-secondary">submitted</button>
-					{% endif %}
+					{% include 'home/snippet/mentor-feedback-status.html' with mentor_status=initial_mentor_status extension_date=intern.initialmentorfeedback.extension_date %}
 				</td>
 				{% endwith %}
 				{% with initial_intern_status=intern.get_intern_initial_feedback_status %}
 				<td>
-					{% if initial_intern_status == intern.MISSING %}
-					<button class="btn btn-secondary">missing</button>
-					{% elif initial_intern_status == intern.SUBMITTED %}
-					<button class="btn btn-success">submitted</button>
-					{% endif %}
+					{% include 'home/snippet/intern-feedback-status.html' with intern_status=initial_intern_status %}
 				</td>
 				{% endwith %}
 				<td></td>
