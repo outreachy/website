@@ -284,6 +284,8 @@ class InternSelectionFactory(factory.django.DjangoModelFactory):
     intern_starts = factory.SelfAttribute('round.internstarts')
     initial_feedback_due = factory.SelfAttribute('round.initialfeedback')
     initial_feedback_opens = factory.LazyAttribute(lambda o: o.initial_feedback_due - datetime.timedelta(days=7))
+    midpoint_feedback_due = factory.SelfAttribute('round.midfeedback')
+    midpoint_feedback_opens = factory.LazyAttribute(lambda o: o.midpoint_feedback_due - datetime.timedelta(days=7))
     intern_ends = factory.SelfAttribute('round.internends')
 
     @factory.post_generation
