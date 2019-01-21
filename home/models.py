@@ -3861,36 +3861,13 @@ class MidpointMentorFeedback(BaseMentorFeedback):
     ONCE_WEEKLY = 'W'
     EVERY_OTHER_WEEK = 'B'
     ASKING_FOR_HELP_FREQUENCY_CHOICES = (
-        (NEVER, 'Intern has not asked for help or feedback'),
+        (NEVER, 'Intern has not asked for help'),
         (ONCE_DAILY, 'Once per day'),
         (MULTIPLE_WEEKLY, 'Multiple times per week'),
         (ONCE_WEEKLY, 'Once per week'),
         (EVERY_OTHER_WEEK, 'Every other week'),
     )
-    intern_help_requests_frequency = models.CharField(max_length=1, choices=ASKING_FOR_HELP_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often does <b>your intern</b> ask for your help or feedback?")
-
-    NEVER = '0'
-    ONCE_DAILY = 'D'
-    MULTIPLE_WEEKLY = 'M'
-    ONCE_WEEKLY = 'W'
-    EVERY_OTHER_WEEK = 'B'
-    ASKING_FOR_HELP_FREQUENCY_CHOICES = (
-        (NEVER, 'I have not responded to requests for help or feedback'),
-        (ONCE_DAILY, 'Once per day'),
-        (MULTIPLE_WEEKLY, 'Multiple times per week'),
-        (ONCE_WEEKLY, 'Once per week'),
-        (EVERY_OTHER_WEEK, 'Every other week'),
-    )
-    mentor_response_frequency = models.CharField(max_length=1, choices=ASKING_FOR_HELP_FREQUENCY_CHOICES, default=NEVER, verbose_name="How long does it take for <b>you</b> to respond to your intern's request for help or feedback?")
-
-    CONTRIBUTION_FREQUENCY_CHOICES = (
-        (NEVER, 'Intern has not submitted a contribution'),
-        (ONCE_DAILY, 'Once per day'),
-        (MULTIPLE_WEEKLY, 'Multiple times per week'),
-        (ONCE_WEEKLY, 'Once per week'),
-        (EVERY_OTHER_WEEK, 'Every other week'),
-    )
-    intern_contribution_frequency = models.CharField(max_length=1, choices=CONTRIBUTION_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often does <b>your intern</b> submit a project contribution?")
+    intern_help_requests_frequency = models.CharField(max_length=1, choices=ASKING_FOR_HELP_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often does <b>your intern</b> ask for your help?")
 
     HOURS_1 = '1H'
     HOURS_3 = '3H'
@@ -3912,9 +3889,20 @@ class MidpointMentorFeedback(BaseMentorFeedback):
         (DAYS_6, '6-7 days'),
         (LONGER, '> 7 days'),
     )
-    mentor_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="How long does it take for <b>you</b> to give feedback on your intern's contributions?")
+    mentor_help_response_time = models.CharField(max_length=1, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>you</b> to respond to your intern's request for help?")
 
-    intern_contribution_revision_time = models.CharField(max_length=1, choices=RESPONSE_TIME_CHOICES, verbose_name="How long does it take for <b>your intern</b> to incorporate feedback and resubmit a contribution?")
+    CONTRIBUTION_FREQUENCY_CHOICES = (
+        (NEVER, 'Intern has not submitted a contribution'),
+        (ONCE_DAILY, 'Once per day'),
+        (MULTIPLE_WEEKLY, 'Multiple times per week'),
+        (ONCE_WEEKLY, 'Once per week'),
+        (EVERY_OTHER_WEEK, 'Every other week'),
+    )
+    intern_contribution_frequency = models.CharField(max_length=1, choices=CONTRIBUTION_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often does <b>your intern</b> submit a project contribution?")
+
+    mentor_review_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>you</b> to give feedback on your intern's contributions?")
+
+    intern_contribution_revision_time = models.CharField(max_length=1, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>your intern</b> to incorporate feedback and resubmit a contribution?")
 
     progress_report = models.TextField(verbose_name="Please provide a paragraph describing your intern's progress on their project. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.")
 
@@ -3940,36 +3928,13 @@ class MidpointInternFeedback(BaseInternFeedback):
     ONCE_WEEKLY = 'W'
     EVERY_OTHER_WEEK = 'B'
     ASKING_FOR_HELP_FREQUENCY_CHOICES = (
-        (NEVER, 'I have not asked for help or feedback'),
+        (NEVER, 'I have not asked for help'),
         (ONCE_DAILY, 'Once per day'),
         (MULTIPLE_WEEKLY, 'Multiple times per week'),
         (ONCE_WEEKLY, 'Once per week'),
         (EVERY_OTHER_WEEK, 'Every other week'),
     )
-    intern_help_requests_frequency = models.CharField(max_length=1, choices=ASKING_FOR_HELP_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often do <b>you</b> ask for your mentor's help or feedback?")
-
-    NEVER = '0'
-    ONCE_DAILY = 'D'
-    MULTIPLE_WEEKLY = 'M'
-    ONCE_WEEKLY = 'W'
-    EVERY_OTHER_WEEK = 'B'
-    ASKING_FOR_HELP_FREQUENCY_CHOICES = (
-        (NEVER, 'Mentor has not responded to requests for help or feedback'),
-        (ONCE_DAILY, 'Once per day'),
-        (MULTIPLE_WEEKLY, 'Multiple times per week'),
-        (ONCE_WEEKLY, 'Once per week'),
-        (EVERY_OTHER_WEEK, 'Every other week'),
-    )
-    mentor_response_frequency = models.CharField(max_length=1, choices=ASKING_FOR_HELP_FREQUENCY_CHOICES, default=NEVER, verbose_name="How long does it take for <b>your mentor</b> to respond to your intern's request for help or feedback?")
-
-    CONTRIBUTION_FREQUENCY_CHOICES = (
-        (NEVER, 'I have not submitted a contribution'),
-        (ONCE_DAILY, 'Once per day'),
-        (MULTIPLE_WEEKLY, 'Multiple times per week'),
-        (ONCE_WEEKLY, 'Once per week'),
-        (EVERY_OTHER_WEEK, 'Every other week'),
-    )
-    intern_contribution_frequency = models.CharField(max_length=1, choices=CONTRIBUTION_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often do <b>you</b> submit a project contribution?")
+    intern_help_requests_frequency = models.CharField(max_length=1, choices=ASKING_FOR_HELP_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often do <b>you</b> ask for your mentor's help?")
 
     HOURS_1 = '1H'
     HOURS_3 = '3H'
@@ -3991,9 +3956,20 @@ class MidpointInternFeedback(BaseInternFeedback):
         (DAYS_6, '6-7 days'),
         (LONGER, '> 7 days'),
     )
-    mentor_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="How long does it take for <b>your mentor</b> to give feedback on your contributions?")
+    mentor_help_response_time = models.CharField(max_length=1, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>your mentor</b> to respond to your requests for help?")
 
-    intern_contribution_revision_time = models.CharField(max_length=1, choices=RESPONSE_TIME_CHOICES, verbose_name="How long does it take for <b>you</b> to incorporate your mentor's feedback and resubmit a contribution?")
+    CONTRIBUTION_FREQUENCY_CHOICES = (
+        (NEVER, 'I have not submitted a contribution'),
+        (ONCE_DAILY, 'Once per day'),
+        (MULTIPLE_WEEKLY, 'Multiple times per week'),
+        (ONCE_WEEKLY, 'Once per week'),
+        (EVERY_OTHER_WEEK, 'Every other week'),
+    )
+    intern_contribution_frequency = models.CharField(max_length=1, choices=CONTRIBUTION_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often do <b>you</b> submit a project contribution?")
+
+    mentor_review_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>your mentor</b> to give feedback on your contributions?")
+
+    intern_contribution_revision_time = models.CharField(max_length=1, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>you</b> to incorporate your mentor's feedback and resubmit a contribution?")
 
     progress_report = models.TextField(verbose_name="Please provide a paragraph describing your progress on your project. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.")
 
