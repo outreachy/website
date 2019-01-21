@@ -92,7 +92,20 @@ def intern_announcement(request):
 
 
 def coordinator_reminder(request):
-    current_round = RoundPage.objects.latest('internstarts')
+    now = datetime.datetime.now(datetime.timezone.utc)
+    today = get_deadline_date_for(now)
+
+    # It's possible that some intern selections may not work out, and a mentor
+    # will have to select another intern after the intern announcement date.
+    # Show coordinator's communities until the day after their mentors' interns
+    # start.
+    try:
+        current_round = RoundPage.objects.filter(
+            internstarts__gt=today,
+        ).earliest('internstarts')
+    except RoundPage.DoesNotExist:
+        return None
+
     role = Role(request.user, current_round)
     return role.approved_coordinator_communities
 
@@ -369,13 +382,18 @@ def mentor_projects(request):
     except Comrade.DoesNotExist:
         return None
 
-    current_round = RoundPage.objects.latest('internstarts')
+    now = datetime.datetime.now(datetime.timezone.utc)
+    today = get_deadline_date_for(now)
 
     # It's possible that some intern selections may not work out,
     # and a mentor will have to select another intern
     # after the intern announcement date.
     # Show their project until the day after their intern starts.
-    if current_round.has_internship_start_date_passed():
+    try:
+        current_round = RoundPage.objects.filter(
+            internstarts__gt=today,
+        ).earliest('internstarts')
+    except RoundPage.DoesNotExist:
         return None
 
     # Get all projects where they're an approved mentor
