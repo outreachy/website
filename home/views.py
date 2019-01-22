@@ -2562,12 +2562,18 @@ class MidpointMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionM
         )
 
     def get_object(self):
-        internship = intern_in_good_standing(get_object_or_404(User, username=self.kwargs['username']))
-        if not internship:
-            raise Http404("{} is not an intern in good standing".format(self.kwargs['username']))
+        applicant = get_object_or_404(User, username=self.kwargs['username'])
+        mentor_relationship = MentorRelationship.objects.filter(
+            mentor__mentor__account=self.request.user,
+            intern_selection__applicant__applicant__account=applicant,
+        )
 
-        if not internship.mentorrelationship_set.filter(mentor__mentor__account=self.request.user).exists():
-            raise PermissionDenied("You are not a mentor for this intern.")
+        if not mentor_relationship.exists():
+            raise PermissionDenied("You are not a mentor for {}.".format(self.kwargs['username']))
+
+        internship = intern_in_good_standing(applicant)
+        if not internship:
+            raise PermissionDenied("{} is not an intern in good standing".format(self.kwargs['username']))
 
         try:
             feedback = MidpointMentorFeedback.objects.get(intern_selection=internship)
@@ -2602,7 +2608,7 @@ class MidpointInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionM
     def get_object(self):
         internship = intern_in_good_standing(self.request.user)
         if not internship:
-            raise Http404("The account for {} is not associated with an intern in good standing".format(self.request.user.username))
+            raise PermissionDenied("The account for {} is not associated with an intern in good standing".format(self.request.user.username))
 
         try:
             feedback = MidpointInternFeedback.objects.get(intern_selection=internship)
