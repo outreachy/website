@@ -55,6 +55,8 @@ willow = "==1.0"
 django-extensions = "*"
 
 [dev-packages]
+coverage = "*"
+django-coverage-plugin = "*"
 
 [requires]
 python_version = "3.6"

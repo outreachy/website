@@ -107,7 +107,10 @@ def coordinator_reminder(request):
         return None
 
     role = Role(request.user, current_round)
-    return role.approved_coordinator_communities
+    if not role.approved_coordinator_communities:
+        return None
+
+    return role
 
 
 def application_summary(request):
