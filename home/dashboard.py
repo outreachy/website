@@ -164,10 +164,13 @@ def staff_subscriptions(request):
 
 # This is a list of all reminders that staff need at different times in the
 # round. Each entry is of the form:
-#   (field, delta, template)
-# where field is the name of a DateField on a RoundPage, delta is a
-# datetime.timedelta, and the template is supposed to be displayed on the date
-# of field + delta.
+#   (field, delta, template, duration)
+# where:
+# - field is the name of a DateField on a RoundPage,
+# - delta is a datetime.timedelta,
+# - the template is supposed to be displayed on the date of field + delta,
+# - and duration is a datetime.timedelta for how long the reminder stays
+#   relevant.
 #
 # These templates are in home/dashboard/email/{name}.html
 #
@@ -186,11 +189,11 @@ all_round_events = (
     ('appslate', datetime.timedelta(), 'application-period-ended'),
     ('internannounce', datetime.timedelta(), 'intern-welcome'),
     ('internstarts', datetime.timedelta(weeks=0), 'internship-week-one'),
-    ('initialfeedback', datetime.timedelta(weeks=-1), 'initial-feedback-instructions'),
+    ('initialfeedback', datetime.timedelta(weeks=-1), 'initial-feedback-instructions', datetime.timedelta(weeks=5)),
     ('internstarts', datetime.timedelta(weeks=2), 'internship-week-three'),
     ('internstarts', datetime.timedelta(weeks=4), 'internship-week-five'),
     ('internstarts', datetime.timedelta(weeks=6), 'internship-week-seven'),
-    ('midfeedback', datetime.timedelta(weeks=-1), 'midpoint-feedback-instructions'),
+    ('midfeedback', datetime.timedelta(weeks=-1), 'midpoint-feedback-instructions', datetime.timedelta(weeks=5)),
 )
 
 def round_events(request):
@@ -205,16 +208,21 @@ def round_events(request):
     late = datetime.timedelta(weeks=1)
 
     events = []
-    for field, delta, template in all_round_events:
+    for field, delta, template, *rest in all_round_events:
+        if rest:
+            duration = rest[0]
+        else:
+            duration = datetime.timedelta()
+
         # We're looking for rounds where:
         #   target = field + delta
         #   target >= today - early
-        #   target <= today + late
+        #   target <= today + duration + late
         # but we can only query against field, so we do a little algebra to
         # shift the rest of each left-hand side over to the right.
         rounds = RoundPage.objects.filter(**{
             field + '__gte': today - delta - early,
-            field + '__lte': today - delta + late,
+            field + '__lte': today - delta + duration + late,
         })
 
         for current_round in rounds:
@@ -222,6 +230,7 @@ def round_events(request):
                 'template': 'home/dashboard/email/{}.html'.format(template),
                 'current_round': current_round,
                 'due': getattr(current_round, field) + delta,
+                'duration': duration,
             })
 
     if events:
