@@ -8,3 +8,7 @@ db.sqlite3
 /static/
 /media/
 /node_modules/
+
+# coverage.py outputs
+/.coverage
+/htmlcov/

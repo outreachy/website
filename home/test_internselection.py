@@ -1,5 +1,5 @@
 import datetime
-from django.test import Client, TestCase, override_settings
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from reversion.models import Version
 

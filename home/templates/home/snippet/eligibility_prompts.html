@@ -13,6 +13,8 @@
 {% elif request.user.comrade.eligible_application and request.user.comrade.get_projects_contributed_to %}
 {% include "home/snippet/apply_prompt.html" %}
 {% endif %}
-{% if request.user.comrade.get_approved_coordinator_communities %}
+{% with communities=request.user.comrade.get_approved_coordinator_communities %}
+{% if communities %}
 {% include "home/snippet/coordinator_reminder_prompt.html" %}
 {% endif %}
+{% endwith %}

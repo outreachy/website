@@ -100,7 +100,11 @@ class RoundPageFactory(PageFactory):
 
     class Params:
         start_from = 'pingnew'
-        start_date = factory.LazyFunction(datetime.date.today)
+        start_date = factory.LazyFunction(lambda:
+            models.get_deadline_date_for(
+                datetime.datetime.now(datetime.timezone.utc)
+            )
+        )
 
     roundnumber = factory.Sequence(int)
 
@@ -204,6 +208,14 @@ class CoordinatorApprovalFactory(factory.django.DjangoModelFactory):
     coordinator = factory.SubFactory(ComradeFactory)
     community = factory.SubFactory(CommunityFactory)
 
+class ApplicationReviewerFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.ApplicationReviewer
+        django_get_or_create = ('comrade', 'reviewing_round')
+
+    comrade = factory.SubFactory(ComradeFactory)
+    reviewing_round = factory.SubFactory(RoundPageFactory)
+
 class ApplicantApprovalFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.ApplicantApproval
@@ -235,6 +247,30 @@ class ContributionFactory(factory.django.DjangoModelFactory):
     date_started = factory.Faker('past_date')
     url = factory.Faker('url')
     description = factory.Faker('paragraph')
+
+class FinalApplicationFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.FinalApplication
+        django_get_or_create = ('applicant', 'project')
+
+    class Params:
+        round = factory.SubFactory(RoundPageFactory, start_from='internannounce')
+
+    applicant = factory.SubFactory(ApplicantApprovalFactory,
+        application_round=factory.SelfAttribute('..round'),
+        approval_status=models.ApprovalStatus.APPROVED,
+    )
+    project = factory.SubFactory(ProjectFactory,
+        project_round__participating_round=factory.SelfAttribute('...round'),
+        approval_status=models.ApprovalStatus.APPROVED,
+        project_round__approval_status=models.ApprovalStatus.APPROVED,
+    )
+
+    experience = factory.Faker('paragraph')
+    foss_experience = factory.Faker('paragraph')
+    relevant_projects = factory.Faker('paragraph')
+
+    spread_the_word = factory.Iterator(models.FinalApplication.HEARD_CHOICES, getter=lambda c: c[0])
 
 class SignedContractFactory(factory.django.DjangoModelFactory):
     class Meta:

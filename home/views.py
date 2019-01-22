@@ -2104,21 +2104,13 @@ class InternRemoval(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Re
 
 @login_required
 def project_timeline(request, round_slug, community_slug, project_slug, applicant_username):
-
-    if not request.user:
-        raise PermissionDenied("You must be logged in to view an intern project timeline.")
-
-    intern_selection = InternSelection.objects.get(
+    intern_selection = get_object_or_404(InternSelection,
             applicant__applicant__account__username=applicant_username,
             project__slug=project_slug,
             project__project_round__community__slug=community_slug,
             project__project_round__participating_round__slug=round_slug)
 
-    final_application = FinalApplication.objects.get(
-            applicant__applicant__account__username=applicant_username,
-            project__slug=project_slug,
-            project__project_round__community__slug=community_slug,
-            project__project_round__participating_round__slug=round_slug)
+    final_application = intern_selection.get_application()
 
     # Verify that this is either:
     # the intern,
@@ -2254,7 +2246,6 @@ class InternApprove(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Re
 
 class AlumStanding(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, View):
     def post(self, request, *args, **kwargs):
-        print("AlumStanding", kwargs['standing'])
         # Only allow approved organizers to approve interns
         if not request.user.is_staff:
             raise PermissionDenied("Only organizers can approve interns.")
@@ -2413,12 +2404,18 @@ class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMi
         )
 
     def get_object(self):
-        internship = intern_in_good_standing(get_object_or_404(User, username=self.kwargs['username']))
-        if not internship:
-            raise Http404("{} is not an intern in good standing".format(self.kwargs['username']))
+        applicant = get_object_or_404(User, username=self.kwargs['username'])
+        mentor_relationship = MentorRelationship.objects.filter(
+            mentor__mentor__account=self.request.user,
+            intern_selection__applicant__applicant__account=applicant,
+        )
 
-        if not internship.mentorrelationship_set.filter(mentor__mentor__account=self.request.user).exists():
-            raise PermissionDenied("You are not a mentor for this intern.")
+        if not mentor_relationship.exists():
+            raise PermissionDenied("You are not a mentor for {}.".format(self.kwargs['username']))
+
+        internship = intern_in_good_standing(applicant)
+        if not internship:
+            raise PermissionDenied("{} is not an intern in good standing".format(self.kwargs['username']))
 
         try:
             feedback = InitialMentorFeedback.objects.get(intern_selection=internship)
@@ -2460,7 +2457,7 @@ class InitialInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMi
     def get_object(self):
         internship = intern_in_good_standing(self.request.user)
         if not internship:
-            raise Http404("The account for {} is not associated with an intern in good standing".format(self.request.user.username))
+            raise PermissionDenied("The account for {} is not associated with an intern in good standing".format(self.request.user.username))
 
         try:
             feedback = InitialInternFeedback.objects.get(intern_selection=internship)
@@ -2626,7 +2623,6 @@ class Survey2018Notification(LoginRequiredMixin, ComradeRequiredMixin, TemplateV
 
         alums, alums_opt_out, past_interns, past_interns_opt_out = self.get_alums_and_opt_outs()
         len_queued_surveys = AlumSurveyTracker.objects.filter(survey_date__isnull=True).count()
-        print("Survey: ", len(alums), len(past_interns))
 
         context = super(Survey2018Notification, self).get_context_data(**kwargs)
         context.update({
@@ -2835,10 +2831,16 @@ class SchoolInformationUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversio
 def get_or_create_application_reviewer_and_review(self):
     # Only allow approved reviewers to rate applications for the current round
     current_round = RoundPage.objects.latest('internstarts')
-    reviewer = get_object_or_404(ApplicationReviewer,
+
+    try:
+        reviewer = ApplicationReviewer.objects.get(
             comrade=self.request.user.comrade,
             reviewing_round=current_round,
-            approval_status=ApprovalStatus.APPROVED)
+            approval_status=ApprovalStatus.APPROVED,
+        )
+    except ApplicationReviewer.DoesNotExist:
+        raise PermissionDenied("You are not currently an approved application reviewer.")
+
     application = get_object_or_404(ApplicantApproval,
             applicant__account__username=self.kwargs['applicant_username'],
             application_round=current_round)

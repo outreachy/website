@@ -497,7 +497,7 @@ class RoundPage(Page):
                 application_round=self).count()
         count_rejected_essay = ApplicantApproval.objects.filter(
                 approval_status=ApplicantApproval.REJECTED,
-                reason_denied_contains="ALIGNMENT",
+                reason_denied__contains="ALIGNMENT",
                 application_round=self).count()
         if count_rejected_all == 0:
             return (count_all, count_approved, 0, 0, 0)
@@ -525,13 +525,13 @@ class RoundPage(Page):
                 contribution__isnull=False).distinct().count()
 
         us_apps = ApplicantApproval.objects.filter(
-                models.Q(us_national_or_permanent_resident=True) | models.Q(living_in_us=True),
+                models.Q(paymenteligibility__us_national_or_permanent_resident=True) | models.Q(paymenteligibility__living_in_us=True),
                 application_round=self,
                 approval_status=ApprovalStatus.APPROVED,
                 contribution__isnull=False).distinct().count()
 
         us_people_of_color_apps = ApplicantApproval.objects.filter(
-                us_resident_demographics=True,
+                applicantraceethnicityinformation__us_resident_demographics=True,
                 application_round=self,
                 approval_status=ApprovalStatus.APPROVED,
                 contribution__isnull=False).distinct().count()
@@ -545,6 +545,9 @@ class RoundPage(Page):
                 application_round=self,
                 approval_status=ApprovalStatus.APPROVED,
                 contribution__isnull=False).distinct().count()
+
+        if all_apps == 0:
+            return (0, 0, 0)
 
         cis_apps = ApplicantGenderIdentity.objects.filter(
                 transgender=False,
