@@ -344,6 +344,37 @@ class InitialMentorFeedbackFactory(factory.django.DjangoModelFactory):
     mentor_response_time = factory.Iterator(models.InitialMentorFeedback.RESPONSE_TIME_CHOICES, getter=lambda c: c[0])
 
     progress_report = factory.Faker('paragraph')
+
+    full_time_effort = True
+
+    payment_approved = True
+
+    request_extension = False
+
+    request_termination = False
+
+class MidpointMentorFeedbackFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.MidpointMentorFeedback
+        django_get_or_create = ('intern_selection',)
+
+    intern_selection = factory.SubFactory(InternSelectionFactory,
+        active=True,
+        round__start_from='midfeedback',
+    )
+    allow_edits = False
+    ip_address = factory.Faker('ipv4_public')
+
+    intern_help_requests_frequency = factory.Iterator(models.MidpointMentorFeedback.ASKING_FOR_HELP_FREQUENCY_CHOICES, getter=lambda c: c[0])
+    mentor_help_response_time = factory.Iterator(models.MidpointMentorFeedback.RESPONSE_TIME_CHOICES, getter=lambda c: c[0])
+    intern_contribution_frequency = factory.Iterator(models.MidpointMentorFeedback.CONTRIBUTION_FREQUENCY_CHOICES, getter=lambda c: c[0])
+    mentor_review_response_time = factory.Iterator(models.MidpointMentorFeedback.RESPONSE_TIME_CHOICES, getter=lambda c: c[0])
+    intern_contribution_revision_time = factory.Iterator(models.MidpointMentorFeedback.RESPONSE_TIME_CHOICES, getter=lambda c: c[0])
+
+    last_contact = factory.Faker('past_date')
+
+    progress_report = factory.Faker('paragraph')
+
     full_time_effort = True
 
     payment_approved = True
