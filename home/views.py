@@ -1076,6 +1076,18 @@ class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
             'unapproved_advertising_description',
             ]
 
+    def get_form(self):
+        now = datetime.now(timezone.utc)
+        today = get_deadline_date_for(now)
+
+        try:
+            self.current_round = RoundPage.objects.filter(
+                lateorgs__gt=today,
+            ).earliest('lateorgs')
+        except RoundPage.DoesNotExist:
+            raise PermissionDenied("There is no round you can participate in right now.")
+        return super(CommunityCreate, self).get_form()
+
     # We have to over-ride this method because we need to
     # create a community's slug from its name.
     def form_valid(self, form):
@@ -1096,7 +1108,10 @@ class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
         # this round. The Participation object doesn't have to be saved
         # to the database yet; that'll happen when they submit it in the
         # next step.
-        return redirect(Participation(community=self.object).get_action_url('submit'))
+        return redirect(Participation(
+            community=self.object,
+            participating_round=self.current_round,
+        ).get_action_url('submit'))
 
 class CommunityUpdate(LoginRequiredMixin, UpdateView):
     model = Community
