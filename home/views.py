@@ -189,7 +189,7 @@ class ComradeUpdate(LoginRequiredMixin, UpdateView):
         )
         # was an approved mentor for some approved project in an approved community
         mentored = comrade.get_mentored_projects().approved().filter(
-            participation__approval_status=ApprovalStatus.APPROVED,
+            project_round__approval_status=ApprovalStatus.APPROVED,
         )
         # was an approved application reviewer at some point
         reviewered = comrade.applicationreviewer_set.approved()
