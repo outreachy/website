@@ -158,6 +158,8 @@ class SyntaxTestCase(TestCase):
             "/contract-export/",
             "/initial-feedback-export/",
             "/initial-feedback-summary/",
+            "/midpoint-feedback-export/",
+            "/midpoint-feedback-summary/",
             "/email/application-deadline-review/",
             "/email/application-period-ended/",
             "/email/application-deadline-reminder/",
@@ -171,6 +173,7 @@ class SyntaxTestCase(TestCase):
             "/email/internship-week-five/",
             "/email/internship-week-seven/",
             "/email/initial-feedback-instructions/",
+            "/email/midpoint-feedback-instructions/",
         ] + include("/communities/{}".format(community.slug), round_community_paths)
 
         paths = sum((
@@ -194,6 +197,8 @@ class SyntaxTestCase(TestCase):
                 # can't test POST-only views, EssayRating/ChangeRedFlag/SetReviewOwner
                 "/dashboard/feedback/mentor/initial/{}/".format(applicant.username),
                 "/dashboard/feedback/intern/initial/",
+                "/dashboard/feedback/mentor/midpoint/{}/".format(applicant.username),
+                "/dashboard/feedback/intern/midpoint/",
                 "/dashboard/trusted-volunteers/",
                 "/eligibility/",
                 # need to create BarriersToParticipation and SchoolInformation to test these two:
