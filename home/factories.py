@@ -208,6 +208,14 @@ class CoordinatorApprovalFactory(factory.django.DjangoModelFactory):
     coordinator = factory.SubFactory(ComradeFactory)
     community = factory.SubFactory(CommunityFactory)
 
+class ApplicationReviewerFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.ApplicationReviewer
+        django_get_or_create = ('comrade', 'reviewing_round')
+
+    comrade = factory.SubFactory(ComradeFactory)
+    reviewing_round = factory.SubFactory(RoundPageFactory)
+
 class ApplicantApprovalFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.ApplicantApproval

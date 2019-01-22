@@ -55,16 +55,17 @@ class SyntaxTestCase(TestCase):
     def testEachVisitorType(self):
         internselection = factories.InternSelectionFactory(active=True)
         project = internselection.project
-        community = project.project_round.community
+        participation = project.project_round
+        community = participation.community
         applicant = internselection.applicant.applicant.account
         mentor = internselection.mentors.get().mentor.account
         contribution = factories.ContributionFactory(
-            round=project.project_round.participating_round,
+            round=participation.participating_round,
             applicant=internselection.applicant,
             project=project,
         )
         finalapplication = factories.FinalApplicationFactory(
-            round=project.project_round.participating_round,
+            round=participation.participating_round,
             applicant=internselection.applicant,
             project=project,
         )
@@ -72,6 +73,9 @@ class SyntaxTestCase(TestCase):
             approval_status=models.ApprovalStatus.APPROVED,
             community=community,
         ).coordinator.account
+        reviewer = factories.ApplicationReviewerFactory(
+            reviewing_round=participation.participating_round,
+        ).comrade.account
 
         visitors = (
             ("no comrade", factories.UserFactory()),
@@ -80,7 +84,7 @@ class SyntaxTestCase(TestCase):
             ("applicant", applicant),
             ("mentor", mentor),
             ("coordinator", coordinator),
-            # TODO: ApplicantReviewerFactory
+            ("reviewer", reviewer),
         )
 
         # Some views expect that only one round will be in a particular phase
