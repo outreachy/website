@@ -23,6 +23,8 @@ from .models import FinalApplication
 from .models import InternSelection
 from .models import InitialMentorFeedback
 from .models import InitialInternFeedback
+from .models import MidpointMentorFeedback
+from .models import MidpointInternFeedback
 from .models import MentorApproval
 from .models import MentorRelationship
 from .models import NewCommunity
@@ -438,12 +440,22 @@ class SignedContractAdmin(admin.ModelAdmin):
 class InitialMentorFeedbackInline(admin.StackedInline):
     model = InitialMentorFeedback
     can_delete = False
-    verbose_name_plural = 'Mentor submitted feedback forms'
+    verbose_name_plural = 'Mentor submitted initial feedback forms'
 
 class InitialInternFeedbackInline(admin.StackedInline):
     model = InitialInternFeedback
     can_delete = False
-    verbose_name_plural = 'Intern submitted feedback forms'
+    verbose_name_plural = 'Intern submitted initial feedback forms'
+
+class MidpointMentorFeedbackInline(admin.StackedInline):
+    model = MidpointMentorFeedback
+    can_delete = False
+    verbose_name_plural = 'Mentor submitted midpoint feedback forms'
+
+class MidpointInternFeedbackInline(admin.StackedInline):
+    model = MidpointInternFeedback
+    can_delete = False
+    verbose_name_plural = 'Intern submitted midpoint feedback forms'
 
 class InternSelectionAdmin(reversion.admin.VersionAdmin):
     list_display = (
@@ -465,27 +477,9 @@ class InternSelectionAdmin(reversion.admin.VersionAdmin):
             'mentors__mentor__public_name',
             'mentors__mentor__account__email',
             )
-    inlines = (InitialMentorFeedbackInline, InitialInternFeedbackInline)
+    inlines = (InitialMentorFeedbackInline, InitialInternFeedbackInline, MidpointMentorFeedbackInline, MidpointInternFeedbackInline)
 
-class InitialMentorFeedbackAdmin(reversion.admin.VersionAdmin):
-    list_display = (
-            'intern_name',
-            'community_name',
-            'project_name',
-            'round',
-            )
-    list_filter = (
-            'intern_selection__project__project_round__participating_round',
-            'intern_selection__project__project_round__community__name',
-            )
-    search_fields = (
-            'intern_selection__applicant__applicant__public_name',
-            'intern_selection__applicant__applicant__legal_name',
-            '=intern_selection__applicant__applicant__account__username',
-            '=intern_selection__applicant__applicant__account__email',
-            )
-
-class InitialInternFeedbackAdmin(reversion.admin.VersionAdmin):
+class FeedbackAdmin(reversion.admin.VersionAdmin):
     list_display = (
             'intern_name',
             'community_name',
@@ -517,8 +511,10 @@ admin.site.register(CoordinatorApproval, CoordinatorApprovalAdmin)
 admin.site.register(Contribution, ContributionAdmin)
 admin.site.register(FinalApplication, FinalApplicationAdmin)
 admin.site.register(InternSelection, InternSelectionAdmin)
-admin.site.register(InitialMentorFeedback, InitialMentorFeedbackAdmin)
-admin.site.register(InitialInternFeedback, InitialInternFeedbackAdmin)
+admin.site.register(InitialMentorFeedback, FeedbackAdmin)
+admin.site.register(InitialInternFeedback, FeedbackAdmin)
+admin.site.register(MidpointMentorFeedback, FeedbackAdmin)
+admin.site.register(MidpointInternFeedback, FeedbackAdmin)
 admin.site.register(MentorApproval, MentorApprovalAdmin)
 admin.site.register(MentorRelationship, MentorRelationshipAdmin)
 admin.site.register(NewCommunity, CommunityAdmin)

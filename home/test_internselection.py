@@ -7,6 +7,7 @@ from . import models
 from .factories import RoundPageFactory
 from .factories import InternSelectionFactory
 from .factories import InitialMentorFeedbackFactory
+from .factories import MidpointMentorFeedbackFactory
 
 
 # don't try to use the static files manifest during tests
@@ -58,11 +59,11 @@ class InternSelectionTestCase(TestCase):
         defaults.update(kwargs)
         return defaults
 
-    def _submit_mentor_feedback_form(self, internselection, answers):
+    def _submit_mentor_feedback_form(self, internselection, stage, answers):
         mentor = internselection.mentors.get()
         self.client.force_login(mentor.mentor.account)
 
-        path = reverse('initial-mentor-feedback', kwargs={
+        path = reverse(stage + '-mentor-feedback', kwargs={
             'username': internselection.applicant.applicant.account.username,
         })
 
@@ -93,7 +94,7 @@ class InternSelectionTestCase(TestCase):
                     request_extension=request_extension,
                     extension_date=extension_date,
                 )
-                response = self._submit_mentor_feedback_form(internselection, answers)
+                response = self._submit_mentor_feedback_form(internselection, 'initial', answers)
                 self.assertEqual(response.status_code, 302)
 
                 # will raise DoesNotExist if the view didn't create this
@@ -120,7 +121,7 @@ class InternSelectionTestCase(TestCase):
                 internselection = prior.intern_selection
 
                 answers = self._mentor_feedback_form(internselection)
-                response = self._submit_mentor_feedback_form(internselection, answers)
+                response = self._submit_mentor_feedback_form(internselection, 'initial', answers)
 
                 # permission denied
                 self.assertEqual(response.status_code, 403)
@@ -130,7 +131,7 @@ class InternSelectionTestCase(TestCase):
         internselection = prior.intern_selection
 
         answers = self._mentor_feedback_form(internselection)
-        response = self._submit_mentor_feedback_form(internselection, answers)
+        response = self._submit_mentor_feedback_form(internselection, 'initial', answers)
         self.assertEqual(response.status_code, 302)
 
         # discard all cached objects and reload from database
@@ -176,7 +177,7 @@ class InternSelectionTestCase(TestCase):
                     request_extension=True,
                     extension_date=extension_date,
                 )
-                response = self._submit_mentor_feedback_form(internselection, answers)
+                response = self._submit_mentor_feedback_form(internselection, 'initial', answers)
                 self.assertEqual(response.status_code, 200)
 
                 # view should not have created a feedback object
@@ -203,10 +204,10 @@ class InternSelectionTestCase(TestCase):
         defaults.update(kwargs)
         return defaults
 
-    def _submit_intern_feedback_form(self, internselection, answers):
+    def _submit_intern_feedback_form(self, internselection, stage, answers):
         self.client.force_login(internselection.applicant.applicant.account)
 
-        return self.client.post(reverse('initial-intern-feedback'), {
+        return self.client.post(reverse(stage + '-intern-feedback'), {
             # This is a dictionary comprehension that converts model-level
             # values to form/POST values. It assumes all form widgets accept
             # the str() representation of their type when the form is POSTed.
@@ -224,11 +225,116 @@ class InternSelectionTestCase(TestCase):
         )
 
         answers = self._intern_feedback_form(internselection)
-        response = self._submit_intern_feedback_form(internselection, answers)
+        response = self._submit_intern_feedback_form(internselection, 'initial', answers)
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
         feedback = internselection.initialinternfeedback
+
+        for key, expected in answers.items():
+            self.assertEqual(getattr(feedback, key), expected)
+
+        # only allow submitting once
+        self.assertFalse(feedback.allow_edits)
+
+        self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+
+    @staticmethod
+    def _midpoint_mentor_feedback_form(internselection, **kwargs):
+        defaults = {
+            'intern_help_requests_frequency': models.MidpointMentorFeedback.MULTIPLE_WEEKLY,
+            'mentor_help_response_time': models.MidpointMentorFeedback.HOURS_6,
+            'intern_contribution_frequency': models.MidpointMentorFeedback.ONCE_WEEKLY,
+            'mentor_review_response_time': models.MidpointMentorFeedback.HOURS_3,
+            'intern_contribution_revision_time': models.MidpointMentorFeedback.DAYS_2,
+            'last_contact': internselection.midpoint_feedback_opens,
+            'payment_approved': True,
+            'full_time_effort': True,
+            'progress_report': 'Everything is fine.',
+            'request_extension': False,
+            'extension_date': None,
+            'request_termination': False,
+            'termination_reason': '',
+        }
+        defaults.update(kwargs)
+        return defaults
+
+    def test_mentor_can_give_midpoint_feedback(self):
+        for request_extension in (False, True):
+            with self.subTest(request_extension=request_extension):
+                internselection = InternSelectionFactory(
+                    active=True,
+                    round__start_from='midfeedback',
+                )
+
+                extension_date = None
+                if request_extension:
+                    extension_date = internselection.round().midfeedback + datetime.timedelta(weeks=5)
+
+                answers = self._midpoint_mentor_feedback_form(internselection,
+                    request_extension=request_extension,
+                    extension_date=extension_date,
+                )
+                response = self._submit_mentor_feedback_form(internselection, 'midpoint', answers)
+                self.assertEqual(response.status_code, 302)
+
+                # will raise DoesNotExist if the view didn't create this
+                feedback = internselection.midpointmentorfeedback
+
+                for key, expected in answers.items():
+                    self.assertEqual(getattr(feedback, key), expected)
+
+                # only allow submitting once
+                self.assertFalse(feedback.allow_edits)
+
+                self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+
+    def test_invalid_duplicate_midpoint_mentor_feedback(self):
+        today = datetime.date.today()
+        week = datetime.timedelta(weeks=1)
+        disallowed_when = (
+            { 'allow_edits': False, 'intern_selection__midpoint_feedback_opens': today - week },
+            { 'allow_edits': True, 'intern_selection__midpoint_feedback_opens': today + week },
+        )
+        for params in disallowed_when:
+            with self.subTest(params=params):
+                prior = MidpointMentorFeedbackFactory(**params)
+                internselection = prior.intern_selection
+
+                answers = self._midpoint_mentor_feedback_form(internselection)
+                response = self._submit_mentor_feedback_form(internselection, 'midpoint', answers)
+
+                # permission denied
+                self.assertEqual(response.status_code, 403)
+
+    @staticmethod
+    def _midpoint_intern_feedback_form(internselection, **kwargs):
+        defaults = {
+            'intern_help_requests_frequency': models.MidpointInternFeedback.MULTIPLE_WEEKLY,
+            'mentor_help_response_time': models.MidpointInternFeedback.HOURS_6,
+            'intern_contribution_frequency': models.MidpointInternFeedback.ONCE_WEEKLY,
+            'mentor_review_response_time': models.MidpointInternFeedback.HOURS_3,
+            'intern_contribution_revision_time': models.MidpointInternFeedback.DAYS_2,
+            'last_contact': internselection.initial_feedback_opens,
+            'mentor_support': 'My mentor is awesome.',
+            'hours_worked': models.InitialInternFeedback.HOURS_40,
+            'progress_report': 'Everything is fine.',
+        }
+        defaults.update(kwargs)
+        return defaults
+
+    def test_intern_can_give_midpoint_feedback(self):
+        internselection = InternSelectionFactory(
+            active=True,
+            round__start_from='midfeedback',
+        )
+
+        answers = self._midpoint_intern_feedback_form(internselection)
+        response = self._submit_intern_feedback_form(internselection, 'midpoint', answers)
+        self.assertEqual(response.status_code, 302)
+
+        # will raise DoesNotExist if the view didn't create this
+        feedback = internselection.midpointinternfeedback
 
         for key, expected in answers.items():
             self.assertEqual(getattr(feedback, key), expected)

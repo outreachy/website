@@ -1,0 +1,6 @@
+{% if not intern_status or intern_status == intern.MISSING %}
+<button class="btn btn-secondary">missing</button>
+{% elif intern_status == intern.SUBMITTED %}
+<button class="btn btn-success">submitted</button>
+{% endif %}
+

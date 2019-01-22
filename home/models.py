@@ -3493,6 +3493,27 @@ class InternSelection(models.Model):
         except InitialInternFeedback.DoesNotExist:
             return True
 
+    def is_midpoint_feedback_on_intern_open(self):
+        if not has_deadline_passed(self.midpoint_feedback_opens):
+            return False
+        try:
+            return self.midpointmentorfeedback.can_edit()
+        except MidpointMentorFeedback.DoesNotExist:
+            return True
+
+    def is_midpoint_feedback_on_intern_past_due(self):
+        if has_deadline_passed(self.midpoint_feedback_due):
+            return True
+        return False
+
+    def is_midpoint_feedback_on_mentor_open(self):
+        if not has_deadline_passed(self.midpoint_feedback_opens):
+            return False
+        try:
+            return self.midpointinternfeedback.can_edit()
+        except MidpointInternFeedback.DoesNotExist:
+            return True
+
     def intern_name(self):
         return self.applicant.applicant.public_name
 
@@ -3566,6 +3587,26 @@ class InternSelection(models.Model):
         except InitialInternFeedback.DoesNotExist:
             return self.MISSING
 
+    def get_mentor_midpoint_feedback_status(self):
+        try:
+            if self.midpointmentorfeedback.request_termination:
+                return self.TERMINATE
+            if self.midpointmentorfeedback.request_extension:
+                return self.EXTEND
+            if self.midpointmentorfeedback.payment_approved:
+                return self.PAY
+            # Validation should ensure this never happens?
+            return self.SUBMITTED
+        except InitialMentorFeedback.DoesNotExist:
+            return self.MISSING
+
+    def get_intern_midpoint_feedback_status(self):
+        try:
+            if self.midpointinternfeedback:
+                return self.SUBMITTED
+        except InitialInternFeedback.DoesNotExist:
+            return self.MISSING
+
     def __str__(self):
         return self.mentor_names() + ' mentoring ' + self.applicant.applicant.public_name
 
@@ -3612,15 +3653,6 @@ class BaseFeedback(models.Model):
 
     def project_name(self):
         return self.intern_selection.project_name()
-
-    def can_edit(self):
-        if not self.allow_edits:
-            return False
-
-        # XXX: I guess we open the feedback form at 4pm UTC?
-        if has_deadline_passed(self.intern_selection.initial_feedback_opens):
-            return True
-        return False
 
     class Meta:
         abstract = True
@@ -3678,17 +3710,6 @@ class BaseMentorFeedback(BaseFeedback):
         version = self.find_version_mentor_edited()
         if version:
             return version.revision.date_created
-
-    def clean(self):
-        if self.request_extension:
-            if self.extension_date is None:
-                raise ValidationError({'extension_date': "If you're requesting an extension, this field is required."})
-            else:
-                # should not be more than five weeks from the initial feedback deadline in the RoundPage
-                base = self.intern_selection.round().initialfeedback
-                limit = base + datetime.timedelta(weeks=5)
-                if not (base <= self.extension_date <= limit):
-                    raise ValidationError({'extension_date': "Extension date must be between {} and {}".format(base, limit)})
 
     class Meta:
         abstract = True
@@ -3758,6 +3779,26 @@ class InitialMentorFeedback(BaseMentorFeedback):
     payment_approved = models.BooleanField(verbose_name="Should your Outreachy intern be paid the initial $1,000 payment?", help_text="Please base your answer on whether your intern has put in a full-time, 40 hours a week effort. They should have established communication with you and other mentors, and have started learning how to tackle their first tasks. If you are going to ask for an internship extension, please say no to this question.")
 
     extension_date = models.DateField(help_text="If you want to extend the internship, please pick a date when you will be asked to update your intern's initial feedback and authorize payment. Internships can be extended for up to five weeks. We don't recommend extending an internship for more than 1 week at initial feedback. Please leave this field blank if you are not asking for an extension.", blank=True, null=True)
+
+    def can_edit(self):
+        if not self.allow_edits:
+            return False
+
+        # XXX: I guess we open the feedback form at 4pm UTC?
+        if has_deadline_passed(self.intern_selection.initial_feedback_opens):
+            return True
+        return False
+
+    def clean(self):
+        if self.request_extension:
+            if self.extension_date is None:
+                raise ValidationError({'extension_date': "If you're requesting an extension, this field is required."})
+            else:
+                # should not be more than five weeks from the initial feedback deadline in the RoundPage
+                base = self.intern_selection.round().initialfeedback
+                limit = base + datetime.timedelta(weeks=5)
+                if not (base <= self.extension_date <= limit):
+                    raise ValidationError({'extension_date': "Extension date must be between {} and {}".format(base, limit)})
 
 class BaseInternFeedback(BaseFeedback):
     last_contact = models.DateField(verbose_name="What was the last date you were in contact with your mentor?")
@@ -3846,37 +3887,55 @@ class InitialInternFeedback(BaseInternFeedback):
 
     progress_report = models.TextField(verbose_name="Please provide a paragraph describing your progress on establishing communication with your mentor, and ramping up on your first tasks. This information will only be seen by Outreachy mentors. If you are having any difficulties or facing any barriers, please let us know, so we can help you.")
 
+    def can_edit(self):
+        if not self.allow_edits:
+            return False
+
+        if has_deadline_passed(self.intern_selection.initial_feedback_opens):
+            return True
+        return False
+
 class MidpointMentorFeedback(BaseMentorFeedback):
     # XXX - Make sure to change the questions in
     # home/templates/home/email/midpoint-feedback-instructions.txt
     # if you change these verbose names.
     NEVER = '0'
+    MULTIPLE_DAILY = 'U'
     ONCE_DAILY = 'D'
     MULTIPLE_WEEKLY = 'M'
     ONCE_WEEKLY = 'W'
     EVERY_OTHER_WEEK = 'B'
     ASKING_FOR_HELP_FREQUENCY_CHOICES = (
-        (NEVER, 'Intern has not asked for help or feedback'),
+        (NEVER, 'Intern has not asked for help'),
+        (MULTIPLE_DAILY, 'Multiple times per day'),
         (ONCE_DAILY, 'Once per day'),
         (MULTIPLE_WEEKLY, 'Multiple times per week'),
         (ONCE_WEEKLY, 'Once per week'),
         (EVERY_OTHER_WEEK, 'Every other week'),
     )
-    intern_help_requests_frequency = models.CharField(max_length=1, choices=ASKING_FOR_HELP_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often does <b>your intern</b> ask for your help or feedback?")
+    intern_help_requests_frequency = models.CharField(max_length=1, choices=ASKING_FOR_HELP_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often does <b>your intern</b> ask for your help?")
 
-    NEVER = '0'
-    ONCE_DAILY = 'D'
-    MULTIPLE_WEEKLY = 'M'
-    ONCE_WEEKLY = 'W'
-    EVERY_OTHER_WEEK = 'B'
-    ASKING_FOR_HELP_FREQUENCY_CHOICES = (
-        (NEVER, 'I have not responded to requests for help or feedback'),
-        (ONCE_DAILY, 'Once per day'),
-        (MULTIPLE_WEEKLY, 'Multiple times per week'),
-        (ONCE_WEEKLY, 'Once per week'),
-        (EVERY_OTHER_WEEK, 'Every other week'),
+    HOURS_1 = '1H'
+    HOURS_3 = '3H'
+    HOURS_6 = '6H'
+    HOURS_12 = '12H'
+    DAYS_1 = '1D'
+    DAYS_2 = '2D'
+    DAYS_4 = '4D'
+    DAYS_6 = '6D'
+    LONGER = '>7D'
+    RESPONSE_TIME_CHOICES = (
+        (HOURS_1, '1 hour'),
+        (HOURS_3, '3 hours'),
+        (HOURS_6, '6 hours'),
+        (HOURS_12, '12 hours'),
+        (DAYS_1, '1 day'),
+        (DAYS_2, '2-3 days'),
+        (DAYS_4, '4-5 days'),
+        (DAYS_6, '6-7 days'),
+        (LONGER, '> 7 days'),
     )
-    mentor_response_frequency = models.CharField(max_length=1, choices=ASKING_FOR_HELP_FREQUENCY_CHOICES, default=NEVER, verbose_name="How long does it take for <b>you</b> to respond to your intern's request for help or feedback?")
+    mentor_help_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>you</b> to respond to your intern's request for help?")
 
     CONTRIBUTION_FREQUENCY_CHOICES = (
         (NEVER, 'Intern has not submitted a contribution'),
@@ -3887,6 +3946,55 @@ class MidpointMentorFeedback(BaseMentorFeedback):
     )
     intern_contribution_frequency = models.CharField(max_length=1, choices=CONTRIBUTION_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often does <b>your intern</b> submit a project contribution?")
 
+    mentor_review_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>you</b> to give feedback on your intern's contributions?")
+
+    intern_contribution_revision_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>your intern</b> to incorporate feedback and resubmit a contribution?")
+
+    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your intern's progress on their project. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.")
+
+    payment_approved = models.BooleanField(verbose_name="Should your Outreachy intern be paid the mid-point $2,000 payment?", help_text="Please base your answer on whether your intern has put in a full-time, 40 hours a week effort. They should have made project contributions, promptly responded to feedback on those contributions, and resubmitted their revised contributions. If they were stuck, they should have reached out to you or the community for help. If you are going to ask for an internship extension, please say no to this question.")
+
+    extension_date = models.DateField(help_text="If you want to extend the internship, please pick a date when you will be asked to update your intern's mid-point feedback and authorize payment. Internships can be extended for up to five weeks. We don't recommend extending an internship for more than 3 weeks at mid-point feedback. Please leave this field blank if you are not asking for an extension.", blank=True, null=True)
+
+    def can_edit(self):
+        if not self.allow_edits:
+            return False
+
+        if has_deadline_passed(self.intern_selection.midpoint_feedback_opens):
+            return True
+        return False
+
+    def clean(self):
+        if self.request_extension:
+            if self.extension_date is None:
+                raise ValidationError({'extension_date': "If you're requesting an extension, this field is required."})
+            else:
+                # should not be more than five weeks from the initial feedback deadline in the RoundPage
+                base = self.intern_selection.round().midfeedback
+                limit = base + datetime.timedelta(weeks=5)
+                if not (base <= self.extension_date <= limit):
+                    raise ValidationError({'extension_date': "Extension date must be between {} and {}".format(base, limit)})
+
+class MidpointInternFeedback(BaseInternFeedback):
+    # XXX - Make sure to change the questions in
+    # home/templates/home/email/midpoint-feedback-instructions.txt
+    # if you change these verbose names.
+    NEVER = '0'
+    MULTIPLE_DAILY = 'U'
+    ONCE_DAILY = 'D'
+    MULTIPLE_WEEKLY = 'M'
+    ONCE_WEEKLY = 'W'
+    EVERY_OTHER_WEEK = 'B'
+    ASKING_FOR_HELP_FREQUENCY_CHOICES = (
+        (NEVER, 'I have not asked for help'),
+        (MULTIPLE_DAILY, 'Multiple times per day'),
+        (ONCE_DAILY, 'Once per day'),
+        (MULTIPLE_WEEKLY, 'Multiple times per week'),
+        (ONCE_WEEKLY, 'Once per week'),
+        (EVERY_OTHER_WEEK, 'Every other week'),
+    )
+    intern_help_requests_frequency = models.CharField(max_length=1, choices=ASKING_FOR_HELP_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often do <b>you</b> ask for your mentor's help?")
+
     HOURS_1 = '1H'
     HOURS_3 = '3H'
     HOURS_6 = '6H'
@@ -3907,47 +4015,7 @@ class MidpointMentorFeedback(BaseMentorFeedback):
         (DAYS_6, '6-7 days'),
         (LONGER, '> 7 days'),
     )
-    mentor_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="How long does it take for <b>you</b> to give feedback on your intern's contributions?")
-
-    intern_contribution_revision_time = models.CharField(max_length=1, choices=RESPONSE_TIME_CHOICES, verbose_name="How long does it take for <b>your intern</b> to incorporate feedback and resubmit a contribution?")
-
-    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your intern's progress on their project. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.")
-
-    payment_approved = models.BooleanField(verbose_name="Should your Outreachy intern be paid the mid-point $2,000 payment?", help_text="Please base your answer on whether your intern has put in a full-time, 40 hours a week effort. They should have made project contributions, promptly responded to feedback on those contributions, and resubmitted their revised contributions. If they were stuck, they should have reached out to you or the community for help. If you are going to ask for an internship extension, please say no to this question.")
-
-    extension_date = models.DateField(help_text="If you want to extend the internship, please pick a date when you will be asked to update your intern's mid-point feedback and authorize payment. Internships can be extended for up to five weeks. We don't recommend extending an internship for more than 3 weeks at mid-point feedback. Please leave this field blank if you are not asking for an extension.", blank=True, null=True)
-
-class MidpointInternFeedback(BaseInternFeedback):
-    # XXX - Make sure to change the questions in
-    # home/templates/home/email/midpoint-feedback-instructions.txt
-    # if you change these verbose names.
-    NEVER = '0'
-    ONCE_DAILY = 'D'
-    MULTIPLE_WEEKLY = 'M'
-    ONCE_WEEKLY = 'W'
-    EVERY_OTHER_WEEK = 'B'
-    ASKING_FOR_HELP_FREQUENCY_CHOICES = (
-        (NEVER, 'I have not asked for help or feedback'),
-        (ONCE_DAILY, 'Once per day'),
-        (MULTIPLE_WEEKLY, 'Multiple times per week'),
-        (ONCE_WEEKLY, 'Once per week'),
-        (EVERY_OTHER_WEEK, 'Every other week'),
-    )
-    intern_help_requests_frequency = models.CharField(max_length=1, choices=ASKING_FOR_HELP_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often do <b>you</b> ask for your mentor's help or feedback?")
-
-    NEVER = '0'
-    ONCE_DAILY = 'D'
-    MULTIPLE_WEEKLY = 'M'
-    ONCE_WEEKLY = 'W'
-    EVERY_OTHER_WEEK = 'B'
-    ASKING_FOR_HELP_FREQUENCY_CHOICES = (
-        (NEVER, 'Mentor has not responded to requests for help or feedback'),
-        (ONCE_DAILY, 'Once per day'),
-        (MULTIPLE_WEEKLY, 'Multiple times per week'),
-        (ONCE_WEEKLY, 'Once per week'),
-        (EVERY_OTHER_WEEK, 'Every other week'),
-    )
-    mentor_response_frequency = models.CharField(max_length=1, choices=ASKING_FOR_HELP_FREQUENCY_CHOICES, default=NEVER, verbose_name="How long does it take for <b>your mentor</b> to respond to your intern's request for help or feedback?")
+    mentor_help_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>your mentor</b> to respond to your requests for help?")
 
     CONTRIBUTION_FREQUENCY_CHOICES = (
         (NEVER, 'I have not submitted a contribution'),
@@ -3958,31 +4026,19 @@ class MidpointInternFeedback(BaseInternFeedback):
     )
     intern_contribution_frequency = models.CharField(max_length=1, choices=CONTRIBUTION_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often do <b>you</b> submit a project contribution?")
 
-    HOURS_1 = '1H'
-    HOURS_3 = '3H'
-    HOURS_6 = '6H'
-    HOURS_12 = '12H'
-    DAYS_1 = '1D'
-    DAYS_2 = '2D'
-    DAYS_4 = '4D'
-    DAYS_6 = '6D'
-    LONGER = '>7D'
-    RESPONSE_TIME_CHOICES = (
-        (HOURS_1, '1 hour'),
-        (HOURS_3, '3 hours'),
-        (HOURS_6, '6 hours'),
-        (HOURS_12, '12 hours'),
-        (DAYS_1, '1 day'),
-        (DAYS_2, '2-3 days'),
-        (DAYS_4, '4-5 days'),
-        (DAYS_6, '6-7 days'),
-        (LONGER, '> 7 days'),
-    )
-    mentor_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="How long does it take for <b>your mentor</b> to give feedback on your contributions?")
+    mentor_review_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>your mentor</b> to give feedback on your contributions?")
 
-    intern_contribution_revision_time = models.CharField(max_length=1, choices=RESPONSE_TIME_CHOICES, verbose_name="How long does it take for <b>you</b> to incorporate your mentor's feedback and resubmit a contribution?")
+    intern_contribution_revision_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>you</b> to incorporate your mentor's feedback and resubmit a contribution?")
 
     progress_report = models.TextField(verbose_name="Please provide a paragraph describing your progress on your project. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.")
+
+    def can_edit(self):
+        if not self.allow_edits:
+            return False
+
+        if has_deadline_passed(self.intern_selection.midpoint_feedback_opens):
+            return True
+        return False
 
 
 # Track each person we sent a survey to

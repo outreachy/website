@@ -32,17 +32,30 @@
 
 			{% if rel.intern_selection.is_initial_feedback_on_intern_open %}
 				<p><a href="{% url 'initial-mentor-feedback' username=rel.intern_selection.applicant.applicant.account.username %}"><button type="button" class="btn btn-info">Submit Initial Feedback</button></a></p>
-			{% elif rel.intern_selection.initialmentorfeedback %}
-				<p>Submitted feedback:</p>
-				<ul>
-					<li>Initial feedback: {% if rel.intern_selection.initialmentorfeedback.payment_approved %}<button type="button" class="btn btn-info">Payment approved</button>{% else %}<button type="button" class="btn btn-warning">Payment Not Aproved</button>{% endif %}{% if rel.intern_selection.initialmentorfeedback.request_extension %} Extension requested for initial feedback until {{ rel.intern_selection.initialmentorfeedback.extension_date|date:"M d, Y" }}.{% endif %}{% if rel.intern_selection.initialmentorfeedback.request_termination %} Termination requested for this internship.{% endif %}</li>
-				</ul>
 			{% endif %}
+			{% if rel.intern_selection.is_midpoint_feedback_on_intern_open %}
+				<p><a href="{% url 'midpoint-mentor-feedback' username=rel.intern_selection.applicant.applicant.account.username %}"><button type="button" class="btn btn-info">Submit Midpoint Feedback</button></a></p>
+			{% endif %}
+
+			<p>Submitted feedback:</p>
+			<ul>
+			{% if rel.intern_selection.initialmentorfeedback %}
+				<li><p>Initial feedback: {% if rel.intern_selection.initialmentorfeedback.payment_approved %}<button type="button" class="btn btn-success">Payment approved</button>{% else %}<button type="button" class="btn btn-warning">Payment Not Aproved</button>{% endif %}{% if rel.intern_selection.initialmentorfeedback.request_extension %} Extension requested for initial feedback until {{ rel.intern_selection.initialmentorfeedback.extension_date|date:"M d, Y" }}.{% endif %}{% if rel.intern_selection.initialmentorfeedback.request_termination %} Termination requested for this internship.{% endif %}</p></li>
+			{% endif %}
+			{% if rel.intern_selection.midpointmentorfeedback %}
+				<li><p>Midpoint feedback: {% if rel.intern_selection.midpointmentorfeedback.payment_approved %}<button type="button" class="btn btn-success">Payment approved</button>{% else %}<button type="button" class="btn btn-warning">Payment Not Aproved</button>{% endif %}{% if rel.intern_selection.midpointmentorfeedback.request_extension %} Extension requested for midpoint feedback until {{ rel.intern_selection.midpointmentorfeedback.extension_date|date:"M d, Y" }}.{% endif %}{% if rel.intern_selection.midpointmentorfeedback.request_termination %} Termination requested for this internship.{% endif %}</p></li>
+			{% endif %}
+			{% if not rel.intern_selection.initialmentorfeedback and not rel.intern_selection.midpointmentorfeedback %}
+				<li>No feedback has been submitted yet.</li>
+			{% endif %}
+			</ul>
+
 			<p>Mentor feedback dates:
 			<ul>
 				<li>{{ rel.intern_selection.initial_feedback_opens }} 4pm UTC - Initial feedback forms open</li>
 				<li>{{ rel.intern_selection.initial_feedback_due }} 4pm UTC - Initial feedback is due</li>
-				<li>{{ rel.round.midfeedback }} - Mid-point feedback is due</li>
+				<li>{{ rel.intern_selection.midpoint_feedback_opens }} 4pm UTC - Mid-point feedback forms open</li>
+				<li>{{ rel.intern_selection.midpoint_feedback_due }} 4pm UTC - Mid-point feedback is due</li>
 				<li>{{ rel.round.finalfeedback }} - Final feedback is due</li>
 			</ul>
 			</p>
