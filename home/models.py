@@ -3708,17 +3708,6 @@ class BaseMentorFeedback(BaseFeedback):
         if version:
             return version.revision.date_created
 
-    def clean(self):
-        if self.request_extension:
-            if self.extension_date is None:
-                raise ValidationError({'extension_date': "If you're requesting an extension, this field is required."})
-            else:
-                # should not be more than five weeks from the initial feedback deadline in the RoundPage
-                base = self.intern_selection.round().initialfeedback
-                limit = base + datetime.timedelta(weeks=5)
-                if not (base <= self.extension_date <= limit):
-                    raise ValidationError({'extension_date': "Extension date must be between {} and {}".format(base, limit)})
-
     class Meta:
         abstract = True
 
@@ -3796,6 +3785,17 @@ class InitialMentorFeedback(BaseMentorFeedback):
         if has_deadline_passed(self.intern_selection.initial_feedback_opens):
             return True
         return False
+
+    def clean(self):
+        if self.request_extension:
+            if self.extension_date is None:
+                raise ValidationError({'extension_date': "If you're requesting an extension, this field is required."})
+            else:
+                # should not be more than five weeks from the initial feedback deadline in the RoundPage
+                base = self.intern_selection.round().initialfeedback
+                limit = base + datetime.timedelta(weeks=5)
+                if not (base <= self.extension_date <= limit):
+                    raise ValidationError({'extension_date': "Extension date must be between {} and {}".format(base, limit)})
 
 class BaseInternFeedback(BaseFeedback):
     last_contact = models.DateField(verbose_name="What was the last date you were in contact with your mentor?")
@@ -3960,6 +3960,17 @@ class MidpointMentorFeedback(BaseMentorFeedback):
         if has_deadline_passed(self.intern_selection.midpoint_feedback_opens):
             return True
         return False
+
+    def clean(self):
+        if self.request_extension:
+            if self.extension_date is None:
+                raise ValidationError({'extension_date': "If you're requesting an extension, this field is required."})
+            else:
+                # should not be more than five weeks from the initial feedback deadline in the RoundPage
+                base = self.intern_selection.round().midfeedback
+                limit = base + datetime.timedelta(weeks=5)
+                if not (base <= self.extension_date <= limit):
+                    raise ValidationError({'extension_date': "Extension date must be between {} and {}".format(base, limit)})
 
 class MidpointInternFeedback(BaseInternFeedback):
     # XXX - Make sure to change the questions in
