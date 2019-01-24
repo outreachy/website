@@ -9,8 +9,6 @@ import wagtail.wagtailcore.fields
 
 class Migration(migrations.Migration):
 
-    replaces = [('home', '0138_auto_20190119_1920'), ('home', '0139_midpointinternfeedback_midpointmentorfeedback'), ('home', '0140_auto_20190121_1904'), ('home', '0141_auto_20190121_1921'), ('home', '0142_auto_20190121_2141')]
-
     dependencies = [
         ('home', '0137_auto_20190119_1823'),
     ]

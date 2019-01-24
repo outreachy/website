@@ -9,8 +9,6 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    replaces = [('home', '0030_auto_20180125_1931'), ('home', '0031_auto_20180125_2108'), ('home', '0032_auto_20180125_2151'), ('home', '0033_auto_20180125_2152'), ('home', '0034_auto_20180125_2216'), ('home', '0035_auto_20180125_2248'), ('home', '0036_auto_20180125_2301'), ('home', '0037_auto_20180126_2055'), ('home', '0038_auto_20180126_2135'), ('home', '0039_auto_20180126_2137'), ('home', '0040_auto_20180126_2255'), ('home', '0041_employmenttimecommitment_quit_on_acceptance'), ('home', '0042_auto_20180129_1944'), ('home', '0043_auto_20180130_2101'), ('home', '0044_auto_20180131_1346'), ('home', '0045_auto_20180131_1448'), ('home', '0046_auto_20180201_0125'), ('home', '0047_auto_20180201_0153'), ('home', '0048_auto_20180201_0202'), ('home', '0049_auto_20180201_0358'), ('home', '0050_auto_20180202_1312'), ('home', '0051_auto_20180202_1334'), ('home', '0052_auto_20180202_1346'), ('home', '0053_auto_20180202_1415'), ('home', '0054_auto_20180205_1520'), ('home', '0055_auto_20180205_1644'), ('home', '0056_auto_20180205_1645'), ('home', '0057_auto_20180205_1658'), ('home', '0058_auto_20180206_2308'), ('home', '0059_auto_20180206_2311'), ('home', '0060_auto_20180208_2151'), ('home', '0061_comrade_agreed_to_code_of_conduct'), ('home', '0062_auto_20180209_1422'), ('home', '0063_auto_20180209_1427'), ('home', '0064_community_tutorial'), ('home', '0065_finalapplication_community_specific_questions'), ('home', '0066_auto_20180210_1614'), ('home', '0067_auto_20180210_1659')]
-
     dependencies = [
         ('home', '0029_auto_20180112_2334_squashed_0044_auto_20180116_0251'),
     ]
