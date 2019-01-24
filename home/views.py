@@ -2378,7 +2378,7 @@ class InitialFeedbackInstructions(SendEmailView):
         interns = current_round.get_interns_with_open_initial_feedback()
 
         for i in interns:
-            email.feedback_email(i, self.request, "initial", connection=connection)
+            email.feedback_email(i, self.request, "initial", i.is_initial_feedback_on_intern_past_due(), connection=connection)
 
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(InitialMentorFeedback,
@@ -2538,7 +2538,7 @@ class MidpointFeedbackInstructions(SendEmailView):
         interns = current_round.get_interns_with_open_midpoint_feedback()
 
         for i in interns:
-            email.feedback_email(i, self.request, "midpoint", connection=connection)
+            email.feedback_email(i, self.request, "midpoint", i.is_midpoint_feedback_on_intern_past_due(), connection=connection)
 
 class MidpointMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(MidpointMentorFeedback,

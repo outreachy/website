@@ -223,9 +223,9 @@ def biweekly_internship_email(intern_selection, request, template, **kwargs):
         recipient_list=emails,
         **kwargs)
 
-def feedback_email(intern_selection, request, stage, **kwargs):
+def feedback_email(intern_selection, request, stage, past_due, **kwargs):
     emails = []
-    if intern_selection.is_initial_feedback_on_intern_past_due():
+    if past_due:
         emails.append(organizers)
         for m in intern_selection.mentors.all():
             emails.append(m.mentor.email_address())
