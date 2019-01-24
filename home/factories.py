@@ -300,6 +300,7 @@ class InternSelectionFactory(factory.django.DjangoModelFactory):
 
             # but these also ought to be set
             signed=True,
+            funding_source=models.InternSelection.ORG_FUNDED,
             #mentors=1, # the post_generation function is not called if this is set
         )
 
