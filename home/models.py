@@ -134,7 +134,7 @@ def has_deadline_passed(deadline_date):
         return False
     now = datetime.datetime.now(DEADLINE_TIME.tzinfo)
     today = get_deadline_date_for(now)
-    return deadline_date < today
+    return deadline_date <= today
 
 class RoundPage(Page):
     roundnumber = models.IntegerField()
