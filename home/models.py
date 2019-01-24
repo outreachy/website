@@ -1301,6 +1301,9 @@ class Participation(ApprovalStatus):
             'action': action,
         })
 
+    def submission_and_approval_deadline(self):
+        return self.participating_round.lateorgs
+
     def is_approver(self, user):
         return user.is_staff
 
@@ -1882,6 +1885,9 @@ class MentorApproval(ApprovalStatus):
         if self.mentor.account != current_user:
             kwargs['username'] = self.mentor.account.username
         return reverse('mentorapproval-action', kwargs=kwargs)
+
+    def submission_and_approval_deadline(self):
+        return self.project.project_round.participating_round.internends + datetime.timedelta(days=7*5)
 
     def is_approver(self, user):
         return self.project.project_round.community.is_coordinator(user)
