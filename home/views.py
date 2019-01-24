@@ -2293,11 +2293,16 @@ class InternAgreementSign(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
                 project_round__community__slug=self.kwargs['community_slug'],
                 project_round__participating_round=self.current_round,
                 project_round__approval_status=ApprovalStatus.APPROVED)
-        self.intern_selection = get_object_or_404(InternSelection,
+
+        try:
+            self.intern_selection = InternSelection.objects.get(
                 applicant__applicant=self.request.user.comrade,
                 funding_source__in=(InternSelection.ORG_FUNDED, InternSelection.GENERAL_FUNDED),
                 organizer_approved=True,
-                applicant__application_round=self.current_round)
+                applicant__application_round=self.current_round
+            )
+        except InternSelection.DoesNotExist:
+            raise PermissionDenied("You are not an intern in this round.")
 
         # Don't allow interns to sign the contract twice
         if self.intern_selection.intern_contract != None:
