@@ -378,6 +378,13 @@ class RoundPage(Page):
                 interns.append(i)
         return interns
 
+    def get_interns_with_open_midpoint_feedback(self):
+        interns = []
+        for i in self.get_in_good_standing_intern_selections():
+            if i.is_midpoint_feedback_on_intern_open():
+                interns.append(i)
+        return interns
+
     def get_communities_with_unused_funding(self):
         participations = Participation.objects.filter(
                 participating_round=self,

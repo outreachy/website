@@ -2530,10 +2530,10 @@ class MidpointFeedbackInstructions(SendEmailView):
 
         # Only get interns that are in good standing and
         # where a mentor or intern hasn't submitted feedback.
-        interns = current_round.get_interns_with_open_initial_feedback()
+        interns = current_round.get_interns_with_open_midpoint_feedback()
 
         for i in interns:
-            email.initial_feedback_email(i, self.request, "midpoint", connection=connection)
+            email.feedback_email(i, self.request, "midpoint", connection=connection)
 
 class MidpointMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(MidpointMentorFeedback,

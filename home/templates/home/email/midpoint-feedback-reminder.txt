@@ -1,6 +1,6 @@
 [URGENT] Mentor feedback required for mid-point payment to {{ intern_selection.applicant.applicant.public_name }}
 
-Please provide feedback on your intern through the Outreachy website. Their initial feedback was due on {{ intern_selection.initial_feedback_due|date:"M d, Y" }}. Their initial ${{ current_round.initialpayment }} payment will be delayed until you provide feedback:
+Please provide feedback on your intern through the Outreachy website. Their mid-point feedback was due on {{ intern_selection.midpoint_feedback_due|date:"M d, Y" }}. Their mid-point ${{ current_round.midpayment }} payment will be delayed until you provide feedback:
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}#feedback
 
@@ -10,4 +10,4 @@ Outreachy Organizers
 
 ---
 
-{% include 'home/email/initial-feedback-instructions.txt' %}
+{% include 'home/email/midpoint-feedback-instructions.txt' %}
