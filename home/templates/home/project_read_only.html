@@ -173,7 +173,7 @@
 {% if current_round.has_project_submission_and_approval_deadline_passed and project.approval_status != project.APPROVED %}
 	<h3>Unapproved Project Proposal</h3>
 	<p>The deadline to approve Outreachy project proposals has passed. You cannot edit an unapproved project after the project proposal deadline.</p>
-{% else %}
+{% elif user.is_staff or coordinator or mentor_request and mentor_request.approval_status == mentor_request.APPROVED %}
 	<h3>Preview of Project Proposal</h3>
 
 	{% if project|is_submitter:request.user %}
@@ -225,7 +225,6 @@
 		</ul>
 	{% endif %}
 {% else %}
-	<p>{{ project.short_title }}</p>
 	<p>Full project details are only available for coordinators and approved project mentors, in order to ensure applicants don't contact mentors until the project is approved and the Outreachy application period opens. If you're an applicant, please wait for projects to appear on the <a href="{{ current_round.url }}">current internship round page</a>!</p>
 {% endif %}
 
