@@ -134,7 +134,7 @@ that timeline, taking into account any time commitments the applicant has.
 				<p class="card-text">
 				{% if project.deadline != project.LATE %}
 					You can extend your project application deadline to {{ current_round.appslate }} at 4pm UTC by
-					<a href="{% url 'project-action' community_slug=project.project_round.community.slug project_slug=project.slug action='submit' %}">editing your project information</a>.
+					<a href="{{ project.get_submit_url }}">editing your project information</a>.
 					The application deadline is in a drop-down at the end of the first form.
 				{% else %}
 					The late project application deadline has passed, and it is not possible to extend your project application deadline.

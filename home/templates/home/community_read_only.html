@@ -45,17 +45,12 @@ Past community participation in Outreachy
 	<p>This community currently has no approved coordinator. Coordinators approve mentored projects, and communicate with both mentors and Outreachy organizers. The full list of coordinator duties can be found on <a href="/mentor/">here</a>.
 {% endif %}
 
-{% if coordinator and coordinator.approval_status != coordinator.APPROVED %}
-	Your request to coordinate for this community is:
-	<a href="{{ coordinator.get_preview_url }}">
-		<strong>{{ coordinator.get_approval_status_display }}</strong>
-	</a>
-{% else %}
+{% if not coordinator %}
 	<p>If you have been a community coordinator in the past but have not yet created an account on this site, or you would like to volunteer to be a new coordinator and you understand the <a href="/mentor/">coordinator duties</a>, you can sign up to be a community coordinator.</p>
 	<p><a href="{% url 'coordinatorapproval-action' action='submit' community_slug=community.slug %}" class="btn btn-success">Coordinate for This Community</a></p>
-{% endif %}
-
-{% if coordinator and coordinator.approval_status == coordinator.APPROVED %}
+{% elif coordinator.approval_status != coordinator.APPROVED %}
+	<p>Your request to coordinate for this community is: <strong>{{ coordinator.get_approval_status_display }}</strong></p>
+{% else %}
 	{% if not participation_info %}
 	{% elif participation_info.approval_status == participation_info.WITHDRAWN %}
 		<p>Have you changed your mind and decided your community can participate in this round of Outreachy?</p>
@@ -123,10 +118,10 @@ Past community participation in Outreachy
 <hr />
 	<h2>Participate in This Round</h2>
 	<p>You can sign the community up to participate in the current round.</p>
-	<p><a class="btn btn-success" href="{% url 'participation-action' action='submit' community_slug=community.slug %}">Community will participate</a></p>
+	<p><a class="btn btn-success" href="{% url 'participation-action' action='submit' round_slug=current_round.slug community_slug=community.slug %}">Community will participate</a></p>
 	<p>If you don't have sponsorship funds or you can't find mentors for this round, you can indicate your community won't participate.
 	This will help direct mentors to communities that are participating.</p>
-	<p><a class="btn btn-warning" href="{% url 'participation-action' action='withdraw' community_slug=community.slug %}">Community will not participate</a></p>
+	<p><a class="btn btn-warning" href="{% url 'participation-action' action='withdraw' round_slug=current_round.slug community_slug=community.slug %}">Community will not participate</a></p>
 {% endif %}
 
 {% if not participation_info %}
@@ -155,7 +150,7 @@ Past community participation in Outreachy
 
 		<p><strong>Outreachy applicants should not submit project proposals through this form.</strong> You need to look over the <a href="{% url 'project-selection' %}">list of projects</a> and pick a project from that list.</p>
 
-		<p><a class='btn btn-success' href="{% url 'project-action' action='submit' community_slug=community.slug %}">Submit a Project Proposal</a></p>
+		<p><a class='btn btn-success' href="{% url 'project-action' action='submit' round_slug=current_round.slug community_slug=community.slug %}">Submit a Project Proposal</a></p>
 	{% else %}
 		<h2>Project Submission Deadline Passed</h2>
 		<p>Unfortunately, the deadline to submit new Outreachy internship projects has closed.
@@ -210,7 +205,7 @@ Past community participation in Outreachy
 				<button class="btn btn-success dropdown-toggle" type="button" id="CoMentorMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select project to co-mentor</button>
 				<div class="dropdown-menu" aria-labelledby="CoMentorMenu">
 					{% for project in approved_projects %}
-						<button class="dropdown-item" formaction="{% url 'mentorapproval-action' community_slug=community.slug project_slug=project.slug action='submit' %}">{{ project.short_title }}</button>
+						<button class="dropdown-item" formaction="{% url 'mentorapproval-action' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' %}">{{ project.short_title }}</button>
 					{% endfor %}
 				</div>
 			</div>

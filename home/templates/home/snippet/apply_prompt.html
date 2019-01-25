@@ -1,5 +1,4 @@
-{% with project_contributions=request.user.comrade.get_projects_contributed_to %}
-{% with project_applications=request.user.comrade.get_projects_applied_to %}
+{% with project_applications=role.application.get_projects_applied_to %}
 
 {% if project_applications %}
 	<div class="card border-info mb-3">
@@ -81,12 +80,11 @@
 
 		<ul class="card-text">
 			{% for p in project_applications %}
-				<li>{% if p.withdrawn %}(Withdrawn application) {% endif %}<a href="{{ p.get_contributions_url }}">{{ p.short_title }}</a></li>
+				<li>{% if p.is_withdrawn %}(Withdrawn application) {% endif %}<a href="{{ p.get_contributions_url }}">{{ p.short_title }}</a></li>
 			{% endfor %}
 		</ul>
 	{% endif %}
 	{% if project_applications %}</div>{% endif %}
     </div>
 </div>
-{% endwith %}
 {% endwith %}

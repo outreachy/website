@@ -2,18 +2,22 @@
 {% include "home/snippet/coc_prompt.html" %}
 {% endif %}
 
-{% if not request.user.comrade or request.user.comrade.needs_application %}
+{% if role.needs_application %}
 {% include "home/snippet/eligibility_prompt.html" %}
-{% elif request.user.comrade.ineligible_application %}
+{% elif role.application.is_rejected %}
 {% include "home/snippet/ineligible_prompt.html" %}
-{% elif request.user.comrade.pending_application %}
+{% elif role.application.is_pending %}
 {% include "home/snippet/pending_prompt.html" %}
-{% elif request.user.comrade.eligible_application and not request.user.comrade.get_projects_contributed_to %}
-{% include "home/snippet/contribute_prompt.html" %}
-{% elif request.user.comrade.eligible_application and request.user.comrade.get_projects_contributed_to %}
-{% include "home/snippet/apply_prompt.html" %}
+{% elif role.application.is_approved %}
+	{% with project_contributions=role.application.get_projects_contributed_to %}
+	{% if not project_contributions %}
+	{% include "home/snippet/contribute_prompt.html" %}
+	{% else %}
+	{% include "home/snippet/apply_prompt.html" %}
+	{% endif %}
+	{% endwith %}
 {% endif %}
-{% with communities=request.user.comrade.get_approved_coordinator_communities %}
+{% with communities=role.approved_coordinator_communities %}
 {% if communities %}
 {% include "home/snippet/coordinator_reminder_prompt.html" %}
 {% endif %}

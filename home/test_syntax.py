@@ -94,19 +94,6 @@ class SyntaxTestCase(TestCase):
         # exception, that will count as a test error.
         current_round = models.RoundPage.objects.get()
 
-        # from project_cfp_patterns:
-        project_cfp_paths = [
-            "/mentor/preview/{}/".format(mentor.username),
-            "/mentor/submit/",
-            "/mentor/submit/{}/".format(mentor.username),
-            "/mentor/approve/{}/".format(mentor.username),
-            "/mentor/reject/{}/".format(mentor.username),
-            "/mentor/withdraw/{}/".format(mentor.username),
-            "/skills/",
-            "/channels/",
-            "/",
-        ]
-
         # from community_cfp_patterns:
         community_cfp_paths = [
             "/edit/",
@@ -117,17 +104,8 @@ class SyntaxTestCase(TestCase):
             "/coordinator/approve/{}/".format(coordinator.username),
             "/coordinator/reject/{}/".format(coordinator.username),
             "/coordinator/withdraw/{}/".format(coordinator.username),
-            "/submit-project/",
-            "/submit-project/{}/".format(project.slug),
-            "/approve-project/{}/".format(project.slug),
-            "/reject-project/{}/".format(project.slug),
-            "/withdraw-project/{}/".format(project.slug),
-            "/submit/",
-            "/approve/",
-            "/reject/",
-            "/withdraw/",
             "/",
-        ] + include("/project/{}".format(project.slug), project_cfp_paths)
+        ]
 
         round_community_project_paths = [
             "/intern-agreement/",
@@ -147,10 +125,28 @@ class SyntaxTestCase(TestCase):
             "/contributions/{}/".format(contribution.pk),
             "/contributions/",
             "/applicants/",
+            "/cfp/mentor/preview/{}/".format(mentor.username),
+            "/cfp/mentor/submit/",
+            "/cfp/mentor/submit/{}/".format(mentor.username),
+            "/cfp/mentor/approve/{}/".format(mentor.username),
+            "/cfp/mentor/reject/{}/".format(mentor.username),
+            "/cfp/mentor/withdraw/{}/".format(mentor.username),
+            "/cfp/skills/",
+            "/cfp/channels/",
+            "/cfp/",
         ]
 
         round_community_paths = [
             "/applicants/",
+            "/submit-project/",
+            "/submit-project/{}/".format(project.slug),
+            "/approve-project/{}/".format(project.slug),
+            "/reject-project/{}/".format(project.slug),
+            "/withdraw-project/{}/".format(project.slug),
+            "/submit/",
+            "/approve/",
+            "/reject/",
+            "/withdraw/",
             "/",
         ] + include("/{}".format(project.slug), round_community_project_paths)
 

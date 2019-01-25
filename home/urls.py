@@ -1,6 +1,7 @@
 from . import views
-from django.views.generic import TemplateView
+from .models import ApprovalStatus
 
+from django.views.generic import TemplateView
 from django.conf.urls import include, url
 
 # To see all URL patterns at once, run:
@@ -8,24 +9,12 @@ from django.conf.urls import include, url
 # or to see just the patterns from this file:
 #   ./manage.py show_urls | grep -Fw home.urls
 
-# These views all take both a community_slug and a project_slug.
-project_cfp_patterns = [
-    url(r'^mentor/preview/(?P<username>[^/]+)/$', views.MentorApprovalPreview.as_view(), name='mentorapproval-preview'),
-    url(r'^mentor/(?P<action>[^/]+)/(?:(?P<username>[^/]+)/)?$', views.MentorApprovalAction.as_view(), name='mentorapproval-action'),
-    url(r'^skills/$', views.ProjectSkillsEditPage.as_view(), name='project-skills-edit'),
-    url(r'^channels/$', views.CommunicationChannelsEditPage.as_view(), name='communication-channels-edit'),
-    url(r'^$', views.project_read_only_view, name='project-read-only'),
-]
-
 # These views all take a community_slug.
 community_cfp_patterns = [
     url(r'^edit/$', views.CommunityUpdate.as_view(), name='community-update'),
     url(r'^notify/$', views.CommunityNotificationUpdate.as_view(), name='notify-me'),
     url(r'^coordinator/preview/(?P<username>[^/]+)/$', views.CoordinatorApprovalPreview.as_view(), name='coordinatorapproval-preview'),
     url(r'^coordinator/(?P<action>[^/]+)/(?:(?P<username>[^/]+)/)?$', views.CoordinatorApprovalAction.as_view(), name='coordinatorapproval-action'),
-    url(r'^project/(?P<project_slug>[^/]+)/', include(project_cfp_patterns)),
-    url(r'^(?P<action>[^/]+)-project/(?:(?P<project_slug>[^/]+)/)?$', views.ProjectAction.as_view(), name='project-action'),
-    url(r'^(?P<action>[^/]+)/$', views.ParticipationAction.as_view(), name='participation-action'),
     url(r'^$', views.community_read_only_view, name='community-read-only'),
 ]
 
@@ -46,12 +35,19 @@ round_community_project_patterns = [
     url(r'^contributions/(?P<contribution_slug>[^/]+)/$', views.ContributionUpdate.as_view(), name='contributions-edit'),
     url(r'^contributions/$', views.ProjectContributions.as_view(), name='contributions'),
     url(r'^applicants/$', views.ProjectApplicants.as_view(), name='project-applicants'),
+    url(r'^cfp/mentor/preview/(?P<username>[^/]+)/$', views.MentorApprovalPreview.as_view(), name='mentorapproval-preview'),
+    url(r'^cfp/mentor/(?P<action>[^/]+)/(?:(?P<username>[^/]+)/)?$', views.MentorApprovalAction.as_view(), name='mentorapproval-action'),
+    url(r'^cfp/skills/$', views.ProjectSkillsEditPage.as_view(), name='project-skills-edit'),
+    url(r'^cfp/channels/$', views.CommunicationChannelsEditPage.as_view(), name='communication-channels-edit'),
+    url(r'^cfp/$', views.project_read_only_view, name='project-read-only'),
 ]
 
 # These views all take a round_slug and a community_slug.
 round_community_patterns = [
     url(r'^(?P<project_slug>[^/]+)/', include(round_community_project_patterns)),
     url(r'^applicants/$', views.community_applicants, name='community-applicants'),
+    url(r'^(?P<action>[^/]+)-project/(?:(?P<project_slug>[^/]+)/)?$', views.ProjectAction.as_view(), name='project-action'),
+    url(r'^(?P<action>[^/]+)/$', views.ParticipationAction.as_view(), name='participation-action'),
     url(r'^$', views.community_landing_view, name='community-landing'),
 ]
 
@@ -86,9 +82,9 @@ urlpatterns = [
     url(r'^generic-mentor-contract-export/$', views.generic_mentor_contract_export_view, name='generic-mentor-contract-export'),
     url(r'^alums/$', views.alums_page, name='alums'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
-    url(r'^dashboard/pending-applications/$', views.applicant_review_summary, name='pending-applicants-summary'),
-    url(r'^dashboard/rejected-applications/$', views.rejected_applicants_summary, name='rejected-applicants-summary'),
-    url(r'^dashboard/approved-applications/$', views.approved_applicants_summary, name='approved-applicants-summary'),
+    url(r'^dashboard/pending-applications/$', views.applicant_review_summary, name='pending-applicants-summary', kwargs={'status': ApprovalStatus.PENDING}),
+    url(r'^dashboard/rejected-applications/$', views.applicant_review_summary, name='rejected-applicants-summary', kwargs={'status': ApprovalStatus.REJECTED}),
+    url(r'^dashboard/approved-applications/$', views.applicant_review_summary, name='approved-applicants-summary', kwargs={'status': ApprovalStatus.APPROVED}),
     url(r'^dashboard/delete-application/(?P<applicant_username>[^/]+)/$', views.DeleteApplication.as_view(), name='delete-application'),
     url(r'^dashboard/review-applications/(?P<applicant_username>[^/]+)/$', views.ViewInitialApplication.as_view(), name='applicant-review-detail'),
     url(r'^dashboard/review-applications/update-comment/(?P<applicant_username>[^/]+)/$', views.ReviewCommentUpdate.as_view(), name='update-comment'),

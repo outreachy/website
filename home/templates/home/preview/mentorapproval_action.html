@@ -23,23 +23,38 @@
 	</p>
 {% endif %}
 
-<h1>Mentor Profile</h1>
-
-<p>Project: <a href="{{ project.get_preview_url }}">{{ project.short_title }}</a></p>
-
 {% if view.kwargs.action == 'submit' %}
+	<h1>Mentor Profile</h1>
+
+	<p>Project: <a href="{{ project.get_preview_url }}">{{ project.short_title }}</a></p>
+
 	<p>Mentors provide need to provide some information about their project so it can be reviewed and approved by their community coordinators. By filling out this information, you understand that some of your personal information will be shown to Outreachy applicants so they can contact you for mentorship.</p>
 
 	{% include "home/snippet/privacy_policy.html" %}
 
 	<p><strong>Please read these questions carefully.</strong></p>
 
+{% elif view.kwargs.action == 'approve' %}
+	<h1>Confirm Mentor</h1>
+
+	<p>Project: <a href="{{ project.get_preview_url }}">{{ project.short_title }}</a></p>
+	<p>{{ mentor.public_name }} &lt;{{ mentor.account.email }}&gt;</p>
+
+{% elif view.kwargs.action == 'reject' %}
+	<h1>Reject Mentor</h1>
+
+	<p>Project: <a href="{{ project.get_preview_url }}">{{ project.short_title }}</a></p>
+	<p>{{ mentor.public_name }} &lt;{{ mentor.account.email }}&gt;</p>
+
 {% else %}
+	<h1>Mentor Profile</h1>
+
+	<p>Project: <a href="{{ project.get_preview_url }}">{{ project.short_title }}</a></p>
+
 	<p>{{ mentor.public_name }} &lt;{{ mentor.account.email }}&gt;</p>
 	{% include "home/snippet/mentor_info.html" with approval=mentorapproval only %}
 {% endif %}
 
-<h3>Mentor Commitments</h3>
 <p><form action="" method="post">
 	{% csrf_token %}
 	{{ form.media }}

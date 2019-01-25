@@ -4,6 +4,4 @@
 </p>
 
 <p>Once you have started work with an applicant on a contribution, you should remind them to record their in-progress contributions at this URL:</p>
-<p><a href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">
-	{{ request.scheme }}://{{ request.get_host }}{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}
-</a></p>
+<p>{{ request.scheme }}://{{ request.get_host }}{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}</p>

@@ -14,18 +14,14 @@
 
 {% block content %}
 
-{% if request.user.comrade.eligible_application and request.user.comrade.get_projects_contributed_to %}
+{% with project_contributions=role.application.get_projects_contributed_to %}
+{% if project_contributions %}
 {% include "home/snippet/apply_prompt.html" %}
 {% endif %}
+{% endwith %}
 
-<p><a href="/apply/">Why apply to Outreachy?</a> &gt;
-{% if not request.user.comrade or request.user.comrade.needs_application %}
-	<a href="{% url 'eligibility' %}">Start your initial application</a>
-{% elif request.user.comrade.ineligible_application or request.user.comrade.pending_application %}
-	<a href="{% url 'eligibility-results' %}">Review your initial application</a>
-{% else %}
-	<a href="/apply/eligibility/">Outreachy Eligibility Rules</a>
-{% endif %}
+<p><a href="/apply/">Why apply to Outreachy?</a>
+&gt; <a href="/apply/eligibility/">Outreachy Eligibility Rules</a>
 &gt; <a href="/apply/project-selection/">Find a Mentor and Internship Project</a>
 &gt; <a href="{% url 'community-landing' round_slug=current_round.slug community_slug=community.slug %}">{{ community.name }}</a>
 {% if not project.has_application_deadline_passed %}

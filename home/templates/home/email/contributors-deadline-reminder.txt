@@ -1,6 +1,6 @@
 {% load tz %}
 {% timezone comrade.timezone %}
-{% with normal_deadline=current_round.application_deadline late_deadline=current_round.late_application_deadline %}
+{% with applied_projects=role.application.get_projects_applied_to normal_deadline=current_round.application_deadline late_deadline=current_round.late_application_deadline %}
 Complete your Outreachy internship applications
 
 In order to be eligible to be selected as an Outreachy intern, you must:
@@ -9,24 +9,24 @@ In order to be eligible to be selected as an Outreachy intern, you must:
 
 2. Finish an application for that project before the project application deadline. Each project may have a different application deadline.
 
-{% if upcoming_deadlines %}Upcoming Deadlines
+{% if role.projects_with_upcoming_deadlines %}Upcoming Deadlines
 ------------------
-{% for project in upcoming_deadlines %}
+{% for project in role.projects_with_upcoming_deadlines %}
 {{ project.project_round.community.name }} project "{{ project.short_title }}"
 Application deadline: {% if project.deadline == project.LATE %}{{ current_round.appslate }} 4pm UTC{% if comrade.timezone %} / {{ late_deadline }} {{ comrade.timezone }}{% endif %}{% else %}{{ current_round.appsclose }} 4pm UTC{% if comrade.timezone %} / {{ normal_deadline }} {{ comrade.timezone }}{% endif %}{% endif %}
-{% if project in comrade.get_projects_applied_to %}Your internship application will be reviewed: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% else %}You have NOT submitted an application for this project. Create one here: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% endif %}{% if not forloop.last %}
+{% if project in applied_projects %}Your internship application will be reviewed: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% else %}You have NOT submitted an application for this project. Create one here: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% endif %}{% if not forloop.last %}
 {% endif %}{% endfor %}
 
 You will be able to edit your application until the project application deadline. After the project application deadline, you are encouraged to continue working on contributions with your project mentor. You will be able to record those contributions (or edit other recorded contributions) up to the date the Outreachy interns for this round are announced on {{ current_round.internannounce }}.
 
 The project application will ask you to fill out a timeline for the internship project. Detailed instructions are included in the pages linked above. If you have trouble with this, or a mentor isn't responsive to your questions about the timeline, do the best you can. You should submit an application by the project deadline, even if you feel the timeline isn't complete or perfect.
 {% endif %}
-{% if passed_deadlines %}Passed Deadlines
+{% if role.projects_with_passed_deadlines %}Passed Deadlines
 ----------------
-{% for project in passed_deadlines %}
+{% for project in role.projects_with_passed_deadlines %}
 {{ project.project_round.community.name }} project "{{ project.short_title }}"
 Application deadline was {% if project.deadline == project.LATE %}{{ current_round.appslate }} 4pm UTC{% if comrade.timezone %} / {{ late_deadline }} {{ comrade.timezone }}{% endif %}{% else %}{{ current_round.appsclose }} 4pm UTC{% if comrade.timezone %} / {{ normal_deadline }} {{ comrade.timezone }}{% endif %}{% endif %}
-{% if project in comrade.get_projects_applied_to %}Your internship application will be reviewed: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% else %}You did not submit an application for this project, and are ineligible for being selected as an intern for this project.{% endif %}{% if not forloop.last %}
+{% if project in applied_projects %}Your internship application will be reviewed: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% else %}You did not submit an application for this project, and are ineligible for being selected as an intern for this project.{% endif %}{% if not forloop.last %}
 {% endif %}{% endfor %}
 {% endif %}Don't see your project listed?
 ------------------------------

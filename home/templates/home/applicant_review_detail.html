@@ -5,10 +5,6 @@
 {% endblock %}
 
 {% block content %}
-{% comment %}FIXME: create new class for applicant reviewers and deny people access if they aren't staff or an approved applicant reviewer{% endcomment %}
-{% if not user.is_staff and not user.comrade.approved_reviewer %}
-	<p>You are not authorized to review applications.</p>
-{% else %}
 	{% if application.approval_status == application.APPROVED %}
 		<td><a class='btn btn-secondary' href="{% url 'approved-applicants-summary' %}"> &lt;- Back to summary of approved applications</a></td>
 	{% elif application.approval_status == application.PENDING %}
@@ -155,5 +151,4 @@
 	{% include 'home/snippet/applicant_review_time_commitments.html' %}
 
 	{% include 'home/snippet/applicant_review_actions.html' %}
-{% endif %}
 {% endblock %}

@@ -61,6 +61,7 @@ from .models import CoordinatorApproval
 from .models import create_time_commitment_calendar
 from .models import EmploymentTimeCommitment
 from .models import FinalApplication
+from .models import get_deadline_date_for
 from .models import InternSelection
 from .models import InitialApplicationReview
 from .models import InitialMentorFeedback
@@ -79,6 +80,7 @@ from .models import PriorFOSSExperience
 from .models import Project
 from .models import ProjectSkill
 from .models import PromotionTracking
+from .models import Role
 from .models import RoundPage
 from .models import SchoolInformation
 from .models import SchoolTimeCommitment
@@ -164,17 +166,41 @@ class ActivationCompleteView(TemplateView):
     template_name = 'registration/activation_complete.html'
 
 class ComradeUpdate(LoginRequiredMixin, UpdateView):
-    model = Comrade
-
     # FIXME - we need a way for comrades to change their passwords
     # and update and re-verify their email address.
-    fields = [
+
+    def get_form_class(self):
+        # We want to have different fields for different comrades, but
+        # self.fields is shared across all instances of this view, so we can't
+        # use that. There's no get_fields() method we can override, either, so
+        # the only hook we can use is overriding this method of ModelFormMixin.
+        fields = [
             'public_name',
             'nick_name',
             'legal_name',
             'pronouns',
             'pronouns_to_participants',
             'pronouns_public',
+        ]
+
+        comrade = self.object
+
+        # was an approved coordinator for a community that had at least one approved participation
+        coordinatored = comrade.coordinatorapproval_set.approved().filter(
+            community__participation__approval_status=ApprovalStatus.APPROVED,
+        )
+        # was an approved mentor for some approved project in an approved community
+        mentored = comrade.get_mentored_projects().approved().filter(
+            project_round__approval_status=ApprovalStatus.APPROVED,
+        )
+        # was an approved application reviewer at some point
+        reviewered = comrade.applicationreviewer_set.approved()
+
+        # people who participated in some way at some time can set a photo of themselves
+        if comrade.account.is_staff or comrade.get_intern_selection() is not None or coordinatored.exists() or mentored.exists() or reviewered.exists():
+            fields.append('photo')
+
+        fields.extend([
             'timezone',
             'location',
             'nick',
@@ -184,22 +210,15 @@ class ComradeUpdate(LoginRequiredMixin, UpdateView):
             'blog_rss_url',
             'twitter_url',
             'agreed_to_code_of_conduct',
-            ]
+        ])
+        return modelform_factory(comrade.__class__, fields=fields)
 
-    # FIXME - we need to migrate any existing staff users who aren't a Comrade
-    # to the Comrade model instead of the User model.
     def get_object(self):
         # Either grab the current comrade to update, or make a new one
-        comrade = None
         try:
-            comrade = self.request.user.comrade
-            # Is this an Outreachy organizer or an approved mentor or coordinator?
-            # Is this an intern in good standing from a past round?
-            if (self.request.user.is_staff or comrade.approved_reviewer() or comrade.approved_mentor_or_coordinator() or comrade.alum_in_good_standing()):
-                self.fields.insert(6, 'photo')
+            return self.request.user.comrade
         except Comrade.DoesNotExist:
-            comrade = Comrade(account=self.request.user)
-        return comrade
+            return Comrade(account=self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super(ComradeUpdate, self).get_context_data(**kwargs)
@@ -390,10 +409,16 @@ def determine_eligibility(wizard, application_round):
 
 # People can only submit new initial applications or edit initial applications
 # when the application period is open.
-def validate_is_time_to_show_initial_application(current_round):
-    if not current_round.has_application_period_started():
-        raise PermissionDenied('The Outreachy application period is not yet open. Eligibility checking will become available when the next application period opens. Please sign up for the announcements mailing list for an email when the next application period opens: https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce')
-    if current_round.has_late_application_deadline_passed():
+def get_current_round_for_initial_application():
+    now = datetime.now(timezone.utc)
+    today = get_deadline_date_for(now)
+
+    try:
+        return RoundPage.objects.get(
+            appsopen__lte=today,
+            appslate__gt=today,
+        )
+    except RoundPage.DoesNotExist:
         raise PermissionDenied('The Outreachy application period is closed. If you are an applicant who has submitted an application for an internship project and your time commitments have increased, please contact the Outreachy organizers (see contact link above). Eligibility checking will become available when the next application period opens. Please sign up for the announcements mailing list for an email when the next application period opens: https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce')
 
 class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, SessionWizardView):
@@ -648,9 +673,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
         return [self.TEMPLATES[self.steps.current]]
 
     def get_current_round(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        validate_is_time_to_show_initial_application(current_round)
-        return current_round
+        return get_current_round_for_initial_application()
 
     def get_context_data(self, **kwargs):
         context = super(EligibilityUpdateView, self).get_context_data(**kwargs)
@@ -699,8 +722,7 @@ class EligibilityResults(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
     context_object_name = 'application'
 
     def get_object(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        validate_is_time_to_show_initial_application(current_round)
+        current_round = get_current_round_for_initial_application()
         return get_object_or_404(ApplicantApproval,
                     applicant=self.request.user.comrade,
                     application_round=current_round)
@@ -718,11 +740,17 @@ class ViewInitialApplication(LoginRequiredMixin, ComradeRequiredMixin, DetailVie
     def get_context_data(self, **kwargs):
         context = super(ViewInitialApplication, self).get_context_data(**kwargs)
         context['current_round'] = self.object.application_round
+        context['role'] = self.role
         return context
 
     def get_object(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        validate_is_time_to_show_initial_application(current_round)
+        current_round = get_current_round_for_initial_application()
+
+        self.role = Role(self.request.user, current_round)
+
+        if not self.role.is_organizer and not self.role.is_reviewer:
+            raise PermissionDenied("You are not authorized to review applications.")
+
         return get_object_or_404(ApplicantApproval,
                     applicant__account__username=self.kwargs['applicant_username'],
                     application_round=current_round)
@@ -735,33 +763,37 @@ def past_rounds_page(request):
             )
 
 def current_round_page(request):
-    current_round = RoundPage.objects.latest('internstarts')
-    all_rounds = RoundPage.objects.all().order_by('-internstarts')
-    if len(all_rounds) > 1:
-        previous_round = all_rounds[1]
-    else:
-        previous_round = None
-
     closed_approved_projects = []
     ontime_approved_projects = []
     late_approved_projects = []
-    mentors_pending_projects = []
     example_skill = ProjectSkill
 
-    if not current_round.validate_is_time_to_show_project_selection():
-        previous_round = current_round
+    now = datetime.now(timezone.utc)
+    today = get_deadline_date_for(now)
+
+    try:
+        previous_round = RoundPage.objects.filter(
+            appslate__lte=today,
+        ).latest('internstarts')
+    except RoundPage.DoesNotExist:
+        previous_round = None
+
+    try:
+        # Keep RoundPage.serve() in sync with this.
+        current_round = RoundPage.objects.get(
+            pingnew__lte=today,
+            # If the application period is closed, don't show projects from the current round
+            appslate__gt=today,
+        )
+    except RoundPage.DoesNotExist:
         current_round = None
-    else:
+
+    role = Role(request.user, current_round, today=today)
+    if current_round is not None:
         approved_participations = current_round.participation_set.approved().order_by('community__name')
 
-        if request.user.is_authenticated:
-            try:
-                mentors_pending_projects = request.user.comrade.get_pending_mentored_projects()
-            except Comrade.DoesNotExist:
-                pass
-
         for p in approved_participations:
-            if not authorized_to_view_project_details(request, p):
+            if not p.approved_to_see_all_project_details(request.user):
                 continue
             projects = p.project_set.approved().filter(deadline=Project.CLOSED)
             if projects:
@@ -780,25 +812,10 @@ def current_round_page(request):
             'closed_projects': closed_approved_projects,
             'ontime_projects': ontime_approved_projects,
             'late_projects': late_approved_projects,
-            'mentors_pending_projects': mentors_pending_projects,
             'example_skill': example_skill,
+            'role': role,
             },
             )
-
-def validate_is_time_to_show_cfp(current_round):
-    # The problem here is the CFP page serves four (or more) purposes:
-    # - to provide mentors a way to submit new projects
-    # - to provide coordinators a way to submit new communities
-    # - to allow mentors to sign up to co-mentor a project
-    # - to allow mentors a way to edit their projects
-    #
-    # So, we close down the page after the interns are announced,
-    # when (hopefully) all mentors have signed up to co-mentor.
-    # Mentors can still be sent a manual link to sign up to co-mentor after that date,
-    # but their community page just won't show their project.
-    if has_deadline_passed(current_round.internstarts):
-        return False
-    return True
 
 # Call for communities, mentors, and volunteers page
 #
@@ -829,12 +846,6 @@ def validate_is_time_to_show_cfp(current_round):
 #    * If not, put it in a not participating communities set
 
 def community_cfp_view(request):
-    # FIXME: Grab data to display about communities and substitute into the template
-    # Grab the most current round, based on the internship start date.
-    # See https://docs.djangoproject.com/en/1.11/ref/models/querysets/#latest
-    current_round = RoundPage.objects.latest('internstarts')
-    previous_round = None
-
     # Cheap trick for case-insensitive sorting: the slug is always lower-cased.
     all_communities = Community.objects.all().order_by('slug')
     approved_communities = []
@@ -842,13 +853,40 @@ def community_cfp_view(request):
     rejected_communities = []
     not_participating_communities = []
 
-    if not validate_is_time_to_show_cfp(current_round):
-        previous_round = current_round
+    # The problem here is the CFP page serves four (or more) purposes:
+    # - to provide mentors a way to submit new projects
+    # - to provide coordinators a way to submit new communities
+    # - to allow mentors to sign up to co-mentor a project
+    # - to allow mentors a way to edit their projects
+    #
+    # So, we close down the page after the interns are announced,
+    # when (hopefully) all mentors have signed up to co-mentor.
+    # Mentors can still be sent a manual link to sign up to co-mentor after that date,
+    # but their community page just won't show their project.
+
+    now = datetime.now(timezone.utc)
+    today = get_deadline_date_for(now)
+
+    try:
+        previous_round = RoundPage.objects.filter(
+            internstarts__lte=today,
+        ).latest('internstarts')
+    except RoundPage.DoesNotExist:
+        previous_round = None
+
+    try:
+        current_round = RoundPage.objects.get(
+            pingnew__lte=today,
+            internstarts__gt=today,
+        )
+    except RoundPage.DoesNotExist:
         current_round = None
         not_participating_communities = all_communities.filter(
             participation__approval_status=ApprovalStatus.APPROVED,
         ).distinct()
     else:
+        # No exception caught, so we have a current_round
+
         # Now grab the community IDs of all communities participating in the current round
         # https://docs.djangoproject.com/en/1.11/topics/db/queries/#following-relationships-backward
         # https://docs.djangoproject.com/en/1.11/ref/models/querysets/#values-list
@@ -881,12 +919,6 @@ def community_cfp_view(request):
             },
             )
 
-def validate_is_time_to_show_project_editing(current_round):
-    # If the application period is closed, don't show projects from the current round
-    if has_deadline_passed(current_round.appslate):
-        return False
-    return True
-
 # This is the page for volunteers, mentors, and coordinators.
 # It's a read-only page that displays information about the community,
 # what projects are accepted, and how volunteers can help.
@@ -895,20 +927,38 @@ def validate_is_time_to_show_project_editing(current_round):
 def community_read_only_view(request, community_slug):
     community = get_object_or_404(Community, slug=community_slug)
 
-    current_round = RoundPage.objects.latest('internstarts')
-    if validate_is_time_to_show_project_editing(current_round):
+    now = datetime.now(timezone.utc)
+    today = get_deadline_date_for(now)
+
+    participation_info = None
+
+    try:
+        current_round = RoundPage.objects.get(
+            pingnew__lte=today,
+            # If the application period is closed, don't show projects from the current round
+            appslate__gt=today,
+        )
         previous_round = None
-    else:
+    except RoundPage.DoesNotExist:
         current_round = None
-        previous_participations = Participation.objects.filter(community__slug=community_slug, approval_status=ApprovalStatus.APPROVED).order_by('-participating_round__internstarts')
-        if not previous_participations:
+        try:
+            previous_round = community.rounds.filter(
+                appslate__lte=today,
+                participation__approval_status=ApprovalStatus.APPROVED,
+            ).latest('internstarts')
+        except RoundPage.DoesNotExist:
             previous_round = None
-        else:
-            previous_round = previous_participations[0].participating_round
+    else:
+        # Try to see if this community is participating in the current round
+        # and get the Participation object if so.
+        try:
+            participation_info = community.participation_set.get(participating_round=current_round)
+        except Participation.DoesNotExist:
+            pass
 
     coordinator = None
     notification = None
-    mentors_pending_projects = None
+    mentors_pending_projects = ()
     if request.user.is_authenticated:
         try:
             # Although the current user is authenticated, don't assume
@@ -919,39 +969,30 @@ def community_read_only_view(request, community_slug):
         except CoordinatorApproval.DoesNotExist:
             pass
         try:
-            notification = Notification.objects.get(comrade__account=request.user, community=community)
+            notification = community.notification_set.get(comrade__account=request.user)
         except Notification.DoesNotExist:
             pass
-        try:
-            all_pending_projects = request.user.comrade.get_pending_mentored_projects()
-            if all_pending_projects:
-                mentors_pending_projects = [p for p in all_pending_projects if p.project_round.community == community]
-            else:
-                mentors_pending_projects = None
-        except Comrade.DoesNotExist:
-            pass
 
-    context = {
-            'current_round' : current_round,
-            'previous_round' : previous_round,
-            'community': community,
-            'coordinator': coordinator,
-            'notification': notification,
-            'mentors_pending_projects': mentors_pending_projects,
-            }
+        if participation_info is not None and participation_info.approval_status in (ApprovalStatus.PENDING, ApprovalStatus.APPROVED):
+            try:
+                mentors_pending_projects = request.user.comrade.get_mentored_projects().pending().filter(
+                    project_round=participation_info,
+                )
+            except Comrade.DoesNotExist:
+                pass
 
-    # Try to see if this community is participating in the current round
-    # and get the Participation object if so.
-    try:
-        context['participation_info'] = Participation.objects.get(community=community, participating_round=current_round)
-    except Participation.DoesNotExist:
-        pass
-
-    return render(request, 'home/community_read_only.html', context)
+    return render(request, 'home/community_read_only.html', {
+        'current_round' : current_round,
+        'previous_round' : previous_round,
+        'community': community,
+        'coordinator': coordinator,
+        'notification': notification,
+        'mentors_pending_projects': mentors_pending_projects,
+        'participation_info': participation_info,
+    })
 
 # A Comrade wants to sign up to be notified when a community coordinator
 # says this community is participating in a new round
-# FIXME we need to deal with deleting these once a community signs up.
 class CommunityNotificationUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     fields = []
 
@@ -964,25 +1005,6 @@ class CommunityNotificationUpdate(LoginRequiredMixin, ComradeRequiredMixin, Upda
 
     def get_success_url(self):
         return self.object.community.get_preview_url()
-
-def authorized_to_view_project_details(request, participation_info):
-    if request.user.is_authenticated:
-        try:
-            # Is the person an approved mentor or coordinator?
-            approved_to_see_all_project_details = participation_info.approved_to_see_all_project_details(request.user.comrade)
-            # Or are applications open and everyone should see the projects?
-            # Note in the template, links are still hidden if the
-            # initial application is pending or rejected
-            if not approved_to_see_all_project_details and participation_info.participating_round.has_application_period_started():
-                approved_to_see_all_project_details = True
-        except Comrade.DoesNotExist:
-                approved_to_see_all_project_details = False
-    else:
-        if participation_info.participating_round.has_application_period_started():
-            approved_to_see_all_project_details = True
-        else:
-            approved_to_see_all_project_details = False
-    return approved_to_see_all_project_details
 
 def community_landing_view(request, round_slug, community_slug):
     # Try to see if this community is participating in that round
@@ -997,39 +1019,31 @@ def community_landing_view(request, round_slug, community_slug):
     late_projects = [p for p in projects if p.deadline == Project.LATE]
     closed_projects = [p for p in projects if p.deadline == Project.CLOSED]
     example_skill = ProjectSkill
+    current_round = participation_info.participating_round
 
+    role = Role(request.user, current_round)
+
+    approved_coordinator_list = CoordinatorApproval.objects.none()
     if request.user.is_authenticated:
-        try:
-            # Although the current user is authenticated, don't assume
-            # that they have a Comrade instance. Instead check that the
-            # approval's coordinator is attached to a User that matches
-            # this one.
-            approved_coordinator_list = participation_info.community.coordinatorapproval_set.filter(
-                    approval_status=ApprovalStatus.APPROVED)
-            approved_mentor_list = participation_info.community.coordinatorapproval_set.filter(
-                    approval_status=ApprovalStatus.APPROVED)
-        except CoordinatorApproval.DoesNotExist:
-            approved_coordinator_list = None
-    else:
-            approved_coordinator_list = None
+        approved_coordinator_list = participation_info.community.coordinatorapproval_set.approved()
 
-    approved_to_see_all_project_details = authorized_to_view_project_details(request, participation_info)
+    approved_to_see_all_project_details = participation_info.approved_to_see_all_project_details(request.user)
 
+    mentors_pending_projects = Project.objects.none()
+    approved_coordinator = False
     if request.user.is_authenticated:
+        # If a mentor has submitted a project, they should be able to see all
+        # their project details and have the link to edit the project, even if
+        # the community is pending or the project isn't approved.
         try:
-            mentors_pending_projects = participation_info.mentors_pending_projects(request.user.comrade)
-            mentored_projects = [p for p in projects if p.is_submitter(request.user)]
-
-            approved_coordinator = participation_info.is_approved_coordinator(request.user.comrade)
-        # Even though the user is authenticated, they may not have a Comrade
+            # XXX: Despite the name, this is not limited to pending projects. Should it be?
+            mentors_pending_projects = request.user.comrade.get_mentored_projects().filter(
+                project_round=participation_info,
+            )
         except Comrade.DoesNotExist:
-            mentors_pending_projects = None
-            mentored_projects = None
-            approved_coordinator = False
-    else:
-        mentors_pending_projects = None
-        mentored_projects = None
-        approved_coordinator = False
+            pass
+
+        approved_coordinator = participation_info.community.is_coordinator(request.user)
 
     return render(request, 'home/community_landing.html',
             {
@@ -1037,8 +1051,9 @@ def community_landing_view(request, round_slug, community_slug):
             'ontime_projects': ontime_projects,
             'late_projects': late_projects,
             'closed_projects': closed_projects,
+            'role': role,
             # TODO: make the template get these off the participation_info instead of passing them in the context
-            'current_round' : participation_info.participating_round,
+            'current_round' : current_round,
             'community': participation_info.community,
             'approved_coordinator_list': approved_coordinator_list,
             'approved_to_see_all_project_details': approved_to_see_all_project_details,
@@ -1063,6 +1078,18 @@ class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
             'unapproved_advertising_description',
             ]
 
+    def get_form(self):
+        now = datetime.now(timezone.utc)
+        today = get_deadline_date_for(now)
+
+        try:
+            self.current_round = RoundPage.objects.filter(
+                lateorgs__gt=today,
+            ).earliest('lateorgs')
+        except RoundPage.DoesNotExist:
+            raise PermissionDenied("There is no round you can participate in right now.")
+        return super(CommunityCreate, self).get_form()
+
     # We have to over-ride this method because we need to
     # create a community's slug from its name.
     def form_valid(self, form):
@@ -1083,7 +1110,10 @@ class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
         # this round. The Participation object doesn't have to be saved
         # to the database yet; that'll happen when they submit it in the
         # next step.
-        return redirect(Participation(community=self.object).get_action_url('submit'))
+        return redirect(Participation(
+            community=self.object,
+            participating_round=self.current_round,
+        ).get_action_url('submit'))
 
 class CommunityUpdate(LoginRequiredMixin, UpdateView):
     model = Community
@@ -1118,7 +1148,7 @@ class ParticipationAction(ApprovalStatusAction):
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     def get_object(self):
         community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
-        participating_round = RoundPage.objects.latest('internstarts')
+        participating_round = get_object_or_404(RoundPage, slug=self.kwargs['round_slug'])
         try:
             return Participation.objects.get(
                     community=community,
@@ -1159,12 +1189,11 @@ class ParticipationAction(ApprovalStatusAction):
                 notification.delete()
 
 # This view is for mentors and coordinators to review project information and approve it
-def project_read_only_view(request, community_slug, project_slug):
-    current_round = RoundPage.objects.latest('internstarts')
+def project_read_only_view(request, round_slug, community_slug, project_slug):
     project = get_object_or_404(
             Project.objects.select_related('project_round__participating_round', 'project_round__community'),
             slug=project_slug,
-            project_round__participating_round=current_round,
+            project_round__participating_round__slug=round_slug,
             project_round__community__slug=community_slug,
             )
 
@@ -1252,10 +1281,9 @@ class MentorApprovalAction(ApprovalStatusAction):
             ]
 
     def get_object(self):
-        participating_round = RoundPage.objects.latest('internstarts')
         project = get_object_or_404(Project,
                 project_round__community__slug=self.kwargs['community_slug'],
-                project_round__participating_round=participating_round,
+                project_round__participating_round__slug=self.kwargs['round_slug'],
                 slug=self.kwargs['project_slug'])
 
         username = self.kwargs.get('username')
@@ -1282,6 +1310,7 @@ class MentorApprovalAction(ApprovalStatusAction):
         # project yet when they first sign up.
         if self.kwargs['action'] == 'submit' and self.object.project.is_submitter(self.request.user):
             return reverse('project-skills-edit', kwargs={
+                'round_slug': self.object.project.project_round.participating_round.slug,
                 'community_slug': self.object.project.project_round.community.slug,
                 'project_slug': self.object.project.slug,
                 })
@@ -1302,10 +1331,9 @@ class ProjectAction(ApprovalStatusAction):
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     def get_object(self):
-        participating_round = RoundPage.objects.latest('internstarts')
         participation = get_object_or_404(Participation,
                     community__slug=self.kwargs['community_slug'],
-                    participating_round=participating_round)
+                    participating_round__slug=self.kwargs['round_slug'])
 
         project_slug = self.kwargs.get('project_slug')
         if project_slug:
@@ -1334,6 +1362,7 @@ class ProjectAction(ApprovalStatusAction):
             return mentor.get_action_url('submit', self.request.user)
         elif self.kwargs['action'] == 'submit':
             return reverse('project-skills-edit', kwargs={
+                'round_slug': self.object.project_round.participating_round.slug,
                 'community_slug': self.object.project_round.community.slug,
                 'project_slug': self.object.slug,
                 })
@@ -1351,11 +1380,10 @@ class ProjectAction(ApprovalStatusAction):
 
 class BaseProjectEditPage(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     def get_object(self):
-        participating_round = RoundPage.objects.latest('internstarts')
         project = get_object_or_404(Project,
                 slug=self.kwargs['project_slug'],
                 project_round__community__slug=self.kwargs['community_slug'],
-                project_round__participating_round=participating_round)
+                project_round__participating_round__slug=self.kwargs['round_slug'])
         if not project.is_submitter(self.request.user):
             raise PermissionDenied("You are not an approved mentor for this project")
         # Only allow adding new project communication channels or skills
@@ -1380,11 +1408,10 @@ class CommunicationChannelsEditPage(BaseProjectEditPage):
 
 class MentorApprovalPreview(Preview):
     def get_object(self):
-        current_round = RoundPage.objects.latest('internstarts')
         return get_object_or_404(
                 MentorApproval,
                 project__slug=self.kwargs['project_slug'],
-                project__project_round__participating_round=current_round,
+                project__project_round__participating_round__slug=self.kwargs['round_slug'],
                 project__project_round__community__slug=self.kwargs['community_slug'],
                 mentor__account__username=self.kwargs['username'])
 
@@ -1561,19 +1588,24 @@ class ProjectContributions(LoginRequiredMixin, ComradeRequiredMixin, EligibleApp
     template_name = 'home/project_contributions.html'
 
     def get_context_data(self, **kwargs):
-        current_round = RoundPage.objects.latest('internstarts')
-
         # Make sure both the Community and Project are approved
         project = get_object_or_404(Project,
                 slug=self.kwargs['project_slug'],
                 approval_status=ApprovalStatus.APPROVED,
                 project_round__community__slug=self.kwargs['community_slug'],
-                project_round__participating_round=current_round,
+                project_round__participating_round__slug=self.kwargs['round_slug'],
                 project_round__approval_status=ApprovalStatus.APPROVED)
-        applicant = get_object_or_404(ApplicantApproval,
-                applicant=self.request.user.comrade,
-                application_round=current_round,
-                approval_status=ApprovalStatus.APPROVED)
+
+        current_round = project.project_round.participating_round
+        role = Role(self.request.user, current_round)
+
+        # Note that there's no reason to ever keep a past applicant from
+        # looking at their old contributions.
+
+        applicant = role.application
+        if applicant is None or not applicant.is_approved():
+            raise Http404("No approved initial application in this round.")
+
         contributions = applicant.contribution_set.filter(
                 project=project)
         try:
@@ -1587,14 +1619,14 @@ class ProjectContributions(LoginRequiredMixin, ComradeRequiredMixin, EligibleApp
             'current_round' : current_round,
             'community': project.project_round.community,
             'project': project,
-            'applicant': applicant,
+            'role': role,
             'contributions': contributions,
             'final_application': final_application,
             })
         return context
 
 # Only submit one contribution at a time
-class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
+class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, EligibleApplicantRequiredMixin, UpdateView):
     fields = [
             'date_started',
             'date_merged',
@@ -1603,19 +1635,16 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
             ]
 
     def get_object(self):
-        # Only allow eligible applicants to add contributions
-        if not self.request.user.comrade.eligible_application():
-            raise PermissionDenied("You are not an eligible applicant or you have not filled out the eligibility check.")
-
-        current_round = RoundPage.objects.latest('internstarts')
-
         # Make sure both the Community and Project are approved
         project = get_object_or_404(Project,
                 slug=self.kwargs['project_slug'],
                 approval_status=ApprovalStatus.APPROVED,
                 project_round__community__slug=self.kwargs['community_slug'],
-                project_round__participating_round=current_round,
+                project_round__participating_round__slug=self.kwargs['round_slug'],
                 project_round__approval_status=ApprovalStatus.APPROVED)
+
+        current_round = project.project_round.participating_round
+
         applicant = get_object_or_404(ApplicantApproval,
                 applicant=self.request.user.comrade,
                 application_round=current_round)
@@ -1626,8 +1655,14 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
         except FinalApplication.DoesNotExist:
             application = None
 
+        if not current_round.has_application_period_started():
+            raise PermissionDenied("You cannot record a contribution until the Outreachy application period opens.")
+
         if project.has_application_deadline_passed() and application == None:
             raise PermissionDenied("Editing or recording new contributions is closed at this time to applicants who have not created a final application.")
+
+        if current_round.has_intern_announcement_deadline_passed():
+            raise PermissionDenied("Editing or recording new contributions is closed at this time.")
 
         if 'contribution_slug' not in self.kwargs:
             return Contribution(applicant=applicant, project=project)
@@ -1645,27 +1680,31 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
 
 class FinalApplicationRate(LoginRequiredMixin, ComradeRequiredMixin, View):
     def post(self, request, *args, **kwargs):
-        username = kwargs['username']
-        current_round = RoundPage.objects.latest('internstarts')
-        if current_round.slug != kwargs['round_slug']:
-            raise PermissionDenied("You can only rate applicants for the current round.")
-
         # Make sure both the Community and Project are approved
         project = get_object_or_404(Project,
                 slug=kwargs['project_slug'],
                 approval_status=ApprovalStatus.APPROVED,
                 project_round__community__slug=kwargs['community_slug'],
-                project_round__participating_round=current_round,
+                project_round__participating_round__slug=kwargs['round_slug'],
                 project_round__approval_status=ApprovalStatus.APPROVED)
-        applicant = get_object_or_404(ApplicantApproval,
-                applicant__account__username=username,
-                application_round=current_round,
-                approval_status=ApprovalStatus.APPROVED)
 
         # Only allow approved mentors to rank applicants
         approved_mentors = project.get_approved_mentors()
         if request.user.comrade not in [m.mentor for m in approved_mentors]:
             raise PermissionDenied("You are not an approved mentor for this project.")
+
+        current_round = project.project_round.participating_round
+
+        if not current_round.has_application_period_started():
+            raise PermissionDenied("You cannot rate an applicant until the Outreachy application period opens.")
+
+        if current_round.has_last_day_to_add_intern_passed():
+            raise PermissionDenied("Outreachy interns cannot be rated at this time.")
+
+        applicant = get_object_or_404(ApplicantApproval,
+                applicant__account__username=kwargs['username'],
+                application_round=current_round,
+                approval_status=ApprovalStatus.APPROVED)
 
         application = get_object_or_404(FinalApplication, applicant=applicant, project=project)
         rating = kwargs['rating']
@@ -1696,22 +1735,30 @@ class FinalApplicationAction(ApprovalStatusAction):
         else:
             comrade = self.request.user.comrade
 
-        # Only allow eligible applicants to add contributions
-        if not comrade.eligible_application():
-            raise PermissionDenied("You are not an eligible applicant or you have not filled out the eligibility check.")
-
-        current_round = RoundPage.objects.latest('internstarts')
-
         # Make sure both the Community and Project are approved
         project = get_object_or_404(Project,
                 slug=self.kwargs['project_slug'],
                 approval_status=ApprovalStatus.APPROVED,
                 project_round__community__slug=self.kwargs['community_slug'],
-                project_round__participating_round=current_round,
+                project_round__participating_round__slug=self.kwargs['round_slug'],
                 project_round__approval_status=ApprovalStatus.APPROVED)
+
+        current_round = project.project_round.participating_round
+
+        if not current_round.has_application_period_started():
+            raise PermissionDenied("You can't submit a final application until the Outreachy application period opens.")
+
+        if project.has_application_deadline_passed():
+            raise PermissionDenied("This project is closed to final applications.")
+
         applicant = get_object_or_404(ApplicantApproval,
                 applicant=comrade,
                 application_round=current_round)
+
+        # Only allow eligible applicants to apply
+        if not applicant.is_approved():
+            raise PermissionDenied("You are not an eligible applicant or you have not filled out the eligibility check.")
+
         try:
             return FinalApplication.objects.get(applicant=applicant, project=project)
         except FinalApplication.DoesNotExist:
@@ -1728,8 +1775,6 @@ class ProjectApplicants(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
     template_name = 'home/project_applicants.html'
 
     def get_context_data(self, **kwargs):
-        current_round = RoundPage.objects.latest('internstarts')
-
         # Make sure both the Community, Project, and mentor are approved
         # Note that accessing URL parameters like project_slug off kwargs only
         # works because this is a TemplateView. For the various kinds of
@@ -1738,8 +1783,14 @@ class ProjectApplicants(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
                 slug=kwargs['project_slug'],
                 approval_status=ApprovalStatus.APPROVED,
                 project_round__community__slug=kwargs['community_slug'],
-                project_round__participating_round=current_round,
+                project_round__participating_round__slug=kwargs['round_slug'],
                 project_round__approval_status=ApprovalStatus.APPROVED)
+
+        current_round = project.project_round.participating_round
+
+        # Note that there's no reason to ever keep someone who was a
+        # coordinator or mentor in a past round from looking at who applied in
+        # that round.
 
         if not self.request.user.is_staff and not project.project_round.community.is_coordinator(self.request.user) and not project.project_round.participating_round.is_mentor(self.request.user):
             raise PermissionDenied("You are not an approved mentor for this project.")
@@ -1770,13 +1821,16 @@ class ProjectApplicants(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
 
 @login_required
 def community_applicants(request, round_slug, community_slug):
-    current_round = RoundPage.objects.latest('internstarts')
-
     # Make sure both the Community and mentor are approved
     participation = get_object_or_404(Participation,
             community__slug=community_slug,
-            participating_round=current_round,
+            participating_round__slug=round_slug,
             approval_status=ApprovalStatus.APPROVED)
+
+    current_round = participation.participating_round
+
+    # Note that there's no reason to ever keep someone who was a coordinator or
+    # mentor in a past round from looking at who applied in that round.
 
     user_is_coordinator = participation.community.is_coordinator(request.user)
     user_is_staff = request.user.is_staff
@@ -1792,13 +1846,37 @@ def community_applicants(request, round_slug, community_slug):
         })
 
 def contribution_tips(request):
-    current_round = RoundPage.objects.latest('internstarts')
+    try:
+        current_round = get_current_round_for_initial_application()
+    except PermissionDenied:
+        current_round = None # don't display any eligibility prompts
+
+    role = Role(request.user, current_round)
+
     return render(request, 'home/contribution_tips.html', {
         'current_round': current_round,
+        'role': role,
         })
 
 def eligibility_information(request):
-    current_round = RoundPage.objects.latest('internstarts')
+    now = datetime.now(timezone.utc)
+    today = get_deadline_date_for(now)
+
+    try:
+        # The most relevant dates come from the soonest round where internships
+        # haven't started yet...
+        current_round = RoundPage.objects.filter(
+            internstarts__gt=today,
+        ).earliest('internstarts')
+    except RoundPage.DoesNotExist:
+        try:
+            # ...but if there aren't any, use the round that started most
+            # recently, so people get some idea of what the timeline looks like
+            # even when the next round isn't announced yet.
+            current_round = RoundPage.objects.latest('internstarts')
+        except RoundPage.DoesNotExist:
+            raise Http404("No internship rounds configured yet!")
+
     return render(request, 'home/eligibility.html', {
         'current_round': current_round,
         })
@@ -1807,17 +1885,23 @@ class TrustedVolunteersListView(UserPassesTestMixin, ListView):
     template_name = 'home/trusted_volunteers.html'
 
     def get_queryset(self):
-        current_round = RoundPage.objects.latest('internstarts')
+        now = datetime.now(timezone.utc)
+        today = get_deadline_date_for(now)
+
+        # Find all mentors and coordinators who are active in any round that is
+        # currently running (anywhere from pingnew to finalfeedback).
         return Comrade.objects.filter(
                 models.Q(
                     mentorapproval__approval_status=ApprovalStatus.APPROVED,
                     mentorapproval__project__approval_status=ApprovalStatus.APPROVED,
                     mentorapproval__project__project_round__approval_status=ApprovalStatus.APPROVED,
-                    mentorapproval__project__project_round__participating_round=current_round,
+                    mentorapproval__project__project_round__participating_round__pingnew__lte=today,
+                    mentorapproval__project__project_round__participating_round__finalfeedback__gt=today,
                 ) | models.Q(
                     coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
                     coordinatorapproval__community__participation__approval_status=ApprovalStatus.APPROVED,
-                    coordinatorapproval__community__participation__participating_round=current_round,
+                    coordinatorapproval__community__participation__participating_round__pingnew__lte=today,
+                    coordinatorapproval__community__participation__participating_round__finalfeedback__gt=today,
                 )
             ).order_by('public_name').distinct()
 
@@ -1962,10 +2046,13 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.
     def get_form_kwargs(self):
         kwargs = super(InternSelectionUpdate, self).get_form_kwargs()
 
-        current_round = RoundPage.objects.latest('internstarts')
-        this_round = RoundPage.objects.get(slug=self.kwargs['round_slug'])
-        if this_round != current_round:
-            raise PermissionDenied("You cannot select an intern for a past Outreachy round.")
+        current_round = get_object_or_404(RoundPage, slug=self.kwargs['round_slug'])
+
+        if not current_round.has_application_period_started():
+            raise PermissionDenied("You can't select an intern until the Outreachy application period opens.")
+
+        if current_round.has_last_day_to_add_intern_passed():
+            raise PermissionDenied("Intern selection is closed for this round.")
 
         set_project_and_applicant(self, current_round)
         application = get_object_or_404(FinalApplication,
@@ -2022,7 +2109,7 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 applicant=self.applicant,
                 project=self.project,
                 intern_starts=self.project.project_round.participating_round.internstarts,
-                initial_feedback_opens=self.project.project_round.participating_round.initialfeedback - datetime.timedelta(days=7),
+                initial_feedback_opens=self.project.project_round.participating_round.initialfeedback - timedelta(days=7),
                 initial_feedback_due=self.project.project_round.participating_round.initialfeedback,
                 midpoint_feedback_opens=self.project.project_round.participating_round.midfeedback - datetime.timedelta(days=7),
                 midpoint_feedback_due=self.project.project_round.participating_round.midfeedback,
@@ -2058,10 +2145,17 @@ class InternRemoval(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Re
     template_name = 'home/intern_removal_form.html'
 
     def get_object(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        this_round = RoundPage.objects.get(slug=self.kwargs['round_slug'])
-        if this_round != current_round:
-            raise PermissionDenied("You cannot remove an intern from a past Outreachy round.")
+        current_round = get_object_or_404(RoundPage, slug=self.kwargs['round_slug'])
+
+        # If the internship is currently active,
+        # then only Outreachy organizers should remove interns
+        # by setting them not in good standing on the alums page.
+        if current_round.is_internship_active():
+            raise PermissionDenied("Only Outreachy organizers can remove an intern after the internship starts.")
+
+        # Mentors shouldn't be able to delete interns after the internship ends.
+        if current_round.has_internship_ended():
+            raise PermissionDenied("Outreachy interns cannot be removed after the internship ends.")
 
         set_project_and_applicant(self, current_round)
         self.intern_selection = get_object_or_404(InternSelection,
@@ -2179,9 +2273,13 @@ class MentorResignation(LoginRequiredMixin, ComradeRequiredMixin, DeleteView):
 class InternFund(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, View):
     def post(self, request, *args, **kwargs):
         username = kwargs['applicant_username']
-        current_round = RoundPage.objects.latest('internstarts')
-        if current_round.slug != kwargs['round_slug']:
-            raise PermissionDenied("You can only select funding sources for interns in the current round.")
+        current_round = get_object_or_404(RoundPage, slug=kwargs['round_slug'])
+
+        if not current_round.has_application_period_started():
+            raise PermissionDenied("You cannot set a funding source for an Outreachy intern until the application period opens.")
+
+        if current_round.has_last_day_to_add_intern_passed():
+            raise PermissionDenied("Funding sources for Outreachy interns cannot be changed at this time.")
 
         set_project_and_applicant(self, current_round)
         self.intern_selection = get_object_or_404(InternSelection,
@@ -2222,9 +2320,13 @@ class InternFund(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Revis
 class InternApprove(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, View):
     def post(self, request, *args, **kwargs):
         username = kwargs['applicant_username']
-        current_round = RoundPage.objects.latest('internstarts')
-        if current_round.slug != kwargs['round_slug']:
-            raise PermissionDenied("You can only approve interns in the current round.")
+        current_round = get_object_or_404(RoundPage, slug=kwargs['round_slug'])
+
+        if not current_round.has_application_period_started():
+            raise PermissionDenied("You cannot approve an Outreachy intern until the application period opens.")
+
+        if current_round.has_last_day_to_add_intern_passed():
+            raise PermissionDenied("Approval status for Outreachy interns cannot be changed at this time.")
 
         set_project_and_applicant(self, current_round)
         self.intern_selection = get_object_or_404(InternSelection,
@@ -2280,12 +2382,14 @@ class InternAgreementSign(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
     fields = ('legal_name',)
 
     def set_project_and_intern_selection(self):
-        self.current_round = RoundPage.objects.latest('internstarts')
-        this_round = RoundPage.objects.get(slug=self.kwargs['round_slug'])
-        if this_round != self.current_round:
-            raise PermissionDenied("You cannot sign an intern agreement for a past Outreachy round.")
+        self.current_round = get_object_or_404(RoundPage, slug=self.kwargs['round_slug'])
         if not self.current_round.has_intern_announcement_deadline_passed():
             raise PermissionDenied("Intern agreements cannot be signed before the interns are announced.")
+
+        # Since interns can't sign the contract twice, the only people who
+        # could sign a contract for a past round are people who never signed it
+        # when they were supposed to. If somehow that happens (it shouldn't!),
+        # let's not limit which round an intern can sign a contract for.
 
         self.project = get_object_or_404(Project,
                 slug=self.kwargs['project_slug'],
@@ -2782,53 +2886,38 @@ class Survey2018Notification(LoginRequiredMixin, ComradeRequiredMixin, TemplateV
         return redirect(reverse('dashboard'))
 
 @login_required
-def applicant_review_summary(request):
+def applicant_review_summary(request, status):
     """
-    For applicant reviewers and staff, show the status of pending applications.
+    For applicant reviewers and staff, show the status of applications that
+    have the specified approval status.
     """
-    current_round = RoundPage.objects.latest('internstarts')
-    pending_applications = ApplicantApproval.objects.filter(
-            application_round = current_round,
-            approval_status = ApprovalStatus.PENDING).order_by('applicant__account__username').order_by('submission_date')
+    current_round = get_current_round_for_initial_application()
+
+    if not request.user.is_staff and not current_round.is_reviewer(request.user):
+        raise PermissionDenied("You are not authorized to review applications.")
+
+    applications = ApplicantApproval.objects.filter(
+        application_round=current_round,
+        approval_status=status,
+    ).order_by('applicant__account__username').order_by('submission_date')
+
+    if status == ApprovalStatus.PENDING:
+        context_name = 'pending_applications'
+    elif status == ApprovalStatus.REJECTED:
+        context_name = 'rejected_applications'
+    elif status == ApprovalStatus.APPROVED:
+        context_name = 'approved_applications'
 
     return render(request, 'home/applicant_review_summary.html', {
-        'pending_applications': pending_applications,
-        })
-
-@login_required
-def rejected_applicants_summary(request):
-    """
-    For applicant reviewers and staff, show the status of rejected applications.
-    """
-    current_round = RoundPage.objects.latest('internstarts')
-    rejected_applications = ApplicantApproval.objects.filter(
-            application_round = current_round,
-            approval_status = ApprovalStatus.REJECTED).order_by('applicant__account__username').order_by('submission_date')
-
-    return render(request, 'home/applicant_review_summary.html', {
-        'rejected_applications': rejected_applications,
-        })
-
-@login_required
-def approved_applicants_summary(request):
-    """
-    For applicant reviewers and staff, show the status of approved applications.
-    """
-    current_round = RoundPage.objects.latest('internstarts')
-    approved_applications = ApplicantApproval.objects.filter(
-            application_round = current_round,
-            approval_status = ApprovalStatus.APPROVED).order_by('applicant__account__username').order_by('submission_date')
-
-    return render(request, 'home/applicant_review_summary.html', {
-        'approved_applications': approved_applications,
-        })
+        context_name: applications,
+    })
 
 # Passed action, applicant_username
 class ApplicantApprovalUpdate(ApprovalStatusAction):
     model = ApplicantApproval
 
     def get_object(self):
-        current_round = RoundPage.objects.latest('internstarts')
+        current_round = get_current_round_for_initial_application()
         return get_object_or_404(ApplicantApproval,
                 applicant__account__username=self.kwargs['applicant_username'],
                 application_round=current_round)
@@ -2851,7 +2940,7 @@ class DeleteApplication(LoginRequiredMixin, ComradeRequiredMixin, View):
         if not request.user.is_staff:
             raise PermissionDenied("Only Outreachy organizers can delete initial applications.")
 
-        current_round = RoundPage.objects.latest('internstarts')
+        current_round = get_current_round_for_initial_application()
         application = get_object_or_404(ApplicantApproval,
                 applicant__account__username=self.kwargs['applicant_username'],
                 application_round=current_round)
@@ -2864,7 +2953,7 @@ class DeleteApplication(LoginRequiredMixin, ComradeRequiredMixin, View):
 class NotifyEssayNeedsUpdating(LoginRequiredMixin, ComradeRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
-        current_round = RoundPage.objects.latest('internstarts')
+        current_round = get_current_round_for_initial_application()
         # Allow staff to ask applicants to revise their essays
         if not request.user.is_staff:
             raise PermissionDenied("Only Outreachy organizers can ask applicants to revise their essays.")
@@ -2891,7 +2980,7 @@ class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, re
             ]
 
     def get_object(self):
-        current_round = RoundPage.objects.latest('internstarts')
+        current_round = get_current_round_for_initial_application()
         # Only allow applicants to revise their own essays
         if self.request.user.comrade.account.username != self.kwargs['applicant_username']:
             raise PermissionDenied('You can only edit your own essay.')
@@ -2912,7 +3001,7 @@ class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, re
 class NotifySchoolInformationUpdating(LoginRequiredMixin, ComradeRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
-        current_round = RoundPage.objects.latest('internstarts')
+        current_round = get_current_round_for_initial_application()
         if not request.user.is_staff:
             raise PermissionDenied("Only Outreachy organizers can ask applicants to revise their school information.")
 
@@ -2938,7 +3027,7 @@ class SchoolInformationUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversio
             ]
 
     def get_object(self):
-        current_round = RoundPage.objects.latest('internstarts')
+        current_round = get_current_round_for_initial_application()
         # Only allow applicants to revise their own essays
         if self.request.user.comrade.account.username != self.kwargs['applicant_username']:
             raise PermissionDenied('You can only edit your own school information.')
@@ -2966,7 +3055,7 @@ class SchoolInformationUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversio
 
 def get_or_create_application_reviewer_and_review(self):
     # Only allow approved reviewers to rate applications for the current round
-    current_round = RoundPage.objects.latest('internstarts')
+    current_round = get_current_round_for_initial_application()
 
     try:
         reviewer = ApplicationReviewer.objects.get(

@@ -4,11 +4,11 @@
 	<div class="card">
 		<div class="card-header" role="tab">
 			<h4 class="mb-0"><a data-toggle="collapse" data-parent="outreachy-information-parent" href="#outreachy-information"
-					{% if not request.user.comrade or request.user.comrade.needs_application %}aria-expanded="true"{% endif %}
+					{% if role.needs_application %}aria-expanded="true"{% endif %}
 					aria-controls="outreachy-information"
 					 >+ Outreachy Internship Information</a></h4>
 		</div>
-		<div class="collapse {% if not request.user.comrade or request.user.comrade.needs_application %}show{% endif %} card-body" id="outreachy-information">
+		<div class="collapse {% if role.needs_application %}show{% endif %} card-body" id="outreachy-information">
 			<h2>What is Outreachy?</h2>
 
 			<p>Outreachy is a program that provides internships for people from groups traditionally underrepresented in tech.

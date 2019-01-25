@@ -6,7 +6,11 @@ Call for Outreachy community coordinators and mentors
 {% block content %}
 
 <p><a href="{% url 'community-cfp' %}">Timeline and FAQ for Outreachy Communities</a></p>
-{% include "home/snippet/cfp_closed_warning.html" %}
+
+{% if current_round.has_project_submission_and_approval_deadline_passed %}
+	{% include "home/snippet/cfp_closed_warning.html" %}
+{% endif %}
+
 <h1>Call for Outreachy Community Participation</h1>
 <p>Twice a year, Free and Open Source Software (FOSS) communities work with Outreachy organizers to offer remote internships. Outreachy's goal is to support <a href="/apply/eligibility/">people from groups underrepresented in the technology industry.</a> Interns work remotely with mentors from Free and Open Source Software (FOSS) communities on projects ranging from programming, user experience, documentation, illustration and graphical design, to data science.
 

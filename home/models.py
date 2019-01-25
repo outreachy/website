@@ -15,6 +15,7 @@ from django.db import models
 from django.forms import ValidationError
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.utils.functional import cached_property
 from itertools import chain, groupby
 from urllib.parse import urlsplit, urlparse
 
@@ -176,14 +177,29 @@ class RoundPage(Page):
         FieldPanel('landingdue'),
         FieldPanel('appsopen'),
         FieldPanel('lateorgs'),
+        FieldPanel('lateprojects'),
         FieldPanel('appsclose'),
         FieldPanel('appslate'),
+        FieldPanel('mentor_intern_selection_deadline'),
+        FieldPanel('coordinator_funding_deadline'),
+        FieldPanel('internapproval'),
         FieldPanel('internannounce'),
         FieldPanel('internstarts'),
+        FieldPanel('initialfeedback'),
         FieldPanel('midfeedback'),
         FieldPanel('internends'),
         FieldPanel('finalfeedback'),
         FieldPanel('sponsordetails', classname="full"),
+        FieldPanel('initialpayment'),
+        FieldPanel('midpayment'),
+        FieldPanel('finalpayment'),
+        FieldPanel('week_two_chat_text_date'),
+        FieldPanel('week_two_chat_video_date'),
+        FieldPanel('week_two_chat_text_url'),
+        FieldPanel('week_two_chat_video_url'),
+        FieldPanel('week_three_stuck_chat_url'),
+        FieldPanel('week_five_audience_chat_url'),
+        FieldPanel('week_seven_timeline_chat_url'),
     ]
 
     def official_name(self):
@@ -300,6 +316,12 @@ class RoundPage(Page):
     def has_internship_start_date_passed(self):
         return has_deadline_passed(self.internstarts)
 
+    # Outreachy internships can be extended for up to five weeks past the official end date.
+    # In some cases, we've changed or added an intern after the official announcement date.
+    # The very latest we could do that would be five weeks after the official start date.
+    def has_last_day_to_add_intern_passed(self):
+        return has_deadline_passed(self.internstarts + datetime.timedelta(days=5*7))
+
     def gsoc_round(self):
         # The internships would start before August
         # for rounds aligned with GSoC
@@ -330,13 +352,27 @@ class RoundPage(Page):
             funded += p.interns_funded()
         return funded
 
+    def is_coordinator(self, user):
+        return CoordinatorApproval.objects.filter(
+            coordinator__account=user,
+            approval_status=ApprovalStatus.APPROVED,
+            community__participation__approval_status=ApprovalStatus.APPROVED,
+            community__participation__participating_round=self,
+        ).exists()
+
     def is_mentor(self, user):
-        return MentorApproval.objects.filter(
-                mentor__account=user,
-                project__project_round__participating_round=self,
-                project__project_round__approval_status=ApprovalStatus.APPROVED,
-                project__approval_status=ApprovalStatus.APPROVED,
-                approval_status=ApprovalStatus.APPROVED).exists()
+        try:
+            return user.comrade.get_mentored_projects().approved().filter(
+                project_round__participating_round=self,
+                project_round__approval_status=ApprovalStatus.APPROVED,
+            ).exists()
+        except Comrade.DoesNotExist:
+            return False
+
+    def is_reviewer(self, user):
+        return self.applicationreviewer_set.approved().filter(
+            comrade__account=user,
+        ).exists()
 
     def get_intern_selections(self):
         return InternSelection.objects.filter(
@@ -628,18 +664,21 @@ class RoundPage(Page):
 
         return (eligible, contributed, applied, funded)
 
-    def validate_is_time_to_show_project_selection(self):
-        # If the application period is closed, don't show projects from the current round
-        if has_deadline_passed(self.appslate):
-            return False
-        return True
-
     def serve(self, request, *args, **kwargs):
+        # If the project selection page (views.current_round_page) would
+        # consider this a current_round, redirect there.
+        now = datetime.datetime.now(datetime.timezone.utc)
+        today = get_deadline_date_for(now)
+        if self.pingnew <= today and self.appslate > today:
+            return redirect('project-selection')
+
         # Only show this page if we shouldn't be showing the project selection page.
-        if not self.validate_is_time_to_show_project_selection():
-            return super(RoundPage, self).serve(request, *args, **kwargs)
-        # Otherwise, the application period is open, so redirect to the project selection view.
-        return redirect('project-selection')
+        return super(RoundPage, self).serve(request, *args, **kwargs)
+
+    def get_context(self, request, *args, **kwargs):
+        context = super(RoundPage, self).get_context(request, *args, **kwargs)
+        context['role'] = Role(request.user, self)
+        return context
 
 class CohortPage(Page):
     round_start = models.DateField("Round start date")
@@ -967,249 +1006,17 @@ class Comrade(models.Model):
 
         return (city.title(), country.title())
 
-    def has_application(self, **filters):
-        # Does this Comrade have an ApplicantApproval for this round?
-        current_round = RoundPage.objects.latest('internstarts')
-        applications = ApplicantApproval.objects.filter(
-                applicant=self, application_round=current_round, 
-                **filters)
-        return applications.exists()
-
-
-    # We want to prompt the Comrade to fill out an ApplicantApproval
-    # if they haven't already.
-    # Don't advertise this for mentors or coordinators (pending or approved) in this current round
-    def needs_application(self):
-        if self.account.is_staff:
-            return False
-
-        if self.has_application():
-            return False
-
-        # Is this Comrade an approved mentor or coordinator?
-        if self.approved_mentor_or_coordinator() or self.approved_reviewer():
-            return False
-        return True
-
-
-    def ineligible_application(self):
-        return self.has_application(approval_status=ApprovalStatus.REJECTED)
-
-    def pending_application(self):
-        return self.has_application(approval_status=ApprovalStatus.PENDING)
-
-    def eligible_application(self):
-        return self.has_application(approval_status=ApprovalStatus.APPROVED)
-
-    def alum_in_good_standing(self):
-        # Search all rounds for an intern selection
-        rounds = RoundPage.objects.all()
-        for r in rounds:
-            intern_selection = r.get_in_good_standing_intern_selections().filter(
-                    applicant__applicant=self)
-            if intern_selection:
-                return True
-        return False
-
-    def approved_mentor_or_coordinator(self):
-        if self.account.is_staff:
-            return True
-
-        current_round = RoundPage.objects.latest('internstarts')
-        mentors = MentorApproval.objects.filter(
-                mentor=self,
-                approval_status=ApprovalStatus.APPROVED,
-                project__approval_status=ApprovalStatus.APPROVED,
-                project__project_round__approval_status=ApprovalStatus.APPROVED,
-                project__project_round__participating_round=current_round,
-                )
-        if mentors.exists():
-            return True
-
-        coordinators = CoordinatorApproval.objects.filter(
-                coordinator=self,
-                approval_status=ApprovalStatus.APPROVED,
-                community__participation__approval_status=ApprovalStatus.APPROVED,
-                community__participation__participating_round=current_round,
-                )
-        if coordinators.exists():
-            return True
-
-        return False
-
-    def approved_reviewer(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        return ApplicationReviewer.objects.filter(
-                comrade=self,
-                reviewing_round=current_round,
-                approval_status=ApprovalStatus.APPROVED).exists()
-
-    def get_approved_mentored_projects(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        # Get all projects where they're an approved mentor
-        # where the project is approved,
-        # and the community is approved to participate in the current round.
-        mentor_approvals = MentorApproval.objects.filter(mentor = self,
-                approval_status = ApprovalStatus.APPROVED,
-                project__approval_status = ApprovalStatus.APPROVED,
-                project__project_round__participating_round = current_round,
-                project__project_round__approval_status = ApprovalStatus.APPROVED,
-                )
-        return [m.project for m in mentor_approvals]
-
-    def get_pending_mentored_projects(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        # Get all projects where they're an approved mentor
-        # where the project is pending,
-        # and the community is approved or pending for the current round.
-        # Don't count withdrawn or rejected communities.
-        mentor_approvals = MentorApproval.objects.filter(mentor = self,
-                approval_status = ApprovalStatus.APPROVED,
-                project__approval_status = ApprovalStatus.PENDING,
-                project__project_round__participating_round = current_round,
-                ).exclude(
-                        project__project_round__approval_status = ApprovalStatus.WITHDRAWN
-                        ).exclude(
-                                project__project_round__approval_status = ApprovalStatus.REJECTED
-                        )
-        if not mentor_approvals:
-            return None
-
-        return [m.project for m in mentor_approvals]
-
-    def get_editable_mentored_projects(self):
-        current_round = RoundPage.objects.latest('internstarts')
-
-        # It's possible that some intern selections may not work out,
-        # and a mentor will have to select another intern
-        # after the intern announcement date.
-        # Show their project until the day after their intern starts.
-        if current_round.has_internship_start_date_passed():
-            return None
-
-        # Get all projects where they're an approved mentor
-        # where the project is pending,
-        # and the community is approved or pending for the current round.
-        # Don't count withdrawn or rejected communities.
-        mentor_approvals = MentorApproval.objects.filter(
-                mentor = self,
-                approval_status = ApprovalStatus.APPROVED,
-                project__project_round__participating_round = current_round,
-                ).exclude(
-                        project__project_round__approval_status = ApprovalStatus.WITHDRAWN
-                        ).exclude(
-                                project__project_round__approval_status = ApprovalStatus.REJECTED
-                        )
-        if not mentor_approvals:
-            return None
-
-        return [m.project for m in mentor_approvals]
-
-    def get_all_mentored_projects(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        # Get all projects where they're a mentor
-        # Don't count withdrawn or rejected communities.
-        mentor_approvals = MentorApproval.objects.filter(
-                mentor = self,
-                project__project_round__participating_round = current_round,
-                ).exclude(
-                        project__project_round__approval_status = ApprovalStatus.WITHDRAWN
-                        ).exclude(
-                                project__project_round__approval_status = ApprovalStatus.REJECTED
-                        )
-        if not mentor_approvals:
-            return None
-
-        return [m.project for m in mentor_approvals]
-
-    def get_approved_coordinator_communities(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        # Get all communities where they're an approved community
-        # and the community is approved to participate in the current round.
-        return Community.objects.filter(
-                participation__participating_round = current_round,
-                participation__approval_status = ApprovalStatus.APPROVED,
-                coordinatorapproval__coordinator = self,
-                coordinatorapproval__approval_status = ApprovalStatus.APPROVED,
-                )
-
-    def get_projects_contributed_to(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        try:
-            applicant = ApplicantApproval.objects.get(applicant = self,
-                    application_round = current_round)
-        except ApplicantApproval.DoesNotExist:
-            return ()
-        contributions = Contribution.objects.filter(applicant=applicant).order_by('-project__deadline').order_by('project__community__name').order_by('project__short_title')
-        projects = []
-        for c in contributions:
-            if not c.project in projects:
-                projects.append(c.project)
-        return projects
-
-    def project_applied_to_for_sort(self, project):
-        try:
-            finalapplication = FinalApplication.objects.get(
-                    applicant__applicant=self,
-                    project=project)
-        except FinalApplication.DoesNotExist:
-            return 0
-        return 1
-
-    def get_projects_with_upcoming_and_passed_deadlines(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        all_projects = self.get_projects_contributed_to()
-
-        upcoming_deadlines = []
-        passed_deadlines = []
-        ontime_deadline = current_round.appsclose
-        late_deadline = current_round.appslate
-        for project in all_projects:
-            if not has_deadline_passed(ontime_deadline) and (project.deadline == Project.ONTIME or project.deadline == Project.CLOSED):
-                upcoming_deadlines.append(project)
-            elif not has_deadline_passed(late_deadline) and project.deadline == Project.LATE:
-                upcoming_deadlines.append(project)
-            else:
-                passed_deadlines.append(project)
-        upcoming_deadlines.sort(key=lambda x: x.deadline, reverse=True)
-        passed_deadlines.sort(key=lambda x: x.deadline, reverse=True)
-        passed_deadlines.sort(key=lambda x: self.project_applied_to_for_sort(x), reverse=True)
-        return upcoming_deadlines, passed_deadlines
-
-    def get_projects_with_upcoming_deadlines(self):
-        upcoming, passed = self.get_projects_with_upcoming_and_passed_deadlines()
-        return upcoming
-
-    def get_projects_with_passed_deadlines(self):
-        upcoming, passed = self.get_projects_with_upcoming_and_passed_deadlines()
-        return passed
-
-    def get_projects_applied_to(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        try:
-            applicant = ApplicantApproval.objects.get(applicant = self,
-                    application_round = current_round)
-        except ApplicantApproval.DoesNotExist:
-            return []
-        applications = FinalApplication.objects.filter(applicant=applicant)
-        projects = []
-        for a in applications:
-            if not a.project in projects:
-                if a.approval_status == ApprovalStatus.WITHDRAWN:
-                    a.project.withdrawn = True
-                else:
-                    a.project.withdrawn = False
-                projects.append(a.project)
-        return projects
-
-    def get_passed_projects_not_applied_to(self):
-        passed_deadlines = self.get_projects_with_passed_deadlines()
-        projects_applied_to = self.get_projects_applied_to()
-        really_passed_deadlines = []
-        for p in passed_deadlines:
-            if p not in projects_applied_to:
-                really_passed_deadlines.append(p)
-        return really_passed_deadlines
+    def get_mentored_projects(self):
+        """
+        Returns all projects for which this person has ever been approved as a
+        mentor, regardless of whether the project itself or its community were
+        approved. You can apply additional filters to the return value if you
+        want to be more specific.
+        """
+        return Project.objects.filter(
+            mentorapproval__mentor=self,
+            mentorapproval__approval_status=ApprovalStatus.APPROVED,
+        )
 
     def get_intern_selection(self):
         try:
@@ -1307,6 +1114,18 @@ class ApprovalStatus(models.Model):
 
     def get_reject_url(self, **kwargs):
         return self.get_action_url('reject', **kwargs)
+
+    def is_pending(self):
+        return self.approval_status == self.PENDING
+
+    def is_approved(self):
+        return self.approval_status == self.APPROVED
+
+    def is_withdrawn(self):
+        return self.approval_status == self.WITHDRAWN
+
+    def is_rejected(self):
+        return self.approval_status == self.REJECTED
 
 class Community(models.Model):
     name = models.CharField(
@@ -1474,16 +1293,23 @@ class Participation(ApprovalStatus):
         return details
 
     def get_absolute_url(self):
-        return reverse('community-landing', kwargs={'round_slug': self.participating_round.slug, 'community_slug': self.community.slug})
+        return reverse('community-landing', kwargs={
+            'round_slug': self.participating_round.slug,
+            'community_slug': self.community.slug,
+        })
 
     def get_preview_url(self):
         return self.community.get_preview_url()
 
     def get_action_url(self, action):
         return reverse('participation-action', kwargs={
+            'round_slug': self.participating_round.slug,
             'community_slug': self.community.slug,
             'action': action,
-            })
+        })
+
+    def submission_and_approval_deadline(self):
+        return self.participating_round.lateorgs
 
     def is_approver(self, user):
         return user.is_staff
@@ -1494,62 +1320,37 @@ class Participation(ApprovalStatus):
     def is_submitter(self, user):
         return self.community.is_coordinator(user)
 
-    def is_approved_coordinator(self, comrade):
-        coordinators = CoordinatorApproval.objects.filter(
-                coordinator=comrade,
-                approval_status=ApprovalStatus.APPROVED,
-                community__participation=self,
-                )
-        if coordinators.exists():
-            return True
-        return False
-
     # This function should only be used before applications are open
     # There are a few people who should be approved to see
     # all the details of all projects for a community
     # before the applications open:
-    def approved_to_see_all_project_details(self, comrade):
+    def approved_to_see_all_project_details(self, user):
         # - staff
-        if comrade.account.is_staff:
+        if user.is_staff:
             return True
+
+        # Are applications open and everyone should see the projects?
+        # Note in the template, links are still hidden if the
+        # initial application is pending or rejected
+        if self.participating_round.has_application_period_started():
+            return True
+
+        # Remaining conditions all require this person to be logged in
+        if not user.is_authenticated:
+            return False
+
+        role = Role(user, self.participating_round)
+
         # - an approved coordinator for any approved community
-        # - an approved mentor with an approved project for a different approved community
-        if comrade.approved_mentor_or_coordinator():
+        if role.is_coordinator:
             return True
-        # - an approved mentor with an approved project for this community (pending or approved)
-        mentors = MentorApproval.objects.filter(
-                mentor=comrade,
-                approval_status=ApprovalStatus.APPROVED,
-                project__project_round=self,
-                project__approval_status=ApprovalStatus.APPROVED,
-                )
-        if mentors.exists():
+
+        # - an approved mentor with an approved project for any approved community
+        if role.is_mentor:
             return True
+
         # - an approved coordinator for this pending community
-        return self.is_approved_coordinator(comrade)
-
-    # This function should only be used before applications are open
-    # If a mentor has submitted a project, but it's not approved,
-    # They should be able to see all their project details
-    # And have the link to edit the project
-    def mentors_pending_projects(self, comrade):
-        # Get all projects where they're an approved mentor.
-        # It's ok if the community is pending and the project isn't approved.
-        mentor_approvals = MentorApproval.objects.filter(
-                mentor = comrade,
-                approval_status = ApprovalStatus.APPROVED,
-                project__project_round = self,
-                )
-        return [m.project for m in mentor_approvals]
-
-    def is_pending_co_mentor(self, comrade):
-        mentors = MentorApproval.objects.filter(
-                mentor=comrade,
-                approval_status=ApprovalStatus.PENDING,
-                project__project_round=self,
-                )
-        if mentors.exists():
-            return True
+        return self.community.is_coordinator(user)
 
     # Note that is is more than just the submitter!
     # We want to notify mentors as well as coordinators
@@ -1575,11 +1376,12 @@ class Participation(ApprovalStatus):
                 )
 
     def is_mentor(self, user):
-        return MentorApproval.objects.filter(
-                mentor__account=user,
-                project__project_round=self,
-                project__approval_status=ApprovalStatus.APPROVED,
-                approval_status=ApprovalStatus.APPROVED).exists()
+        try:
+            return user.comrade.get_mentored_projects().approved().filter(
+                project_round=self,
+            ).exists()
+        except Comrade.DoesNotExist:
+            return False
 
 class Sponsorship(models.Model):
     participation = models.ForeignKey(Participation, on_delete=models.CASCADE)
@@ -1755,7 +1557,11 @@ class Project(ApprovalStatus):
                 )
 
     def get_preview_url(self):
-        return reverse('project-read-only', kwargs={'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
+        return reverse('project-read-only', kwargs={
+            'round_slug': self.project_round.participating_round.slug,
+            'community_slug': self.project_round.community.slug,
+            'project_slug': self.slug,
+        })
 
     def get_project_selection_url(self):
         return reverse('project-selection') + '#' + self.project_round.community.slug + '-' + self.slug
@@ -1771,10 +1577,11 @@ class Project(ApprovalStatus):
 
     def get_action_url(self, action):
         return reverse('project-action', kwargs={
+            'round_slug': self.project_round.participating_round.slug,
             'community_slug': self.project_round.community.slug,
             'project_slug': self.slug,
             'action': action,
-            })
+        })
 
     def submission_and_approval_deadline(self):
         return self.project_round.participating_round.ProjectsDeadline()
@@ -2067,6 +1874,7 @@ class MentorApproval(ApprovalStatus):
 
     def get_preview_url(self):
         return reverse('mentorapproval-preview', kwargs={
+            'round_slug': self.project.project_round.participating_round.slug,
             'community_slug': self.project.project_round.community.slug,
             'project_slug': self.project.slug,
             'username': self.mentor.account.username,
@@ -2074,13 +1882,17 @@ class MentorApproval(ApprovalStatus):
 
     def get_action_url(self, action, current_user=None):
         kwargs = {
-                'community_slug': self.project.project_round.community.slug,
-                'project_slug': self.project.slug,
-                'action': action,
-                }
+            'round_slug': self.project.project_round.participating_round.slug,
+            'community_slug': self.project.project_round.community.slug,
+            'project_slug': self.project.slug,
+            'action': action,
+            }
         if self.mentor.account != current_user:
             kwargs['username'] = self.mentor.account.username
         return reverse('mentorapproval-action', kwargs=kwargs)
+
+    def submission_and_approval_deadline(self):
+        return self.project.project_round.participating_round.internends + datetime.timedelta(days=7*5)
 
     def is_approver(self, user):
         return self.project.project_round.community.is_coordinator(user)
@@ -2341,7 +2153,7 @@ class ApplicantApproval(ApprovalStatus):
                 }
 
     def get_time_commitments(self):
-        current_round = RoundPage.objects.latest('internstarts')
+        current_round = self.application_round
         noncollege_school_time_commitments = NonCollegeSchoolTimeCommitment.objects.filter(applicant=self)
         school_time_commitments = SchoolTimeCommitment.objects.filter(applicant=self)
         volunteer_time_commitments = VolunteerTimeCommitment.objects.filter(applicant=self)
@@ -2427,6 +2239,20 @@ class ApplicantApproval(ApprovalStatus):
         return ApplicationReviewer.objects.filter(
                 reviewing_round=self.application_round,
                 approval_status=ApprovalStatus.APPROVED)
+
+    def get_projects_contributed_to(self):
+        return self.project_contributions.distinct().order_by(
+            '-deadline',
+            'project_round__community__name',
+            'short_title',
+        )
+
+    def get_projects_applied_to(self):
+        # FinalApplication sets the combination of applicant and project to be
+        # unique. Since we've restricted results to a single applicant, each
+        # matching FinalApplication will contribute exactly one Project. As a
+        # result, this query does not need distinct().
+        return Project.objects.filter(finalapplication__applicant=self)
 
     def __str__(self):
         return "{name} <{email}> - {status}".format(
@@ -2904,7 +2730,7 @@ class SchoolTimeCommitment(models.Model):
         # Look for people which list Outreachy project credit for a term that is
         # already underway - people often think we mean the number of hours they'll spend
         # on Outreachy.
-        current_round = RoundPage.objects.latest('internstarts')
+        current_round = self.applicant.application_round
         if self.outreachy_credits and self.start_date and self.start_date < current_round.internstarts:
             error_string = 'You cannot receive school course credits for an Outreachy internship for a term that starts before the Outreachy internship starts.'
             raise ValidationError({'outreachy_credits': error_string})
@@ -3389,12 +3215,11 @@ class FinalApplication(ApprovalStatus):
             return None
 
     def get_intern_selection_conflicts(self):
-        current_round = RoundPage.objects.latest('internstarts')
-        return InternSelection.objects.filter(
-                applicant=self.applicant,
-                project__project_round__participating_round=current_round).exclude(
-                        funding_source=InternSelection.NOT_FUNDED).exclude(
-                                project=self.project)
+        return self.applicant.internselection_set.exclude(
+            funding_source=InternSelection.NOT_FUNDED,
+        ).exclude(
+            project=self.project,
+        )
 
     def __str__(self):
         return '{applicant} application for {community} - {project} - {id}'.format(
@@ -4382,6 +4207,164 @@ class AlumSurvey(models.Model):
         if self.survey_tracker.alumni_info != None:
             return self.survey_tracker.alumni_info.community
         return None
+
+class Role(object):
+    """
+    Compute the role which the current visitor most likely is interested in for
+    a given round, and encapsulate that information in a single object that we
+    can pass to templates.
+
+    This is not a Django model and does not have a database representation, but
+    it's too easy to get into circular import dependencies if this class lives
+    anywhere outside models.py.
+    """
+
+    def __init__(self, user, current_round, today=None):
+        self.user = user
+        self.current_round = current_round
+
+        if today is not None:
+            self.__dict__['today'] = today
+
+    # Any properties that do database queries should be cached:
+
+    @cached_property
+    def today(self):
+        now = datetime.datetime.now(datetime.timezone.utc)
+        return get_deadline_date_for(now)
+
+    @cached_property
+    def application(self):
+        if self.current_round is not None and self.user.is_authenticated:
+            try:
+                return self.current_round.applicantapproval_set.get(
+                    applicant__account=self.user,
+                )
+            except ApplicantApproval.DoesNotExist:
+                pass
+        return None
+
+    @cached_property
+    def is_coordinator(self):
+        if self.current_round is not None and self.user.is_authenticated:
+            return self.current_round.is_coordinator(self.user)
+        return False
+
+    @cached_property
+    def is_mentor(self):
+        if self.current_round is not None and self.user.is_authenticated:
+            return self.current_round.is_mentor(self.user)
+        return False
+
+    @cached_property
+    def is_reviewer(self):
+        if self.current_round is not None and self.user.is_authenticated:
+            return self.current_round.is_reviewer(self.user)
+        return False
+
+    @cached_property
+    def pending_mentored_projects(self):
+        # Get all projects where they're an approved mentor
+        # where the project is pending,
+        # and the community is approved or pending for the current round.
+        # Don't count withdrawn or rejected communities.
+        if self.current_round is not None and self.user.is_authenticated:
+            try:
+                return self.user.comrade.get_mentored_projects().pending().filter(
+                    project_round__participating_round=self.current_round,
+                    project_round__approval_status__in=(ApprovalStatus.PENDING, ApprovalStatus.APPROVED),
+                )
+            except Comrade.DoesNotExist:
+                pass
+        return Project.objects.none()
+
+    @cached_property
+    def approved_coordinator_communities(self):
+        """
+        Get all communities where this person is an approved coordinator
+        and the community is approved to participate in the current round.
+        """
+        if self.current_round is not None and self.user.is_authenticated:
+            return Community.objects.filter(
+                participation__participating_round=self.current_round,
+                participation__approval_status=ApprovalStatus.APPROVED,
+                coordinatorapproval__coordinator__account=self.user,
+                coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+            )
+        return Community.objects.none()
+
+    @cached_property
+    def projects_with_upcoming_and_passed_deadlines(self):
+        applicant = self.application
+        if applicant is None:
+            return (), ()
+
+        all_projects = applicant.get_projects_contributed_to()
+        applied_projects = set(applicant.get_projects_applied_to().values_list('pk', flat=True))
+
+        upcoming_deadlines = []
+        passed_deadlines = []
+        for project in all_projects:
+            project.did_apply = project.pk in applied_projects
+            if not project.has_application_deadline_passed():
+                upcoming_deadlines.append(project)
+            else:
+                passed_deadlines.append(project)
+
+        passed_deadlines.sort(key=lambda x: x.did_apply, reverse=True)
+        return upcoming_deadlines, passed_deadlines
+
+    # Anything that just uses other properties does not need to be cached:
+
+    @property
+    def is_organizer(self):
+        return self.user.is_staff
+
+    @property
+    def is_applicant(self):
+        return self.application is not None
+
+    @property
+    def is_volunteer(self):
+        """
+        Coordinators, mentors, reviewers, and organizers often are interested
+        in seeing the same things, so lump them all together. "Volunteer" isn't
+        necessarily the right name for this but it's good enough.
+        """
+        return self.is_organizer or self.is_mentor or self.is_coordinator or self.is_reviewer
+
+    @property
+    def needs_application(self):
+        """
+        Volunteers don't need to see prompts for eligibility checks and such;
+        and if someone has already done the eligibility check we shouldn't
+        prompt them to do it again.
+        """
+        if self.current_round is None:
+            return False
+        if not (self.current_round.appsopen <= self.today < self.current_round.appslate):
+            return False
+        return not self.is_volunteer and not self.is_applicant
+
+    @property
+    def needs_review(self):
+        if self.application is not None:
+            return self.application.approval_status in (ApprovalStatus.PENDING, ApprovalStatus.REJECTED)
+        return False
+
+    @property
+    def projects_with_upcoming_deadlines(self):
+        upcoming, passed = self.projects_with_upcoming_and_passed_deadlines
+        return upcoming
+
+    @property
+    def projects_with_passed_deadlines(self):
+        upcoming, passed = self.projects_with_upcoming_and_passed_deadlines
+        return passed
+
+    @property
+    def passed_projects_not_applied_to(self):
+        return [ p for p in self.projects_with_passed_deadlines if not p.did_apply ]
 
 # Please keep this at the end of this file; it has to come after the
 # models it mentions, so just keep it after all other definitions.

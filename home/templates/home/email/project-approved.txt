@@ -9,7 +9,8 @@ A {{ community.name }} coordinator has approved this Outreachy internship projec
 {{ request.scheme }}://{{ request.get_host }}{{ project.get_landing_url }}
 
 {% include 'home/email/snippet-email-filters.txt' %}
-{% if not project.has_application_deadline_passed %}{% include 'home/email/snippet-community-promotion.txt' %}
+{% if not project.has_application_deadline_passed %}{% include 'home/email/snippet-application-prep.txt' %}
+{% include 'home/email/snippet-community-promotion.txt' %}
 {% include 'home/email/snippet-application-process.txt' %}
 {% endif %}{% include 'home/email/snippet-application-dashboard.txt' %}
 
