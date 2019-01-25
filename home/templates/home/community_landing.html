@@ -17,7 +17,7 @@ Outreachy internships working with {{ community.name }}
 		Outreachy application period starts on {{ current_round.appsopen }} at 4pm UTC.
 		You can sign up for an email notification when the round opens by
 		<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">subscribing to the Outreachy announcements mailing list</a>.</p>
-	{% elif not role.application.is_approved and not mentors_pending_projects and not approved_coordinator and not role.is_reviewer and not role.is_organizer %}
+	{% elif not role.application.is_approved and not mentors_pending_projects and not approved_to_see_all_project_details and not role.is_reviewer %}
 		{% if not user.comrade %}
 			You may need to <a href="{% url 'login' %}?next={{ request.path|urlencode }}">log in</a> to see this information.</p>
 		{% elif role.needs_application %}
