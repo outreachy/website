@@ -1332,16 +1332,14 @@ class Participation(ApprovalStatus):
         if not user.is_authenticated:
             return False
 
+        role = Role(user, self.participating_round)
+
         # - an approved coordinator for any approved community
-        if self.participating_round.is_coordinator(user):
+        if role.is_coordinator:
             return True
 
-        # - an approved mentor with an approved project for a different approved community
-        if self.participating_round.is_mentor(user):
-            return True
-
-        # - an approved mentor with an approved project for this community (pending or approved)
-        if self.is_mentor(user):
+        # - an approved mentor with an approved project for any approved community
+        if role.is_mentor:
             return True
 
         # - an approved coordinator for this pending community
