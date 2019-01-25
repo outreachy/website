@@ -14,9 +14,9 @@
 	Mentor for {{ community.name }}
 </h1>
 
+{% if mentorapproval.approval_status == mentorapproval.PENDING %}
 <p>Please read through the answers {{ mentor.public_name }} has provided and decide whether they should be approved as a mentor for the {{ community.name }} internship project proposal <a href="{{ project.get_landing_url }}">"{{ project.short_title }}"</a></p>
 
-{% if mentorapproval.approval_status == mentorapproval.PENDING %}
 {% if mentorapproval|is_approver:request.user %}
 {% include "home/snippet/mentor_approval_warnings.html" with approval=mentorapproval only %}
 <a href="{{ mentorapproval.get_approve_url }}" class="btn btn-success">Approve Mentor</a>
