@@ -9,20 +9,16 @@
 
 <p><a href="{% url 'community-cfp' %}">Timeline and FAQ for Outreachy Communities</a> &gt; <a href="{{ community.get_preview_url }}">{{ community.name }}</a> &gt; {{ project.get_approval_status_display }} Project</p>
 
+<h1>{{ project.get_approval_status_display }} {{ community.name }} Project</h1>
+
+<p>Project title: "{{ project.short_title }}"</p>
+
 {% if project.approval_status == project.APPROVED %}
-	<h1>Approved {{ community.name }} Project</h1>
 	<p>This project has been approved by the {{ community.name }} coordinator(s) to participate in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
 
-	{% if not project.has_application_deadline_passed %}
-		<h2>Promoting To Outreachy Applicants</h2>
-
-		{% include 'home/snippet/project_promotion.html' %}
-	{% endif %}
-
 {% elif project.approval_status == project.PENDING %}
-	<h1>Pending {{ community.name }} Project</h1>
 	{% if not current_round.has_project_submission_and_approval_deadline_passed %}
-		<p>This project is waiting to be approved by the {{ community.name }} coordinator(s) for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
+		<p>This project is waiting to be approved by the {{ community.name }} coordinator(s) for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round. Mentors will receive an email when the project is approved. In the meantime, please see the instructions below for getting ready for the application period.</p>
 	{% else %}
 		<p>Unfortunately, the deadline to approve new Outreachy intern proposals has passed, and the coordinator did not approve this project before the deadline.</p>
 	{% endif %}
@@ -31,22 +27,37 @@
 	<p>The {{ community.name }} coordinator(s) or Outreachy organizers do not think this project is suitable for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
 {% endif %}
 
-{% if not current_round.has_internship_ended %}
-	<h3>Project Mentors</h3>
-	{% if mentor_request %}
-		<p>Your request to mentor this project is:
-		<strong>{{ mentor_request.get_approval_status_display }}</strong></p>
+{% if not project.has_application_deadline_passed %}
+		<h2>Next Steps for Mentors</h2>
+		<h3>Prepping for the application period</h3>
+		<p>During the six-week application period, Outreachy applicants will make a contribution to this project. Only applicants that have made a contribution (and recorded the contribution on this website) will be eligible to be selected as an intern. Mentors should <a href="/mentor/mentor-faq/#define-starter-tasks">read more about how to prep for the application period</a>.</p>
+{% endif %}
 
-		{% if mentor_request.approval_status == mentor_request.PENDING or mentor_request.approval_status == mentor_request.APPROVED %}
-			<p><a href="{{ mentor_request.get_withdraw_url }}" class="btn btn-warning">Withdraw From Mentoring</a></p>
-		{% elif mentor_request.approval_status == mentor_request.WITHDRAWN %}
-			<p><a href="{{ mentor_request.get_submit_url }}" class="btn btn-success">Mentor This Project</a></p>
-		{% endif %}
+{% if project.approval_status == project.APPROVED and not project.has_application_deadline_passed %}
+		<h2>Promoting To Outreachy Applicants</h2>
+
+		{% include 'home/snippet/project_promotion.html' %}
+{% endif %}
+
+
+{% if not current_round.has_internship_ended %}
+	<h3>Adding Co-mentors</h3>
+	{% if mentor_request or coordinator %}
 		{% if not current_round.has_late_application_deadline_passed %}
-			<p>Each co-mentor for your project will need to sign up, so that they can view applicant's recorded contributions and application.
-			You can send them this link to sign up as a co-mentor:
-			<a href="{% url 'mentorapproval-action' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' %}">{{ request.scheme }}://{{ request.get_host }}{% url 'mentorapproval-action' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' %}</a>
+			<p>The Outreachy organizers encourage projects to have more than one mentor. Each co-mentor for this project will need to sign up, so that they can view applicants' recorded contributions and final applications. You can send them this link so they can sign up as a co-mentor:
+			{{ request.scheme }}://{{ request.get_host }}{% url 'mentorapproval-action' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' %}
 		{% endif %}
+
+		{% if mentor_request %}
+			<p>Your request to mentor this project is:
+			<strong>{{ mentor_request.get_approval_status_display }}</strong></p>
+			{% if mentor_request.approval_status == mentor_request.PENDING or mentor_request.approval_status == mentor_request.APPROVED %}
+				<p><a href="{{ mentor_request.get_withdraw_url }}" class="btn btn-warning">Withdraw From Mentoring</a></p>
+			{% elif mentor_request.approval_status == mentor_request.WITHDRAWN %}
+				<p><a href="{{ mentor_request.get_submit_url }}" class="btn btn-success">Mentor This Project</a></p>
+			{% endif %}
+		{% endif %}
+
 	{% else %}
 		<p>If you need to sign up to co-mentor this project, please click the button below to create an account. Once you're approved by the coordinator, you will receive instructions on how to sign the mentor agreement for the selected intern.</p>
 		<p><a href="{% url 'mentorapproval-action' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' %}" class="btn btn-success">Co-mentor This Project</a></p>
@@ -56,7 +67,7 @@
 {% endif %}
 
 {% if coordinator %}
-	<h2>Coordinator Actions</h2>
+	<h2>Next Steps for Coordinators</h2>
 	<h3>Project Approval</h3>
 	{% if current_round.has_project_submission_and_approval_deadline_passed %}
 		<p>The deadline to approve new projects has passed. You can reject the project to let the mentor know their project wasn't accepted, or (if absolutely necessary) contact the Outreachy organizers to have them manually approve the project.</p>
@@ -154,10 +165,10 @@
 {% endif %}
 
 {% if current_round.has_project_submission_and_approval_deadline_passed and project.approval_status != project.APPROVED %}
-	<h2>Unapproved Project Proposal</h2>
+	<h3>Unapproved Project Proposal</h3>
 	<p>The deadline to approve Outreachy project proposals has passed. You cannot edit an unapproved project after the project proposal deadline.</p>
 {% else %}
-	<h2>Preview of Project Proposal</h2>
+	<h3>Preview of Project Proposal</h3>
 
 	{% if project|is_submitter:request.user %}
 		<p>Does the project information look correct? If not, you can edit it.</p>
