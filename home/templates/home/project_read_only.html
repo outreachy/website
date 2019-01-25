@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load approval_status %}
+{% load wagtailcore_tags %}
 
 {% block title %}
 {{ project.get_approval_status_display }} {{ community.name }} Project - {{ project.short_title }}
@@ -28,15 +29,19 @@
 {% endif %}
 
 {% if not project.has_application_deadline_passed %}
+	{% if user.is_staff or coordinator or mentor_request and mentor_request.approval_status == mentor_request.APPROVED %}
 		<h2>Next Steps for Mentors</h2>
 		<h3>Prepping for the application period</h3>
 		<p>During the six-week application period, Outreachy applicants will make a contribution to this project. Only applicants that have made a contribution (and recorded the contribution on this website) will be eligible to be selected as an intern. Mentors should <a href="/mentor/mentor-faq/#define-starter-tasks">read more about how to prep for the application period</a>.</p>
+	{% endif %}
 {% endif %}
 
 {% if project.approval_status == project.APPROVED and not project.has_application_deadline_passed %}
+	{% if user.is_staff or coordinator or mentor_request and mentor_request.approval_status == mentor_request.APPROVED %}
 		<h2>Promoting To Outreachy Applicants</h2>
 
 		{% include 'home/snippet/project_promotion.html' %}
+	{% endif %}
 {% endif %}
 
 
@@ -59,6 +64,7 @@
 		{% endif %}
 
 	{% else %}
+	<p>This page allows Outreachy mentors to sign up to co-mentor this project. Outreachy applicants should not sign up to co-mentor projects. Applicants should wait for projects to appear on the <a href="{% pageurl current_round %}">intern project page</a>.</p>
 		<p>If you need to sign up to co-mentor this project, please click the button below to create an account. Once you're approved by the coordinator, you will receive instructions on how to sign the mentor agreement for the selected intern.</p>
 		<p><a href="{% url 'mentorapproval-action' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' %}" class="btn btn-success">Co-mentor This Project</a></p>
 	{% endif %}
