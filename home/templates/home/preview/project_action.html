@@ -61,8 +61,8 @@
 		{% if 'deadline' in field.label_tag %}
 			<h3 id="project-deadline">Project Deadline and Advertisement</h3>
 			<p>Close now: If you have many strong applicants who have already filled out an application, you may want to close your project to new applicants.
-			<p>Standard deadline: Most Outreachy projects will close applications on {{ project.project_round.round.appsclose }} at 4pm UTC.</p>
-			<p>Extended deadline: If you have too few applicants, you may want to extend your project deadlines to {{ project.project_round.round.appslate }} at 4pm UTC.</p>
+			<p>Standard deadline: Most Outreachy projects will close applications on {{ project.project_round.participating_round.appsclose }} at 4pm UTC.</p>
+			<p>Extended deadline: If you have too few applicants, you may want to extend your project deadlines to {{ project.project_round.participating_round.appslate }} at 4pm UTC.</p>
 			</p>
 		{% endif %}
 		{% if 'Repository' in field.label_tag %}
