@@ -546,6 +546,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 fields=(
                     'lacking_representation',
                     'systemic_bias',
+                    'employment_bias',
                     'barriers_to_contribution',
                 ),
             )),
@@ -2976,6 +2977,7 @@ class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, re
     fields = [
             'lacking_representation',
             'systemic_bias',
+            'employment_bias',
             'barriers_to_contribution',
             ]
 
