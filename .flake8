@@ -1,0 +1,12 @@
+[flake8]
+exclude =
+	.git,
+	# we aren't going to "fix" style warnings in auto-generated migrations
+	migrations,
+	# nor in documentation, which may not be executable as-is
+	docs
+ignore =
+	# disable warning about line-length limits for now
+	E501,
+	# allow less than 2 blank lines between definitions for now
+	E302, E305

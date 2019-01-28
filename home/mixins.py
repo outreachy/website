@@ -33,9 +33,9 @@ class ComradeRequiredMixin(object):
             # If not, redirect to create one and remember to come back
             # here afterward.
             return HttpResponseRedirect(
-                    '{account_url}?{query_string}'.format(
-                        account_url=reverse('account'),
-                        query_string=urlencode({'next': request.path})))
+                '{account_url}?{query_string}'.format(
+                    account_url=reverse('account'),
+                    query_string=urlencode({'next': request.path})))
         return super(ComradeRequiredMixin, self).dispatch(request, *args, **kwargs)
 
 # If the logged-in user doesn't have an ApplicantApproval object,
@@ -68,9 +68,9 @@ class Preview(DetailView):
 
     def get_template_names(self):
         name = "{}/preview/{}{}.html".format(
-                self.object._meta.app_label,
-                self.object._meta.model_name,
-                self.template_name_suffix)
+            self.object._meta.app_label,
+            self.object._meta.model_name,
+            self.template_name_suffix)
         return [name]
 
 class ApprovalStatusAction(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, UpdateView):
@@ -86,27 +86,28 @@ class ApprovalStatusAction(LoginRequiredMixin, ComradeRequiredMixin, reversion.v
         pass
 
     allowed_actions = {
-            'approve': ApprovalStatus.APPROVED,
-            'reject': ApprovalStatus.REJECTED,
-            'withdraw': ApprovalStatus.WITHDRAWN,
-            }
+        'approve': ApprovalStatus.APPROVED,
+        'reject': ApprovalStatus.REJECTED,
+        'withdraw': ApprovalStatus.WITHDRAWN,
+    }
     allowed_transitions = frozenset((
-            (ApprovalStatus.WITHDRAWN, ApprovalStatus.PENDING),
+        (ApprovalStatus.WITHDRAWN, ApprovalStatus.PENDING),
 
-            (ApprovalStatus.PENDING, ApprovalStatus.APPROVED),
-            (ApprovalStatus.REJECTED, ApprovalStatus.APPROVED),
+        (ApprovalStatus.PENDING, ApprovalStatus.APPROVED),
+        (ApprovalStatus.REJECTED, ApprovalStatus.APPROVED),
 
-            (ApprovalStatus.PENDING, ApprovalStatus.WITHDRAWN),
-            (ApprovalStatus.APPROVED, ApprovalStatus.WITHDRAWN),
+        (ApprovalStatus.PENDING, ApprovalStatus.WITHDRAWN),
+        (ApprovalStatus.APPROVED, ApprovalStatus.WITHDRAWN),
 
-            (ApprovalStatus.PENDING, ApprovalStatus.REJECTED),
-            (ApprovalStatus.APPROVED, ApprovalStatus.REJECTED),
-            )).union(
-                    # Also allow all self-transitions. If we're already
-                    # in that state, it's surely okay to stay there.
-                    (status, status)
-                    for status, label
-                    in ApprovalStatus.APPROVAL_STATUS_CHOICES)
+        (ApprovalStatus.PENDING, ApprovalStatus.REJECTED),
+        (ApprovalStatus.APPROVED, ApprovalStatus.REJECTED),
+    )).union(
+        # Also allow all self-transitions. If we're already
+        # in that state, it's surely okay to stay there.
+        (status, status)
+        for status, label
+        in ApprovalStatus.APPROVAL_STATUS_CHOICES
+    )
 
     def get_form_class(self):
         model = self.object.__class__
@@ -179,9 +180,9 @@ class ApprovalStatusAction(LoginRequiredMixin, ComradeRequiredMixin, reversion.v
 
     def get_template_names(self):
         name = "{}/preview/{}{}.html".format(
-                self.object._meta.app_label,
-                self.object._meta.model_name,
-                self.template_name_suffix)
+            self.object._meta.app_label,
+            self.object._meta.model_name,
+            self.template_name_suffix)
         return [name]
 
     def save_form(self, form):

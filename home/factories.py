@@ -100,8 +100,8 @@ class RoundPageFactory(PageFactory):
 
     class Params:
         start_from = 'pingnew'
-        start_date = factory.LazyFunction(lambda:
-            models.get_deadline_date_for(
+        start_date = factory.LazyFunction(
+            lambda: models.get_deadline_date_for(
                 datetime.datetime.now(datetime.timezone.utc)
             )
         )
@@ -234,11 +234,13 @@ class ContributionFactory(factory.django.DjangoModelFactory):
     class Params:
         round = factory.SubFactory(RoundPageFactory, start_from='appsclose')
 
-    applicant = factory.SubFactory(ApplicantApprovalFactory,
+    applicant = factory.SubFactory(
+        ApplicantApprovalFactory,
         application_round=factory.SelfAttribute('..round'),
         approval_status=models.ApprovalStatus.APPROVED,
     )
-    project = factory.SubFactory(ProjectFactory,
+    project = factory.SubFactory(
+        ProjectFactory,
         project_round__participating_round=factory.SelfAttribute('...round'),
         approval_status=models.ApprovalStatus.APPROVED,
         project_round__approval_status=models.ApprovalStatus.APPROVED,
@@ -256,11 +258,13 @@ class FinalApplicationFactory(factory.django.DjangoModelFactory):
     class Params:
         round = factory.SubFactory(RoundPageFactory, start_from='internannounce')
 
-    applicant = factory.SubFactory(ApplicantApprovalFactory,
+    applicant = factory.SubFactory(
+        ApplicantApprovalFactory,
         application_round=factory.SelfAttribute('..round'),
         approval_status=models.ApprovalStatus.APPROVED,
     )
-    project = factory.SubFactory(ProjectFactory,
+    project = factory.SubFactory(
+        ProjectFactory,
         project_round__participating_round=factory.SelfAttribute('...round'),
         approval_status=models.ApprovalStatus.APPROVED,
         project_round__approval_status=models.ApprovalStatus.APPROVED,
@@ -301,18 +305,20 @@ class InternSelectionFactory(factory.django.DjangoModelFactory):
             # but these also ought to be set
             signed=True,
             funding_source=models.InternSelection.ORG_FUNDED,
-            #mentors=1, # the post_generation function is not called if this is set
+            # mentors=1, # the post_generation function is not called if this is set
         )
 
     # set all the approval_status fields to APPROVED, because an
     # InternSelection object can only be created if
     # home.views.set_project_and_applicant succeeds
 
-    applicant = factory.SubFactory(ApplicantApprovalFactory,
+    applicant = factory.SubFactory(
+        ApplicantApprovalFactory,
         application_round=factory.SelfAttribute('..round'),
         approval_status=models.ApprovalStatus.APPROVED,
     )
-    project = factory.SubFactory(ProjectFactory,
+    project = factory.SubFactory(
+        ProjectFactory,
         project_round__participating_round=factory.SelfAttribute('...round'),
         approval_status=models.ApprovalStatus.APPROVED,
         project_round__approval_status=models.ApprovalStatus.APPROVED,
@@ -361,7 +367,8 @@ class InitialMentorFeedbackFactory(factory.django.DjangoModelFactory):
         model = models.InitialMentorFeedback
         django_get_or_create = ('intern_selection',)
 
-    intern_selection = factory.SubFactory(InternSelectionFactory,
+    intern_selection = factory.SubFactory(
+        InternSelectionFactory,
         active=True,
         round__start_from='initialfeedback',
     )
@@ -395,7 +402,8 @@ class MidpointMentorFeedbackFactory(factory.django.DjangoModelFactory):
         model = models.MidpointMentorFeedback
         django_get_or_create = ('intern_selection',)
 
-    intern_selection = factory.SubFactory(InternSelectionFactory,
+    intern_selection = factory.SubFactory(
+        InternSelectionFactory,
         active=True,
         round__start_from='midfeedback',
     )

@@ -96,8 +96,8 @@ MIDDLEWARE = [
 ]
 
 INTERNAL_IPS = [
-        '127.0.0.1',
-        ]
+    '127.0.0.1',
+]
 
 ROOT_URLCONF = 'outreachyhome.urls'
 
@@ -165,11 +165,11 @@ WSGI_APPLICATION = 'outreachyhome.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 # Update database configuration with $DATABASE_URL.
 
-import dj_database_url
+import dj_database_url  # noqa: E402
 DATABASES = {
     'default': dj_database_url.config(
         conn_max_age=600,
-        default='sqlite:///'+os.path.join(BASE_DIR, 'db.sqlite3'))
+        default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3'))
 }
 
 # If an error occurs in a view, make sure none of that view's changes are saved.
