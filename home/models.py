@@ -2503,9 +2503,9 @@ class BarriersToParticipation(models.Model):
             verbose_name='What barriers or concerns have kept you from contributing to free and open source software?',
             help_text="Please provide specific examples. Outreachy organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.")
 
-    systematic_bias = models.TextField(
-            verbose_name='What systematic bias or discrimination have you faced while building your skills?',
-            help_text="<p>Outreachy projects often require applicants to know some basic skills. Those skills might include programming, user experience, documentation, illustration and graphical design, or data science. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>In these settings, have you faced systematic bias or discrimination? Have you been discouraged from accessing these resources because of your identity or background?</p><p>Please provide specific examples and (optionally) statistics.</p><p>Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
+    systemic_bias = models.TextField(
+            verbose_name='What systemic bias or discrimination have you faced while building your skills?',
+            help_text="<p>Outreachy projects often require applicants to know some basic skills. Those skills might include programming, user experience, documentation, illustration and graphical design, or data science. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>In these settings, have you faced systemic bias or discrimination? Have you been discouraged from accessing these resources because of your identity or background?</p><p>Please provide specific examples and (optionally) statistics.</p><p>Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
 
     lacking_representation = models.TextField(
             verbose_name='Does your learning environment have few people who share your identity or background? Please provide details.',
@@ -2525,7 +2525,7 @@ class BarriersToParticipation(models.Model):
                     for v in [versions[0]]
                 ),
             )
-            for attname in ('lacking_representation', 'systematic_bias', 'barriers_to_contribution')
+            for attname in ('lacking_representation', 'systemic_bias', 'barriers_to_contribution')
         ]
         new_answers = []
         for new_field, answers in self.get_answers():
@@ -2552,8 +2552,8 @@ class BarriersToParticipation(models.Model):
                     }, self.lacking_representation),
                 (
                 { 'verbose_name':
-                    'What systematic bias or discrimination have you faced while building your skills?',
-                    }, self.systematic_bias),
+                    'What systemic bias or discrimination have you faced while building your skills?',
+                    }, self.systemic_bias),
                 (
                 { 'verbose_name':
                     'What barriers or concerns have kept you from contributing to free and open source software?',

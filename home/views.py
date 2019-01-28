@@ -545,7 +545,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
             ('Barriers to Participation', modelform_factory(BarriersToParticipation,
                 fields=(
                     'lacking_representation',
-                    'systematic_bias',
+                    'systemic_bias',
                     'barriers_to_contribution',
                 ),
             )),
@@ -2975,7 +2975,7 @@ class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, re
 
     fields = [
             'lacking_representation',
-            'systematic_bias',
+            'systemic_bias',
             'barriers_to_contribution',
             ]
 
