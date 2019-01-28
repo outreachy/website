@@ -38,6 +38,39 @@ class RoundPageTestCase(TestCase):
         # Make sure the page shows the community as a past approved community
         self.assertContains(response, community_name, status_code=200)
 
+    # def test_previous_community_signup(self):
+        # Create a previous round with pingnew set to six months ago
+        # Create a current round with pingnew set today
+        # Create a community that participated in the previous round
+        # Login as that community's approved coordinator
+        # Go to /communities/cfp/ and ensure that community's name has a valid link on the page as a previous community
+        # Follow that link - it should be /communities/cfp/community-slug/
+        # On /communities/cfp/community-slug/ there should be two buttons 'Community will participate' and 'Community will not participate'
+        # (one is to submit, one is to withdraw)
+        # Click 'Community will participate' - round-page-slug/communities/community-slug/submit/
+        # Fill out one sponsor
+        # Should be redirected back to the community read-only page /communities/cfp/community-slug/
+        # That page should have a button in it that says 'Pending Participation'
+        # An email should have been sent to the Outreachy organizers
+        # Log in as staff
+        # Staff dashboard should show a pending action to approve the participation of the community
+        # Approve the community's participation - round-slug/communities/community-slug/approve/
+        # An email should have been sent to the community coordinators
+        # Test to ensure both staff and approved coordinator can see the community landing page - round-slug/communities/community-slug/
+        #
+        # Test project creation and approval
+        # Log out from coordinator role - should not be logged in at all
+        # Go to /communities/cfp/ - a link to the community read-only page should be there
+        #  - should be under the "Mentor for a Participating FOSS community" heading
+        # Go to /communities/cfp/community-slug/
+        # There should be a 'Submit a Project Proposal' button that links to round-slug/communities/community-slug/submit-project/
+        # Create a Comrade for a mentor, login as them
+        # 
+        # Test co-mentor signup
+        #
+        # Subtest: Can a new community sign up? Can the coordinator see community A who was approved above
+        # Create a new Comrade
+
     # XXX: FIXME - this test case looks fine when I recreate it in my local database
     # and log in as a mentor with a pending project.
     # However, the test case fails, showing both pending and approved project.
