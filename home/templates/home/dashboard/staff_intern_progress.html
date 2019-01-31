@@ -38,6 +38,17 @@
 				<td></td>
 				<td></td>
 			</tr>
+			{% if intern.intern_has_custom_dates %}
+				<tr>
+					<td>starts: {{ intern.intern_starts }}<br>ends: {{ intern.intern_ends }}</td>
+					<td>initial feedback opens: {{ intern.initial_feedback_opens }}</td>
+					<td>initial feedback due: {{ intern.initial_feedback_due }}</td>
+					<td>mid-point feedback opens: {{ intern.midpoint_feedback_opens }}</td>
+					<td>mid-point feedback due: {{ intern.midpoint_feedback_due }}</td>
+					<td></td>
+					<td></td>
+				</tr>
+			{% endif %}
 		{% endfor %}
 	</table>
 {% endwith %}
