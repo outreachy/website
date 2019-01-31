@@ -1511,6 +1511,10 @@ class Project(ApprovalStatus):
             blank=True,
             help_text='Description of the internship project.<br><br>Please do not place educational restrictions (such as needing a degree) on this project. Outreachy applicants are judged on their demonstrated skills, not on their educational background. If your project requires knowledge that would normally be learned during a degree, your project contribution tasks should test applicants for that knowledge.<br><br>You should exclude applicant skills and communication channels. Those will be added in the next step.<br><br>You should also exclude discussion of internship tasks, internship benefits, repository URLs, issue tracker URLs, newcomer tags, or application period contribution tasks. Those are collected in the optional fields below.')
 
+    minimum_system_requirements = CKEditorField(
+            help_text="What are the minimum computer requirements to contribute to this project during the application period? Examples: Operating system, CPU, memory, and hard drive space. <br><br>Many Outreachy applicants have older laptops. Many of them are working with ten year old systems (e.g. 1.6 GHz dual core with 2 GB of RAM). Please evaluate whether your project could better support contributors with older systems.",
+            default="<p>No system requirements provided.</p>")
+
     repository = models.URLField(blank=True, help_text="(Optional) URL for your team's repository or contribution mechanism")
     issue_tracker = models.URLField(blank=True, help_text="(Optional) URL for your team's issue tracker")
     newcomer_issue_tag = models.CharField(

@@ -1,3 +1,11 @@
+<h3>Project Skills</h3>
+<div>
+	{% include "home/snippet/project_skills_display.html" %}
+</div>
+
+<h3>System Requirements</h3>
+{{ project.minimum_system_requirements|safe }}
+
 <h3>Project Description</h3>
 <p>{{ project.short_title }}</p>
 {{ project.long_description|safe }}
