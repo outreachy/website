@@ -3306,7 +3306,7 @@ class InternSelection(models.Model):
             return True
         if self.initial_feedback_due != self.project.project_round.participating_round.initialfeedback:
             return True
-        if self.midpoint_feedback_due != self.project.project_round.participating_round.midpointfeedback:
+        if self.midpoint_feedback_due != self.project.project_round.participating_round.midfeedback:
             return True
         return False
 
