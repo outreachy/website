@@ -27,11 +27,13 @@
 {% for contract in employment_time_commitments %}
 	<p>Employment Period #{{ forloop.counter }}</p>
 	<ul>
+		<li>Job title: {{ contract.job_title }}</li>
 		<li>Date employment starts: <strong>{{ contract.start_date|date:"F d, Y" }}</strong></li>
 		<li>Date employment ends: <strong>{{ contract.end_date|date:"F d, Y" }}</strong></li>
 		<li>Number of hours per week required by your employment contract: <strong>{{ contract.hours_per_week }}</strong></li>
 		<li>Will you quit this employment or contract work if you are accepted for Outreachy?
 			{% if contract.quit_on_acceptance %}<strong>Yes.</strong>{% else %}<strong>No.</strong>{% endif %}</li>
+		<li>Job description: {{ contract.job_description }}</li>
 	</ul>
 {% endfor %}
 

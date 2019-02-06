@@ -575,6 +575,8 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'start_date',
                     'end_date',
                     'hours_per_week',
+                    'job_title',
+                    'job_description',
                     'quit_on_acceptance',
                 ),
             )),

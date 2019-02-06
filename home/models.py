@@ -2620,6 +2620,11 @@ class EmploymentTimeCommitment(models.Model):
             help_text="Number of hours per week required by your employment contract",
             validators=[validators.MinValueValidator(1)],
             )
+    job_title = models.TextField(
+            max_length=SENTENCE_LENGTH)
+    job_description = models.TextField(
+            max_length=THREE_PARAGRAPH_LENGTH,
+            help_text="Please tell us about the work you do and your job duties.")
     quit_on_acceptance = models.BooleanField(
             help_text="I will quit this job or contract if I am accepted as an Outreachy intern.")
 

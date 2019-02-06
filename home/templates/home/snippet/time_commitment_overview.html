@@ -87,7 +87,10 @@
 						<p>Employment time commitments:</p>
 						<ul>
 						{% for period in tcs.employment_time_commitments %}
-							<li>{{ period.hours_per_week }} hours per week from {{ period.start_date|date:"Y-m-d" }} to {{ period.end_date|date:"Y-m-d" }}.{% if period.quit_on_acceptance %} Applicant has indicated they will quit this job if they are accepted as an Outreachy intern.{% endif %}</li>
+							<li>{{ period.job_title }}</li>
+							<li>{{ period.hours_per_week }} hours per week from {{ period.start_date|date:"Y-m-d" }} to {{ period.end_date|date:"Y-m-d" }}.</li>
+							{% if period.quit_on_acceptance %}<li>Applicant has indicated they will quit this job if they are accepted as an Outreachy intern.</li>{% endif %}
+							<li>Job description: {{ period.job_description|linebreaksbr }}</li>
 						{% endfor %}
 						</ul>
 					{% endif %}
