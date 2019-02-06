@@ -19,10 +19,13 @@ class MockWizard(object):
 
 class EligibilityTests(SimpleTestCase):
 
-    application_round = RoundPage(
-        internstarts=date(2018, 3, 1),
-        internends=date(2018, 6, 1),
-    )
+    @classmethod
+    def setUpClass(cls):
+        super(EligibilityTests, cls).setUpClass()
+        cls.application_round = RoundPage(
+            internstarts=date(2018, 3, 1),
+            internends=date(2018, 6, 1),
+        )
 
     all_gender_identities = (
         'transgender',
