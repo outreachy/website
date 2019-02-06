@@ -31,6 +31,8 @@ class EligibilityTests(SimpleTestCase):
         'woman',
         'demi_boy',
         'demi_girl',
+        'trans_masculine',
+        'trans_feminine',
         'non_binary',
         'demi_non_binary',
         'genderqueer',
@@ -91,7 +93,7 @@ class EligibilityTests(SimpleTestCase):
             'prior_paid_contributor': False,
         }
         defaults.update(kwargs)
-        return ('Payment Eligibility', defaults)
+        return ('Prior FOSS Experience', defaults)
 
     @staticmethod
     def usa_demographics(us_resident_demographics):
@@ -164,6 +166,7 @@ class EligibilityTests(SimpleTestCase):
     def time_commitments(*args):
         defaults = {
             'enrolled_as_student': False,
+            'enrolled_as_noncollege_student': False,
             'employed': False,
             'contractor': False,
             'volunteer_time_commitments': False,
@@ -199,7 +202,6 @@ class EligibilityTests(SimpleTestCase):
             ('over_18', False),
             ('eligible_to_work', False),
             ('under_export_control', True),
-            ('gsoc_or_outreachy_internship', True),
         )
         # If any of the above are set, it shouldn't matter what these
         # are set to; the wizard should stop after the first step.
@@ -220,6 +222,8 @@ class EligibilityTests(SimpleTestCase):
                         ApprovalStatus.REJECTED,
                         'GENERAL',
                         self.approved_work_eligibility(**fields),
+                        self.barriers_to_participation(),
+                        self.promotional(),
                     )
 
     def test_gathering_us_demographics(self):
@@ -227,7 +231,7 @@ class EligibilityTests(SimpleTestCase):
             with self.subTest(condition=condition):
                 self.assertEligible(
                     ApprovalStatus.PENDING,
-                    '',
+                    'ESSAY',
                     self.gender_identity('man'),
                     *data,
                 )
@@ -246,7 +250,7 @@ class EligibilityTests(SimpleTestCase):
                 with self.subTest(condition=condition, genders=genders):
                     self.assertEligible(
                         ApprovalStatus.PENDING,
-                        '',
+                        'ESSAY',
                         self.gender_identity(*genders),
                         self.time_commitments(),
                         *data,
@@ -259,6 +263,8 @@ class EligibilityTests(SimpleTestCase):
             self.approved_payment_eligibility(),
             self.approved_foss_experience(),
             self.gender_identity(self.all_gender_identities[0]),
+            self.barriers_to_participation(),
+            self.promotional(),
         ]
         if school:
             kinds.append('enrolled_as_student')
@@ -295,7 +301,7 @@ class EligibilityTests(SimpleTestCase):
     def test_approve_time_commitment(self):
         self.assertTimeEligible(
             ApprovalStatus.PENDING,
-            '',
+            'ESSAY',
             time=[{
                 'start_date': self.application_round.internstarts,
                 'end_date': self.application_round.internends,
@@ -317,7 +323,7 @@ class EligibilityTests(SimpleTestCase):
     def test_approve_half_time_school(self):
         self.assertTimeEligible(
             ApprovalStatus.PENDING,
-            '',
+            'ESSAY',
             school=[{
                 'start_date': self.application_round.internstarts,
                 'end_date': self.application_round.internends,
@@ -331,7 +337,7 @@ class EligibilityTests(SimpleTestCase):
     def test_approve_school_vacation(self):
         self.assertTimeEligible(
             ApprovalStatus.PENDING,
-            '',
+            'ESSAY',
             school=self.vacation(days=49,
                 registered_credits=12,
                 outreachy_credits=0,
