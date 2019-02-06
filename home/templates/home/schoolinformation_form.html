@@ -34,8 +34,6 @@ Update Your School Information
 			{{ current_round.internstarts|date:"F d, Y" }} to
 			{{ current_round.internends|date:"F d, Y" }}.</li>
 				<li>list term dates that differ from their official academic calendar</li>
-				<li>state that they will be receiving school course credit for their Outreachy internship for more than one term</li>
-				<li>list graduate credits when they are not graduate students</li>
 			</ul>
 			<p>
 			Please ensure your school terms are correct by providing updated information below.
@@ -71,16 +69,6 @@ Update Your School Information
 			been released yet, please use the academic calendar
 			for the term during the previous school year.</p>
 
-			<p><b>Please provide proof that students are allowed to
-			enroll in a part-time course load.</b> In many
-			schools, especially in India, it is required
-			(compulsory) that students register for a specific
-			number of credits each term.  We cannot accept letters
-			from school administrators providing an exception to
-			these policies.  Please provide a link to a page on
-			your official school's website that shows students can
-			register for a part-time course load without an
-			exception.</p>
 			<h2>Your Stated School Terms</h2>
 			{% with tcs=schoolinformation.applicant.get_time_commitments applicant=schoolinformation.applicant.applicant %}
 				{% if tcs.school_time_commitments %}
@@ -90,13 +78,7 @@ Update Your School Information
 						<li>Degree: {{ schoolinformation.degree_name }}</li>
 						{% for term in tcs.school_time_commitments %}
 						<li>Term name/number: {{ term.term_name }}</li>
-						<ul>
-							<li>{{ term.start_date }} to {{ term.end_date }}</li>
-							<li>Applicant is registered for {{ term.registered_credits }} total credits.</li>
-							<li>Students typically register for {{ term.typical_credits }} total credits during this term.</li>
-							{% if term.outreachy_credits %}<li>The Outreachy internship will be used for {{ term.outreachy_credits }} credits during this term</li>{% endif %}
-							{% if term.thesis_credits %}<li>Applicant is registered for {{ term.thesis_credits }} graduate thesis or research credits during this term</li>{% endif %}
-						</ul>
+						<li>Term dates: {{ term.start_date }} to {{ term.end_date }}</li>
 						{% endfor %}
 					</ul>
 				{% else %}

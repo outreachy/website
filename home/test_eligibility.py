@@ -320,17 +320,13 @@ class EligibilityTests(SimpleTestCase):
             }],
         )
 
-    def test_approve_half_time_school(self):
+    def test_reject_full_time_school(self):
         self.assertTimeEligible(
-            ApprovalStatus.PENDING,
-            'ESSAY',
+            ApprovalStatus.REJECTED,
+            'TIME',
             school=[{
                 'start_date': self.application_round.internstarts,
                 'end_date': self.application_round.internends,
-                'registered_credits': 6,
-                'outreachy_credits': 0,
-                'thesis_credits': 0,
-                'typical_credits': 12,
             }],
         )
 
@@ -338,22 +334,12 @@ class EligibilityTests(SimpleTestCase):
         self.assertTimeEligible(
             ApprovalStatus.PENDING,
             'ESSAY',
-            school=self.vacation(days=49,
-                registered_credits=12,
-                outreachy_credits=0,
-                thesis_credits=0,
-                typical_credits=12,
-            ),
+            school=self.vacation(days=49),
         )
 
     def test_reject_short_school_vacation(self):
         self.assertTimeEligible(
             ApprovalStatus.REJECTED,
             'TIME',
-            school=self.vacation(days=48,
-                registered_credits=12,
-                outreachy_credits=0,
-                thesis_credits=0,
-                typical_credits=12,
-            ),
+            school=self.vacation(days=48),
         )

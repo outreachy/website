@@ -23,7 +23,7 @@ You will need to log into the Outreachy site and accept the Outreachy internship
 
 https://www.outreachy.org/dashboard 
 
-This is a legal document that asserts the information you provided on your initial and final application (including your eligibility information, school credits, and work information) is accurate and correct. Please review your time commitment information to ensure it is accurate, and email organizers@outreachy.org if you need to make any corrections. Your initial application, with your stated time commitment information can be viewed here:
+This is a legal document that asserts the information you provided on your initial and final application (including your eligibility information, school academic calendar, and work information) is accurate and correct. Please review your time commitment information to ensure it is accurate, and email organizers@outreachy.org if you need to make any corrections. Your initial application, with your stated time commitment information can be viewed here:
 
 https://www.outreachy.org/eligibility-results/
 

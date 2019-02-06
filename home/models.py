@@ -2169,7 +2169,7 @@ class ApplicantApproval(ApprovalStatus):
                 for d in employment_time_commitments or []
                 if d ]
 
-        stcs = [ self.time_commitment_from_model(d, 40 * (d.get_total_credits() / d.typical_credits))
+        stcs = [ self.time_commitment_from_model(d, 40)
                 for d in school_time_commitments or []
                 if d ]
         calendar = create_time_commitment_calendar(chain(tcs, ctcs, etcs, stcs), current_round)
@@ -2573,11 +2573,11 @@ class TimeCommitmentSummary(models.Model):
 
     enrolled_as_student = models.BooleanField(
             verbose_name='Are you (or will you be) a university or college student during the internship period?',
-            help_text='Will you be enrolled in a university or college during the Outreachy internship period? University and college students will be asked questions about the number of credits they are taking. Please state yes even if only a few days overlap with the internship period.')
+            help_text='Will you be enrolled in a university or college during the Outreachy internship period? Please state yes even if only a few days overlap with the internship period.')
 
     enrolled_as_noncollege_student = models.BooleanField(
             verbose_name='Are you enrolled in a coding school or self-paced online courses?',
-            help_text='Will you be enrolled in a coding school or self-paced online classes during the Outreachy internship period? If you are taking classes without receiving credits, select this option.')
+            help_text='Will you be enrolled in a coding school or self-paced online classes during the Outreachy internship period?')
 
     employed = models.BooleanField(
             help_text='Will you be an employee (for any number of hours) during the Outreachy internship period?')
@@ -2674,12 +2674,6 @@ class OfficialSchoolTerm(models.Model):
             verbose_name="Date all exams end.",
             help_text="This is the date the university advertises for the last possible date of any exam for any student in the semester.")
 
-    typical_credits = models.IntegerField(
-            blank=True,
-            null=True,
-            verbose_name="Number of credits for a typical student",
-            help_text="How many credits does a typical student register for?<br> If the university has different credit requirements for each semester for students in each major, pick the most common major listed by students in this university.")
-
 class SchoolTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
 
@@ -2695,53 +2689,11 @@ class SchoolTimeCommitment(models.Model):
     end_date = models.DateField(
             verbose_name="Date all exams end.",
             help_text="This is the date your university advertises for the last possible date of any exam for any student in your semester. Use the last possible exam date, even if your personal exams end sooner.")
-    
-    typical_credits = models.IntegerField(
-            validators=[validators.MinValueValidator(1)],
-            verbose_name="Number of credits for a typical student",
-            help_text="How many credits does a typical student register for?<br> If your university has different credit requirements for each semester for students in your major, use the number of credits that are listed on your syllabus or class schedule.")
-
-    registered_credits = models.IntegerField(
-            validators=[validators.MinValueValidator(1)],
-            verbose_name="Total number of credits you're registered for",
-            help_text="What is the total number of credits you are enrolled for this term?<br>If you aren't registered yet, please provide an approximate number of credits?")
-
-    outreachy_credits = models.PositiveIntegerField(
-            verbose_name="Number of internship or project credits for Outreachy",
-            help_text="If you are going to seek university credit for your Outreachy internship, how many credits will you earn?")
-
-    thesis_credits = models.PositiveIntegerField(
-            verbose_name="Number of graduate thesis or research credits",
-            help_text="If you are a graduate student, how many credits will you earn for working on your thesis or research (not including the credits earned for the Outreachy internship)?")
-
-    def get_total_credits(self):
-        # Ignore Outreachy or thesis credits if people filled them in wrong
-        if (self.outreachy_credits + self.thesis_credits) > self.registered_credits:
-            return self.registered_credits
-        return self.registered_credits - self.outreachy_credits - self.thesis_credits 
 
     def clean(self):
         if self.start_date and self.end_date and self.start_date > self.end_date:
             error_string = 'School term (' + self.term_name + ') start date ' + self.start_date.strftime("%Y-%m-%d") + ' is after term end date ' + self.end_date.strftime("%Y-%m-%d")
             raise ValidationError({'start_date': error_string})
-
-        extra_credits = 0
-        if self.outreachy_credits:
-            extra_credits += self.outreachy_credits
-        if self.thesis_credits:
-            extra_credits += self.thesis_credits
-        if self.registered_credits:
-            if extra_credits > self.registered_credits:
-                error_string = 'The total number of credits for this term is less than your graduate credits plus the credit you will receive for Outreachy. Total credits = ' + str(self.registered_credits) + ' < ' + str(extra_credits) + '. Please make sure your total number of credits includes both your graduate credits and the credits you will receive for your Outreachy internship.'
-                raise ValidationError({'registered_credits': error_string})
-
-        # Look for people which list Outreachy project credit for a term that is
-        # already underway - people often think we mean the number of hours they'll spend
-        # on Outreachy.
-        current_round = self.applicant.application_round
-        if self.outreachy_credits and self.start_date and self.start_date < current_round.internstarts:
-            error_string = 'You cannot receive school course credits for an Outreachy internship for a term that starts before the Outreachy internship starts.'
-            raise ValidationError({'outreachy_credits': error_string})
 
 class SchoolInformation(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
@@ -2767,7 +2719,7 @@ class SchoolInformation(models.Model):
             max_length=THREE_PARAGRAPH_LENGTH,
             blank=True,
             verbose_name='Provide any updates about your school term information',
-            help_text="<p>If the school terms above are incorrect, or you have forgotten to include a term that overlaps with the Outreachy internship period, please update your terms.<p>For each school term, please provide:</p><ol><li>The term name</li><li>The start date of classes for ALL students in the school</li><li>The end date of exams for ALL students in the school</li><li>The total number of credits you will be enrolled for this term</li><li>The total number of credits a student typically enrolls for during this school term.</li><li>If you are a graduate student, the subset of those credits you will be using for graduate research or thesis credits.</li><li>If you will receive any school credits for your Outreachy internship, how many credits will you receive during that term?</li></ol><p>Please do not modify your dates to differ from the starting dates in your academic calendar. Outreachy organizers cannot accept statements that you will start your classes late.</p><p>Please provide a link to your school website which proves that students are eligible to register for less than a full course load. Some schools, especially those in India, do not allow students to register for a part-time course load.</p>")
+            help_text="<p>If the school terms above are incorrect, or you have forgotten to include a term that overlaps with the Outreachy internship period, please update your terms.<p>For each school term, please provide:</p><ol><li>The term name</li><li>The start date of classes for ALL students in the school</li><li>The end date of exams for ALL students in the school</li></ol><p>Please do not modify your dates to differ from the starting dates in your academic calendar. Outreachy organizers cannot accept statements that you will start your classes late.</p>")
     applicant_should_update = models.BooleanField(default=False)
 
     def find_official_terms(self):
@@ -2837,7 +2789,6 @@ class SchoolInformation(models.Model):
         terms = SchoolTimeCommitment.objects.filter(applicant__applicant__account__email=school_info.applicant.applicant.account.email)
         for t in terms:
             print("Term: ", t.term_name, "; Start date: ", t.start_date, "; End date: ", t.end_date)
-            print("Typical " + str(t.typical_credits) + "; registered " + str(t.registered_credits) + "; outreachy " + str(t.outreachy_credits) + "; thesis " + str(t.thesis_credits))
 
     def print_university_students(school_name):
         apps = SchoolInformation.objects.filter(university_name__icontains=school_name).orderby('applicant__approval_status')

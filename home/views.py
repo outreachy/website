@@ -331,7 +331,7 @@ def time_commitments_are_approved(wizard, application_round):
             for d in wizard.get_cleaned_data_for_step('Employment Info') or []
             if d ]
 
-    stcs = [ time_commitment(d, 40 * ((d['registered_credits'] - d['outreachy_credits'] - d['thesis_credits']) / d['typical_credits']))
+    stcs = [ time_commitment(d, 40)
             for d in wizard.get_cleaned_data_for_step('School Term Info') or []
             if d ]
 
@@ -535,10 +535,6 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'term_name',
                     'start_date',
                     'end_date',
-                    'typical_credits',
-                    'registered_credits',
-                    'outreachy_credits',
-                    'thesis_credits',
                 ),
             )),
             ('Coding School or Online Courses Time Commitment Info', modelformset_factory(NonCollegeSchoolTimeCommitment,

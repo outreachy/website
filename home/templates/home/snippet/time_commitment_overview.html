@@ -37,13 +37,7 @@
 									<ul>
 										{% for term in tcs.school_time_commitments %}
 											<li>Term name/number: {{ term.term_name }}</li>
-											<ul>
-												<li>{{ term.start_date|date:"Y-m-d" }} to {{ term.end_date|date:"Y-m-d" }}</li>
-												<li>Total credits enrolled for: {{ term.registered_credits }} credits.</li>
-												<li>Students typically register for {{ term.typical_credits }} credits during this term.</li>
-												{% if term.outreachy_credits %}<li>The Outreachy internship will be used for {{ term.outreachy_credits }} credits during this term</li>{% endif %}
-												{% if term.thesis_credits %}<li>Applicant is registered for {{ term.thesis_credits }} graduate thesis or research credits during this term</li>{% endif %}
-											</ul>
+											<li>Term dates: {{ term.start_date }} to {{ term.end_date }}</li>
 										{% endfor %}
 									</ul>
 									{% if application.schoolinformation.school_term_updates %}
@@ -62,9 +56,6 @@
 											<ul>
 												<li>{% if term.academic_calendar %}<a href="{{ term.academic_calendar }}">{% endif %}{{ term.term_name }}{% if term.academic_calendar %}</a>{% endif %}</li>
 												<li>{{ term.start_date|date:"Y-m-d" }} to {{ term.end_date|date:"Y-m-d" }}</li>
-												{% if term.typical_credits %}
-												<li>Students typically register for {{ term.typical_credits }} credits during this term.</li>
-												{% endif %}
 											</ul>
 											{% endfor %}
 											{% if not terms %}
