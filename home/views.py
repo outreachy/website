@@ -270,52 +270,6 @@ def show_us_demographics(wizard):
     us_resident = cleaned_data.get('us_national_or_permanent_resident', True)
     return us_resident
 
-def gender_and_demographics_is_aligned_with_program_goals(wizard):
-    if not prior_foss_experience_is_approved(wizard):
-        return False
-    demo_data = wizard.get_cleaned_data_for_step('USA demographics')
-    if demo_data and demo_data['us_resident_demographics'] is True:
-        return True
-
-    gender_data = wizard.get_cleaned_data_for_step('Gender Identity')
-    if not gender_data:
-        return True
-
-    gender_minority_list = [
-            'transgender',
-            'genderqueer',
-            'woman',
-            'demi_boy',
-            'demi_girl',
-            'trans_masculine',
-            'trans_feminine',
-            'non_binary',
-            'demi_non_binary',
-            'genderqueer',
-            'genderflux',
-            'genderfluid',
-            'demi_genderfluid',
-            'demi_gender',
-            'bi_gender',
-            'tri_gender',
-            'multigender',
-            'pangender',
-            'maxigender',
-            'aporagender',
-            'intergender',
-            'mavrique',
-            'gender_confusion',
-            'gender_indifferent',
-            'graygender',
-            'agender',
-            'genderless',
-            'gender_neutral',
-            'neutrois',
-            'androgynous',
-            'androgyne',
-            ]
-    return any(gender_data[x] for x in gender_minority_list)
-
 def show_noncollege_school_info(wizard):
     if not prior_foss_experience_is_approved(wizard):
         return False
@@ -393,13 +347,6 @@ def determine_eligibility(wizard, application_round):
         return (ApprovalStatus.REJECTED, 'GENERAL')
     if not time_commitments_are_approved(wizard, application_round):
         return (ApprovalStatus.REJECTED, 'TIME')
-
-    gender_data = wizard.get_cleaned_data_for_step('Gender Identity')
-    if not (gender_and_demographics_is_aligned_with_program_goals(wizard)):
-        # Did this person self-identify their gender?
-        if gender_data['self_identify']:
-            return (ApprovalStatus.PENDING, 'SELFIDENTIFY')
-        return (ApprovalStatus.PENDING, 'ESSAY')
 
     general_data = wizard.get_cleaned_data_for_step('Work Eligibility')
     if general_data['us_sanctioned_country']:
