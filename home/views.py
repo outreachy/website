@@ -242,6 +242,9 @@ def work_eligibility_is_approved(wizard):
         return True
     if not cleaned_data['over_18']:
         return False
+    # If they have student visa restrictions, we don't follow up
+    # until they're actually selected as an intern, at which point we
+    # need to send them a CPT letter and have them get it approved.
     if not cleaned_data['eligible_to_work']:
         return False
     if cleaned_data['under_export_control']:
@@ -373,8 +376,8 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
     condition_dict = {
             'Payment Eligibility': work_eligibility_is_approved,
             'Prior FOSS Experience': work_eligibility_is_approved,
-            'Gender Identity': prior_foss_experience_is_approved,
             'USA demographics': show_us_demographics,
+            'Gender Identity': prior_foss_experience_is_approved,
             'Time Commitments': prior_foss_experience_is_approved,
             'School Info': show_school_info,
             'School Term Info': show_school_info,
