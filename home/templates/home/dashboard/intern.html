@@ -11,7 +11,7 @@
 	{% if not internship.intern_contract %}
 		<p><b>Please sign your <a href="{% url 'intern-agreement' round_slug=my_round.slug community_slug=internship.project.project_round.community.slug project_slug=internship.project.slug%}">internship contract</a>.</b></p>
 	{% else %}
-		<p>You signed your internship contract on {{ internship.intern_contract.date_signed }}. <a href="{% url 'intern-contract-export' %}">Download your contact</a>.</p>
+		<p>You signed your internship contract on {{ internship.intern_contract.date_signed }}. <a href="{% url 'intern-contract-export' %}">Download your contract</a>.</p>
 	{% endif %}
 
 	<h2>Outreachy Mailing Lists</h2>
