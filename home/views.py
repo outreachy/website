@@ -2051,8 +2051,23 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.
         if not current_round.has_application_period_started():
             raise PermissionDenied("You can't select an intern until the Outreachy application period opens.")
 
+        # Usually, we want mentors to only be able to select new interns
+        # until the deadline. However, sometimes an Outreachy mentor
+        # needs to stop participating in the middle of the internship.
+        # This function is the path for them to sign up to co-mentor
+        # (so that they can submit internship feedback).
         if current_round.has_last_day_to_add_intern_passed():
-            raise PermissionDenied("Intern selection is closed for this round.")
+            try:
+                intern_selection = InternSelection.objects.get(
+                    applicant=self.applicant,
+                    project=self.project,
+                    )
+            except InternSelection.DoesNotExist:
+                raise PermissionDenied("Intern selection is closed for this round.")
+
+        # Allow mentors to sign up to co-mentor, up until the internship ends
+        if current_round.has_internship_ended():
+                raise PermissionDenied("You cannot sign up to mentor after an internship has ended.")
 
         set_project_and_applicant(self, current_round)
         application = get_object_or_404(FinalApplication,
