@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "939c8bde0c1a58cdb0883c2f9bc264841ee567b56fecde690b4be7adf8de7f2d"
+            "sha256": "49cc5343114b7518f2c36a93006777ea571d175918219c3ab9467ce63ca5e212"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -55,11 +55,11 @@
         },
         "django": {
             "hashes": [
-                "sha256:fad46f44f6f4de66aacaa92e7753dbc4fe3ae834aa2daffaca0bf16c64798186",
-                "sha256:fed3e79bb5a3a8d5eb054c7a1ec1de229ef3f43335a67821cc3e489e9582f711"
+                "sha256:0a73696e0ac71ee6177103df984f9c1e07cd297f080f8ec4dc7c6f3fb74395b5",
+                "sha256:43a99da08fee329480d27860d68279945b7d8bf7b537388ee2c8938c709b2041"
             ],
             "index": "pypi",
-            "version": "==1.11.8"
+            "version": "==1.11.20"
         },
         "django-appconf": {
             "hashes": [
@@ -116,11 +116,11 @@
         },
         "django-extensions": {
             "hashes": [
-                "sha256:8317a3fe479b1ba3e3a04ecf33fb8d6ccf09bb18f30eab64e34c40a593741d26",
-                "sha256:a76a61566f1c8d96acc7bcf765080b8e91367a25a2c6f8c5bddd574493839180"
+                "sha256:6fcedb2ea660c9dbf9ac59441721ffdd4ab5b753fbd6159c3e28f391a65bab46",
+                "sha256:a607459e5fa8c579a672131b63366fa52fab80adb2a862d362f5fb48cd2d2cac"
             ],
             "index": "pypi",
-            "version": "==2.1.4"
+            "version": "==2.1.5"
         },
         "django-formtools": {
             "hashes": [
@@ -517,11 +517,11 @@
         },
         "flake8": {
             "hashes": [
-                "sha256:6a35f5b8761f45c5513e3405f110a86bea57982c3b75b766ce7b65217abe1670",
-                "sha256:c01f8a3963b3571a8e6bd7a4063359aff90749e160778e03817cd9b71c9e07d2"
+                "sha256:c3ba1e130c813191db95c431a18cb4d20a468e98af7a77e2181b68574481ad36",
+                "sha256:fd9ddf503110bf3d8b1d270e8c673aab29ccb3dd6abf29bae1f54e5116ab4a91"
             ],
             "index": "pypi",
-            "version": "==3.6.0"
+            "version": "==3.7.5"
         },
         "mccabe": {
             "hashes": [
