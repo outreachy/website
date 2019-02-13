@@ -2127,7 +2127,7 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 intern_starts=self.project.project_round.participating_round.internstarts,
                 initial_feedback_opens=self.project.project_round.participating_round.initialfeedback - timedelta(days=7),
                 initial_feedback_due=self.project.project_round.participating_round.initialfeedback,
-                midpoint_feedback_opens=self.project.project_round.participating_round.midfeedback - datetime.timedelta(days=7),
+                midpoint_feedback_opens=self.project.project_round.participating_round.midfeedback - timedelta(days=7),
                 midpoint_feedback_due=self.project.project_round.participating_round.midfeedback,
                 intern_ends=self.project.project_round.participating_round.internends,
                 )
