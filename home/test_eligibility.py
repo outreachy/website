@@ -274,12 +274,11 @@ class EligibilityTests(SimpleTestCase):
             data.append(('School Info', [{}]))
             data.append(('School Term Info', list(school) + [None]))
         if employment:
-            if contractor:
-                kinds.append('contractor')
-                data.append(('Contractor Info', [{'continuing_contract_work': True}]))
-            else:
-                kinds.append('employed')
+            kinds.append('employed')
             data.append(('Employment Info', list(employment) + [None]))
+        if contractor:
+            kinds.append('contractor')
+            data.append(('Contractor Info', [{'continuing_contract_work': True}]))
         if time:
             kinds.append('volunteer_time_commitments')
             data.append(('Volunteer Time Commitment Info', list(time) + [None]))
@@ -300,6 +299,34 @@ class EligibilityTests(SimpleTestCase):
         before.update(kwargs)
         after.update(kwargs)
         return [before, after]
+
+    def test_approve_job_commitment(self):
+        self.assertTimeEligible(
+            ApprovalStatus.PENDING,
+            'ESSAY',
+            employment=[{
+                'start_date': self.application_round.internstarts,
+                'end_date': self.application_round.internends,
+                'hours_per_week': 20,
+                'job_title': 'Fancy Pants',
+                'job_description': 'I wear the pants',
+                'quit_on_acceptance': False,
+            }],
+        )
+
+    def test_reject_job_commitment(self):
+        self.assertTimeEligible(
+            ApprovalStatus.REJECTED,
+            'TIME',
+            employment=[{
+                'start_date': self.application_round.internstarts,
+                'end_date': self.application_round.internends,
+                'hours_per_week': 21,
+                'job_title': 'Overworked Fancy Pants',
+                'job_description': 'I wear the pants',
+                'quit_on_acceptance': False,
+            }],
+        )
 
     def test_approve_time_commitment(self):
         self.assertTimeEligible(
