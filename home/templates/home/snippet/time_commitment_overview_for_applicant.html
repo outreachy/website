@@ -1,0 +1,85 @@
+{% with tcs=application.get_time_commitments applicant=application.applicant final_application=applicant_contributions.0.get_application %}
+	<div class="card border mt-3" id="time-commitments">
+		<div class="card-header bg-secondary text-white">Time commitment information</div>
+		<div class="card-body">
+			<div class="card-text">
+				<p><strong>{{ tcs.longest_period_free }} days out of {{ tcs.internship_total_days.days }} days free</strong> from full-time commitments during the internship.</p>
+				<ul>
+					<li>Applicant has {{ tcs.longest_period_free }} consecutive days free from full-time commitments during the internship period.</li>
+					<li>Applicants are required to have at least 49 consecutive days free from full-time commitments.</li>
+					<li>The internship period is {{ tcs.internship_total_days.days }} days long.</li>
+					<li>Applicant is free from {{ tcs.free_period_start_date|date:"Y-m-d" }} to {{ tcs.free_period_end_date|date:"Y-m-d" }}.</li>
+				</ul>
+				<h3>Details</h3>
+				{% with tcs=application.get_time_commitments applicant=application.applicant final_application=applicant_contributions.0.get_application %}
+					{% if not tcs.school_time_commitments and not tcs.volunteer_time_commitments and not tcs.employment_time_commitments and not tcs.noncollege_school_time_commitments %}
+						<p>Applicant has not listed any university/college, coding school/online courses, work, or volunteer time commitments.</p>
+					{% endif %}
+					{% if tcs.school_time_commitments %}
+						<div class="container">
+							<div class="row">
+								<div class="col">
+									<p>Location: <b>{% with location=application.applicant.get_city_country %}{% if location.0 %}{{ location.0}}, {% endif %}{% if location.1 %}{{ location.1 }}{% endif %}
+										{% if not location.0 and not location.1 %}Unknown{% endif %}{% endwith %}</b>
+									<br>Applicant is enrolled at <a href="{{ application.schoolinformation.university_website }}">{{ application.schoolinformation.university_name }}</a>
+									<br>Degree: {{ application.schoolinformation.degree_name }}
+									{% if application.schoolinformation.current_academic_calendar %}
+									<br><a href="{{ application.schoolinformation.current_academic_calendar }}">Current term academic calendar</a>
+									{% endif %}
+									{% if application.schoolinformation.next_academic_calendar %}
+									<br><a href="{{ application.schoolinformation.next_academic_calendar }}">Next term academic calendar</a>
+									{% endif %}
+								</div>
+								<div class="col">
+									<p>School terms during the internship ({{ current_round.internstarts|date:"Y-m-d" }} to {{ current_round.internends|date:"Y-m-d" }}):</p>
+									<ul>
+										{% for term in tcs.school_time_commitments %}
+											<li>Term name/number: {{ term.term_name }}</li>
+											<li>Term dates: {{ term.start_date }} to {{ term.end_date }}</li>
+										{% endfor %}
+									</ul>
+									{% if application.schoolinformation.school_term_updates %}
+									<p>The applicant provided the following updates about their school term:</p>
+									<p>{{ application.schoolinformation.school_term_updates|linebreaksbr }}</p>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+					{% endif %}
+					{% if tcs.noncollege_school_time_commitments %}
+						<p>Coding school or online courses time commitments:</p>
+						<ul>
+						{% for course in tcs.noncollege_school_time_commitments %}
+							<li>Course #{{ forloop.counter }}</li>
+							<ul>
+								<li>{{ course.hours_per_week }} hours per week from {{ course.start_date|date:"Y-m-d" }} to {{ course.end_date|date:"Y-m-d" }}.</li>
+								<li>Description of course work and organization offering courses: {{ course.description }}</li>
+							</ul>
+						{% endfor %}
+						</ul>
+					{% endif %}
+					{% if tcs.employment_time_commitments %}
+						<p>Employment time commitments:</p>
+						<ul>
+						{% for period in tcs.employment_time_commitments %}
+							<li>{{ period.job_title }}</li>
+							<li>{{ period.hours_per_week }} hours per week from {{ period.start_date|date:"Y-m-d" }} to {{ period.end_date|date:"Y-m-d" }}.</li>
+							{% if period.quit_on_acceptance %}<li>Applicant has indicated they will quit this job if they are accepted as an Outreachy intern.</li>{% endif %}
+							<li>Job description: {{ period.job_description|linebreaksbr }}</li>
+						{% endfor %}
+						</ul>
+					{% endif %}
+					{% if tcs.volunteer_time_commitments %}
+						<p>Volunteer time commitments:</p>
+						<ul>
+						{% for period in tcs.volunteer_time_commitments %}
+							<li>{{ period.hours_per_week }} hours per week from {{ period.start_date|date:"Y-m-d" }} to {{ period.end_date|date:"Y-m-d" }}.</li>
+							<li>Description of volunteer commitments: {{ period.description }}</li>
+						{% endfor %}
+						</ul>
+					{% endif %}
+				{% endwith %}
+			</div>
+		</div>
+	</div>
+{% endwith %}
