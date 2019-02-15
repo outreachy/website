@@ -6,10 +6,6 @@
 	<ul>
 		<li>Date classes start for all students: <strong>{{ term.start_date|date:"F d, Y" }}</strong></li>
 		<li>Date exams end for all students: <strong>{{ term.end_date|date:"F d, Y" }}</strong></li>
-		<li>Number of credits for a typical student: <strong>{{ term.typical_credits }}</strong></li>
-		<li>Number of credits you're registered for: <strong>{{ term.registered_credits }}</strong></li>
-		<li>Number of internship or project credits for Outreachy: <strong>{{ term.outreachy_credits }}</strong></li>
-		<li>Number of graduate thesis or research credits: <strong>{{ term.thesis_credits }}</strong></li>
 	</ul>
 {% endfor %}
 {% if noncollege_school_time_commitments %}
@@ -31,11 +27,13 @@
 {% for contract in employment_time_commitments %}
 	<p>Employment Period #{{ forloop.counter }}</p>
 	<ul>
+		<li>Job title: {{ contract.job_title }}</li>
 		<li>Date employment starts: <strong>{{ contract.start_date|date:"F d, Y" }}</strong></li>
 		<li>Date employment ends: <strong>{{ contract.end_date|date:"F d, Y" }}</strong></li>
 		<li>Number of hours per week required by your employment contract: <strong>{{ contract.hours_per_week }}</strong></li>
 		<li>Will you quit this employment or contract work if you are accepted for Outreachy?
 			{% if contract.quit_on_acceptance %}<strong>Yes.</strong>{% else %}<strong>No.</strong>{% endif %}</li>
+		<li>Job description: {{ contract.job_description }}</li>
 	</ul>
 {% endfor %}
 

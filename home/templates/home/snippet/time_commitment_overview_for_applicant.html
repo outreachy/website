@@ -19,9 +19,7 @@
 						<div class="container">
 							<div class="row">
 								<div class="col">
-									<p>Location: <b>{% with location=application.applicant.get_city_country %}{% if location.0 %}{{ location.0}}, {% endif %}{% if location.1 %}{{ location.1 }}{% endif %}
-										{% if not location.0 and not location.1 %}Unknown{% endif %}{% endwith %}</b>
-									<br>Applicant is enrolled at <a href="{{ application.schoolinformation.university_website }}">{{ application.schoolinformation.university_name }}</a>
+									Applicant is enrolled at <a href="{{ application.schoolinformation.university_website }}">{{ application.schoolinformation.university_name }}</a>
 									<br>Degree: {{ application.schoolinformation.degree_name }}
 									{% if application.schoolinformation.current_academic_calendar %}
 									<br><a href="{{ application.schoolinformation.current_academic_calendar }}">Current term academic calendar</a>
@@ -30,8 +28,6 @@
 									<br><a href="{{ application.schoolinformation.next_academic_calendar }}">Next term academic calendar</a>
 									{% endif %}
 								</div>
-							</div>
-							<div class="row">
 								<div class="col">
 									<p>School terms during the internship ({{ current_round.internstarts|date:"Y-m-d" }} to {{ current_round.internends|date:"Y-m-d" }}):</p>
 									<ul>
@@ -45,31 +41,8 @@
 									<p>{{ application.schoolinformation.school_term_updates|linebreaksbr }}</p>
 									{% endif %}
 								</div>
-								<div class="col">
-									{% if tcs.school_time_commitments %}
-									<p>Classmates with the same school website:<br>{{ application.schoolinformation.total_classmates }} applied, {{ application.schoolinformation.pending_classmates }} pending, {{ application.schoolinformation.acceptance_rate|floatformat }}% accepted, {{ application.schoolinformation.time_rejection_rate|floatformat }}% rejected for full-time commitments</p>
-									<p>Possible school term matches:</p>
-									<ul>
-										{% with terms=application.schoolinformation.find_official_terms %}
-											{% for term in terms %}
-											<li><a href="{{ term.school.university_website}}">{{ term.school.university_name}}</a></li>
-											<ul>
-												<li>{% if term.academic_calendar %}<a href="{{ term.academic_calendar }}">{% endif %}{{ term.term_name }}{% if term.academic_calendar %}</a>{% endif %}</li>
-												<li>{{ term.start_date|date:"Y-m-d" }} to {{ term.end_date|date:"Y-m-d" }}</li>
-											</ul>
-											{% endfor %}
-											{% if not terms %}
-												<p>No matches.</p>
-											{% endif %}
-										{% endwith %}
-									</ul>
-									{% endif %}
-								</div>
 							</div>
 						</div>
-					{% else %}
-						<p>Location: <b>{% with location=application.applicant.get_city_country %}{% if location.0 %}{{ location.0}}, {% endif %}{% if location.1 %}{{ location.1 }}{% endif %}
-							{% if not location.0 and not location.1 %}Unknown{% endif %}{% endwith %}</b></p>
 					{% endif %}
 					{% if tcs.noncollege_school_time_commitments %}
 						<p>Coding school or online courses time commitments:</p>

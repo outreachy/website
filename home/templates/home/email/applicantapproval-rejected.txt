@@ -9,7 +9,7 @@ We encourage you to apply another round! You can sign up for the announcements m
 
 https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce
 
-Outreachy organizers review each applicant's time commitments, including volunteer work, employment, contract work, stated class credits, and the school's academic calendar.
+Outreachy organizers review each applicant's time commitments, including volunteer work, employment, contract work, and students' academic calendar.
 
 For applicants who are students, we look at the school's academic calendar to determine if students have a long enough break between school terms. In order to be eligible, applicants who are students must have 49 consecutive days free from full-time commitments during the Outreachy internship period. 49 days is the absolute minimum, and we cannot make exceptions or accept letters from school administrators for exceptions.
 {% elif reason|slice:":5" == 'ALIGN' %}The Outreachy organizers have been reviewing your initial application, including your essay questions.

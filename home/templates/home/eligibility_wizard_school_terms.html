@@ -9,30 +9,15 @@ Are you eligible to apply to Outreachy?
 
 {% include "home/snippet/privacy_policy.html" %}
 
-<p>
-Please enter information for each school term that overlaps with the Outreachy internship period,
-from <strong>{{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}</strong>.
-</p>
+<p><b>Please enter information your current school term and your next two school terms.</b></p>
+
 <p>Common questions about school term dates:</p>
 <ul>
 	<li><strong>A school term lasts from the first possible day of classes for ALL students until the last possible exam date for ALL students.</strong></li>
 	<li>Outreachy cannot accept university letters of late enrollment.</li>
 	<li>The last school term day must be the last possible exam date, and it cannot be the day you think will be your last exam.</li>
-</ul>
-<p>Common questions about what school terms to include:</p>
-<ul>
-	<li>You are required to fill out information for at least one term.</li>
-	<li>Make sure to include all overlapping school terms, even if there is only a short period of time that overlaps with the Outreachy internship period.</li>
-	<li>If less than three terms overlap with the Outreachy internship period, leave those terms blank.</li>
-	<li>If you have no school terms that overlap with the Outreachy internship period, fill out the information for your current school term (or the last school term you took) and the next school term you will take.</li>
-</ul>
-<p>Common questions about "Number of credits for a typical student":</p>
-<ul>
-	<li>This question asks how many credits a typical student takes each term.</li>
-	<li>Sometimes a term is optional, such as a Summer term. In that case, the "Number of credits for a typical student" should be the number of credits required to be considered a full-time student during that term.</li>
-	<li>Some European universities use ETCS points instead of credits. A student must take so many ETCS per year to be considered a full-time student. For example, if your university requires 60 ETCS per year to be considered a full-time student, and you have two terms in a school year, then the "Number of credits for a typical student" per term would be 30.</li>
-	<li>Some universities in India publish a class schedule for students in each university degree. The class schedule outlines the classes a student is required to take, with some options for elective classes. The total number of required class credits (or credit hours) may vary each term. If your university has different credit requirements for each semester for students in your major, "Number of credits for a typical student" is the number of credits or credit hours that are listed on your syllabus or class schedule for that term.</li>
-	<li>Some universities do not allow students to skip classes or rearrange their schedule without an exception from the university. Outreachy cannot accept letters of exception from class from universities.</li>
+	<li>If you don't know the dates for future terms, use the dates for those terms in the previous school year.</li>
+	<li>If one of these school terms is your last term before graduation, fill out the information for that school term and check 'This is the last term in my degree'. If you will continue onto another degree after your graduation, make sure to fill in the remaining school terms.</li>
 </ul>
 <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
 <hr>
@@ -42,11 +27,49 @@ from <strong>{{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.
 {{ wizard.management_form }}
 {% if wizard.form.forms %}
     {{ wizard.form.management_form }}
+    {{ wizard.form.non_form_errors }}
     {% for form in wizard.form.forms %}
 	<div class="card border-info mb-3">
-		<div class="card-header text-white bg-info">Term #{{ forloop.counter }}</div>
+		{% if forloop.counter == 1 %}
+		<div class="card-header text-white bg-info">Current Term</div>
+		{% elif forloop.counter == 2 %}
+		<div class="card-header text-white bg-info">Next Term</div>
+		{% else %}
+		<div class="card-header text-white bg-info">Following Term</div>
+		{% endif %}
 	</div>
-        {% include "bootstrap_card_form.html" with form=form only %}
+	{% for field in form.visible_fields %}
+		{% if 'Last term:' in field.label_tag %}
+			<div class="form-group card">
+				<div class = "card-header">
+					Are you graduating after this term?
+				</div>
+				<div class = "card-body">
+					<p>
+					{{ field.errors }}
+					{{ field }}
+					{{ field.help_text }}
+					</p>
+				</div>
+			</div>
+		{% else %}
+			<div class="form-group card">
+				{{ field.errors }}
+				<div class = "card-header">
+					{{ field.label_tag|safe }}
+				</div>	    
+				<div class = "card-body">
+					{{ field }}
+				</div>
+				{% if field.help_text %}
+				<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+				{% endif %}
+			</div>
+		{% endif %}
+	{% endfor %}
+	{% for hidden in form.hidden_fields %}
+		{{ hidden }}
+	{% endfor %}
     {% endfor %}
 {% else %}
     {% include "bootstrap_card_form.html" with form=wizard.form only %}

@@ -2173,7 +2173,7 @@ class ApplicantApproval(ApprovalStatus):
                 for d in employment_time_commitments or []
                 if d ]
 
-        stcs = [ self.time_commitment_from_model(d, 40 * (d.get_total_credits() / d.typical_credits))
+        stcs = [ self.time_commitment_from_model(d, 40)
                 for d in school_time_commitments or []
                 if d ]
         calendar = create_time_commitment_calendar(chain(tcs, ctcs, etcs, stcs), current_round)
@@ -2207,6 +2207,13 @@ class ApplicantApproval(ApprovalStatus):
                 'volunteer_time_commitments': volunteer_time_commitments,
                 'employment_time_commitments': employment_time_commitments,
                 }
+
+    def overlapping_school_terms(self):
+        school_time_commitments = SchoolTimeCommitment.objects.filter(applicant=self)
+        for term in school_time_commitments:
+            if term.start_date <= self.application_round.internends and self.application_round.internstarts <= term.end_date:
+                return True
+        return False
 
     def get_essay_ratings(self):
         ratings_list = []
@@ -2507,13 +2514,17 @@ class BarriersToParticipation(models.Model):
             verbose_name='What barriers or concerns have kept you from contributing to free and open source software?',
             help_text="Please provide specific examples. Outreachy organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.")
 
-    systematic_bias = models.TextField(
-            verbose_name='What systematic bias or discrimination have you faced while building your skills?',
-            help_text="<p>Outreachy projects often require applicants to know some basic skills. Those skills might include programming, user experience, documentation, illustration and graphical design, or data science. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>In these settings, have you faced systematic bias or discrimination? Have you been discouraged from accessing these resources because of your identity or background?</p><p>Please provide specific examples and (optionally) statistics.</p><p>Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
+    systemic_bias = models.TextField(
+            verbose_name='What systemic bias or discrimination have you faced while building your skills?',
+            help_text="<p>Outreachy projects often require applicants to know some basic skills. Those skills might include programming, user experience, documentation, illustration and graphical design, or data science. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>In these settings, have you faced systemic bias or discrimination? Have you been discouraged from accessing these resources because of your identity or background?</p><p>Please provide specific examples and (optionally) statistics.</p><p>Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
 
     lacking_representation = models.TextField(
             verbose_name='Does your learning environment have few people who share your identity or background? Please provide details.',
-            help_text="<p>Contributing to free and open source software takes some skill. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>Does any of your learning environments have few people who share your identity or background? How did your identity or background differ from the majority of people in this learning environment?</p><p>Examples of the types of identities or backgrounds to consider include (but are not limited to):</p><ul><li>age</li><li>body size</li><li>disability</li><li>ethnicity</li><li>gender identity and expression</li><li>socio-economic status</li><li>nationality</li><li>personal appearance</li><li>race</li><li>religion</li><li>sexual identity and orientation</li></ul></p><p>Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
+            help_text="<p>Contributing to free and open source software takes some skill. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>Does any of your learning environments have few people who share your identity or background? How did your identity or background differ from the majority of people in this learning environment?</p><p>Examples of the types of identities or backgrounds to consider include (but are not limited to):</p><ul><li>age</li><li>body size</li><li>caste</li><li>disability</li><li>ethnicity</li><li>gender identity and expression</li><li>socio-economic status</li><li>nationality</li><li>personal appearance</li><li>race</li><li>religion</li><li>sexual identity and orientation</li></ul></p><p>Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
+
+    employment_bias = models.TextField(
+            verbose_name='What systemic bias or discrimination would you face if you applied for a job in the technology industry of your country?',
+            help_text="<p>Think about when you have applied for a job in the technology industry of your country. Do you think you have faced discrimination on the basis of your background or identity? If you have not applied for a job yet, do you think you may be discriminated against on the basis of your background or identity?</p><p>Please provide specific examples and (optionally) statistics.</p><p>Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
 
     applicant_should_update = models.BooleanField(default=False)
 
@@ -2529,7 +2540,7 @@ class BarriersToParticipation(models.Model):
                     for v in [versions[0]]
                 ),
             )
-            for attname in ('lacking_representation', 'systematic_bias', 'barriers_to_contribution')
+            for attname in ('lacking_representation', 'systemic_bias', 'employment_bias', 'barriers_to_contribution')
         ]
         new_answers = []
         for new_field, answers in self.get_answers():
@@ -2556,8 +2567,12 @@ class BarriersToParticipation(models.Model):
                     }, self.lacking_representation),
                 (
                 { 'verbose_name':
-                    'What systematic bias or discrimination have you faced while building your skills?',
-                    }, self.systematic_bias),
+                    'What systemic bias or discrimination have you faced while building your skills?',
+                    }, self.systemic_bias),
+                (
+                { 'verbose_name':
+                    'What systemic bias or discrimination would you face if you applied for a job in the technology industry of your country?',
+                    }, self.employment_bias),
                 (
                 { 'verbose_name':
                     'What barriers or concerns have kept you from contributing to free and open source software?',
@@ -2569,11 +2584,11 @@ class TimeCommitmentSummary(models.Model):
 
     enrolled_as_student = models.BooleanField(
             verbose_name='Are you (or will you be) a university or college student during the internship period?',
-            help_text='Will you be enrolled in a university or college during the Outreachy internship period? University and college students will be asked questions about the number of credits they are taking. Please state yes even if only a few days overlap with the internship period.')
+            help_text='Will you be enrolled in a university or college during the Outreachy internship period? Please state yes even if only a few days overlap with the internship period.')
 
     enrolled_as_noncollege_student = models.BooleanField(
             verbose_name='Are you enrolled in a coding school or self-paced online courses?',
-            help_text='Will you be enrolled in a coding school or self-paced online classes during the Outreachy internship period? If you are taking classes without receiving credits, select this option.')
+            help_text='Will you be enrolled in a coding school or self-paced online classes during the Outreachy internship period?')
 
     employed = models.BooleanField(
             help_text='Will you be an employee (for any number of hours) during the Outreachy internship period?')
@@ -2616,6 +2631,11 @@ class EmploymentTimeCommitment(models.Model):
             help_text="Number of hours per week required by your employment contract",
             validators=[validators.MinValueValidator(1)],
             )
+    job_title = models.CharField(
+            max_length=SENTENCE_LENGTH)
+    job_description = models.TextField(
+            max_length=THREE_PARAGRAPH_LENGTH,
+            help_text="Please tell us about the work you do and your job duties.")
     quit_on_acceptance = models.BooleanField(
             help_text="I will quit this job or contract if I am accepted as an Outreachy intern.")
 
@@ -2670,12 +2690,6 @@ class OfficialSchoolTerm(models.Model):
             verbose_name="Date all exams end.",
             help_text="This is the date the university advertises for the last possible date of any exam for any student in the semester.")
 
-    typical_credits = models.IntegerField(
-            blank=True,
-            null=True,
-            verbose_name="Number of credits for a typical student",
-            help_text="How many credits does a typical student register for?<br> If the university has different credit requirements for each semester for students in each major, pick the most common major listed by students in this university.")
-
 class SchoolTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
 
@@ -2686,58 +2700,20 @@ class SchoolTimeCommitment(models.Model):
     
     start_date = models.DateField(
             verbose_name="Date classes start.",
-            help_text="What is the first possible day of classes for all students?<br>If you started this term late (or will start this term late), use the date that classes start for all students, not the late registration date.<br>If students who are in different school years or different semester numbers start classes on different dates, use the first possible date that students in your year or semester start classes.<br>If you do not know when the term will start, use the start date of that term from last year.")
+            help_text="What is the first possible day of classes for all students?<br>If you started this term late (or will start this term late), use the date that classes start for all students, not the late registration date.<br>If students who are in different school years or different semester numbers start classes on different dates, use the first possible date that students in your year or semester start classes.<br>If you do not know when the term will start, use the start date of that term from last year.<br>If you don't see a calendar pop-up, please use the date format YYYY-MM-DD.")
     
     end_date = models.DateField(
             verbose_name="Date all exams end.",
-            help_text="This is the date your university advertises for the last possible date of any exam for any student in your semester. Use the last possible exam date, even if your personal exams end sooner.")
-    
-    typical_credits = models.IntegerField(
-            validators=[validators.MinValueValidator(1)],
-            verbose_name="Number of credits for a typical student",
-            help_text="How many credits does a typical student register for?<br> If your university has different credit requirements for each semester for students in your major, use the number of credits that are listed on your syllabus or class schedule.")
+            help_text="This is the date your university advertises for the last possible date of any exam for any student in your semester. Use the last possible exam date, even if your personal exams end sooner. If you don't see a calendar pop-up, please use the date format YYYY-MM-DD.")
 
-    registered_credits = models.IntegerField(
-            validators=[validators.MinValueValidator(1)],
-            verbose_name="Total number of credits you're registered for",
-            help_text="What is the total number of credits you are enrolled for this term?<br>If you aren't registered yet, please provide an approximate number of credits?")
-
-    outreachy_credits = models.PositiveIntegerField(
-            verbose_name="Number of internship or project credits for Outreachy",
-            help_text="If you are going to seek university credit for your Outreachy internship, how many credits will you earn?")
-
-    thesis_credits = models.PositiveIntegerField(
-            verbose_name="Number of graduate thesis or research credits",
-            help_text="If you are a graduate student, how many credits will you earn for working on your thesis or research (not including the credits earned for the Outreachy internship)?")
-
-    def get_total_credits(self):
-        # Ignore Outreachy or thesis credits if people filled them in wrong
-        if (self.outreachy_credits + self.thesis_credits) > self.registered_credits:
-            return self.registered_credits
-        return self.registered_credits - self.outreachy_credits - self.thesis_credits 
+    last_term = models.BooleanField(
+            default=False,
+            help_text="This is the last term in my degree.")
 
     def clean(self):
         if self.start_date and self.end_date and self.start_date > self.end_date:
             error_string = 'School term (' + self.term_name + ') start date ' + self.start_date.strftime("%Y-%m-%d") + ' is after term end date ' + self.end_date.strftime("%Y-%m-%d")
             raise ValidationError({'start_date': error_string})
-
-        extra_credits = 0
-        if self.outreachy_credits:
-            extra_credits += self.outreachy_credits
-        if self.thesis_credits:
-            extra_credits += self.thesis_credits
-        if self.registered_credits:
-            if extra_credits > self.registered_credits:
-                error_string = 'The total number of credits for this term is less than your graduate credits plus the credit you will receive for Outreachy. Total credits = ' + str(self.registered_credits) + ' < ' + str(extra_credits) + '. Please make sure your total number of credits includes both your graduate credits and the credits you will receive for your Outreachy internship.'
-                raise ValidationError({'registered_credits': error_string})
-
-        # Look for people which list Outreachy project credit for a term that is
-        # already underway - people often think we mean the number of hours they'll spend
-        # on Outreachy.
-        current_round = self.applicant.application_round
-        if self.outreachy_credits and self.start_date and self.start_date < current_round.internstarts:
-            error_string = 'You cannot receive school course credits for an Outreachy internship for a term that starts before the Outreachy internship starts.'
-            raise ValidationError({'outreachy_credits': error_string})
 
 class SchoolInformation(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
@@ -2749,11 +2725,11 @@ class SchoolInformation(models.Model):
     university_website = models.URLField(help_text="University or college website")
 
     current_academic_calendar = models.URLField(verbose_name="Link to your official academic calendar for your *current* school term",
-            help_text="For some students, their academic calendar is not available online (or is only available to students). In this case, please upload a copy of the PDF or a picture of your official academic calendar to a file sharing site and add the link to the file here. Do not leave off your academic calendar or your initial application will not be processed promptly.")
+            help_text="Please provide a link on your school's official website. Some schools do not make their calendars publicly available. You can upload your calendar to a file sharing service, but the Outreachy organizers may not take it into account when validating your school dates.")
 
     next_academic_calendar = models.URLField(
             verbose_name="Link to your official academic calendar for your *next* school term",
-            help_text="If the calendar for your next term is not released yet, link to last year's academic calendar for that term. For some students, their academic calendar is not available online (or is only available to students). In this case, please upload a copy of the PDF or a picture of your official academic calendar to a file sharing site and add the link to the file here. Do not leave off your academic calendar or your initial application will not be processed promptly.")
+            help_text="If the calendar for your next term is not released yet, link to last year's academic calendar for that term. Some schools do not make their calendars publicly available. You can upload your calendar to a file sharing service, but the Outreachy organizers may not take it into account when validating your school dates.")
 
     degree_name = models.CharField(
             max_length=SENTENCE_LENGTH,
@@ -2763,7 +2739,7 @@ class SchoolInformation(models.Model):
             max_length=THREE_PARAGRAPH_LENGTH,
             blank=True,
             verbose_name='Provide any updates about your school term information',
-            help_text="<p>If the school terms above are incorrect, or you have forgotten to include a term that overlaps with the Outreachy internship period, please update your terms.<p>For each school term, please provide:</p><ol><li>The term name</li><li>The start date of classes for ALL students in the school</li><li>The end date of exams for ALL students in the school</li><li>The total number of credits you will be enrolled for this term</li><li>The total number of credits a student typically enrolls for during this school term.</li><li>If you are a graduate student, the subset of those credits you will be using for graduate research or thesis credits.</li><li>If you will receive any school credits for your Outreachy internship, how many credits will you receive during that term?</li></ol><p>Please do not modify your dates to differ from the starting dates in your academic calendar. Outreachy organizers cannot accept statements that you will start your classes late.</p><p>Please provide a link to your school website which proves that students are eligible to register for less than a full course load. Some schools, especially those in India, do not allow students to register for a part-time course load.</p>")
+            help_text="<p>If the school terms above are incorrect, or you have forgotten to include a term that overlaps with the Outreachy internship period, please update your terms.<p>For each school term, please provide:</p><ol><li>The term name</li><li>The start date of classes for ALL students in the school</li><li>The end date of exams for ALL students in the school</li></ol><p>Please do not modify your dates to differ from the starting dates in your academic calendar. Outreachy organizers cannot accept statements that you will start your classes late.</p>")
     applicant_should_update = models.BooleanField(default=False)
 
     def find_official_terms(self):
@@ -2833,7 +2809,6 @@ class SchoolInformation(models.Model):
         terms = SchoolTimeCommitment.objects.filter(applicant__applicant__account__email=school_info.applicant.applicant.account.email)
         for t in terms:
             print("Term: ", t.term_name, "; Start date: ", t.start_date, "; End date: ", t.end_date)
-            print("Typical " + str(t.typical_credits) + "; registered " + str(t.registered_credits) + "; outreachy " + str(t.outreachy_credits) + "; thesis " + str(t.thesis_credits))
 
     def print_university_students(school_name):
         apps = SchoolInformation.objects.filter(university_name__icontains=school_name).orderby('applicant__approval_status')

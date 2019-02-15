@@ -51,7 +51,7 @@ The types of personal data collected may include (but are not limited to):
     * your legal name to use in intern or mentor contracts or payments;
     * your pronouns, whether to share those pronouns with mentors and coordinators, and whether to publicly display those pronouns on the Outreachy website;
     * information about your age, location, employment, time commitment information, and other information that we collect to determine your eligibility for the program
-    * information about your gender identity, demographics, the representation of people who share your background and identity in your learning environments, your experiences with systematic bias and discrimination, what barriers you face in free software, and other information that we collect to determine we are meeting our program goal to support people from groups under represented in the technology industry in their country
+    * information about your gender identity, demographics, the representation of people who share your background and identity in your learning environments, your experiences with systemic bias and discrimination, what barriers you face in free software, and other information that we collect to determine we are meeting our program goal to support people from groups under represented in the technology industry in their country
     * information about mentors and mentored projects, such as information about your role in your community, your mentorship background and the project you wish to mentor
     * (optional) your nickname on community forums/chat/IRC;
     * (optional) your language preference;
@@ -151,7 +151,7 @@ When an approved Outreachy applicant records a contribution to a mentored projec
 * (optional) your Twitter user profile URL;
 
 Outreachy organizers may use anonymized quotes from essay questions in sponsor materials and on the Outreachy website:
-* examples of the systematic bias, discrimination you have faced
+* examples of the systemic bias, discrimination you have faced
 
 Only Outreachy organizers and designated applicant reviewers will have access to the following private personal data for applicants who have filled out an initial application:
 
@@ -161,7 +161,7 @@ Only Outreachy organizers and designated applicant reviewers will have access to
 * your pronouns, if you choose not to share your pronouns with mentors and coordinators;
 * your time commitment detailed information:
     * whether you are currently applying to Google Summer of Code
-    * your student enrollment status, course load, typical student course load, and academic calendar
+    * your student enrollment status and academic calendar
     * your enrollment status in a coding school or online self-paced courses
     * your contracted employment hours
     * your hours working as a self-employed contractor
@@ -183,7 +183,7 @@ Only Outreachy organizers and designated applicant reviewers will have access to
     * your gender identity, including whether you are transgender or genderqueer
     * your prior experiences contributing to free and open source software
     * your concerns or barriers that have kept you from participating in free and open source software
-    * examples of the systematic bias, discrimination you have faced
+    * examples of the systemic bias, discrimination you have faced
 * information that helps us improve our promotional efforts:
     * where you heard about Outreachy from
 

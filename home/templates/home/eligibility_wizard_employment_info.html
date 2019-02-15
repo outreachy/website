@@ -43,7 +43,39 @@ If you are a teacher who has a break between terms, enter your employment period
 	<div class="card border-info mb-3">
 		<div class="card-header text-white bg-info">Employment Period #{{ forloop.counter }}</div>
 	</div>
-        {% include "bootstrap_card_form.html" with form=form only %}
+	{% for field in form.visible_fields %}
+		{% if 'Quit on acceptance:' in field.label_tag %}
+			<div class="form-group card">
+				<div class = "card-header">
+					Will you quit this job if you're accepted as an Outreachy intern?
+				</div>
+				<div class = "card-body">
+					<p>
+					{{ field.errors }}
+					{{ field }}
+					Yes, {{ field.help_text }}
+					</p>
+				</div>
+			</div>
+		{% else %}
+			<div class="form-group card">
+				{{ field.errors }}
+				<div class = "card-header">
+					{% if field.help_text %}
+						{{ field.help_text|safe }}
+					{% else %}
+						{{ field.label_tag|safe }}
+					{% endif %}
+				</div>
+				<div class = "card-body">
+					{{ field }}
+				</div>
+			</div>
+		{% endif %}
+	{% endfor %}
+	{% for hidden in form.hidden_fields %}
+		{{ hidden }}
+	{% endfor %}
     {% endfor %}
 {% else %}
     {% include "bootstrap_card_form.html" with form=wizard.form only %}
