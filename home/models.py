@@ -2627,7 +2627,7 @@ class EmploymentTimeCommitment(models.Model):
             help_text="Number of hours per week required by your employment contract",
             validators=[validators.MinValueValidator(1)],
             )
-    job_title = models.TextField(
+    job_title = models.CharField(
             max_length=SENTENCE_LENGTH)
     job_description = models.TextField(
             max_length=THREE_PARAGRAPH_LENGTH,
