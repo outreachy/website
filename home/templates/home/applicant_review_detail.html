@@ -76,6 +76,9 @@
 			<li><span class="badge badge-warning">Warning</span> Applicant has a part-time job.</li>
 		{% endif %}
 	{% endwith %}
+	{% if application.schoolinformation %}
+		<li><span class="badge badge-warning">Warning</span> This is a student from {% include 'home/snippet/applicant_location.html' %}.</li>
+	{% endif %}
 		<li>
 			{% if application.is_not_under_export_control == False %}
 				<span class="badge badge-warning">Warning</span> Free from U.S. export control: <b>No</b>, applicant is under U.S. export control.
