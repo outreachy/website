@@ -236,6 +236,43 @@ class EmptyModelFormSet(BaseModelFormSet):
     def get_queryset(self):
         return self.model._default_manager.none()
 
+class SchoolTimeCommitmentModelFormSet(EmptyModelFormSet):
+    def clean(self):
+        super(SchoolTimeCommitmentModelFormSet, self).clean()
+        if any(self.errors):
+            # Don't validate if the individual term fields already have errors
+            return
+
+        end = None
+        last_term = None
+        number_filled_terms = 0
+        for index, form in enumerate(self.forms):
+            # This checks if one of the forms was left blank
+            if index >= self.initial_form_count() and not form.has_changed():
+                continue
+            number_filled_terms += 1
+
+            # Ensure that only one term has last_term set
+            end_term = form.cleaned_data['last_term']
+            if end_term:
+                if last_term:
+                    raise ValidationError("You cannot have more than one term be the last term in your degree.")
+                else:
+                    last_term = form
+
+            # Ensure terms are in consecutive order
+            start_date = form.cleaned_data['start_date']
+            if end and end > start_date:
+                raise ValidationError("Terms must be in chronological order.")
+            end = form.cleaned_data['end_date']
+
+        # Ensure that all three terms are filled out, unless one term has the last_term set
+        if not last_term and number_filled_terms < 3:
+            raise ValidationError("Please provide information for your next three terms of classes.")
+
+        # We can't confirm there are no terms after the term where last_term is set
+        # because someone might be ending their bachelor's degree and starting a master's.
+
 def work_eligibility_is_approved(wizard):
     cleaned_data = wizard.get_cleaned_data_for_step('Work Eligibility')
     if not cleaned_data:
@@ -526,7 +563,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 ),
             )),
             ('School Term Info', modelformset_factory(SchoolTimeCommitment,
-                formset=EmptyModelFormSet,
+                formset=SchoolTimeCommitmentModelFormSet,
                 min_num=1,
                 validate_min=True,
                 extra=2,
@@ -535,6 +572,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'term_name',
                     'start_date',
                     'end_date',
+                    'last_term',
                 ),
             )),
             ('Coding School or Online Courses Time Commitment Info', modelformset_factory(NonCollegeSchoolTimeCommitment,

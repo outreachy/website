@@ -2204,6 +2204,13 @@ class ApplicantApproval(ApprovalStatus):
                 'employment_time_commitments': employment_time_commitments,
                 }
 
+    def overlapping_school_terms(self):
+        school_time_commitments = SchoolTimeCommitment.objects.filter(applicant=self)
+        for term in school_time_commitments:
+            if term.start_date <= self.application_round.internends and self.application_round.internstarts <= term.end_date:
+                return True
+        return False
+
     def get_essay_ratings(self):
         ratings_list = []
         ratings = InitialApplicationReview.objects.filter(application=self)
@@ -2689,11 +2696,15 @@ class SchoolTimeCommitment(models.Model):
     
     start_date = models.DateField(
             verbose_name="Date classes start.",
-            help_text="What is the first possible day of classes for all students?<br>If you started this term late (or will start this term late), use the date that classes start for all students, not the late registration date.<br>If students who are in different school years or different semester numbers start classes on different dates, use the first possible date that students in your year or semester start classes.<br>If you do not know when the term will start, use the start date of that term from last year.")
+            help_text="What is the first possible day of classes for all students?<br>If you started this term late (or will start this term late), use the date that classes start for all students, not the late registration date.<br>If students who are in different school years or different semester numbers start classes on different dates, use the first possible date that students in your year or semester start classes.<br>If you do not know when the term will start, use the start date of that term from last year.<br>If you don't see a calendar pop-up, please use the date format YYYY-MM-DD.")
     
     end_date = models.DateField(
             verbose_name="Date all exams end.",
-            help_text="This is the date your university advertises for the last possible date of any exam for any student in your semester. Use the last possible exam date, even if your personal exams end sooner.")
+            help_text="This is the date your university advertises for the last possible date of any exam for any student in your semester. Use the last possible exam date, even if your personal exams end sooner. If you don't see a calendar pop-up, please use the date format YYYY-MM-DD.")
+
+    last_term = models.BooleanField(
+            default=False,
+            help_text="This is the last term in my degree.")
 
     def clean(self):
         if self.start_date and self.end_date and self.start_date > self.end_date:
@@ -2710,11 +2721,11 @@ class SchoolInformation(models.Model):
     university_website = models.URLField(help_text="University or college website")
 
     current_academic_calendar = models.URLField(verbose_name="Link to your official academic calendar for your *current* school term",
-            help_text="For some students, their academic calendar is not available online (or is only available to students). In this case, please upload a copy of the PDF or a picture of your official academic calendar to a file sharing site and add the link to the file here. Do not leave off your academic calendar or your initial application will not be processed promptly.")
+            help_text="Please provide a link on your school's official website. Some schools do not make their calendars publicly available. You can upload your calendar to a file sharing service, but the Outreachy organizers may not take it into account when validating your school dates.")
 
     next_academic_calendar = models.URLField(
             verbose_name="Link to your official academic calendar for your *next* school term",
-            help_text="If the calendar for your next term is not released yet, link to last year's academic calendar for that term. For some students, their academic calendar is not available online (or is only available to students). In this case, please upload a copy of the PDF or a picture of your official academic calendar to a file sharing site and add the link to the file here. Do not leave off your academic calendar or your initial application will not be processed promptly.")
+            help_text="If the calendar for your next term is not released yet, link to last year's academic calendar for that term. Some schools do not make their calendars publicly available. You can upload your calendar to a file sharing service, but the Outreachy organizers may not take it into account when validating your school dates.")
 
     degree_name = models.CharField(
             max_length=SENTENCE_LENGTH,

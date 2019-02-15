@@ -34,11 +34,10 @@ Outreachy eligibility results
 	<h1>Initial application is not approved</h1>
 	<p>We're sorry, but after reviewing your application,
 	we have determined that you are not a strong applicant for the Outreachy internship program.
-	This may be due to one of several reasons:
+	This may be due to one of two reasons:
 	<ul>
 		<li>You may not be eligible to be paid as a contractor of a non-profit based in the United States of America. This could be due to you not being eligible to work in all the countries you are living in during your internship, you being a legal minor (under 18), visa restrictions, U.S. sanctions programs, or U.S. export restrictions.</li>
 		<li>You may have already participated in Google Summer of Code or a previous Outreachy round.</li>
-		<li>You may not have sufficiently explained why your application is aligned with the Outreachy program goal of supporting people from groups under-represented in the technology industry.</li>
 	</ul>
 	Please review your application below to ensure the information you submitted is correct.
 	</p>
@@ -75,8 +74,14 @@ Outreachy eligibility results
 	<h1>Initial application is not approved</h1>
 
 	<p>After reviewing your time commitments, we have determined you do not
-	have 49 consecutive days free from full-time commitments, and thus are
-	not eligible for this round of Outreachy internships.</p>
+	meet our minimum free time criteria.</p>
+
+	{% if school_time_commitments %}
+		<p>{% include 'home/snippet/student_hemisphere.html' %}</p>
+	{% else %}
+		<p>All applicants must have 49 consecutive days free from
+		full-time commitments to be eligible.</p>
+	{% endif %}
 
 	<p>
 	We encourage you to apply another round!
@@ -93,31 +98,26 @@ Outreachy eligibility results
 	including volunteer work, employment, contract work, and
 	student's academic calendar.</p>
 	
-	<p>For applicants who are students, we look at the school's academic
-	calendar to determine if students have a long enough break between
-	school terms. In order to be eligible, applicants who are students must
-	have 49 consecutive days free from full-time commitments during the
-	Outreachy internship period. 49 days is the absolute minimum, and we
-	cannot make exceptions or accept letters from school administrators for
-	exceptions.</p>
+	{% if not school_time_commitments %}
 
-	<h2>Weeks Free From Full-Time Commitments</h2>
+		<h2>Weeks Free From Full-Time Commitments</h2>
 
-	{% if free_period_start_date %}
-		<p>Based on the information you provided, you have the
-		following consecutive days free from full-time commitments:
-		<strong>{{ free_period_start_date|date:"F d, Y" }} to {{ free_period_end_date|date:"F d, Y" }}</strong>.</p>
-		<p>Outreachy interns must have a minimum number of 49 consecutive days free from full-time commitments
-		from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
-		</p>
-		<p>You have {{ longest_period_free }} consecutive days free from full-time commitments.
-		We cannot lower the minimum number of days for any applicant.</p>
-	{% else %}
-		<p>Based on the information you provided, you have no
-		consecutive days free from full-time commitments during the Outreachy internship from
-		<strong>{{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}</strong>.</p>
-		<p>Outreachy interns must have a minimum number of 49 consecutive days free from full-time commitments.
-		</p>
+		{% if free_period_start_date %}
+			<p>Based on the information you provided, you have the
+			following consecutive days free from full-time commitments:
+			<strong>{{ free_period_start_date|date:"F d, Y" }} to {{ free_period_end_date|date:"F d, Y" }}</strong>.</p>
+			<p>Outreachy interns must have a minimum number of 49 consecutive days free from full-time commitments
+			from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
+			</p>
+			<p>You have {{ longest_period_free }} consecutive days free from full-time commitments.
+			We cannot lower the minimum number of days for any applicant.</p>
+		{% else %}
+			<p>Based on the information you provided, you have no
+			consecutive days free from full-time commitments during the Outreachy internship from
+			<strong>{{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}</strong>.</p>
+			<p>Outreachy interns must have a minimum number of 49 consecutive days free from full-time commitments.
+			</p>
+		{% endif %}
 	{% endif %}
 
 	<h2>Can I contest this result?</h2>
@@ -149,6 +149,8 @@ Outreachy eligibility results
 		the eligibility rules around time commitment requirements.</strong>
 	We cannot accept letters to excuse students from class work or late class enrollment letters.
 	We cannot accept manager approval for an employee to work for less than the hours in their employment contract.
+	We cannot allow students from schools in the Northern Hemisphere to participate in the December to March round.
+	We cannot allow students from schools in the Southern Hemisphere to participate in the May to August round.
 	</p>
 	<p>
 	We hope your time commitments change in the future such that you
@@ -162,7 +164,6 @@ Outreachy eligibility results
 	<h2>What if the information is incorrect?</h2>
 	<p>
 	If any of the above information was filled out incorrectly
-	or your school term information changed,
 	please contact the Outreachy organizers at organizers@outreachy.org
 	<p>
 	</p>
@@ -171,20 +172,7 @@ Outreachy eligibility results
 	<ul>
 		<li>User name: {{ request.user.username }}</li>
 		<li>Email address: {{ request.user.email }}</li>
-		<li>Which question was filled out incorrectly?
-		{% if school_time_commitments %}
-			If the question was about your school term information, please include in the email:
-			<ul>
-				<li>The term name or number you need information changed for.</li>
-				<li>What information should change?</li>
-				<li>A school website URL or attached document showing your <strong>school term calendar</strong>
-					for all terms overlapping with
-					{{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
-					If a school term calendar is not yet released, send us the school term calendar from the year before.
-				</li>
-			</ul>
-		{% endif %}
-		</li>
+		<li>Which question was filled out incorrectly?</li>
 	</ul>
 
 {% elif application.approval_status == application.PENDING %}
