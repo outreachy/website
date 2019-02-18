@@ -2165,7 +2165,7 @@ class ApplicantApproval(ApprovalStatus):
         tcs = [ self.time_commitment_from_model(d, d.hours_per_week)
                 for d in volunteer_time_commitments or []
                 if d ]
-        ctcs = [ self.time_commitment_from_model(d, d.hours_per_week)
+        ctcs = [ self.time_commitment_from_model(d, 0 if d.quit_on_acceptance else d.hours_per_week)
                 for d in noncollege_school_time_commitments or []
                 if d ]
 
@@ -2656,6 +2656,8 @@ class NonCollegeSchoolTimeCommitment(models.Model):
             max_length=THREE_PARAGRAPH_LENGTH,
             blank=True,
             help_text="Please describe the course. Include the name and a link to the website of your coding school or organization offering online courses. Add the course name and a short description of course work.")
+    quit_on_acceptance = models.BooleanField(
+            help_text="I will quit this coding school or stop this self-paced online course if I am accepted as an Outreachy intern.")
 
     def clean(self):
         if self.start_date and self.end_date and self.start_date > self.end_date:

@@ -18,6 +18,7 @@
 		<li>Date your coding school or online course ends: <strong>{{ course.end_date|date:"F d, Y" }}</strong></li>
 		<li>Maximum hours per week spent on coursework, exercises, homework, and studying: <strong>{{ course.hours_per_week }}</strong></li>
 		<li>Description of organization offering courses and course name and description: <strong>{{ course.description }}</strong></li>
+		{% if course.quit_on_acceptance %}<li>Applicant has indicated they will quit this coding school or stop their online courses if they are accepted as an Outreachy intern.</li>{% endif %}
 	</ul>
 {% endfor %}
 

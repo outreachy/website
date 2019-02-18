@@ -360,7 +360,7 @@ def time_commitments_are_approved(wizard, application_round):
             for d in wizard.get_cleaned_data_for_step('Volunteer Time Commitment Info') or []
             if d ]
 
-    ctcs = [ time_commitment(d, d['hours_per_week'])
+    ctcs = [ time_commitment(d, 0 if d['quit_on_acceptance'] else d['hours_per_week'])
             for d in wizard.get_cleaned_data_for_step('Coding School or Online Courses Time Commitment Info') or []
             if d ]
 
@@ -586,6 +586,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'end_date',
                     'hours_per_week',
                     'description',
+                    'quit_on_acceptance',
                 ),
             )),
             ('Contractor Info', modelformset_factory(ContractorInformation,

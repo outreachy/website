@@ -259,7 +259,7 @@ class EligibilityTests(SimpleTestCase):
                         *data,
                     )
 
-    def assertTimeEligible(self, expected_status, expected_reason, school=None, contractor=False, employment=None, time=None):
+    def assertTimeEligible(self, expected_status, expected_reason, school=None, coding_school=None, contractor=False, employment=None, time=None):
         kinds = []
         data = [
             self.approved_work_eligibility(),
@@ -276,6 +276,9 @@ class EligibilityTests(SimpleTestCase):
         if employment:
             kinds.append('employed')
             data.append(('Employment Info', list(employment) + [None]))
+        if coding_school:
+            kinds.append('enrolled_as_noncollege_student')
+            data.append(('Coding School or Online Courses Time Commitment Info', list(coding_school) + [None]))
         if contractor:
             kinds.append('contractor')
             data.append(('Contractor Info', [{'continuing_contract_work': True}]))
@@ -372,4 +375,43 @@ class EligibilityTests(SimpleTestCase):
             ApprovalStatus.REJECTED,
             'TIME',
             school=self.vacation(days=48),
+        )
+
+    def test_reject_full_time_coding_school(self):
+        self.assertTimeEligible(
+            ApprovalStatus.REJECTED,
+            'TIME',
+            coding_school=[{
+                'start_date': self.application_round.internstarts,
+                'end_date': self.application_round.internends,
+                'hours_per_week': 21,
+                'description': 'In-person coding school.',
+                'quit_on_acceptance': False,
+            }],
+        )
+
+    def test_accept_quitting_full_time_coding_school(self):
+        self.assertTimeEligible(
+            ApprovalStatus.PENDING,
+            'ESSAY',
+            coding_school=[{
+                'start_date': self.application_round.internstarts,
+                'end_date': self.application_round.internends,
+                'hours_per_week': 21,
+                'description': 'Self-paced online coding school.',
+                'quit_on_acceptance': True,
+            }],
+        )
+
+    def test_accept_part_time_coding_school(self):
+        self.assertTimeEligible(
+            ApprovalStatus.PENDING,
+            'ESSAY',
+            coding_school=[{
+                'start_date': self.application_round.internstarts,
+                'end_date': self.application_round.internends,
+                'hours_per_week': 20,
+                'description': 'Self-paced online coding school.',
+                'quit_on_acceptance': False,
+            }],
         )
