@@ -6,6 +6,7 @@
 		<tr>
 			<th scope="col">Approve applicant?</th>
 			<th scope="col">Reject applicant?</th>
+			<th scope="col">Request essay revision?</th>
 			<th scope="col">Delete application?</th>
 		</tr>
 		</thread>
@@ -15,6 +16,14 @@
 		</td>
 		<td>{% if application.approval_status != application.REJECTED %}
 				<a class='btn btn-warning' href="{% url 'application-action' action='reject' applicant_username=application.applicant.account.username %}">Reject Application</a>
+			{% endif %}
+		</td>
+		<td>
+			{% if application.approval_status == application.PENDING %}
+			<form method="post" action="{% url 'request-essay-revision' applicant_username=application.applicant.account.username %}">
+				{% csrf_token %}
+				<input type='submit' class='btn btn-info' value="Request Essay Revision">
+			</form>
 			{% endif %}
 		</td>
 		<td>
