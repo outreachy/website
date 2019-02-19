@@ -5,17 +5,13 @@
 		<thread class="thread-dark">
 		<tr>
 			<th scope="col">Approve applicant?</th>
-			<th scope="col">Reject applicant?</th>
 			<th scope="col">Request essay revision?</th>
+			<th scope="col">Reject applicant?</th>
 			<th scope="col">Delete application?</th>
 		</tr>
 		</thread>
 		<td>{% if application.approval_status != application.APPROVED %}
 				<a class='btn btn-success' href="{% url 'application-action' action='approve' applicant_username=application.applicant.account.username %}">Approve Application</a>
-			{% endif %}
-		</td>
-		<td>{% if application.approval_status != application.REJECTED %}
-				<a class='btn btn-warning' href="{% url 'application-action' action='reject' applicant_username=application.applicant.account.username %}">Reject Application</a>
 			{% endif %}
 		</td>
 		<td>
@@ -24,6 +20,10 @@
 				{% csrf_token %}
 				<input type='submit' class='btn btn-info' value="Request Essay Revision">
 			</form>
+			{% endif %}
+		</td>
+		<td>{% if application.approval_status != application.REJECTED %}
+				<a class='btn btn-warning' href="{% url 'application-action' action='reject' applicant_username=application.applicant.account.username %}">Reject Application</a>
 			{% endif %}
 		</td>
 		<td>
