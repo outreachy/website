@@ -78,6 +78,7 @@
 	{% endwith %}
 	{% if application.schoolinformation %}
 		<li><span class="badge badge-warning">Warning</span> This is a student from {% include 'home/snippet/applicant_location.html' %}.</li>
+		<li>Classmates with the same school website: {{ application.schoolinformation.time_rejection_rate|floatformat }}% rejected for full-time commitments</li>
 	{% endif %}
 		<li>
 			{% if application.is_not_under_export_control == False %}
