@@ -10,8 +10,12 @@
 			<th scope="col">Delete application?</th>
 		</tr>
 		</thread>
-		<td>{% if application.approval_status != application.APPROVED %}
-				<a class='btn btn-success' href="{% url 'application-action' action='approve' applicant_username=application.applicant.account.username %}">Approve Application</a>
+		<td>
+			{% if application.approval_status != application.APPROVED %}
+			<form action="{% url 'application-action' action='approve' applicant_username=application.applicant.account.username %}" method="post">
+			    {% csrf_token %}
+			    <input type="submit" class="btn btn-success" value="Approve Application" />
+			</form>
 			{% endif %}
 		</td>
 		<td>
