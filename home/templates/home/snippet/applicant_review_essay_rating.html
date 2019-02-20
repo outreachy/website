@@ -18,7 +18,7 @@
 					</p>
 					<p><form method="post" action="{% url 'request-essay-revision' applicant_username=application.applicant.account.username %}">
 						{% csrf_token %}
-						<input type='submit' class='btn btn-warning' value="Request Essay Revision">
+						<input type='submit' class='btn btn-info' value="Request Essay Revision">
 					</form></p>
 				{% endif %}
 				<h2>Rate Essay</h2>
