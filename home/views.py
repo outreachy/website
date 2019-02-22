@@ -2903,7 +2903,7 @@ def applicant_review_summary(request, status):
     applications = ApplicantApproval.objects.filter(
         application_round=current_round,
         approval_status=status,
-    ).order_by('applicant__account__username').order_by('submission_date')
+    ).order_by('pk')
 
     if status == ApprovalStatus.PENDING:
         context_name = 'pending_applications'
