@@ -3258,6 +3258,8 @@ class InternSelection(models.Model):
     initial_feedback_due = models.DateField("Date initial feedback form due", blank=True)
     midpoint_feedback_opens = models.DateField("Date mid-point feedback form opens (typically 7 days before the mid-point feedback deadline)", blank=True)
     midpoint_feedback_due = models.DateField("Date mid-point feedback form due", blank=True)
+    final_feedback_opens = models.DateField("Date final feedback form opens", blank=True)
+    final_feedback_due = models.DateField("Date final feedback form due (typically 3 days after the internship ends)", blank=True)
     intern_ends = models.DateField("Date the internship ends", blank=True)
 
     class Meta:
