@@ -42,6 +42,7 @@ from .models import SchoolInformation
 from .models import SchoolTimeCommitment
 from .models import SignedContract
 from .models import Sponsorship
+from .models import TimeCommitmentSummary
 from .models import VolunteerTimeCommitment
 from .models import WorkEligibility
 
@@ -269,6 +270,10 @@ class PriorFOSSExperienceInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Prior FOSS Experience'
 
+class TimeCommitmentSummaryInline(admin.StackedInline):
+    model = TimeCommitmentSummary
+    can_delete = False
+
 class SchoolInformationInline(admin.StackedInline):
     model = SchoolInformation
     can_delete = False
@@ -331,7 +336,7 @@ class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
             '=applicant__account__username',
             '=applicant__account__email',
             )
-    inlines = (WorkEligibilityInline, PaymentEligibilityInline, ApplicantGenderIdentityInline, ApplicantRaceEthnicityInformationInline, PriorFOSSExperienceInline, BarriersToParticipationInline, SchoolInformationInline, SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, ContractorInformationInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline, PromotionTrackingInline)
+    inlines = (WorkEligibilityInline, PaymentEligibilityInline, ApplicantGenderIdentityInline, ApplicantRaceEthnicityInformationInline, PriorFOSSExperienceInline, BarriersToParticipationInline, TimeCommitmentSummaryInline, SchoolInformationInline, SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, ContractorInformationInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline, PromotionTrackingInline)
 
     def round(self, obj):
         return obj.application_round
