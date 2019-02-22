@@ -2850,6 +2850,7 @@ class ContractorInformation(models.Model):
 class PromotionTracking(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
 
+    AISES = 'AISES'
     BIT = 'BIT'
     GIRLSWHOCODE = 'GWC'
     NAJOBS = 'NAJ'
@@ -2874,6 +2875,7 @@ class PromotionTracking(models.Model):
     SEARCH = 'SEAR'
     OTHER = 'OTH'
     HEARD_CHOICES = (
+        (AISES, 'Job board - American Indian Science and Engineering Society'),
         (BIT, 'Job board - Blacks in Tech'),
         (GIRLSWHOCODE, 'Job board - Girls Who Code'),
         (NAJOBS, 'Job board - Native American Jobs'),
