@@ -1,7 +1,7 @@
 {% if role.is_organizer %}
 	<h1>Staff Actions</h1>
 
-	<table class="table table-striped table-bordered">
+	<table class="table table-bordered">
 		<thread class="thread-dark">
 		<tr>
 			<th scope="col">Approve applicant?</th>
@@ -10,32 +10,44 @@
 			<th scope="col">Delete application?</th>
 		</tr>
 		</thread>
-		<td>
-			{% if application.approval_status != application.APPROVED %}
-			<form action="{% url 'application-action' action='approve' applicant_username=application.applicant.account.username %}" method="post">
-			    {% csrf_token %}
-			    <input type="submit" class="btn btn-success" value="Approve Application" />
-			</form>
-			{% endif %}
-		</td>
-		<td>
-			{% if application.approval_status == application.PENDING %}
-			<form method="post" action="{% url 'request-essay-revision' applicant_username=application.applicant.account.username %}">
-				{% csrf_token %}
-				<input type='submit' class='btn btn-info' value="Request Essay Revision">
-			</form>
-			{% endif %}
-		</td>
-		<td>{% if application.approval_status != application.REJECTED %}
-				<a class='btn btn-warning' href="{% url 'application-action' action='reject' applicant_username=application.applicant.account.username %}">Reject Application</a>
-			{% endif %}
-		</td>
-		<td>
-			<form method="post" action="{% url 'delete-application' applicant_username=application.applicant.account.username %}">
-				{% csrf_token %}
-				<input type='submit' class='btn btn-danger' value="Delete Application">
-			</form>
-		</td>
+		<tr>
+			<td>
+				{% if application.approval_status != application.APPROVED %}
+				<form action="{% url 'application-action' action='approve' applicant_username=application.applicant.account.username %}" method="post">
+				    {% csrf_token %}
+				    <input type="submit" class="btn btn-success" value="Approve Application" />
+				</form>
+				{% endif %}
+			</td>
+			<td>
+				{% if application.approval_status == application.PENDING %}
+				<form method="post" action="{% url 'request-essay-revision' applicant_username=application.applicant.account.username %}">
+					{% csrf_token %}
+					<input type='submit' class='btn btn-info' value="Request Essay Revision">
+				</form>
+				{% endif %}
+			</td>
+			<td>{% if application.approval_status != application.REJECTED %}
+					<a class='btn btn-warning' href="{% url 'application-action' action='reject' applicant_username=application.applicant.account.username %}">Reject Application</a>
+				{% endif %}
+			</td>
+			<td>
+				<form method="post" action="{% url 'delete-application' applicant_username=application.applicant.account.username %}">
+					{% csrf_token %}
+					<input type='submit' class='btn btn-danger' value="Delete Application">
+				</form>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			</td>
+			<td>
+				<form method="post">
+					{% csrf_token %}
+					{% include 'home/snippet/applicant_essay_rating_form.html' %}
+				</form>
+			</td>
+		</tr>
 	</table>
 {% endif %}
 {% if role.is_reviewer %}

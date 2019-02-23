@@ -1,0 +1,14 @@
+
+<div class="dropdown">
+	<button class="btn btn-secondary dropdown-toggle" type="button" id="EssayRatingMenu-{{ intern.account.username }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Your rating for this essay</button>
+	<div class="dropdown-menu" aria-labelledby="EssayRatingMenu-{{ intern.account.username }}">
+		<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='STRONG' %}">+3</button>
+		<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='GOOD' %}">+2</button>
+		<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='MAYBE' %}">+1</button>
+		<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='UNCLEAR' %}">??</button>
+		<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='NOBIAS' %}">-1</button>
+		<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='NOTUNDERSTOOD' %}">-2</button>
+		<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='SPAM' %}">-3</button>
+		<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='UNRATED' %}">Mark as unrated</button>
+	</div>
+</div>
