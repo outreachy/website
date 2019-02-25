@@ -342,6 +342,28 @@ class RoundPage(Page):
                 approval_status=ApprovalStatus.APPROVED,
                 project_round__approval_status=ApprovalStatus.APPROVED).distinct().count()
 
+    def get_new_projects(self):
+        # Find all approved projects
+        projects = Project.objects.filter(project_round__participating_round=self,
+                approval_status=ApprovalStatus.APPROVED,
+                project_round__approval_status=ApprovalStatus.APPROVED).order_by('project_round__community__name').distinct()
+
+        new_projects = []
+        now = datetime.datetime.now(datetime.timezone.utc)
+        week_ago = now - datetime.timedelta(weeks=1)
+        # Find all projects that were in the submitted state within the last week
+        for p in projects:
+            versions = Version.objects.get_for_object(p)
+            for v in versions:
+                if v.revision.date_created < week_ago:
+                    break
+                if v.field_dict['approval_status'] == ApprovalStatus.PENDING:
+                    new_projects.append(p)
+                    break
+        return new_projects
+    # for p in new_projects:
+    #   print(p.project_round.community.name, '"' + p.short_title + '" - ', ','.join([s.skill for s in p.projectskill_set.all()]))
+
     def number_funded_interns(self):
         participations = Participation.objects.filter(
                 participating_round=self,
