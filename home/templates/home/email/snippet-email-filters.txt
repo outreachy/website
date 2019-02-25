@@ -6,3 +6,8 @@ You will receive an email from "mentors-request@lists.outreachy.org" that will p
 *Please make sure to set a filter for your email*
 
 Setting a filter for the mentors mailing list ensure that all communication to this list goes into your inbox. If you use Gmail, it will often categorize mailing list emails under the 'Promotions' tab.  You will need to set a filter for 'lists.outreachy.org' to ensure it ends up in your Personal inbox.
+
+Private Outreachy Chat
+----------------------
+
+You will receive an invitation to a private Outreachy chat server. The server will be used during the internship to communicate with interns and mentors. You can also use it to ask questions of other mentors or the Outreachy organizers.
