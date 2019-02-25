@@ -362,7 +362,8 @@ class RoundPage(Page):
                     break
         return new_projects
     # for p in new_projects:
-    #   print(p.project_round.community.name, '"' + p.short_title + '" - ', ','.join([s.skill for s in p.projectskill_set.all()]))
+    #   print(p.project_round.community.name, '"' + p.short_title + '" - ', ', '.join([s.skill for s in p.projectskill_set.all()]))
+    #   print("New @outreachy internship project:", p.project_round.community.name, '"' + p.short_title + '" - ', ', '.join([s.skill for s in p.projectskill_set.all()]), 'https://www.outreachy.org/apply/project-selection/#' + p.project_round.community.slug + '-' + p.slug)
 
     def number_funded_interns(self):
         participations = Participation.objects.filter(
