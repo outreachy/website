@@ -4122,17 +4122,25 @@ class FinalInternFeedback(BaseInternFeedback):
     )
     interning_recommended = models.CharField(max_length=3, choices=SURVEY_RESPONSES, default=NO_OPINION, verbose_name="Would you recommend a friend intern with Outreachy?")
 
+    recommend_intern_chat = models.CharField(max_length=3, choices=SURVEY_RESPONSES, default=NO_OPINION, verbose_name="Should Outreachy organizers have video chats with all interns next round?")
+
     WEEK1 = '1'
     WEEK2 = '2'
     WEEK3 = '3'
     WEEK4 = '4'
+    WEEK6 = '6'
+    ONCE = '12'
     BLOG_FREQUENCY = (
         (WEEK1, 'Once a week'),
-        (WEEK2, 'Every two weeks'),
-        (WEEK3, 'Every three weeks'),
-        (WEEK4, 'Every four weeks'),
+        (WEEK2, 'Every 2 weeks'),
+        (WEEK3, 'Every 3 weeks'),
+        (WEEK4, 'Every 4 weeks'),
+        (WEEK6, 'Every 6 weeks'),
+        (ONCE, 'Once during the internship'),
         (NO_OPINION, 'No opinion'),
     )
+    chat_frequency = models.CharField(max_length=3, choices=BLOG_FREQUENCY, default=NO_OPINION, verbose_name="How often do you feel Outreachy organizers should host a video chat for all interns during their 12 week internship?")
+
     blog_frequency = models.CharField(max_length=3, choices=BLOG_FREQUENCY, default=NO_OPINION, verbose_name="How often do you feel Outreachy interns should blog during their 12 week internship?")
 
     blog_prompts_caused_writing = models.CharField(max_length=3, choices=SURVEY_RESPONSES, default=NO_OPINION, verbose_name="Did the Outreachy blog prompt emails encourage you to write about your project?")

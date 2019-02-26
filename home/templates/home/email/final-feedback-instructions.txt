@@ -46,6 +46,7 @@ Interns will be asked:
  * Questions about how your mentor is supporting you
  * Questions about your internship effort
  * Questions about whether Outreachy has helped you
+ * Questions about whether the video chat with all interns and Outreachy organizers was useful
 
 Both mentor and intern will be asked:
  * Questions about whether the blog post prompts were effective
