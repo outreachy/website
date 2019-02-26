@@ -8,6 +8,7 @@ from .factories import RoundPageFactory
 from .factories import InternSelectionFactory
 from .factories import InitialMentorFeedbackFactory
 from .factories import MidpointMentorFeedbackFactory
+from .factories import FinalMentorFeedbackFactory
 
 
 # don't try to use the static files manifest during tests
@@ -343,3 +344,79 @@ class InternSelectionTestCase(TestCase):
         self.assertFalse(feedback.allow_edits)
 
         self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+
+    @staticmethod
+    def _final_intern_feedback_form(internselection, **kwargs):
+        defaults = {
+            'intern_help_requests_frequency': models.FinalInternFeedback.MULTIPLE_WEEKLY,
+            'mentor_help_response_time': models.FinalInternFeedback.HOURS_6,
+            'intern_contribution_frequency': models.FinalInternFeedback.ONCE_WEEKLY,
+            'mentor_review_response_time': models.FinalInternFeedback.HOURS_3,
+            'intern_contribution_revision_time': models.FinalInternFeedback.DAYS_2,
+            'last_contact': internselection.final_feedback_opens,
+            'mentor_support': 'My mentor is awesome.',
+            'hours_worked': models.FinalInternFeedback.HOURS_40,
+            'progress_report': 'Everything is fine.',
+        }
+        defaults.update(kwargs)
+        return defaults
+
+    @staticmethod
+    def _final_mentor_feedback_form(internselection, **kwargs):
+        defaults = {
+            'intern_help_requests_frequency': models.FinalMentorFeedback.MULTIPLE_WEEKLY,
+            'mentor_help_response_time': models.FinalMentorFeedback.HOURS_6,
+            'intern_contribution_frequency': models.FinalMentorFeedback.ONCE_WEEKLY,
+            'mentor_review_response_time': models.FinalMentorFeedback.HOURS_3,
+            'intern_contribution_revision_time': models.FinalMentorFeedback.DAYS_2,
+            'last_contact': internselection.final_feedback_opens,
+            'payment_approved': True,
+            'full_time_effort': True,
+            'progress_report': 'Everything is fine.',
+            'request_extension': False,
+            'extension_date': None,
+            'request_termination': False,
+            'termination_reason': '',
+            'mentoring_recommended': models.FinalMentorFeedback.NO_OPINION,
+            'blog_frequency': models.FinalMentorFeedback.NO_OPINION,
+            'blog_prompts_caused_writing': models.FinalMentorFeedback.NO_OPINION,
+            'blog_prompts_caused_overhead': models.FinalMentorFeedback.NO_OPINION,
+            'recommend_blog_prompts': models.FinalMentorFeedback.NO_OPINION,
+            'zulip_caused_intern_discussion': models.FinalMentorFeedback.NO_OPINION,
+            'zulip_caused_mentor_discussion': models.FinalMentorFeedback.NO_OPINION,
+            'recommend_zulip': models.FinalMentorFeedback.NO_OPINION,
+            'feedback_for_organizers': 'There are things you could improve but they are minor',
+        }
+        defaults.update(kwargs)
+        return defaults
+
+    def test_mentor_can_give_final_feedback(self):
+        for request_extension in (False, True):
+            with self.subTest(request_extension=request_extension):
+                internselection = InternSelectionFactory(
+                    active=True,
+                    round__start_from='midfeedback',
+                )
+
+                extension_date = None
+                if request_extension:
+                    extension_date = internselection.round().midfeedback + datetime.timedelta(weeks=5)
+
+                answers = self._final_mentor_feedback_form(internselection,
+                    request_extension=request_extension,
+                    extension_date=extension_date,
+                )
+                response = self._submit_mentor_feedback_form(internselection, 'final', answers)
+                self.assertEqual(response.status_code, 302)
+
+                # will raise DoesNotExist if the view didn't create this
+                feedback = internselection.finalmentorfeedback
+
+                for key, expected in answers.items():
+                    self.assertEqual(getattr(feedback, key), expected)
+
+                # only allow submitting once
+                self.assertFalse(feedback.allow_edits)
+
+                self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+

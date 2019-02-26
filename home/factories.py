@@ -429,3 +429,45 @@ class MidpointMentorFeedbackFactory(factory.django.DjangoModelFactory):
     request_extension = False
 
     request_termination = False
+
+class FinalMentorFeedbackFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.FinalMentorFeedback
+        django_get_or_create = ('intern_selection',)
+
+    intern_selection = factory.SubFactory(
+        InternSelectionFactory,
+        active=True,
+        round__start_from='midfeedback',
+    )
+    allow_edits = False
+    ip_address = factory.Faker('ipv4_public')
+
+    intern_help_requests_frequency = factory.Iterator(models.FinalMentorFeedback.ASKING_FOR_HELP_FREQUENCY_CHOICES, getter=lambda c: c[0])
+    mentor_help_response_time = factory.Iterator(models.FinalMentorFeedback.RESPONSE_TIME_CHOICES, getter=lambda c: c[0])
+    intern_contribution_frequency = factory.Iterator(models.FinalMentorFeedback.CONTRIBUTION_FREQUENCY_CHOICES, getter=lambda c: c[0])
+    mentor_review_response_time = factory.Iterator(models.FinalMentorFeedback.RESPONSE_TIME_CHOICES, getter=lambda c: c[0])
+    intern_contribution_revision_time = factory.Iterator(models.FinalMentorFeedback.RESPONSE_TIME_CHOICES, getter=lambda c: c[0])
+
+    last_contact = factory.Faker('past_date')
+
+    progress_report = factory.Faker('paragraph')
+
+    full_time_effort = True
+
+    payment_approved = True
+
+    request_extension = False
+
+    request_termination = False
+
+    mentoring_recommended = factory.Iterator(models.FinalMentorFeedback.SURVEY_RESPONSES, getter=lambda c: c[0])
+    blog_frequency = factory.Iterator(models.FinalMentorFeedback.BLOG_FREQUENCY, getter=lambda c: c[0])
+    blog_prompts_caused_writing = factory.Iterator(models.FinalMentorFeedback.SURVEY_RESPONSES, getter=lambda c: c[0])
+    blog_prompts_caused_overhead = factory.Iterator(models.FinalMentorFeedback.SURVEY_RESPONSES, getter=lambda c: c[0])
+    recommend_blog_prompts = factory.Iterator(models.FinalMentorFeedback.SURVEY_RESPONSES, getter=lambda c: c[0])
+    zulip_caused_intern_discussion = factory.Iterator(models.FinalMentorFeedback.SURVEY_RESPONSES, getter=lambda c: c[0])
+    zulip_caused_mentor_discussion = factory.Iterator(models.FinalMentorFeedback.SURVEY_RESPONSES, getter=lambda c: c[0])
+    recommend_zulip = factory.Iterator(models.FinalMentorFeedback.SURVEY_RESPONSES, getter=lambda c: c[0])
+
+    feedback_for_organizers = factory.Faker('paragraph')
