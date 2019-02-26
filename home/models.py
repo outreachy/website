@@ -444,6 +444,13 @@ class RoundPage(Page):
                 interns.append(i)
         return interns
 
+    def get_interns_with_open_final_feedback(self):
+        interns = []
+        for i in self.get_in_good_standing_intern_selections():
+            if i.is_final_feedback_on_intern_open():
+                interns.append(i)
+        return interns
+
     def get_communities_with_unused_funding(self):
         participations = Participation.objects.filter(
                 participating_round=self,
@@ -3356,6 +3363,27 @@ class InternSelection(models.Model):
         except MidpointInternFeedback.DoesNotExist:
             return True
 
+    def is_final_feedback_on_intern_open(self):
+        if not has_deadline_passed(self.final_feedback_opens):
+            return False
+        try:
+            return self.finalmentorfeedback.can_edit()
+        except FinalMentorFeedback.DoesNotExist:
+            return True
+
+    def is_final_feedback_on_intern_past_due(self):
+        if has_deadline_passed(self.final_feedback_due):
+            return True
+        return False
+
+    def is_final_feedback_on_mentor_open(self):
+        if not has_deadline_passed(self.final_feedback_opens):
+            return False
+        try:
+            return self.finalinternfeedback.can_edit()
+        except FinalInternFeedback.DoesNotExist:
+            return True
+
     def intern_name(self):
         return self.applicant.applicant.public_name
 
@@ -3445,6 +3473,26 @@ class InternSelection(models.Model):
     def get_intern_midpoint_feedback_status(self):
         try:
             if self.midpointinternfeedback:
+                return self.SUBMITTED
+        except InitialInternFeedback.DoesNotExist:
+            return self.MISSING
+
+    def get_mentor_final_feedback_status(self):
+        try:
+            if self.finalmentorfeedback.request_termination:
+                return self.TERMINATE
+            if self.finalmentorfeedback.request_extension:
+                return self.EXTEND
+            if self.finalmentorfeedback.payment_approved:
+                return self.PAY
+            # Validation should ensure this never happens?
+            return self.SUBMITTED
+        except InitialMentorFeedback.DoesNotExist:
+            return self.MISSING
+
+    def get_intern_final_feedback_status(self):
+        try:
+            if self.finalinternfeedback:
                 return self.SUBMITTED
         except InitialInternFeedback.DoesNotExist:
             return self.MISSING
@@ -3879,6 +3927,237 @@ class MidpointInternFeedback(BaseInternFeedback):
             return False
 
         if has_deadline_passed(self.intern_selection.midpoint_feedback_opens):
+            return True
+        return False
+
+class FinalMentorFeedback(BaseMentorFeedback):
+    # XXX - Make sure to change the questions in
+    # home/templates/home/email/final-feedback-instructions.txt
+    # if you change these verbose names.
+    NEVER = '0'
+    MULTIPLE_DAILY = 'U'
+    ONCE_DAILY = 'D'
+    MULTIPLE_WEEKLY = 'M'
+    ONCE_WEEKLY = 'W'
+    EVERY_OTHER_WEEK = 'B'
+    ASKING_FOR_HELP_FREQUENCY_CHOICES = (
+        (NEVER, 'Intern has not asked for help'),
+        (MULTIPLE_DAILY, 'Multiple times per day'),
+        (ONCE_DAILY, 'Once per day'),
+        (MULTIPLE_WEEKLY, 'Multiple times per week'),
+        (ONCE_WEEKLY, 'Once per week'),
+        (EVERY_OTHER_WEEK, 'Every other week'),
+    )
+    intern_help_requests_frequency = models.CharField(max_length=1, choices=ASKING_FOR_HELP_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often does <b>your intern</b> ask for your help?")
+
+    HOURS_1 = '1H'
+    HOURS_3 = '3H'
+    HOURS_6 = '6H'
+    HOURS_12 = '12H'
+    DAYS_1 = '1D'
+    DAYS_2 = '2D'
+    DAYS_4 = '4D'
+    DAYS_6 = '6D'
+    LONGER = '>7D'
+    RESPONSE_TIME_CHOICES = (
+        (HOURS_1, '1 hour'),
+        (HOURS_3, '3 hours'),
+        (HOURS_6, '6 hours'),
+        (HOURS_12, '12 hours'),
+        (DAYS_1, '1 day'),
+        (DAYS_2, '2-3 days'),
+        (DAYS_4, '4-5 days'),
+        (DAYS_6, '6-7 days'),
+        (LONGER, '> 7 days'),
+    )
+    mentor_help_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>you</b> to respond to your intern's request for help?")
+
+    CONTRIBUTION_FREQUENCY_CHOICES = (
+        (NEVER, 'Intern has not submitted a contribution'),
+        (ONCE_DAILY, 'Once per day'),
+        (MULTIPLE_WEEKLY, 'Multiple times per week'),
+        (ONCE_WEEKLY, 'Once per week'),
+        (EVERY_OTHER_WEEK, 'Every other week'),
+    )
+    intern_contribution_frequency = models.CharField(max_length=1, choices=CONTRIBUTION_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often does <b>your intern</b> submit a project contribution?")
+
+    mentor_review_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>you</b> to give feedback on your intern's contributions?")
+
+    intern_contribution_revision_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>your intern</b> to incorporate feedback and resubmit a contribution?")
+
+    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your intern's progress on their project. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.")
+
+    payment_approved = models.BooleanField(verbose_name="Should your Outreachy intern be paid the final $2,500 payment?", help_text="Please base your answer on whether your intern has put in a full-time, 40 hours a week effort. They should have made project contributions, promptly responded to feedback on those contributions, and resubmitted their revised contributions. If they were stuck, they should have reached out to you or the community for help. If you are going to ask for an internship extension, please say no to this question.")
+
+    extension_date = models.DateField(help_text="If you want to extend the internship, please pick a date when you will be asked to update your intern's final feedback and authorize payment. Internships can be extended for up to five weeks. Please leave this field blank if you are not asking for an extension.", blank=True, null=True)
+
+    # Survey for Outreachy organizers
+
+    YES = 'YES'
+    NO = 'NO'
+    DUNNO = 'DUN'
+    NO_OPINION = 'NOP'
+    SURVEY_RESPONSES = (
+        (YES, 'Yes'),
+        (NO, 'No'),
+        (DUNNO, "I don't know"),
+        (NO_OPINION, 'No opinion'),
+    )
+    mentoring_recommended = models.CharField(max_length=3, choices=SURVEY_RESPONSES, default=NO_OPINION, verbose_name="Would you recommend a friend mentor for Outreachy?")
+
+    WEEK1 = '1'
+    WEEK2 = '2'
+    WEEK3 = '3'
+    WEEK4 = '4'
+    BLOG_FREQUENCY = (
+        (WEEK1, 'Once a week'),
+        (WEEK2, 'Every two weeks'),
+        (WEEK3, 'Every three weeks'),
+        (WEEK4, 'Every four weeks'),
+        (NO_OPINION, 'No opinion'),
+    )
+    blog_frequency = models.CharField(max_length=3, choices=BLOG_FREQUENCY, default=NO_OPINION, verbose_name="How often do you feel Outreachy interns should blog during their 12 week internship?")
+
+    blog_prompts_caused_writing = models.CharField(max_length=3, choices=SURVEY_RESPONSES, default=NO_OPINION, verbose_name="Did the Outreachy blog prompt emails encourage your intern to write about their project?")
+
+    blog_prompts_caused_overhead = models.CharField(max_length=3, choices=SURVEY_RESPONSES, default=NO_OPINION, verbose_name="Did the Outreachy blog prompts take too much time away from your intern's project work?")
+
+    recommend_blog_prompts = models.CharField(max_length=3, choices=SURVEY_RESPONSES, default=NO_OPINION, verbose_name="Should Outreachy organizers provide blog post prompt emails next round?")
+
+    zulip_caused_intern_discussion = models.CharField(max_length=3, choices=SURVEY_RESPONSES, default=NO_OPINION, verbose_name="Did the Outreachy Zulip chat encourage your intern to communicate more?")
+
+    zulip_caused_mentor_discussion = models.CharField(max_length=3, choices=SURVEY_RESPONSES, default=NO_OPINION, verbose_name="Did the Outreachy Zulip chat encourage you to communicate more?")
+
+    recommend_zulip = models.CharField(max_length=3, choices=SURVEY_RESPONSES, default=NO_OPINION, verbose_name="Should Outreachy organizers provide the Zulip chat next round?")
+
+    feedback_for_organizers = models.TextField(verbose_name="Please provide Outreachy organizers any additional feedback.")
+
+    def can_edit(self):
+        if not self.allow_edits:
+            return False
+
+        if has_deadline_passed(self.intern_selection.final_feedback_opens):
+            return True
+        return False
+
+    def clean(self):
+        if self.request_extension:
+            if self.extension_date is None:
+                raise ValidationError({'extension_date': "If you're requesting an extension, this field is required."})
+            else:
+                # should not be more than five weeks from the internship end date in the RoundPage
+                base = self.intern_selection.round().internends
+                limit = base + datetime.timedelta(weeks=5)
+                if not (base <= self.extension_date <= limit):
+                    raise ValidationError({'extension_date': "Extension date must be between {} and {}".format(base, limit)})
+
+class FinalInternFeedback(BaseInternFeedback):
+    # XXX - Make sure to change the questions in
+    # home/templates/home/email/final-feedback-instructions.txt
+    # if you change these verbose names.
+    NEVER = '0'
+    MULTIPLE_DAILY = 'U'
+    ONCE_DAILY = 'D'
+    MULTIPLE_WEEKLY = 'M'
+    ONCE_WEEKLY = 'W'
+    EVERY_OTHER_WEEK = 'B'
+    ASKING_FOR_HELP_FREQUENCY_CHOICES = (
+        (NEVER, 'I have not asked for help'),
+        (MULTIPLE_DAILY, 'Multiple times per day'),
+        (ONCE_DAILY, 'Once per day'),
+        (MULTIPLE_WEEKLY, 'Multiple times per week'),
+        (ONCE_WEEKLY, 'Once per week'),
+        (EVERY_OTHER_WEEK, 'Every other week'),
+    )
+    intern_help_requests_frequency = models.CharField(max_length=1, choices=ASKING_FOR_HELP_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often do <b>you</b> ask for your mentor's help?")
+
+    HOURS_1 = '1H'
+    HOURS_3 = '3H'
+    HOURS_6 = '6H'
+    HOURS_12 = '12H'
+    DAYS_1 = '1D'
+    DAYS_2 = '2D'
+    DAYS_4 = '4D'
+    DAYS_6 = '6D'
+    LONGER = '>7D'
+    RESPONSE_TIME_CHOICES = (
+        (HOURS_1, '1 hour'),
+        (HOURS_3, '3 hours'),
+        (HOURS_6, '6 hours'),
+        (HOURS_12, '12 hours'),
+        (DAYS_1, '1 day'),
+        (DAYS_2, '2-3 days'),
+        (DAYS_4, '4-5 days'),
+        (DAYS_6, '6-7 days'),
+        (LONGER, '> 7 days'),
+    )
+    mentor_help_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>your mentor</b> to respond to your requests for help?")
+
+    CONTRIBUTION_FREQUENCY_CHOICES = (
+        (NEVER, 'I have not submitted a contribution'),
+        (ONCE_DAILY, 'Once per day'),
+        (MULTIPLE_WEEKLY, 'Multiple times per week'),
+        (ONCE_WEEKLY, 'Once per week'),
+        (EVERY_OTHER_WEEK, 'Every other week'),
+    )
+    intern_contribution_frequency = models.CharField(max_length=1, choices=CONTRIBUTION_FREQUENCY_CHOICES, default=NEVER, verbose_name="How often do <b>you</b> submit a project contribution?")
+
+    mentor_review_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>your mentor</b> to give feedback on your contributions?")
+
+    intern_contribution_revision_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>you</b> to incorporate your mentor's feedback and resubmit a contribution?")
+
+    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your progress on your project. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.")
+
+    # Survey for Outreachy organizers
+
+    YES = 'YES'
+    NO = 'NO'
+    DUNNO = 'DUN'
+    NO_OPINION = 'NOP'
+    SURVEY_RESPONSES = (
+        (YES, 'Yes'),
+        (NO, 'No'),
+        (DUNNO, "I don't know"),
+        (NO_OPINION, 'No opinion'),
+    )
+    interning_recommended = models.CharField(max_length=3, choices=SURVEY_RESPONSES, default=NO_OPINION, verbose_name="Would you recommend a friend intern with Outreachy?")
+
+    WEEK1 = '1'
+    WEEK2 = '2'
+    WEEK3 = '3'
+    WEEK4 = '4'
+    BLOG_FREQUENCY = (
+        (WEEK1, 'Once a week'),
+        (WEEK2, 'Every two weeks'),
+        (WEEK3, 'Every three weeks'),
+        (WEEK4, 'Every four weeks'),
+        (NO_OPINION, 'No opinion'),
+    )
+    blog_frequency = models.CharField(max_length=3, choices=BLOG_FREQUENCY, default=NO_OPINION, verbose_name="How often do you feel Outreachy interns should blog during their 12 week internship?")
+
+    blog_prompts_caused_writing = models.CharField(max_length=3, choices=SURVEY_RESPONSES, default=NO_OPINION, verbose_name="Did the Outreachy blog prompt emails encourage you to write about your project?")
+
+    blog_prompts_caused_overhead = models.CharField(max_length=3, choices=SURVEY_RESPONSES, default=NO_OPINION, verbose_name="Did the Outreachy blog prompts take too much time away from your project work?")
+
+    recommend_blog_prompts = models.CharField(max_length=3, choices=SURVEY_RESPONSES, default=NO_OPINION, verbose_name="Should Outreachy organizers provide blog post prompt emails next round?")
+
+    zulip_caused_intern_discussion = models.CharField(max_length=3, choices=SURVEY_RESPONSES, default=NO_OPINION, verbose_name="Did the Outreachy Zulip chat encourage you to communicate more?")
+
+    zulip_caused_mentor_discussion = models.CharField(max_length=3, choices=SURVEY_RESPONSES, default=NO_OPINION, verbose_name="Did the Outreachy Zulip chat encourage your mentor to communicate more?")
+
+    recommend_zulip = models.CharField(max_length=3, choices=SURVEY_RESPONSES, default=NO_OPINION, verbose_name="Should Outreachy organizers provide the Zulip chat next round?")
+
+    tech_industry_prep = models.CharField(max_length=3, choices=SURVEY_RESPONSES, default=NO_OPINION, verbose_name="Do you feel better prepared to work in the technology industry after your Outreachy internship?")
+
+    foss_confidence = models.CharField(max_length=3, choices=SURVEY_RESPONSES, default=NO_OPINION, verbose_name="Do you feel more confident about contributing to free and open source software after your Outreachy internship?")
+
+    feedback_for_organizers = models.TextField(verbose_name="Please provide Outreachy organizers any additional feedback.")
+
+    def can_edit(self):
+        if not self.allow_edits:
+            return False
+
+        if has_deadline_passed(self.intern_selection.final_feedback_opens):
             return True
         return False
 

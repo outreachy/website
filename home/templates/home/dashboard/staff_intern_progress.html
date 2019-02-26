@@ -5,7 +5,7 @@
 <ul>
 	<li><p>{{ current_round.initialfeedback }} - Initial feedback is due. <a href="{% url 'initial-feedback-summary' round_slug=current_round.slug %}"><button class="btn btn-secondary">View Initial Feedback</button></a> <a href="{% url 'initial-feedback-export' round_slug=current_round.slug %}"><button class="btn btn-success">Export Initial Feedback</button></a></p></li>
 	<li><p>{{ current_round.midfeedback }} - Mid-point feedback is due. <a href="{% url 'midpoint-feedback-summary' round_slug=current_round.slug %}"><button class="btn btn-secondary">View Midpoint Feedback</button></a> <a href="{% url 'midpoint-feedback-export' round_slug=current_round.slug %}"><button class="btn btn-success">Export Midpoint Feedback</button></a></p></li>
-	<li><p>{{ current_round.finalfeedback }} - Final feedback is due</p></li>
+	<li><p>{{ current_round.finalfeedback }} - Final feedback is due. <a href="{% url 'final-feedback-summary' round_slug=current_round.slug %}"><button class="btn btn-secondary">View Final Feedback</button></a> <a href="{% url 'final-feedback-export' round_slug=current_round.slug %}"><button class="btn btn-success">Export Final Feedback</button></a></p></li>
 </ul>
 {% with interns=current_round.get_approved_intern_selections %}
 	<table class="table table-striped table-bordered">
@@ -35,8 +35,12 @@
 				<td>
 					{% include 'home/snippet/intern-feedback-status.html' with intern_status=intern.get_intern_midpoint_feedback_status %}
 				</td>
-				<td></td>
-				<td></td>
+				<td>
+					{% include 'home/snippet/mentor-feedback-status.html' with mentor_status=intern.get_mentor_final_feedback_status extension_date=intern.finalmentorfeedback.extension_date %}
+				</td>
+				<td>
+					{% include 'home/snippet/intern-feedback-status.html' with intern_status=intern.get_intern_final_feedback_status %}
+				</td>
 			</tr>
 			{% if intern.intern_has_custom_dates %}
 				<tr>
@@ -45,8 +49,8 @@
 					<td>initial feedback due: {{ intern.initial_feedback_due }}</td>
 					<td>mid-point feedback opens: {{ intern.midpoint_feedback_opens }}</td>
 					<td>mid-point feedback due: {{ intern.midpoint_feedback_due }}</td>
-					<td></td>
-					<td></td>
+					<td>final feedback opens: {{ intern.final_feedback_opens }}</td>
+					<td>final feedback due: {{ intern.final_feedback_due }}</td>
 				</tr>
 			{% endif %}
 		{% endfor %}

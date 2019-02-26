@@ -59,6 +59,9 @@
 		{% if internship.is_midpoint_feedback_on_mentor_open %}
 			<p><a href="{% url 'midpoint-intern-feedback' %}"><button type="button" class="btn btn-info">Submit Midpoint Feedback</button></a></p>
 		{% endif %}
+		{% if internship.is_final_feedback_on_mentor_open %}
+			<p><a href="{% url 'final-intern-feedback' %}"><button type="button" class="btn btn-info">Submit Final Feedback</button></a></p>
+		{% endif %}
 		<p>Feedback and payment status:</p>
 		<ul>
 			{% if internship.initialinternfeedback %}
@@ -85,14 +88,28 @@
 			{% if internship.midpointmentorfeedback.organizer_payment_approved %}
 				<li>The Outreachy organizers have requested that the Software Freedom Conservancy pay your midpoint stipend.</li>
 			{% endif %}
+			{% if internship.finalinternfeedback %}
+				<li>Your final feedback was submitted.</li>
+			{% endif %}
+			{% if internship.finalmentorfeedback %}
+				<li>Your mentor most recently submitted final feedback on {{ internship.finalmentorfeedback.find_version_mentor_edited.revision.date_created }}</li>
+			{% endif %}
+			{% if not internship.finalinternfeedback and not internship.finalmentorfeedback %}
+				<li>Neither you nor your mentor have submitted final feedback.</li>
+			{% endif %}
+			{% if internship.finalmentorfeedback.organizer_payment_approved %}
+				<li>The Outreachy organizers have requested that the Software Freedom Conservancy pay your final stipend.</li>
+			{% endif %}
 		</ul>
 
 		<p>Dates for you to give feedback on your mentor:
 		<ul>
 			<li>{{ internship.initial_feedback_opens }} 4pm UTC - Initial feedback forms open</li>
 			<li>{{ internship.initial_feedback_due }} 4pm UTC - Initial feedback is due</li>
-			<li>{{ my_round.midfeedback }} - Mid-point feedback is due</li>
-			<li>{{ my_round.finalfeedback }} - Final feedback is due</li>
+			<li>{{ internship.midpoint_feedback_opens }} 4pm UTC - Mid-point feedback forms open</li>
+			<li>{{ internship.midpoint_feedback_due }} - Mid-point feedback is due</li>
+			<li>{{ internship.final_feedback_opens }} 4pm UTC - Final feedback forms open</li>
+			<li>{{ internship.final_feedback_due }} - Final feedback is due</li>
 		</ul>
 		</p>
 		<p>You can <a href="{% url 'contact-organizers' %}">contact Outreachy organizers</a> at any time to give informal feedback or ask for additional help.</p>

@@ -59,6 +59,8 @@ round_patterns = [
     url(r'^initial-feedback-summary/$', views.initial_feedback_summary, name='initial-feedback-summary'),
     url(r'^midpoint-feedback-export/$', views.midpoint_mentor_feedback_export_view, name='midpoint-feedback-export'),
     url(r'^midpoint-feedback-summary/$', views.midpoint_feedback_summary, name='midpoint-feedback-summary'),
+    url(r'^final-feedback-export/$', views.final_mentor_feedback_export_view, name='final-feedback-export'),
+    url(r'^final-feedback-summary/$', views.final_feedback_summary, name='final-feedback-summary'),
     url(r'^email/application-deadline-review/$', views.MentorCheckDeadlinesReminder.as_view(), name='email-deadline-review'),
     url(r'^email/application-period-ended/$', views.ContributorsApplicationPeriodEndedReminder.as_view(), name='email-application-period-ended'),
     url(r'^email/application-deadline-reminder/$', views.ApplicantsDeadlinesReminder.as_view(), name='email-deadline-reminder'),
@@ -70,6 +72,7 @@ round_patterns = [
     url(r'^email/internship-week-(?P<week>[^/]+)/$', views.InternWeek.as_view(), name='email-internship-week'),
     url(r'^email/initial-feedback-instructions/$', views.InitialFeedbackInstructions.as_view(), name='email-initial-feedback-instructions'),
     url(r'^email/midpoint-feedback-instructions/$', views.MidpointFeedbackInstructions.as_view(), name='email-midpoint-feedback-instructions'),
+    url(r'^email/final-feedback-instructions/$', views.FinalFeedbackInstructions.as_view(), name='email-final-feedback-instructions'),
 ]
 
 urlpatterns = [
@@ -96,6 +99,8 @@ urlpatterns = [
     url(r'^dashboard/feedback/intern/initial/$', views.InitialInternFeedbackUpdate.as_view(), name='initial-intern-feedback'),
     url(r'^dashboard/feedback/mentor/midpoint/(?P<username>[^/]+)/$', views.MidpointMentorFeedbackUpdate.as_view(), name='midpoint-mentor-feedback'),
     url(r'^dashboard/feedback/intern/midpoint/$', views.MidpointInternFeedbackUpdate.as_view(), name='midpoint-intern-feedback'),
+    url(r'^dashboard/feedback/mentor/final/(?P<username>[^/]+)/$', views.FinalMentorFeedbackUpdate.as_view(), name='final-mentor-feedback'),
+    url(r'^dashboard/feedback/intern/final/$', views.FinalInternFeedbackUpdate.as_view(), name='final-intern-feedback'),
     url(r'^dashboard/trusted-volunteers/$', views.TrustedVolunteersListView.as_view(), name='trusted-volunteers-list'),
     url(r'^eligibility/$', views.EligibilityUpdateView.as_view(), name='eligibility'),
     url(r'^eligibility/essay-revision/(?P<applicant_username>[^/]+)/$', views.BarriersToParticipationUpdate.as_view(), name='essay-revision'),

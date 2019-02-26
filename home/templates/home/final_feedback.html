@@ -1,0 +1,85 @@
+{% extends "base.html" %} 
+{% load approval_status %}
+
+{% block title %}
+Final Feedback for current_round.official_name
+{% endblock %}
+
+{% block content %}
+{% if request.user.is_staff %}
+	{% with interns=current_round.get_approved_intern_selections %}
+		{% for i in interns %}
+			<h2>{{ i.community_name }} - {{ i.intern_name }}</h2>
+
+			<table class="table table-striped table-bordered">
+				{% with final_mentor_status=i.get_mentor_final_feedback_status final_intern_status=i.get_intern_final_feedback_status %}
+				<thread class="thread-dark">
+				<tr>
+					<th scope="col" class="col-md-1">Feedback from mentor:</th>
+					<th scope="col" class="col-md-1">Feedback from intern:</th>
+					<th scope="col" class="col-md-3">Description</th>
+				</tr>
+				</thread>
+				<tr>
+					<td>
+						{% include 'home/snippet/mentor-feedback-status.html' with intern=i mentor_status=final_mentor_status extension_date=i.finalmentorfeedback.extension_date %}
+					</td>
+					<td>
+						{% include 'home/snippet/intern-feedback-status.html' with intern=i intern_status=final_intern_status %}
+					</td>
+					<td>Feedback status</td>
+				</tr>
+				{% if final_mentor_status == i.TERMINATE %}<tr><td colspan="3">Mentor's stated reasons for termination:<br><p>{{ i.finalmentorfeedback.termination_reason }}</p></td></tr>{% endif %}
+				{% if final_mentor_status != i.MISSING or final_intern_status != i.MISSING %}
+					<tr><td colspan="3"><b>Mentor support</b></td></tr>
+					<tr>
+						<td>{% if i.finalmentorfeedback %}{% if i.finalmentorfeedback.mentor_help_response_time == i.finalmentorfeedback.HOURS_1 or i.finalmentorfeedback.mentor_help_response_time == i.finalmentorfeedback.HOURS_3 or i.finalmentorfeedback.mentor_help_response_time == i.finalmentorfeedback.HOURS_6 %}<button class="btn btn-success">Prompt response</button>{% elif i.finalmentorfeedback.mentor_help_response_time == i.finalmentorfeedback.HOURS_12 or i.finalmentorfeedback.mentor_help_response_time == i.finalmentorfeedback.DAYS_1 %}<button class="btn btn-warning">Delayed response</button>{% else %}<button class="btn btn-danger">Very delayed response</button>{% endif %}<br>{{ i.finalmentorfeedback.get_mentor_help_response_time_display }}{% endif %}</td>
+						<td>{% if i.finalinternfeedback %}{% if i.finalinternfeedback.mentor_help_response_time == i.finalinternfeedback.HOURS_1 or i.finalinternfeedback.mentor_help_response_time == i.finalinternfeedback.HOURS_3 or i.finalinternfeedback.mentor_help_response_time == i.finalinternfeedback.HOURS_6 %}<button class="btn btn-success">Prompt response</button>{% elif i.finalinternfeedback.mentor_help_response_time == i.finalinternfeedback.HOURS_12 or i.finalinternfeedback.mentor_help_response_time == i.finalinternfeedback.DAYS_1 %}<button class="btn btn-warning">Delayed response</button>{% else %}<button class="btn btn-danger">Very delayed response</button>{% endif %}<br>{{ i.finalinternfeedback.get_mentor_help_response_time_display }}{% endif %}</td>
+						<td>How long does it take the mentor to respond to intern requests for help?</td>
+					</tr>
+					<tr>
+						<td>{% if i.finalmentorfeedback %}{% if i.finalmentorfeedback.mentor_review_response_time == i.finalmentorfeedback.HOURS_1 or i.finalmentorfeedback.mentor_review_response_time == i.finalmentorfeedback.HOURS_3 or i.finalmentorfeedback.mentor_review_response_time == i.finalmentorfeedback.HOURS_6 %}<button class="btn btn-success">Prompt response</button>{% elif i.finalmentorfeedback.mentor_review_response_time == i.finalmentorfeedback.HOURS_12 or i.finalmentorfeedback.mentor_review_response_time == i.finalmentorfeedback.DAYS_1 %}<button class="btn btn-warning">Delayed response</button>{% else %}<button class="btn btn-danger">Very delayed response</button>{% endif %}<br>{{ i.finalmentorfeedback.get_mentor_review_response_time_display }}{% endif %}</td>
+						<td>{% if i.finalinternfeedback %}{% if i.finalinternfeedback.mentor_review_response_time == i.finalinternfeedback.HOURS_1 or i.finalinternfeedback.mentor_review_response_time == i.finalinternfeedback.HOURS_3 or i.finalinternfeedback.mentor_review_response_time == i.finalinternfeedback.HOURS_6 %}<button class="btn btn-success">Prompt response</button>{% elif i.finalinternfeedback.mentor_review_response_time == i.finalinternfeedback.HOURS_12 or i.finalinternfeedback.mentor_review_response_time == i.finalinternfeedback.DAYS_1 %}<button class="btn btn-warning">Delayed response</button>{% else %}<button class="btn btn-danger">Very delayed response</button>{% endif %}<br>{{ i.finalinternfeedback.get_mentor_review_response_time_display }}{% endif %}</td>
+						<td>How long does it take the mentor to review and give feedback on their intern's contributions?</td>
+					</tr>
+					{% if final_intern_status == i.SUBMITTED %}<tr><td colspan="3"><p>Intern's report on the support they received from their mentor:</p><p>{{ i.finalinternfeedback.mentor_support|linebreaksbr }}</p></td></tr>{% endif %}
+					<tr><td colspan="3"><b>Intern progress</b></td></tr>
+					<tr>
+						<td>{% if i.finalmentorfeedback %}{% if i.finalmentorfeedback.intern_help_requests_frequency == i.finalmentorfeedback.ONCE_DAILY or i.finalmentorfeedback.intern_help_requests_frequency == i.finalmentorfeedback.MULTIPLE_DAILY %}<button class="btn btn-warning">Frequent requests for help</button>{% elif i.finalmentorfeedback.intern_help_requests_frequency == i.finalmentorfeedback.MULTIPLE_WEEKLY or i.finalmentorfeedback.intern_help_requests_frequency == i.finalmentorfeedback.ONCE_WEEKLY %}<button class="btn btn-success">Asks for help at least weekly</button>{% else %}<button class="btn btn-danger">Infrequently asking for help</button>{% endif %}<br>{{ i.finalmentorfeedback.get_intern_help_requests_frequency_display }}{% endif %}</td>
+						<td>{% if i.finalinternfeedback %}{% if i.finalinternfeedback.intern_help_requests_frequency == i.finalinternfeedback.ONCE_DAILY or i.finalinternfeedback.intern_help_requests_frequency == i.finalinternfeedback.MULTIPLE_DAILY %}<button class="btn btn-warning">Frequent requests for help</button>{% elif i.finalinternfeedback.intern_help_requests_frequency == i.finalinternfeedback.MULTIPLE_WEEKLY or i.finalinternfeedback.intern_help_requests_frequency == i.finalinternfeedback.ONCE_WEEKLY %}<button class="btn btn-success">Asks for help at least weekly</button>{% else %}<button class="btn btn-danger">Infrequently asking for help</button>{% endif %}<br>{{ i.finalinternfeedback.get_intern_help_requests_frequency_display }}{% endif %}</td>
+						<td>How often does the intern ask for help?</td>
+					</tr>
+					<tr>
+						<td>{% if i.finalmentorfeedback %}{% if i.finalmentorfeedback.intern_contribution_frequency == i.finalmentorfeedback.ONCE_DAILY or i.finalmentorfeedback.intern_contribution_frequency == i.finalmentorfeedback.MULTIPLE_WEEKLY or i.finalmentorfeedback.intern_contribution_frequency == i.finalmentorfeedback.ONCE_WEEKLY %}<button class="btn btn-success">Submits weekly contributions</button>{% else %}<button class="btn btn-danger">Infrequently submitting contributions</button>{% endif %}<br>{{ i.finalmentorfeedback.get_intern_contribution_frequency_display }}{% endif %}</td>
+						<td>{% if i.finalinternfeedback %}{% if i.finalinternfeedback.intern_contribution_frequency == i.finalinternfeedback.ONCE_DAILY or i.finalinternfeedback.intern_contribution_frequency == i.finalinternfeedback.MULTIPLE_WEEKLY or i.finalinternfeedback.intern_contribution_frequency == i.finalinternfeedback.ONCE_WEEKLY %}<button class="btn btn-success">Submits weekly contributions</button>{% else %}<button class="btn btn-danger">Infrequently submitting contributions</button>{% endif %}<br>{{ i.finalinternfeedback.get_intern_contribution_frequency_display }}{% endif %}</td>
+						<td>How often does the intern submit a contribution?</td>
+					</tr>
+					<tr>
+						<td>{% if i.finalmentorfeedback %}{% if i.finalmentorfeedback.intern_contribution_revision_time == i.finalmentorfeedback.HOURS_1 or i.finalmentorfeedback.intern_contribution_revision_time == i.finalmentorfeedback.HOURS_3 or i.finalmentorfeedback.intern_contribution_revision_time == i.finalmentorfeedback.HOURS_6 or i.finalmentorfeedback.intern_contribution_revision_time == i.finalmentorfeedback.HOURS_12 or i.finalmentorfeedback.intern_contribution_revision_time == i.finalmentorfeedback.DAYS_1 or i.finalmentorfeedback.intern_contribution_revision_time == i.finalmentorfeedback.DAYS_2 %}<button class="btn btn-success">Prompt revision</button>{% elif i.finalmentorfeedback.intern_contribution_revision_time == i.finalmentorfeedback.DAYS_4 or i.finalmentorfeedback.intern_contribution_revision_time == i.finalmentorfeedback.DAYS_6 %}<button class="btn btn-warning">Delayed revision</button>{% else %}<button class="btn btn-danger">Very delayed revision</button>{% endif %}<br>{{ i.finalmentorfeedback.get_intern_contribution_revision_time_display }}{% endif %}</td>
+						<td>{% if i.finalinternfeedback %}{% if i.finalinternfeedback.intern_contribution_revision_time == i.finalinternfeedback.HOURS_1 or i.finalinternfeedback.intern_contribution_revision_time == i.finalinternfeedback.HOURS_3 or i.finalinternfeedback.intern_contribution_revision_time == i.finalinternfeedback.HOURS_6 or i.finalinternfeedback.intern_contribution_revision_time == i.finalinternfeedback.HOURS_12 or i.finalinternfeedback.intern_contribution_revision_time == i.finalinternfeedback.DAYS_1 or i.finalinternfeedback.intern_contribution_revision_time == i.finalinternfeedback.DAYS_2 %}<button class="btn btn-success">Prompt revision</button>{% elif i.finalinternfeedback.intern_contribution_revision_time == i.finalinternfeedback.DAYS_4 or i.finalinternfeedback.intern_contribution_revision_time == i.finalinternfeedback.DAYS_6 %}<button class="btn btn-warning">Delayed revision</button>{% else %}<button class="btn btn-danger">Very delayed revision</button>{% endif %}<br>{{ i.finalinternfeedback.get_intern_contribution_revision_time_display }}{% endif %}</td>
+						<td>How long does it take the intern to revise a contribution?</td>
+					</tr>
+					<tr>
+						<td>{% if i.finalmentorfeedback %}{% if i.finalmentorfeedback.full_time_effort %}<button class="btn btn-success">Full-time effort</button>{% else %}<button class="btn btn-danger">Not a full-time effort</button>{% endif %}{% endif %}</td>
+						<td>{% if i.finalinternfeedback %}{% if i.finalinternfeedback.hours_worked == i.finalinternfeedback.HOURS_40 or i.finalinternfeedback.hours_worked == i.finalinternfeedback.HOURS_50 or i.finalinternfeedback.hours_worked == i.finalinternfeedback.HOURS_60 %}<button class="btn btn-success">Full-time effort</button>{% else %}<button class="btn btn-danger">Not a full-time effort</button>{% endif %}<br>{{ i.finalinternfeedback.get_hours_worked_display }} per week{% endif %}</td>
+						<td>Is the intern putting in a full-time effort?</td>
+					</tr>
+					<tr>
+						<td>{% if i.finalmentorfeedback %}{{ i.finalmentorfeedback.last_contact }}{% endif %}</td>
+						<td>{% if i.finalinternfeedback %}{{ i.finalinternfeedback.last_contact }}{% endif %}</td>
+						<td>Date intern and mentor were last in contact</td>
+					</tr>
+					<tr>
+						<td>{% if i.finalmentorfeedback %}{{ i.finalmentorfeedback.get_submission_date }}{% endif %}</td>
+						<td>{% if i.finalinternfeedback %}{{ i.finalinternfeedback.get_submission_date }}{% endif %}</td>
+						<td>Date latest feedback was submitted</td>
+					</tr>
+					{% if i.finalmentorfeedback %}<tr><td colspan="3"><p>Mentor's report on the intern's progress:</p><p>{{ i.finalmentorfeedback.progress_report }}</p></td></tr>{% endif %}
+					{% if i.finalinternfeedback %}<tr><td colspan="3"><p>Intern's report on their own progress:</p><p>{{ i.finalinternfeedback.progress_report }}</p></td></tr>{% endif %}
+				{% endif %}
+				{% endwith %}
+			</table>
+		{% endfor %}
+	{% endwith %}
+{% endif %}
+{% endblock %}

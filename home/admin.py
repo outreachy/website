@@ -20,6 +20,8 @@ from .models import Contribution
 from .models import CoordinatorApproval
 from .models import EmploymentTimeCommitment
 from .models import FinalApplication
+from .models import FinalInternFeedback
+from .models import FinalMentorFeedback
 from .models import InternSelection
 from .models import InitialMentorFeedback
 from .models import InitialInternFeedback
@@ -462,6 +464,16 @@ class MidpointInternFeedbackInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Intern submitted midpoint feedback forms'
 
+class FinalMentorFeedbackInline(admin.StackedInline):
+    model = FinalMentorFeedback
+    can_delete = False
+    verbose_name_plural = 'Mentor submitted final feedback forms'
+
+class FinalInternFeedbackInline(admin.StackedInline):
+    model = FinalInternFeedback
+    can_delete = False
+    verbose_name_plural = 'Intern submitted final feedback forms'
+
 class InternSelectionAdmin(reversion.admin.VersionAdmin):
     list_display = (
             'round',
@@ -482,7 +494,7 @@ class InternSelectionAdmin(reversion.admin.VersionAdmin):
             'mentors__mentor__public_name',
             'mentors__mentor__account__email',
             )
-    inlines = (InitialMentorFeedbackInline, InitialInternFeedbackInline, MidpointMentorFeedbackInline, MidpointInternFeedbackInline)
+    inlines = (InitialMentorFeedbackInline, InitialInternFeedbackInline, MidpointMentorFeedbackInline, MidpointInternFeedbackInline, FinalMentorFeedbackInline, FinalInternFeedbackInline)
 
 class FeedbackAdmin(reversion.admin.VersionAdmin):
     list_display = (

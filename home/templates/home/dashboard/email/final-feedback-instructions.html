@@ -1,0 +1,7 @@
+<p>Week 11: Send the email asking for final feedback. You may have to send it multiple times, if some interns have an extension:
+<ul>
+	<li>Send the email after {{ due }}.</li>
+</ul>
+</p>
+
+<p><a href="{% url 'email-final-feedback-instructions' round_slug=current_round.slug %}"><input class="btn btn-success" value="Final Feedback Reminder" /></a>

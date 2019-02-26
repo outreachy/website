@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}
+Final mentor feedback
+{% endblock %}
+
+{% block content %}
+<h1>Feedback on {{ finalmentorfeedback.intern_selection.applicant.applicant.public_name }}</h1>
+
+<p>Outreachy organizers collect intern feedback from mentors three times during the Outreachy internship. Please give yourself at least 5 to 15 minutes to complete this form.</p>
+
+<h2>Instructions</h2>
+
+<p>Only one mentor can submit feedback for one intern. If you are co-mentoring an intern, please talk with your co-mentor to decide what your feedback should be.</p>
+
+<p>Once you submit this form and you mark your intern as being able to be paid, the form cannot be edited. If you ask for an extension for this internship milestone, you will be able to update your answers after the extension is complete.</p>
+
+<h2>Privacy</h2>
+
+<p>Your answers will only be seen by Outreachy organizers and by Software Freedom Conservancy accounting staff. Your intern will be able to see when you submit your feedback to us, but will not be able see what the feedback is. If Outreachy organizers need to discuss your feedback with your intern, we will draft a response with you before contacting your intern.</p>
+
+<h2>Metrics for Success</h2>
+
+<p>The most important metric for success is whether your intern is putting in a full-time, 40 hours a week effort. If an intern isn't putting in a full-time effort, we use the other metrics to come up with a plan to get the intern back on track. We also gather metrics about mentor engagement to ensure success for all Outreachy mentors.</p>
+
+<div class="card border-warning mb-3">
+    <div class="card-header text-white bg-warning">
+        Verify your intern name
+    </div>
+    <div class="card-body">
+        <p class="card-text">
+	<b>{{ finalmentorfeedback.intern_selection.applicant.applicant.public_name }}</b> is the intern you are giving feedback on.
+	If you are mentoring multiple interns, please make sure you're filling out the right final feedback form.
+        </p>
+    </div>
+</div>
+
+<form method="post" action="">
+{% csrf_token %}
+{% for field in form.visible_fields %}
+	{% if 'Should your Outreachy intern be paid' in field.label_tag %}
+		<h2>Intern Payment Authorization</h2>
+	{% endif %}
+	{% if 'Does your intern need an extension' in field.label_tag %}
+		<h2>Internship Extension</h2>
+
+		<p>Outreachy organizers view this internship as a fellowship. Mentors should not expect a certain project to be completed by the intern, but rather expect that the intern's work will be adjusted to the level of their ability, their interests, and the project's priorities throughout the internship. Outreachy organizers prefer not to fail people in the program as long as they are working full-time on the project.</p>
+
+		<p>We will discuss your feedback and the extension with you before we contact your intern. We will come up with a plan of action to get the internship back on track, draft a response to your intern together, and then we will contact your intern.</p>
+
+	{% endif %}
+	{% if 'Do you believe the internship should be terminated' in field.label_tag %}
+		<h2>Internship Termination</h2>
+
+		<p>Outreachy organizers prefer not to terminate an internship unless the intern has been given an extension and is still not putting in a full-time, 40 hours a week effort. Outreachy organizers view this internship as a fellowship. Mentors should not expect a certain project to be completed by the intern, but rather expect that the intern's work will be adjusted to the level of their ability, their interests, and the project's priorities throughout the internship. Outreachy organizers prefer not to fail people in the program as long as they are working full-time on the project.</p>
+
+		<p>We will discuss your request for this internship to be terminated with you before we contact your intern. We will work together to draft a response to your intern.</p>
+
+	{% endif %}
+	{% if 'Would you recommend a friend' in field.label_tag %}
+		<h2>Survey to Help Outreachy Organizers</h2>
+	{% endif %}
+	{% if 'Please provide Outreachy organizers any additional feedback' in field.label_tag %}
+		<h2>Feedback for Outreachy Organizers</h2>
+		<p>Please provide feedback for Outreachy organizers about the internship processes. If you wish to submit feedback in a more anonymous manner, you can <a href="{% url 'contact-organizers' %}">use the organizer contact form</a> and fill in your name as 'feedback', your email address as &lt;feedback@outreachy.org&gt;, and the subject as 'Anonymous Feedback'.</p>
+	{% endif %}
+	{% if 'How often' in field.label_tag or 'How long' in field.label_tag %}
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class = "card-header">
+				<label for="{{ field.id_for_label }}">{{ field.label|safe }}</label>
+			</div>
+			<div class = "card-body">
+				{{ field }}
+			</div>
+			{% if field.help_text %}
+				<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+			{% endif %}
+		</div>
+	{% else %}
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class = "card-header">
+				{{ field.label_tag }}
+			</div>
+			<div class = "card-body">
+				{{ field }}
+			</div>
+			{% if field.help_text %}
+				<div class="card-footer bg-white">{{ field.help_text }}</div>
+			{% endif %}
+		</div>
+	{% endif %} 
+{% endfor %}
+{% for hidden in form.hidden_fields %}
+	{{ hidden }}
+{% endfor %}
+<div class="card border-warning mb-3">
+    <div class="card-header text-white bg-warning">
+        Verify your intern name
+    </div>
+    <div class="card-body">
+        <p class="card-text">
+	<b>{{ finalmentorfeedback.intern_selection.applicant.applicant.public_name }}</b> is the intern you are giving feedback on.
+	If you are mentoring multiple interns, please make sure you're filling out the right final feedback form.
+        </p>
+    </div>
+</div>
+<input type="submit" class="btn btn-block btn-primary" value="Submit feedback" />
+</form>
+
+{% endblock %}

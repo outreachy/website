@@ -195,6 +195,7 @@ all_round_events = (
     ('internstarts', datetime.timedelta(weeks=4), 'internship-week-five'),
     ('internstarts', datetime.timedelta(weeks=6), 'internship-week-seven'),
     ('midfeedback', datetime.timedelta(weeks=-1), 'midpoint-feedback-instructions', datetime.timedelta(weeks=5)),
+    ('finalfeedback', datetime.timedelta(weeks=-1), 'final-feedback-instructions', datetime.timedelta(weeks=5)),
 )
 
 def round_events(request):
