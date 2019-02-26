@@ -640,8 +640,6 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 ),
             )),
         ]
-    # TODO: override get method to redirect to results page if the person
-    # has filled out an application
     TEMPLATES = {
             'Work Eligibility': 'home/eligibility_wizard_general.html',
             'Payment Eligibility': 'home/eligibility_wizard_tax_forms.html',
@@ -662,20 +660,42 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
     def get_template_names(self):
         return [self.TEMPLATES[self.steps.current]]
 
-    def get_current_round(self):
-        return get_current_round_for_initial_application()
+    def show_results_if_any(self):
+        # get_context_data() and done() both need a round; save it for them.
+        self.current_round = get_current_round_for_initial_application()
+
+        already_submitted = ApplicantApproval.objects.filter(
+            applicant=self.request.user.comrade,
+            application_round=self.current_round,
+        ).exists()
+
+        if not already_submitted:
+            # Continue with the default get or post behavior.
+            return None
+
+        return redirect(self.request.GET.get('next', reverse('eligibility-results')))
+
+    def get(self, *args, **kwargs):
+        # Using `or` this way returns the redirect from show_results_if_any,
+        # unless that function returns None. Only in that case does it call the
+        # superclass implementation of this method and return _that_.
+        return self.show_results_if_any() or super(EligibilityUpdateView, self).get(*args, **kwargs)
+
+    def post(self, *args, **kwargs):
+        # See self.get(), above.
+        return self.show_results_if_any() or super(EligibilityUpdateView, self).post(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(EligibilityUpdateView, self).get_context_data(**kwargs)
-        context['current_round'] = self.get_current_round()
+        context['current_round'] = self.current_round
         return context
 
     def done(self, form_list, **kwargs):
 
         self.object = ApplicantApproval(
-                    applicant=self.request.user.comrade,
-                    application_round=self.get_current_round(),
-                )
+            applicant=self.request.user.comrade,
+            application_round=self.current_round,
+        )
         self.object.ip_address = self.request.META.get('REMOTE_ADDR')
 
         # It's okay that the other objects aren't saved,
