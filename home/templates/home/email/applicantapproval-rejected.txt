@@ -3,7 +3,7 @@ Your Outreachy initial application status
 
 Hi {{ recipient.display_name }},
 
-{% if reason == 'TIME' %}After reviewing your time commitments, we have determined you do not have 49 consecutive days free from full-time commitments, and thus are not eligible for this round of Outreachy internships.
+{% if reason == 'TIME' %}After reviewing your time commitments, we have determined you do not have 49 consecutive days free from full-time commitments, and thus are not eligible for this round of Outreachy internships. Applicants are also not eligible if they have a technical part-time job during the Outreachy internship, or they have already been accepted for another full-time technical job.
 
 We encourage you to apply another round! You can sign up for the announcements mailing list to get an email when the application period opens for the next round:
 

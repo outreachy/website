@@ -75,12 +75,14 @@ Outreachy eligibility results
 
 	<p>After reviewing your time commitments, we have determined you do not
 	meet our minimum free time criteria.</p>
-
 	{% if school_time_commitments %}
 		<p>{% include 'home/snippet/student_hemisphere.html' %}</p>
 	{% else %}
 		<p>All applicants must have 49 consecutive days free from
-		full-time commitments to be eligible.</p>
+		full-time commitments to be eligible. Applicants are also not
+		eligible if they have a technical part-time job during the
+		Outreachy internship, or they have already been accepted for
+		another full-time technical job.</p>
 	{% endif %}
 
 	<p>
