@@ -51,6 +51,12 @@ from .models import WorkEligibility
 class ComradeInline(admin.StackedInline):
     model = Comrade
     can_delete = False
+    readonly_fields = (
+        'primary_language',
+        'second_language',
+        'third_language',
+        'fourth_language',
+    )
     verbose_name_plural = 'comrade'
 
 class ComradeAdmin(UserAdmin):
@@ -245,80 +251,102 @@ class ApplicationReviewerAdmin(reversion.admin.VersionAdmin):
 class WorkEligibilityInline(admin.StackedInline):
     model = WorkEligibility
     can_delete = False
+    extra = 1
     verbose_name_plural = 'Work Eligibility'
 
 class PaymentEligibilityInline(admin.StackedInline):
     model = PaymentEligibility
     can_delete = False
+    extra = 1
     verbose_name_plural = 'Payment Eligibility'
 
 class ApplicantGenderIdentityInline(admin.StackedInline):
     model = ApplicantGenderIdentity
     can_delete = False
+    extra = 1
     verbose_name_plural = 'Gender Identity'
 
 class ApplicantRaceEthnicityInformationInline(admin.StackedInline):
     model = ApplicantRaceEthnicityInformation
     can_delete = False
+    extra = 1
     verbose_name_plural = 'Race and Ethnicity'
 
 class BarriersToParticipationInline(admin.StackedInline):
     model = BarriersToParticipation
     can_delete = False
+    extra = 1
     verbose_name_plural = 'Barriers to Participation'
 
 class PriorFOSSExperienceInline(admin.StackedInline):
     model = PriorFOSSExperience
     can_delete = False
+    extra = 1
     verbose_name_plural = 'Prior FOSS Experience'
 
 class TimeCommitmentSummaryInline(admin.StackedInline):
     model = TimeCommitmentSummary
     can_delete = False
+    extra = 1
 
 class SchoolInformationInline(admin.StackedInline):
     model = SchoolInformation
     can_delete = False
+    extra = 1
     verbose_name_plural = 'School information'
 
 class SchoolTimeCommitmentsInline(admin.StackedInline):
     model = SchoolTimeCommitment
     can_delete = False
+    extra = 1
     verbose_name_plural = 'School term'
 
 class NonCollegeSchoolTimeCommitmentsInline(admin.StackedInline):
     model = NonCollegeSchoolTimeCommitment
     can_delete = False
+    extra = 1
     verbose_name_plural = 'Coding school or online courses'
 
 class EmploymentTimeCommitmentsInline(admin.StackedInline):
     model = EmploymentTimeCommitment
     can_delete = False
+    extra = 1
     verbose_name_plural = 'Employment period'
 
 class ContractorInformationInline(admin.StackedInline):
     model = ContractorInformation
     can_delete = False
+    extra = 1
     verbose_name_plural = 'Contractor Information'
 
 class VolunteerTimeCommitmentsInline(admin.StackedInline):
     model = VolunteerTimeCommitment
     can_delete = False
+    extra = 1
     verbose_name_plural = 'Time commitment'
 
 class ContributionsInline(admin.StackedInline):
     model = Contribution
     can_delete = True
+    extra = 1
     verbose_name_plural = 'Project contributions'
+    raw_id_fields = (
+        'project',
+    )
 
 class ApplicationsInline(admin.StackedInline):
     model = FinalApplication
     can_delete = True
+    extra = 1
     verbose_name_plural = 'Project application'
+    raw_id_fields = (
+        'project',
+    )
 
 class PromotionTrackingInline(admin.StackedInline):
     model = PromotionTracking
     can_delete = False
+    extra = 1
     verbose_name_plural = 'Promotion tracking'
 
 class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
@@ -338,6 +366,13 @@ class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
             '=applicant__account__username',
             '=applicant__account__email',
             )
+
+    readonly_fields = (
+        'applicant',
+        'application_round',
+        'ip_address',
+    )
+
     inlines = (WorkEligibilityInline, PaymentEligibilityInline, ApplicantGenderIdentityInline, ApplicantRaceEthnicityInformationInline, PriorFOSSExperienceInline, BarriersToParticipationInline, TimeCommitmentSummaryInline, SchoolInformationInline, SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, ContractorInformationInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline, PromotionTrackingInline)
 
     def round(self, obj):
