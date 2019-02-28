@@ -51,6 +51,7 @@ Outreachy Internships | Apply | Pick a Project
 <ul>
 	<li><a href="/apply/#how-to-apply">Outreachy's application process</a></li>
 	<li><a href="/blog/outreachy-interns-talk-about-application-process/">December 2018 Outreachy interns talk about the application process</a></li>
+	<li><a href="/alums/">Read past Outreachy intern's blogs</a></li>
 	<li><a href="https://medium.freecodecamp.org/get-the-most-out-of-your-outreachy-application-process-937d4a8ab4bf">Get the most out of your Outreachy intern application process</a></li>
 	<li><a href="https://medium.freecodecamp.org/outreachy-what-how-why-4fb60d10a228">How I got into the Outreachy open source internship program</a></li>
 	<li><a href="https://blog.ihsavru.me/node/9">Application tips from an Outreachy intern who just completed their internship</a></li>
@@ -60,7 +61,17 @@ Outreachy Internships | Apply | Pick a Project
 </ul>
 </p>
 
-{% if previous_round %}
+<p>Outreachy recommends the following resources for learning about contributing to free and open source software projects:
+<ul>
+	<li><a href="https://opensource.com/resources/what-open-source">"What is open source?"</a> an article by opensource.com</li>
+	<li><a href="https://pragprog.com/book/vbopens/forge-your-future-with-open-source">"Forge Your Future With Open Source"</a>, an introduction book for newcomers</li>
+	<li><a href="https://lab.github.com/">GitHub Lab</a>, a free resource for learning git</li>
+	<li><a href="https://www.freecodecamp.org/">FreeCodeCamp</a>, a free resource for learning programming skills</li>
+	<li><a href="https://up-for-grabs.net">Up for Grabs</a> (unaffiliated with Outreachy) - find projects to volunteer your time with</li>
+</ul>
+</p>
+
+{% if previous_round and not current_round.has_application_period_started %}
 	<p>You may want to brush up on your skills for contributing to free and open source software communities. Each project will use a different set of skills, and some mentors may be willing to teach you skills. Projects and the skills they use change each round. The most common skills used in projects last round were:
 	<ul>
 		{% for common_skill in previous_round.get_common_skills %}
@@ -70,7 +81,6 @@ Outreachy Internships | Apply | Pick a Project
 	</p>
 {% endif %}
 
-<p>You may also want to purchase a DRM-free copy of <a href="https://pragprog.com/book/vbopens/forge-your-future-with-open-source">"Forge Your Future With Open Source"</a> by VM (Vicky) Brasseur.</p>
 {% if current_round and not current_round.has_application_period_started %}
 	<h1>Projects will be listed soon!</h1>
 	<p>The list of Outreachy projects for the {{ current_round.official_name }} will be available to applicants on {{ current_round.appsopen }}.</p>
@@ -182,6 +192,20 @@ Outreachy Internships | Apply | Pick a Project
 	{% else %}
 		<h2 id="open-projects">Past Outreachy Projects</h2>
 	{% endif %}
+	{% if current_round.has_application_period_started %}
+		<p>Outreachy is offering internship projects in the following areas:
+		<ul>
+			{% for common_skill in current_round.get_common_skills %}
+			{% if common_skill.1 > 2 %}<li>{{ common_skill.0 }} - {{ common_skill.1 }} project{{ common_skill.1|pluralize }}</li>{% endif %}
+			{% endfor %}
+			<li>{% for common_skill in current_round.get_common_skills %}
+				{% if common_skill.1 <= 2 %}{{ common_skill.0 }}, {% endif %}
+				{% endfor %}
+			</li>
+		</ul>
+		</p>
+	{% endif %}
+
 
 	<p>Each project mentor looks for applicants who have
 	different skills. Sometimes a skill is a hard requirement for
