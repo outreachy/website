@@ -2166,7 +2166,7 @@ class ApplicantApproval(ApprovalStatus):
             pass
 
         if self.approval_status == self.PENDING:
-            return 'Essay questions need review'
+            return 'Essay review'
 
         return 'Unknown'
 
