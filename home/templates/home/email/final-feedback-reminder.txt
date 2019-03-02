@@ -1,0 +1,13 @@
+[URGENT] Mentor feedback required for final payment to {{ intern_selection.applicant.applicant.public_name }}
+
+Please provide feedback on your intern through the Outreachy website. Their final feedback was due on {{ intern_selection.final_feedback_due|date:"M d, Y" }}. Their final ${{ current_round.finalpayment }} payment will be delayed until you provide feedback:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}#feedback
+
+See instructions below for more information. If you are mentoring more than one intern, you may need to scroll further down your dashboard to find their feedback button.
+
+Outreachy Organizers
+
+---
+
+{% include 'home/email/final-feedback-instructions.txt' %}
