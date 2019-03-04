@@ -73,7 +73,15 @@ This community requires applicants to complete a tutorial before they can make t
 				{% with url_parsed=channel.url_parsed %}
 				{% if url_parsed.scheme == 'irc' %}
 					{% if url_parsed.netloc == 'freenode.net' or url_parsed.netloc == 'irc.freenode.net' or url_parsed.netloc == 'freenode.org' or url_parsed.netloc == 'irc.freenode.org' %}
-						<a href="https://webchat.freenode.net/?channels={{ url_parsed.fragment }}" target="_blank">Follow this link</a> to join this project's public chat.
+						{% comment %}
+							If someone puts a # for the channel, it shows up as a fragment. If they don't, it shows up as a path.
+							The web services work whether you put a # in front of the channel or not.
+						{% endcomment %}
+						{% if url_parsed.path %}
+							<a href="https://webchat.freenode.net/?channels={{ url_parsed.path|slice:"1:" }}" target="_blank">Follow this link</a> to join this project's public chat.
+						{% else %}
+							<a href="https://webchat.freenode.net/?channels={{ url_parsed.fragment }}" target="_blank">Follow this link</a> to join this project's public chat.
+						{% endif %}
 					{% elif url_parsed.netloc == 'oftc.net' or url_parsed.netloc == 'irc.oftc.net' or url_parsed.netloc == 'irc.debian.org' %}
 						<a href="https://webchat.oftc.net/?channels={{ url_parsed.fragment }}" target="_blank">Follow this link</a> to join this project's public chat.
 					{% else %}
