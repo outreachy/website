@@ -2189,7 +2189,7 @@ class ApplicantApproval(ApprovalStatus):
     def get_time_commitments(self):
         current_round = self.application_round
         noncollege_school_time_commitments = NonCollegeSchoolTimeCommitment.objects.filter(applicant=self)
-        school_time_commitments = SchoolTimeCommitment.objects.filter(applicant=self)
+        school_time_commitments = SchoolTimeCommitment.objects.filter(applicant=self).order_by('start_date')
         volunteer_time_commitments = VolunteerTimeCommitment.objects.filter(applicant=self)
         employment_time_commitments = EmploymentTimeCommitment.objects.filter(applicant=self)
         tcs = [ self.time_commitment_from_model(d, d.hours_per_week)
