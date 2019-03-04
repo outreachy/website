@@ -73,9 +73,9 @@ This community requires applicants to complete a tutorial before they can make t
 				{% with url_parsed=channel.url_parsed %}
 				{% if url_parsed.scheme == 'irc' %}
 					{% if url_parsed.netloc == 'freenode.net' or url_parsed.netloc == 'irc.freenode.net' or url_parsed.netloc == 'freenode.org' or url_parsed.netloc == 'irc.freenode.org' %}
-						<a href="https://webchat.freenode.net/?channels={{ url_parsed.path|slice:"1:" }}" target="_blank">Follow this link</a> to join this project's public chat.
+						<a href="https://webchat.freenode.net/?channels={{ url_parsed.path }}" target="_blank">Follow this link</a> to join this project's public chat.
 					{% elif url_parsed.netloc == 'oftc.net' or url_parsed.netloc == 'irc.oftc.net' or url_parsed.netloc == 'irc.debian.org' %}
-						<a href="https://webchat.oftc.net/?channels={{ url_parsed.path|slice:"1:" }}" target="_blank">Follow this link</a> to join this project's public chat.
+						<a href="https://webchat.oftc.net/?channels={{ url_parsed.path }}" target="_blank">Follow this link</a> to join this project's public chat.
 					{% else %}
 						<a href="https://kiwiirc.com/nextclient/{{ url_parsed.netloc }}{{ url_parsed.path }}" target="_blank">Follow this link</a> to join this project's public chat.
 					{% endif %}
