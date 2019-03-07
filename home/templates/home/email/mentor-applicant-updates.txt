@@ -3,13 +3,24 @@
 {% with contributors=project.get_applicants_and_contributions_list %}
 {% with applicants=project.get_applications %}
 {% with coordinators=community.get_coordinator_email_list %}
-Review Outreachy applicants and application deadlines
+Too many Outreachy applicants? Too few? We can help!
 
 Hi Outreachy mentor,
 
-As the Outreachy application deadline approaches on {{ current_round.appsclose }}, mentors need to review whether their project could benefit from more promotion, an extended deadline, or closing the project to new applicants. You may receive this email for multiple projects you are mentoring for.
+We want to make sure that all Outreachy applicants get a chance to make a contribution. If you're currently working with too many strong applicants, we want you to close your project to new applicants. The option is at the bottom of this page, in the "Project Deadline and Advertisement" section:
 
-{{ community.name }} project "{{ project.short_title }}"
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_submit_url }}
+
+Closing your project to new applicants simply changes how the project is displayed on the projects list. Your project will be moved to a section at the end called "Closed Projects". Any applicant can still record contributions and create final applications for your project until {{ current_round.appsclose }}.
+
+If you have too few applicants, you can mark your project as needing more applicants. You can also choose to extend your project deadline until {{ current_round.appslate }}. The option is at the bottom of this page, in the "Project Deadline and Advertisement" section:
+
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_submit_url }}
+
+Your Project Applicants
+-----------------------
+
+You may receive this email for multiple projects you are mentoring for. This email is for the {{ community.name }} project "{{ project.short_title }}".
 
 {% if project.approval_status == project.PENDING %}Your coordinator has not yet approved your project for this round, and it is not yet listed on the applicant project selection page.{% else %}{{ contributors|length }} applicant{{ contributors|pluralize:" has,s have" }} recorded their contributions to your project{% if contributors|length > 0 %}: {% for c in contributors %}{{ c.applicant.public_name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}.
 
