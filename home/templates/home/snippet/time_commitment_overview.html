@@ -8,7 +8,7 @@
 					<li>Applicant has {{ tcs.longest_period_free }} consecutive days free from full-time commitments during the internship period.</li>
 					<li>Applicants are required to have at least 49 consecutive days free from full-time commitments.</li>
 					<li>The internship period is {{ tcs.internship_total_days.days }} days long.</li>
-					<li>Applicant is free from {{ tcs.free_period_start_date|date:"Y-m-d" }} to {{ tcs.free_period_end_date|date:"Y-m-d" }}.</li>
+					<li>Applicant is free from {{ tcs.free_period_start_date }} to {{ tcs.free_period_end_date }}.</li>
 				</ul>
 				<h3>Details</h3>
 				{% with tcs=application.get_time_commitments applicant=application.applicant final_application=applicant_contributions.0.get_application %}
@@ -33,7 +33,7 @@
 							</div>
 							<div class="row">
 								<div class="col">
-									<p>School terms during the internship ({{ current_round.internstarts|date:"Y-m-d" }} to {{ current_round.internends|date:"Y-m-d" }}):</p>
+									<p>School terms during the internship ({{ current_round.internstarts }} to {{ current_round.internends }}):</p>
 									<ul>
 										{% for term in tcs.school_time_commitments %}
 											<li>Term name/number: {{ term.term_name }}</li>
@@ -57,7 +57,7 @@
 											<li><a href="{{ term.school.university_website}}">{{ term.school.university_name}}</a></li>
 											<ul>
 												<li>{% if term.academic_calendar %}<a href="{{ term.academic_calendar }}">{% endif %}{{ term.term_name }}{% if term.academic_calendar %}</a>{% endif %}</li>
-												<li>{{ term.start_date|date:"Y-m-d" }} to {{ term.end_date|date:"Y-m-d" }}</li>
+												<li>{{ term.start_date }} to {{ term.end_date }}</li>
 											</ul>
 											{% endfor %}
 											{% if not terms %}
@@ -79,7 +79,7 @@
 						{% for course in tcs.noncollege_school_time_commitments %}
 							<li>Course #{{ forloop.counter }}</li>
 							<ul>
-								<li>{{ course.hours_per_week }} hours per week from {{ course.start_date|date:"Y-m-d" }} to {{ course.end_date|date:"Y-m-d" }}.</li>
+								<li>{{ course.hours_per_week }} hours per week from {{ course.start_date }} to {{ course.end_date }}.</li>
 								<li>Description of course work and organization offering courses: {{ course.description }}</li>
 								{% if course.quit_on_acceptance %}<li>Applicant has indicated they will quit this coding school or stop their online courses if they are accepted as an Outreachy intern.</li>{% endif %}
 							</ul>
@@ -91,7 +91,7 @@
 						<ul>
 						{% for period in tcs.employment_time_commitments %}
 							<li>{{ period.job_title }}</li>
-							<li>{{ period.hours_per_week }} hours per week from {{ period.start_date|date:"Y-m-d" }} to {{ period.end_date|date:"Y-m-d" }}.</li>
+							<li>{{ period.hours_per_week }} hours per week from {{ period.start_date }} to {{ period.end_date }}.</li>
 							{% if period.quit_on_acceptance %}<li>Applicant has indicated they will quit this job if they are accepted as an Outreachy intern.</li>{% endif %}
 							<li>Job description: {{ period.job_description|linebreaksbr }}</li>
 						{% endfor %}
@@ -101,7 +101,7 @@
 						<p>Volunteer time commitments:</p>
 						<ul>
 						{% for period in tcs.volunteer_time_commitments %}
-							<li>{{ period.hours_per_week }} hours per week from {{ period.start_date|date:"Y-m-d" }} to {{ period.end_date|date:"Y-m-d" }}.</li>
+							<li>{{ period.hours_per_week }} hours per week from {{ period.start_date }} to {{ period.end_date }}.</li>
 							<li>Description of volunteer commitments: {{ period.description }}</li>
 						{% endfor %}
 						</ul>
