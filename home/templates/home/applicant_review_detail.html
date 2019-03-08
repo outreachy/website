@@ -79,7 +79,7 @@
 	{% if application.schoolinformation %}
 		<li><span class="badge badge-warning">Warning</span> This is a student from {% include 'home/snippet/applicant_location.html' %}.</li>
 		{% with stats=application.schoolinformation.classmate_statistics %}
-		<li>Classmates: {{ stats.acceptance_rate|floatformat }}% accepted, {{ stats.time_rejection_rate|floatformat }}% rejected for full-time commitments</li>
+		<li>{% if stats.graduating %}Graduating{% else %}Non-graduating{% endif %} classmates: {{ stats.acceptance_rate|floatformat }}% accepted, {{ stats.time_rejection_rate|floatformat }}% rejected for full-time commitments</li>
 		{% endwith %}
 	{% endif %}
 		<li>

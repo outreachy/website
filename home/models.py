@@ -2799,10 +2799,32 @@ class SchoolInformation(models.Model):
             application_round=self.applicant.application_round,
             schoolinformation__university_website__icontains=self.school_domain,
         )
+
+        # Find students who are graduating after their current term. This weird
+        # query checks for students who have a last_term but don't have any
+        # non-last_terms.
+        graduating_students = ApplicantApproval.objects.filter(
+            schooltimecommitment__last_term=True,
+        ).exclude(
+            schooltimecommitment__last_term=False,
+        )
+        # Check if this student is one of the graduating students.
+        graduating = graduating_students.filter(pk=self.applicant_id).exists()
+
+        # Compute statistics only over students who are in the same situation
+        # as this student: either they're all graduating, or none of them are.
+        # This matters because we interpret time commitments differently for
+        # students who are in their last term.
+        if graduating:
+            classmates = classmates.filter(pk__in=graduating_students)
+        else:
+            classmates = classmates.exclude(pk__in=graduating_students)
+
         total = classmates.count()
         accepted = classmates.approved().count()
         rejected = classmates.rejected().filter(reason_denied="TIME").count()
         return {
+            'graduating': graduating,
             'pending_classmates': classmates.pending().count(),
             'total_classmates': total,
             'acceptance_rate': 100 * accepted / total,

@@ -48,7 +48,7 @@
 								<div class="col">
 									{% if tcs.school_time_commitments %}
 									{% with stats=application.schoolinformation.classmate_statistics %}
-									<p>Classmates with the same school website:<br>{{ stats.total_classmates }} applied, {{ stats.pending_classmates }} pending, {{ stats.acceptance_rate|floatformat }}% accepted, {{ stats.time_rejection_rate|floatformat }}% rejected for full-time commitments</p>
+									<p>{% if stats.graduating %}Graduating{% else %}Non-graduating{% endif %} classmates with the same school website:<br>{{ stats.total_classmates }} applied, {{ stats.pending_classmates }} pending, {{ stats.acceptance_rate|floatformat }}% accepted, {{ stats.time_rejection_rate|floatformat }}% rejected for full-time commitments</p>
 									{% endwith %}
 									<p>Possible school term matches:</p>
 									<ul>
