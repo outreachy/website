@@ -1060,8 +1060,15 @@ class Comrade(models.Model):
 class ApprovalStatusQuerySet(models.QuerySet):
     def approved(self):
         return self.filter(approval_status=ApprovalStatus.APPROVED)
+
     def pending(self):
         return self.filter(approval_status=ApprovalStatus.PENDING)
+
+    def withdrawn(self):
+        return self.filter(approval_status=ApprovalStatus.WITHDRAWN)
+
+    def rejected(self):
+        return self.filter(approval_status=ApprovalStatus.REJECTED)
 
 class ApprovalStatus(models.Model):
     PENDING = 'P'
