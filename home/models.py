@@ -2787,49 +2787,20 @@ class SchoolInformation(models.Model):
             'start_date',
         )
 
-    def pending_classmates(self):
-        school_url = urlparse(self.university_website)
-        school_domain = school_url.netloc
-
-        # find the number of classmates applied this round
-        return ApplicantApproval.objects.filter(
-                approval_status=ApprovalStatus.PENDING,
-                application_round=self.applicant.application_round,
-                schoolinformation__university_website__icontains=school_domain).count()
-
-    def total_classmates(self):
-        school_url = urlparse(self.university_website)
-        school_domain = school_url.netloc
-
-        # find the number of classmates applied this round
-        return ApplicantApproval.objects.filter(
-                application_round=self.applicant.application_round,
-                schoolinformation__university_website__icontains=school_domain).count()
-
-    def acceptance_rate(self):
-        school_url = urlparse(self.university_website)
-        school_domain = school_url.netloc
-
-        # find the number of classmates applied this round
-        total_classmates = self.total_classmates()
-        accepted = ApplicantApproval.objects.filter(
-                approval_status=ApprovalStatus.APPROVED,
-                application_round=self.applicant.application_round,
-                schoolinformation__university_website__icontains=school_domain).count()
-        return accepted / total_classmates * 100
-
-    def time_rejection_rate(self):
-        school_url = urlparse(self.university_website)
-        school_domain = school_url.netloc
-
-        # find the number of classmates applied this round
-        total_classmates = self.total_classmates()
-        rejected = ApplicantApproval.objects.filter(
-                approval_status=ApprovalStatus.REJECTED,
-                reason_denied="TIME",
-                application_round=self.applicant.application_round,
-                schoolinformation__university_website__icontains=school_domain).count()
-        return rejected / total_classmates * 100
+    def classmate_statistics(self):
+        classmates = ApplicantApproval.objects.filter(
+            application_round=self.applicant.application_round,
+            schoolinformation__university_website__icontains=self.school_domain,
+        )
+        total = classmates.count()
+        accepted = classmates.approved().count()
+        rejected = classmates.rejected().filter(reason_denied="TIME").count()
+        return {
+            'pending_classmates': classmates.pending().count(),
+            'total_classmates': total,
+            'acceptance_rate': 100 * accepted / total,
+            'time_rejection_rate': 100 * rejected / total,
+        }
 
     def print_terms(school_info):
         print(school_info.applicant.get_approval_status_display(), " ", school_info.applicant.applicant.public_name, " <", school_info.applicant.applicant.account.email, ">")
