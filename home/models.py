@@ -2774,22 +2774,18 @@ class SchoolInformation(models.Model):
             help_text="<p>If the school terms above are incorrect, or you have forgotten to include a term that overlaps with the Outreachy internship period, please update your terms.<p>For each school term, please provide:</p><ol><li>The term name</li><li>The start date of classes for ALL students in the school</li><li>The end date of exams for ALL students in the school</li></ol><p>Please do not modify your dates to differ from the starting dates in your academic calendar. Outreachy organizers cannot accept statements that you will start your classes late.</p>")
     applicant_should_update = models.BooleanField(default=False)
 
+    @property
+    def school_domain(self):
+        return urlparse(self.university_website).hostname
+
     def find_official_terms(self):
-        school_url = urlparse(self.university_website)
-        school_domain = school_url.netloc
-
         # find all OfficialSchools with the same domain
-        matches = OfficialSchool.objects.filter(university_website__icontains=school_domain)
-        if not matches:
-            return []
-
-        # We need to be able to combine querysets with Q
-        # https://docs.djangoproject.com/en/1.11/topics/db/queries/#complex-lookups-with-q-objects
-        results = OfficialSchoolTerm.objects.all()
-        query = models.Q()
-        for school_match in matches:
-            query = query | models.Q(school=school_match)
-        return results.filter(query).order_by('school__university_website', 'start_date')
+        return OfficialSchoolTerm.objects.filter(
+            school__university_website__icontains=self.school_domain,
+        ).order_by(
+            'school__university_website',
+            'start_date',
+        )
 
     def pending_classmates(self):
         school_url = urlparse(self.university_website)
