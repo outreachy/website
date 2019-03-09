@@ -2195,10 +2195,19 @@ class ApplicantApproval(ApprovalStatus):
 
     def get_time_commitments(self):
         current_round = self.application_round
-        noncollege_school_time_commitments = NonCollegeSchoolTimeCommitment.objects.filter(applicant=self)
-        school_time_commitments = SchoolTimeCommitment.objects.filter(applicant=self).order_by('start_date')
-        volunteer_time_commitments = VolunteerTimeCommitment.objects.filter(applicant=self)
-        employment_time_commitments = EmploymentTimeCommitment.objects.filter(applicant=self)
+
+        nearby_date = datetime.timedelta(days=30)
+        relevant = models.Q(
+            applicant=self,
+            start_date__lte=current_round.internends + nearby_date,
+            end_date__gte=current_round.internstarts - nearby_date,
+        )
+
+        noncollege_school_time_commitments = NonCollegeSchoolTimeCommitment.objects.filter(relevant)
+        school_time_commitments = SchoolTimeCommitment.objects.filter(relevant).order_by('start_date')
+        volunteer_time_commitments = VolunteerTimeCommitment.objects.filter(relevant)
+        employment_time_commitments = EmploymentTimeCommitment.objects.filter(relevant)
+
         tcs = [ self.time_commitment_from_model(d, d.hours_per_week)
                 for d in volunteer_time_commitments or []
                 if d ]
@@ -2786,9 +2795,15 @@ class SchoolInformation(models.Model):
         return urlparse(self.university_website).hostname
 
     def find_official_terms(self):
-        # find all OfficialSchools with the same domain
+        current_round = self.applicant.application_round
+        nearby_date = datetime.timedelta(days=30)
+
+        # find terms happening near the time of the current round from all
+        # OfficialSchools with the same domain
         return OfficialSchoolTerm.objects.filter(
             school__university_website__icontains=self.school_domain,
+            start_date__lte=current_round.internends + nearby_date,
+            end_date__gte=current_round.internstarts - nearby_date,
         ).order_by(
             'school__university_website',
             'start_date',
