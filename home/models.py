@@ -2738,6 +2738,9 @@ class OfficialSchoolTerm(models.Model):
             verbose_name="Date all exams end.",
             help_text="This is the date the university advertises for the last possible date of any exam for any student in the semester.")
 
+    def overlaps(self, other):
+        return self.start_date <= other.end_date and other.start_date <= self.end_date
+
 class SchoolTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
 
@@ -2794,20 +2797,61 @@ class SchoolInformation(models.Model):
     def school_domain(self):
         return urlparse(self.university_website).hostname
 
-    def find_official_terms(self):
-        current_round = self.applicant.application_round
-        nearby_date = datetime.timedelta(days=30)
+    @staticmethod
+    def roll_year(d, years):
+        try:
+            return d.replace(year=d.year + years)
+        except ValueError:
+            assert d.month == 2 and d.day == 29
+            return d.replace(year=d.year + years, month=3, day=1)
 
+    def find_official_terms(self):
         # find terms happening near the time of the current round from all
         # OfficialSchools with the same domain
-        return OfficialSchoolTerm.objects.filter(
+        all_terms = OfficialSchoolTerm.objects.filter(
             school__university_website__icontains=self.school_domain,
-            start_date__lte=current_round.internends + nearby_date,
-            end_date__gte=current_round.internstarts - nearby_date,
         ).order_by(
             'school__university_website',
-            'start_date',
+            # sort newest terms first so they override older year's terms
+            '-start_date',
         )
+
+        current_round = self.applicant.application_round
+        nearby_date = datetime.timedelta(days=30)
+        start_date = current_round.internstarts - nearby_date
+        end_date = current_round.internends + nearby_date
+
+        terms = []
+        for school_id, school_terms in groupby(all_terms, key=lambda term: term.school_id):
+            best_terms = []
+            for term in school_terms:
+                years_old = 0
+                while self.roll_year(term.end_date, years_old) < start_date:
+                    years_old += 1
+
+                term.start_date = self.roll_year(term.start_date, years_old)
+                if term.start_date > end_date:
+                    # Even after adjusting the year, this term does not overlap
+                    # the current round.
+                    continue
+
+                term.end_date = self.roll_year(term.end_date, years_old)
+
+                # Okay, we've found an adjusted year that makes this term
+                # overlap the current round. But if we've already seen a more
+                # recent term (i.e. a term we didn't have to adjust as much)
+                # that overlaps this one, prefer that one instead.
+                drop = any(
+                    other_years < years_old and other_term.overlaps(term)
+                    for other_term, other_years in best_terms
+                )
+                if not drop:
+                    best_terms.append((term, years_old))
+
+            # Get this school's best terms in order by adjusted start date
+            terms.extend(sorted((term for term, years_old in best_terms), key=lambda term: term.start_date))
+
+        return terms
 
     def classmate_statistics(self):
         classmates = ApplicantApproval.objects.filter(
