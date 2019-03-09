@@ -14,7 +14,7 @@
 				{% if not tcs.school_time_commitments and not tcs.volunteer_time_commitments and not tcs.employment_time_commitments and not tcs.noncollege_school_time_commitments %}
 					<p>Applicant has not listed any university/college, coding school/online courses, work, or volunteer time commitments.</p>
 				{% else %}
-					<div id="time-commitments-timeline" style="height: 13em"></div>
+					<div id="time-commitments-timeline" style="height: 13em"{% if tcs.longest_period_free >= 49 %} class="enough-time"{% endif %}></div>
 				{% endif %}
 				{% if tcs.school_time_commitments %}
 					<div class="container">
