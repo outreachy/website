@@ -1,4 +1,6 @@
 {% extends "base.html" %} 
+{% load compress %}
+{% load static %}
 
 {% block title %}
 {{ application.applicant.public_name }} - Review Application
@@ -160,4 +162,111 @@
 	{% include 'home/snippet/applicant_review_time_commitments.html' %}
 
 	{% include 'home/snippet/applicant_review_actions.html' %}
+{% endblock %}
+
+{% block extra_css %}
+{% compress css %}
+<link rel="stylesheet" href="{% static "timeline-chart.css" %}">
+<style>
+.timeline-chart rect.interval {
+	fill: #6c757d;
+}
+.timeline-chart rect.interval.conflict {
+	fill: #dc3545;
+}
+.timeline-chart rect.interval.reference {
+	fill: #000;
+}
+</style>
+{% endcompress %}
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
+<script src="{% static "timeline-chart.js" %}"></script>
+{% with tcs=application.get_time_commitments current_round=application.application_round %}
+<script>
+	new TimelineChart(document.getElementById("time-commitments-timeline"), [{
+		label: "Internship period",
+		data: [{
+			type: TimelineChart.TYPE.INTERVAL,
+			customClass: "reference",
+			from: new Date([{{ current_round.internstarts|date:"Y, n, j" }}]),
+			to: new Date([{{ current_round.internends|date:"Y, n, j" }}])
+		}]
+	}, {
+		label: "School terms",
+		data: [{
+{% for term in tcs.school_time_commitments %}
+			label: "{{ term.term_name|escapejs }}{% if term.last_term %} (last){% endif %}",
+			customClass: "{% if term.start_date <= current_round.internends and current_round.internstarts <= term.end_date %}conflict{% endif %}",
+			type: TimelineChart.TYPE.INTERVAL,
+			from: new Date([{{ term.start_date|date:"Y, n, j" }}]),
+			to: new Date([{{ term.end_date|date:"Y, n, j" }}])
+{% if not forloop.last %}
+		}, {
+{% endif %}
+{% endfor %}
+		}]
+	}, {
+{% with terms=application.schoolinformation.find_official_terms %}
+		label: "Official terms",
+		data: [{
+{% for term in terms %}
+			label: "{{ term.term_name|escapejs }}",
+			customClass: "reference",
+			type: TimelineChart.TYPE.INTERVAL,
+			from: new Date([{{ term.start_date|date:"Y, n, j" }}]),
+			to: new Date([{{ term.end_date|date:"Y, n, j" }}])
+{% if not forloop.last %}
+		}, {
+{% endif %}
+{% endfor %}
+		}]
+{% endwith %}
+	}, {
+		label: "Online/coding school",
+		data: [{
+{% for course in tcs.noncollege_school_time_commitments %}
+			label: "{{ course.hours_per_week }} hours/week{% if course.quit_on_acceptance %} (will quit){% endif %}",
+			customClass: "{% if not course.quit_on_acceptance and course.start_date <= current_round.internends and current_round.internstarts <= course.end_date %}conflict{% endif %}",
+			type: TimelineChart.TYPE.INTERVAL,
+			from: new Date([{{ course.start_date|date:"Y, n, j" }}]),
+			to: new Date([{{ course.end_date|date:"Y, n, j" }}])
+{% if not forloop.last %}
+		}, {
+{% endif %}
+{% endfor %}
+		}]
+	}, {
+		label: "Employment",
+		data: [{
+{% for period in tcs.employment_time_commitments %}
+			label: "{{ period.hours_per_week }} hours/week as {{ period.job_title|escapejs }}{% if period.quit_on_acceptance %} (will quit){% endif %}",
+			customClass: "{% if not period.quit_on_acceptance and period.start_date <= current_round.internends and current_round.internstarts <= period.end_date %}conflict{% endif %}",
+			type: TimelineChart.TYPE.INTERVAL,
+			from: new Date([{{ period.start_date|date:"Y, n, j" }}]),
+			to: new Date([{{ period.end_date|date:"Y, n, j" }}])
+{% if not forloop.last %}
+		}, {
+{% endif %}
+{% endfor %}
+		}]
+	}, {
+		label: "Volunteering",
+		data: [{
+{% for period in tcs.volunteer_time_commitments %}
+			label: "{{ period.hours_per_week }} hours/week",
+			customClass: "{% if period.start_date <= current_round.internends and current_round.internstarts <= period.end_date %}conflict{% endif %}",
+			type: TimelineChart.TYPE.INTERVAL,
+			from: new Date([{{ period.start_date|date:"Y, n, j" }}]),
+			to: new Date([{{ period.end_date|date:"Y, n, j" }}])
+{% if not forloop.last %}
+		}, {
+{% endif %}
+{% endfor %}
+		}]
+	}]);
+</script>
+{% endwith %}
 {% endblock %}
