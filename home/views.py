@@ -1899,19 +1899,20 @@ class TrustedVolunteersListView(UserPassesTestMixin, ListView):
         today = get_deadline_date_for(now)
 
         # Find all mentors and coordinators who are active in any round that is
-        # currently running (anywhere from pingnew to finalfeedback).
+        # currently running (anywhere from pingnew to internends).
+        # Mentors get annoyed if they're re-subscribed after the internship ends.
         return Comrade.objects.filter(
                 models.Q(
                     mentorapproval__approval_status=ApprovalStatus.APPROVED,
                     mentorapproval__project__approval_status=ApprovalStatus.APPROVED,
                     mentorapproval__project__project_round__approval_status=ApprovalStatus.APPROVED,
                     mentorapproval__project__project_round__participating_round__pingnew__lte=today,
-                    mentorapproval__project__project_round__participating_round__finalfeedback__gt=today,
+                    mentorapproval__project__project_round__participating_round__internends__gt=today,
                 ) | models.Q(
                     coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
                     coordinatorapproval__community__participation__approval_status=ApprovalStatus.APPROVED,
                     coordinatorapproval__community__participation__participating_round__pingnew__lte=today,
-                    coordinatorapproval__community__participation__participating_round__finalfeedback__gt=today,
+                    coordinatorapproval__community__participation__participating_round__internends__gt=today,
                 )
             ).order_by('public_name').distinct()
 
