@@ -1060,8 +1060,15 @@ class Comrade(models.Model):
 class ApprovalStatusQuerySet(models.QuerySet):
     def approved(self):
         return self.filter(approval_status=ApprovalStatus.APPROVED)
+
     def pending(self):
         return self.filter(approval_status=ApprovalStatus.PENDING)
+
+    def withdrawn(self):
+        return self.filter(approval_status=ApprovalStatus.WITHDRAWN)
+
+    def rejected(self):
+        return self.filter(approval_status=ApprovalStatus.REJECTED)
 
 class ApprovalStatus(models.Model):
     PENDING = 'P'
@@ -2188,10 +2195,19 @@ class ApplicantApproval(ApprovalStatus):
 
     def get_time_commitments(self):
         current_round = self.application_round
-        noncollege_school_time_commitments = NonCollegeSchoolTimeCommitment.objects.filter(applicant=self)
-        school_time_commitments = SchoolTimeCommitment.objects.filter(applicant=self).order_by('start_date')
-        volunteer_time_commitments = VolunteerTimeCommitment.objects.filter(applicant=self)
-        employment_time_commitments = EmploymentTimeCommitment.objects.filter(applicant=self)
+
+        nearby_date = datetime.timedelta(days=30)
+        relevant = models.Q(
+            applicant=self,
+            start_date__lte=current_round.internends + nearby_date,
+            end_date__gte=current_round.internstarts - nearby_date,
+        )
+
+        noncollege_school_time_commitments = NonCollegeSchoolTimeCommitment.objects.filter(relevant)
+        school_time_commitments = SchoolTimeCommitment.objects.filter(relevant).order_by('start_date')
+        volunteer_time_commitments = VolunteerTimeCommitment.objects.filter(relevant)
+        employment_time_commitments = EmploymentTimeCommitment.objects.filter(relevant)
+
         tcs = [ self.time_commitment_from_model(d, d.hours_per_week)
                 for d in volunteer_time_commitments or []
                 if d ]
@@ -2722,6 +2738,9 @@ class OfficialSchoolTerm(models.Model):
             verbose_name="Date all exams end.",
             help_text="This is the date the university advertises for the last possible date of any exam for any student in the semester.")
 
+    def overlaps(self, other):
+        return self.start_date <= other.end_date and other.start_date <= self.end_date
+
 class SchoolTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
 
@@ -2774,66 +2793,102 @@ class SchoolInformation(models.Model):
             help_text="<p>If the school terms above are incorrect, or you have forgotten to include a term that overlaps with the Outreachy internship period, please update your terms.<p>For each school term, please provide:</p><ol><li>The term name</li><li>The start date of classes for ALL students in the school</li><li>The end date of exams for ALL students in the school</li></ol><p>Please do not modify your dates to differ from the starting dates in your academic calendar. Outreachy organizers cannot accept statements that you will start your classes late.</p>")
     applicant_should_update = models.BooleanField(default=False)
 
+    @property
+    def school_domain(self):
+        return urlparse(self.university_website).hostname
+
+    @staticmethod
+    def roll_year(d, years):
+        try:
+            return d.replace(year=d.year + years)
+        except ValueError:
+            assert d.month == 2 and d.day == 29
+            return d.replace(year=d.year + years, month=3, day=1)
+
     def find_official_terms(self):
-        school_url = urlparse(self.university_website)
-        school_domain = school_url.netloc
+        # find terms happening near the time of the current round from all
+        # OfficialSchools with the same domain
+        all_terms = OfficialSchoolTerm.objects.filter(
+            school__university_website__icontains=self.school_domain,
+        ).order_by(
+            'school__university_website',
+            # sort newest terms first so they override older year's terms
+            '-start_date',
+        )
 
-        # find all OfficialSchools with the same domain
-        matches = OfficialSchool.objects.filter(university_website__icontains=school_domain)
-        if not matches:
-            return []
+        current_round = self.applicant.application_round
+        nearby_date = datetime.timedelta(days=30)
+        start_date = current_round.internstarts - nearby_date
+        end_date = current_round.internends + nearby_date
 
-        # We need to be able to combine querysets with Q
-        # https://docs.djangoproject.com/en/1.11/topics/db/queries/#complex-lookups-with-q-objects
-        results = OfficialSchoolTerm.objects.all()
-        query = models.Q()
-        for school_match in matches:
-            query = query | models.Q(school=school_match)
-        return results.filter(query).order_by('school__university_website', 'start_date')
+        terms = []
+        for school_id, school_terms in groupby(all_terms, key=lambda term: term.school_id):
+            best_terms = []
+            for term in school_terms:
+                years_old = 0
+                while self.roll_year(term.end_date, years_old) < start_date:
+                    years_old += 1
 
-    def pending_classmates(self):
-        school_url = urlparse(self.university_website)
-        school_domain = school_url.netloc
+                term.start_date = self.roll_year(term.start_date, years_old)
+                if term.start_date > end_date:
+                    # Even after adjusting the year, this term does not overlap
+                    # the current round.
+                    continue
 
-        # find the number of classmates applied this round
-        return ApplicantApproval.objects.filter(
-                approval_status=ApprovalStatus.PENDING,
-                application_round=self.applicant.application_round,
-                schoolinformation__university_website__icontains=school_domain).count()
+                term.end_date = self.roll_year(term.end_date, years_old)
 
-    def total_classmates(self):
-        school_url = urlparse(self.university_website)
-        school_domain = school_url.netloc
+                # Okay, we've found an adjusted year that makes this term
+                # overlap the current round. But if we've already seen a more
+                # recent term (i.e. a term we didn't have to adjust as much)
+                # that overlaps this one, prefer that one instead.
+                drop = any(
+                    other_years < years_old and other_term.overlaps(term)
+                    for other_term, other_years in best_terms
+                )
+                if not drop:
+                    best_terms.append((term, years_old))
 
-        # find the number of classmates applied this round
-        return ApplicantApproval.objects.filter(
-                application_round=self.applicant.application_round,
-                schoolinformation__university_website__icontains=school_domain).count()
+            # Get this school's best terms in order by adjusted start date
+            terms.extend(sorted((term for term, years_old in best_terms), key=lambda term: term.start_date))
 
-    def acceptance_rate(self):
-        school_url = urlparse(self.university_website)
-        school_domain = school_url.netloc
+        return terms
 
-        # find the number of classmates applied this round
-        total_classmates = self.total_classmates()
-        accepted = ApplicantApproval.objects.filter(
-                approval_status=ApprovalStatus.APPROVED,
-                application_round=self.applicant.application_round,
-                schoolinformation__university_website__icontains=school_domain).count()
-        return accepted / total_classmates * 100
+    def classmate_statistics(self):
+        classmates = ApplicantApproval.objects.filter(
+            application_round=self.applicant.application_round,
+            schoolinformation__university_website__icontains=self.school_domain,
+        )
 
-    def time_rejection_rate(self):
-        school_url = urlparse(self.university_website)
-        school_domain = school_url.netloc
+        # Find students who are graduating after their current term. This weird
+        # query checks for students who have a last_term but don't have any
+        # non-last_terms.
+        graduating_students = ApplicantApproval.objects.filter(
+            schooltimecommitment__last_term=True,
+        ).exclude(
+            schooltimecommitment__last_term=False,
+        )
+        # Check if this student is one of the graduating students.
+        graduating = graduating_students.filter(pk=self.applicant_id).exists()
 
-        # find the number of classmates applied this round
-        total_classmates = self.total_classmates()
-        rejected = ApplicantApproval.objects.filter(
-                approval_status=ApprovalStatus.REJECTED,
-                reason_denied="TIME",
-                application_round=self.applicant.application_round,
-                schoolinformation__university_website__icontains=school_domain).count()
-        return rejected / total_classmates * 100
+        # Compute statistics only over students who are in the same situation
+        # as this student: either they're all graduating, or none of them are.
+        # This matters because we interpret time commitments differently for
+        # students who are in their last term.
+        if graduating:
+            classmates = classmates.filter(pk__in=graduating_students)
+        else:
+            classmates = classmates.exclude(pk__in=graduating_students)
+
+        total = classmates.count()
+        accepted = classmates.approved().count()
+        rejected = classmates.rejected().filter(reason_denied="TIME").count()
+        return {
+            'graduating': graduating,
+            'pending_classmates': classmates.pending().count(),
+            'total_classmates': total,
+            'acceptance_rate': 100 * accepted / total,
+            'time_rejection_rate': 100 * rejected / total,
+        }
 
     def print_terms(school_info):
         print(school_info.applicant.get_approval_status_display(), " ", school_info.applicant.applicant.public_name, " <", school_info.applicant.applicant.account.email, ">")
