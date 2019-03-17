@@ -37,6 +37,9 @@
 								<p>School terms during the internship ({{ current_round.internstarts }} to {{ current_round.internends }}):</p>
 								<ul>
 									{% for term in tcs.school_time_commitments %}
+										{% if term.last_term %}
+										<li><strong>Student says this is their last term</strong></li>
+										{% endif %}
 										<li>Term name/number: {{ term.term_name }}</li>
 										<li>Term dates: {{ term.start_date }} to {{ term.end_date }}</li>
 									{% endfor %}
