@@ -28,7 +28,7 @@
 
 	<h2>Travel Stipend</h2>
 
-	<p><b>Please read the <a href="">travel stipend details</a> before booking your travel!</b></p>
+	<p><b>Please read the <a href="{% url 'travel-stipend' %}">travel stipend details</a> before booking your travel!</b></p>
 	
 	<p>Each Outreachy intern has a $500 USD stipend to travel to conferences or events related to their internship.
 	{% if my_round.is_travel_stipend_valid %}
