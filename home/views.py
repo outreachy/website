@@ -2141,6 +2141,8 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 midpoint_feedback_opens=self.project.project_round.participating_round.midfeedback - timedelta(days=7),
                 midpoint_feedback_due=self.project.project_round.participating_round.midfeedback,
                 intern_ends=self.project.project_round.participating_round.internends,
+                final_feedback_opens=self.project.project_round.participating_round.finalfeedback - timedelta(days=7),
+                final_feedback_due=self.project.project_round.participating_round.finalfeedback,
                 )
         signed_contract = form['contract'].save(commit=False)
         signed_contract.date_signed = datetime.now(timezone.utc)
