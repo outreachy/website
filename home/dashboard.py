@@ -26,6 +26,7 @@ The context value can be any type. Here are some examples:
 """
 
 from collections import defaultdict
+from django.db import models
 import datetime
 
 from .models import ApplicantApproval
@@ -209,31 +210,26 @@ def round_events(request):
     early = datetime.timedelta(weeks=2)
     late = datetime.timedelta(weeks=1)
 
+    # Check all rounds for events. Most rounds won't have any
+    # currently-relevant events, but there will never be so many rounds that
+    # this becomes a performance bottleneck, and it's a lot easier to
+    # understand this way than trying to craft a more precise query.
     events = []
-    for field, delta, template, *rest in all_round_events:
-        if rest:
-            duration = rest[0]
-        else:
-            duration = datetime.timedelta()
+    for current_round in RoundPage.objects.order_by():
+        for field, delta, template, *rest in all_round_events:
+            if rest:
+                duration = rest[0]
+            else:
+                duration = datetime.timedelta()
 
-        # We're looking for rounds where:
-        #   target = field + delta
-        #   target >= today - early
-        #   target <= today + duration + late
-        # but we can only query against field, so we do a little algebra to
-        # shift the rest of each left-hand side over to the right.
-        rounds = RoundPage.objects.filter(**{
-            field + '__gte': today - delta - early,
-            field + '__lte': today - delta + duration + late,
-        })
-
-        for current_round in rounds:
-            events.append({
-                'template': 'home/dashboard/email/{}.html'.format(template),
-                'current_round': current_round,
-                'due': getattr(current_round, field) + delta,
-                'duration': duration,
-            })
+            due = getattr(current_round, field) + delta
+            if due - early <= today <= due + duration + late:
+                events.append({
+                    'template': 'home/dashboard/email/{}.html'.format(template),
+                    'current_round': current_round,
+                    'due': due,
+                    'duration': duration,
+                })
 
     if events:
         events.sort(key=lambda d: d['due'])
