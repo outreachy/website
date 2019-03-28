@@ -2474,7 +2474,7 @@ class InternAgreementSign(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
         return reverse('dashboard')
 
 def round_statistics(request, round_slug):
-    current_round = RoundPage.objects.get(slug=round_slug)
+    current_round = get_object_or_404(RoundPage, slug=round_slug)
     todays_date = datetime.now()
     return render(request, 'home/blog/round-statistics.html', {
         'current_round': current_round,
@@ -2653,7 +2653,7 @@ def initial_mentor_feedback_export_view(request, round_slug):
 @login_required
 @staff_member_required
 def initial_feedback_summary(request, round_slug):
-    current_round = RoundPage.objects.get(slug=round_slug)
+    current_round = get_object_or_404(RoundPage, slug=round_slug)
 
     return render(request, 'home/initial_feedback.html',
             {
@@ -2781,7 +2781,7 @@ def midpoint_mentor_feedback_export_view(request, round_slug):
 @login_required
 @staff_member_required
 def midpoint_feedback_summary(request, round_slug):
-    current_round = RoundPage.objects.get(slug=round_slug)
+    current_round = get_object_or_404(RoundPage, slug=round_slug)
 
     return render(request, 'home/midpoint_feedback.html',
             {
@@ -2931,7 +2931,7 @@ def final_mentor_feedback_export_view(request, round_slug):
 @login_required
 @staff_member_required
 def final_feedback_summary(request, round_slug):
-    current_round = RoundPage.objects.get(slug=round_slug)
+    current_round = get_object_or_404(RoundPage, slug=round_slug)
 
     return render(request, 'home/final_feedback.html',
             {
