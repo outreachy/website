@@ -340,7 +340,7 @@ def message_samples():
     contributor_deadline_reminder(contributor, current_round, request)
     contributor_application_period_ended(contributor, current_round, request)
     notify_accepted_intern(intern_selection, request)
-    for week in ('one', 'three', 'five'):
+    for week in (1, 3, 5, 7):
         template = 'home/email/internship-week-{}.txt'.format(week)
         biweekly_internship_email(intern_selection, request, template)
     initial_feedback_email(intern_selection, request)

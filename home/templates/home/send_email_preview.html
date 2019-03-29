@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-Send reminder emails
+Send {{ view.description }}
 {% endblock %}
 
 {% block content %}
@@ -21,6 +21,6 @@ Send reminder emails
 
 <form action="" method="post">
     {% csrf_token %}
-    <input class="btn btn-success" type="submit" value="Confirm" />
+    <input class="btn btn-success" type="submit" value="Send {{ view.description }}" />
 </form>
 {% endblock %}

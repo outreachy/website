@@ -1,4 +1,4 @@
-from . import views
+from . import dashboard, views
 from .models import ApprovalStatus
 
 from django.views.generic import TemplateView
@@ -61,18 +61,9 @@ round_patterns = [
     url(r'^midpoint-feedback-summary/$', views.midpoint_feedback_summary, name='midpoint-feedback-summary'),
     url(r'^final-feedback-export/$', views.final_mentor_feedback_export_view, name='final-feedback-export'),
     url(r'^final-feedback-summary/$', views.final_feedback_summary, name='final-feedback-summary'),
-    url(r'^email/application-deadline-review/$', views.MentorCheckDeadlinesReminder.as_view(), name='email-deadline-review'),
-    url(r'^email/application-period-ended/$', views.ContributorsApplicationPeriodEndedReminder.as_view(), name='email-application-period-ended'),
-    url(r'^email/application-deadline-reminder/$', views.ApplicantsDeadlinesReminder.as_view(), name='email-deadline-reminder'),
-    url(r'^email/contributor-deadline-reminder/$', views.ContributorsDeadlinesReminder.as_view(), name='email-contributor-deadline-reminder'),
-    url(r'^email/mentor-application-deadline-reminder/$', views.MentorApplicationDeadlinesReminder.as_view(), name='email-mentor-application-deadline-reminder'),
-    url(r'^email/mentor-intern-selection-reminder/$', views.MentorInternSelectionReminder.as_view(), name='email-mentor-intern-selection-reminder'),
-    url(r'^email/coordinator-intern-selection-reminder/$', views.CoordinatorInternSelectionReminder.as_view(), name='email-coordinator-intern-selection-reminder'),
-    url(r'^email/intern-welcome/$', views.InternNotification.as_view(), name='email-intern-welcome'),
-    url(r'^email/internship-week-(?P<week>[^/]+)/$', views.InternWeek.as_view(), name='email-internship-week'),
-    url(r'^email/initial-feedback-instructions/$', views.InitialFeedbackInstructions.as_view(), name='email-initial-feedback-instructions'),
-    url(r'^email/midpoint-feedback-instructions/$', views.MidpointFeedbackInstructions.as_view(), name='email-midpoint-feedback-instructions'),
-    url(r'^email/final-feedback-instructions/$', views.FinalFeedbackInstructions.as_view(), name='email-final-feedback-instructions'),
+] + [
+    url(r'^email/{}/$'.format(event.slug), event.as_view(), name=event.url_name())
+    for event in dashboard.all_round_events
 ]
 
 urlpatterns = [

@@ -6,7 +6,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core import mail
-from django.core.mail.backends.base import BaseEmailBackend
 from django.core.exceptions import PermissionDenied
 from django.core.signing import TimestampSigner, SignatureExpired, BadSignature 
 from django.db import models
@@ -1432,168 +1431,6 @@ class CoordinatorApprovalPreview(Preview):
                 community__slug=self.kwargs['community_slug'],
                 coordinator__account__username=self.kwargs['username'])
 
-class SendEmailView(LoginRequiredMixin, ComradeRequiredMixin, BaseEmailBackend, TemplateView):
-    template_name = 'home/send_email_preview.html'
-
-    def generate_messages(self, current_round, connection):
-        """
-        Subclasses must implement this function to generate the desired emails,
-        and must pass the connection argument on to the final send_mail or
-        send_messages calls.
-        """
-        pass
-
-    def get_round(self):
-        return get_object_or_404(RoundPage, slug=self.kwargs['round_slug'])
-
-    def get_context_data(self, **kwargs):
-        """
-        Use this view's BaseEmailBackend implementation to do a dry-run of
-        sending the generated messages, and return a preview of the messages
-        that would be sent.
-        """
-        self.messages = []
-        self.generate_messages(current_round=self.get_round(), connection=self)
-        context = super(SendEmailView, self).get_context_data(**kwargs)
-        context['messages'] = self.messages
-        return context
-
-    def send_messages(self, messages):
-        """
-        Implementation of BaseEmailBackend that just saves the generated
-        messages on self, so get_context_data can dig them back out again.
-        """
-        self.messages.extend(messages)
-        return len(messages)
-
-    def post(self, request, *args, **kwargs):
-        """
-        Use the real email backend to send the generated messages.
-        """
-        with mail.get_connection() as connection:
-            self.generate_messages(current_round=self.get_round(), connection=connection)
-        return redirect(reverse('dashboard'))
-
-class MentorCheckDeadlinesReminder(SendEmailView):
-    def generate_messages(self, current_round, connection):
-        if not self.request.user.is_staff:
-            raise PermissionDenied("You are not authorized to send reminder emails.")
-        projects = Project.objects.filter(
-                approval_status__in=[Project.APPROVED, Project.PENDING],
-                project_round__participating_round=current_round)
-        for p in projects:
-            email.project_applicant_review(p, self.request, connection=connection)
-
-def get_open_approved_projects(current_round):
-    if not current_round.has_ontime_application_deadline_passed():
-        return Project.objects.filter(
-                project_round__participating_round=current_round).all().approved()
-    elif not current_round.has_late_application_deadline_passed():
-        return Project.objects.filter(
-                deadline=Project.LATE,
-                project_round__participating_round=current_round).all().approved()
-    return ()
-
-def get_closed_approved_projects(current_round):
-    if current_round.has_ontime_application_deadline_passed():
-        return Project.objects.filter(
-                project_round__participating_round=current_round,
-                deadline__in=[Project.ONTIME, Project.CLOSED]).all().approved()
-    elif current_round.has_late_application_deadline_passed():
-        return Project.objects.filter(
-                deadline=Project.LATE,
-                project_round__participating_round=current_round).all().approved()
-    return ()
-
-class MentorApplicationDeadlinesReminder(SendEmailView):
-    def generate_messages(self, current_round, connection):
-        if not self.request.user.is_staff:
-            raise PermissionDenied("You are not authorized to send reminder emails.")
-        projects = get_open_approved_projects(current_round)
-        for p in projects:
-            email.mentor_application_deadline_reminder(p, self.request, connection=connection)
-
-class MentorInternSelectionReminder(SendEmailView):
-    def generate_messages(self, current_round, connection):
-        if not self.request.user.is_staff:
-            raise PermissionDenied("You are not authorized to send reminder emails.")
-        projects = get_closed_approved_projects(current_round)
-        for p in projects:
-            email.mentor_intern_selection_reminder(p, self.request, connection=connection)
-
-class CoordinatorInternSelectionReminder(SendEmailView):
-    def generate_messages(self, current_round, connection):
-        if not self.request.user.is_staff:
-            raise PermissionDenied("You are not authorized to send reminder emails.")
-        participations = Participation.objects.filter(
-                participating_round=current_round,
-                approval_status=Participation.APPROVED)
-        for p in participations:
-            email.coordinator_intern_selection_reminder(p, self.request, connection=connection)
-
-class ApplicantsDeadlinesReminder(SendEmailView):
-    def generate_messages(self, current_round, connection):
-        if not self.request.user.is_staff:
-            raise PermissionDenied("You are not authorized to send reminder emails.")
-        late_projects = Project.objects.filter(
-                project_round__participating_round=current_round,
-                approval_status=Project.APPROVED,
-                deadline=Project.LATE).order_by('project_round__community__name')
-        promoted_projects = Project.objects.filter(
-                project_round__participating_round=current_round,
-                approval_status=Project.APPROVED,
-                deadline=Project.ONTIME,
-                needs_more_applicants=True).order_by('project_round__community__name')
-        closed_projects = Project.objects.filter(
-                project_round__participating_round=current_round,
-                approval_status=Project.APPROVED,
-                deadline=Project.CLOSED).order_by('project_round__community__name')
-        email.applicant_deadline_reminder(late_projects, promoted_projects, closed_projects, current_round, self.request, connection=connection)
-
-def get_contributors_with_upcoming_deadlines(current_round):
-    ontime_deadline = current_round.appsclose
-    late_deadline = current_round.appslate
-    if not has_deadline_passed(ontime_deadline):
-        return Comrade.objects.filter(
-                applicantapproval__application_round=current_round,
-                applicantapproval__approval_status=ApprovalStatus.APPROVED,
-                applicantapproval__contribution__isnull=False).distinct()
-    if not has_deadline_passed(late_deadline):
-        return Comrade.objects.filter(
-                applicantapproval__application_round=current_round,
-                applicantapproval__approval_status=ApprovalStatus.APPROVED,
-                applicantapproval__contribution__project__deadline=Project.LATE).distinct()
-    return []
-
-class ContributorsApplicationPeriodEndedReminder(SendEmailView):
-    def generate_messages(self, current_round, connection):
-        if not self.request.user.is_staff:
-            raise PermissionDenied("You are not authorized to send reminder emails.")
-        contributors = Comrade.objects.filter(
-                applicantapproval__application_round=current_round,
-                applicantapproval__approval_status=ApprovalStatus.APPROVED,
-                applicantapproval__contribution__isnull=False).distinct()
-
-        for c in contributors:
-            email.contributor_application_period_ended(
-                    c,
-                    current_round,
-                    self.request,
-                    connection=connection)
-
-class ContributorsDeadlinesReminder(SendEmailView):
-    def generate_messages(self, current_round, connection):
-        if not self.request.user.is_staff:
-            raise PermissionDenied("You are not authorized to send reminder emails.")
-        contributors = get_contributors_with_upcoming_deadlines(current_round)
-
-        for c in contributors:
-            email.contributor_deadline_reminder(
-                    c,
-                    current_round,
-                    self.request,
-                    connection=connection)
-
 class ProjectContributions(LoginRequiredMixin, ComradeRequiredMixin, EligibleApplicantRequiredMixin, TemplateView):
     template_name = 'home/project_contributions.html'
 
@@ -2481,38 +2318,6 @@ def round_statistics(request, round_slug):
         'todays_date': todays_date,
         })
 
-class InternNotification(SendEmailView):
-    def generate_messages(self, current_round, connection):
-        if not self.request.user.is_staff:
-            raise PermissionDenied("You are not authorized to send reminder emails.")
-        interns = current_round.get_approved_intern_selections()
-
-        for i in interns:
-            email.notify_accepted_intern(i, self.request, connection=connection)
-
-class InternWeek(SendEmailView):
-    def generate_messages(self, current_round, connection):
-        if not self.request.user.is_staff:
-            raise PermissionDenied("You are not authorized to send reminder emails.")
-
-        template = 'home/email/internship-week-{}.txt'.format(self.kwargs['week'])
-        interns = current_round.get_in_good_standing_intern_selections()
-
-        for i in interns:
-            email.biweekly_internship_email(i, self.request, template, connection=connection)
-
-class InitialFeedbackInstructions(SendEmailView):
-    def generate_messages(self, current_round, connection):
-        if not self.request.user.is_staff:
-            raise PermissionDenied("You are not authorized to send reminder emails.")
-
-        # Only get interns that are in good standing and
-        # where a mentor or intern hasn't submitted feedback.
-        interns = current_round.get_interns_with_open_initial_feedback()
-
-        for i in interns:
-            email.feedback_email(i, self.request, "initial", i.is_initial_feedback_on_intern_past_due(), connection=connection)
-
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(InitialMentorFeedback,
             fields=(
@@ -2661,18 +2466,6 @@ def initial_feedback_summary(request, round_slug):
             },
             )
 
-class MidpointFeedbackInstructions(SendEmailView):
-    def generate_messages(self, current_round, connection):
-        if not self.request.user.is_staff:
-            raise PermissionDenied("You are not authorized to send reminder emails.")
-
-        # Only get interns that are in good standing and
-        # where a mentor or intern hasn't submitted feedback.
-        interns = current_round.get_interns_with_open_midpoint_feedback()
-
-        for i in interns:
-            email.feedback_email(i, self.request, "midpoint", i.is_midpoint_feedback_on_intern_past_due(), connection=connection)
-
 class MidpointMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(MidpointMentorFeedback,
             fields=(
@@ -2788,18 +2581,6 @@ def midpoint_feedback_summary(request, round_slug):
             'current_round' : current_round,
             },
             )
-
-class FinalFeedbackInstructions(SendEmailView):
-    def generate_messages(self, current_round, connection):
-        if not self.request.user.is_staff:
-            raise PermissionDenied("You are not authorized to send reminder emails.")
-
-        # Only get interns that are in good standing and
-        # where a mentor or intern hasn't submitted feedback.
-        interns = current_round.get_interns_with_open_final_feedback()
-
-        for i in interns:
-            email.feedback_email(i, self.request, "final", i.is_final_feedback_on_intern_past_due(), connection=connection)
 
 class FinalMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(FinalMentorFeedback,

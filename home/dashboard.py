@@ -26,9 +26,18 @@ The context value can be any type. Here are some examples:
 """
 
 from collections import defaultdict
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core import mail
+from django.core.exceptions import PermissionDenied
+from django.core.mail.backends.base import BaseEmailBackend
 from django.db import models
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
+from django.views.generic import TemplateView
 import datetime
 
+from . import email
+from .mixins import ComradeRequiredMixin
 from .models import ApplicantApproval
 from .models import ApprovalStatus
 from .models import Community
@@ -37,6 +46,7 @@ from .models import DASHBOARD_MODELS
 from .models import MentorApproval
 from .models import MentorRelationship
 from .models import Participation
+from .models import Project
 from .models import Role
 from .models import RoundPage
 from .models import get_deadline_date_for
@@ -164,39 +174,387 @@ def staff_subscriptions(request):
     return request.user.is_staff
 
 
+class RoundEvent(object):
+    @classmethod
+    def instances(cls):
+        return (cls.instance,)
+
+    @classmethod
+    def url_name(cls):
+        return 'email-' + cls.slug
+
+    @classmethod
+    def dashboard_snippet(cls):
+        return 'home/dashboard/email/{}.html'.format(cls.slug)
+
+
+class SendEmailView(RoundEvent, LoginRequiredMixin, ComradeRequiredMixin, BaseEmailBackend, TemplateView):
+    template_name = 'home/send_email_preview.html'
+
+    def generate_messages(self, current_round, connection):
+        """
+        Subclasses must implement this function to generate the desired emails,
+        and must pass the connection argument on to the final send_mail or
+        send_messages calls.
+        """
+        pass
+
+    def get_round(self):
+        return get_object_or_404(RoundPage, slug=self.kwargs['round_slug'])
+
+    def get_context_data(self, **kwargs):
+        """
+        Use this view's BaseEmailBackend implementation to do a dry-run of
+        sending the generated messages, and return a preview of the messages
+        that would be sent.
+        """
+        self.messages = []
+        self.generate_messages(current_round=self.get_round(), connection=self)
+        context = super(SendEmailView, self).get_context_data(**kwargs)
+        context['messages'] = self.messages
+        return context
+
+    def send_messages(self, messages):
+        """
+        Implementation of BaseEmailBackend that just saves the generated
+        messages on self, so get_context_data can dig them back out again.
+        """
+        self.messages.extend(messages)
+        return len(messages)
+
+    def post(self, request, *args, **kwargs):
+        """
+        Use the real email backend to send the generated messages.
+        """
+        with mail.get_connection() as connection:
+            self.generate_messages(current_round=self.get_round(), connection=connection)
+        return redirect(reverse('dashboard'))
+
+
+class MentorCheckDeadlinesReminder(SendEmailView):
+    description = 'Mentor Deadlines Email'
+    slug = 'deadline-review'
+
+    @staticmethod
+    def instance(current_round):
+        return current_round.appsclose - datetime.timedelta(weeks=2)
+
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+        projects = Project.objects.filter(
+            approval_status__in=[Project.APPROVED, Project.PENDING],
+            project_round__participating_round=current_round,
+        )
+        for p in projects:
+            email.project_applicant_review(p, self.request, connection=connection)
+
+
+class MentorApplicationDeadlinesReminder(SendEmailView):
+    description = 'Mentor Deadline Email'
+    slug = 'mentor-application-deadline-reminder'
+
+    @staticmethod
+    def first_warning(current_round):
+        # First warning on a Monday at least 3 days before appsclose:
+        due = current_round.appsclose - datetime.timedelta(days=3)
+        due -= datetime.timedelta(days=due.weekday())
+        return due
+
+    @staticmethod
+    def second_warning(current_round):
+        # Second warning on a Monday at least 3 days before appslate, if
+        # possible...
+        due = current_round.appslate - datetime.timedelta(days=3)
+        due -= datetime.timedelta(days=due.weekday())
+        # ... but never any earlier than appsclose.
+        return max(current_round.appsclose, due)
+
+    @classmethod
+    def instances(cls):
+        return (cls.first_warning, cls.second_warning)
+
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+
+        # Don't ask mentors to encourage interns to apply if it's too late for
+        # anyone to apply any more.
+        if current_round.has_late_application_deadline_passed():
+            return
+
+        projects = Project.objects.filter(project_round__participating_round=current_round).approved()
+
+        if current_round.has_ontime_application_deadline_passed():
+            projects = projects.filter(deadline=Project.LATE)
+
+        for p in projects:
+            email.mentor_application_deadline_reminder(p, self.request, connection=connection)
+
+
+class MentorInternSelectionReminder(SendEmailView):
+    description = 'Mentor Intern Selection Email'
+    slug = 'mentor-intern-selection-reminder'
+
+    @staticmethod
+    def instance(current_round):
+        return current_round.appsclose
+
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+
+        projects = Project.objects.approved().filter(
+            project_round__participating_round=current_round,
+        ).exclude(deadline=Project.LATE)
+
+        for p in projects:
+            email.mentor_intern_selection_reminder(p, self.request, connection=connection)
+
+
+class CoordinatorInternSelectionReminder(SendEmailView):
+    description = 'Coordinator Intern Selection Email'
+    slug = 'coordinator-intern-selection-reminder'
+
+    @staticmethod
+    def instance(current_round):
+        return current_round.appslate
+
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+        for p in current_round.participation_set.approved():
+            email.coordinator_intern_selection_reminder(p, self.request, connection=connection)
+
+
+class ApplicantsDeadlinesReminder(SendEmailView):
+    description = 'Applicant Deadline Email'
+    slug = 'deadline-reminder'
+
+    @staticmethod
+    def instance(current_round):
+        return MentorCheckDeadlinesReminder.instance(current_round) + datetime.timedelta(days=3)
+
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+
+        projects = Project.objects.filter(
+            project_round__participating_round=current_round,
+        ).approved().order_by('project_round__community__name')
+
+        late_projects = projects.filter(deadline=Project.LATE)
+        promoted_projects = projects.filter(deadline=Project.ONTIME, needs_more_applicants=True)
+        closed_projects = projects.filter(deadline=Project.CLOSED)
+        email.applicant_deadline_reminder(late_projects, promoted_projects, closed_projects, current_round, self.request, connection=connection)
+
+
+class ContributorsApplicationPeriodEndedReminder(SendEmailView):
+    description = 'Contributor Final Email'
+    slug = 'application-period-ended'
+
+    @staticmethod
+    def instance(current_round):
+        return current_round.appslate
+
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+        contributors = Comrade.objects.filter(
+            applicantapproval__application_round=current_round,
+            applicantapproval__approval_status=ApprovalStatus.APPROVED,
+            applicantapproval__contribution__isnull=False).distinct()
+
+        for c in contributors:
+            email.contributor_application_period_ended(
+                c,
+                current_round,
+                self.request,
+                connection=connection,
+            )
+
+
+class ContributorsDeadlinesReminder(SendEmailView):
+    description = 'Contributor Deadline Email'
+    slug = 'contributor-deadline-reminder'
+
+    @staticmethod
+    def first_reminder(current_round):
+        return current_round.appsclose - datetime.timedelta(weeks=1)
+
+    @staticmethod
+    def ontime_reminder(current_round):
+        return current_round.appsclose - datetime.timedelta(days=1)
+
+    @staticmethod
+    def late_reminder(current_round):
+        return current_round.appslate - datetime.timedelta(days=1)
+
+    @classmethod
+    def instances(cls):
+        return (cls.first_reminder, cls.ontime_reminder, cls.late_reminder)
+
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+
+        contributors = Comrade.objects.filter(
+            applicantapproval__application_round=current_round,
+            applicantapproval__approval_status=ApprovalStatus.APPROVED,
+        ).distinct()
+        if not current_round.has_ontime_application_deadline_passed():
+            contributors = contributors.filter(applicantapproval__contribution__isnull=False)
+        elif not current_round.has_late_application_deadline_passed():
+            contributors = contributors.filter(applicantapproval__contribution__project__deadline=Project.LATE)
+        else:
+            return
+
+        for c in contributors:
+            email.contributor_deadline_reminder(
+                c,
+                current_round,
+                self.request,
+                connection=connection,
+            )
+
+
+class InternNotification(SendEmailView):
+    description = 'Intern Welcome Email'
+    slug = 'intern-welcome'
+
+    @staticmethod
+    def instance(current_round):
+        return current_round.internannounce
+
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+        interns = current_round.get_approved_intern_selections()
+
+        for i in interns:
+            email.notify_accepted_intern(i, self.request, connection=connection)
+
+
+class InternWeek(SendEmailView):
+    @classmethod
+    def at(cls, week):
+        # Create a subclass of this class where the week number is hard-coded.
+        return type('{}{}'.format(cls.__name__, week), (cls,), {
+            'week': week,
+            'description': 'Week {} Email'.format(week),
+            'slug': 'internship-week-{}'.format(week),
+        })
+
+    @classmethod
+    def instance(cls, current_round):
+        return current_round.internstarts + datetime.timedelta(weeks=cls.week - 1)
+
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+
+        template = 'home/email/internship-week-{}.txt'.format(self.week)
+        interns = current_round.get_in_good_standing_intern_selections()
+
+        for i in interns:
+            email.biweekly_internship_email(i, self.request, template, connection=connection)
+
+
+class FeedbackInstructions(SendEmailView):
+    @classmethod
+    def make_instance(cls, week):
+        def instance(current_round):
+            return cls.due_date(current_round) + datetime.timedelta(weeks=week)
+        return instance
+
+    @classmethod
+    def instances(cls):
+        # Start sending instructions one week before the standard due date, and
+        # continue until four weeks after.
+        return tuple(map(cls.make_instance, range(-1, 5)))
+
+
+class InitialFeedbackInstructions(FeedbackInstructions):
+    description = 'Initial Feedback Reminder'
+    slug = 'initial-feedback-instructions'
+
+    @staticmethod
+    def due_date(current_round):
+        return current_round.initialfeedback
+
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+
+        # Only get interns that are in good standing and
+        # where a mentor or intern hasn't submitted feedback.
+        interns = current_round.get_interns_with_open_initial_feedback()
+
+        for i in interns:
+            email.feedback_email(i, self.request, "initial", i.is_initial_feedback_on_intern_past_due(), connection=connection)
+
+
+class MidpointFeedbackInstructions(FeedbackInstructions):
+    description = 'Midpoint Feedback Reminder'
+    slug = 'midpoint-feedback-instructions'
+
+    @staticmethod
+    def due_date(current_round):
+        return current_round.midfeedback
+
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+
+        # Only get interns that are in good standing and
+        # where a mentor or intern hasn't submitted feedback.
+        interns = current_round.get_interns_with_open_midpoint_feedback()
+
+        for i in interns:
+            email.feedback_email(i, self.request, "midpoint", i.is_midpoint_feedback_on_intern_past_due(), connection=connection)
+
+
+class FinalFeedbackInstructions(FeedbackInstructions):
+    description = 'Final Feedback Reminder'
+    slug = 'final-feedback-instructions'
+
+    @staticmethod
+    def due_date(current_round):
+        return current_round.finalfeedback
+
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+
+        # Only get interns that are in good standing and
+        # where a mentor or intern hasn't submitted feedback.
+        interns = current_round.get_interns_with_open_final_feedback()
+
+        for i in interns:
+            email.feedback_email(i, self.request, "final", i.is_final_feedback_on_intern_past_due(), connection=connection)
+
+
 # This is a list of all reminders that staff need at different times in the
-# round. Each entry is of the form:
-#   (field, delta, template, duration)
-# where:
-# - field is the name of a DateField on a RoundPage,
-# - delta is a datetime.timedelta,
-# - the template is supposed to be displayed on the date of field + delta,
-# - and duration is a datetime.timedelta for how long the reminder stays
-#   relevant.
-#
-# These templates are in home/dashboard/email/{name}.html
+# round. Each entry should be a subclass of both RoundEvent and View.
 #
 # It doesn't matter what order this list is in, but I think it's less confusing
 # if we keep it sorted by when in the round each event occurs.
 all_round_events = (
-    ('appsclose', datetime.timedelta(weeks=-2), 'deadline-review'),
-    ('appsclose', datetime.timedelta(weeks=-2, days=3), 'deadline-reminder'),
-    ('appsclose', datetime.timedelta(weeks=-1), 'contributor-deadline-reminder'),
-    ('appsclose', datetime.timedelta(weeks=-1), 'mentor-application-deadline-reminder-early'),
-    ('appsclose', datetime.timedelta(days=-1), 'contributor-deadline-reminder'),
-    ('appsclose', datetime.timedelta(), 'mentor-application-deadline-reminder-final'),
-    ('appsclose', datetime.timedelta(), 'mentor-intern-selection-reminder'),
-    ('appslate', datetime.timedelta(days=-1), 'contributor-deadline-reminder'),
-    ('appslate', datetime.timedelta(), 'coordinator-intern-selection-reminder'),
-    ('appslate', datetime.timedelta(), 'application-period-ended'),
-    ('internannounce', datetime.timedelta(), 'intern-welcome'),
-    ('internstarts', datetime.timedelta(weeks=0), 'internship-week-one'),
-    ('initialfeedback', datetime.timedelta(weeks=-1), 'initial-feedback-instructions', datetime.timedelta(weeks=5)),
-    ('internstarts', datetime.timedelta(weeks=2), 'internship-week-three'),
-    ('internstarts', datetime.timedelta(weeks=4), 'internship-week-five'),
-    ('internstarts', datetime.timedelta(weeks=6), 'internship-week-seven'),
-    ('midfeedback', datetime.timedelta(weeks=-1), 'midpoint-feedback-instructions', datetime.timedelta(weeks=5)),
-    ('finalfeedback', datetime.timedelta(weeks=-1), 'final-feedback-instructions', datetime.timedelta(weeks=5)),
+    MentorCheckDeadlinesReminder,
+    ApplicantsDeadlinesReminder,
+    ContributorsDeadlinesReminder,
+    MentorApplicationDeadlinesReminder,
+    MentorInternSelectionReminder,
+    CoordinatorInternSelectionReminder,
+    ContributorsApplicationPeriodEndedReminder,
+    InternNotification,
+    InternWeek.at(week=1),
+    InitialFeedbackInstructions,
+    InternWeek.at(week=3),
+    InternWeek.at(week=5),
+    InternWeek.at(week=7),
+    MidpointFeedbackInstructions,
+    FinalFeedbackInstructions,
 )
 
 def round_events(request):
@@ -216,19 +574,19 @@ def round_events(request):
     # understand this way than trying to craft a more precise query.
     events = []
     for current_round in RoundPage.objects.order_by():
-        for field, delta, template, *rest in all_round_events:
-            if rest:
-                duration = rest[0]
-            else:
-                duration = datetime.timedelta()
+        for event in all_round_events:
+            # If this event has multiple instances, pick the one whose due date
+            # is closest to today.
+            due = min(
+                (due(current_round) for due in event.instances()),
+                key=lambda due: abs(today - due),
+            )
 
-            due = getattr(current_round, field) + delta
-            if due - early <= today <= due + duration + late:
+            if due - early <= today <= due + late:
                 events.append({
-                    'template': 'home/dashboard/email/{}.html'.format(template),
+                    'kind': event,
                     'current_round': current_round,
                     'due': due,
-                    'duration': duration,
                 })
 
     if events:
