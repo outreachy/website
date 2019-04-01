@@ -1293,7 +1293,7 @@ class NewCommunity(Community):
             blank=True,
             help_text="(Optional) If your community resources advertise the services of only one community, please explain.")
 
-    goverance = models.URLField(blank=True, verbose_name="(Optional) Please provide the URL for a description of your community's governance model")
+    governance = models.URLField(blank=True, verbose_name="(Optional) Please provide the URL for a description of your community's governance model")
     code_of_conduct = models.URLField(blank=True, verbose_name="(Optional) Please provide the URL for to your community's Code of Conduct")
     cla = models.URLField(blank=True, verbose_name="(Optional) Please provide the URL for your community's Contributor License Agreement (CLA)")
     dco = models.URLField(blank=True, verbose_name="(Optional) Please provide the URL for your community's Developer Certificate of Origin (DCO) agreement")
