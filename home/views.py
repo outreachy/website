@@ -2851,6 +2851,8 @@ def applicant_review_summary(request, status):
     For applicant reviewers and staff, show the status of applications that
     have the specified approval status.
     """
+    # Update dashboard.application_summary too if you change anything here.
+
     current_round = get_current_round_for_initial_application()
 
     if not request.user.is_staff and not current_round.is_reviewer(request.user):

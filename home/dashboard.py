@@ -125,12 +125,16 @@ def coordinator_reminder(request):
 
 
 def application_summary(request):
+    # This should return non-None if, and only if,
+    # views.applicant_review_summary doesn't raise an exception like
+    # PermissionDenied.
+
     now = datetime.datetime.now(datetime.timezone.utc)
     today = get_deadline_date_for(now)
     try:
         current_round = RoundPage.objects.get(
             appsopen__lte=today,
-            internannounce__gt=today,
+            appslate__gt=today,
         )
     except RoundPage.DoesNotExist:
         return None
