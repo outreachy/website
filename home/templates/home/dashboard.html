@@ -15,7 +15,7 @@ Dashboard
 {% endif %}
 {% for template_name, context in sections %}
 <div>
-{% include template_name with request=request section=context only %}
+{% include template_name with request=request csrf_token=csrf_token section=context only %}
 </div>
 {% endfor %}
 {% endblock %}
