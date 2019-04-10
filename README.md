@@ -1,38 +1,26 @@
 # What is Outreachy?
 
 Outreachy is a three-month paid internship program for people traditionally underrepresented in tech.
-This particular project is an attempt to rebuild a new website for Outreachy.
+This project is the Django website for [the Outreachy website](https://www.outreachy.org).
 
 # Current state of Outreachy tech
 
-[![Build Status](https://travis-ci.org/sagesharp/outreachy-django-wagtail.svg?branch=master)](https://travis-ci.org/sagesharp/outreachy-django-wagtail)
+The Outreachy web presence is in a couple of different places:
+ * [Outreachy website](https://www.outreachy.org)
+ * [GitHub Repository](https://github.com/sagesharp/outreachy-django-wagtail/)
+ * [Repository CI Status](https://travis-ci.org/sagesharp/outreachy-django-wagtail.svg?branch=master)
 
-The Outreachy web presence is scattered across multiple different sites, domains, and technologies:
+Older/deprecated websites include:
  - [GNOME Outreachy homepage](https://www.gnome.org/outreachy/) - shell homepage, where the outreachy.org domain currently redirects to
  - [GNOME wiki Outreachy pages](http://wiki.gnome.org/Outreachy) - moinmoin based wiki with information about how to apply and sponsor
  - [Outreachy application system](http://outreachy.gnome.org) - PHP-based application system currently hosted on OpenShift
  - irc.gnome.org #outreachy - GNOME IRC channel - where applicants get help
  - [Outreachy Planeteria](http://www.planeteria.info/outreach) - blog aggregation for Outreachy interns
 
-Missing things:
- - An Outreachy coordinator blog
- - A user-friendly chat system (IRC ports are often blocked by universities due to concerns about IRC being used for spam bot coordination)
- - A way for coordinators, mentors, and interns to update the information we have stored and/or displayed (without all needing GNOME wiki accounts)
+# Future Long-term Goals
 
-# Goals
-
- - Move Outreachy web presence onto our own domain, outreachy.org
- - Create templates for pages that have a standard layout (e.g. round pages) to eliminate manually updating multiple pages when a date changes
- - Create data models to track information about communities, mentors, sponsors, applicants, and interns
- - Use those data models to send emails (e.g. mentor needs to select an intern, remind mentor to send intern feedback, etc)
-
-## Stretch Goals
-
- - Allow community coordinators and mentors to create and manage community and project pages
- - Replace the current Outreachy application system with one that integrates into this site
  - Replace planetaria with one hosted on our domain (that allows for filtering which blogs are displayed?)
  - Track longitudinal information of alumni, so we can share success stories and improve our program
- - Track where communities are in our "funnel" - e.g. do they have funding? a landing page? which mentors are signed up in the application system?
  - Track sponsorship information
  - Create a better way of displaying the list of potential Outreachy projects - e.g. allow searching, tagging for programming language or design or documentation or user experience
 
