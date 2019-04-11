@@ -58,15 +58,7 @@ The following command will automatically create a virtual environment and instal
 pipenv install
 ```
 
-Pipenv automatically records changes in the project's dependencies in the `Pipfile` when you add/remove packages using the corresponding commands:
-
-```
-pipenv install <package>
-```
-
-```
-pipenv uninstall <package>
-```
+[Note: Pipenv automatically records changes in the project's dependencies in the `Pipfile` when you add/remove packages. You can add a package with the command `pipenv install <package>`. You can remove a package with the command `pipenv uninstall <package>`.]
 
 Now, you activate the virtual environment by typing the following command in the directory of the project:
 
