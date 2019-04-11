@@ -241,7 +241,23 @@ Outreachy uses Sentry to log error messages received on both the Outreachy websi
 ssh -t dokku@www.outreachy.org run www env --unset=SENTRY_DSN python manage.py shell
 ```
 
-# Rolling back migrations
+# Migrations
+
+When you change some aspect of a field in a model, that can create a change to the underlying database information. For example, if you change a field name from "foo" to "bar", the Django object database has to change such that you can quenry for objects using the new name. You can read more about migrations and how to create and apply them in the Django migrations documentation. We suggest starting with the [simple migrations introduction in the Django tutorial](https://docs.djangoproject.com/en/1.11/intro/tutorial02/#activating-models), and then looking at the [more detailed migrations documentation](https://docs.djangoproject.com/en/1.11/topics/migrations/) if needed.
+
+In most cases, there are only two commands you need to run to create and apply a migration. The first is:
+
+```./manage.py makemigrations```
+
+This will examine the code changes you've made, and automatically generate a Python file that describes how the underlying database schema should change. Make sure to commit this file along with your model code changes. Then the second command you'll run is:
+
+```./manage.py migrate```
+
+This will apply the database schema change to your local test environment. If the Outreachy organizers push a change that includes a migration to the production or testing sites, they will need to update the server's database schema by running `ssh dokku@outreachy.org run www python manage.py migrate` or `ssh dokku@outreachy.org run test python manage.py migrate`.
+
+The next two sections describe some of the trickier aspects of migrations that we've run into.
+
+## Rolling back migrations
 
 If you have migrated the database (either locally or on the server) and want to go back to a previous migration, you can run:
 
@@ -249,7 +265,7 @@ If you have migrated the database (either locally or on the server) and want to 
 ./manage.py migrate home [version number]
 ```
 
-# Delicate migrations
+## Delicate migrations
 
 Sometimes a field doesn't work out exactly the way you wanted it to, and you want to change the field type. In this example, we'll be changing a simple BooleanField to CharField to support three different choices. This is a dance, because we want to preserve the values in the old field to populate the contents of a new field.
 
