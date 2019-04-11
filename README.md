@@ -171,6 +171,19 @@ In the Outreachy repository, the directory `outreachy-home` is the project. We h
 
 The Outreachy website also uses some apps that are listed in the `INSTALLED_APPS` variable in `outreachyhome/settings/base.py`, but aren't found in top-level directories in the repository. That's because the apps' code was installed into your virtualenv directory when you ran `mkvirtualenv -r requirements.txt`. That command looked at the Python package requirements listed in requirements.txt and ran `pip install` for each of them. For example, if your virtualenv name is `outreachy-django` and you're running Python 2.7 locally, you'll be able to find the code for Wagtail forms (wagtail.wagtailforms) in `~/.virtualenvs/outreachy-django/lib/python2.7/site-packages/wagtail/wagtailforms`.
 
+## Outreachy terminology
+
+Please use the gender-neutral ["they/them" pronouns](http://pronoun.is/they) and gender-neutral language to refer to all Outreachy participants.
+
+ * **FOSS:** Free and Open Source Software.
+ * **Project:** A series of intern tasks to improve FOSS.
+ * **Community:** A community is a set of related projects. For instance, if Django participated as an Outreachy community, the community might mentor projects to improve Django core functionality or Django extensions.
+ * **Mentor:** A mentor defines a project. They work with applicants to help them complete contributions to the project during the application process. A mentor selects an applicant to be the intern for their project. The mentor works remotely with the selected intern during the internship. An intern can have one or more mentors. Most Outreachy mentors only mentor one intern.
+ * **Coordinator:** Each internship project must be associated with a FOSS community participating in Outreachy. That community provides funding for interns, either directly from community funds, or by finding a company or foundation to sponsor interns. Each community has one or more coordinators, who review submitted projects, approve mentors, set internship funding sources, and generally provide a communication link between the mentors and Outreachy organizers. Some smaller communities have only one coordinator, who is also the only mentor.
+ * **Outreachy organizers:** There is a small set of organizers who oversee the entire Outreachy program. They communicate with coordinators about funding, onboard new communities, review inern feedback, authorize intern payments, answer questions, and promote the program to potential applicants.
+ * **Applicant:** During the application process, Outreachy applicants make contributions to projects and apply to be an Outreachy intern.
+ * **Intern:** An accepted applicant works with a mentor for three months during the internship period.
+
 ## Outreachy Internship Phases
 
 The Outreachy website changes depending on what phase of the internship round Outreachy is in. The Outreachy internship round is represented by `class RoundPage` in `home/models.py`. The phases of the internship round are:
