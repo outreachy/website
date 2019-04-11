@@ -146,19 +146,46 @@ Remember, if you change any of the Python code, you'll need to exit the shell (C
 
 # Tour of the code base
 
+When you first clone this project, you'll see a couple top level directories:
+ * `bin`
+ * `contacts`
+ * `docs`
+ * `home`
+ * `outreachyhome`
+ * `search`
+
+If you've followed the steps above to set up your development environment, Django may have generated some directories and put files in them. Don't modify or commit files from those directories. You can use `git ls-tree HEAD` to show you which directories are under revision control. Top-level directories you shouldn't commit to are ones like `media`, `node_modules`, and `static`. These directories are in the .gitignore file, so your changes to those files won't be listed if you run `git status`.
+
+The `bin` directory almost never changes. It includes a script that's run by dokku before the website is deployed to outreachy.org.
+
+The top-level directory `docs` is where our maintenance and design documents go. It also includes the intern and mentor agreements, and our privacy policy.
+
+The `outreachyhome` directory contains the base HTML page templates for all pages on the website. It also includes all the Django project settings for both development and production environments. This directory isn't changed very often.
+
 Django breaks up functionality into a project (a Django web application) and apps (smaller a set of Python code that implements a specific feature). There is only one project deployed on a site at a time, but there could be many apps deployed. You can read more about what an application is in [the Django documentation](https://docs.djangoproject.com/en/2.0/ref/applications/).  
+
 In the Outreachy repository, the directory `outreachy-home` is the project. We have several apps:
-* `home` which contains models (based on wagtail) used on the Outreachy home pages
+* `home` which contains models used on most the Outreachy pages
 * `search` which was set up during the wagtail installation to allow searching for pages and media
-* `contacts` which is a Django app for our contact page.
+* `contacts` which is a Django app for our contact page
 
 The Outreachy website also uses some apps that are listed in the `INSTALLED_APPS` variable in `outreachyhome/settings/base.py`, but aren't found in top-level directories in the repository. That's because the apps' code was installed into your virtualenv directory when you ran `mkvirtualenv -r requirements.txt`. That command looked at the Python package requirements listed in requirements.txt and ran `pip install` for each of them. For example, if your virtualenv name is `outreachy-django` and you're running Python 2.7 locally, you'll be able to find the code for Wagtail forms (wagtail.wagtailforms) in `~/.virtualenvs/outreachy-django/lib/python2.7/site-packages/wagtail/wagtailforms`.
 
-The top-level directory `docs` is where our maintenance and design documents go.
+## Outreachy Internship Phases
 
-If you've been running Django to test locally, you may have two directories `static` and `media`. These will store site images and media you've uploaded through your local site. These directories are in the .gitignore file and should never be committed.
+The Outreachy website changes depending on what phase of the internship round Outreachy is in. The Outreachy internship round is represented by `class RoundPage` in `home/models.py`. The phases of the internship round are:
 
-# Adding a new app
+ 1. Community sign up and mentor project submission
+ 2. Initial application submission
+ 3. Applicant contribution period
+ 4. Final application submission period
+ 5. Intern selection period
+ 6. Intern announcement
+ 7. Internship period
+
+Some of these phases overlap. For example, the project submission period ends part-way through the applicant contribution period. Since Outreachy internships run twice a year, that means one internship round may overlap with another. For example, the end of the intership period often overlaps with the community sign up and mentor project submission phase.
+
+# Adding a new Django app
 
 If you have a set of Django models, views, and templates that is a discrete chunk of functionality, you may want to create a new app in the top-level directory. If we want to call our new app `contacts` we can run the helper script to set up our app:
 
