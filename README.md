@@ -186,7 +186,7 @@ Please use the gender-neutral ["they/them" pronouns](http://pronoun.is/they) and
 
 ## Outreachy Internship Phases
 
-The Outreachy website changes depending on what phase of the internship round Outreachy is in. The Outreachy internship round is represented by `class RoundPage` in `home/models.py`. The phases of the internship round are:
+The Outreachy website changes depending on what phase of the internship round Outreachy is in. The phases of the internship round are:
 
  1. Community sign up and mentor project submission
  2. Initial application submission
@@ -197,6 +197,20 @@ The Outreachy website changes depending on what phase of the internship round Ou
  7. Internship period
 
 Some of these phases overlap. For example, the project submission period ends part-way through the applicant contribution period. Since Outreachy internships run twice a year, that means one internship round may overlap with another. For example, the end of the intership period often overlaps with the community sign up and mentor project submission phase.
+
+## Project submission objects
+
+The Outreachy internship round is represented by `class RoundPage` in `home/models.py`. It contains dates that define the phases of the internship rounds, the round name, the round number, links to future intern chats over video and text.
+
+A FOSS community is represented by the `class Community` in `home/models.py`. It contains things like the community name.
+
+Communities can participate in multiple Outreachy internship rounds. We record their participation in each round in with the `class Participation` in `home/models.py`. A participation includes details like who is sponsoring the Outreachy interns for this community. A participation model has a "link" (a ForeignKey) to one `Community` and one `RoundPage` object. So, for example, we could say "Debian participated the May 2019 Outreachy internship round."
+
+A project is represented by the `class Project` in `home/models.py`. It has a ForeignKey to a `Community`.
+
+The relationships described above can be represented by this diagram:
+
+![A Participation is related to a Community and a RoundPage. A Project is related to a Participation.](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/roundpage-community-participation-project.svg)
 
 # Adding a new Django app
 
