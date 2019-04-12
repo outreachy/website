@@ -134,7 +134,7 @@ def application_summary(request):
     try:
         current_round = RoundPage.objects.get(
             appsopen__lte=today,
-            appslate__gt=today,
+            internannounce__gt=today,
         )
     except RoundPage.DoesNotExist:
         return None
