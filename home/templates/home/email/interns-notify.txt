@@ -36,15 +36,15 @@ Payments and tax information
 
 Outreachy's fiscal sponsor, Software Freedom Conservancy (SFC) will be handling tax information and payment processing. They will contact you through their accounting ticketing system to collect information for sending your payments and any tax-related information.
 
-We ask mentors to notify us if an intern hasn't started their work by {{ current_round.intern_not_started_deadline }}. You will receive the emails to collect payment and tax information sometime after {{ current_round.intern_sfc_initial_payment_notification_deadline }} when we notify SFC that you have started your internships, and before {{ current_round.initial_stipend_payment_deadline }} when Conservancy is scheduled to complete sending your initial payment out.
+We ask mentors to notify us if an intern hasn't started their work by {{ current_round.intern_not_started_deadline }}. You will receive the emails to collect payment and tax information sometime after {{ current_round.intern_sfc_initial_payment_notification_deadline }} when we notify SFC that you have started your internships, and before {{ current_round.initial_stipend_payment_deadline }} when Conservancy will issue your initial stipend payment.
 
 Please note that the SFC payment and tax email addresses are part of a ticketing queue that is an automated system. Please send any questions to organizers@outreachy.org and we will respond to them or properly route them.
 
 Your payments will be sent on the following schedule, provided you start your internship and your mentor notifies us on time that you are in good standing for mid-point and final evaluation. (See "Stipend" section of your internship agreement for full details on this.)
 
- * ${{ current_round.initialpayment }} will be sent to you by {{ current_round.initial_stipend_payment_deadline }}
- * ${{ current_round.midpayment }} will be sent to you by {{ current_round.midpoint_stipend_payment_deadline }}
- * ${{ current_round.finalpayment }} will be sent to you by {{ current_round.final_stipend_payment_deadline }}
+ * The ${{ current_round.initialpayment }} initial payment will be issued by {{ current_round.initial_stipend_payment_deadline }}
+ * The ${{ current_round.midpayment }} mid-point payment will be issued by {{ current_round.midpoint_stipend_payment_deadline }}
+ * The ${{ current_round.finalpayment }} final payment will be issued by {{ current_round.final_stipend_payment_deadline }}
 
 W-9 and W8-BEN forms
 --------------------
