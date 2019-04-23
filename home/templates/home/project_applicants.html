@@ -165,8 +165,11 @@ that timeline, taking into account any time commitments the applicant has.
 					{% endif %}
 				</div>
 			</div>
+		{% if user.is_staff %}
+			{% include 'home/snippet/time_commitment_overview.html' %}
+		{% else %}
+			{% include 'home/snippet/time_commitment_overview_for_mentor.html' %}
 		{% endif %}
-		{% include 'home/snippet/time_commitment_overview_for_mentor.html' %}
 		<p>Contact Information:</p>
 		<ul>
 			<li>{{ applicant.public_name }} &lt;{{ applicant.account.email }}&gt;</li>
