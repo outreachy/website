@@ -83,6 +83,61 @@ The next step is to create an admin account for the local website.
 ```
 ./manage.py createsuperuser
 ```
+
+You'll need to set up a new internship round, following the instructions in the next section.
+
+# Django shell
+
+Django has a 'shell' mode where you can run snippets of Python code. This is extremely useful for figuring out why view code isn't working. You can also use it to test complicated [query sets](https://docs.djangoproject.com/en/1.11/topics/db/queries/#retrieving-objects). It's also useful for doing quick tests of how templates (especially email templates) will look.
+
+You can run the shell on either your local copy of the database, or you can run it on the remote server's database. If you start the shell on your local computer, it will load your local copy of the code and your local database. If you start the shell on the remote server, it will load the server's version of the code and the server's database. Remember, if you change any of the Python code, you'll need to exit the shell (CTRL-d) and restart it to reload the code.
+
+## Setting up a new internship round
+
+When you've first cloned and [set up the Outreachy website development environment](#setting-up-your-development-environment), you'll need to create a new internship round. The website expects to have at least one past round, and some pages won't work without a round. You may also need to set up a new round in your local database so you can test how the website looks during some particular phase. (See the section below for more explanation of the phases of the Outreachy round.)
+
+In either case, the best way to do that is to use the shell to call into `home/factories.py` to create a new internship round. First, start the Django shell:
+
+```
+./manage.py shell
+```
+
+You'll get a Python prompt that looks fairly similar to the standard Python shell, except that all the Django code you've written is available. It will look like this:
+
+```
+$ ./manage.py shell
+Python 3.6.6 (default, Jun 27 2018, 14:44:17) 
+[GCC 8.1.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> 
+```
+
+First, import all the models in `home/models.py`:
+
+```
+>>> from home.models import *
+```
+
+We'll also need to import all the methods in `home/factories.py`:
+
+```
+>>> from home.factories import *
+```
+
+The advantage of using the factories methods is that it automatically computes reasonable dates for all round deadlines, based on what the Outreachy internship round schedule normally is. You just have to give it one date and it will calculate the rest.
+
+### Contributions open
+
+Let's assume you want an internship round where we're in the middle of the contribution period. We can set the deadline for when the final applications for most projects are due (`appsclose`) to be one week from today:
+
+```
+>>> import datetime
+>>> RoundPageFactory(start_from="appsclose", start_date=datetime.date.today() + datetime.timedelta(days=7)).save()
+```
+
+The `save()` method saves the RoundPage object in the local database. Should you need to delete an object from the database, you can call the `delete()` method. Don't call `save()` afterwards, because that will write the object to the database.
+
 # Testing the local website
 
 Once you've run the above setup commands, you should be all set to start testing your local website. First, run the command to start the Django webserver and serve up the local website.
@@ -91,50 +146,11 @@ Once you've run the above setup commands, you should be all set to start testing
 PATH="$PWD/node_modules/.bin:$PATH" ./manage.py runserver
 ```
 
-In your web browser, go to `http://localhost:8000/admin/` to get to the Wagtail administrative interface. `http://localhost:8000/django-admin/` takes you to the regular Django administrative interface. You can log in into both with the account you created with `./manage.py createsuperuser`. 
+To make sure you've set up an internship round successfully, go to the internship project selection page at `http://localhost:8000/apply/project-selection/`. You should see that the internship round dates are correct. If you created an internship round where the final application date has passed, you can see older rounds at `http://localhost:8000/past-projects/`.
 
-If you want to create participating communities, project proposals etc. you first need to set up a `RoundPage`. An easy way to do so is from the *Wagtail interface*. To do this navigate to `http://127.0.0.1:8000/admin` and login with the `superuser` account. On the left menu, click on `Pages` and then on the `Home` directory. Press `Add child page`, select `Round page` and fill out the necessary fields (such as `title`, `roundnumber`, `slug`). All other fields can be run with the defaults. Afterwards you can navigate to `http://127.0.0.1:8000/communities/cfp/` to see the current round.
+To go to the Django administrative interface, go to `http://localhost:8000/django-admin/`. You can log in into with the account you created with `./manage.py createsuperuser`. If you're new to Django, you may want to find the RoundPage you created and edit some of the dates. You can find it by clicking the 'Round pages' link under the HOME section. You'll see the changed dates reflected in the internship project selection page if you refresh it.
 
-# Django shell
-
-Django has a 'shell' mode where you can run snippets of Python code. This is extremely useful for figuring out why view code isn't working. It's also useful for doing quick tests of how templates (especially email templates) will look.
-
-You can run the shell on either your local copy of the database, or you can run it on the remote server's database. To start the shell on your local copy of the code and local database, run
-
-```
-./manage.py shell
-```
-
-You'll get a Python prompt that looks fairly similar to the standard Python shell, except that all the Django code you've written is available. For instance, you can import all the models in `home/models.py`:
-
-```
-$ ./manage.py shell
-Python 3.6.6 (default, Jun 27 2018, 14:44:17) 
-[GCC 8.1.0] on linux
-Type "help", "copyright", "credits" or "license" for more information.
-(InteractiveConsole)
->>> from home.models import *
-```
-
-Say we're making changes to an email template, and we want to know whether the template will render correctly. We'll use the template `home/templates/home/email/interns-notify.txt' as an example. This template takes an InternSelection object and a RoundPage object, both of which will be passed in a dictionary to the render function. Let's pick the first InternSelection object in the list:
-
-```
->>> intern_selection = InternSelection.objects.all()[0]
-```
-
-Now, we can pass those two objects to render to get the HttpResponse. That will change any instances of the objects in the template to use the values of the fields referenced. The render function takes an HTTP request object. If you need to, you can create a simple dictionary to use as the render object. In this example, we pass in None for the request object, because the email template doesn't require it.
-
-```
->>> response = render(None, 'home/email/interns-notify.txt', { 'current_round' : intern_selection.round(), 'intern_selection' : intern_selection, 'coordinator_names': intern_selection.project.project_round.community.get_coordinator_names(), },)
-```
-
-You can see how the final template will look by getting the content out of the HttpResponse object and decoding it:
-
-```
->>> print(response.content.decode('utf-8'))
-```
-
-Remember, if you change any of the Python code, you'll need to exit the shell (CTRL-d) and restart it to reload the code.
+It's unlikely you'll need to access the Wagtail admin interface, where the local CMS content is managed. If you do need to access the Wagtail admin interface, go to `http://localhost:8000/admin/`. Use the same account you created with the `./manage.py createsuperuser` command.
 
 # Tour of the code base
 
