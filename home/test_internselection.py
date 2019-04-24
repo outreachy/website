@@ -15,11 +15,13 @@ from .factories import FinalMentorFeedbackFactory
 @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class InternSelectionTestCase(TestCase):
     def test_mentor_can_resign(self):
+        current_round = RoundPageFactory(start_from='midfeedback', start_date=datetime.date.today())
         for mentors_count in (1, 2):
             with self.subTest(mentors_count=mentors_count):
                 internselection = InternSelectionFactory(
                     active=True,
                     mentors=mentors_count,
+                    round=current_round,
                 )
                 mentors = list(internselection.mentors.all())
                 mentor = mentors.pop()
@@ -80,11 +82,12 @@ class InternSelectionTestCase(TestCase):
         })
 
     def test_mentor_can_give_initial_feedback(self):
+        current_round = RoundPageFactory(start_from='initialfeedback', start_date=datetime.date.today())
         for request_extension in (False, True):
             with self.subTest(request_extension=request_extension):
                 internselection = InternSelectionFactory(
                     active=True,
-                    round__start_from='initialfeedback',
+                    round=current_round,
                 )
 
                 extension_date = None
@@ -116,9 +119,10 @@ class InternSelectionTestCase(TestCase):
             { 'allow_edits': False, 'intern_selection__initial_feedback_opens': today - week },
             { 'allow_edits': True, 'intern_selection__initial_feedback_opens': today + week },
         )
+        current_round = RoundPageFactory(start_from='initialfeedback', start_date=today)
         for params in disallowed_when:
             with self.subTest(params=params):
-                prior = InitialMentorFeedbackFactory(**params)
+                prior = InitialMentorFeedbackFactory(intern_selection__round=current_round, **params)
                 internselection = prior.intern_selection
 
                 answers = self._mentor_feedback_form(internselection)
@@ -261,11 +265,12 @@ class InternSelectionTestCase(TestCase):
         return defaults
 
     def test_mentor_can_give_midpoint_feedback(self):
+        current_round = RoundPageFactory(start_from='midfeedback', start_date=datetime.date.today())
         for request_extension in (False, True):
             with self.subTest(request_extension=request_extension):
                 internselection = InternSelectionFactory(
                     active=True,
-                    round__start_from='midfeedback',
+                    round=current_round,
                 )
 
                 extension_date = None
@@ -297,9 +302,11 @@ class InternSelectionTestCase(TestCase):
             { 'allow_edits': False, 'intern_selection__midpoint_feedback_opens': today - week },
             { 'allow_edits': True, 'intern_selection__midpoint_feedback_opens': today + week },
         )
+        # The dates of the round don't matter because the views check the dates in the InternSelection
+        current_round = RoundPageFactory(start_from='midfeedback', start_date=today)
         for params in disallowed_when:
             with self.subTest(params=params):
-                prior = MidpointMentorFeedbackFactory(**params)
+                prior = MidpointMentorFeedbackFactory(intern_selection__round=current_round, **params)
                 internselection = prior.intern_selection
 
                 answers = self._midpoint_mentor_feedback_form(internselection)
@@ -391,11 +398,12 @@ class InternSelectionTestCase(TestCase):
         return defaults
 
     def test_mentor_can_give_final_feedback(self):
+        current_round = RoundPageFactory(start_from='finalfeedback', start_date=datetime.date.today())
         for request_extension in (False, True):
             with self.subTest(request_extension=request_extension):
                 internselection = InternSelectionFactory(
                     active=True,
-                    round__start_from='midfeedback',
+                    round=current_round,
                 )
 
                 extension_date = None

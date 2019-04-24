@@ -1,5 +1,6 @@
 import datetime
 import factory
+from django.utils.text import slugify
 from wagtail.wagtailcore.models import Page
 from . import models
 
@@ -152,6 +153,8 @@ class RoundPageFactory(PageFactory):
         for field_name in round_dates:
             previous += kwargs[field_name]
             kwargs[field_name] = previous
+        kwargs['title'] = kwargs['internstarts'].strftime('Outreachy %B %Y internship round')
+        kwargs['slug'] = slugify(kwargs['title'])
         return kwargs
 
 class CommunityFactory(factory.django.DjangoModelFactory):
