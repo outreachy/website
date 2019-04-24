@@ -1968,19 +1968,32 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.
 
     def form_valid(self, form):
         form['rating'].save()
-        # Fill in the date and IP address of the signed contract
-        intern_selection, was_intern_selection_created = InternSelection.objects.get_or_create(
+
+        # We can't use get or create here, in case the payment dates have changed
+        # between when the intern was initially selected and when a co-mentor signed up
+        was_intern_selection_created = False
+        try:
+            intern_selection = InternSelection.objects.get(
                 applicant=self.applicant,
                 project=self.project,
-                intern_starts=self.project.project_round.participating_round.internstarts,
-                initial_feedback_opens=self.project.project_round.participating_round.initialfeedback - timedelta(days=7),
-                initial_feedback_due=self.project.project_round.participating_round.initialfeedback,
-                midpoint_feedback_opens=self.project.project_round.participating_round.midfeedback - timedelta(days=7),
-                midpoint_feedback_due=self.project.project_round.participating_round.midfeedback,
-                intern_ends=self.project.project_round.participating_round.internends,
-                final_feedback_opens=self.project.project_round.participating_round.finalfeedback - timedelta(days=7),
-                final_feedback_due=self.project.project_round.participating_round.finalfeedback,
                 )
+        except InternSelection.DoesNotExist:
+            was_intern_selection_created = True
+
+            intern_selection = InternSelection.objects.create(
+                    applicant=self.applicant,
+                    project=self.project,
+                    intern_starts=self.project.project_round.participating_round.internstarts,
+                    initial_feedback_opens=self.project.project_round.participating_round.initialfeedback - timedelta(days=7),
+                    initial_feedback_due=self.project.project_round.participating_round.initialfeedback,
+                    midpoint_feedback_opens=self.project.project_round.participating_round.midfeedback - timedelta(days=7),
+                    midpoint_feedback_due=self.project.project_round.participating_round.midfeedback,
+                    intern_ends=self.project.project_round.participating_round.internends,
+                    final_feedback_opens=self.project.project_round.participating_round.finalfeedback - timedelta(days=7),
+                    final_feedback_due=self.project.project_round.participating_round.finalfeedback,
+                    )
+
+        # Fill in the date and IP address of the signed contract
         signed_contract = form['contract'].save(commit=False)
         signed_contract.date_signed = datetime.now(timezone.utc)
         signed_contract.ip_address = self.request.META.get('REMOTE_ADDR')
