@@ -279,10 +279,10 @@ When testing the website on your local machine, it's useful to create a mentor a
 
 The factory will fill in random names, phrases, and choices for any required fields in the Comrade, User, and Project objects. If you want to override any of those fields, you can pass that field value as an assignment in the same format you would for a [Django filter queryset](https://docs.djangoproject.com/en/1.11/topics/db/queries/#retrieving-specific-objects-with-filters).
 
-In the example Django shell code below, we'll set the password for the mentor so that we can log in under their account. The factories code handles hashing the password and storing the hashed password in the database. We'll also set the MentorApproval approval status to approved (by default, all ApprovalStatus objects are created with the withdrawn approval status). The code assumes you have a pre-created Participation object referenced by the variable `participation`. The code will associate the Project with that community's participation in the internship round, rather than allowing the factories code to create new Community and RoundPage objects with random values.
+In the example Django shell code below, we'll set the password for the mentor so that we can log in under their account. The factories code handles hashing the password and storing the hashed password in the database. We'll also set the MentorApproval approval status and the Project approval status to approved. (By default, all ApprovalStatus objects are created with the withdrawn approval status.) The code assumes you have a pre-created Participation object referenced by the variable `participation`. The code will associate the Project with that community's participation in the internship round, rather than allowing the factories code to create new Community and RoundPage objects with random values.
 
 ```
->>> mentor1 = MentorApprovalFactory(mentor__account__password="mentor1", mentor__account__username="mentor1", approval_status=ApprovalStatus.APPROVED, project__project_round=participation)
+>>> mentor1 = MentorApprovalFactory(mentor__account__password="mentor1", mentor__account__username="mentor1", approval_status=ApprovalStatus.APPROVED, project__project_round=participation, project__approval_status=ApprovalStatus.APPROVED)
 ```
 
 If you want to create a co-mentor under the same project, you can run these two commands:
