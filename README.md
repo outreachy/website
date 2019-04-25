@@ -218,7 +218,7 @@ A project is represented by the `class Project` in `home/models.py`. It has a Fo
 
 The relationships described above can be represented by this diagram:
 
-![A Participation is related to a Community and a RoundPage. A Project is related to a Participation.](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/roundpage-community-participation-project.png)
+![A Participation is related to a Community and a RoundPage. A Project is related to a Participation.](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/RoundPage-Community-Participation-Project.png)
 
 # Adding a new Django app
 
