@@ -292,6 +292,20 @@ If you want to create a co-mentor under the same project, you can run these two 
 >>> mentor2 = MentorApprovalFactory(mentor__account__password="mentor2", mentor__account__username="mentor2", approval_status=ApprovalStatus.APPROVED, project=project)
 ```
 
+## Models for Applicants
+
+When a person wants to apply to Outreachy, their first step is to fill out an initial application. That application is reviewed by Outreachy organizers and approved or rejected. The initial application may be automatically rejected if the person is not eligible to be paid or they have too many time commitments. The initial application must be re-submitted each internship round, because the person's time commitments and payment eligibility may change from round to round. The initial application is represented by `class ApplicantApproval`.
+
+After the applicant's initial application is approved, their next step is to pick one or more projects and make a contribution to it. A contribution is a small task that an applicant finds in the project's issue tracker. Once a contribution is started, the applicant can then record the contribution in the Outreachy website. The contribution form asks for the date started, completed, a URL for the contribution (typically to the issue tracker), and a description of the contribution. The recorded contribution is represented by `class Contribution`.
+
+As the project application deadline nears, the next step is for an applicant to create a final application. The final application includes questions about the applicant's past experiences with FOSS communities, relevant projects, and a timeline of project tasks for the internship project they're applying to. The final application is represented by `class FinalApplication`.
+
+Applicants can record many contributions for the same Project, or different projects. Applicants can submit multiple final applications to different projects. The associated Contribution and FinalApplication objects will all have foriegn keys back to the ApplicantApproval and Project objects.
+
+If the applicant applies to another round, they have to create a new initial application (ApplicantApproval object) and new Contribution and FinalApplication objects associated with the Project they're applying for.
+
+![Diagram showing the relationship from a RoundPage through a Project to a Contribution, then an ApplicationApproval, to a FinalApplication](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/RoundPage-Participation-Project-Contribution-ApplicantApproval-FinalApplication.png)
+
 # Adding a new Django app
 
 If you have a set of Django models, views, and templates that is a discrete chunk of functionality, you may want to create a new app in the top-level directory. If we want to call our new app `contacts` we can run the helper script to set up our app:

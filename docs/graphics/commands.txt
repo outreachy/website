@@ -1,2 +1,3 @@
 ./manage.py graph_models --disable-fields --include-models 'RoundPage,Community,Participation,Project' home | dot -Tsvg:cairo -o docs/graphics/RoundPage-Community-Participation-Project.svg
 ./manage.py graph_models --disable-fields --include-models 'Participation,Community,CoordinatorApproval,Project,MentorApproval' home | dot -Tsvg:cairo -o docs/graphics/Participation-Community-CoordinatorApproval-Project-MentorApproval.svg
+./manage.py graph_models --disable-fields --include-models 'RoundPage,Participation,Project,Contribution,ApplicantApproval,FinalApplication' home | dot -Tsvg:cairo -o docs/graphics/RoundPage-Participation-Project-Contribution-ApplicantApproval-FinalApplication.svg
