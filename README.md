@@ -234,7 +234,7 @@ Most classes with an ApprovalStatus will have emails sent to the submitter when 
 
 The community coordinator role is represented by the CoordinatorApproval class. It has a foreign key to a Community, because we expect the coordinator to remain the same from round to round. New coordinators are on-boarded as people change roles, but most coordinators stick around for at least 2-4 internship rounds.
 
-![A CoordinatorApproval has a foriegn key to a Community.](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/Participation-Community-CoordinatorApproval-Project-MentorApproval.png)
+![A CoordinatorApproval has a foreign key to a Community.](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/Participation-Community-CoordinatorApproval-Project-MentorApproval.png)
 
 When testing the website on your local machine, it's useful to create a coordinator account that you can log into. This allows you to see how the website looks at various points in the round to a coordinator. You can create a new CoordinatoorApproval object using the `home/factories.py` function `CoordinatorApprovalFactory()`.
 

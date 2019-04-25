@@ -180,6 +180,16 @@ class ParticipationFactory(factory.django.DjangoModelFactory):
     community = factory.SubFactory(CommunityFactory)
     participating_round = factory.SubFactory(RoundPageFactory)
 
+class SponsorshipFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.Sponsorship
+
+    participation = factory.SubFactory(ParticipationFactory)
+    coordinator_can_update = True
+    name = factory.Faker('name') + ' Corporation'
+    amount = 6500
+    funding_decision_date = datetime.date.today()
+
 class ProjectFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.Project
