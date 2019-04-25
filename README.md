@@ -330,6 +330,19 @@ The following Django shell example creates a new FinalApplication object. It ass
 >>> FinalApplicationFactory(project=project, applicant=applicant1, round=project.project_round.participating_round, approval_status=ApprovalStatus.PENDING)
 ```
 
+## InternSelection and MentorRelationship classes
+
+When the contribution period is over and the deadline has passed to submit a final application, Outreachy mentors decide which interns they want to select. As part of that process, they must sign a mentor agreement that states they understand their commitments to this internship. The signed contract for this internship with this applicant is stored in `class MentorRelationship`.
+
+When the mentor picks an intern, that intern selection is represented by `class InternSelection`. That model stores information about the internship, such as what project the applicant will be interning with, if the intern has custom start or end dates, if the internship is approved by the Outreachy organizers, etc.
+
+If a co-mentor for the same Project signs up to participate as a mentor for this intern, another MentorRelationship object will be created. Mentors from a different Project can select the applicant as an intern. That would create a MentorRelationship to the MentorApproval for that mentor in that other project. If mentors from two different projects select the same applicant, it shows up as an intern selection conflict on their project applicant review page, the community applicant review page, and the organizer dashboard.
+
+The relationship between an InternSelection and a MentorRelationship is shown below:
+
+![An InternSelection is related to a MentorApproval through a MentorRelationship](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/RoundPage-Community-Participation-Project.png)
+
+
 # Adding a new Django app
 
 If you have a set of Django models, views, and templates that is a discrete chunk of functionality, you may want to create a new app in the top-level directory. If we want to call our new app `contacts` we can run the helper script to set up our app:
