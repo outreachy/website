@@ -306,6 +306,30 @@ If the applicant applies to another round, they have to create a new initial app
 
 ![Diagram showing the relationship from a RoundPage through a Project to a Contribution, then an ApplicationApproval, to a FinalApplication](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/RoundPage-Participation-Project-Contribution-ApplicantApproval-FinalApplication.png)
 
+### Creating ApplicantApproval Test Objects
+
+It can be useful to log into your local test website and see how the pages look from an applicant's perspective. The following Django shell example creates a new ApplicantApproval. It assumes you already have a pre-created RoundPage referenced by the variable `current_round`. It sets the initial application's approval status to approved. The code also ensures that the username and password is set for the applicant so you can log in.
+
+```
+>>> applicant1 = ApplicantApprovalFactory(application_round=current_round, approval_status=ApprovalStatus.APPROVED, applicant__account__username="applicant1", applicant__account__password="applicant1")
+```
+
+### Creating Contribution Test Objects
+
+The following Django shell example creates a new Contribution object. It assumes you already have a pre-created ApplicantApproval referenced by the variable `applicant1` and a pre-created Project referenced by the variable `project`.
+
+```
+>>> ContributionFactory(project=project, applicant=applicant1, round=project.project_round.participating_round)
+```
+
+### Creating FinalApplication Test Objects
+
+The following Django shell example creates a new FinalApplication object. It assumes you already have a pre-created ApplicantApproval referenced by the variable `applicant1` and a pre-created Project referenced by the variable `project`. It sets the FinalApplication approval status to pending.
+
+```
+>>> FinalApplicationFactory(project=project, applicant=applicant1, round=project.project_round.participating_round, approval_status=ApprovalStatus.PENDING)
+```
+
 # Adding a new Django app
 
 If you have a set of Django models, views, and templates that is a discrete chunk of functionality, you may want to create a new app in the top-level directory. If we want to call our new app `contacts` we can run the helper script to set up our app:
