@@ -186,7 +186,7 @@ class SponsorshipFactory(factory.django.DjangoModelFactory):
 
     participation = factory.SubFactory(ParticipationFactory)
     coordinator_can_update = True
-    name = factory.Faker('name') + ' Corporation'
+    name = factory.Faker('name')
     amount = 6500
     funding_decision_date = datetime.date.today()
 
