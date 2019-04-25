@@ -220,6 +220,16 @@ The relationships described above can be represented by this diagram:
 
 ![A Participation is related to a Community and a RoundPage. A Project is related to a Participation.](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/RoundPage-Community-Participation-Project.png)
 
+## ApprovalStatus class
+
+You'll notice in the diagram above that both `class Participation` and `class Project` have `class ApprovalStatus` as a base class. The ApprovalStatus class is a way to keep track of who submitted an object, who has permissions to approve an object, and what the status of the approval is. An ApprovalStatus object can be in the pending, approved, rejected, or withdrawn state.
+
+Outreachy coordinators sign up their community to participate in a particular Outreachy internship round. That puts the associated Participation into the pending state. Outreachy organizers then review the Participation and approve or reject it. Coordinators can withdraw their community's participation at any time. For Participation objects, coordinators are considered the submitters of the Participation, and organizers are the approvers.
+
+Once a community signs up to participate (and even before it's approved), Outreachy mentors can submit projects. That puts the associated Project into the pending state. Coordinators then review the Project and approve or reject it. Project mentors can withdraw their project's participation at any time. For Project objects, mentors are the submitters and coordinators are the approvers.
+
+Most classes with an ApprovalStatus will have emails sent to the submitter when they are approved, but some don't. Review the view code in `home/views.py` to see what emails are sent when the status changes.
+
 # Adding a new Django app
 
 If you have a set of Django models, views, and templates that is a discrete chunk of functionality, you may want to create a new app in the top-level directory. If we want to call our new app `contacts` we can run the helper script to set up our app:
