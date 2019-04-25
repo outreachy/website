@@ -340,7 +340,7 @@ If a co-mentor for the same Project signs up to participate as a mentor for this
 
 The relationship between an InternSelection and a MentorRelationship is shown below:
 
-![An InternSelection is related to a MentorApproval through a MentorRelationship](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/RoundPage-Community-Participation-Project.png)
+![An InternSelection is related to a MentorApproval through a MentorRelationship](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/docs/graphics/MentorApproval-MentorRelationship-Project-ApplicantApproval-InternSelection.png)
 
 
 # Adding a new Django app
