@@ -1,5 +1,17 @@
 This manual will document the common tasks that an Outreachy organizer has during the Outreachy application phase and internship.
 
+# Organizer private resources
+
+ * Public GitHub [Outreachy website repository](https://github.com/sagesharp/outreachy-django-wagtail/)
+ * Public etherpad for taking notes during Outreachy organizer meetings (ask an organizer for the URL before the meeting)
+ * Private GitLab [notes repository](https://gitlab.com/sagesharp/outreachy-notes/) for organizers
+ * Private GitLab [eligibility notes repository](https://gitlab.com/sagesharp/outreachy-applicant-review)
+ * Private Software Freedom Conservancy [subversion repository](svn+ssh://svn@basswood.sfconservancy.org/Conservancy/Projects/Outreachy) for storing intern and mentor agreements, sponsorship agreements, and the Outreachy finances ledger files. Only Outreachy PLC members have access to this via ssh key.
+ * Invite-only [Zulip chat](https://chat.outreachy.org/) for Outreachy interns, mentors, coordinators, and organizers
+ * [Invoice Ninja account](https://www.invoiceninja.com/) for tracking invoices
+ * [Organizer dashboard](https://www.outreachy.org/dasboard/) for sending semi-automated emails and tracking progress during the internship round
+ * [Rackspace account](https://mycloud.rackspace.com/) for managing Outreachy web servers
+
 # Intern selection period
 
 After final applications are closed, the following steps need to be taken:
@@ -28,3 +40,11 @@ When reviewing all interns, please do the following:
  * **Review applicant time commitments** Click the applicant's name on the dashboard to be taken to their detailed application and time commitment information. If an applicant said they would quit their job, email them to a) double check if their stated weekly hours is correct and b) double check whether they will quit that job, if required. It's required that applicants quit their jobs if they work more than 20 hours a week, or if they're working in a technical role and they're being accepted for a technical position. There's an email template in the Outreachy organizer's private GitLab eligibility repository that you can use.
  * **Check final applications for mentions of jobs or other time commitments** Sometimes applicants aren't truthful, and don't include all their time commitments on their initial application. If you notice they mention a job or classes, email them with a sternly worded warning and ask questions about their time commitments.
  * **Check for mentors over-committing themselves** Review all the mentors in each community. If one mentor has selected two interns, ask if they have a co-mentor who can help them. If they don't, and the community is new to Outreachy, tell them they shouldn't select more than one intern.
+
+## Invoice Information Gathering
+
+During the intern selection period is a good time to ask for billing information for sponsors. The email template for that is in the organizer private GitLab notes repo.
+
+Make sure to add the sponsor contact details and invoice draft to Invoice Ninja. There is a particular format for setting the invoice number that makes it easier to search: `RoundDate-InvoiceNumber-CommunitiesThatReceiveThisFunding`. Do not click send invoice! Save it as a draft instead.  Ask Software Freedom Conservancy to invoice the sponsor, and they will send the invoice. Instructions for the format and email address to send to are in the GitLab notes repository in the `payment-emails.txt` file and `email/email-sponsor-confirmation.txt`. Mark the invoice as sent when you make the invoice request. Mark in the invoice private notes the date you sent the invoice request.
+
+Once the invoice is sent and ledger shows the invoice amount as a negative amount in Accrued:Accounts Receivable:Outreachy, it means Conservancy has recorded the invoice as paid. You can use this command to look at the accounts receivable entries in ledger: `ledger -V -f Ledger/outreachy.ledger --group-by date register /^Accrued:Accounts\ Receivable/`
