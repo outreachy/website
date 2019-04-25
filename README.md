@@ -206,15 +206,13 @@ The Outreachy website changes depending on what phase of the internship round Ou
 
 Some of these phases overlap. For example, the project submission period ends part-way through the applicant contribution period. Since Outreachy internships run twice a year, that means one internship round may overlap with another. For example, the end of the intership period often overlaps with the community sign up and mentor project submission phase.
 
-## Project submission objects
+## Internship Rounds and Communities
 
 The Outreachy internship round is represented by `class RoundPage` in `home/models.py`. It contains dates that define the phases of the internship rounds, the round name, the round number, links to future intern chats over video and text.
 
 A FOSS community is represented by the `class Community` in `home/models.py`. It contains things like the community name.
 
 Communities can participate in multiple Outreachy internship rounds. We record their participation in each round in with the `class Participation` in `home/models.py`. A participation includes details like who is sponsoring the Outreachy interns for this community. A participation model has a "link" (a ForeignKey) to one `Community` and one `RoundPage` object. So, for example, we could say "Debian participated the May 2019 Outreachy internship round."
-
-A project is represented by the `class Project` in `home/models.py`. It has a ForeignKey to a `Community`.
 
 The relationships described above can be represented by this diagram:
 
@@ -251,10 +249,48 @@ The example above sets the community name to "Really Awesome Community", but you
 If you want to create a second coordinator under the same community, you can run this command:
 
 ```
->>> coord2 = CoordinatorApprovalFactory(coordinator__account__password="coord2", coordinator__account__username="coord2", approval_status=ApprovalStatus.APPROVED, community=coord1.community)
+>>> really_awesome_community = coord1.community
+>>> coord2 = CoordinatorApprovalFactory(coordinator__account__password="coord2", coordinator__account__username="coord2", approval_status=ApprovalStatus.APPROVED, community=really_awesome_community)
 ```
 
 If you visit `http://localhost:8000/communities/cfp/really-awesome-community/`, you should see the randomly generated names of the coordinators. You can log in with the superuser account or one of the coordinator's accounts to see how the page changes once you log in.
+
+## Participation and Sponsorship classes
+
+Each community can sign up to participate in an Outreachy internship round. That sign up is represented by `class Participation`. As part of signing up to participate in Outreachy, each community must provide sponsorship for at least one intern ($6,500 USD). When a community signs up, we require the coordinator to fill out information about their sponsor names and sponsorship amounts. The sponsor information is stored in `class Sponsorship`, which has a foreign key to the Participation object.
+
+You can use the Django shell to create a new participation. The example below assumes you already have a pre-created community that is being referenced by the variable name `really_awesome_community`, and a pre-created RoundPage `current_round`. The code also sets the approval status to say the community has been approved to participate in this round. The example sets that the community will be receiving sponsorship for two interns. We'll save a reference to that Participation object in the variable participation.
+
+```
+>>> participation = SponsorshipFactory(participation__participating_round=current_round, participation__community=really_awesome_community, participation__approval_status=ApprovalStatus.APPROVED, amount=13000).participation
+```
+
+## Project and MentorApproval classes
+
+In Outreachy, mentors submit projects under a participating community. Mentors are in charge of defining the project description and tasks that the applicants work on during the contribution phase. Each project can have one or more mentors.
+
+A project is represented by the `class Project` in `home/models.py`. It has a ForeignKey to a `Participation` (the representation of a community participating in an internship round).
+
+The mentor(s) for that project are represented by the `class MentorApproval` in `home/models.py`. That provides a link between the mentor's account on Outreachy (a `Comrade` object) and the Project object. A mentor submit or co-mentor more than one project, which will create multiple MentorApproval objects.
+
+![A MentorApproval has a foreign key to a Project.](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/Participation-Community-CoordinatorApproval-Project-MentorApproval.png)
+
+When testing the website on your local machine, it's useful to create a mentor account that you can log into. This allows you to see how the website looks at various points in the round to a mentor. You can create a new MentorApproval object using the `home/factories.py` function `MentorApprovalFactory()`.
+
+The factory will fill in random names, phrases, and choices for any required fields in the Comrade, User, and Project objects. If you want to override any of those fields, you can pass that field value as an assignment in the same format you would for a [Django filter queryset](https://docs.djangoproject.com/en/1.11/topics/db/queries/#retrieving-specific-objects-with-filters).
+
+In the example Django shell code below, we'll set the password for the mentor so that we can log in under their account. The factories code handles hashing the password and storing the hashed password in the database. We'll also set the MentorApproval approval status to approved (by default, all ApprovalStatus objects are created with the withdrawn approval status). The code assumes you have a pre-created Participation object referenced by the variable `participation`. The code will associate the Project with that community's participation in the internship round, rather than allowing the factories code to create new Community and RoundPage objects with random values.
+
+```
+>>> mentor1 = MentorApprovalFactory(mentor__account__password="mentor1", mentor__account__username="mentor1", approval_status=ApprovalStatus.APPROVED, project__project_round=participation)
+```
+
+If you want to create a co-mentor under the same project, you can run these two commands:
+
+```
+>>> project = mentor1.project
+>>> mentor2 = MentorApprovalFactory(mentor__account__password="mentor2", mentor__account__username="mentor2", approval_status=ApprovalStatus.APPROVED, project=project)
+```
 
 # Adding a new Django app
 
