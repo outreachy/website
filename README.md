@@ -230,6 +230,32 @@ Once a community signs up to participate (and even before it's approved), Outrea
 
 Most classes with an ApprovalStatus will have emails sent to the submitter when they are approved, but some don't. Review the view code in `home/views.py` to see what emails are sent when the status changes.
 
+## CoordinatorApproval class
+
+The community coordinator role is represented by the CoordinatorApproval class. It has a foreign key to a Community, because we expect the coordinator to remain the same from round to round. New coordinators are on-boarded as people change roles, but most coordinators stick around for at least 2-4 internship rounds.
+
+![A CoordinatorApproval has a foriegn key to a Community.](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/Participation-Community-CoordinatorApproval-Project-MentorApproval.png)
+
+When testing the website on your local machine, it's useful to create a coordinator account that you can log into. This allows you to see how the website looks at various points in the round to a coordinator. You can create a new CoordinatoorApproval object using the `home/factories.py` function `CoordinatorApprovalFactory()`.
+
+The factory will fill in random names, phrases, and choices for any required fields in the CoordinatorApproval, Comrade, User, and Community objects. If you want to override any of those fields, you can pass that field value as an assignment in the same format you would for a [Django filter queryset](https://docs.djangoproject.com/en/1.11/topics/db/queries/#retrieving-specific-objects-with-filters).
+
+In the example code below, we'll set the password for the coordinator so that we can log in under their account. The factories code handles hashing the password and storing the hashed password in the database. We'll also set the CoordinatorApproval approval status to approved (by default, all ApprovalStatus objects are created with the withdrawn approval status).
+
+```
+>>> coord1 = CoordinatorApprovalFactory(coordinator__account__password="coord1", coordinator__account__username="coord1", approval_status=ApprovalStatus.APPROVED, community__name=name, community__slug=slugify(name))
+```
+
+The example above sets the community name to "Really Awesome Community", but you can use the name of your favorite FOSS community instead.
+
+If you want to create a second coordinator under the same community, you can run this command:
+
+```
+>>> coord2 = CoordinatorApprovalFactory(coordinator__account__password="coord2", coordinator__account__username="coord2", approval_status=ApprovalStatus.APPROVED, community=coord1.community)
+```
+
+If you visit `http://localhost:8000/communities/cfp/really-awesome-community/`, you should see the randomly generated names of the coordinators. You can log in with the superuser account or one of the coordinator's accounts to see how the page changes once you log in.
+
 # Adding a new Django app
 
 If you have a set of Django models, views, and templates that is a discrete chunk of functionality, you may want to create a new app in the top-level directory. If we want to call our new app `contacts` we can run the helper script to set up our app:
