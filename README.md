@@ -162,7 +162,7 @@ When you first clone this project, you'll see a couple top level directories:
  * `outreachyhome`
  * `search`
 
-If you've followed the steps above to set up your development environment, Django may have generated some directories and put files in them. Don't modify or commit files from those directories. You can use `git ls-tree HEAD` to show you which directories are under revision control. Top-level directories you shouldn't commit to are ones like `media`, `node_modules`, and `static`. These directories are in the .gitignore file, so your changes to those files won't be listed if you run `git status`.
+If you've followed the steps above to set up your development environment, Django may have generated some directories and put files in them. Don't modify or commit files from those directories. You can use `git status --ignored` to show you which directories are not supposed to be under revision control. Top-level directories you shouldn't commit to are ones like `media`, `node_modules`, and `static`. These directories are in the .gitignore file, so your changes to those files won't be listed if you run `git status`.
 
 The `bin` directory almost never changes. It includes a script that's run by dokku before the website is deployed to outreachy.org.
 
