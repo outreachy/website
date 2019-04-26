@@ -244,12 +244,11 @@ When testing the website on your local machine, it's useful to create a coordina
 
 The factory will fill in random names, phrases, and choices for any required fields in the CoordinatorApproval, Comrade, User, and Community objects. If you want to override any of those fields, you can pass that field value as an assignment in the same format you would for a [Django filter queryset](https://docs.djangoproject.com/en/1.11/topics/db/queries/#retrieving-specific-objects-with-filters).
 
-In the example code below, we'll set the password for the coordinator so that we can log in under their account. The factories code handles hashing the password and storing the hashed password in the database. We'll also set the CoordinatorApproval approval status to approved (by default, all ApprovalStatus objects are created with the withdrawn approval status). The example sets the community name to "Really Awesome Community", but you can use the name of your favorite FOSS community instead.
+In the example code below, we'll create a new CoordinatorApproval object. The factories code automatically sets all passwords for User accounts to `test`. We'll set the CoordinatorApproval approval status to approved (by default, all ApprovalStatus objects are created with the withdrawn approval status). The example sets the community name to "Really Awesome Community", but you can use the name of your favorite FOSS community instead.
 
 ```
 >>> name = "Really Awesome Community"
 >>> coord1 = CoordinatorApprovalFactory(
-	coordinator__account__password="coord1",
 	coordinator__account__username="coord1",
 	approval_status=ApprovalStatus.APPROVED,
 	community__name=name,
@@ -261,7 +260,6 @@ If you want to create a second coordinator under the same community, you can run
 
 ```
 >>> coord2 = CoordinatorApprovalFactory(
-	coordinator__account__password="coord2",
 	coordinator__account__username="coord2",
 	approval_status=ApprovalStatus.APPROVED,
 	community=really_awesome_community)
@@ -298,11 +296,10 @@ When testing the website on your local machine, it's useful to create a mentor a
 
 The factory will fill in random names, phrases, and choices for any required fields in the Comrade, User, and Project objects. If you want to override any of those fields, you can pass that field value as an assignment in the same format you would for a [Django filter queryset](https://docs.djangoproject.com/en/1.11/topics/db/queries/#retrieving-specific-objects-with-filters).
 
-In the example Django shell code below, we'll set the password for the mentor so that we can log in under their account. The factories code handles hashing the password and storing the hashed password in the database. We'll also set the MentorApproval approval status and the Project approval status to approved. (By default, all ApprovalStatus objects are created with the withdrawn approval status.) The code assumes you have a pre-created Participation object referenced by the variable `participation`. The code will associate the Project with that community's participation in the internship round, rather than allowing the factories code to create new Community and RoundPage objects with random values.
+In the example Django shell code below, we'll create a MentorApproval object. The factories code automatically sets the password for the mentor to `test`. We'll set the MentorApproval approval status and the Project approval status to approved. (By default, all ApprovalStatus objects are created with the withdrawn approval status.) The code assumes you have a pre-created Participation object referenced by the variable `participation`. The code will associate the Project with that community's participation in the internship round, rather than allowing the factories code to create new Community and RoundPage objects with random values.
 
 ```
 >>> mentor1 = MentorApprovalFactory(
-	mentor__account__password="mentor1",
 	mentor__account__username="mentor1",
 	approval_status=ApprovalStatus.APPROVED,
 	project__project_round=participation,
@@ -314,7 +311,6 @@ If you want to create a co-mentor under the same project, you can run these two 
 ```
 >>> project = mentor1.project
 >>> mentor2 = MentorApprovalFactory(
-	mentor__account__password="mentor2",
 	mentor__account__username="mentor2",
 	approval_status=ApprovalStatus.APPROVED,
 	project=project)
@@ -336,14 +332,13 @@ If the applicant applies to another round, they have to create a new initial app
 
 ### Creating ApplicantApproval Test Objects
 
-It can be useful to log into your local test website and see how the pages look from an applicant's perspective. The following Django shell example creates a new ApplicantApproval. It assumes you already have a pre-created RoundPage referenced by the variable `current_round`. It sets the initial application's approval status to approved. The code also ensures that the username and password is set for the applicant so you can log in.
+It can be useful to log into your local test website and see how the pages look from an applicant's perspective. The following Django shell example creates a new ApplicantApproval. It assumes you already have a pre-created RoundPage referenced by the variable `current_round`. It sets the initial application's approval status to approved. The code sets the applicant's account username. The factories code automatically sets the password to `test`.
 
 ```
 >>> applicant1 = ApplicantApprovalFactory(
 	application_round=current_round,
 	approval_status=ApprovalStatus.APPROVED,
-	applicant__account__username="applicant1",
-	applicant__account__password="applicant1")
+	applicant__account__username="applicant1")
 ```
 
 ### Creating Contribution Test Objects
