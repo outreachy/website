@@ -304,12 +304,12 @@ In the example Django shell code below, we'll create a MentorApproval object. Th
 	approval_status=ApprovalStatus.APPROVED,
 	project__project_round=participation,
 	project__approval_status=ApprovalStatus.APPROVED)
+>>> project = mentor1.project
 ```
 
 If you want to create a co-mentor under the same project, you can run these two commands:
 
 ```
->>> project = mentor1.project
 >>> mentor2 = MentorApprovalFactory(
 	mentor__account__username="mentor2",
 	approval_status=ApprovalStatus.APPROVED,
