@@ -242,18 +242,17 @@ When testing the website on your local machine, it's useful to create a coordina
 
 The factory will fill in random names, phrases, and choices for any required fields in the CoordinatorApproval, Comrade, User, and Community objects. If you want to override any of those fields, you can pass that field value as an assignment in the same format you would for a [Django filter queryset](https://docs.djangoproject.com/en/1.11/topics/db/queries/#retrieving-specific-objects-with-filters).
 
-In the example code below, we'll set the password for the coordinator so that we can log in under their account. The factories code handles hashing the password and storing the hashed password in the database. We'll also set the CoordinatorApproval approval status to approved (by default, all ApprovalStatus objects are created with the withdrawn approval status).
+In the example code below, we'll set the password for the coordinator so that we can log in under their account. The factories code handles hashing the password and storing the hashed password in the database. We'll also set the CoordinatorApproval approval status to approved (by default, all ApprovalStatus objects are created with the withdrawn approval status). The example sets the community name to "Really Awesome Community", but you can use the name of your favorite FOSS community instead.
 
 ```
+>>> name = "Really Awesome Community"
 >>> coord1 = CoordinatorApprovalFactory(coordinator__account__password="coord1", coordinator__account__username="coord1", approval_status=ApprovalStatus.APPROVED, community__name=name, community__slug=slugify(name))
+>>> really_awesome_community = coord1.community
 ```
-
-The example above sets the community name to "Really Awesome Community", but you can use the name of your favorite FOSS community instead.
 
 If you want to create a second coordinator under the same community, you can run this command:
 
 ```
->>> really_awesome_community = coord1.community
 >>> coord2 = CoordinatorApprovalFactory(coordinator__account__password="coord2", coordinator__account__username="coord2", approval_status=ApprovalStatus.APPROVED, community=really_awesome_community)
 ```
 
