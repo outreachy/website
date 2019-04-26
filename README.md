@@ -133,10 +133,10 @@ Let's assume you want an internship round where we're in the middle of the contr
 
 ```
 >>> import datetime
->>> RoundPageFactory(start_from="appsclose", start_date=datetime.date.today() + datetime.timedelta(days=7)).save()
+>>> RoundPageFactory(start_from="appsclose", start_date=datetime.date.today() + datetime.timedelta(days=7))
 ```
 
-The `save()` method saves the RoundPage object in the local database. Should you need to delete an object from the database, you can call the `delete()` method. Don't call `save()` afterwards, because that will write the object to the database.
+Note: Normally in the Django shell, you need to call the `save()` method to write the RoundPage object in the local database. The factories code automatically calls the `save()` method for you. Should you need to delete an object from the database, you can call the `delete()` method. Don't call `save()` afterwards, because that will write the object back to the database.
 
 # Testing the local website
 
