@@ -1,6 +1,7 @@
 import datetime
-import factory
 from django.utils.text import slugify
+import factory
+import itertools
 from wagtail.wagtailcore.models import Page
 from . import models
 
@@ -36,6 +37,39 @@ class ComradeFactory(factory.django.DjangoModelFactory):
     @factory.lazy_attribute
     def agreed_to_code_of_conduct(self):
         return self.legal_name
+
+
+class CoordinatorFactory(ComradeFactory):
+    "Subclass of ComradeFactory with specialized usernames for coordinators."
+    account__username = factory.Iterator(
+        ('coordinator{}'.format(n) for n in itertools.count(1)),
+        cycle=False,
+    )
+
+
+class ReviewerFactory(ComradeFactory):
+    "Subclass of ComradeFactory with specialized usernames for application reviewers."
+    account__username = factory.Iterator(
+        ('reviewer{}'.format(n) for n in itertools.count(1)),
+        cycle=False,
+    )
+
+
+class MentorFactory(ComradeFactory):
+    "Subclass of ComradeFactory with specialized usernames for project mentors."
+    account__username = factory.Iterator(
+        ('mentor{}'.format(n) for n in itertools.count(1)),
+        cycle=False,
+    )
+
+
+class ApplicantFactory(ComradeFactory):
+    "Subclass of ComradeFactory with specialized usernames for applicants."
+    account__username = factory.Iterator(
+        ('applicant{}'.format(n) for n in itertools.count(1)),
+        cycle=False,
+    )
+
 
 class PageFactory(factory.Factory):
     """
