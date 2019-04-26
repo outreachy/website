@@ -5,80 +5,106 @@
 			<h2>{{ rel.round.official_name }}</h2>
 		{% endifchanged %}
 		{% if not rel.round.has_intern_announcement_deadline_passed %}
-			<div class="card mb-3">
+		<div class="card border-info mb-3">
+			<div class="card-header bg-warning">Keep intern decisions private from mentees until {{ rel.round.internannounce }} at 4pm UTC</div>
 			<div class="card-body">
-				<p class="card-text"><b>This internship has not been announced yet. Please do not tell your mentee about their internship until after {{ rel.round.internannounce }} at 4pm UTC.</b> Outreachy organizers need time to seek additional funding, review all interns, and resolve any conflicts where two mentors accept the same intern. In order to ensure we don't communicate the wrong information, we need all mentors to keep their intern selection private until the official announcement date.</p>
+				<p class="card-text">
+				You have selected {{ rel.intern_name }} as an intern for the {{ rel.community_name }} project "<a href="{% url 'community-landing' round_slug=rel.round.slug community_slug=rel.intern_selection.project.project_round.community.slug %}#{{ rel.intern_selection.project.slug }}">{{ rel.project_name }}</a>".</p>
+				<p class="card-text">
+				{% if rel.intern_selection.organizer_approved == True %}
+					Your intern selection has been approved by Organizers.</p>
+					<p class="card-text"><b>This internship has not been announced yet.
+					Please do not tell your mentee about their internship until after
+					{{ rel.round.internannounce }} at 4pm UTC.</b>
+				{% elif rel.intern_selection.organizer_approved == None %}
+					Your internship selection is pending Organizer review.</p>
+					<p class="card-text"><b>Please do not tell your mentee about their internship until after
+					{{ rel.round.internannounce }} at 4pm UTC.</b>
+					Outreachy organizers need time to seek additional funding, review all interns,
+					and resolve any conflicts where two mentors accept the same intern.
+					In order to ensure we don't communicate the wrong information,
+					we need all mentors to keep their intern selection private until the official announcement date.</p>
+				{% else %}
+					Your internship selection was not approved by the Outreachy Organizers.</p>
+					<p class="card-text"><b>Please do not communicate our decision until after
+					{{ rel.round.internannounce }} at 4pm UTC.</b>
+					You may want to encourage them to apply again in a future round.</p>
+				{% endif %}
 			</div>
 			</div>
+		{% else %}
+			<p>Accepted interns are announced on the <a href="{% url 'alums' %}">Outreachy alums page</a>.</p>
 		{% endif %}
 
-		<p>You {% if rel.round.has_internship_ended %}mentored{% else %}are mentoring{% endif %} {{ rel.intern_name }} for the {{ rel.community_name }} project "<a href="{% url 'community-landing' round_slug=rel.round.slug community_slug=rel.intern_selection.project.project_round.community.slug %}#{{ rel.intern_selection.project.slug }}">{{ rel.project_name }}</a>".{% if not rel.round.has_internship_ended %} Please <a href="/mentor/mentor-faq/#during-the-internship">review our tips</a> for ensuring your mentee is successful.{% endif %}</p>
+		{% if rel.intern_selection.organizer_approved == True %}
+			<p>You {% if rel.round.has_internship_ended %}mentored{% else %}are mentoring{% endif %} {{ rel.intern_name }} for the {{ rel.community_name }} project "<a href="{% url 'community-landing' round_slug=rel.round.slug community_slug=rel.intern_selection.project.project_round.community.slug %}#{{ rel.intern_selection.project.slug }}">{{ rel.project_name }}</a>".{% if not rel.round.has_internship_ended %} Please <a href="/mentor/mentor-faq/#during-the-internship">review our tips</a> for ensuring your mentee is successful.{% endif %}</p>
 
-		{% if not rel.round.has_internship_ended %}
-			<h3>Internship Dates</h3>
-			{% if not rel.intern_selection.intern_has_custom_dates %}
-				<p>Outreachy internships start on {{ rel.round.internstarts }} and end on {{ rel.round.internends }}.{% if not rel.round.has_internship_ended %} <a href="/mentor/mentor-faq/#internship-delays">Internships can be extended</a> by up to five weeks if interns are not putting in a full-time (40 hours a week effort), or the intern needs to take more than a week off from their internship. Please <a href="{% url 'contact-organizers' %}">discuss any extensions</a> or changes to the intern start date with the Outreachy organizers.{% endif %}</p>
-			{% else %}
-				<p>Your intern has custom internship dates. Their internship will start on {{ rel.intern_selection.intern_starts }} and end on {{ rel.intern_selection.intern_ends}}.{% if not rel.round.has_internship_ended %} <a href="/mentor/mentor-faq/#internship-delays">Internships can be extended</a> by up to five weeks from the official end date of {{ rel.round.internends }}. Please <a href="{% url 'contact-organizers' %}">discuss any further extensions</a> or changes to the intern start date with the Outreachy organizers.{% endif %}</p>
-			{% endif %}
+			{% if not rel.round.has_internship_ended %}
+				<h3>Internship Dates</h3>
+				{% if not rel.intern_selection.intern_has_custom_dates %}
+					<p>Outreachy internships start on {{ rel.round.internstarts }} and end on {{ rel.round.internends }}.{% if not rel.round.has_internship_ended %} <a href="/mentor/mentor-faq/#internship-delays">Internships can be extended</a> by up to five weeks if interns are not putting in a full-time (40 hours a week effort), or the intern needs to take more than a week off from their internship. Please <a href="{% url 'contact-organizers' %}">discuss any extensions</a> or changes to the intern start date with the Outreachy organizers.{% endif %}</p>
+				{% else %}
+					<p>Your intern has custom internship dates. Their internship will start on {{ rel.intern_selection.intern_starts }} and end on {{ rel.intern_selection.intern_ends}}.{% if not rel.round.has_internship_ended %} <a href="/mentor/mentor-faq/#internship-delays">Internships can be extended</a> by up to five weeks from the official end date of {{ rel.round.internends }}. Please <a href="{% url 'contact-organizers' %}">discuss any further extensions</a> or changes to the intern start date with the Outreachy organizers.{% endif %}</p>
+				{% endif %}
 
-			<h3 id="feedback">Internship Feedback</h3>
+				<h3 id="feedback">Internship Feedback</h3>
 
-			<p>Outreachy organizers require <a href="/mentor/mentor-faq/#mid-point-and-final-review">mentor feedback</a> at three points during the internship. We must receive successful feedback from one mentor in order for the intern to be paid their stipends on time.</p>
+				<p>Outreachy organizers require <a href="/mentor/mentor-faq/#mid-point-and-final-review">mentor feedback</a> at three points during the internship. We must receive successful feedback from one mentor in order for the intern to be paid their stipends on time.</p>
 
-			<p>Only one mentor can submit feedback for one intern. If you are co-mentoring an intern, please talk with your co-mentor to decide what your feedback should be.</p>
+				<p>Only one mentor can submit feedback for one intern. If you are co-mentoring an intern, please talk with your co-mentor to decide what your feedback should be.</p>
 
-			<p>Once you submit your feedback form and you mark your intern as being able to be paid, the form cannot be edited. If you ask for an extension for this internship milestone, you will be able to update your answers after the extension is complete.</p>
+				<p>Once you submit your feedback form and you mark your intern as being able to be paid, the form cannot be edited. If you ask for an extension for this internship milestone, you will be able to update your answers after the extension is complete.</p>
 
-			{% if rel.intern_selection.is_initial_feedback_on_intern_open %}
-				<p><a href="{% url 'initial-mentor-feedback' username=rel.intern_selection.applicant.applicant.account.username %}"><button type="button" class="btn btn-info">Submit Initial Feedback</button></a></p>
-			{% endif %}
-			{% if rel.intern_selection.is_midpoint_feedback_on_intern_open %}
-				<p><a href="{% url 'midpoint-mentor-feedback' username=rel.intern_selection.applicant.applicant.account.username %}"><button type="button" class="btn btn-info">Submit Midpoint Feedback</button></a></p>
-			{% endif %}
-			{% if rel.intern_selection.is_final_feedback_on_intern_open %}
-				<p><a href="{% url 'final-mentor-feedback' username=rel.intern_selection.applicant.applicant.account.username %}"><button type="button" class="btn btn-info">Submit Final Feedback</button></a></p>
-			{% endif %}
+				{% if rel.intern_selection.is_initial_feedback_on_intern_open %}
+					<p><a href="{% url 'initial-mentor-feedback' username=rel.intern_selection.applicant.applicant.account.username %}"><button type="button" class="btn btn-info">Submit Initial Feedback</button></a></p>
+				{% endif %}
+				{% if rel.intern_selection.is_midpoint_feedback_on_intern_open %}
+					<p><a href="{% url 'midpoint-mentor-feedback' username=rel.intern_selection.applicant.applicant.account.username %}"><button type="button" class="btn btn-info">Submit Midpoint Feedback</button></a></p>
+				{% endif %}
+				{% if rel.intern_selection.is_final_feedback_on_intern_open %}
+					<p><a href="{% url 'final-mentor-feedback' username=rel.intern_selection.applicant.applicant.account.username %}"><button type="button" class="btn btn-info">Submit Final Feedback</button></a></p>
+				{% endif %}
 
-			<p>Submitted feedback:</p>
-			<ul>
-			{% if rel.intern_selection.initialmentorfeedback %}
-				<li><p>Initial feedback: {% if rel.intern_selection.initialmentorfeedback.payment_approved %}<button type="button" class="btn btn-success">Payment approved</button>{% else %}<button type="button" class="btn btn-warning">Payment Not Aproved</button>{% endif %}{% if rel.intern_selection.initialmentorfeedback.request_extension %} Extension requested for initial feedback until {{ rel.intern_selection.initialmentorfeedback.extension_date|date:"M d, Y" }}.{% endif %}{% if rel.intern_selection.initialmentorfeedback.request_termination %} Termination requested for this internship.{% endif %}</p></li>
-			{% endif %}
-			{% if rel.intern_selection.midpointmentorfeedback %}
-				<li><p>Midpoint feedback: {% if rel.intern_selection.midpointmentorfeedback.payment_approved %}<button type="button" class="btn btn-success">Payment approved</button>{% else %}<button type="button" class="btn btn-warning">Payment Not Aproved</button>{% endif %}{% if rel.intern_selection.midpointmentorfeedback.request_extension %} Extension requested for midpoint feedback until {{ rel.intern_selection.midpointmentorfeedback.extension_date|date:"M d, Y" }}.{% endif %}{% if rel.intern_selection.midpointmentorfeedback.request_termination %} Termination requested for this internship.{% endif %}</p></li>
-			{% endif %}
-			{% if rel.intern_selection.finalmentorfeedback %}
-				<li><p>Final feedback: {% if rel.intern_selection.finalmentorfeedback.payment_approved %}<button type="button" class="btn btn-success">Payment approved</button>{% else %}<button type="button" class="btn btn-warning">Payment Not Aproved</button>{% endif %}{% if rel.intern_selection.finalmentorfeedback.request_extension %} Extension requested for final feedback until {{ rel.intern_selection.finalmentorfeedback.extension_date|date:"M d, Y" }}.{% endif %}{% if rel.intern_selection.finalmentorfeedback.request_termination %} Termination requested for this internship.{% endif %}</p></li>
-			{% endif %}
-			{% if not rel.intern_selection.initialmentorfeedback and not rel.intern_selection.midpointmentorfeedback and not rel.intern_selection.finalmentorfeedback %}
-				<li>No feedback has been submitted yet.</li>
-			{% endif %}
-			</ul>
+				<p>Submitted feedback:</p>
+				<ul>
+				{% if rel.intern_selection.initialmentorfeedback %}
+					<li><p>Initial feedback: {% if rel.intern_selection.initialmentorfeedback.payment_approved %}<button type="button" class="btn btn-success">Payment approved</button>{% else %}<button type="button" class="btn btn-warning">Payment Not Aproved</button>{% endif %}{% if rel.intern_selection.initialmentorfeedback.request_extension %} Extension requested for initial feedback until {{ rel.intern_selection.initialmentorfeedback.extension_date|date:"M d, Y" }}.{% endif %}{% if rel.intern_selection.initialmentorfeedback.request_termination %} Termination requested for this internship.{% endif %}</p></li>
+				{% endif %}
+				{% if rel.intern_selection.midpointmentorfeedback %}
+					<li><p>Midpoint feedback: {% if rel.intern_selection.midpointmentorfeedback.payment_approved %}<button type="button" class="btn btn-success">Payment approved</button>{% else %}<button type="button" class="btn btn-warning">Payment Not Aproved</button>{% endif %}{% if rel.intern_selection.midpointmentorfeedback.request_extension %} Extension requested for midpoint feedback until {{ rel.intern_selection.midpointmentorfeedback.extension_date|date:"M d, Y" }}.{% endif %}{% if rel.intern_selection.midpointmentorfeedback.request_termination %} Termination requested for this internship.{% endif %}</p></li>
+				{% endif %}
+				{% if rel.intern_selection.finalmentorfeedback %}
+					<li><p>Final feedback: {% if rel.intern_selection.finalmentorfeedback.payment_approved %}<button type="button" class="btn btn-success">Payment approved</button>{% else %}<button type="button" class="btn btn-warning">Payment Not Aproved</button>{% endif %}{% if rel.intern_selection.finalmentorfeedback.request_extension %} Extension requested for final feedback until {{ rel.intern_selection.finalmentorfeedback.extension_date|date:"M d, Y" }}.{% endif %}{% if rel.intern_selection.finalmentorfeedback.request_termination %} Termination requested for this internship.{% endif %}</p></li>
+				{% endif %}
+				{% if not rel.intern_selection.initialmentorfeedback and not rel.intern_selection.midpointmentorfeedback and not rel.intern_selection.finalmentorfeedback %}
+					<li>No feedback has been submitted yet.</li>
+				{% endif %}
+				</ul>
 
-			<p>Mentor feedback dates:
-			<ul>
-				<li>{{ rel.intern_selection.initial_feedback_opens }} 4pm UTC - Initial feedback forms open</li>
-				<li>{{ rel.intern_selection.initial_feedback_due }} 4pm UTC - Initial feedback is due</li>
-				<li>{{ rel.intern_selection.midpoint_feedback_opens }} 4pm UTC - Mid-point feedback forms open</li>
-				<li>{{ rel.intern_selection.midpoint_feedback_due }} 4pm UTC - Mid-point feedback is due</li>
-				<li>{{ rel.intern_selection.final_feedback_opens }} 4pm UTC - Final feedback forms open</li>
-				<li>{{ rel.intern_selection.final_feedback_due }} 4pm UTC - Final feedback is due</li>
-			</ul>
-			</p>
-			<h3>Intern Payment Schedule</h3>
-			<p>Payments are handled by Outreachy's parent organization, the Software Freedom Conservancy. Payments may be delayed by internship extensions, interns not returning tax paperwork in promptly, or approval delays for third-party payments (such as when a parent or spouse is the owner of a bank account). As a mentor, the best thing you can do to help your intern be paid on time is to respond promptly to requests for mid-point and final feedback.</p>
-			<p>Payment schedule:
-			<ul>
-				<li>{{ rel.round.initial_stipend_payment_deadline }} - Interns with a standard start date and successful initial feedback from their mentor will receive the ${{ rel.round.initialpayment }} initial stipend</li>
-				<li>{{ rel.round.midpoint_stipend_payment_deadline }} - Interns without extensions and successful mid-point feedback from their mentor will receive the ${{ rel.round.midpayment }} midpoint stipend</li>
-				<li>{{ rel.round.final_stipend_payment_deadline }} - Interns without extensions and successful final feedback from their mentor will receive the ${{ rel.round.finalpayment }} final stipend</li>
-			</ul>
-			</p>
+				<p>Mentor feedback dates:
+				<ul>
+					<li>{{ rel.intern_selection.initial_feedback_opens }} 4pm UTC - Initial feedback forms open</li>
+					<li>{{ rel.intern_selection.initial_feedback_due }} 4pm UTC - Initial feedback is due</li>
+					<li>{{ rel.intern_selection.midpoint_feedback_opens }} 4pm UTC - Mid-point feedback forms open</li>
+					<li>{{ rel.intern_selection.midpoint_feedback_due }} 4pm UTC - Mid-point feedback is due</li>
+					<li>{{ rel.intern_selection.final_feedback_opens }} 4pm UTC - Final feedback forms open</li>
+					<li>{{ rel.intern_selection.final_feedback_due }} 4pm UTC - Final feedback is due</li>
+				</ul>
+				</p>
+				<h3>Intern Payment Schedule</h3>
+				<p>Payments are handled by Outreachy's parent organization, the Software Freedom Conservancy. Payments may be delayed by internship extensions, interns not returning tax paperwork in promptly, or approval delays for third-party payments (such as when a parent or spouse is the owner of a bank account). As a mentor, the best thing you can do to help your intern be paid on time is to respond promptly to requests for mid-point and final feedback.</p>
+				<p>Payment schedule:
+				<ul>
+					<li>{{ rel.round.initial_stipend_payment_deadline }} - Interns with a standard start date and successful initial feedback from their mentor will receive the ${{ rel.round.initialpayment }} initial stipend</li>
+					<li>{{ rel.round.midpoint_stipend_payment_deadline }} - Interns without extensions and successful mid-point feedback from their mentor will receive the ${{ rel.round.midpayment }} midpoint stipend</li>
+					<li>{{ rel.round.final_stipend_payment_deadline }} - Interns without extensions and successful final feedback from their mentor will receive the ${{ rel.round.finalpayment }} final stipend</li>
+				</ul>
+				</p>
+			{% endif %}
+			<h3>Intern Travel Stipend</h3>
+			<p><a href="{% url 'travel-stipend' %}">Travel stipend requirements</a>.{% if not rel.round.has_travel_stipend_ended %} Your mentee is eligible for a $500 USD travel stipend. As a mentor, you should discuss with them what event or conference would be appropriate to attend. The event must be related to their internship (either an event for your community, or another FOSS event). Interns who network with the FOSS community are much more likely to feel connected to our community, and to find a job where they can work with or on FOSS.</p>
+			<p>{{ rel.intern_name }}'s travel stipend is valid for travel between {{ rel.round.travel_stipend_starts }} and {{ rel.round.travel_stipend_ends }}.{% else %} Your mentee's $500 USD travel stipend expired on {{ rel.round.travel_stipend_ends }}.{% endif %}</p>
+			<a href="{% url 'mentor-contract' round_slug=rel.round.slug community_slug=rel.intern_selection.project.project_round.community.slug project_slug=rel.intern_selection.project.slug applicant_username=rel.intern_selection.applicant.applicant.account.username %}"><button type="button" class="btn btn-info">Export Mentor Contract</button></a>
 		{% endif %}
-		<h3>Intern Travel Stipend</h3>
-		<p><a href="{% url 'travel-stipend' %}">Travel stipend requirements</a>.{% if not rel.round.has_travel_stipend_ended %} Your mentee is eligible for a $500 USD travel stipend. As a mentor, you should discuss with them what event or conference would be appropriate to attend. The event must be related to their internship (either an event for your community, or another FOSS event). Interns who network with the FOSS community are much more likely to feel connected to our community, and to find a job where they can work with or on FOSS.</p>
-		<p>{{ rel.intern_name }}'s travel stipend is valid for travel between {{ rel.round.travel_stipend_starts }} and {{ rel.round.travel_stipend_ends }}.{% else %} Your mentee's $500 USD travel stipend expired on {{ rel.round.travel_stipend_ends }}.{% endif %}</p>
-		<a href="{% url 'mentor-contract' round_slug=rel.round.slug community_slug=rel.intern_selection.project.project_round.community.slug project_slug=rel.intern_selection.project.slug applicant_username=rel.intern_selection.applicant.applicant.account.username %}"><button type="button" class="btn btn-info">Export Mentor Contract</button></a>
 	{% endfor %}
 {% endwith %}
