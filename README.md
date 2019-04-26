@@ -133,7 +133,7 @@ Let's assume you want an internship round where we're in the middle of the contr
 
 ```
 >>> import datetime
->>> RoundPageFactory(
+>>> current_round = RoundPageFactory(
 	start_from="appsclose",
 	start_date=datetime.date.today() + datetime.timedelta(days=7))
 ```
