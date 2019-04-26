@@ -5,7 +5,7 @@ up complete scenarios which are useful for various testing purposes.
 
 import factory
 from . import factories
-
+from home.models import ApprovalStatus
 
 class Scenario(object):
     def __init__(self, **kwargs):
@@ -35,6 +35,7 @@ class NewRoundScenario(factory.Factory):
         factories.CoordinatorApprovalFactory,
         coordinator=factory.SelfAttribute('..coordinator'),
         community=factory.SelfAttribute('..community'),
+        approval_status=ApprovalStatus.APPROVED,
     )
 
     reviewer = factory.SubFactory(factories.ReviewerFactory)
@@ -45,6 +46,7 @@ class NewRoundScenario(factory.Factory):
         factories.ApplicationReviewerFactory,
         comrade=factory.SelfAttribute('..reviewer'),
         reviewing_round=factory.SelfAttribute('..round'),
+        approval_status=ApprovalStatus.APPROVED,
     )
 
 
@@ -62,6 +64,7 @@ class ApplicationsOpenScenario(NewRoundScenario):
         factories.ParticipationFactory,
         community=factory.SelfAttribute('..community'),
         participating_round=factory.SelfAttribute('..round'),
+        approval_status=ApprovalStatus.APPROVED,
     )
 
     sponsorship = factory.SubFactory(
@@ -72,10 +75,12 @@ class ApplicationsOpenScenario(NewRoundScenario):
     project = factory.SubFactory(
         factories.ProjectFactory,
         project_round=factory.SelfAttribute('..participation'),
+        approval_status=ApprovalStatus.APPROVED,
     )
 
     mentor_approval = factory.SubFactory(
         factories.MentorApprovalFactory,
         mentor=factory.SelfAttribute('..mentor'),
         project=factory.SelfAttribute('..project'),
+        approval_status=ApprovalStatus.APPROVED,
     )
