@@ -133,7 +133,9 @@ Let's assume you want an internship round where we're in the middle of the contr
 
 ```
 >>> import datetime
->>> RoundPageFactory(start_from="appsclose", start_date=datetime.date.today() + datetime.timedelta(days=7))
+>>> RoundPageFactory(
+	start_from="appsclose",
+	start_date=datetime.date.today() + datetime.timedelta(days=7))
 ```
 
 Note: Normally in the Django shell, you need to call the `save()` method to write the RoundPage object in the local database. The factories code automatically calls the `save()` method for you. Should you need to delete an object from the database, you can call the `delete()` method. Don't call `save()` afterwards, because that will write the object back to the database.
@@ -246,14 +248,23 @@ In the example code below, we'll set the password for the coordinator so that we
 
 ```
 >>> name = "Really Awesome Community"
->>> coord1 = CoordinatorApprovalFactory(coordinator__account__password="coord1", coordinator__account__username="coord1", approval_status=ApprovalStatus.APPROVED, community__name=name, community__slug=slugify(name))
+>>> coord1 = CoordinatorApprovalFactory(
+	coordinator__account__password="coord1",
+	coordinator__account__username="coord1",
+	approval_status=ApprovalStatus.APPROVED,
+	community__name=name,
+	community__slug=slugify(name))
 >>> really_awesome_community = coord1.community
 ```
 
 If you want to create a second coordinator under the same community, you can run this command:
 
 ```
->>> coord2 = CoordinatorApprovalFactory(coordinator__account__password="coord2", coordinator__account__username="coord2", approval_status=ApprovalStatus.APPROVED, community=really_awesome_community)
+>>> coord2 = CoordinatorApprovalFactory(
+	coordinator__account__password="coord2",
+	coordinator__account__username="coord2",
+	approval_status=ApprovalStatus.APPROVED,
+	community=really_awesome_community)
 ```
 
 If you visit `http://localhost:8000/communities/cfp/really-awesome-community/`, you should see the randomly generated names of the coordinators. You can log in with the superuser account or one of the coordinator's accounts to see how the page changes once you log in.
@@ -265,7 +276,11 @@ Each community can sign up to participate in an Outreachy internship round. That
 You can use the Django shell to create a new participation. The example below assumes you already have a pre-created community that is being referenced by the variable name `really_awesome_community`, and a pre-created RoundPage `current_round`. The code also sets the approval status to say the community has been approved to participate in this round. The example sets that the community will be receiving sponsorship for two interns. We'll save a reference to that Participation object in the variable participation.
 
 ```
->>> sponsorship = SponsorshipFactory(participation__participating_round=current_round, participation__community=really_awesome_community, participation__approval_status=ApprovalStatus.APPROVED, amount=13000)
+>>> sponsorship = SponsorshipFactory(
+	participation__participating_round=current_round,
+	participation__community=really_awesome_community,
+	participation__approval_status=ApprovalStatus.APPROVED,
+	amount=13000)
 >>> participation = sponsorship.participation
 ```
 
@@ -286,14 +301,23 @@ The factory will fill in random names, phrases, and choices for any required fie
 In the example Django shell code below, we'll set the password for the mentor so that we can log in under their account. The factories code handles hashing the password and storing the hashed password in the database. We'll also set the MentorApproval approval status and the Project approval status to approved. (By default, all ApprovalStatus objects are created with the withdrawn approval status.) The code assumes you have a pre-created Participation object referenced by the variable `participation`. The code will associate the Project with that community's participation in the internship round, rather than allowing the factories code to create new Community and RoundPage objects with random values.
 
 ```
->>> mentor1 = MentorApprovalFactory(mentor__account__password="mentor1", mentor__account__username="mentor1", approval_status=ApprovalStatus.APPROVED, project__project_round=participation, project__approval_status=ApprovalStatus.APPROVED)
+>>> mentor1 = MentorApprovalFactory(
+	mentor__account__password="mentor1",
+	mentor__account__username="mentor1",
+	approval_status=ApprovalStatus.APPROVED,
+	project__project_round=participation,
+	project__approval_status=ApprovalStatus.APPROVED)
 ```
 
 If you want to create a co-mentor under the same project, you can run these two commands:
 
 ```
 >>> project = mentor1.project
->>> mentor2 = MentorApprovalFactory(mentor__account__password="mentor2", mentor__account__username="mentor2", approval_status=ApprovalStatus.APPROVED, project=project)
+>>> mentor2 = MentorApprovalFactory(
+	mentor__account__password="mentor2",
+	mentor__account__username="mentor2",
+	approval_status=ApprovalStatus.APPROVED,
+	project=project)
 ```
 
 ## Models for Applicants
@@ -315,7 +339,11 @@ If the applicant applies to another round, they have to create a new initial app
 It can be useful to log into your local test website and see how the pages look from an applicant's perspective. The following Django shell example creates a new ApplicantApproval. It assumes you already have a pre-created RoundPage referenced by the variable `current_round`. It sets the initial application's approval status to approved. The code also ensures that the username and password is set for the applicant so you can log in.
 
 ```
->>> applicant1 = ApplicantApprovalFactory(application_round=current_round, approval_status=ApprovalStatus.APPROVED, applicant__account__username="applicant1", applicant__account__password="applicant1")
+>>> applicant1 = ApplicantApprovalFactory(
+	application_round=current_round,
+	approval_status=ApprovalStatus.APPROVED,
+	applicant__account__username="applicant1",
+	applicant__account__password="applicant1")
 ```
 
 ### Creating Contribution Test Objects
@@ -323,7 +351,10 @@ It can be useful to log into your local test website and see how the pages look 
 The following Django shell example creates a new Contribution object. It assumes you already have a pre-created ApplicantApproval referenced by the variable `applicant1` and a pre-created Project referenced by the variable `project`.
 
 ```
->>> ContributionFactory(project=project, applicant=applicant1, round=project.project_round.participating_round)
+>>> ContributionFactory(
+	project=project,
+	applicant=applicant1,
+	round=project.project_round.participating_round)
 ```
 
 ### Creating FinalApplication Test Objects
@@ -331,7 +362,11 @@ The following Django shell example creates a new Contribution object. It assumes
 The following Django shell example creates a new FinalApplication object. It assumes you already have a pre-created ApplicantApproval referenced by the variable `applicant1` and a pre-created Project referenced by the variable `project`. It sets the FinalApplication approval status to pending.
 
 ```
->>> FinalApplicationFactory(project=project, applicant=applicant1, round=project.project_round.participating_round, approval_status=ApprovalStatus.PENDING)
+>>> FinalApplicationFactory(
+	project=project,
+	applicant=applicant1,
+	round=project.project_round.participating_round,
+	approval_status=ApprovalStatus.PENDING)
 ```
 
 ## InternSelection and MentorRelationship classes
