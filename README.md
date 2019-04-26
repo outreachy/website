@@ -265,7 +265,8 @@ Each community can sign up to participate in an Outreachy internship round. That
 You can use the Django shell to create a new participation. The example below assumes you already have a pre-created community that is being referenced by the variable name `really_awesome_community`, and a pre-created RoundPage `current_round`. The code also sets the approval status to say the community has been approved to participate in this round. The example sets that the community will be receiving sponsorship for two interns. We'll save a reference to that Participation object in the variable participation.
 
 ```
->>> participation = SponsorshipFactory(participation__participating_round=current_round, participation__community=really_awesome_community, participation__approval_status=ApprovalStatus.APPROVED, amount=13000).participation
+>>> sponsorship = SponsorshipFactory(participation__participating_round=current_round, participation__community=really_awesome_community, participation__approval_status=ApprovalStatus.APPROVED, amount=13000)
+>>> participation = sponsorship.participation
 ```
 
 ## Project and MentorApproval classes
