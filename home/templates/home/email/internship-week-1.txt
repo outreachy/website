@@ -26,11 +26,9 @@ Week 1 tips:
 Interns
 -------
 
-Save the date for an introduction chat and Q&A! We want to let you ask any questions of Outreachy organizers, and give you time to connect to other Outreachy interns. We know some of you may have unreliable internet, so we offer both a text chat and a video chat. The two chats are at different times to try and accomodate everyone's timezone. Join whichever works for you!
+Save the date for an introduction chat and Q&A! We want to let you ask any questions of Outreachy organizers, and give you time to connect to other Outreachy interns. The chat will be text-based, using the Outreachy Zulip chat.
 
 The text chat will take place on {{ current_round.week_two_chat_text_date|date:"D M d, Y" }} {{ current_round.week_two_chat_text_date|time:"H:i" }} UTC on {{ current_round.week_two_chat_text_url }}
-
-The video chat will take place on {{ current_round.week_two_chat_video_date|date:"D M d, Y" }} {{ current_round.week_two_chat_video_date|time:"H:i" }} UTC at {{ current_round.week_two_chat_video_url }}
 
 Week 1 goals:
 
@@ -44,8 +42,8 @@ Week 1 goals:
 
 Week 1 tips:
 
- - contact Outreachy organizers organizers@outreachy.org if you can't get a hold of your mentor after 2 days of trying to reach them and/or if your mentor is being unresponsive to questions
- - you've got this!
+ - Contact Outreachy organizers organizers@outreachy.org if you can't get a hold of your mentor after 2 days of trying to reach them and/or if your mentor is being unresponsive to questions
+ - You've got this!
 
 Week 1 Blog
 -----------
@@ -57,8 +55,9 @@ Here's some prompts that could get you started writing this blog post:
  - What motivated you to apply to Outreachy?
  - What were you excited about when thinking about applying? 
  - What made you passionate about the project you applied to?
- - What was confusing about the Outreachy application process? 
- - How did you find information or who did you ask questions of when you were stuck?
+ - What was confusing about the Outreachy application process?
+ - How did you find information?
+ - Who did you ask questions of when you were stuck?
  - How did you mentor help you during the application process? 
  - What would you tell someone who is worried about applying to Outreachy? 
 

@@ -154,9 +154,7 @@ class RoundPage(Page):
     internannounce = models.DateField("Date interns are announced", default='2017-11-09')
     internstarts = models.DateField("Date internships start", default='2017-12-05')
     week_two_chat_text_date = models.DateTimeField("Date and time of outreachy week two chat (text only)", default='2018-12-10 13:00Z')
-    week_two_chat_video_date = models.DateTimeField("Date and time of outreachy week two chat (video only)", default='2018-12-10 16:00Z')
     week_two_chat_text_url = models.URLField(blank=True, verbose_name="URL of the real-time text chat")
-    week_two_chat_video_url = models.URLField(blank=True, verbose_name="URL of the video chat")
     week_three_stuck_chat_url = models.URLField(blank=True, verbose_name="URL of the week three chat on what we're stuck on")
     week_five_audience_chat_url = models.URLField(blank=True, verbose_name="URL of the week five chat to explain your project to a newcomer")
     week_seven_timeline_chat_url = models.URLField(blank=True, verbose_name="URL of the week seven chat to talk about project timeline modifications")
@@ -194,9 +192,7 @@ class RoundPage(Page):
         FieldPanel('midpayment'),
         FieldPanel('finalpayment'),
         FieldPanel('week_two_chat_text_date'),
-        FieldPanel('week_two_chat_video_date'),
         FieldPanel('week_two_chat_text_url'),
-        FieldPanel('week_two_chat_video_url'),
         FieldPanel('week_three_stuck_chat_url'),
         FieldPanel('week_five_audience_chat_url'),
         FieldPanel('week_seven_timeline_chat_url'),
