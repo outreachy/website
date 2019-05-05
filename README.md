@@ -7,7 +7,8 @@ This repository is for the Django code that comprises the [Outreachy website](ht
 
 The Outreachy web presence is in a couple of different places:
  * [Outreachy website](https://www.outreachy.org)
- * [GitHub Repository](https://github.com/sagesharp/outreachy-django-wagtail/)
+ * [GitHub website code repository](https://github.com/outreachy/website/)
+ * [GitHub repository for creative works and miscellaneous scripts](https://github.com/outreachy/creative-works-and-scripts/)
  * [Repository CI Status](https://travis-ci.org/sagesharp/outreachy-django-wagtail.svg?branch=master)
 
 Older/deprecated websites include:
@@ -39,7 +40,7 @@ You can run Django locally to test changes to the code, test creating new pages,
 To set up your local development environment, first clone the repository to your local machine:
 
 ```
-git clone https://github.com/sagesharp/outreachy-django-wagtail.git
+git clone https://github.com/outreachy/website.git
 ```
 
 In order to develop with Python, you'll need the Python 3 development headers, so install them. You'll also need to install node.js.
@@ -232,7 +233,7 @@ Communities can participate in multiple Outreachy internship rounds. We record t
 
 The relationships described above can be represented by this diagram:
 
-![A Participation is related to a Community and a RoundPage. A Project is related to a Participation.](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/RoundPage-Community-Participation-Project.png)
+![A Participation is related to a Community and a RoundPage. A Project is related to a Participation.](https://github.com/outreachy/website/raw/master/docs/graphics/RoundPage-Community-Participation-Project.png)
 
 ## ApprovalStatus class
 
@@ -248,7 +249,7 @@ Most classes with an ApprovalStatus will have emails sent to the submitter when 
 
 The community coordinator role is represented by the CoordinatorApproval class. It has a foreign key to a Community, because we expect the coordinator to remain the same from round to round. New coordinators are on-boarded as people change roles, but most coordinators stick around for at least 2-4 internship rounds.
 
-![A CoordinatorApproval has a foreign key to a Community.](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/Participation-Community-CoordinatorApproval-Project-MentorApproval.highlighted-CoordinatorApproval.png)
+![A CoordinatorApproval has a foreign key to a Community.](https://github.com/outreachy/website/raw/master/docs/graphics/Participation-Community-CoordinatorApproval-Project-MentorApproval.highlighted-CoordinatorApproval.png)
 
 When testing the website on your local machine, it's useful to create a coordinator account that you can log into. This allows you to see how the website looks at various points in the round to a coordinator. You can create a new CoordinatorApproval object using the `home/factories.py` function `CoordinatorApprovalFactory()`.
 
@@ -300,7 +301,7 @@ A project is represented by the `class Project` in `home/models.py`. It has a Fo
 
 The mentor(s) for that project are represented by the `class MentorApproval` in `home/models.py`. That provides a link between the mentor's account on Outreachy (a `Comrade` object) and the Project object. A mentor submit or co-mentor more than one project, which will create multiple MentorApproval objects.
 
-![A MentorApproval has a foreign key to a Project.](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/Participation-Community-CoordinatorApproval-Project-MentorApproval.highlighted-MentorApproval-Project.png)
+![A MentorApproval has a foreign key to a Project.](https://github.com/outreachy/website/raw/master/docs/graphics/Participation-Community-CoordinatorApproval-Project-MentorApproval.highlighted-MentorApproval-Project.png)
 
 When testing the website on your local machine, it's useful to create a mentor account that you can log into. This allows you to see how the website looks at various points in the round to a mentor. You can create a new MentorApproval object using the `home/factories.py` function `MentorApprovalFactory()`.
 
@@ -338,7 +339,7 @@ Applicants can record many contributions for the same Project, or different proj
 
 If the applicant applies to another round, they have to create a new initial application (ApplicantApproval object) and new Contribution and FinalApplication objects associated with the Project they're applying for.
 
-![Diagram showing the relationship from a RoundPage through a Project to a Contribution, then an ApplicationApproval, to a FinalApplication](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/RoundPage-Participation-Project-Contribution-ApplicantApproval-FinalApplication.png)
+![Diagram showing the relationship from a RoundPage through a Project to a Contribution, then an ApplicationApproval, to a FinalApplication](https://github.com/outreachy/website/raw/master/docs/graphics/RoundPage-Participation-Project-Contribution-ApplicantApproval-FinalApplication.png)
 
 ### Creating ApplicantApproval Test Objects
 
@@ -384,7 +385,7 @@ If a co-mentor for the same Project signs up to participate as a mentor for this
 
 The relationship between an InternSelection and a MentorRelationship is shown below:
 
-![An InternSelection is related to a MentorApproval through a MentorRelationship](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/MentorApproval-MentorRelationship-Project-ApplicantApproval-InternSelection.png)
+![An InternSelection is related to a MentorApproval through a MentorRelationship](https://github.com/outreachy/website/raw/master/docs/graphics/MentorApproval-MentorRelationship-Project-ApplicantApproval-InternSelection.png)
 
 
 # Adding a new Django app

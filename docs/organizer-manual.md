@@ -2,7 +2,8 @@ This manual will document the common tasks that an Outreachy organizer has durin
 
 # Organizer private resources
 
- * Public GitHub [Outreachy website repository](https://github.com/sagesharp/outreachy-django-wagtail/)
+ * Public GitHub [Outreachy website repository](https://github.com/outreachy/website/)
+ * Public GitHub [repository for Outreachy creative works and miscellaneous scripts](https://github.com/outreachy/creative-works-and-scripts/)
  * Public etherpad for taking notes during Outreachy organizer meetings (ask an organizer for the URL before the meeting)
  * Private GitLab [notes repository](https://gitlab.com/sagesharp/outreachy-notes/) for organizers
  * Private GitLab [eligibility notes repository](https://gitlab.com/sagesharp/outreachy-applicant-review)
