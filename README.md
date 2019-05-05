@@ -9,7 +9,7 @@ The Outreachy web presence is in a couple of different places:
  * [Outreachy website](https://www.outreachy.org)
  * [GitHub website code repository](https://github.com/outreachy/website/)
  * [GitHub repository for creative works and miscellaneous scripts](https://github.com/outreachy/creative-works-and-scripts/)
- * [Repository CI Status](https://travis-ci.org/sagesharp/outreachy-django-wagtail.svg?branch=master)
+ * [Repository CI Status](https://travis-ci.org/outreachy/website.svg?branch=master)
 
 Older/deprecated websites include:
  - [GNOME Outreachy homepage](https://www.gnome.org/outreachy/) - shell homepage, where the outreachy.org domain currently redirects to
