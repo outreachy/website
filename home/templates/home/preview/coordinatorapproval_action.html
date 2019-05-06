@@ -27,7 +27,7 @@ Sign Up to Coordinate for {{ coordinatorapproval.community }}
 {% with c=coordinatorapproval.coordinator community=coordinatorapproval.community %}
 
 {% if view.kwargs.action != 'submit' %}
-	<p>{{ c.public_name }} &lt;{{ c.account.email }}&gt;</p>
+	<p>"{{ c.public_name }}" &lt;{{ c.account.email }}&gt;</p>
 
 	<ul>
 		{% if c.pronouns_to_participants %}<li>Pronouns: {{ c.get_pronouns_display }}</li>{% endif %}

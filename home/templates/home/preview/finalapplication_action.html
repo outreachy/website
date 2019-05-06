@@ -21,7 +21,7 @@
 {% elif view.kwargs.action == 'withdraw' %}
 <p>We're sorry to hear you want to withdraw your application. We hope that working with Outreachy mentors and coordinators has been a good experience for you, and please <a href="{% url 'contact-us' %}">contact the Outreachy organizers</a> if you have any concerns.</p>
 {% else %}
-	<p>{{ applicant.public_name }} &lt;{{ applicant.account.email }}&gt;</p>
+	<p>"{{ applicant.public_name }}" &lt;{{ applicant.account.email }}&gt;</p>
 	{% include "home/snippet/mentor_info.html" with approval=mentorapproval only %}
 {% endif %}
 

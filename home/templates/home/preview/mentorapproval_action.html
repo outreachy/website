@@ -38,20 +38,20 @@
 	<h1>Confirm Mentor</h1>
 
 	<p>Project: <a href="{{ project.get_preview_url }}">{{ project.short_title }}</a></p>
-	<p>{{ mentor.public_name }} &lt;{{ mentor.account.email }}&gt;</p>
+	<p>"{{ mentor.public_name }}" &lt;{{ mentor.account.email }}&gt;</p>
 
 {% elif view.kwargs.action == 'reject' %}
 	<h1>Reject Mentor</h1>
 
 	<p>Project: <a href="{{ project.get_preview_url }}">{{ project.short_title }}</a></p>
-	<p>{{ mentor.public_name }} &lt;{{ mentor.account.email }}&gt;</p>
+	<p>"{{ mentor.public_name }}" &lt;{{ mentor.account.email }}&gt;</p>
 
 {% else %}
 	<h1>Mentor Profile</h1>
 
 	<p>Project: <a href="{{ project.get_preview_url }}">{{ project.short_title }}</a></p>
 
-	<p>{{ mentor.public_name }} &lt;{{ mentor.account.email }}&gt;</p>
+	<p>"{{ mentor.public_name }}" &lt;{{ mentor.account.email }}&gt;</p>
 	{% include "home/snippet/mentor_info.html" with approval=mentorapproval only %}
 {% endif %}
 

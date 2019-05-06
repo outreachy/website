@@ -39,7 +39,7 @@ Past community participation in Outreachy
 {% if approved_coordinator_list %}
 	<p>The {{ community.name }} coordinator{{ approved_coordinator_list|length|pluralize:" is,s are" }}
 	{% for approval in approved_coordinator_list %}
-	{% if user.is_authenticated %}<a href="{{ approval.get_preview_url }}">{{ approval.coordinator.public_name }}</a>{% else %}{{ approval.coordinator.public_name }}{% endif %}{% if user.is_authenticated %} &lt;{{ approval.coordinator.account.email }}&gt;{% endif %}{% if not forloop.last %}, {% else %}.{% endif %}
+	{% if user.is_authenticated %}<a href="{{ approval.get_preview_url }}">{{ approval.coordinator.public_name }}</a>{% else %}"{{ approval.coordinator.public_name }}"{% endif %}{% if user.is_authenticated %} &lt;{{ approval.coordinator.account.email }}&gt;{% endif %}{% if not forloop.last %}, {% else %}.{% endif %}
 	{% endfor %}
 {% else %}
 	<p>This community currently has no approved coordinator. Coordinators approve mentored projects, and communicate with both mentors and Outreachy organizers. The full list of coordinator duties can be found on <a href="/mentor/">here</a>.
@@ -236,9 +236,11 @@ Past community participation in Outreachy
 		</p>
 		<p class="card-text">
 		{% for approval in approved_coordinator_list %}
-			- {{ approval.coordinator.public_name }}
 			{% if user.is_authenticated %}
+			- "{{ approval.coordinator.public_name }}"
 				&lt;{{ approval.coordinator.account.email }}&gt;
+			{% else %}
+			- {{ approval.coordinator.public_name }}
 			{% endif %}
 			{% if not forloop.last %}<br />{% endif %}
 		{% endfor %}

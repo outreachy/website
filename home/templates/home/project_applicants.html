@@ -63,7 +63,7 @@ that timeline, taking into account any time commitments the applicant has.
 							</div>
 						</div>
 					</td>{% endif %}
-					<td>{{ fa.applicant.applicant.public_name }} &lt;{{ fa.applicant.applicant.account.email }}&gt; </td>
+					<td>"{{ fa.applicant.applicant.public_name }}" &lt;{{ fa.applicant.applicant.account.email }}&gt; </td>
 					<td><a href="#{{ fa.applicant.applicant.pk }}">(details)</a></td>
 					<td>
 						{% with selection=fa.get_intern_selection %}
@@ -175,7 +175,7 @@ that timeline, taking into account any time commitments the applicant has.
 		
 		<p>Contact Information:</p>
 		<ul>
-			<li>{{ applicant.public_name }} &lt;{{ applicant.account.email }}&gt;</li>
+			<li>"{{ applicant.public_name }}" &lt;{{ applicant.account.email }}&gt;</li>
 			{% if applicant.nick %}<li>Forum, chat, or IRC username: {{ applicant.nick }}</li>{% endif %}
 			{% if applicant.github_url %}<li>GitHub profile: <a href="{{ applicant.github_url }}">{{ applicant.github_url }}</a></li>{% endif %}
 			{% if applicant.gitlab_url %}<li>GitLab profile: <a href="{{ applicant.gitlab_url }}">{{ applicant.gitlab_url }}</a></li>{% endif %}

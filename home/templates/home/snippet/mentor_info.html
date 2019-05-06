@@ -1,6 +1,6 @@
 <h2>Mentor Personal Information</h2>
 <ul>
-	<li>Name: {{ approval.mentor.public_name }} &lt;{{ approval.mentor.account.email }}&gt;</li>
+	<li>Name: "{{ approval.mentor.public_name }}" &lt;{{ approval.mentor.account.email }}&gt;</li>
 	{% if approval.mentor.pronouns_to_participants %}<li>Pronouns: {{ approval.mentor.get_pronouns_html|safe }}</li>{% endif %}
 	{% if approval.mentor.timezone %}<li>Timezone: {{ approval.mentor.get_timezone_display }}</li>{% endif %}
 	{% if approval.mentor.primary_language %}<li>Primary language: {{ approval.mentor.get_primary_language_display }}</li>{% endif %}

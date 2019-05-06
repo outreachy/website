@@ -13,7 +13,7 @@
 {% endif %}
 <p>Contact info:</p>
 <ul>
-	<li>Personal email: {{ approval.mentor.public_name }} &lt;{{ approval.mentor.account.email }}&gt;</li>
+	<li>Personal email: "{{ approval.mentor.public_name }}" &lt;{{ approval.mentor.account.email }}&gt;</li>
 	{% if approval.mentor.nick %}
 		<li>Please try to contact the mentor on public community channels as much as possible. Often other mentors for the project can answer your question or point you in the right direction to get help. They may be able to answer your question faster than emailing your mentor directly. While it's fine to contact mentors privately with doubts, Outreachy applicants and interns will need to learn how to ask questions and work publicly through the community communication channels.</li>
 		<li>Username on community forums or chat: {{ approval.mentor.nick }}</li>
