@@ -258,6 +258,9 @@ The factory will fill in random names, phrases, and choices for any required fie
 In the example code below, we'll create a new CoordinatorApproval object. The factories code automatically sets all passwords for User accounts to `test`. We'll set the CoordinatorApproval approval status to approved (by default, all ApprovalStatus objects are created with the withdrawn approval status). The example sets the community name to "Really Awesome Community", but you can use the name of your favorite FOSS community instead.
 
 ```
+from home.factories import CoordinatorApprovalFactory
+from home.models import ApprovalStatus
+from django.utils.text import slugify
 >>> name = "Really Awesome Community"
 >>> coord1 = CoordinatorApprovalFactory(
 	coordinator__account__username="coord1",
