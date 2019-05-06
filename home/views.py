@@ -2212,6 +2212,9 @@ class InternApprove(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Re
                 applicant=self.applicant,
                 project=self.project)
 
+        if self.intern_selection.funding_source not in (InternSelection.GENERAL_FUNDED, InternSelection.ORG_FUNDED):
+            raise PermissionDenied("Outreachy interns cannot be approvde until they have a funding source selected.")
+
         # Only allow approved organizers to approve interns
         if not request.user.is_staff:
             raise PermissionDenied("Only organizers can approve interns.")

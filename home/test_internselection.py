@@ -66,6 +66,17 @@ class InternSelectionTestCase(TestCase):
                 self.assertEqual(intern_selection.applicant, applicantapproval)
                 self.assertEqual(intern_selection.project, project)
 
+                # organizer approves too early, rejected..
+                self.client.force_login(organizer)
+                path = reverse("intern-approval", kwargs={
+                    **post_params,
+                    "approval": "Approved",
+                })
+                response = self.client.post(path)
+                self.assertEqual(response.status_code, 403)
+                intern_selection = models.InternSelection.objects.get(project=project)
+                self.assertEqual(intern_selection.organizer_approved, None)
+
                 # coordinator adds funding..
                 self.client.force_login(coordinatorapproval.coordinator.account)
                 path = reverse("intern-fund", kwargs={
