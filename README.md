@@ -41,9 +41,10 @@ To set up your local development environment, first clone the repository to your
 
 ```
 git clone https://github.com/outreachy/website.git
+cd website
 ```
 
-In order to develop with Python, you'll need the Python 3 development headers, so install them. You'll also need to install node.js.
+In order to develop with Python, you'll need the Python 3 development headers, so install them (for example, `apt-get install python3.6-dev` on Ubuntu). You'll also need to install node.js.
 
 Next, you'll need to create a new virtualenv. A "virtualenv" is a separate virtual environment for working on different Python projects. It's good practice to create a virtual environment for each Python project you're working on, in case they have conflicting dependencies, and so that you make sure to record all the dependencies for each project.
 
@@ -54,6 +55,7 @@ To install pipenv, you'll need to either [install Homebrew](https://brew.sh/) (i
 Then [install pipenv](https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv).
 
 The following command will automatically create a virtual environment and install the Python dependencies specified in the `Pipfile`. If you need help understanding pipenv, run `pipenv --help`
+Make sure that you are in the `website` directory first, and have *not* run `pipenv shell` yet, then:
 
 ```
 pipenv install
@@ -83,6 +85,12 @@ The next step is to create an admin account for the local website.
 
 ```
 ./manage.py createsuperuser
+```
+
+and run the tests.
+
+```
+PATH="$PWD/node_modules/.bin:$PATH" ./manage.py test
 ```
 
 You'll need to set up a new internship round, following the instructions in the next section.
