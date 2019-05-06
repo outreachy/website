@@ -141,10 +141,10 @@ Let's assume you want an internship round where we're in the middle of the contr
 
 Note: Normally in the Django shell, you need to call the `save()` method to write the RoundPage object in the local database. The factories code automatically calls the `save()` method for you. Should you need to delete an object from the database, you can call the `delete()` method. Don't call `save()` afterwards, because that will write the object back to the database.
 
-If you get an error when running the factories code, it's often hard to tell what exactly is wrong. Most often, the issue is that a variable is missing that needs to be passed to the factories method. That usually means the factories code needs to create that object from scratch, which will cause it to create a new RoundPage. That will show up as an error `django.core.exceptions.ValidationError: {'slug': ['This slug is already in use']}`. If the factories method you were calling was making multiple objects, you'll need to debug which call failed. You can do that by adding a with section to invoke the factories debugger, and an automic translation block to ensure that no objects that were created before the factory method failed are saved to the database:
+If you get an error when running the factories code, it's often hard to tell what exactly is wrong. Most often, the issue is that a variable is missing that needs to be passed to the factories method. That usually means the factories code needs to create that object from scratch, which will cause it to create a new RoundPage. That will show up as an error `django.core.exceptions.ValidationError: {'slug': ['This slug is already in use']}`. If the factories method you were calling was making multiple objects, you'll need to debug which call failed. You can do that by adding a with section to invoke the factories debugger, and an atomic translation block to ensure that no objects that were created before the factory method failed are saved to the database:
 
 ```
->>> with factory.debug(), transaction.automic():
+>>> with factory.debug(), transaction.atomic():
 ...     current_round = RoundPageFactory(
 ...		start_from="appsclose",
 ...		start_date=datetime.date.today() + datetime.timedelta(days=7))
