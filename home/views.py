@@ -2216,12 +2216,12 @@ class InternApprove(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Re
         if not request.user.is_staff:
             raise PermissionDenied("Only organizers can approve interns.")
 
-        funding = kwargs['approval']
-        if funding == "Approved":
+        approval = kwargs['approval']
+        if approval == "Approved":
             self.intern_selection.organizer_approved = True
-        elif funding == "Rejected":
+        elif approval == "Rejected":
             self.intern_selection.organizer_approved = False
-        elif funding == "Undecided":
+        elif approval == "Undecided":
             self.intern_selection.organizer_approved = None
         self.intern_selection.save()
 

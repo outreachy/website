@@ -4,16 +4,92 @@ from django.urls import reverse
 from reversion.models import Version
 
 from . import models
-from .factories import RoundPageFactory
-from .factories import InternSelectionFactory
-from .factories import InitialMentorFeedbackFactory
-from .factories import MidpointMentorFeedbackFactory
-from .factories import FinalMentorFeedbackFactory
+from .factories import *
 
 
 # don't try to use the static files manifest during tests
 @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class InternSelectionTestCase(TestCase):
+    def test_intern_selection_process(self):
+        for phase in ('appsopen', 'appsclose'):
+            with self.subTest(phase=phase):
+                current_round = RoundPageFactory(
+                    start_from=phase, start_date=datetime.date.today()
+                )
+                applicantapproval = ApplicantApprovalFactory(
+                    application_round=current_round,
+                    approval_status=models.ApprovalStatus.APPROVED,
+                )
+
+                project = ProjectFactory(
+                    project_round__participating_round=current_round,
+                    approval_status=models.ApprovalStatus.APPROVED,
+                    project_round__approval_status=models.ApprovalStatus.APPROVED,
+                )
+
+                finalapplication = FinalApplicationFactory(
+                    round=current_round, project=project, applicant=applicantapproval
+                )
+
+                mentorapproval = MentorApprovalFactory(
+                    project=project, approval_status=models.ApprovalStatus.APPROVED
+                )
+
+                coordinatorapproval = CoordinatorApprovalFactory(
+                    community=project.project_round.community,
+                    approval_status=models.ApprovalStatus.APPROVED,
+                )
+
+                organizer = ComradeFactory(account__is_staff=True).account
+
+                post_params = {
+                    "round_slug": current_round.slug,
+                    "community_slug": project.project_round.community.slug,
+                    "project_slug": project.slug,
+                    "applicant_username": applicantapproval.applicant.account.username,
+                }
+
+                # mentor selects the intern..
+                self.client.force_login(mentorapproval.mentor.account)
+                path = reverse("select-intern", kwargs={**post_params})
+
+                legal_name = applicantapproval.applicant.public_name
+                response = self.client.post(path, {
+                    "rating-rating": models.FinalApplication.AMAZING,
+                    "contract-legal_name": legal_name,
+                })
+                self.assertEqual(response.status_code, 302)
+
+                new_relationship = models.MentorRelationship.objects.get(mentor=mentorapproval)
+                intern_selection = new_relationship.intern_selection
+                self.assertEqual(new_relationship.contract.legal_name, legal_name)
+                self.assertEqual(intern_selection.applicant, applicantapproval)
+                self.assertEqual(intern_selection.project, project)
+
+                # coordinator adds funding..
+                self.client.force_login(coordinatorapproval.coordinator.account)
+                path = reverse("intern-fund", kwargs={
+                    **post_params,
+                    "funding": models.InternSelection.GENERAL_FUNDED,
+                })
+                response = self.client.post(path)
+                self.assertEqual(response.status_code, 302)
+
+                intern_selection = models.InternSelection.objects.get(project=project)
+                self.assertEqual(intern_selection.funding_source, models.InternSelection.GENERAL_FUNDED)
+
+                # organizer approves..
+                self.client.force_login(organizer)
+                path = reverse("intern-approval", kwargs={
+                    **post_params,
+                    "approval": "Approved",
+                })
+                response = self.client.post(path)
+                self.assertEqual(response.status_code, 302)
+
+                intern_selection = models.InternSelection.objects.get(project=project)
+                self.assertEqual(intern_selection.organizer_approved, True)
+
     def test_mentor_can_resign(self):
         current_round = RoundPageFactory(start_from='midfeedback', start_date=datetime.date.today())
         for mentors_count in (1, 2):
