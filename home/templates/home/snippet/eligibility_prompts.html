@@ -4,6 +4,8 @@
 
 {% if role.needs_application %}
 {% include "home/snippet/eligibility_prompt.html" %}
+{% elif role.application.barrierstoparticipation.applicant_should_update %}
+{% include "home/snippet/pending_prompt.html" %}
 {% elif role.application.is_rejected %}
 {% include "home/snippet/ineligible_prompt.html" %}
 {% elif role.application.is_pending %}
