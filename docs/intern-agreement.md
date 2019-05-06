@@ -2,7 +2,7 @@
 
 **Internship Terms of Participation**
 
-_last edited - April 11, 2019_
+_last edited - May 6, 2019_
 
 **Dear Participant:**
 
@@ -157,7 +157,7 @@ and are not currently residing in one of these countries;
 (c) you are not a person or entity restricted by US export controls or
 sanctions programs;
 
-(d) you are or will be 18 years of age or older by December 4, 2018;
+(d) you are or will be 18 years of age or older by May 20, 2019;
 
 (e) (i) the contents of your Application and information you submitted for your
 Initial Application, including your stated availability and time commitment to
@@ -198,7 +198,7 @@ which furthers Conservancy’s charitable purposes.
 
 **Termination.**
 
-The internship will take place between December 4, 2018 and March 4, 2019. In
+The internship will take place between May 20, 2019 and August 20, 2019. In
 exceptional situations, your internship can be extended for up to five weeks,
 provided that both you and your Volunteer Mentor send a written request for an
 extension specifying a new end date to the Outreachy Project's leadership
