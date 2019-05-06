@@ -1,0 +1,50 @@
+New community created - {{ new_community.community.name }}
+
+Hi {{ recipient.display_name }},
+
+Community: {{ new_community.community.name }}
+
+This is a new Outreachy community, so please review the following information carefully:
+
+{% if not new_community.approved_license %}
+    WARNING! This community may be using non-free licenses. Please follow up with the community coordinators.
+    {% if new_community.unapproved_license_description %}
+        Coordinators provided this info about non-approved licenses:
+        {{ new_community.unapproved_license_description|striptags }}
+    {% else %}
+        Coordinators provided no info about the non-approved licenses.
+    {% endif %}
+{% else %}
+    Community uses approved licenses.
+{% endif %}
+
+{% if not new_community.no_proprietary_software %}
+    WARNING! This community may be using or building upon proprietary software. Please follow up with the community coordinators.
+    {% if new_community.proprietary_software_description %}
+        Coordinators provided this info about the proprietary software they use or build upon:
+        {{ new_community.proprietary_software_description|striptags }}
+    {% else %}
+        Coordinators provided no info about the proprietary software they use or build upon.
+    {% endif %}
+{% else %}
+    Community uses approved licenses.
+{% endif %}
+
+{% if not new_community.approved_advertising %}
+    {% include 'home/snippet/unapproved_advertising.html' %}
+    {% if new_community.unapproved_advertising_description %}
+        Coordinators provided this info about the community advertising:
+        {{ new_community.proprietary_software_description|striptags }}
+    {% else %}
+        Coordinators provided no info about their community advertising.
+    {% endif %}
+{% else %}
+    Community uses approved licenses.
+{% endif %}
+
+Community size: {{ new_community.get_community_size_display }}
+
+Community has been open source for: {{ new_community.get_longevity_display }}
+
+Organizations that participate in this community:
+{{ new_community.participating_orgs }}

@@ -1114,6 +1114,9 @@ class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
                 community=self.object,
                 approval_status=ApprovalStatus.APPROVED)
 
+        # Send email
+        email.notify_organizers_of_new_community(self.object)
+
         # When a new community is created, immediately redirect the
         # coordinator to gather information about their participation in
         # this round. The Participation object doesn't have to be saved

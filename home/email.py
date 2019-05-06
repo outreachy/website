@@ -67,6 +67,15 @@ def notify_mentor(participation, notification, request):
         request=request,
         recipient_list=[notification.comrade.email_address()])
 
+def notify_organizers_of_new_community(new_community):
+    send_template_mail(
+        'home/email/new-community-created.txt',
+        {
+            'new_community': new_community
+        },
+        recipient_list=[organizers]
+    )
+
 def project_nonfree_warning(project, request):
     send_template_mail('home/email/project-warning.txt', {
         'project': project,
