@@ -21,7 +21,7 @@
 	<h1>Outreachy {{ page.specific.internstarts|date:"F Y" }} to {{ page.specific.internends|date:"F Y" }} Internships</h1>
 
 	<p>For the current list of internships, <a href="/apply/project-selection">see the current round page</a></p>
-       
+
 	<p>The timeline for this round is:</p>
 
 	<table class=table>
@@ -42,12 +42,15 @@
 	{% with communities=page.get_approved_communities %}
 	{% if communities %}
 		<h1>Past Participating Communities</h1>
-		{% for community in page.get_approved_communities %}
+		{% for community, projects in page.get_approved_communities_and_projects %}
 			<h4>{{ community.name }}</h4>
 			<p>{{ community.description }}</p>
 			{% if page.has_intern_announcement_deadline_passed %}
 				<p>Learn more on the <a href="{% url 'community-landing' round_slug=page.slug community_slug=community.slug %}">{{ community.name }} community landing page</a>.</p>
 			{% endif %}
+			{% with project_status="closed " current_round=page %}
+				{% include 'home/snippet/projects_for_round_page.html' %}
+			{% endwith %}
 		{% endfor %}
 	{% endif %}
 	{% endwith %}
