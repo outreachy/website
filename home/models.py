@@ -4101,7 +4101,10 @@ class FinalMentorFeedback(BaseMentorFeedback):
                 limit = base + datetime.timedelta(weeks=5)
                 if not (base <= self.extension_date <= limit):
                     raise ValidationError({'extension_date': "Extension date must be between {} and {}".format(base, limit)})
-
+        if self.payment_approved and self.request_termination:
+            raise ValidationError({"Cannot request to terminate failing intern and to pay them"})
+        if not self.request_termination and self.termination_reason:
+            raise ValidationError({"Please leave termination reason blank if not terminating the intern"})
 class FinalInternFeedback(BaseInternFeedback):
     # XXX - Make sure to change the questions in
     # home/templates/home/email/final-feedback-instructions.txt
