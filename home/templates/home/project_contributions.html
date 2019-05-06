@@ -184,9 +184,9 @@
 		{% elif not project.has_application_deadline_passed %}
 			<p><a class='btn btn-primary' href="{{ final_application.get_submit_url }}">Update Your Application</a></p>
 		{% endif %}
-		<p><i>Your experience with this free software community and project:</i></p>
+		<p><i>Your past experience with this free software community and project:</i></p>
 		<pre>{{ final_application.experience }}</pre>
-		<p><i>Your experience with other free software communities:</i></p>
+		<p><i>Your past experience with other free software communities:</i></p>
 		<pre>{{ final_application.foss_experience }}</pre>
 		<p><i>Your relevant personal or class projects that relate to this project:</i></p>
 		<pre>{{ final_application.relevant_projects }}</pre>
