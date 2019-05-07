@@ -3134,13 +3134,13 @@ class FinalApplication(ApprovalStatus):
 
     experience = models.TextField(
             max_length=EIGHT_PARAGRAPH_LENGTH,
-            verbose_name="Experience with this community",
-            help_text="Please describe your experience with this free software community and project as a user and as a contributor.")
+            verbose_name="Past experience with this community",
+            help_text="Please describe your experience before this Outreachy application period with this free software community. You can describe your prior experiences as both a user and a contributor.")
 
     foss_experience = models.TextField(
             max_length=EIGHT_PARAGRAPH_LENGTH,
-            verbose_name="Experience with other communities",
-            help_text="Please describe your experience with any other free software projects as a user and as a contributor.")
+            verbose_name="Past experience with other communities",
+            help_text="Please describe your experience before this Outreachy application period with any other free software communities. You can describe your prior experiences as both a user and a contributor.")
 
     relevant_projects = models.TextField(
             max_length=EIGHT_PARAGRAPH_LENGTH,

@@ -9,7 +9,7 @@ The Outreachy web presence is in a couple of different places:
  * [Outreachy website](https://www.outreachy.org)
  * [GitHub website code repository](https://github.com/outreachy/website/)
  * [GitHub repository for creative works and miscellaneous scripts](https://github.com/outreachy/creative-works-and-scripts/)
- * [Repository CI Status](https://travis-ci.org/sagesharp/outreachy-django-wagtail.svg?branch=master)
+ * [Repository CI Status](https://travis-ci.org/outreachy/website.svg?branch=master)
 
 Older/deprecated websites include:
  - [GNOME Outreachy homepage](https://www.gnome.org/outreachy/) - shell homepage, where the outreachy.org domain currently redirects to
@@ -41,9 +41,10 @@ To set up your local development environment, first clone the repository to your
 
 ```
 git clone https://github.com/outreachy/website.git
+cd website
 ```
 
-In order to develop with Python, you'll need the Python 3 development headers, so install them. You'll also need to install node.js.
+In order to develop with Python, you'll need the Python 3 development headers, so install them (for example, `apt-get install python3.6-dev` on Ubuntu). You'll also need to install node.js.
 
 Next, you'll need to create a new virtualenv. A "virtualenv" is a separate virtual environment for working on different Python projects. It's good practice to create a virtual environment for each Python project you're working on, in case they have conflicting dependencies, and so that you make sure to record all the dependencies for each project.
 
@@ -54,6 +55,7 @@ To install pipenv, you'll need to either [install Homebrew](https://brew.sh/) (i
 Then [install pipenv](https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv).
 
 The following command will automatically create a virtual environment and install the Python dependencies specified in the `Pipfile`. If you need help understanding pipenv, run `pipenv --help`
+Make sure that you are in the `website` directory first, and have *not* run `pipenv shell` yet, then:
 
 ```
 pipenv install
@@ -83,6 +85,12 @@ The next step is to create an admin account for the local website.
 
 ```
 ./manage.py createsuperuser
+```
+
+and run the tests.
+
+```
+PATH="$PWD/node_modules/.bin:$PATH" ./manage.py test
 ```
 
 You'll need to set up a new internship round, following the instructions in the next section.
@@ -141,10 +149,11 @@ Let's assume you want an internship round where we're in the middle of the contr
 
 Note: Normally in the Django shell, you need to call the `save()` method to write the RoundPage object in the local database. The factories code automatically calls the `save()` method for you. Should you need to delete an object from the database, you can call the `delete()` method. Don't call `save()` afterwards, because that will write the object back to the database.
 
-If you get an error when running the factories code, it's often hard to tell what exactly is wrong. Most often, the issue is that a variable is missing that needs to be passed to the factories method. That usually means the factories code needs to create that object from scratch, which will cause it to create a new RoundPage. That will show up as an error `django.core.exceptions.ValidationError: {'slug': ['This slug is already in use']}`. If the factories method you were calling was making multiple objects, you'll need to debug which call failed. You can do that by adding a with section to invoke the factories debugger, and an automic translation block to ensure that no objects that were created before the factory method failed are saved to the database:
+If you get an error when running the factories code, it's often hard to tell what exactly is wrong. Most often, the issue is that a variable is missing that needs to be passed to the factories method. That usually means the factories code needs to create that object from scratch, which will cause it to create a new RoundPage. That will show up as an error `django.core.exceptions.ValidationError: {'slug': ['This slug is already in use']}`. If the factories method you were calling was making multiple objects, you'll need to debug which call failed. You can do that by adding a with section to invoke the factories debugger, and an atomic transaction block to ensure that no objects that were created before the factory method failed are saved to the database:
 
 ```
->>> with factory.debug(), transaction.automic():
+>>> from django.db import transaction
+>>> with factory.debug(), transaction.atomic():
 ...     current_round = RoundPageFactory(
 ...		start_from="appsclose",
 ...		start_date=datetime.date.today() + datetime.timedelta(days=7))
