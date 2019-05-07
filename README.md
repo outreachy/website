@@ -44,7 +44,20 @@ git clone https://github.com/outreachy/website.git
 cd website
 ```
 
-In order to develop with Python, you'll need the Python 3 development headers, so install them (for example, `apt-get install python3.6-dev` on Ubuntu). You'll also need to install node.js.
+In order to develop with Python, you'll need the Python 3 development headers, so install them (for example, `apt-get install python3.6-dev` on Ubuntu). You'll also need to install node.js. 
+
+A note to brew users not currently on python 3.6, you can switch to a previously installed python 3.6.x.
+```
+brew update
+brew info python
+brew switch python 3.6.x_x
+```
+If no previously installed 3.6.x exists, try a fresh install.
+```
+brew update
+brew install --ignore-dependencies https://raw.githubusercontent.com/Homebrew/homebrew-core/f2a764ef944b1080be64bd88dca9a1d80130c558/Formula/python.rb
+brew switch python 3.6.5_1
+```
 
 Next, you'll need to create a new virtualenv. A "virtualenv" is a separate virtual environment for working on different Python projects. It's good practice to create a virtual environment for each Python project you're working on, in case they have conflicting dependencies, and so that you make sure to record all the dependencies for each project.
 
