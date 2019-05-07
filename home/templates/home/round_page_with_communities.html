@@ -29,17 +29,7 @@ Outreachy Internships | Apply | Pick a Project
 
 {% if current_round %}
 	<h1>Outreachy {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} Internships</h1>
-	<h2>Timeline</h2>
-	<table class=table>
-		<tr><td>{{ current_round.appsopen }}</td><td>Applicants start making contributions to internship projects</td></tr>
-		<tr><td>{{ current_round.lateorgs }}</td><td>Last date for new mentoring community listings</td></tr>
-		<tr><td>{{ current_round.ProjectsDeadline }}</td><td>Last date for mentors to submit new internship project listings</td></tr>
-		<tr><td>{{ current_round.appsclose }} at 4pm UTC</td><td>Application deadline. Last day to finish any contributions to internship projects. Applications who made a contribution must submit the rest of their project application by this date.</td></tr>
-		<tr><td>{{ current_round.appslate }} at 4pm UTC</td><td>Late application deadline for specific projects (see below for which projects are accepting late applications)</td></tr>
-		<tr><td>{{ current_round.appsclose }} to {{ current_round.internannounce }}</td><td>Applicants are encouraged to continue making contributions</td></tr>
-		<tr><td>{{ current_round.internannounce }}</td><td>Accepted interns announced on <a href"/alums/">the alums page</a> at 4pm UTC</td></tr>
-		<tr><td>{{ current_round.internstarts }} to {{ current_round.internends }}</td><td>Internships period</td></tr>
-	</table>
+	{% include 'home/snippet/round_timeline.html' %}
 	{% include 'home/snippet/payment_schedule.html' %}
 	{{ current_round.sponsordetails|safe }}
 {% else %}
@@ -231,7 +221,7 @@ Outreachy Internships | Apply | Pick a Project
 			<h3>Applications Closed {{ current_round.appslate }} at 4pm UTC</h3>
 		{% endif %}
 	{% endif %}
-	
+
 	{% for community, funded_interns, projects in late_projects %}
 		<h4>{{ community.name }} - {{ funded_interns }} intern{{ funded_interns|pluralize }}</h4>
 		<p>{{ community.description }}</p>
@@ -260,7 +250,7 @@ Outreachy Internships | Apply | Pick a Project
 			<h3>Applications Closed {{ current_round.appsclose }} at 4pm UTC</h3>
 		{% endif %}
 	{% endif %}
-	
+
 	{% for community, funded_interns, projects in ontime_projects %}
 		<h4>{{ community.name }} - {{ funded_interns }} intern{{ funded_interns|pluralize }}</h4>
 		<p>{{ community.description }}</p>
