@@ -7,7 +7,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core import mail
 from django.core.exceptions import PermissionDenied
-from django.core.signing import TimestampSigner, SignatureExpired, BadSignature 
+from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
 from django.db import models
 from django.forms import inlineformset_factory, ModelForm, modelform_factory, modelformset_factory, ValidationError
 from django.forms.models import BaseInlineFormSet, BaseModelFormSet
@@ -1019,10 +1019,10 @@ def community_landing_view(request, round_slug, community_slug):
     # Try to see if this community is participating in that round
     # and if so, get the Participation object and related objects.
     participation_info = get_object_or_404(
-            Participation.objects.select_related('community', 'participating_round'),
-            community__slug=community_slug,
-            participating_round__slug=round_slug,
-            )
+        Participation.objects.select_related('community', 'participating_round'),
+        community__slug=community_slug,
+        participating_round__slug=round_slug,
+    )
     projects = participation_info.project_set.approved()
     ontime_projects = [p for p in projects if p.deadline == Project.ONTIME]
     late_projects = [p for p in projects if p.deadline == Project.LATE]
@@ -1234,7 +1234,7 @@ def project_read_only_view(request, round_slug, community_slug, project_slug):
             pass
 
     return render(request, 'home/project_read_only.html',
-            {
+        {
             'current_round': project.project_round.participating_round,
             'community': project.project_round.community,
             'project' : project,
@@ -1242,8 +1242,9 @@ def project_read_only_view(request, round_slug, community_slug, project_slug):
             'unapproved_mentors': unapproved_mentors,
             'mentor_request': mentor_request,
             'coordinator': coordinator,
-            },
-            )
+        },
+    )
+
 
 class CoordinatorApprovalAction(ApprovalStatusAction):
     # We don't collect any information about coordinators beyond what's

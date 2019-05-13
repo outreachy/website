@@ -73,7 +73,7 @@ Configure environment variables
 
 Clone the git repo:
 ```
-$ git clone git@github.com:sagesharp/outreachy-django-wagtail.git outreachy
+$ git clone git@github.com:outreachy/website.git outreachy
 $ cd outreachy
 ```
 

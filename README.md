@@ -7,8 +7,9 @@ This repository is for the Django code that comprises the [Outreachy website](ht
 
 The Outreachy web presence is in a couple of different places:
  * [Outreachy website](https://www.outreachy.org)
- * [GitHub Repository](https://github.com/sagesharp/outreachy-django-wagtail/)
- * [Repository CI Status](https://travis-ci.org/sagesharp/outreachy-django-wagtail.svg?branch=master)
+ * [GitHub website code repository](https://github.com/outreachy/website/)
+ * [GitHub repository for creative works and miscellaneous scripts](https://github.com/outreachy/creative-works-and-scripts/)
+ * [Repository CI Status](https://travis-ci.org/outreachy/website.svg?branch=master)
 
 Older/deprecated websites include:
  - [GNOME Outreachy homepage](https://www.gnome.org/outreachy/) - shell homepage, where the outreachy.org domain currently redirects to
@@ -39,10 +40,11 @@ You can run Django locally to test changes to the code, test creating new pages,
 To set up your local development environment, first clone the repository to your local machine:
 
 ```
-git clone https://github.com/sagesharp/outreachy-django-wagtail.git
+git clone https://github.com/outreachy/website.git
+cd website
 ```
 
-In order to develop with Python, you'll need the Python 3 development headers, so install them. You'll also need to install node.js.
+In order to develop with Python, you'll need the Python 3 development headers, so install them (for example, `apt-get install python3.6-dev` on Ubuntu). You'll also need to install node.js.
 
 Next, you'll need to create a new virtualenv. A "virtualenv" is a separate virtual environment for working on different Python projects. It's good practice to create a virtual environment for each Python project you're working on, in case they have conflicting dependencies, and so that you make sure to record all the dependencies for each project.
 
@@ -53,6 +55,7 @@ To install pipenv, you'll need to either [install Homebrew](https://brew.sh/) (i
 Then [install pipenv](https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv).
 
 The following command will automatically create a virtual environment and install the Python dependencies specified in the `Pipfile`. If you need help understanding pipenv, run `pipenv --help`
+Make sure that you are in the `website` directory first, and have *not* run `pipenv shell` yet, then:
 
 ```
 pipenv install
@@ -82,6 +85,12 @@ The next step is to create an admin account for the local website.
 
 ```
 ./manage.py createsuperuser
+```
+
+and run the tests.
+
+```
+PATH="$PWD/node_modules/.bin:$PATH" ./manage.py test
 ```
 
 You'll need to set up a new internship round, following the instructions in the next section.
@@ -140,10 +149,11 @@ Let's assume you want an internship round where we're in the middle of the contr
 
 Note: Normally in the Django shell, you need to call the `save()` method to write the RoundPage object in the local database. The factories code automatically calls the `save()` method for you. Should you need to delete an object from the database, you can call the `delete()` method. Don't call `save()` afterwards, because that will write the object back to the database.
 
-If you get an error when running the factories code, it's often hard to tell what exactly is wrong. Most often, the issue is that a variable is missing that needs to be passed to the factories method. That usually means the factories code needs to create that object from scratch, which will cause it to create a new RoundPage. That will show up as an error `django.core.exceptions.ValidationError: {'slug': ['This slug is already in use']}`. If the factories method you were calling was making multiple objects, you'll need to debug which call failed. You can do that by adding a with section to invoke the factories debugger, and an automic translation block to ensure that no objects that were created before the factory method failed are saved to the database:
+If you get an error when running the factories code, it's often hard to tell what exactly is wrong. Most often, the issue is that a variable is missing that needs to be passed to the factories method. That usually means the factories code needs to create that object from scratch, which will cause it to create a new RoundPage. That will show up as an error `django.core.exceptions.ValidationError: {'slug': ['This slug is already in use']}`. If the factories method you were calling was making multiple objects, you'll need to debug which call failed. You can do that by adding a with section to invoke the factories debugger, and an atomic transaction block to ensure that no objects that were created before the factory method failed are saved to the database:
 
 ```
->>> with factory.debug(), transaction.automic():
+>>> from django.db import transaction
+>>> with factory.debug(), transaction.atomic():
 ...     current_round = RoundPageFactory(
 ...		start_from="appsclose",
 ...		start_date=datetime.date.today() + datetime.timedelta(days=7))
@@ -232,7 +242,7 @@ Communities can participate in multiple Outreachy internship rounds. We record t
 
 The relationships described above can be represented by this diagram:
 
-![A Participation is related to a Community and a RoundPage. A Project is related to a Participation.](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/RoundPage-Community-Participation-Project.png)
+![A Participation is related to a Community and a RoundPage. A Project is related to a Participation.](https://github.com/outreachy/website/raw/master/docs/graphics/RoundPage-Community-Participation-Project.png)
 
 ## ApprovalStatus class
 
@@ -248,7 +258,7 @@ Most classes with an ApprovalStatus will have emails sent to the submitter when 
 
 The community coordinator role is represented by the CoordinatorApproval class. It has a foreign key to a Community, because we expect the coordinator to remain the same from round to round. New coordinators are on-boarded as people change roles, but most coordinators stick around for at least 2-4 internship rounds.
 
-![A CoordinatorApproval has a foreign key to a Community.](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/Participation-Community-CoordinatorApproval-Project-MentorApproval.highlighted-CoordinatorApproval.png)
+![A CoordinatorApproval has a foreign key to a Community.](https://github.com/outreachy/website/raw/master/docs/graphics/Participation-Community-CoordinatorApproval-Project-MentorApproval.highlighted-CoordinatorApproval.png)
 
 When testing the website on your local machine, it's useful to create a coordinator account that you can log into. This allows you to see how the website looks at various points in the round to a coordinator. You can create a new CoordinatorApproval object using the `home/factories.py` function `CoordinatorApprovalFactory()`.
 
@@ -300,7 +310,7 @@ A project is represented by the `class Project` in `home/models.py`. It has a Fo
 
 The mentor(s) for that project are represented by the `class MentorApproval` in `home/models.py`. That provides a link between the mentor's account on Outreachy (a `Comrade` object) and the Project object. A mentor submit or co-mentor more than one project, which will create multiple MentorApproval objects.
 
-![A MentorApproval has a foreign key to a Project.](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/Participation-Community-CoordinatorApproval-Project-MentorApproval.highlighted-MentorApproval-Project.png)
+![A MentorApproval has a foreign key to a Project.](https://github.com/outreachy/website/raw/master/docs/graphics/Participation-Community-CoordinatorApproval-Project-MentorApproval.highlighted-MentorApproval-Project.png)
 
 When testing the website on your local machine, it's useful to create a mentor account that you can log into. This allows you to see how the website looks at various points in the round to a mentor. You can create a new MentorApproval object using the `home/factories.py` function `MentorApprovalFactory()`.
 
@@ -338,7 +348,7 @@ Applicants can record many contributions for the same Project, or different proj
 
 If the applicant applies to another round, they have to create a new initial application (ApplicantApproval object) and new Contribution and FinalApplication objects associated with the Project they're applying for.
 
-![Diagram showing the relationship from a RoundPage through a Project to a Contribution, then an ApplicationApproval, to a FinalApplication](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/RoundPage-Participation-Project-Contribution-ApplicantApproval-FinalApplication.png)
+![Diagram showing the relationship from a RoundPage through a Project to a Contribution, then an ApplicationApproval, to a FinalApplication](https://github.com/outreachy/website/raw/master/docs/graphics/RoundPage-Participation-Project-Contribution-ApplicantApproval-FinalApplication.png)
 
 ### Creating ApplicantApproval Test Objects
 
@@ -384,7 +394,7 @@ If a co-mentor for the same Project signs up to participate as a mentor for this
 
 The relationship between an InternSelection and a MentorRelationship is shown below:
 
-![An InternSelection is related to a MentorApproval through a MentorRelationship](https://github.com/sagesharp/outreachy-django-wagtail/raw/master/docs/graphics/MentorApproval-MentorRelationship-Project-ApplicantApproval-InternSelection.png)
+![An InternSelection is related to a MentorApproval through a MentorRelationship](https://github.com/outreachy/website/raw/master/docs/graphics/MentorApproval-MentorRelationship-Project-ApplicantApproval-InternSelection.png)
 
 
 # Adding a new Django app

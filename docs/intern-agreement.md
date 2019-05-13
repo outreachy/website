@@ -114,7 +114,7 @@ In addition to being subject to your good standing, payment according to this
 schedule is subject to the timely receipt of appropriate tax documentation
 which you will provide to Conservancy as we may request, and adherence to the
 Outreachy Code of Conduct at
-[https://github.com/sagesharp/outreachy-django-wagtail/blob/master/CODE-OF-CONDUCT.md](https://github.com/sagesharp/outreachy-django-wagtail/blob/master/CODE-OF-CONDUCT.md)
+[https://github.com/outreachy/website/blob/master/CODE-OF-CONDUCT.md](https://github.com/outreachy/website/blob/master/CODE-OF-CONDUCT.md)
 
 **Taxes, Insurance, Benefits and Business Expenses.**
 

@@ -216,9 +216,9 @@ that timeline, taking into account any time commitments the applicant has.
 					<p><i>(Organizers only) Applicant found out about Outreachy:</i></p>
 					<p>{{ final_application.get_spread_the_word_display }}</p>
 				{% endif %}
-				<p><i>Their experience with this free software community and project:</i></p>
+				<p><i>Their past experience with this free software community and project:</i></p>
 				<pre>{{ final_application.experience }}</pre>
-				<p><i>Their experience with other free software communities:</i></p>
+				<p><i>Their past experience with other free software communities:</i></p>
 				<pre>{{ final_application.foss_experience }}</pre>
 				<p><i>Their relevant personal or class projects that relate to this project:</i></p>
 				<pre>{{ final_application.relevant_projects }}</pre>
@@ -229,7 +229,7 @@ that timeline, taking into account any time commitments the applicant has.
 				<p><i>Applicant has not provided answers to community-specific questions.</i></p>
 				{% endif %}
 				{% if final_application.applying_to_gsoc %}
-				<p><i>Google Summer of Code communities and projects you are applying for, and the mentor contact information for those projects:</i></p>
+				<p><i>Google Summer of Code communities and projects the applicant is applying for, and the mentor contact information for those projects:</i></p>
 				<pre>{{ final_application.applying_to_gsoc }}</pre>
 				{% else %}
 				<p><i>You are not applying to Google Summer of Code.</i></p>

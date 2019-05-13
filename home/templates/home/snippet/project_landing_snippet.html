@@ -63,7 +63,7 @@ This community requires applicants to complete a tutorial before they can make t
 		{% for channel in channels %}
 			<li><b>{{ channel.tool_name }}</b> -
 			{% if channel.communication_help %}
-				You can find helpful documentation about this communication tool <a href="{{ channel.communication_help }}">here</a>. 
+				You can find helpful documentation about this communication tool <a href="{{ channel.communication_help }}">here</a>.
 			{% endif %}
 			{% if channel.norms %}
 				Once you join the project's communication channel,
@@ -151,11 +151,11 @@ by other Outreachy applicants. Can you point me to an issue that involves Z?"
 <p>When you've exhausted all other avenues of communication, you can reach out
 to the community's coordinator. Each FOSS community has one or more coordinators.
 {% if approved_coordinator_list %}
-The {{ community.name }} coordinator{{ approved_coordinator_list|length|pluralize:" is,(s) are" }} 
+The {{ community.name }} coordinator{{ approved_coordinator_list|length|pluralize:" is,(s) are" }}
 	{% for approval in approved_coordinator_list %}
 		{{ approval.coordinator.public_name }}
 		{% if user.is_authenticated %}
-			&lt;{{ approval.coordinator.account.email }}&gt;
+			&lt;{{ approval.coordinator.account.email }}&gt;{% if not forloop.last %}, {% endif %}
 		{% endif %}
 	{% endfor %}
 	</p>

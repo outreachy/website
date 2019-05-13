@@ -53,8 +53,8 @@ This Code of Conduct applies within Outreachy project spaces:
   * [irc://irc.gnome.org/outreachy](irc://irc.gnome.org/outreachy)
   * [irc://irc.gnome.org/outreachy-admins](irc://irc.gnome.org/outreachy-admins)
 * The Outreachy public and private git repositories:
-  * [https://github.com/sagesharp/outreachy-django-wagtail/](https://github.com/sagesharp/outreachy-django-wagtail/)
-  * [https://github.com/sagesharp/outreachy](https://github.com/sagesharp/outreachy)
+  * [https://github.com/outreachy/website/](https://github.com/outreachy/website/)
+  * [https://github.com/outreachy/creative-works-and-scripts](https://github.com/outreachy/creative-works-and-scripts)
   * [https://gitlab.com/sagesharp/outreachy-notes](https://gitlab.com/sagesharp/outreachy-notes)
 * Any additional Outreachy project spaces added in the future
 
