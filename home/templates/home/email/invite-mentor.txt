@@ -1,0 +1,18 @@
+{% with community=project.project_round.community %}
+{% with current_round=project.project_round.participating_round %}
+{{ sender.display_name }} invites you to co-mentor for {{ community.name }}
+
+{% filter wordwrap:72 %}
+Hi {{ recipient.display_name }},
+
+{{ sender.display_name }} is inviting you to co-mentor an intern on an Outreachy project titled "{{ project.name }}" for the {{ community.name }} community.
+
+To accept this invitation, visit this page:
+{% endfilter %}
+{{ request.scheme }}://{{ request.get_host }}{{ url 'mentorapproval-action' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' }}
+
+Outreachy Organizers
+
+{% include 'home/email/footer-coordinator.txt' %}
+{% endwith %}
+{% endwith %}

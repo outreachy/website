@@ -74,6 +74,29 @@ def project_nonfree_warning(project, request):
         request=request,
         recipient_list=[organizers])
 
+def invite_mentor(project, recipient, request):
+    # Calling these functions from the shell is tedious enough without having
+    # to construct a real Request object. If the `user` field is missing, just
+    # use a default address.
+    if hasattr(request, 'user'):
+        sender = request.user.comrade.email_address
+    else:
+        sender = organizers
+
+    # We could set from_email=sender, but "forging" email makes it look more
+    # like spam, so just use our own address and include the sender in the
+    # message body instead.
+    send_template_mail(
+        'home/email/invite-mentor.txt',
+        {
+            'project': project,
+            'recipient': recipient,
+            'sender': sender,
+        },
+        request=request,
+        recipient_list=[recipient],
+    )
+
 def project_applicant_review(project, request, **kwargs):
     send_group_template_mail('home/email/mentor-applicant-updates.txt', {
         'project': project,

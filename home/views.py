@@ -23,6 +23,7 @@ from django.utils.text import slugify
 from django.views.decorators.http import require_POST
 from django.views.generic import FormView, View, DetailView, ListView, TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.detail import SingleObjectMixin
 from formtools.wizard.views import SessionWizardView
 from itertools import chain, groupby
 from markdownx.utils import markdownify
@@ -34,6 +35,7 @@ from . import email
 
 from .dashboard import get_dashboard_sections
 
+from .forms import InviteForm
 from .forms import RadioBooleanField
 
 from .mixins import ApprovalStatusAction
@@ -1276,6 +1278,33 @@ class CoordinatorApprovalAction(ApprovalStatusAction):
     def notify(self):
         if self.prior_status != self.target_status:
             email.approval_status_changed(self.object, self.request)
+
+
+class InviteMentor(LoginRequiredMixin, ComradeRequiredMixin, SingleObjectMixin, FormView):
+    template_name = 'home/invite-mentor.html'
+    form_class = InviteForm
+
+    def get_form(self, *args, **kwargs):
+        # This method is called during both GET and POST, before
+        # get_context_data or form_valid, but after the login checks have run.
+        # So it's a semi-convenient common place to set self.object.
+        self.object = project = get_object_or_404(
+            Project,
+            project_round__community__slug=self.kwargs['community_slug'],
+            project_round__participating_round__slug=self.kwargs['round_slug'],
+            slug=self.kwargs['project_slug'],
+        )
+
+        user = self.request.user
+        if not project.is_mentor(user) and not project.project_round.community.is_coordinator(user):
+            raise PermissionDenied("Only approved project mentors or community coordinators can invite additional mentors.")
+
+        return super(InviteMentor, self).get_form(*args, **kwargs)
+
+    def form_valid(self, form):
+        email.invite_mentor(self.object, form.get_address(), self.request)
+        return redirect('dashboard')
+
 
 class MentorApprovalAction(ApprovalStatusAction):
     fields = [

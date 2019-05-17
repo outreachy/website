@@ -1,6 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import widgets
+from email.headerregistry import Address
 
 
 class RadioBooleanField(forms.NullBooleanField):
@@ -21,3 +22,11 @@ class RadioBooleanField(forms.NullBooleanField):
     def validate(self, value):
         if value is None:
             raise ValidationError(self.error_messages['required'], code='required')
+
+
+class InviteForm(forms.Form):
+    name = forms.CharField()
+    email_address = forms.EmailField()
+
+    def get_address(self):
+        return Address(self.name, addr_spec=self.email_address)

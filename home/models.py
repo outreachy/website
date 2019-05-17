@@ -1645,6 +1645,9 @@ class Project(ApprovalStatus):
         if self.id is None:
             return True
         # XXX: Should coordinators also be allowed to edit projects?
+        return self.is_mentor(user)
+
+    def is_mentor(self, user):
         return self.mentorapproval_set.approved().filter(
                 mentor__account=user).exists()
 
