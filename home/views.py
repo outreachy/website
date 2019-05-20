@@ -1756,6 +1756,39 @@ class TrustedVolunteersListView(UserPassesTestMixin, ListView):
     def test_func(self):
         return self.request.user.is_staff
 
+class ActiveTrustedVolunteersListView(UserPassesTestMixin, ListView):
+    template_name = 'home/trusted_volunteers.html'
+
+    def get_queryset(self):
+        now = datetime.now(timezone.utc)
+        today = get_deadline_date_for(now)
+
+        # For all interns with active internships, who are approved by Outreachy organizers,
+        interns = InternSelection.objects.filter(
+                organizer_approved=True,
+                intern_starts__lte=today,
+                intern_ends__gte=today)
+
+        # Find all mentors who signed up to mentor this intern,
+        # and all approved coordinators for the intern's community.
+        #
+        # This means mentors who didn't select an intern,
+        # or coordiantors from communities who didn't select any interns don't
+        # get re-subscribed to the mentors' mailing list or invited to the chat.
+        return Comrade.objects.filter(
+                models.Q(
+                    mentorapproval__approval_status=ApprovalStatus.APPROVED,
+                    mentorapproval__mentorrelationship__intern_selection__in=interns,
+                ) | models.Q(
+                    coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+                    coordinatorapproval__community__in=[i.project.project_round.community for i in interns],
+                )
+            ).order_by('public_name').distinct()
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+
 # Is this a current or past intern in good standing?
 # This will return None if the internship hasn't been announced yet.
 def intern_in_good_standing(user):
