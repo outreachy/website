@@ -2,7 +2,7 @@
 
 **Internship Terms of Participation**
 
-_last edited - April 11, 2019_
+_last edited - May 13, 2019_
 
 **Dear Participant:**
 
@@ -18,15 +18,16 @@ charity, and corporate home of the Outreachy Project.
 **The Project.**
 
 You agree to perform the Project as assigned to the Application you submitted to
-Conservancy (the “Application”). Your project should be your primary focus during
-the duration of the Program and you should dedicate 40 hours per week to it.
-From time to time, you will deliver work product related to your Project (“Project
-Work Product”) to your Participating Organization (as set out in the Application)
-through your Volunteer Mentor or Volunteer Mentors (if applicable, together
-referred to herein as the “Volunteer Mentor”) (as set out in the Application) or
-otherwise. Please discuss with your Volunteer Mentor any adjustments that need
-to be made to your Project Work Product goals based on your progress with the
-project, interests, and current goals of the project team.
+Conservancy (the “Application”). Your project should be your primary focus and
+you should dedicate 40 hours per week for the substantial portion of the
+Program's duration. From time to time, you will deliver work product related to
+your Project (“Project Work Product”) to your Participating Organization (as set
+out in the Application) through your Volunteer Mentor or Volunteer Mentors (if
+applicable, together referred to herein as the “Volunteer Mentor”) (as set out
+in the Application) or otherwise. Please discuss with your Volunteer Mentor any
+adjustments that need to be made to your Project Work Product goals based on
+your progress with the project, interests, and current goals of the project
+team.
 
 While you retain any copyright or patent rights in the Project, you hereby license
 all submissions related to the Project under a license that is (i) approved by your
@@ -84,21 +85,22 @@ will make best efforts to send out payments quickly after internship progress
 confirmations. Payments may be issued earlier than scheduled deadlines below,
 but interns should not rely on earlier payments.
 
- * $1,000 will be sent to you by July 3, 2019 if your Volunteer Mentor confirms
-   confirms to Conservancy by June 3, 2019 that you are in good standing. If
-   Conservancy receives such confirmation late, your payment will be delayed. If
-   such confirmation is not received, you will not receive payment.
-
- * $2,000 will be sent to you by August 7, 2019 if your Volunteer Mentor
-   confirms to Conservancy by July 8, 2019 that you are in good standing. If
-   Conservancy receives such confirmation late, your payment will be delayed. If
-   such confirmation is not received, you will not receive payment.
-
- * $2,500 will be sent to you by September 22, 2019 if your Volunteer Mentor
-   confirms to Conservancy by August 23, 2019 that you successfully completed
-   your internship. If Conservancy receives such confirmation late, your payment
-   will be delayed. If such confirmation is not received, you will not receive
+ * $1,000 will be sent to you by or around July 8, 2019 if your Volunteer Mentor
+   confirms confirms to Conservancy by June 8, 2019 that you are in good
+   standing. If Conservancy receives such confirmation late, your payment will
+   be delayed. If such confirmation is not received, you will not receive
    payment.
+
+ * $2,000 will be sent to you by or around August 7, 2019 if your Volunteer
+   Mentor confirms to Conservancy by July 8, 2019 that you are in good standing.
+   If Conservancy receives such confirmation late, your payment will be delayed.
+   If such confirmation is not received, you will not receive payment.
+
+ * $2,500 will be sent to you by or around September 24, 2019 if your Volunteer
+   Mentor confirms to Conservancy by August 25, 2019 that you successfully
+   completed your internship. If Conservancy receives such confirmation late,
+   your payment will be delayed. If such confirmation is not received, you will
+   not receive payment.
 
 Participants will be in good standing if they have used their best efforts to
 complete their Project Work Product. Whether or not you are in good standing
@@ -157,7 +159,7 @@ and are not currently residing in one of these countries;
 (c) you are not a person or entity restricted by US export controls or
 sanctions programs;
 
-(d) you are or will be 18 years of age or older by December 4, 2018;
+(d) you are or will be 18 years of age or older by May 20, 2019;
 
 (e) (i) the contents of your Application and information you submitted for your
 Initial Application, including your stated availability and time commitment to
@@ -198,7 +200,7 @@ which furthers Conservancy’s charitable purposes.
 
 **Termination.**
 
-The internship will take place between December 4, 2018 and March 4, 2019. In
+The internship will take place between May 20, 2019 and August 20, 2019. In
 exceptional situations, your internship can be extended for up to five weeks,
 provided that both you and your Volunteer Mentor send a written request for an
 extension specifying a new end date to the Outreachy Project's leadership

@@ -94,6 +94,7 @@ urlpatterns = [
     url(r'^dashboard/feedback/mentor/final/(?P<username>[^/]+)/$', views.FinalMentorFeedbackUpdate.as_view(), name='final-mentor-feedback'),
     url(r'^dashboard/feedback/intern/final/$', views.FinalInternFeedbackUpdate.as_view(), name='final-intern-feedback'),
     url(r'^dashboard/trusted-volunteers/$', views.TrustedVolunteersListView.as_view(), name='trusted-volunteers-list'),
+    url(r'^dashboard/active-trusted-volunteers/$', views.ActiveTrustedVolunteersListView.as_view(), name='active-trusted-volunteers-list'),
     url(r'^eligibility/$', views.EligibilityUpdateView.as_view(), name='eligibility'),
     url(r'^eligibility/essay-revision/(?P<applicant_username>[^/]+)/$', views.BarriersToParticipationUpdate.as_view(), name='essay-revision'),
     url(r'^eligibility/school-revision/(?P<applicant_username>[^/]+)/$', views.SchoolInformationUpdate.as_view(), name='school-revision'),
