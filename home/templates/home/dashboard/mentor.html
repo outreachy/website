@@ -41,7 +41,7 @@
 
 			{% if not rel.round.has_internship_ended %}
 				<h3>Co-mentors</h3>
-				{% with mentors=rel.intern_selection.mentors %}
+				{% with mentors=rel.intern_selection.mentors.all %}
 				{% if mentors|length == 1 %}
 				<p>You don't have any co-mentors for this intern.</p>
 				{% else %}
