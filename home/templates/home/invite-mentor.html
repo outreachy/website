@@ -5,7 +5,7 @@ Invite a co-mentor
 {% endblock %}
 
 {% block content %}
-<p>Who would you like to invite to co-mentor "{{ project.name }}" in the {{ project.project_round.community.name }} community?</p>
+<p>Who would you like to invite to co-mentor the {{ project.project_round.community.name }} project "{{ project.short_title }}"?</p>
 
 <form method="post" action="">
 {% csrf_token %}
