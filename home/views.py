@@ -1360,7 +1360,7 @@ class MentorApprovalAction(ApprovalStatusAction):
         if self.prior_status != self.target_status:
             email.approval_status_changed(self.object, self.request)
             if self.target_status == MentorApproval.APPROVED:
-                interns = self.object.project.internselection_set.all()
+                interns = self.object.project.internselection_set.exclude(funding_source=InternSelection.NOT_FUNDED)
 
                 # If we're adding a co-mentor after Outreachy organizers have
                 # approved intern selections, then only tell the new co-mentor
@@ -1370,8 +1370,7 @@ class MentorApprovalAction(ApprovalStatusAction):
                     interns = interns.filter(organizer_approved=True)
 
                 for i in interns:
-                    if i.funding_source != InternSelection.NOT_FUNDED:
-                        email.co_mentor_intern_selection_notification(i, self.request)
+                    email.co_mentor_intern_selection_notification(i, self.request)
 
 class ProjectAction(ApprovalStatusAction):
     fields = ['approved_license', 'no_proprietary_software', 'longevity', 'community_size', 'short_title', 'long_description', 'minimum_system_requirements', 'contribution_tasks', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'intern_tasks', 'intern_benefits', 'community_benefits', 'unapproved_license_description', 'proprietary_software_description', 'deadline', 'needs_more_applicants', ]
