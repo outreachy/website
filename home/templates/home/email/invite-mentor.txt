@@ -5,14 +5,17 @@
 {% filter wordwrap:72 %}
 Hi {{ recipient.display_name }},
 
-{{ sender.display_name }} is inviting you to co-mentor an intern on an Outreachy project titled "{{ project.name }}" for the {{ community.name }} community.
+{{ sender.display_name }} is inviting you to co-mentor an Outreachy intern with the {{ community.name }} project "{{ project.short_title }}".
 
 To accept this invitation, visit this page:
 {% endfilter %}
-{{ request.scheme }}://{{ request.get_host }}{{ url 'mentorapproval-action' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' }}
+{{ request.scheme }}://{{ request.get_host }}{% url 'mentorapproval-action' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' %}
 
 Outreachy Organizers
 
-{% include 'home/email/footer-coordinator.txt' %}
+---
+
+This is an automated email sent via Django on {{ request.scheme }}://{{ request.get_host }}
+If you feel you have received this email in error, please contact "Outreachy Organizers" <organizers@outreachy.org>
 {% endwith %}
 {% endwith %}

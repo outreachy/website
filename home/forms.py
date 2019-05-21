@@ -29,4 +29,4 @@ class InviteForm(forms.Form):
     email_address = forms.EmailField()
 
     def get_address(self):
-        return Address(self.name, addr_spec=self.email_address)
+        return Address(self.cleaned_data['name'], addr_spec=self.cleaned_data['email_address'])

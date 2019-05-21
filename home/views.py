@@ -1280,7 +1280,7 @@ class CoordinatorApprovalAction(ApprovalStatusAction):
             email.approval_status_changed(self.object, self.request)
 
 
-class InviteMentor(LoginRequiredMixin, ComradeRequiredMixin, SingleObjectMixin, FormView):
+class InviteMentor(LoginRequiredMixin, ComradeRequiredMixin, FormView, SingleObjectMixin):
     template_name = 'home/invite-mentor.html'
     form_class = InviteForm
 
