@@ -1361,6 +1361,14 @@ class MentorApprovalAction(ApprovalStatusAction):
             email.approval_status_changed(self.object, self.request)
             if self.target_status == MentorApproval.APPROVED:
                 interns = self.object.project.get_interns()
+
+                # If we're adding a co-mentor after Outreachy organizers have
+                # approved intern selections, then only tell the new co-mentor
+                # about the approved interns.
+                current_round = self.object.project.project_round.participating_round
+                if has_deadline_passed(current_round.internapproval):
+                    interns = interns.filter(organizer_approved=True)
+
                 for i in interns:
                     if i.funding_source != InternSelection.NOT_FUNDED:
                         email.co_mentor_intern_selection_notification(i, self.request)
