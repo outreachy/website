@@ -132,14 +132,7 @@ def coordinator_intern_selection_reminder(participation, request, **kwargs):
             recipient_list=email_list,
             **kwargs)
 
-def co_mentor_intern_selection_notification(intern_selection, request):
-    mentor_email = intern_selection.mentors.get().mentor.account.email
-    email_list = []
-    for email in intern_selection.project.get_mentor_email_list():
-        if email.addr_spec == mentor_email:
-            continue
-        email_list.append(email)
-
+def co_mentor_intern_selection_notification(intern_selection, email_list, request):
     if email_list:
         send_group_template_mail('home/email/co-mentor-sign-agreement.txt', {
             'intern_selection': intern_selection,
@@ -355,7 +348,7 @@ def message_samples():
     mentor_application_deadline_reminder(project, request)
     mentor_intern_selection_reminder(project, request)
     coordinator_intern_selection_reminder(participation, request)
-    co_mentor_intern_selection_notification(intern_selection, request)
+    co_mentor_intern_selection_notification(intern_selection, intern_selection.project.get_mentor_email_list(), request)
     intern_selection_conflict_notification(intern_selection, request)
     # TODO: applicant_deadline_reminder
     applicant_essay_needs_updated(applicant, request)

@@ -1369,8 +1369,12 @@ class MentorApprovalAction(ApprovalStatusAction):
                 if has_deadline_passed(current_round.internapproval):
                     interns = interns.filter(organizer_approved=True)
 
-                for i in interns:
-                    email.co_mentor_intern_selection_notification(i, self.request)
+                for intern_selection in interns:
+                    email.co_mentor_intern_selection_notification(
+                        intern_selection,
+                        [self.object.mentor.email_address()],
+                        self.request,
+                    )
 
 class ProjectAction(ApprovalStatusAction):
     fields = ['approved_license', 'no_proprietary_software', 'longevity', 'community_size', 'short_title', 'long_description', 'minimum_system_requirements', 'contribution_tasks', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'intern_tasks', 'intern_benefits', 'community_benefits', 'unapproved_license_description', 'proprietary_software_description', 'deadline', 'needs_more_applicants', ]
@@ -2073,10 +2077,21 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 intern_selection=intern_selection,
                 mentor=self.mentor_approval,
                 contract=signed_contract).save()
-        # If we just created this intern selection,
-        # email all co-mentors and encourage them to sign the mentor agreement.
+
+        # If we just created this intern selection, email all co-mentors and
+        # encourage them to sign the mentor agreement.
         if was_intern_selection_created:
-            email.co_mentor_intern_selection_notification(intern_selection, self.request)
+            email.co_mentor_intern_selection_notification(
+                intern_selection,
+                [
+                    mentor_approval.mentor.email_address()
+                    for mentor_approval in self.project.mentorapproval_set.all()
+                    # skip the current visitor, who just signed
+                    if mentor_approval != self.mentor_approval
+                ],
+                self.request,
+            )
+
         # Send emails about any project conflicts
         email.intern_selection_conflict_notification(intern_selection, self.request)
         return redirect(self.get_success_url())
