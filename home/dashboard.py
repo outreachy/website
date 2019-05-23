@@ -32,8 +32,10 @@ from django.core.exceptions import PermissionDenied
 from django.core.mail.backends.base import BaseEmailBackend
 from django.db import models
 from django.shortcuts import get_object_or_404, redirect
+from django.utils.html import urlize
 from django.views.generic import TemplateView
 import datetime
+import re
 
 from . import email
 from .mixins import ComradeRequiredMixin
@@ -207,8 +209,19 @@ class SendEmailView(RoundEvent, LoginRequiredMixin, ComradeRequiredMixin, BaseEm
         """
         self.messages = []
         self.generate_messages(current_round=self.get_round(), connection=self)
+
+        # Find all URLs in all messages by asking Django's urlize function to
+        # mark up URL-like text as HTML and then looking for the HTML that
+        # urlize generated.
+        urlize_re = re.compile(r'<a href="(.*?)"')
+        urls = set()
+        for message in self.messages:
+            for url in urlize_re.finditer(urlize(message.body)):
+                urls.add(url.group(1))
+
         context = super(SendEmailView, self).get_context_data(**kwargs)
         context['messages'] = self.messages
+        context['urls'] = sorted(urls)
         return context
 
     def send_messages(self, messages):
