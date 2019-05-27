@@ -55,7 +55,7 @@ Make adjustments to the project goals to ensure you'll complete them before your
 Week 8 Mentor & Intern Chat
 ---------------------------
 
-On {{ current_round.week_eight_chat_date }} we will host a chat for both Outreachy interns and mentors:
+On {{ current_round.week_eight_chat_text_date }} we will host a chat for both Outreachy interns and mentors:
 
 {{ current_round.week_eight_timeline_chat_url }}
 
