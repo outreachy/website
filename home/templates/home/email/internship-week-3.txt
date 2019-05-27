@@ -23,7 +23,7 @@ This week, we want Outreachy mentors and their interns to have a longer conversa
 
 Optionally, both mentors and interns can share a brief version of what you're currently stuck on in the Outreachy chat:
 
-{{ current_round.week_three_stuck_chat_url }}
+{{ current_round.week_four_stuck_chat_url }}
 
 Goals for Mentors
 -----------------

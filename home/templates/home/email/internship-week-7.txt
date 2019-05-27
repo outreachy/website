@@ -54,7 +54,7 @@ Make adjustments to the project goals to ensure you'll complete them before your
 
 In the chat, interns should share a brief paragraph on one goal that you thought would be easy and why it wasn't easy:
 
-{{ current_round.week_seven_timeline_chat_url }}
+{{ current_round.week_eight_timeline_chat_url }}
 
 Interns can also share the link to their progress report blog post in the chat.
 

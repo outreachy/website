@@ -31,8 +31,7 @@ Mentor & Intern Assignment
 This week, we want Outreachy mentors and interns to brainstorm interesting things about their project they could share with the other Outreachy interns and mentors. It could be a small success you've had, an interesting problem that was a challenge to solve, or a new tool you found useful. Then you should both try to identify which terms or concepts an intern from a different community might not understand. How could you explain make your story easier to understand? Do you have documentation or resources you could point them to help them understand a new concept?
 
 Once you and your mentor have talked through how to share your project with other Outreachy interns, go ahead and share it on the Zulip chat:
-
-{{ current_round.week_five_audience_chat_url }}
+{{ current_round.week_six_audience_chat_url }}
 
 When you see someone sharing their stories about their projects, try to ask questions about things you don't understand. This helps others learn what newcomers to their projects don't know.
 
