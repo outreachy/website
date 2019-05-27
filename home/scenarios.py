@@ -88,8 +88,9 @@ class ApplicationsOpenScenario(NewRoundScenario):
 
 class InternSelectionScenario(ApplicationsOpenScenario):
     """
-    Create samples of the objects which matter once applicants are allowed to
-    begin applying to participate in the new round.
+    Create samples of the objects which matter once mentors start to
+    select the interns they want to work with, and coordinators
+    need to set funding sources for the selected interns.
     """
 
     round__start_from = 'mentor_intern_selection_deadline'
