@@ -13,17 +13,6 @@ For most interns, mid-point feedback is due on {{ current_round.midfeedback }}. 
 
 The goal of midpoint feedback is to ensure that interns are working full-time on their projects, communicating with their mentor(s), and revising their contributions based on feedback in a timely manner.
 
-Travel stipend
---------------
-
-If you haven't discussed with your mentor how you could use the Outreachy travel stipend, now is a good time to do so!
-
-Both you and your mentor(s) should carefully read Outreachy's travel stipend policy:
-
-{{ request.scheme }}://{{ request.get_host }}{% url 'travel-stipend' %}
-
-Interns should have (or will shortly) receive an email from the Software Freedom Conservancy that outlines how to ask for a travel reimbursement.
-
 Week 7 Theme
 ------------
 
