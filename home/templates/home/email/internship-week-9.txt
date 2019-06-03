@@ -27,7 +27,7 @@ Your goal for this week's blog post is to write a post about what direction you 
 Week 10 Mentor & Intern Chat
 ----------------------------
 
-On {{ current_round.week_ten_chat_text_date }} we will host a chat for both Outreachy interns and mentors:
+On {{ current_round.week_ten_chat_text_date }} UTC we will host a chat for both Outreachy interns and mentors:
 
 {{ current_round.week_ten_timeline_chat_url }}
 

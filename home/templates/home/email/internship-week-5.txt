@@ -28,7 +28,7 @@ See the detailed section below for more prompts.
 Week 6 Mentor & Intern Chat
 ---------------------------
 
-On {{ current_round.week_six_chat_text_date }} we will host a chat for both Outreachy interns and mentors. We encourage you to briefly share share why you're passionate about your project or community. Try to explain why your project is interesting in a way that someone who has never heard of your community could understand.
+On {{ current_round.week_six_chat_text_date }} UTC we will host a chat for both Outreachy interns and mentors. We encourage you to briefly share share why you're passionate about your project or community. Try to explain why your project is interesting in a way that someone who has never heard of your community could understand.
 
 {{ current_round.week_six_audience_chat_url }}
 

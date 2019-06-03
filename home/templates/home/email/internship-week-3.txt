@@ -22,7 +22,7 @@ Part of the reason many people find free and open source software development in
 Week 4 Mentor & Intern Chat
 ---------------------------
 
-On {{ current_round.week_four_chat_text_date }} we will host a chat for both Outreachy interns and mentors. We encourage you to briefly share something you're currently stuck on. If you've solved it by the chat date, share what you tried to do to find the solution, what didn't work, and how you found help to finally get unstuck.
+On {{ current_round.week_four_chat_text_date }} UTC we will host a chat for both Outreachy interns and mentors. We encourage you to briefly share something you're currently stuck on. If you've solved it by the chat date, share what you tried to do to find the solution, what didn't work, and how you found help to finally get unstuck.
 
 {{ current_round.week_four_stuck_chat_url }}
 
