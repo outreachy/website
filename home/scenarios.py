@@ -3,6 +3,7 @@ Meta-factories which combine the individual factories from factories.py to set
 up complete scenarios which are useful for various testing purposes.
 """
 
+import datetime
 import factory
 from . import factories
 from home.models import ApprovalStatus
@@ -185,3 +186,15 @@ class InternSelectionScenario(ApplicationsOpenScenario):
         intern_selection=factory.SelfAttribute('..intern_selection3'),
         mentor=factory.SelfAttribute('..mentor_approval3'),
     )
+
+class WeekNineScenario(InternSelectionScenario):
+    """
+    Create the scenario where it's the start of week 9 during the internship.
+    """
+
+    round__start_from = 'internstarts'
+    round__start_date =  datetime.date.today() - datetime.timedelta(weeks=9-1)
+
+    # Make sure two intern selections have been approved, and one is not approved.
+    intern_selection1__organizer_approved = True
+    intern_selection1__funding_source = InternSelection.ORG_FUNDED
