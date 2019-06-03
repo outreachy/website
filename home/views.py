@@ -2430,7 +2430,6 @@ class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMi
                 'payment_approved',
                 'full_time_effort',
                 'progress_report',
-                'mentors_report',
                 'request_extension',
                 'extension_date',
                 'request_termination',
