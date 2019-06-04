@@ -187,13 +187,19 @@ class InternSelectionScenario(ApplicationsOpenScenario):
         mentor=factory.SelfAttribute('..mentor_approval3'),
     )
 
-class WeekNineScenario(InternSelectionScenario):
+class InternshipWeekScenario(InternSelectionScenario):
     """
-    Create the scenario where it's the start of week 9 during the internship.
+    Create the scenario where it's the start of the given week during the
+    internship.
     """
 
+    class Params:
+        week = 1
+
     round__start_from = 'internstarts'
-    round__start_date =  datetime.date.today() - datetime.timedelta(weeks=9-1)
+    round__start_date = factory.LazyAttribute(
+        lambda round: datetime.date.today() - datetime.timedelta(weeks=round.factory_parent.week - 1)
+    )
 
     # Make sure two intern selections have been approved, and one is not approved.
     intern_selection1__organizer_approved = True
