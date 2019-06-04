@@ -13,17 +13,6 @@ For most interns, mid-point feedback is due on {{ current_round.midfeedback }}. 
 
 The goal of midpoint feedback is to ensure that interns are working full-time on their projects, communicating with their mentor(s), and revising their contributions based on feedback in a timely manner.
 
-Travel stipend
---------------
-
-If you haven't discussed with your mentor how you could use the Outreachy travel stipend, now is a good time to do so!
-
-Both you and your mentor(s) should carefully read Outreachy's travel stipend policy:
-
-{{ request.scheme }}://{{ request.get_host }}{% url 'travel-stipend' %}
-
-Interns should have (or will shortly) receive an email from the Software Freedom Conservancy that outlines how to ask for a travel reimbursement.
-
 Week 7 Theme
 ------------
 
@@ -52,11 +41,18 @@ This week, we want Outreachy mentors and interns to review the original project 
 
 Make adjustments to the project goals to ensure you'll complete them before your internship ends. Outreachy organizers view the internship as more like a fellowship. As long as an intern is working full-time on a project, Outreachy organizers consider this a success. Outreachy internships should not be extended to meet a particular project goal. Interns are not required to continue working on their project after their internship ends. Some Outreachy interns do continue working as volunteers on their project, but it's completely optional.
 
-In the chat, interns should share a brief paragraph on one goal that you thought would be easy and why it wasn't easy:
+Week 8 Mentor & Intern Chat
+---------------------------
 
-{{ current_round.week_seven_timeline_chat_url }}
+On {{ current_round.week_eight_chat_text_date }} UTC we will host a chat for both Outreachy interns and mentors:
 
-Interns can also share the link to their progress report blog post in the chat.
+{{ current_round.week_eight_timeline_chat_url }}
+
+Interns can share the link to their progress report blog post in the chat. We encourage you to share one project goal that you thought would be easy and why it took more time to complete than you thought.
+
+Mentors are encouraged to share what project goal they thought would take less time, but turned out to be more complex.
+
+Share why you think you underestimated the complexity of the goal. Share what you've learned about how to better estimate the complexity of this kind of goal. Often times there was nothing you could have done to better estimate the time a task would have taken, and that's okay too!
 
 Goals for Mentors
 -----------------

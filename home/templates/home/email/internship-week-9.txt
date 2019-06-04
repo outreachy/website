@@ -1,0 +1,91 @@
+Outreachy week 9: Assignments for mentors & interns
+
+Welcome to week nine of your Outreachy internship! Now is a good time to start thinking about your career path after the Outreachy internship.
+
+We have some goals and assignments for both mentors and interns. Please read the sections below.
+
+Travel stipend
+--------------
+
+If you haven't discussed with your mentor how you could use the Outreachy travel stipend, now is a good time to do so! Conferences and events are a great way to network and find new opportunities.
+
+Both you and your mentor(s) should carefully read Outreachy's travel stipend policy:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'travel-stipend' %}
+
+Week 9 Theme
+------------
+
+The theme for this week is "Career opportunities".
+
+Some Outreachy interns may not know what they want to do with their career. Other Outreachy interns may be switching careers, and not know how to break into a new field. There may be Outreachy interns who took time off from their career to raise kids, and want to get back to work.
+
+It's important to talk to your mentor, coordinators, and Outreachy organizers about what career opportunities are possible. If you don't ask for help finding opportunities, you may miss one! We'll have an Outreachy chat to share career opportunities.
+
+Your goal for this week's blog post is to write a post about what direction you want your career to go. You may want to wait to publish the post until after you participate in next week's chat, since your goals might change!
+
+Week 10 Mentor & Intern Chat
+----------------------------
+
+On {{ current_round.week_ten_chat_text_date }} UTC we will host a chat for both Outreachy interns and mentors:
+
+{{ current_round.week_ten_timeline_chat_url }}
+
+We'll be discussing all the different ways you can advance your career by participating in free software. The discussion will have two parts.
+
+The first part of the discussion will be everyone brainstorming different career paths in the technology industry and free software. Many people have part-time or full-time jobs working in the technology industry. Some people may be self-employed contractors, paid to work on free software. People may have taken a while to find a job. They may have participated in other internship programs, volunteer opportunies, grants, or networked at conferences and events.
+
+We encourage both mentors and interns to share their stories of how they advanced their career. What did you try that didn't work? Where did you hear about opportunities? How did you network and connect with people who helped you advance your goals?
+
+The second part of the discussion is brainstorming additional opportunities to work on free software. We encourage both mentors and interns to provide information about paid opportunities, but information about unpaid opportunities is also welcome. Sharing information about resource groups or job posting boards is also encouraged.
+
+After the chat, you can help Outreachy organizers spread the word about these opportunities. You can update the Outreachy website opportunities page by sending a GitHub pull request:
+
+https://www.outreachy.org/opportunities/
+https://www.github.com/outreachy/website/
+
+Goals for Mentors
+-----------------
+
+Week 9 goals:
+
+ - Talk to your intern about any opportunities to continue working in your community
+ - Ask your network about jobs, grants, or other opportunities to share during the chat
+
+Goals for Interns
+-----------------
+
+Week 9 goals:
+
+ - Talk to your mentor about ways you can continue working in the community
+ - Participate in the career chat
+ - Write a blog post about your career goals
+
+Week 9 Blog
+-----------
+
+For this week's blog post, we'd like to write about what your career goals are. If you aren't looking for a job or internship, you can talk about what volunteer opportunities you'd like to participate in. If you're looking for a opportunity in the future, make sure to include when you'll be available.
+
+Here's some prompts that could get you started writing this blog post:
+
+ - Are you looking for a job, internship, a grant, a volunteer position, or some type of other opportunity?
+ - What types of work would you like to contribute to?
+ - What tools or skills do you have that would help you with that work?
+ - What tools or skills would you like to learn?
+ - What interpersonal skills make you a collaborative team member?
+ - What languages do you speak, and at what school grade level?
+
+You might also want to talk about how your identity or background will allow you to provide a unique perspective on a team. Companies often want a diverse set of perspectivies in their teams. A team will people who have all the same background makes products that don't fit everyone's needs. Parts of your identity to consider might be race, gender, or disability. Parts of your background could include things like your socioeconomic status or your nationality. You can mention anything that you think might provide a unique perspective to a team. Only share what you're comfortable with being public on the internet!
+
+If you're looking for a job opportunity, here's some additional things you might want to mention:
+
+ - When are you available to start work? (This should be after your Outreachy internship ends, including if you have an extension.)
+ - Are you able to move, and if so, which countries/regions are you willing to move to?
+ - Are you looking for a remote job? (Hint, saying you already have three months experience as a remote intern will help you find another remote position!)
+ - Are you looking for a full-time or part-time paid position?
+ - Are you open to being a self-employed contractor?
+
+If you have any questions, please contact the Outreachy organizers organizers@outreachy.org
+
+Outreachy Organizers
+{% include 'home/email/footer-mentor-intern-coordinator.txt' %}

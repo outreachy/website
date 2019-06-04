@@ -23,6 +23,7 @@ from django.utils.text import slugify
 from django.views.decorators.http import require_POST
 from django.views.generic import FormView, View, DetailView, ListView, TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.detail import SingleObjectMixin
 from formtools.wizard.views import SessionWizardView
 from itertools import chain, groupby
 from markdownx.utils import markdownify
@@ -34,6 +35,7 @@ from . import email
 
 from .dashboard import get_dashboard_sections
 
+from .forms import InviteForm
 from .forms import RadioBooleanField
 
 from .mixins import ApprovalStatusAction
@@ -1280,6 +1282,33 @@ class CoordinatorApprovalAction(ApprovalStatusAction):
         if self.prior_status != self.target_status:
             email.approval_status_changed(self.object, self.request)
 
+
+class InviteMentor(LoginRequiredMixin, ComradeRequiredMixin, FormView, SingleObjectMixin):
+    template_name = 'home/invite-mentor.html'
+    form_class = InviteForm
+
+    def get_form(self, *args, **kwargs):
+        # This method is called during both GET and POST, before
+        # get_context_data or form_valid, but after the login checks have run.
+        # So it's a semi-convenient common place to set self.object.
+        self.object = project = get_object_or_404(
+            Project,
+            project_round__community__slug=self.kwargs['community_slug'],
+            project_round__participating_round__slug=self.kwargs['round_slug'],
+            slug=self.kwargs['project_slug'],
+        )
+
+        user = self.request.user
+        if not project.is_mentor(user) and not project.project_round.community.is_coordinator(user):
+            raise PermissionDenied("Only approved project mentors or community coordinators can invite additional mentors.")
+
+        return super(InviteMentor, self).get_form(*args, **kwargs)
+
+    def form_valid(self, form):
+        email.invite_mentor(self.object, form.get_address(), self.request)
+        return redirect('dashboard')
+
+
 class MentorApprovalAction(ApprovalStatusAction):
     fields = [
             'instructions_read',
@@ -1334,10 +1363,21 @@ class MentorApprovalAction(ApprovalStatusAction):
         if self.prior_status != self.target_status:
             email.approval_status_changed(self.object, self.request)
             if self.target_status == MentorApproval.APPROVED:
-                interns = self.object.project.get_interns()
-                for i in interns:
-                    if i.funding_source != InternSelection.NOT_FUNDED:
-                        email.co_mentor_intern_selection_notification(i, self.request)
+                interns = self.object.project.internselection_set.exclude(funding_source=InternSelection.NOT_FUNDED)
+
+                # If we're adding a co-mentor after Outreachy organizers have
+                # approved intern selections, then only tell the new co-mentor
+                # about the approved interns.
+                current_round = self.object.project.project_round.participating_round
+                if has_deadline_passed(current_round.internapproval):
+                    interns = interns.filter(organizer_approved=True)
+
+                for intern_selection in interns:
+                    email.co_mentor_intern_selection_notification(
+                        intern_selection,
+                        [self.object.mentor.email_address()],
+                        self.request,
+                    )
 
 class ProjectAction(ApprovalStatusAction):
     fields = ['approved_license', 'no_proprietary_software', 'longevity', 'community_size', 'short_title', 'long_description', 'minimum_system_requirements', 'contribution_tasks', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'intern_tasks', 'intern_benefits', 'community_benefits', 'unapproved_license_description', 'proprietary_software_description', 'deadline', 'needs_more_applicants', ]
@@ -2040,10 +2080,21 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 intern_selection=intern_selection,
                 mentor=self.mentor_approval,
                 contract=signed_contract).save()
-        # If we just created this intern selection,
-        # email all co-mentors and encourage them to sign the mentor agreement.
+
+        # If we just created this intern selection, email all co-mentors and
+        # encourage them to sign the mentor agreement.
         if was_intern_selection_created:
-            email.co_mentor_intern_selection_notification(intern_selection, self.request)
+            email.co_mentor_intern_selection_notification(
+                intern_selection,
+                [
+                    mentor_approval.mentor.email_address()
+                    for mentor_approval in self.project.mentorapproval_set.all()
+                    # skip the current visitor, who just signed
+                    if mentor_approval != self.mentor_approval
+                ],
+                self.request,
+            )
+
         # Send emails about any project conflicts
         email.intern_selection_conflict_notification(intern_selection, self.request)
         return redirect(self.get_success_url())
@@ -2382,7 +2433,6 @@ class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMi
                 'payment_approved',
                 'full_time_effort',
                 'progress_report',
-                'mentors_report',
                 'request_extension',
                 'extension_date',
                 'request_termination',

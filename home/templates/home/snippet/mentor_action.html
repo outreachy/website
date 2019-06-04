@@ -57,6 +57,9 @@
 		<a class="btn btn-primary" href="{% url 'communication-channels-edit' round_slug=project.project_round.participating_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}">Update Communication Channels</a>
 		</p>
 		<p class="card-text">
+		<a class="btn btn-primary" href="{% url 'mentorapproval-invite' round_slug=project.project_round.participating_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}">Invite a co-mentor</a>
+		</p>
+		<p class="card-text">
 		<a class="btn btn-warning" href="{{ project.get_withdraw_url }}">Withdraw Project</a>
 		<hr>
 		<p class="card-text">You can <a href="{% url 'community-read-only' community_slug=project.project_round.community.slug %}">submit another project</a>

@@ -35,6 +35,7 @@ round_community_project_patterns = [
     url(r'^contributions/(?P<contribution_slug>[^/]+)/$', views.ContributionUpdate.as_view(), name='contributions-edit'),
     url(r'^contributions/$', views.ProjectContributions.as_view(), name='contributions'),
     url(r'^applicants/$', views.ProjectApplicants.as_view(), name='project-applicants'),
+    url(r'^cfp/mentor/invite/$', views.InviteMentor.as_view(), name='mentorapproval-invite'),
     url(r'^cfp/mentor/preview/(?P<username>[^/]+)/$', views.MentorApprovalPreview.as_view(), name='mentorapproval-preview'),
     url(r'^cfp/mentor/(?P<action>[^/]+)/(?:(?P<username>[^/]+)/)?$', views.MentorApprovalAction.as_view(), name='mentorapproval-action'),
     url(r'^cfp/skills/$', views.ProjectSkillsEditPage.as_view(), name='project-skills-edit'),

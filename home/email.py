@@ -83,6 +83,29 @@ def project_nonfree_warning(project, request):
         request=request,
         recipient_list=[organizers])
 
+def invite_mentor(project, recipient, request):
+    # Calling these functions from the shell is tedious enough without having
+    # to construct a real Request object. If the `user` field is missing, just
+    # use a default address.
+    if hasattr(request, 'user'):
+        sender = request.user.comrade.email_address
+    else:
+        sender = organizers
+
+    # We could set from_email=sender, but "forging" email makes it look more
+    # like spam, so just use our own address and include the sender in the
+    # message body instead.
+    send_template_mail(
+        'home/email/invite-mentor.txt',
+        {
+            'project': project,
+            'recipient': recipient,
+            'sender': sender,
+        },
+        request=request,
+        recipient_list=[recipient],
+    )
+
 def project_applicant_review(project, request, **kwargs):
     send_group_template_mail('home/email/mentor-applicant-updates.txt', {
         'project': project,
@@ -118,14 +141,7 @@ def coordinator_intern_selection_reminder(participation, request, **kwargs):
             recipient_list=email_list,
             **kwargs)
 
-def co_mentor_intern_selection_notification(intern_selection, request):
-    mentor_email = intern_selection.mentors.get().mentor.account.email
-    email_list = []
-    for email in intern_selection.project.get_mentor_email_list():
-        if email.addr_spec == mentor_email:
-            continue
-        email_list.append(email)
-
+def co_mentor_intern_selection_notification(intern_selection, email_list, request):
     if email_list:
         send_group_template_mail('home/email/co-mentor-sign-agreement.txt', {
             'intern_selection': intern_selection,
@@ -341,7 +357,7 @@ def message_samples():
     mentor_application_deadline_reminder(project, request)
     mentor_intern_selection_reminder(project, request)
     coordinator_intern_selection_reminder(participation, request)
-    co_mentor_intern_selection_notification(intern_selection, request)
+    co_mentor_intern_selection_notification(intern_selection, intern_selection.project.get_mentor_email_list(), request)
     intern_selection_conflict_notification(intern_selection, request)
     # TODO: applicant_deadline_reminder
     applicant_essay_needs_updated(applicant, request)

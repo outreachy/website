@@ -557,6 +557,7 @@ all_round_events = (
     InternWeek.at(week=3),
     InternWeek.at(week=5),
     InternWeek.at(week=7),
+    InternWeek.at(week=9),
     MidpointFeedbackInstructions,
     FinalFeedbackInstructions,
 )

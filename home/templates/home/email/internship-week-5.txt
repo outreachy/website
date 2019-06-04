@@ -25,16 +25,14 @@ As you write this blog post, think about what terms or concepts were confusing t
 
 See the detailed section below for more prompts.
 
-Mentor & Intern Assignment
---------------------------
+Week 6 Mentor & Intern Chat
+---------------------------
 
-This week, we want Outreachy mentors and interns to brainstorm interesting things about their project they could share with the other Outreachy interns and mentors. It could be a small success you've had, an interesting problem that was a challenge to solve, or a new tool you found useful. Then you should both try to identify which terms or concepts an intern from a different community might not understand. How could you explain make your story easier to understand? Do you have documentation or resources you could point them to help them understand a new concept?
+On {{ current_round.week_six_chat_text_date }} UTC we will host a chat for both Outreachy interns and mentors. We encourage you to briefly share share why you're passionate about your project or community. Try to explain why your project is interesting in a way that someone who has never heard of your community could understand.
 
-Once you and your mentor have talked through how to share your project with other Outreachy interns, go ahead and share it on the Zulip chat:
+{{ current_round.week_six_audience_chat_url }}
 
-{{ current_round.week_five_audience_chat_url }}
-
-When you see someone sharing their stories about their projects, try to ask questions about things you don't understand. This helps others learn what newcomers to their projects don't know.
+Other interns and mentors are encouraged to ask questions. Don't worry about being grilled on your project! This chat is about being curious about other free and open source software communities. Answering questions about your project is a way to share your interests and encourage others to share theirs.
 
 Goals for Mentors
 -----------------
@@ -53,10 +51,7 @@ Goals for Interns
 
 Week 5 goals:
 
- - Talk with your mentor about how to share your project with an Outreachy intern from another community
- - Share that story on the Outreachy Zulip chat
  - Write your blog post explaining your project to a newcomer to your community
- - Ask an Outreachy intern from another community to review your blog post
  - If you don't understand something your mentor said, ask them to explain it a different way
  - Remember that it's not always obvious to your mentor what newcomers don't know
  - It is perfectly okay to ask a question twice, or ask for more detail later!

@@ -38,7 +38,7 @@ Review {{ community.name }} Applicants
 			</tr>
 			</thread>
 		{% for project in projects %}
-			{% with interns=project.get_interns %}
+			{% with interns=project.internselection_set.all %}
 				{% if not interns and project.approval_status == project.APPROVED %}
 				<tr>
 					<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></td>

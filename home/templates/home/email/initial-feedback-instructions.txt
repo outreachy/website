@@ -15,7 +15,7 @@ The mentor feedback will determine whether the intern is paid their ${{ current_
 Privacy
 ---
 
-Feedback is completely private, and will only be seen by Outreachy Organizers and Software Freedom Conservancy accounting staff. Outreachy organizers will discuss your feedback with you and draft a response with you before contacting the other person about any issues. Mentors can (optionally) provide feedback that will be shared with other Outreachy mentors and coordinators.
+Feedback is completely private, and will only be seen by Outreachy Organizers and Software Freedom Conservancy accounting staff. Outreachy organizers will discuss your feedback with you and draft a response with you before contacting the other person about any issues.
 
 We encourage mentors and interns to provide honest feedback on how the internship is going.
 
@@ -32,7 +32,6 @@ Mentors will be asked:
  * On average, how long does it take for your intern to respond to your questions or feedback?
  * On average, how long does it take for you to respond to your intern's questions or requests for feedback?
  * Please provide a paragraph describing your intern's progress on establishing communication with you, connecting to your FOSS community, and ramping up on their first tasks. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.
- * (Optional) Please provide a paragraph for Outreachy coordinators and other mentors describing your intern's progress. This will be shared on the mentors mailing list, but will not be made public.
  * Do you believe your Outreachy intern is putting in a full-time, 40 hours a week effort into the internship?
  * Should your Outreachy intern be paid the initial ${{ current_round.initialpayment }} payment?
  * Questions about whether the intern needs an extension, and when the next date for internship feedback should be after the extension is done.
@@ -61,7 +60,7 @@ The most important metric for success is whether the mentor knows their intern i
 Transparency
 ---
 
-Interns will be able to see on their dashboard if their mentor has submitted feedback, but not the contents of that feedback. They will get an email when the mentor feedback is reviewed by the Outreachy organizers and their payment authorization is sent to the Software Freedom Conservancy. As we batch payment authorizations, please do not email Outreachy organizers to remind us of feedback that needs to be reviewed.
+Interns will be able to see on their dashboard if their mentor has submitted feedback, but not the contents of that feedback. The interns will be able to see on their dashboard when the mentor feedback is reviewed by the Outreachy organizers and their payment authorization is sent to the Software Freedom Conservancy. As we batch payment authorizations, please do not email Outreachy organizers to remind us of feedback that needs to be reviewed.
 
 If the mentor has requested that an internship be extended, interns will receive an email from Outreachy organizers to confirm the internship extension. If an internship has already been extended, and the mentor feels like an intern has not put in a full-time effort (and is unlikely to put in a full-time effort), then the mentor can indicate they wish to terminate the internship. Interns will get an email from the Outreachy organizers if that unlikely event occurs.
 

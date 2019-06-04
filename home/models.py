@@ -155,9 +155,16 @@ class RoundPage(Page):
     internstarts = models.DateField("Date internships start", default='2017-12-05')
     week_two_chat_text_date = models.DateTimeField("Date and time of outreachy week two chat (text only)", default='2018-12-10 13:00Z')
     week_two_chat_text_url = models.URLField(blank=True, verbose_name="URL of the real-time text chat")
-    week_three_stuck_chat_url = models.URLField(blank=True, verbose_name="URL of the week three chat on what we're stuck on")
-    week_five_audience_chat_url = models.URLField(blank=True, verbose_name="URL of the week five chat to explain your project to a newcomer")
-    week_seven_timeline_chat_url = models.URLField(blank=True, verbose_name="URL of the week seven chat to talk about project timeline modifications")
+    week_four_chat_text_date = models.DateTimeField("Date and time of Outreachy week four chat about what we're stuck on", default='2018-12-10 13:00Z')
+    week_four_stuck_chat_url = models.URLField(blank=True, verbose_name="URL of the week four chat on what we're stuck on")
+    week_six_chat_text_date = models.DateTimeField("Date and time of Outreachy week six chat to explain why your project passion to a newcomer", default='2018-12-10 13:00Z')
+    week_six_audience_chat_url = models.URLField(blank=True, verbose_name="URL of the week six chat to explain your project to a newcomer")
+    week_eight_chat_text_date = models.DateTimeField("Date and time of Outreachy week eight chat to talk about difficulties scoping project tasks", default='2018-12-10 13:00Z')
+    week_eight_timeline_chat_url = models.URLField(blank=True, verbose_name="URL of the week eight chat to talk about project timeline modifications")
+    week_ten_chat_text_date = models.DateTimeField("Date and time of Outreachy week ten chat to talk about career opportunities", default='2018-12-10 13:00Z')
+    week_ten_career_chat_url = models.URLField(blank=True, verbose_name="URL of the week ten chat to talk about career opportunities")
+    week_twelve_chat_text_date = models.DateTimeField("Date and time of Outreachy week twelve chat to wrap up the Outreachy internship", default='2018-12-10 13:00Z')
+    week_twelve_wrapup_chat_url = models.URLField(blank=True, verbose_name="URL of the week twelve chat to wrap up the Outreachy internship")
     initialfeedback = models.DateField("Date initial feedback is due", blank=True, default='2017-12-20')
     initialpayment = models.IntegerField(default=1000)
     midfeedback = models.DateField("Date mid-point feedback is due", blank=True, default='2018-01-31')
@@ -193,9 +200,16 @@ class RoundPage(Page):
         FieldPanel('finalpayment'),
         FieldPanel('week_two_chat_text_date'),
         FieldPanel('week_two_chat_text_url'),
-        FieldPanel('week_three_stuck_chat_url'),
-        FieldPanel('week_five_audience_chat_url'),
-        FieldPanel('week_seven_timeline_chat_url'),
+        FieldPanel('week_four_chat_text_date'),
+        FieldPanel('week_four_stuck_chat_url'),
+        FieldPanel('week_six_chat_text_date'),
+        FieldPanel('week_six_audience_chat_url'),
+        FieldPanel('week_eight_chat_text_date'),
+        FieldPanel('week_eight_timeline_chat_url'),
+        FieldPanel('week_ten_chat_text_date'),
+        FieldPanel('week_ten_career_chat_url'),
+        FieldPanel('week_twelve_chat_text_date'),
+        FieldPanel('week_twelve_wrapup_chat_url'),
     ]
 
     def official_name(self):
@@ -1645,6 +1659,9 @@ class Project(ApprovalStatus):
         if self.id is None:
             return True
         # XXX: Should coordinators also be allowed to edit projects?
+        return self.is_mentor(user)
+
+    def is_mentor(self, user):
         return self.mentorapproval_set.approved().filter(
                 mentor__account=user).exists()
 
@@ -1701,9 +1718,6 @@ class Project(ApprovalStatus):
 
     def get_withdrawn_applications(self):
         return FinalApplication.objects.filter(project = self, approval_status=ApprovalStatus.WITHDRAWN)
-
-    def get_interns(self):
-        return InternSelection.objects.filter(project = self).all()
 
     def get_approved_mentors(self):
         return self.mentorapproval_set.filter(approval_status=ApprovalStatus.APPROVED)

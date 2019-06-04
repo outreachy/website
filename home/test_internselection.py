@@ -53,7 +53,6 @@ class InternSelectionTestCase(TestCase):
             'payment_approved': True,
             'full_time_effort': True,
             'progress_report': 'Everything is fine.',
-            'mentors_report': 'My intern is awesome',
             'request_extension': False,
             'extension_date': None,
             'request_termination': False,

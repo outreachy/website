@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+Invite a co-mentor
+{% endblock %}
+
+{% block content %}
+<p>Who would you like to invite to co-mentor the {{ project.project_round.community.name }} project "{{ project.short_title }}"?</p>
+
+<form method="post" action="">
+{% csrf_token %}
+{{ form.as_p }}
+<input class="btn btn-primary" type="submit" value="Invite co-mentor" />
+</form>
+{% endblock %}
