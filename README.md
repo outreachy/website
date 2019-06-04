@@ -44,7 +44,7 @@ git clone https://github.com/outreachy/website.git
 cd website
 ```
 
-In order to develop with Python, you'll need the Python 3 development headers, so install them (for example, `apt-get install python3.6-dev` on Ubuntu). You'll also need to install node.js.
+In order to develop with Python, you'll need the Python 3 development headers, so install them (for example, `apt-get install python3-dev` on Ubuntu). You'll also need to install node.js.
 
 Next, you'll need to create a new virtualenv. A "virtualenv" is a separate virtual environment for working on different Python projects. It's good practice to create a virtual environment for each Python project you're working on, in case they have conflicting dependencies, and so that you make sure to record all the dependencies for each project.
 
