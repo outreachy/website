@@ -7,7 +7,7 @@
 		{% else %}<p> - </p>
 		{% endif %}
 	</td>
-	<td>{{ app.applicant.public_name }} &lt;{{ app.applicant.account.email }}&gt;</td>
+	<td>"{{ app.applicant.public_name }}" &lt;{{ app.applicant.account.email }}&gt;</td>
 	<td>
 		{% for essay_rating in app.get_essay_ratings %}
 			<p>{% include 'home/snippet/essay_rating.html' %}</p>

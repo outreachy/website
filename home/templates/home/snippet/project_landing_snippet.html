@@ -153,7 +153,7 @@ to the community's coordinator. Each FOSS community has one or more coordinators
 {% if approved_coordinator_list %}
 The {{ community.name }} coordinator{{ approved_coordinator_list|length|pluralize:" is,(s) are" }}
 	{% for approval in approved_coordinator_list %}
-		{{ approval.coordinator.public_name }}
+		"{{ approval.coordinator.public_name }}"
 		{% if user.is_authenticated %}
 			&lt;{{ approval.coordinator.account.email }}&gt;{% if not forloop.last %}, {% endif %}
 		{% endif %}

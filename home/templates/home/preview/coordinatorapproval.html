@@ -15,7 +15,7 @@
 
 {% with c=coordinatorapproval.coordinator community=coordinatorapproval.community %}
 
-<p>{{ c.public_name }} &lt;{{ c.account.email }}&gt;</p>
+<p>"{{ c.public_name }}" &lt;{{ c.account.email }}&gt;</p>
 
 {% if coordinatorapproval.approval_status == coordinatorapproval.PENDING %}
 {% if coordinatorapproval|is_approver:request.user %}

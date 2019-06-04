@@ -146,7 +146,7 @@
 	{% if unapproved_mentors %}
 		<h3>Approve Mentors</h3>
 		{% for approval in unapproved_mentors %}
-			<p>{{ approval.mentor.public_name }} &lt;{{ approval.mentor.account.email }}&gt;</p>
+			<p>"{{ approval.mentor.public_name }}" &lt;{{ approval.mentor.account.email }}&gt;</p>
 			{% include "home/snippet/mentor_approval_warnings.html" %}
 			{% if approval.approval_status != approval.APPROVED %}
 			<a href="{{ approval.get_approve_url }}" class="btn btn-success">Approve Mentor</a>
@@ -161,7 +161,7 @@
 	{% if approved_mentors %}
 		<h3>Review Approved Mentors</h3>
 		{% for approval in approved_mentors %}
-			<p>{{ approval.mentor.public_name }} &lt;{{ approval.mentor.account.email }}&gt;</p>
+			<p>"{{ approval.mentor.public_name }}" &lt;{{ approval.mentor.account.email }}&gt;</p>
 			{% include "home/snippet/mentor_approval_warnings.html" %}
 			<a href="{{ approval.get_reject_url }}" class="btn btn-warning">Reject Mentor</a>
 			{% include "home/snippet/mentor_info.html" %}
