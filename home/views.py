@@ -3208,11 +3208,17 @@ class ReviewCommentUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
             'applicant_username': self.kwargs['applicant_username'],
             })
 
+
 def travel_stipend(request):
     rounds = RoundPage.objects.all().order_by('-internstarts')
     return render(request, 'home/travel_stipend.html', {
         'rounds': rounds,
         })
+
+
+def opportunities(request):
+    return render(request, 'home/opportunities.html')
+
 
 @login_required
 def dashboard(request):
