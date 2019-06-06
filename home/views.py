@@ -2300,16 +2300,19 @@ class InternApprove(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Re
                 applicant=self.applicant,
                 project=self.project)
 
+        if self.intern_selection.funding_source not in (InternSelection.GENERAL_FUNDED, InternSelection.ORG_FUNDED):
+            raise PermissionDenied("Outreachy interns cannot be approvde until they have a funding source selected.")
+
         # Only allow approved organizers to approve interns
         if not request.user.is_staff:
             raise PermissionDenied("Only organizers can approve interns.")
 
-        funding = kwargs['approval']
-        if funding == "Approved":
+        approval = kwargs['approval']
+        if approval == "Approved":
             self.intern_selection.organizer_approved = True
-        elif funding == "Rejected":
+        elif approval == "Rejected":
             self.intern_selection.organizer_approved = False
-        elif funding == "Undecided":
+        elif approval == "Undecided":
             self.intern_selection.organizer_approved = None
         self.intern_selection.save()
 
