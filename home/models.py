@@ -239,7 +239,7 @@ class RoundPage(Page):
 
     def has_application_deadline_passed(self):
         return has_deadline_passed(self.appslate)
-    
+
     def InternSelectionDeadline(self):
         return(self.mentor_intern_selection_deadline)
 
@@ -260,7 +260,7 @@ class RoundPage(Page):
 
     def intern_sfc_initial_payment_notification_deadline(self):
         return(self.initialfeedback)
-    
+
     def initial_stipend_payment_deadline(self):
         return self.initialfeedback + datetime.timedelta(days=30)
 
@@ -341,6 +341,10 @@ class RoundPage(Page):
     def get_approved_communities(self):
         approved_participations = Participation.objects.filter(participating_round=self, approval_status=Participation.APPROVED).order_by('community__name')
         return [p.community for p in approved_participations]
+
+    def get_approved_communities_and_projects(self):
+        approved_participations = Participation.objects.filter(participating_round=self, approval_status=Participation.APPROVED).order_by('community__name')
+        return [(p.community, p.project_set.approved()) for p in approved_participations]
 
     def number_approved_communities_with_projects(self):
         return Participation.objects.filter(participating_round=self,
@@ -2758,11 +2762,11 @@ class SchoolTimeCommitment(models.Model):
             max_length=SENTENCE_LENGTH,
             verbose_name="Term name or term number",
             help_text="If your university uses term names (e.g. Winter 2018 term of your Sophomore year), enter your current term name, year in college, and term year. If your university uses term numbers (e.g. 7th semester), enter the term number.")
-    
+
     start_date = models.DateField(
             verbose_name="Date classes start.",
             help_text="What is the first possible day of classes for all students?<br>If you started this term late (or will start this term late), use the date that classes start for all students, not the late registration date.<br>If students who are in different school years or different semester numbers start classes on different dates, use the first possible date that students in your year or semester start classes.<br>If you do not know when the term will start, use the start date of that term from last year.<br>If you don't see a calendar pop-up, please use the date format YYYY-MM-DD.")
-    
+
     end_date = models.DateField(
             verbose_name="Date all exams end.",
             help_text="This is the date your university advertises for the last possible date of any exam for any student in your semester. Use the last possible exam date, even if your personal exams end sooner. If you don't see a calendar pop-up, please use the date format YYYY-MM-DD.")
@@ -3101,7 +3105,7 @@ class InitialApplicationReview(models.Model):
 #    end_date = models.DateField(
 #            verbose_name="Date all exams end.",
 #            help_text="This is the date your university advertises for the last possible date of any exam for any student in your semester. Use the last possible exam date, even if your personal exams end sooner.")
-    
+
 # --------------------------------------------------------------------------- #
 # end reviewer models
 # --------------------------------------------------------------------------- #
