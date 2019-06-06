@@ -11,17 +11,6 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>
-      {% block title %}
-        {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
-      {% endblock %}
-
-      {% block title_suffix %}
-        {% with self.get_site.site_name as site_name %}
-          {% if site_name %}- {{ site_name }}{% endif %}
-        {% endwith %}
-      {% endblock %}
-    </title>
     <meta name="description" content="An internship program that supports diversity in free and open source software." />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -42,11 +31,22 @@
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="1200">
 
+    <title>
+      {% block title %}
+        {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
+      {% endblock %}
+
+      {% block title_suffix %}
+        {% with self.get_site.site_name as site_name %}
+          {% if site_name %}- {{ site_name }}{% endif %}
+        {% endwith %}
+      {% endblock %}
+    </title>
+
     {# Global stylesheets #}
     {% compress css %}
       <style type="text/x-scss">
         {% include 'sass/_config.scss' %}
-        {% include 'sass/_fonts.scss' %}
         {% include 'sass/application.scss' %}
       </style>
     {% endcompress %}
@@ -60,7 +60,9 @@
 
     <div class="navbar navbar-dark bg-primary fixed-top navbar-expand-lg">
       <div class="container">
-        <a class="navbar-brand brand" href="/">Outreachy</a>
+        <a class="navbar-brand" href="/">
+          <img src="{% static 'css/img/logo-no-background.svg' %}" />
+        </a>
 
         {% if request.user.is_authenticated %}
           <a class="nav-link" href="{% url 'dashboard' %}">
