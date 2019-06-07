@@ -276,9 +276,6 @@ class MentorApplicationDeadlinesReminder(SendEmailView):
 
         projects = Project.objects.filter(project_round__participating_round=current_round).approved()
 
-        if current_round.has_application_deadline_passed():
-            projects = projects.filter(deadline=Project.LATE)
-
         for p in projects:
             email.mentor_application_deadline_reminder(p, self.request, connection=connection)
 
@@ -297,7 +294,7 @@ class MentorInternSelectionReminder(SendEmailView):
 
         projects = Project.objects.approved().filter(
             project_round__participating_round=current_round,
-        ).exclude(deadline=Project.LATE)
+        )
 
         for p in projects:
             email.mentor_intern_selection_reminder(p, self.request, connection=connection)
@@ -396,8 +393,6 @@ class ContributorsDeadlinesReminder(SendEmailView):
         ).distinct()
         if not current_round.has_application_deadline_passed():
             contributors = contributors.filter(applicantapproval__contribution__isnull=False)
-        elif not current_round.has_application_deadline_passed():
-            contributors = contributors.filter(applicantapproval__contribution__project__deadline=Project.LATE)
         else:
             return
 
