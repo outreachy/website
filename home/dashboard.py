@@ -331,10 +331,8 @@ class ApplicantsDeadlinesReminder(SendEmailView):
             project_round__participating_round=current_round,
         ).approved().order_by('project_round__community__name')
 
-        late_projects = projects.filter(deadline=Project.LATE)
-        promoted_projects = projects.filter(deadline=Project.ONTIME, needs_more_applicants=True)
         closed_projects = projects.filter(deadline=Project.CLOSED)
-        email.applicant_deadline_reminder(late_projects, promoted_projects, closed_projects, current_round, self.request, connection=connection)
+        email.applicant_deadline_reminder(closed_projects, current_round, self.request, connection=connection)
 
 
 class ContributorsApplicationPeriodEndedReminder(SendEmailView):
