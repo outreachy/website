@@ -1816,7 +1816,8 @@ def mentor_read_contract(value):
 # If a mentor creates a project, we set them as approved. The coordinator then reviews the Project.
 # If a co-mentor signs up to join a project, we set them as unapproved.
 # We want the coordinator to review any co-mentors to ensure
-# we don't have a random person signing up who can now see project applications.
+# we don't have a random person signing up who can now see
+# final applications with applicant contact info, location, and pronouns.
 class MentorApproval(ApprovalStatus):
     # If a Project or a Comrade gets deleted, delete this through table.
     mentor = models.ForeignKey(Comrade, on_delete=models.CASCADE)
@@ -3163,7 +3164,7 @@ class FinalApplication(ApprovalStatus):
             max_length=EIGHT_PARAGRAPH_LENGTH,
             blank=True,
             verbose_name="(Optional) Community-specific Questions",
-            help_text="Some communities or projects may want you to answer additional questions. Please check with your mentor and community coordinator to see if you need to provide any additional information after you save your project application.")
+            help_text="Some communities or projects may want you to answer additional questions. Please check with your mentor and community coordinator to see if you need to provide any additional information after you save your final application.")
 
     timeline = models.TextField(
             max_length=EIGHT_PARAGRAPH_LENGTH,

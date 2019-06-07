@@ -336,7 +336,7 @@ class ApplicationsInline(admin.StackedInline):
     model = FinalApplication
     can_delete = True
     extra = 1
-    verbose_name_plural = 'Project application'
+    verbose_name_plural = 'Final application'
     raw_id_fields = (
         'project',
     )
