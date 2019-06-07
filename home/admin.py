@@ -159,7 +159,6 @@ class ProjectAdmin(reversion.admin.VersionAdmin):
             'community',
             'approval_status',
             'deadline',
-            'needs_more_applicants',
             'reason_denied',
             'round',
             )
@@ -167,7 +166,6 @@ class ProjectAdmin(reversion.admin.VersionAdmin):
             'approval_status',
             'project_round__participating_round',
             'deadline',
-            'needs_more_applicants',
             )
     search_fields = (
             'short_title',

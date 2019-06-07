@@ -167,11 +167,9 @@ def intern_selection_conflict_notification(intern_selection, request):
             request=request,
             recipient_list=email_list)
 
-def applicant_deadline_reminder(late_projects, promoted_projects, closed_projects, current_round, request, **kwargs):
+def applicant_deadline_reminder(closed_projects, current_round, request, **kwargs):
     send_group_template_mail('home/email/applicants-deadline-reminder.txt', {
-        'late_projects': late_projects,
         'closed_projects': closed_projects,
-        'promoted_projects': promoted_projects,
         'current_round': current_round,
         },
         request=request,
