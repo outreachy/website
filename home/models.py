@@ -4569,6 +4569,8 @@ class Role(object):
         self.current_round = current_round
 
         if today is not None:
+            # This magic overrides the cached_property below and ensures that
+            # self.today always returns the specified date.
             self.__dict__['today'] = today
 
     # Any properties that do database queries should be cached:
@@ -4639,25 +4641,19 @@ class Role(object):
         return Community.objects.none()
 
     @cached_property
-    def projects_with_upcoming_and_passed_deadlines(self):
+    def projects_contributed_to(self):
         applicant = self.application
         if applicant is None:
-            return (), ()
+            return ()
 
-        all_projects = applicant.get_projects_contributed_to()
+        all_projects = list(applicant.get_projects_contributed_to())
         applied_projects = set(applicant.get_projects_applied_to().values_list('pk', flat=True))
 
-        upcoming_deadlines = []
-        passed_deadlines = []
         for project in all_projects:
             project.did_apply = project.pk in applied_projects
-            if not project.has_application_deadline_passed():
-                upcoming_deadlines.append(project)
-            else:
-                passed_deadlines.append(project)
 
-        passed_deadlines.sort(key=lambda x: x.did_apply, reverse=True)
-        return upcoming_deadlines, passed_deadlines
+        all_projects.sort(key=lambda x: x.did_apply, reverse=True)
+        return all_projects
 
     # Anything that just uses other properties does not need to be cached:
 
@@ -4698,14 +4694,20 @@ class Role(object):
         return False
 
     @property
+    def projects_with_upcoming_and_passed_deadlines(self):
+        return self.projects_with_upcoming_deadlines, self.projects_with_passed_deadlines
+
+    @property
     def projects_with_upcoming_deadlines(self):
-        upcoming, passed = self.projects_with_upcoming_and_passed_deadlines
-        return upcoming
+        if self.current_round.appslate <= self.today:
+            return ()
+        return self.projects_contributed_to
 
     @property
     def projects_with_passed_deadlines(self):
-        upcoming, passed = self.projects_with_upcoming_and_passed_deadlines
-        return passed
+        if self.current_round.appslate > self.today:
+            return ()
+        return self.projects_contributed_to
 
     @property
     def passed_projects_not_applied_to(self):
