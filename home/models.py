@@ -1578,6 +1578,15 @@ class Project(ApprovalStatus):
             verbose_name="Does your project need more applicants?",
             help_text='Check this box to advertise this project as needing more applicants. This is typically used by projects without a lot of strong applicants two weeks before the application deadline.<br><br>You should uncheck this box if you already have many strong applicants who have filled out a final application.')
 
+    new_contributors_welcome = models.BooleanField(
+        default=True,
+        verbose_name="Is your project open to new contributors?",
+        choices=(
+            (True, "My project is open to new contributors"),
+            (False, "My project already has many strong applicants"),
+        ),
+    )
+
     class Meta:
         unique_together = (
                 ('slug', 'project_round'),
