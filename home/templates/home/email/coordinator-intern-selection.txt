@@ -19,9 +19,9 @@ In order to be eligible to be selected as an Outreachy intern, each applicant mu
 
 1. Fill out an initial application at {{ request.scheme }}://{{ request.get_host }}{% url 'eligibility' %}
 2. Record a contribution to a {{ community }} project listed on the Outreachy site: {{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
-3. Complete an application for the project by the project's application deadline.
+3. Complete a final application for the project.
 
-The deadline to submit an application was {{ current_round.appslate|date:"F d" }} at 4pm UTC. Each round, we get a few applicants who miss the deadline. If this happens, **and** this is a strong applicant you are considering for the internship, please ask the applicant to send an email to organizers@outreachy.org with you on Cc. Only applicants who have already filled out an initial application and who have completed a contribution, or have a contribution in progress for your project are eligible to submit their applications manually.
+The deadline to submit a final application was {{ current_round.appslate|date:"F d" }} at 4pm UTC. Each round, we get a few applicants who miss the deadline. If this happens, **and** this is a strong applicant you are considering for the internship, please ask the applicant to send an email to organizers@outreachy.org with you on Cc. Only applicants who have already filled out an initial application and who have completed a contribution, or have a contribution in progress for your project are eligible to submit their final applications manually.
 
 Selecting an Intern
 -------------------
@@ -49,7 +49,7 @@ Mentors and coordinators can review all {{ community.name }} applicants and sele
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'community-applicants' round_slug=current_round.slug community_slug=community.slug %}
 
-On the {{ community.name }} applicants page, you will find a link to each applicant's detailed description of their contributions and their application. The details are linked from the applicant's name.
+On the {{ community.name }} applicants page, you will find a link to each applicant's detailed description of their contributions and their final application. The details are linked from the applicant's name.
 
 It's important that coordinators review the mentor's rating of the intern, the applicant's available time during the internship, and the description of their contributions to ensure they meet the criteria in the section above.
 

@@ -21,10 +21,10 @@ In order to be eligible to be selected as an Outreachy intern, you must have:
 
 2. Finished an application for that project before the project application deadline. Each project may have a different application deadline.
 
-{% if applied_projects %}Project Applications
+{% if applied_projects %}Final Applications
 ----------------
 
-Our records indicate you have submitted an application for the following projects:
+Our records indicate you have submitted a final application for the following projects:
 {% for project in applied_projects %}
 {{ project.project_round.community.name }} project "{{ project.short_title }}"
 Your internship application will be reviewed: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% if not forloop.last %}
@@ -33,7 +33,7 @@ Your internship application will be reviewed: {{ request.scheme }}://{{ request.
 Passed Deadlines
 ----------------
 
-Our records indicate you recorded a contribution but did not create an application for the following projects:
+Our records indicate you recorded a contribution but did not create a final application for the following projects:
 
 {% for project in role.passed_projects_not_applied_to %}{{ project.project_round.community.name }} project "{{ project.short_title }}"
 Application deadline was {% if project.deadline == project.LATE %}{{ current_round.appslate }} 4pm UTC{% if comrade.timezone %} / {{ late_deadline }} {{ comrade.timezone }}{% endif %}{% else %}{{ current_round.appslate }} 4pm UTC{% if comrade.timezone %} / {{ normal_deadline }} {{ comrade.timezone }}{% endif %}{% endif %}
