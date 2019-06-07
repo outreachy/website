@@ -11,7 +11,7 @@ We want to make sure that all Outreachy applicants get a chance to make a contri
 
 {{ request.scheme }}://{{ request.get_host }}{{ project.get_submit_url }}
 
-Closing your project to new applicants simply changes how the project is displayed on the projects list. Your project will be moved to a section at the end called "Closed Projects". Any applicant can still record contributions and create final applications for your project until {{ current_round.appsclose }}.
+Closing your project to new applicants simply changes how the project is displayed on the projects list. Your project will be moved to a section at the end called "Closed Projects". Any applicant can still record contributions and create final applications for your project until {{ current_round.appslate }}.
 
 If you have too few applicants, you can mark your project as needing more applicants. You can also choose to extend your project deadline until {{ current_round.appslate }}. The option is at the bottom of this page, in the "Project Deadline and Advertisement" section:
 
@@ -37,7 +37,7 @@ You can review your project's applicants and rank them here:
 Application Deadlines
 ---------------------
 
-Your project is currently marked as {% if project.deadline == project.LATE %}having an extended deadline to {{ current_round.appslate }}{% else %}having a regular application deadline of {{ current_round.appsclose }}{% endif %}. You can either keep the application deadline to be aligned with the application period deadline ({{ current_round.appsclose}}), or you can extend the deadline by one week ({{ current_round.appslate }}). {% if project.approval_status == project.APPROVED and contributors|length < 2 and project.deadline != project.LATE %}Your project may benefit from extending the deadline to {{ current_round.appslate }}. {% endif %}
+Your project is currently marked as {% if project.deadline == project.LATE %}having an extended deadline to {{ current_round.appslate }}{% else %}having a regular application deadline of {{ current_round.appslate }}{% endif %}. You can either keep the application deadline to be aligned with the application period deadline ({{ current_round.appslate}}), or you can extend the deadline by one week ({{ current_round.appslate }}). {% if project.approval_status == project.APPROVED and contributors|length < 2 and project.deadline != project.LATE %}Your project may benefit from extending the deadline to {{ current_round.appslate }}. {% endif %}
 
 Your project is currrent marked as being {% if project.deadline == project.CLOSED %}closed{% else %}open{% endif %} to new applicants.{% if project.approval_status == project.APPROVED and contributors|length > 4 and project.deadline != project.CLOSED %} If you are working with many applicants and your top intern picks have recorded their contributions, you may want to mark the project as closed to new applicants.{% endif %} When a project is closed to new applicants, this moves your project listing to the end of the project selection and community projects pages. Applicants will still be allowed to record contributions and create applications for your project.
 

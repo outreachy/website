@@ -241,7 +241,7 @@ class MentorCheckDeadlinesReminder(SendEmailView):
 
     @staticmethod
     def instance(current_round):
-        return current_round.appsclose - datetime.timedelta(weeks=2)
+        return current_round.appslate - datetime.timedelta(weeks=2)
 
     def generate_messages(self, current_round, connection):
         if not self.request.user.is_staff:
@@ -260,8 +260,8 @@ class MentorApplicationDeadlinesReminder(SendEmailView):
 
     @staticmethod
     def first_warning(current_round):
-        # First warning on a Monday at least 3 days before appsclose:
-        due = current_round.appsclose - datetime.timedelta(days=3)
+        # First warning on a Monday at least 3 days before appslate:
+        due = current_round.appslate - datetime.timedelta(days=3)
         due -= datetime.timedelta(days=due.weekday())
         return due
 
@@ -271,8 +271,8 @@ class MentorApplicationDeadlinesReminder(SendEmailView):
         # possible...
         due = current_round.appslate - datetime.timedelta(days=3)
         due -= datetime.timedelta(days=due.weekday())
-        # ... but never any earlier than appsclose.
-        return max(current_round.appsclose, due)
+        # ... but never any earlier than appslate.
+        return max(current_round.appslate, due)
 
     @classmethod
     def instances(cls):
@@ -302,7 +302,7 @@ class MentorInternSelectionReminder(SendEmailView):
 
     @staticmethod
     def instance(current_round):
-        return current_round.appsclose
+        return current_round.appslate
 
     def generate_messages(self, current_round, connection):
         if not self.request.user.is_staff:
@@ -389,11 +389,11 @@ class ContributorsDeadlinesReminder(SendEmailView):
 
     @staticmethod
     def first_reminder(current_round):
-        return current_round.appsclose - datetime.timedelta(weeks=1)
+        return current_round.appslate - datetime.timedelta(weeks=1)
 
     @staticmethod
     def ontime_reminder(current_round):
-        return current_round.appsclose - datetime.timedelta(days=1)
+        return current_round.appslate - datetime.timedelta(days=1)
 
     @staticmethod
     def late_reminder(current_round):

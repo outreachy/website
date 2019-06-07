@@ -138,12 +138,12 @@ The advantage of using the factories methods is that it automatically computes r
 
 ### Contributions open
 
-Let's assume you want an internship round where we're in the middle of the contribution period. We can set the deadline for when the final applications for most projects are due (`appsclose`) to be one week from today:
+Let's assume you want an internship round where we're in the middle of the contribution period. We can set the deadline for when the final applications for most projects are due (`appslate`) to be one week from today:
 
 ```
 >>> import datetime
 >>> current_round = RoundPageFactory(
-	start_from="appsclose",
+	start_from="appslate",
 	start_date=datetime.date.today() + datetime.timedelta(days=7))
 ```
 
@@ -155,7 +155,7 @@ If you get an error when running the factories code, it's often hard to tell wha
 >>> from django.db import transaction
 >>> with factory.debug(), transaction.atomic():
 ...     current_round = RoundPageFactory(
-...		start_from="appsclose",
+...		start_from="appslate",
 ...		start_date=datetime.date.today() + datetime.timedelta(days=7))
 >>>
 ```

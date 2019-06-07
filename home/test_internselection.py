@@ -11,7 +11,7 @@ from .factories import *
 @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class InternSelectionTestCase(TestCase):
     def test_intern_selection_process(self):
-        for phase in ('appsopen', 'appsclose'):
+        for phase in ('appsopen', 'appslate'):
             with self.subTest(phase=phase):
                 current_round = RoundPageFactory(
                     start_from=phase, start_date=datetime.date.today()

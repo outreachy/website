@@ -36,7 +36,7 @@ Passed Deadlines
 Our records indicate you recorded a contribution but did not create an application for the following projects:
 
 {% for project in role.passed_projects_not_applied_to %}{{ project.project_round.community.name }} project "{{ project.short_title }}"
-Application deadline was {% if project.deadline == project.LATE %}{{ current_round.appslate }} 4pm UTC{% if comrade.timezone %} / {{ late_deadline }} {{ comrade.timezone }}{% endif %}{% else %}{{ current_round.appsclose }} 4pm UTC{% if comrade.timezone %} / {{ normal_deadline }} {{ comrade.timezone }}{% endif %}{% endif %}
+Application deadline was {% if project.deadline == project.LATE %}{{ current_round.appslate }} 4pm UTC{% if comrade.timezone %} / {{ late_deadline }} {{ comrade.timezone }}{% endif %}{% else %}{{ current_round.appslate }} 4pm UTC{% if comrade.timezone %} / {{ normal_deadline }} {{ comrade.timezone }}{% endif %}{% endif %}
 {% if not forloop.last %}
 {% endif %}{% endfor %}{% endif %}
 

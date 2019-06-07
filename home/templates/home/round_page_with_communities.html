@@ -242,12 +242,12 @@ Outreachy Internships | Apply | Pick a Project
 
 	{% if ontime_projects %}
 		{% if not current_round.has_ontime_application_deadline_passed %}
-			<h3>Applications Due {{ current_round.appsclose }} at 4pm UTC</h3>
+			<h3>Applications Due {{ current_round.appslate }} at 4pm UTC</h3>
 
 			<p> The following projects are accepting contributions and applications from new
-			applicants until {{ current_round.appsclose }} at 4pm UTC.</p>
+			applicants until {{ current_round.appslate }} at 4pm UTC.</p>
 		{% else %}
-			<h3>Applications Closed {{ current_round.appsclose }} at 4pm UTC</h3>
+			<h3>Applications Closed {{ current_round.appslate }} at 4pm UTC</h3>
 		{% endif %}
 	{% endif %}
 
@@ -299,7 +299,7 @@ Outreachy Internships | Apply | Pick a Project
 		<h2>Closed Early - Outreachy Internship Projects</h2>
 		<p>
 		The following projects were closed to new applicants before
-		the application deadline of {{ current_round.appsclose }} at 4pm UTC.
+		the application deadline of {{ current_round.appslate }} at 4pm UTC.
 		This typically means the mentors were working with many promising
 		applicants early in the application period. In future rounds,
 		applicants should make sure to start their contributions early

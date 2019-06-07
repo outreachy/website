@@ -229,13 +229,13 @@ class RoundPage(Page):
         return has_deadline_passed(self.ProjectsDeadline())
 
     def application_deadline(self):
-        return datetime.datetime.combine(self.appsclose, DEADLINE_TIME)
+        return datetime.datetime.combine(self.appslate, DEADLINE_TIME)
 
     def late_application_deadline(self):
         return datetime.datetime.combine(self.appslate, DEADLINE_TIME)
 
     def LateApplicationsDeadline(self):
-        return(self.appsclose + datetime.timedelta(days=7))
+        return(self.appslate + datetime.timedelta(days=7))
 
     def has_application_deadline_passed(self):
         return has_deadline_passed(self.appslate)
@@ -305,7 +305,7 @@ class RoundPage(Page):
         return not has_deadline_passed(self.travel_stipend_deadline())
 
     def has_ontime_application_deadline_passed(self):
-        return has_deadline_passed(self.appsclose)
+        return has_deadline_passed(self.appslate)
 
     def has_late_application_deadline_passed(self):
         return has_deadline_passed(self.appslate)
@@ -318,7 +318,7 @@ class RoundPage(Page):
             for project in projects:
                 if project.deadline == Project.LATE:
                     return has_deadline_passed(self.appslate)
-        return has_deadline_passed(self.appsclose)
+        return has_deadline_passed(self.appslate)
 
     def has_intern_announcement_deadline_passed(self):
         return has_deadline_passed(self.internannounce)
@@ -1647,7 +1647,7 @@ class Project(ApprovalStatus):
     def application_deadline(self):
         if self.deadline == Project.LATE:
             return self.project_round.participating_round.appslate
-        return self.project_round.participating_round.appsclose
+        return self.project_round.participating_round.appslate
 
     def has_intern_announcement_deadline_passed(self):
         return has_deadline_passed(self.project_round.participating_round.internannounce)

@@ -279,7 +279,7 @@ class ContributionFactory(factory.django.DjangoModelFactory):
         django_get_or_create = ('applicant', 'project')
 
     class Params:
-        round = factory.SubFactory(RoundPageFactory, start_from='appsclose')
+        round = factory.SubFactory(RoundPageFactory, start_from='appslate')
 
     applicant = factory.SubFactory(
         ApplicantApprovalFactory,
