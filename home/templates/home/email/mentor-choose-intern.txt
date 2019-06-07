@@ -1,10 +1,10 @@
-{% with community=project.project_round.community %}{% with current_round=project.project_round.participating_round %}{% with contributors=project.get_applicants_and_contributions_list %}{% with applicants=project.get_applications %}{% with coordinators=community.get_coordinator_email_list %}{% if applicants|length > 0 %}Select your Outreachy Intern by {{ current_round.InternSelectionDeadline }}{% else %}Your Outreachy project application has deadline passed{% endif %}
+{% with community=project.project_round.community %}{% with current_round=project.project_round.participating_round %}{% with contributors=project.get_applicants_and_contributions_list %}{% with applicants=project.get_applications %}{% with coordinators=community.get_coordinator_email_list %}{% if applicants|length > 0 %}Select your Outreachy Intern by {{ current_round.InternSelectionDeadline }}{% else %}Outreachy final application deadlines have passed{% endif %}
 
 Hi Outreachy mentor,
 
 The application deadline has passed for your {{ community.name }} project "{{ project.short_title }}".
 
-{% if applicants|length == 0 %}Unfortunately, no applicants created a final application for your project this round.{% if project.deadline != project.LATE %} You may want to extend your project deadline to {{ current_round.appslate }}. If you want the Outreachy organizers to do any promotion of your project, please reach out to organizers@outreachy.org{% endif %}
+{% if applicants|length == 0 %}Unfortunately, no applicants created a final application for your project this round. If an applicant has contacted you because they missed the deadline to submit a final application, please email Outreachy organizers <organizers@outreachy.org> with their name and email address. Otherwise, we encourage you to submit your project next round!
 
 {% else %}Please select your Outreachy intern by {{ current_round.InternSelectionDeadline }}:
 

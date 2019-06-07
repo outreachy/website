@@ -5,33 +5,35 @@ Complete your Outreachy internship applications
 
 In order to be eligible to be selected as an Outreachy intern, you must:
 
-1. Record at least one in-progress contribution you've made to an Outreachy internship project by the project application deadline.
+1. Record at least one in-progress contribution you've made to an Outreachy internship project.
 
-2. Finish an application for that project before the project application deadline. Each project may have a different application deadline.
+2. Create a final application for that project.
 
-{% if role.projects_with_upcoming_deadlines %}Upcoming Deadlines
-------------------
+Contributions and final applications are due by {{ current_round.appslate }} at 4pm UTC{% if comrade.timezone %} / {{ contribution_deadline }} {{ comrade.timezone }}{% endif %}
+
+We encourage you to submit your final applications early. You will be able to edit it until the final application deadline.
+
+{% if role.projects_with_upcoming_deadlines %}Your Project Contributions
+--------------------------
+
 {% for project in role.projects_with_upcoming_deadlines %}
 {{ project.project_round.community.name }} project "{{ project.short_title }}"
-Application deadline: {{ current_round.appslate }} 4pm UTC{% if comrade.timezone %} / {{ contribution_deadline }} {{ comrade.timezone }}{% endif %}
-{% if project in applied_projects %}Your internship application will be reviewed: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% else %}You have NOT submitted an application for this project. Create one here: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% endif %}{% if not forloop.last %}
+{% if project in applied_projects %}Your final application will be reviewed: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% else %}You have NOT submitted a final application for this project. Create one here: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% endif %}{% if not forloop.last %}
 {% endif %}{% endfor %}
 
-You will be able to edit your application until the project application deadline. After the project application deadline, you are encouraged to continue working on contributions with your project mentor. You will be able to record those contributions (or edit other recorded contributions) up to the date the Outreachy interns for this round are announced on {{ current_round.internannounce }}.
+Final Application
+-----------------
 
-The project application will ask you to fill out a timeline for the internship project. Detailed instructions are included in the pages linked above. If you have trouble with this, or a mentor isn't responsive to your questions about the timeline, do the best you can. You should submit an application by the project deadline, even if you feel the timeline isn't complete or perfect.
+You will be able to edit your final applications until the deadline on {{ current_round.appslate }} at 4pm UTC{% if comrade.timezone %} / {{ contribution_deadline }} {{ comrade.timezone }}{% endif %}. We encourage you to submit final applications early, and then make edits to it.
+
+After the final application deadline, you are encouraged (but not required) to continue working on contributions with your project mentor. You will be able to record those contributions (or edit other recorded contributions) up to the date the Outreachy interns for this round are announced on {{ current_round.internannounce }}.
+
+The final application will ask you to fill out a timeline for the internship project. Detailed instructions are included in the pages linked above. If you have trouble with this, or a mentor isn't responsive to your questions about the timeline, do the best you can. You should submit a final application by the final application deadline, even if you feel the timeline isn't complete or perfect.
 {% endif %}
-{% if role.projects_with_passed_deadlines %}Passed Deadlines
-----------------
-{% for project in role.projects_with_passed_deadlines %}
-{{ project.project_round.community.name }} project "{{ project.short_title }}"
-Application deadline was {{ current_round.appslate }} 4pm UTC{% if comrade.timezone %} / {{ contribution_deadline }} {{ comrade.timezone }}{% endif %}
-{% if project in applied_projects %}Your internship application will be reviewed: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% else %}You did not submit an application for this project, and are ineligible for being selected as an intern for this project.{% endif %}{% if not forloop.last %}
-{% endif %}{% endfor %}
-{% endif %}Don't see your project listed?
+Don't see your project listed?
 ------------------------------
 
-If you haven't recorded a contribution to a project yet (and the project application deadline has not passed), please follow the project link from this page and click 'Record contributions' button:
+If you haven't recorded a contribution to a project yet, please follow the project link from this page and click 'Record contributions' button:
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
 
