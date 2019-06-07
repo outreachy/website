@@ -231,14 +231,8 @@ class RoundPage(Page):
     def application_deadline(self):
         return datetime.datetime.combine(self.appslate, DEADLINE_TIME)
 
-    def late_application_deadline(self):
-        return datetime.datetime.combine(self.appslate, DEADLINE_TIME)
-
     def LateApplicationsDeadline(self):
         return(self.appslate + datetime.timedelta(days=7))
-
-    def has_application_deadline_passed(self):
-        return has_deadline_passed(self.appslate)
 
     def InternSelectionDeadline(self):
         return(self.mentor_intern_selection_deadline)
@@ -304,20 +298,7 @@ class RoundPage(Page):
     def is_travel_stipend_active(self):
         return not has_deadline_passed(self.travel_stipend_deadline())
 
-    def has_ontime_application_deadline_passed(self):
-        return has_deadline_passed(self.appslate)
-
-    def has_late_application_deadline_passed(self):
-        return has_deadline_passed(self.appslate)
-
-    # Is there an approved project with a late deadline, or are all projects on time?
     def has_application_deadline_passed(self):
-        participations = self.participation_set.all().approved()
-        for p in participations:
-            projects = p.project_set.approved()
-            for project in projects:
-                if project.deadline == Project.LATE:
-                    return has_deadline_passed(self.appslate)
         return has_deadline_passed(self.appslate)
 
     def has_intern_announcement_deadline_passed(self):
@@ -1645,8 +1626,6 @@ class Project(ApprovalStatus):
         return has_deadline_passed(self.application_deadline())
 
     def application_deadline(self):
-        if self.deadline == Project.LATE:
-            return self.project_round.participating_round.appslate
         return self.project_round.participating_round.appslate
 
     def has_intern_announcement_deadline_passed(self):

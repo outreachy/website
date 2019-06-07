@@ -259,24 +259,11 @@ class MentorApplicationDeadlinesReminder(SendEmailView):
     slug = 'mentor-application-deadline-reminder'
 
     @staticmethod
-    def first_warning(current_round):
-        # First warning on a Monday at least 3 days before appslate:
+    def instance(current_round):
+        # Warn on a Monday at least 3 days before appslate:
         due = current_round.appslate - datetime.timedelta(days=3)
         due -= datetime.timedelta(days=due.weekday())
         return due
-
-    @staticmethod
-    def second_warning(current_round):
-        # Second warning on a Monday at least 3 days before appslate, if
-        # possible...
-        due = current_round.appslate - datetime.timedelta(days=3)
-        due -= datetime.timedelta(days=due.weekday())
-        # ... but never any earlier than appslate.
-        return max(current_round.appslate, due)
-
-    @classmethod
-    def instances(cls):
-        return (cls.first_warning, cls.second_warning)
 
     def generate_messages(self, current_round, connection):
         if not self.request.user.is_staff:
@@ -284,12 +271,12 @@ class MentorApplicationDeadlinesReminder(SendEmailView):
 
         # Don't ask mentors to encourage interns to apply if it's too late for
         # anyone to apply any more.
-        if current_round.has_late_application_deadline_passed():
+        if current_round.has_application_deadline_passed():
             return
 
         projects = Project.objects.filter(project_round__participating_round=current_round).approved()
 
-        if current_round.has_ontime_application_deadline_passed():
+        if current_round.has_application_deadline_passed():
             projects = projects.filter(deadline=Project.LATE)
 
         for p in projects:
@@ -392,16 +379,12 @@ class ContributorsDeadlinesReminder(SendEmailView):
         return current_round.appslate - datetime.timedelta(weeks=1)
 
     @staticmethod
-    def ontime_reminder(current_round):
-        return current_round.appslate - datetime.timedelta(days=1)
-
-    @staticmethod
-    def late_reminder(current_round):
+    def second_reminder(current_round):
         return current_round.appslate - datetime.timedelta(days=1)
 
     @classmethod
     def instances(cls):
-        return (cls.first_reminder, cls.ontime_reminder, cls.late_reminder)
+        return (cls.first_reminder, cls.second_reminder)
 
     def generate_messages(self, current_round, connection):
         if not self.request.user.is_staff:
@@ -411,9 +394,9 @@ class ContributorsDeadlinesReminder(SendEmailView):
             applicantapproval__application_round=current_round,
             applicantapproval__approval_status=ApprovalStatus.APPROVED,
         ).distinct()
-        if not current_round.has_ontime_application_deadline_passed():
+        if not current_round.has_application_deadline_passed():
             contributors = contributors.filter(applicantapproval__contribution__isnull=False)
-        elif not current_round.has_late_application_deadline_passed():
+        elif not current_round.has_application_deadline_passed():
             contributors = contributors.filter(applicantapproval__contribution__project__deadline=Project.LATE)
         else:
             return

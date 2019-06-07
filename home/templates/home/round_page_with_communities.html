@@ -177,7 +177,7 @@ Outreachy Internships | Apply | Pick a Project
 	{% endif %}
 {% endif %}
 {% if ontime_projects or late_projects %}
-	{% if ontime_projects and not current_round.has_ontime_application_deadline_passed or late_projects and not current_round.has_late_application_deadline_passed %}
+	{% if ontime_projects and not current_round.has_application_deadline_passed or late_projects and not current_round.has_application_deadline_passed %}
 		<h2 id="open-projects">Outreachy Open Projects</h2>
 	{% else %}
 		<h2 id="open-projects">Past Outreachy Projects</h2>
@@ -212,7 +212,7 @@ Outreachy Internships | Apply | Pick a Project
 		{% endfor %}
 	</p>
 	{% if late_projects %}
-		{% if not current_round.has_late_application_deadline_passed %}
+		{% if not current_round.has_application_deadline_passed %}
 			<h3>Applications Due {{ current_round.appslate }} at 4pm UTC</h3>
 
 			<p> The following projects have an extended deadline, and will be accepting contributions and applications from new
@@ -226,7 +226,7 @@ Outreachy Internships | Apply | Pick a Project
 		<h4>{{ community.name }} - {{ funded_interns }} intern{{ funded_interns|pluralize }}</h4>
 		<p>{{ community.description }}</p>
 		{% if role.application.is_approved or role.is_volunteer %}
-			{% if not current_round.has_late_application_deadline_passed %}
+			{% if not current_round.has_application_deadline_passed %}
 				<p>Learn how to make a contribution to these internship projects on the
 			{% else %}
 				<p>Learn more on the
@@ -241,7 +241,7 @@ Outreachy Internships | Apply | Pick a Project
 	{% endfor %}
 
 	{% if ontime_projects %}
-		{% if not current_round.has_ontime_application_deadline_passed %}
+		{% if not current_round.has_application_deadline_passed %}
 			<h3>Applications Due {{ current_round.appslate }} at 4pm UTC</h3>
 
 			<p> The following projects are accepting contributions and applications from new
@@ -255,7 +255,7 @@ Outreachy Internships | Apply | Pick a Project
 		<h4>{{ community.name }} - {{ funded_interns }} intern{{ funded_interns|pluralize }}</h4>
 		<p>{{ community.description }}</p>
 		{% if role.application.is_approved or role.is_volunteer %}
-			{% if not current_round.has_ontime_application_deadline_passed %}
+			{% if not current_round.has_application_deadline_passed %}
 				<p>Learn how to make a contribution to these internship projects on the
 			{% else %}
 				<p>Learn more about the {{ community.name }} on the
@@ -283,7 +283,7 @@ Outreachy Internships | Apply | Pick a Project
 	{% endwith %}
 {% endif %}
 {% if closed_projects %}
-	{% if not current_round.has_ontime_application_deadline_passed %}
+	{% if not current_round.has_application_deadline_passed %}
 		<h2>Closed Outreachy Internship Projects</h2>
 
 		<p>

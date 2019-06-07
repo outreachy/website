@@ -9,9 +9,9 @@
 		Thank you for recording your contributions and creating {{ project_applications|pluralize:"a project final application, project final applications" }}. You will need to create a final application for each project, in order to be eligible to be selected as an intern for that project.
 		</p>
 		<p class="card-text">
-		{% if not current_round.has_ontime_application_deadline_passed %}
+		{% if not current_round.has_application_deadline_passed %}
 			The application deadline is {{ current_round.appslate|date:"F d, Y" }}. Some projects are open to late applications, and their application deadline will be {{ current_round.appslate|date:"F d, Y" }}.
-		{% elif not current_round.has_late_application_deadline_passed %}
+		{% elif not current_round.has_application_deadline_passed %}
 			The application deadline for most projects was {{ current_round.appslate|date:"F d, Y" }}. Some projects are open to late applications, and their application deadline will be {{ current_round.appslate|date:"F d, Y" }}.
 		{% else %}
 			The late application deadline was {{ current_round.appslate|date:"F d, Y" }}. All project application deadlines have now passed. Your project applications will be reviewed.
