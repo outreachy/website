@@ -1,6 +1,6 @@
 {% load tz %}
 {% timezone comrade.timezone %}
-{% with applied_projects=role.application.get_projects_applied_to normal_deadline=current_round.application_deadline late_deadline=current_round.late_application_deadline %}
+{% with applied_projects=role.application.get_projects_applied_to contribution_deadline=current_round.application_deadline %}
 Complete your Outreachy internship applications
 
 In order to be eligible to be selected as an Outreachy intern, you must:
@@ -13,7 +13,7 @@ In order to be eligible to be selected as an Outreachy intern, you must:
 ------------------
 {% for project in role.projects_with_upcoming_deadlines %}
 {{ project.project_round.community.name }} project "{{ project.short_title }}"
-Application deadline: {% if project.deadline == project.LATE %}{{ current_round.appslate }} 4pm UTC{% if comrade.timezone %} / {{ late_deadline }} {{ comrade.timezone }}{% endif %}{% else %}{{ current_round.appsclose }} 4pm UTC{% if comrade.timezone %} / {{ normal_deadline }} {{ comrade.timezone }}{% endif %}{% endif %}
+Application deadline: {{ current_round.appslate }} 4pm UTC{% if comrade.timezone %} / {{ contribution_deadline }} {{ comrade.timezone }}{% endif %}
 {% if project in applied_projects %}Your internship application will be reviewed: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% else %}You have NOT submitted an application for this project. Create one here: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% endif %}{% if not forloop.last %}
 {% endif %}{% endfor %}
 
@@ -25,7 +25,7 @@ The project application will ask you to fill out a timeline for the internship p
 ----------------
 {% for project in role.projects_with_passed_deadlines %}
 {{ project.project_round.community.name }} project "{{ project.short_title }}"
-Application deadline was {% if project.deadline == project.LATE %}{{ current_round.appslate }} 4pm UTC{% if comrade.timezone %} / {{ late_deadline }} {{ comrade.timezone }}{% endif %}{% else %}{{ current_round.appsclose }} 4pm UTC{% if comrade.timezone %} / {{ normal_deadline }} {{ comrade.timezone }}{% endif %}{% endif %}
+Application deadline was {{ current_round.appslate }} 4pm UTC{% if comrade.timezone %} / {{ contribution_deadline }} {{ comrade.timezone }}{% endif %}
 {% if project in applied_projects %}Your internship application will be reviewed: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% else %}You did not submit an application for this project, and are ineligible for being selected as an intern for this project.{% endif %}{% if not forloop.last %}
 {% endif %}{% endfor %}
 {% endif %}Don't see your project listed?
@@ -36,9 +36,8 @@ If you haven't recorded a contribution to a project yet (and the project applica
 {{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
 
 As an Outreachy project applicant, you'll receive emailed reminders:
- - The week before the regular application deadline
- - One day before the regular application deadline
- - One day before the late application deadline
+ - The week before the contribution and final application deadline
+ - One day before the contribution and final application deadline
 
 Outreachy Organizers
 {% include 'home/email/footer-applicant.txt' %}

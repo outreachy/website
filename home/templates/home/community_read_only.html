@@ -182,7 +182,6 @@ Past community participation in Outreachy
 		{% for project in approved_projects %}
 			<li>
 				{% if project.deadline == project.CLOSED %}(Closed to new applicants. Deadline is {{ current_round.appsclose }}){% endif %}
-				{% if project.deadline == project.LATE %}(Extended deadline to {{ current_round.appslate }}){% endif %}
 				{% if project.deadline == project.ONTIME %}(Application deadline is {{ current_round.appsclose }}){% endif %}
 				<a href="{{ project.get_landing_url }}">{{ project.short_title }}</a>
 			</li>
@@ -249,7 +248,7 @@ Past community participation in Outreachy
 		When the application period opens on {{ current_round.appsopen }}, applicants will start making
 		contributions to approved projects.
 		Mentors should submit projects as soon as possible, but no later than
-		two weeks before the Outreachy application period closes on {{ current_round.appsclose }}.
+		{{ current_round.ProjectsDeadline }}.
 		</p>
 		<p class="card-text">
 		Full details about the Outreachy program, the internship timeline, and mentor duties and time commitments

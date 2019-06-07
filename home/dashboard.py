@@ -354,6 +354,11 @@ class ApplicantsDeadlinesReminder(SendEmailView):
 
 
 class ContributorsApplicationPeriodEndedReminder(SendEmailView):
+    """
+    Email reminder to every applicant who made a contribution.
+    This tells them which projects they made a final application to,
+    and when to expect interns be announced.
+    """
     description = 'Contributor Final Email'
     slug = 'application-period-ended'
 
