@@ -13,9 +13,7 @@ class InternSelectionTestCase(TestCase):
     def test_intern_selection_process(self):
         for phase in ('appsopen', 'appslate'):
             with self.subTest(phase=phase):
-                current_round = RoundPageFactory(
-                    start_from=phase, start_date=datetime.date.today()
-                )
+                current_round = RoundPageFactory(start_from=phase)
                 applicantapproval = ApplicantApprovalFactory(
                     application_round=current_round,
                     approval_status=models.ApprovalStatus.APPROVED,
