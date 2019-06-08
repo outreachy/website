@@ -78,7 +78,7 @@ Outreachy internships working with {{ community.name }}
 		{% endif %}
 
 
-		{% if ontime_projects or late_projects or mentors_pending_projects %}
+		{% if ontime_projects or mentors_pending_projects %}
 			<h1>Open Projects</h1>
 
 			<p>Mentors for these projects are willing to work with new Outreachy
@@ -103,7 +103,7 @@ Outreachy internships working with {{ community.name }}
 				{% endfor %}
 			</p>
 			{% if approved_to_see_all_project_details %}
-				{% with projects=late_projects|add:ontime_projects %}
+				{% with projects=ontime_projects %}
 					{% include 'home/snippet/projects_for_round_page.html' %}
 
 				{% endwith %}
@@ -146,7 +146,7 @@ Outreachy internships working with {{ community.name }}
 			{% elif mentors_pending_projects %}
 				<p>Details for the other approved projects are hidden until you are approved to participate as a mentor.</p>
 			{% else %}
-				{% with projects=late_projects|add:ontime_projects %}
+				{% with projects=ontime_projects %}
 				{% for project in projects %}
 					<hr id="{{ project.slug }}">
 					<h2>{{ project.short_title }}</h2>

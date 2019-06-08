@@ -176,8 +176,8 @@ Outreachy Internships | Apply | Pick a Project
 		{% include 'home/snippet/deadline_passed.html' %}
 	{% endif %}
 {% endif %}
-{% if ontime_projects or late_projects %}
-	{% if ontime_projects and not current_round.has_application_deadline_passed or late_projects and not current_round.has_application_deadline_passed %}
+{% if ontime_projects %}
+	{% if not current_round.has_application_deadline_passed %}
 		<h2 id="open-projects">Outreachy Open Projects</h2>
 	{% else %}
 		<h2 id="open-projects">Past Outreachy Projects</h2>
@@ -211,44 +211,14 @@ Outreachy Internships | Apply | Pick a Project
 			<br><button type="button" class="btn btn-info">{{ forloop.counter }}</button> {{ i.1 }}
 		{% endfor %}
 	</p>
-	{% if late_projects %}
-		{% if not current_round.has_application_deadline_passed %}
-			<h3>Applications Due {{ current_round.appslate }} at 4pm UTC</h3>
 
-			<p> The following projects have an extended deadline, and will be accepting contributions and applications from new
-			applicants until {{ current_round.appslate }} at 4pm UTC.</p>
-		{% else %}
-			<h3>Applications Closed {{ current_round.appslate }} at 4pm UTC</h3>
-		{% endif %}
-	{% endif %}
+	{% if not current_round.has_application_deadline_passed %}
+		<h3>Applications Due {{ current_round.appslate }} at 4pm UTC</h3>
 
-	{% for community, funded_interns, projects in late_projects %}
-		<h4>{{ community.name }} - {{ funded_interns }} intern{{ funded_interns|pluralize }}</h4>
-		<p>{{ community.description }}</p>
-		{% if role.application.is_approved or role.is_volunteer %}
-			{% if not current_round.has_application_deadline_passed %}
-				<p>Learn how to make a contribution to these internship projects on the
-			{% else %}
-				<p>Learn more on the
-			{% endif %}
-			<a href="{% url 'community-landing' round_slug=current_round.slug community_slug=community.slug %}">{{ community.name }} community landing page</a>.</p>
-		{% else %}
-			{% include 'home/snippet/project_hidden.html' %}
-		{% endif %}
-		{% with project_status="" %}
-			{% include 'home/snippet/projects_for_round_page.html' %}
-		{% endwith %}
-	{% endfor %}
-
-	{% if ontime_projects %}
-		{% if not current_round.has_application_deadline_passed %}
-			<h3>Applications Due {{ current_round.appslate }} at 4pm UTC</h3>
-
-			<p> The following projects are accepting contributions and applications from new
-			applicants until {{ current_round.appslate }} at 4pm UTC.</p>
-		{% else %}
-			<h3>Applications Closed {{ current_round.appslate }} at 4pm UTC</h3>
-		{% endif %}
+		<p> The following projects are accepting contributions and applications from new
+		applicants until {{ current_round.appslate }} at 4pm UTC.</p>
+	{% else %}
+		<h3>Applications Closed {{ current_round.appslate }} at 4pm UTC</h3>
 	{% endif %}
 
 	{% for community, funded_interns, projects in ontime_projects %}

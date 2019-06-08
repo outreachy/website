@@ -776,7 +776,6 @@ def past_rounds_page(request):
 def current_round_page(request):
     closed_approved_projects = []
     ontime_approved_projects = []
-    late_approved_projects = []
     example_skill = ProjectSkill
 
     now = datetime.now(timezone.utc)
@@ -806,15 +805,12 @@ def current_round_page(request):
         for p in approved_participations:
             if not p.approved_to_see_all_project_details(request.user):
                 continue
-            projects = p.project_set.approved().filter(deadline=Project.CLOSED)
+            projects = p.project_set.approved().filter(new_contributors_welcome=False)
             if projects:
                 closed_approved_projects.append((p.community, projects))
-            projects = p.project_set.approved().filter(deadline=Project.ONTIME)
+            projects = p.project_set.approved().filter(new_contributors_welcome=True)
             if projects:
                 ontime_approved_projects.append((p.community, p.interns_funded(), projects))
-            projects = p.project_set.approved().filter(deadline=Project.LATE)
-            if projects:
-                late_approved_projects.append((p.community, p.interns_funded(), projects))
 
     return render(request, 'home/round_page_with_communities.html',
             {
@@ -822,7 +818,6 @@ def current_round_page(request):
             'previous_round' : previous_round,
             'closed_projects': closed_approved_projects,
             'ontime_projects': ontime_approved_projects,
-            'late_projects': late_approved_projects,
             'example_skill': example_skill,
             'role': role,
             },
@@ -1026,9 +1021,8 @@ def community_landing_view(request, round_slug, community_slug):
         participating_round__slug=round_slug,
     )
     projects = participation_info.project_set.approved()
-    ontime_projects = [p for p in projects if p.deadline == Project.ONTIME]
-    late_projects = [p for p in projects if p.deadline == Project.LATE]
-    closed_projects = [p for p in projects if p.deadline == Project.CLOSED]
+    ontime_projects = [p for p in projects if p.new_contributors_welcome]
+    closed_projects = [p for p in projects if not p.new_contributors_welcome]
     example_skill = ProjectSkill
     current_round = participation_info.participating_round
 
@@ -1060,7 +1054,6 @@ def community_landing_view(request, round_slug, community_slug):
             {
             'participation_info': participation_info,
             'ontime_projects': ontime_projects,
-            'late_projects': late_projects,
             'closed_projects': closed_projects,
             'role': role,
             # TODO: make the template get these off the participation_info instead of passing them in the context
@@ -1380,7 +1373,7 @@ class MentorApprovalAction(ApprovalStatusAction):
                     )
 
 class ProjectAction(ApprovalStatusAction):
-    fields = ['approved_license', 'no_proprietary_software', 'longevity', 'community_size', 'short_title', 'long_description', 'minimum_system_requirements', 'contribution_tasks', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'intern_tasks', 'intern_benefits', 'community_benefits', 'unapproved_license_description', 'proprietary_software_description', 'deadline']
+    fields = ['approved_license', 'no_proprietary_software', 'longevity', 'community_size', 'short_title', 'long_description', 'minimum_system_requirements', 'contribution_tasks', 'repository', 'issue_tracker', 'newcomer_issue_tag', 'intern_tasks', 'intern_benefits', 'community_benefits', 'unapproved_license_description', 'proprietary_software_description', 'new_contributors_welcome']
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     def get_object(self):
