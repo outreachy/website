@@ -1,12 +1,6 @@
-{% if project.deadline == project.LATE %}
 	<p>Deadline
 	{% if not project.has_application_deadline_passed %}is{% else %}was{% endif %}
 	{{ current_round.appslate }}
-{% else %}
-	<p>Deadline
-	{% if not project.has_application_deadline_passed %}is{% else %}was{% endif %}
-	{{ current_round.appslate }}
-{% endif %}
 to
 {% if role.application.is_approved and not project.has_application_deadline_passed %}<a href="{{ project.get_contributions_url }}">{% endif %}
 	record your contributions and create a final application.

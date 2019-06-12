@@ -42,11 +42,7 @@
 	All applicants must work with a mentor to make a contribution to a project.
 	</p>
 
-	{% if project.deadline == project.LATE %}
-		<p>Deadline is {{ current_round.appslate }} 4pm UTC to record your contributions and create a final application. You will not be able to edit your final application or record more contributions after this date.</p>
-	{% else %}
-		<p>Deadline is {{ current_round.appslate }} 4pm UTC to record your contributions and create a final application. You will not be able to edit your final application or record more contributions after this date.</p>
-	{% endif %}
+	<p>Deadline is {{ current_round.appslate }} 4pm UTC to record your contributions and create a final application. You will not be able to edit your final application or record more contributions after this date.</p>
 
 	<p>
 	If you're having trouble figuring out how to contribute,
@@ -66,11 +62,7 @@
 		<p>You're viewing contributions to the following project:</p>
 		<p><strong>{{ project.short_title }}</strong></p>
 	{% endif %}
-	{% if project.deadline == project.LATE %}
 		<p>Deadline was {{ current_round.appslate }} 4pm UTC to record your contributions and create a final application.
-	{% else %}
-		<p>Deadline was {{ current_round.appslate }} 4pm UTC to record your contributions and create a final application.
-	{% endif %}
 	{% if final_application %}
 		Since you submitted a final application by the deadline, you are eligible to be selected as an intern for this project. You may continue recording your contributions to this project until the intern announcement on {{ current_round.internannounce }} at 4pm UTC.</p>
 	{% else %}

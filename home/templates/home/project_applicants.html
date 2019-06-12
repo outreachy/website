@@ -131,15 +131,6 @@ that timeline, taking into account any time commitments the applicant has.
 				<p class="card-text">
 				None of the applicants for this project created an application, and your project's application deadline has passed. You cannot select an intern who has not created an application.
 				</p>
-				<p class="card-text">
-				{% if project.deadline != project.LATE %}
-					You can extend your project application deadline to {{ current_round.appslate }} at 4pm UTC by
-					<a href="{{ project.get_submit_url }}">editing your project information</a>.
-					The application deadline is in a drop-down at the end of the first form.
-				{% else %}
-					The late project application deadline has passed, and it is not possible to extend your project application deadline.
-				{% endif %}
-				</p>
 			</div>
 		</div>
 	{% endif %}
