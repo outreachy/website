@@ -10,11 +10,9 @@
 		</p>
 		<p class="card-text">
 		{% if not current_round.has_application_deadline_passed %}
-			The application deadline is {{ current_round.appslate|date:"F d, Y" }}. Some projects are open to late applications, and their application deadline will be {{ current_round.appslate|date:"F d, Y" }}.
-		{% elif not current_round.has_application_deadline_passed %}
-			The application deadline for most projects was {{ current_round.appslate|date:"F d, Y" }}. Some projects are open to late applications, and their application deadline will be {{ current_round.appslate|date:"F d, Y" }}.
+			The final application deadline is {{ current_round.appslate|date:"F d, Y" }} at 4pm UTC.
 		{% else %}
-			The late application deadline was {{ current_round.appslate|date:"F d, Y" }}. All project application deadlines have now passed. Your project applications will be reviewed.
+			The deadline to submit a final application was {{ current_round.appslate|date:"F d, Y" }} at 4pm UTC. Your final application{{ project_applications|pluralize }} will be reviewed.
 		{% endif %}
 		</p>
 {% elif current_round.has_application_deadline_passed %}
@@ -32,7 +30,7 @@
 		<strong>Your next step is to create a final application.</strong> You will need to create a final application for each project, in order to be eligible to be selected as an intern for that project.
 		</p>
 		<p class="card-text">
-		The final application deadline is {{ current_round.appslate|date:"F d, Y" }}. Some projects are open to late final applications, and their final application deadline will be {{ current_round.appslate|date:"F d, Y" }}.
+		The final application deadline is {{ current_round.appslate|date:"F d, Y" }} at 4pm UTC.
 		</p>
 {% endif %}
 	<h5 class="card-text">My Contributions</h5>

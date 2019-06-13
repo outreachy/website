@@ -13,7 +13,7 @@ During the intern selection period, Outreachy organizers may reach out to confir
 
 Please do not ask Outreachy mentors or coordinators whether you have been selected for the internship. Because it takes Outreachy organizers several weeks to sort out intern select and find additional funds, we want to ensure all applicants find out about intern selection at the same time.
 
-The project contribution period officially ends when the project deadline has passed. However, we find applicants often want to continue working with mentors on a project they've become passionate about. You are welcome (but not required) to continue making contributions to the projects. If you have submitted an application for that project, you are welcome to continue recording your contributions up to the intern announcement date {{ current_round.internannounce }}. If you have not submitted an application for that project, you will not be able to record more contributions.
+The project contribution period has officially ended. However, we find applicants often want to continue working with mentors on a project they've become passionate about. You are welcome (but not required) to continue making contributions to the projects. If you have submitted an application for that project, you are welcome to continue recording your contributions up to the intern announcement date {{ current_round.internannounce }}. If you have not submitted an application for that project, you will not be able to record more contributions.
 
 Your Outreachy Projects
 -----------------------
