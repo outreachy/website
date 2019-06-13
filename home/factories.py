@@ -323,6 +323,23 @@ class FinalApplicationFactory(factory.django.DjangoModelFactory):
 
     spread_the_word = factory.Iterator(models.FinalApplication.HEARD_CHOICES, getter=lambda c: c[0])
 
+    @factory.post_generation
+    def contributions(self, create, extracted, **kwargs):
+        # create a contribution unless contributions=0 is explicitly specified
+        if extracted is None:
+            extracted = 1
+
+        if not create:
+            return
+
+        # allow contributions=3 to generate 3 new contributions
+        for _ in range(extracted):
+            ContributionFactory.create(
+                applicant=self.applicant,
+                project=self.project,
+                round=self.applicant.application_round,
+            )
+
 class SignedContractFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.SignedContract
