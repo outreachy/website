@@ -17,6 +17,9 @@
 				<p>
 				Please note: You can only accept an applicant as an intern if they have recorded their contributions and submitted a final application. If you have an applicant who has been making contributions but not recording it, you can tell them to record their contributions at this link:</p>
 				<p><pre>{{ request.scheme }}://{{ request.get_host }}{% url 'contributions' round_slug=current_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}</pre></p>
+				<p>
+				{{ current_round.appslate }} 4pm UTC is the deadline for applicants to record contributions and create a final application.
+				</p>
 			{% else %}
 				<p class="card-text">This project is approved.
 				Once applications are open, you can
@@ -34,12 +37,6 @@
 				You cannot review applicants until the community is approved to participate in Outreachy.
 				</p>
 			{% endif %}
-			<p>
-			Application deadline: {{ project.application_deadline }} 4pm UTC
-			</p>
-			<p class="card-text">
-			<a class="btn btn-primary" href="{{ project.get_submit_url }}#project-deadline">Update Application Deadline</a>
-			</p>
 		{% elif project.approval_status == project.PENDING %}
 			<p class="card-text">This project is pending.
 				Once applications are open and your project is approved, you can
@@ -49,6 +46,10 @@
 		{% endif %}
 		<p class="card-text">
 		<a class="btn btn-primary" href="{{ project.get_submit_url }}">Update Project Details</a>
+		</p>
+		<p class="card-text">
+		<p class="card-text">
+		<a class="btn btn-primary" href="{{ project.get_submit_url }}#contributors-welcome">Close project to new contributors</a>
 		</p>
 		<p class="card-text">
 		<a class="btn btn-primary" href="{% url 'project-skills-edit' round_slug=project.project_round.participating_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}">Update Project Skills</a>
