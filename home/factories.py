@@ -419,6 +419,18 @@ class InternSelectionFactory(factory.django.DjangoModelFactory):
                 **defaults
             )
 
+    @factory.post_generation
+    def finalapplication(self, create, extracted, **kwargs):
+        # ignore finalapplication=0 because we always want to create one final application
+        if not create or extracted:
+            return
+
+        FinalApplicationFactory.create(
+            applicant=self.applicant,
+            project=self.project,
+            round=self.applicant.application_round,
+        )
+
 class MentorRelationshipFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.MentorRelationship
