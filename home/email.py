@@ -122,14 +122,6 @@ def mentor_application_deadline_reminder(project, request, **kwargs):
         recipient_list=project.get_mentor_email_list(),
         **kwargs)
 
-def mentor_intern_selection_reminder(project, request, **kwargs):
-    send_group_template_mail('home/email/mentor-choose-intern.txt', {
-        'project': project,
-        },
-        request=request,
-        recipient_list=project.get_mentor_email_list(),
-        **kwargs)
-
 def coordinator_intern_selection_reminder(participation, request, **kwargs):
     email_list = participation.get_submitter_email_list()
     if email_list:

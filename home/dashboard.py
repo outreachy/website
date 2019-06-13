@@ -279,7 +279,6 @@ class MentorApplicationDeadlinesReminder(SendEmailView):
         for p in projects:
             email.mentor_application_deadline_reminder(p, self.request, connection=connection)
 
-
 class MentorInternSelectionReminder(SendEmailView):
     description = 'Mentor Intern Selection Email'
     slug = 'mentor-intern-selection-reminder'
@@ -297,8 +296,12 @@ class MentorInternSelectionReminder(SendEmailView):
         )
 
         for p in projects:
-            email.mentor_intern_selection_reminder(p, self.request, connection=connection)
-
+            email.send_group_template_mail('home/email/mentor-choose-intern.txt', {
+                'project': p,
+                },
+                request=self.request,
+                recipient_list=p.get_mentor_email_list(),
+                connection=connection)
 
 class CoordinatorInternSelectionReminder(SendEmailView):
     description = 'Coordinator Intern Selection Email'
