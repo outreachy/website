@@ -7,9 +7,8 @@
     <tr><th width="175">{{ current_round.appsopen }}</th><td>Applicants start making contributions to internship projects</td></tr>
     <tr><th>{{ current_round.lateorgs }}</th><td>Last date for new mentoring community listings</td></tr>
     {% if not current_round.has_application_deadline_passed %}<tr><th>{{ current_round.ProjectsDeadline }}</th><td>Last date for mentors to submit new internship project listings</td></tr>{% endif %}
-    <tr><th>{{ current_round.appslate }}<br> at 4pm UTC</th><td>Application deadline. Last day to finish any contributions to internship projects. Applications who made a contribution must submit the rest of their project application by this date.</td></tr>
-    <tr><th>{{ current_round.appslate }}<br> at 4pm UTC</th><td>Late application deadline for specific projects (see below for which projects are accepting late applications)</td></tr>
-    <tr><th>{{ current_round.appslate }}<br> to {{ current_round.internannounce }}</th><td>Applicants are encouraged to continue making contributions</td></tr>
+    <tr><th>{{ current_round.appslate }}<br> at 4pm UTC</th><td>Contribution and final application deadline. Last day to finish recording contributions to internship projects. Applications who made a contribution must create their final application by this date.</td></tr>
+    <tr><th>{{ current_round.appslate }}<br> to {{ current_round.internannounce }}</th><td>Applicants are encouraged (but not required) to continue making contributions</td></tr>
     <tr><th>{{ current_round.internannounce }}</th><td>Accepted interns announced on <a href"/alums/">the alums page</a> at 4pm UTC</td></tr>
     <tr><th>{{ current_round.internstarts }}<br> to {{ current_round.internends }}</th><td>Internships period</td></tr>
 </table>
