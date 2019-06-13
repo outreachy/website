@@ -3100,6 +3100,16 @@ class InitialApplicationReview(models.Model):
 # --------------------------------------------------------------------------- #
 
 class Contribution(models.Model):
+    """
+    An Outreachy applicant must make contributions to a project in order to be
+    eligible to be accepted as an intern. The Contribution model is a record
+    of that contribution that the applicant submits to the Outreachy website.
+    Contributions are recorded from the start of the contribution period to
+    when the final application is due. Applicants who have submitted a final
+    application can continue to record contributions until the intern
+    announcement.
+    """
+
     applicant = models.ForeignKey(ApplicantApproval)
     project = models.ForeignKey(Project)
 
