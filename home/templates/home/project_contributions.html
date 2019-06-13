@@ -40,17 +40,19 @@
 	<p><strong>{{ project.short_title }}</strong></p>
 	<p>
 	All applicants must work with a mentor to make a contribution to a project.
+	This page allows you to record a description and link to that contribution.
+	You can record new contributions or edit recorded contributions until the final application deadline.
 	</p>
 
-	<p>Deadline is {{ current_round.appslate }} 4pm UTC to record your contributions and create a final application. You will not be able to edit your final application or record more contributions after this date.</p>
-
+	<p>
+	Only applicants that submit a final application will be eligible to be selected as an intern.
+	You need to submit a final application for each project you want to apply to.
+	You'll need to record one contribution to the project in the Outreachy website before you can submit a final application. 
+	</p>
+	<p><b>{{ current_round.appslate }} 4pm UTC is the final application deadline.</b> You can edit your final application until the final application deadline.</p>
 	<p>
 	If you're having trouble figuring out how to contribute,
 	<a href="https://www.outreachy.org/apply/make-contributions/">check out our contribution tips</a>.
-	</p>
-	<p>
-	Once you've started a contribution, use this page to record your in-progress and completed contributions.
-	Once you've recorded at least one contribution, you can start your application for the project.
 	</p>
 {% else %}
 	{% if final_application and not project.has_intern_announcement_deadline_passed %}
