@@ -110,8 +110,14 @@ round_dates = (
     'internapproval',
     'internannounce',
     'internstarts',
+    'week_two_chat_text_date',
     'initialfeedback',
+    'week_four_chat_text_date',
+    'week_six_chat_text_date',
+    'week_eight_chat_text_date',
     'midfeedback',
+    'week_ten_chat_text_date',
+    'week_twelve_chat_text_date',
     'internends',
     'finalfeedback',
 )
@@ -140,6 +146,7 @@ class RoundPageFactory(PageFactory):
                 datetime.datetime.now(datetime.timezone.utc)
             )
         )
+        chat_text_time = datetime.time(13, 0, tzinfo=datetime.timezone.utc)
 
     roundnumber = factory.Sequence(int)
 
@@ -156,9 +163,15 @@ class RoundPageFactory(PageFactory):
     internapproval = datetime.timedelta(days=2)
     internannounce = datetime.timedelta(days=4)
     internstarts = datetime.timedelta(days=26)
-    initialfeedback = datetime.timedelta(days=15)
-    midfeedback = datetime.timedelta(days=42)
-    internends = datetime.timedelta(days=33)
+    week_two_chat_text_date = datetime.timedelta(days=7)
+    initialfeedback = datetime.timedelta(days=8)
+    week_four_chat_text_date = datetime.timedelta(days=6)
+    week_six_chat_text_date = datetime.timedelta(days=14)
+    week_eight_chat_text_date = datetime.timedelta(days=14)
+    midfeedback = datetime.timedelta(days=8)
+    week_ten_chat_text_date = datetime.timedelta(days=6)
+    week_twelve_chat_text_date = datetime.timedelta(days=14)
+    internends = datetime.timedelta(days=13)
     finalfeedback = datetime.timedelta(days=7)
 
     @factory.lazy_attribute
@@ -186,7 +199,10 @@ class RoundPageFactory(PageFactory):
         previous = kwargs['pingnew']
         for field_name in round_dates:
             previous += kwargs[field_name]
-            kwargs[field_name] = previous
+            if field_name.endswith('_chat_text_date'):
+                kwargs[field_name] = datetime.datetime.combine(previous, kwargs['chat_text_time'])
+            else:
+                kwargs[field_name] = previous
         kwargs['title'] = kwargs['internstarts'].strftime('Outreachy %B %Y internship round')
         kwargs['slug'] = slugify(kwargs['title'])
         return kwargs
