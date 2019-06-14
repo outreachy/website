@@ -397,19 +397,42 @@ def determine_eligibility(wizard, application_round):
 
     return (ApprovalStatus.PENDING, 'ESSAY')
 
-# People can only submit new initial applications or edit initial applications
-# when the application period is open.
+
 def get_current_round_for_initial_application():
+    """
+    People can only submit new initial applications or edit initial
+    applications when the application period is open.
+    """
+
     now = datetime.now(timezone.utc)
     today = get_deadline_date_for(now)
 
     try:
         return RoundPage.objects.get(
-            appsopen__lte=today,
-            appslate__gt=today,
+            initial_applications_open__lte=today,
+            initial_applications_close__gt=today,
         )
     except RoundPage.DoesNotExist:
         raise PermissionDenied('The Outreachy application period is closed. If you are an applicant who has submitted an application for an internship project and your time commitments have increased, please contact the Outreachy organizers (see contact link above). Eligibility checking will become available when the next application period opens. Please sign up for the announcements mailing list for an email when the next application period opens: https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce')
+
+
+def get_current_round_for_initial_application_review():
+    """
+    Application reviewers need to have finished their work before the
+    contribution period begins.
+    """
+
+    now = datetime.now(timezone.utc)
+    today = get_deadline_date_for(now)
+
+    try:
+        return RoundPage.objects.get(
+            initial_applications_open__lte=today,
+            contributions_open__gt=today,
+        )
+    except RoundPage.DoesNotExist:
+        raise PermissionDenied('It is too late to review applications.')
+
 
 class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, SessionWizardView):
     template_name = 'home/wizard_form.html'
@@ -733,7 +756,20 @@ class EligibilityResults(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
     context_object_name = 'application'
 
     def get_object(self):
-        current_round = get_current_round_for_initial_application()
+        now = datetime.now(timezone.utc)
+        today = get_deadline_date_for(now)
+
+        # We want to let people know why they can't make contributions, right
+        # up until all contributions are closed; but we don't want to confuse
+        # people who come back in a future round by showing them old results.
+        try:
+            current_round = RoundPage.objects.get(
+                initial_applications_open__lte=today,
+                contributions_close__gt=today,
+            )
+        except RoundPage.DoesNotExist:
+            raise PermissionDenied('The Outreachy application period is closed. Eligibility checking will become available when the next application period opens. Please sign up for the announcements mailing list for an email when the next application period opens: https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce')
+
         return get_object_or_404(ApplicantApproval,
                     applicant=self.request.user.comrade,
                     application_round=current_round)
@@ -755,7 +791,7 @@ class ViewInitialApplication(LoginRequiredMixin, ComradeRequiredMixin, DetailVie
         return context
 
     def get_object(self):
-        current_round = get_current_round_for_initial_application()
+        current_round = get_current_round_for_initial_application_review()
 
         self.role = Role(self.request.user, current_round)
 
@@ -1731,6 +1767,7 @@ def community_applicants(request, round_slug, community_slug):
 
 def contribution_tips(request):
     try:
+        # TODO: check which date should replace appsopen for eligibility prompts
         current_round = get_current_round_for_initial_application()
     except PermissionDenied:
         current_round = None # don't display any eligibility prompts
@@ -2949,7 +2986,7 @@ def applicant_review_summary(request, status):
     """
     # Update dashboard.application_summary too if you change anything here.
 
-    current_round = get_current_round_for_initial_application()
+    current_round = get_current_round_for_initial_application_review()
 
     if not request.user.is_staff and not current_round.is_reviewer(request.user):
         raise PermissionDenied("You are not authorized to review applications.")
@@ -2975,7 +3012,7 @@ class ApplicantApprovalUpdate(ApprovalStatusAction):
     model = ApplicantApproval
 
     def get_object(self):
-        current_round = get_current_round_for_initial_application()
+        current_round = get_current_round_for_initial_application_review()
         return get_object_or_404(ApplicantApproval,
                 applicant__account__username=self.kwargs['applicant_username'],
                 application_round=current_round)
@@ -2998,7 +3035,11 @@ class DeleteApplication(LoginRequiredMixin, ComradeRequiredMixin, View):
         if not request.user.is_staff:
             raise PermissionDenied("Only Outreachy organizers can delete initial applications.")
 
+        # This only happens during review, but only makes sense to do while the
+        # applicant still has an opportunity to submit the initial application
+        # again, so we don't use the longer review period here.
         current_round = get_current_round_for_initial_application()
+
         application = get_object_or_404(ApplicantApproval,
                 applicant__account__username=self.kwargs['applicant_username'],
                 application_round=current_round)
@@ -3011,7 +3052,7 @@ class DeleteApplication(LoginRequiredMixin, ComradeRequiredMixin, View):
 class NotifyEssayNeedsUpdating(LoginRequiredMixin, ComradeRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
-        current_round = get_current_round_for_initial_application()
+        current_round = get_current_round_for_initial_application_review()
         # Allow staff to ask applicants to revise their essays
         if not request.user.is_staff:
             raise PermissionDenied("Only Outreachy organizers can ask applicants to revise their essays.")
@@ -3039,7 +3080,7 @@ class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, re
             ]
 
     def get_object(self):
-        current_round = get_current_round_for_initial_application()
+        current_round = get_current_round_for_initial_application_review()
         # Only allow applicants to revise their own essays
         if self.request.user.comrade.account.username != self.kwargs['applicant_username']:
             raise PermissionDenied('You can only edit your own essay.')
@@ -3060,7 +3101,7 @@ class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, re
 class NotifySchoolInformationUpdating(LoginRequiredMixin, ComradeRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
-        current_round = get_current_round_for_initial_application()
+        current_round = get_current_round_for_initial_application_review()
         if not request.user.is_staff:
             raise PermissionDenied("Only Outreachy organizers can ask applicants to revise their school information.")
 
@@ -3086,7 +3127,7 @@ class SchoolInformationUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversio
             ]
 
     def get_object(self):
-        current_round = get_current_round_for_initial_application()
+        current_round = get_current_round_for_initial_application_review()
         # Only allow applicants to revise their own essays
         if self.request.user.comrade.account.username != self.kwargs['applicant_username']:
             raise PermissionDenied('You can only edit your own school information.')
@@ -3114,7 +3155,7 @@ class SchoolInformationUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversio
 
 def get_or_create_application_reviewer_and_review(self):
     # Only allow approved reviewers to rate applications for the current round
-    current_round = get_current_round_for_initial_application()
+    current_round = get_current_round_for_initial_application_review()
 
     try:
         reviewer = ApplicationReviewer.objects.get(

@@ -133,8 +133,8 @@ def application_summary(request):
     today = get_deadline_date_for(now)
     try:
         current_round = RoundPage.objects.get(
-            appsopen__lte=today,
-            appslate__gt=today,
+            initial_applications_open__lte=today,
+            contributions_open__gt=today,
         )
     except RoundPage.DoesNotExist:
         return None
@@ -594,8 +594,8 @@ def sponsor_statistics(request):
     today = get_deadline_date_for(now)
     try:
         return RoundPage.objects.filter(
-            appsopen__lte=today,
-        ).latest('appsopen')
+            initial_applications_open__lte=today,
+        ).latest('initial_applications_open')
     except RoundPage.DoesNotExist:
         return None
 
@@ -622,8 +622,10 @@ def staff_intern_selection(request):
     now = datetime.datetime.now(datetime.timezone.utc)
     today = get_deadline_date_for(now)
     try:
+        # There can't be any interns selected until they start making
+        # contributions, so don't display this section until then.
         return RoundPage.objects.get(
-            appsopen__lte=today,
+            contributions_open__lte=today,
             initialfeedback__gt=today + datetime.timedelta(days=7),
         )
     except RoundPage.DoesNotExist:
@@ -637,8 +639,11 @@ def staff_community_progress(request):
     now = datetime.datetime.now(datetime.timezone.utc)
     today = get_deadline_date_for(now)
     try:
+        # Show staff this table as soon as communities can start applying to
+        # participate in a round, but nothing in it is relevant any more after
+        # interns are announced.
         current_round = RoundPage.objects.get(
-            appsopen__lte=today,
+            pingnew__lte=today,
             internannounce__gt=today,
         )
     except RoundPage.DoesNotExist:
