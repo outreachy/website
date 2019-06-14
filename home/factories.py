@@ -101,17 +101,26 @@ round_dates = (
     'orgreminder',
     'landingdue',
     'appsopen',
+    'initial_applications_open',
+    'contributions_open',
     'lateorgs',
     'lateprojects',
-    'appsclose',
     'appslate',
+    'initial_applications_close',
+    'contributions_close',
     'mentor_intern_selection_deadline',
     'coordinator_funding_deadline',
     'internapproval',
     'internannounce',
     'internstarts',
+    'week_two_chat_text_date',
     'initialfeedback',
+    'week_four_chat_text_date',
+    'week_six_chat_text_date',
+    'week_eight_chat_text_date',
     'midfeedback',
+    'week_ten_chat_text_date',
+    'week_twelve_chat_text_date',
     'internends',
     'finalfeedback',
 )
@@ -140,6 +149,7 @@ class RoundPageFactory(PageFactory):
                 datetime.datetime.now(datetime.timezone.utc)
             )
         )
+        chat_text_time = datetime.time(13, 0, tzinfo=datetime.timezone.utc)
 
     roundnumber = factory.Sequence(int)
 
@@ -147,18 +157,27 @@ class RoundPageFactory(PageFactory):
     orgreminder = datetime.timedelta(days=7)
     landingdue = datetime.timedelta(days=14)
     appsopen = datetime.timedelta(days=10)
+    initial_applications_open = datetime.timedelta(days=0)
+    contributions_open = datetime.timedelta(days=0)
     lateorgs = datetime.timedelta(days=25)
     lateprojects = datetime.timedelta(days=14)
-    appsclose = datetime.timedelta(days=7)
-    appslate = datetime.timedelta(days=7)
+    appslate = datetime.timedelta(days=14)
+    initial_applications_close = datetime.timedelta(days=0)
+    contributions_close = datetime.timedelta(days=0)
     mentor_intern_selection_deadline = datetime.timedelta(days=3)
     coordinator_funding_deadline = datetime.timedelta(days=1)
     internapproval = datetime.timedelta(days=2)
     internannounce = datetime.timedelta(days=4)
     internstarts = datetime.timedelta(days=26)
-    initialfeedback = datetime.timedelta(days=15)
-    midfeedback = datetime.timedelta(days=42)
-    internends = datetime.timedelta(days=33)
+    week_two_chat_text_date = datetime.timedelta(days=7)
+    initialfeedback = datetime.timedelta(days=8)
+    week_four_chat_text_date = datetime.timedelta(days=6)
+    week_six_chat_text_date = datetime.timedelta(days=14)
+    week_eight_chat_text_date = datetime.timedelta(days=14)
+    midfeedback = datetime.timedelta(days=8)
+    week_ten_chat_text_date = datetime.timedelta(days=6)
+    week_twelve_chat_text_date = datetime.timedelta(days=14)
+    internends = datetime.timedelta(days=13)
     finalfeedback = datetime.timedelta(days=7)
 
     @factory.lazy_attribute
@@ -186,7 +205,10 @@ class RoundPageFactory(PageFactory):
         previous = kwargs['pingnew']
         for field_name in round_dates:
             previous += kwargs[field_name]
-            kwargs[field_name] = previous
+            if field_name.endswith('_chat_text_date'):
+                kwargs[field_name] = datetime.datetime.combine(previous, kwargs['chat_text_time'])
+            else:
+                kwargs[field_name] = previous
         kwargs['title'] = kwargs['internstarts'].strftime('Outreachy %B %Y internship round')
         kwargs['slug'] = slugify(kwargs['title'])
         return kwargs
