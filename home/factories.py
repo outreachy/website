@@ -99,14 +99,14 @@ class PageFactory(factory.Factory):
 round_dates = (
     'pingold',
     'orgreminder',
-    'landingdue',
-    'appsopen',
     'initial_applications_open',
-    'contributions_open',
+    'appsopen',
     'lateorgs',
-    'lateprojects',
-    'appslate',
     'initial_applications_close',
+    'landingdue',
+    'lateprojects',
+    'contributions_open',
+    'appslate',
     'contributions_close',
     'mentor_intern_selection_deadline',
     'coordinator_funding_deadline',
@@ -137,6 +137,9 @@ class RoundPageFactory(PageFactory):
     Finally, you can change the delay between adjacent deadlines: for example,
     if you want a shorter delay between ``orgreminder`` and ``landingdue``, you
     could set ``landingdue=datetime.timedelta(days=7)``.
+
+    If you change the order of any of the round date fields in this function,
+    you must change the ordering in the list above.
     """
 
     class Meta:
@@ -153,22 +156,59 @@ class RoundPageFactory(PageFactory):
 
     roundnumber = factory.Sequence(int)
 
-    pingold = datetime.timedelta(days=6)
+    # week 0 - Jan 8 / Aug 6
+    pingold = datetime.timedelta(days=0)
+    # week 1
     orgreminder = datetime.timedelta(days=7)
-    landingdue = datetime.timedelta(days=14)
-    appsopen = datetime.timedelta(days=10)
-    initial_applications_open = datetime.timedelta(days=0)
+    # week 2 - Jan 22 / Aug 20
+    initial_applications_open = datetime.timedelta(days=7)
+    appsopen = datetime.timedelta(days=0)
+    # week 3
+    # week 4 - Feb 5 / Sept 3
+    lateorgs = datetime.timedelta(days=14)
+    # week 5
+    # week 6
+    # week 7 - Feb 26 / Sept 24 - "soft" deadline for project submission
+    # week 7 - Feb 26 / Sept 24 - deadline for submitting initial applications
+    initial_applications_close = datetime.timedelta(days=21)
+    landingdue = datetime.timedelta(days=0)
+    # week 8 - Mar 5 / Oct 1 - deadline for approving initial apps & projects
+    lateprojects = datetime.timedelta(days=7)
     contributions_open = datetime.timedelta(days=0)
-    lateorgs = datetime.timedelta(days=25)
-    lateprojects = datetime.timedelta(days=14)
-    appslate = datetime.timedelta(days=14)
-    initial_applications_close = datetime.timedelta(days=0)
+    # week 9
+    # week 10
+    # week 11
+    # week 12
+    # week 13 - Apr 9 / Nov 5 - contribution and final application deadline
+    appslate = datetime.timedelta(days=35)
     contributions_close = datetime.timedelta(days=0)
-    mentor_intern_selection_deadline = datetime.timedelta(days=3)
-    coordinator_funding_deadline = datetime.timedelta(days=1)
-    internapproval = datetime.timedelta(days=2)
-    internannounce = datetime.timedelta(days=4)
-    internstarts = datetime.timedelta(days=26)
+    # week 14
+    # week 15 - Apr 18 / Nov 14 - deadline for intern selection
+    mentor_intern_selection_deadline = datetime.timedelta(days=9)
+    # week 16 - Apr 22 / Nov 18 - deadline for coordinators to set intern funding
+    coordinator_funding_deadline = datetime.timedelta(days=4)
+    # week 16 - Apr 23 / Nov 19 - thanksgiving holiday
+    internapproval = datetime.timedelta(days=1)
+    # For the December round, there's a short delay between the intern announcement
+    # and when the interns start.
+    #
+    # week 17 - Nov 26
+    # week 18 - Dec 3
+    #
+    # Pass the following parameters to set up the December round:
+    # internapproval = datetime.timedelta(days=1),
+    # internannounce = datetime.timedelta(days=7),
+    # internstarts=datetime.timedelta(days=7),
+    #
+    #
+    # The May round aligns with Google summer of Code, so there's a longer
+    # period between when interns are announced and when they start
+    # in the Outreachy May round. The code below sets up the May round:
+    # week 17
+    # week 18
+    internannounce = datetime.timedelta(days=14)
+    # week 20 - May 20
+    internstarts = datetime.timedelta(days=14)
     week_two_chat_text_date = datetime.timedelta(days=7)
     initialfeedback = datetime.timedelta(days=8)
     week_four_chat_text_date = datetime.timedelta(days=6)
