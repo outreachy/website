@@ -221,6 +221,20 @@ class RoundPage(Page):
     def official_name(self):
         return(self.internstarts.strftime("%B %Y") + " to " + self.internends.strftime("%B %Y") + " Outreachy internships")
 
+    def is_initial_application_period_open(self):
+        if has_deadline_passed(self.initial_applications_close):
+            return False
+        if has_deadline_passed(self.initial_applications_open):
+            return True
+        return False
+
+    def is_contribution_period_open(self):
+        if has_deadline_passed(self.contributions_close):
+            return False
+        if has_deadline_passed(self.contributions_open):
+            return True
+        return False
+
     def is_application_period_open(self):
         if has_deadline_passed(self.appslate):
             return False
@@ -279,6 +293,12 @@ class RoundPage(Page):
     # during the internship period?"
     def sfc_payment_last_date(self):
         return self.internends + datetime.timedelta(days=7*5)
+
+    def has_initial_application_period_started(self):
+        return has_deadline_passed(self.initial_applications_open)
+
+    def has_contribution_period_started(self):
+        return has_deadline_passed(self.contributions_open)
 
     def has_application_period_started(self):
         return has_deadline_passed(self.appsopen)
@@ -4709,6 +4729,8 @@ class Role(object):
         """
         if self.current_round is None:
             return False
+        # FIXME - audit all usages of this function to be sure
+        # We don't want to show the eligibility checks during the contribution period.
         if not (self.current_round.appsopen <= self.today < self.current_round.appslate):
             return False
         return not self.is_volunteer and not self.is_applicant
