@@ -248,6 +248,12 @@ class RoundPage(Page):
     def has_project_submission_and_approval_deadline_passed(self):
         return has_deadline_passed(self.ProjectsDeadline())
 
+    def initial_application_deadline(self):
+        return datetime.datetime.combine(self.initial_applications_close, DEADLINE_TIME)
+
+    def contribution_deadline(self):
+        return datetime.datetime.combine(self.contributions_close, DEADLINE_TIME)
+
     def application_deadline(self):
         return datetime.datetime.combine(self.appslate, DEADLINE_TIME)
 
@@ -1378,19 +1384,83 @@ class Participation(ApprovalStatus):
     def is_submitter(self, user):
         return self.community.is_coordinator(user)
 
-    # This function should only be used before applications are open
+    # This function should only be used before the contribution period is open.
     # There are a few people who should be approved to see
     # all the details of all projects for a community
-    # before the applications open:
+    # before the contribution period opens:
     def approved_to_see_all_project_details(self, user):
+        """
+        This function controls whether the project details
+        on the community landing page are visible
+        on /<round_slug>/communities/<community_slug>/
+
+        The rules are:
+         - Staff (Outreachy organizers) should see all projects all the time
+
+         - Anyone with an approved initial application should be able to see
+           it if the contribution period is open.
+
+         - If the contribution period isn't open, the people who should
+           see project overviews are approved coordinators for communities
+           approved to participate in this round, approved coordinators for
+           communities that have pending participation for this round, and
+           approved mentors with approved projects.
+
+        """
         # - staff
         if user.is_staff:
             return True
 
-        # Are applications open and everyone should see the projects?
+        # Is the contribution period open and everyone should see the projects?
         # Note in the template, links are still hidden if the
         # initial application is pending or rejected
-        if self.participating_round.has_application_period_started():
+        if self.participating_round.has_contribution_period_started():
+            return True
+
+        # Remaining conditions all require this person to be logged in
+        if not user.is_authenticated:
+            return False
+
+        role = Role(user, self.participating_round)
+
+        # - an approved coordinator for any approved community
+        if role.is_coordinator:
+            return True
+
+        # - an approved mentor with an approved project for any approved community
+        if role.is_mentor:
+            return True
+
+        # - an approved coordinator for this pending community
+        return self.community.is_coordinator(user)
+
+    def approved_to_see_project_overview(self, user):
+        """
+        This function controls whether the project overview (title & skills)
+        are displayed on /apply/project-selection/
+
+        The rules are:
+         - Staff (Outreachy organizers) should see all projects all the time
+
+         - Anyone should be able to see it if the initial application period is open.
+           This builds up excitement in applicants and gets them to complete an
+           initial application.
+
+         - If the initial application period isn't open, the people who should
+           see project overviews are approved coordinators for communities
+           approved to participate in this round, approved coordinators for
+           communities that have pending participation for this round, and
+           approved mentors with approved projects.
+
+        """
+        # - staff
+        if user.is_staff:
+            return True
+
+        # Is the initial application period open?
+        # Note in the template, links are still hidden if the
+        # initial application is pending or rejected
+        if self.participating_round.has_initial_application_period_started():
             return True
 
         # Remaining conditions all require this person to be logged in
@@ -1656,6 +1726,12 @@ class Project(ApprovalStatus):
 
     def submission_and_approval_deadline(self):
         return self.project_round.participating_round.ProjectsDeadline()
+
+    def has_initial_application_deadline_passed(self):
+        return self.project_round.participating_round.initial_application_deadline()
+
+    def has_contribution_deadline_passed(self):
+        return self.project_round.participating_round.contribution_deadline()
 
     def has_application_deadline_passed(self):
         return has_deadline_passed(self.application_deadline())
