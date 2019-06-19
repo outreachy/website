@@ -52,13 +52,13 @@ class NewRoundScenario(factory.Factory):
     )
 
 
-class ApplicationsOpenScenario(NewRoundScenario):
+class CommunitySignupUnderwayScenario(NewRoundScenario):
     """
-    Create samples of the objects which matter once applicants are allowed to
-    begin applying to participate in the new round.
+    Create samples of the objects in the middle of the period
+    where communities are signing up, but before initial applications opens.
     """
 
-    round__start_from = 'appsopen'
+    round__start_from = 'pingold'
 
     mentor = factory.SubFactory(factories.MentorFactory)
 
@@ -87,18 +87,11 @@ class ApplicationsOpenScenario(NewRoundScenario):
         approval_status=ApprovalStatus.APPROVED,
     )
 
-class InternSelectionScenario(ApplicationsOpenScenario):
+class InitialApplicationsUnderwayScenario(CommunitySignupUnderwayScenario):
     """
-    Create samples of the objects which matter once mentors start to
-    select the interns they want to work with, and coordinators
-    need to set funding sources for the selected interns.
+    Create samples of the objects in the middle of the initial application period.
     """
-
-    round__start_from = 'mentor_intern_selection_deadline'
-    sponsorship__amount = 13000
-
-    mentor2 = factory.SubFactory(factories.MentorFactory)
-    mentor3 = factory.SubFactory(factories.MentorFactory)
+    round__start_from = 'initial_applications_open'
 
     applicant1 = factory.SubFactory(
         factories.ApplicantApprovalFactory,
@@ -118,6 +111,46 @@ class InternSelectionScenario(ApplicationsOpenScenario):
         applicant=factory.SubFactory(factories.ApplicantFactory),
         approval_status=ApprovalStatus.APPROVED,
     )
+    applicant4 = factory.SubFactory(
+        factories.ApplicantApprovalFactory,
+        application_round=factory.SelfAttribute('..round'),
+        applicant=factory.SubFactory(factories.ApplicantFactory),
+        approval_status=ApprovalStatus.PENDING,
+    )
+    applicant5 = factory.SubFactory(
+        factories.ApplicantApprovalFactory,
+        application_round=factory.SelfAttribute('..round'),
+        applicant=factory.SubFactory(factories.ApplicantFactory),
+        approval_status=ApprovalStatus.REJECTED,
+        reason_denied='TIME',
+    )
+    applicant6 = factory.SubFactory(
+        factories.ApplicantApprovalFactory,
+        application_round=factory.SelfAttribute('..round'),
+        applicant=factory.SubFactory(factories.ApplicantFactory),
+        approval_status=ApprovalStatus.REJECTED,
+        reason_denied='ALIGNMENT',
+    )
+    applicant7 = factory.SubFactory(
+        factories.ApplicantApprovalFactory,
+        application_round=factory.SelfAttribute('..round'),
+        applicant=factory.SubFactory(factories.ApplicantFactory),
+        approval_status=ApprovalStatus.REJECTED,
+        reason_denied='GENERAL',
+    )
+
+class InternSelectionScenario(InitialApplicationsUnderwayScenario):
+    """
+    Create samples of the objects which matter once mentors start to
+    select the interns they want to work with, and coordinators
+    need to set funding sources for the selected interns.
+    """
+
+    round__start_from = 'mentor_intern_selection_deadline'
+    sponsorship__amount = 13000
+
+    mentor2 = factory.SubFactory(factories.MentorFactory)
+    mentor3 = factory.SubFactory(factories.MentorFactory)
 
     project2 = factory.SubFactory(
         factories.ProjectFactory,
