@@ -3,12 +3,12 @@
 <h2>Timeline</h2>
 
 <table class="table">
-    {% if current_round.has_application_deadline_passed %}<tr><th>{{ current_round.landingdue }}</th><td>Most FOSS communities will be listed</td></tr>{% endif %}
-    <tr><th width="175">{{ current_round.appsopen }}</th><td>Applicants start making contributions to internship projects</td></tr>
-    <tr><th>{{ current_round.lateorgs }}</th><td>Last date for new mentoring community listings</td></tr>
-    {% if not current_round.has_application_deadline_passed %}<tr><th>{{ current_round.ProjectsDeadline }}</th><td>Last date for mentors to submit new internship project listings</td></tr>{% endif %}
-    <tr><th>{{ current_round.appslate }}<br> at 4pm UTC</th><td>Contribution and final application deadline. Last day to finish recording contributions to internship projects. Applications who made a contribution must create their final application by this date.</td></tr>
-    <tr><th>{{ current_round.appslate }}<br> to {{ current_round.internannounce }}</th><td>Applicants are encouraged (but not required) to continue making contributions</td></tr>
-    <tr><th>{{ current_round.internannounce }}</th><td>Accepted interns announced on <a href"/alums/">the alums page</a> at 4pm UTC</td></tr>
+{% comment %}TODO: link the words "initial application" and "contribute to projects" to the right sections in the to-be-written documentation page{% endcomment %}
+    <tr><th width="175">{{ current_round.initial_applications_open }}</th><td>Initial applications open</td></tr>
+    <tr><th>{{ current_round.initial_applications_close }} at 4pm UTC</th><td>Initial application deadline</td></tr>
+    <tr><th>{{ current_round.initial_applications_close }}</th><td>Project list finalized</td></tr>
+    <tr><th>{{ current_round.contributions_open }} to {{ current_round.contributions_close }}</th><td>Contribute to projects</td></tr>
+    <tr><th>{{ current_round.contributions_close }}<br> at 4pm UTC</th><td>Final application deadline</td></tr>
+    <tr><th>{{ current_round.internannounce }} at 4pm UTC</th><td>Accepted interns announced</td></tr>
     <tr><th>{{ current_round.internstarts }}<br> to {{ current_round.internends }}</th><td>Internships period</td></tr>
 </table>
