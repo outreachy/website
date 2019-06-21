@@ -14,9 +14,11 @@ Outreachy internships working with {{ community.name }}
 		If your participation has been approved, you may need to <a href="{% url 'login' %}?next={{ request.path|urlencode }}">log in</a>.</p>
 
 		<p>If you are an Outreachy applicant, this information will be available once the
-		Outreachy application period starts on {{ current_round.appsopen }} at 4pm UTC.
+		Outreachy contribution period starts on {{ current_round.contributions_open }} at 4pm UTC.
 		You can sign up for an email notification when the round opens by
 		<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">subscribing to the Outreachy announcements mailing list</a>.</p>
+
+	{% comment %} If we've reached this else block, it's because the contribution period is open and the person is not a coordinator, mentor, or reviewer.{% endcomment %}
 	{% elif not role.application.is_approved and not mentors_pending_projects and not approved_to_see_all_project_details and not role.is_reviewer %}
 		{% if not user.comrade %}
 			You may need to <a href="{% url 'login' %}?next={{ request.path|urlencode }}">log in</a> to see this information.</p>
@@ -27,12 +29,9 @@ Outreachy internships working with {{ community.name }}
 			<p>This information is only available to applicants who have their initial application approved.
 			Unfortunately, your initial application is not approved.
 			</p>
-		{% elif role.application.is_pending %}
-			<p>This information is only available to applicants who have their initial application approved.
-			Your initial application is currently pending review by Outreachy organizers.
-			</p>
 		{% endif %}
-	{% else %}{# allowed to see project details #}
+
+	{% else %}{# allowed to see project details (this could be an approved mentor/coordinator before the contribution period opens or a person with an approved initial application after the contribution period opens) #}
 
 		{% if not current_round.has_contribution_period_started %}
 			<div class="card border-info mb-3">
