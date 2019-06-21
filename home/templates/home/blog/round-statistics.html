@@ -6,8 +6,8 @@ Statistics for Outreachy {{ current_round.internstarts|date:"F Y" }} to {{ curre
 {% block content %}
 {% load humanize %}
 <h1>Statistics for Outreachy {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} application period</h1>
-{% if todays_date < current_round.appslate %}
-	<p>Statistics for this Outreachy application period will be available the day after the application period closes on {{ current_round.appslate }}.</p>
+{% if todays_date < current_round.contributions_close %}
+	<p>Statistics for this Outreachy application period will be available the day after the application period closes on {{ current_round.contributions_close }}.</p>
 {% else %}
 	<h2>Who was interested in Outreachy?</h2>
 
