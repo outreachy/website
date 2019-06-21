@@ -4797,12 +4797,20 @@ class Role(object):
         Volunteers don't need to see prompts for eligibility checks and such;
         and if someone has already done the eligibility check we shouldn't
         prompt them to do it again.
+
+        This function checks whether a person needs to create an initial application.
+        It only prompts the user if the initial application period is open.
         """
         if self.current_round is None:
             return False
+
         # FIXME - audit all usages of this function to be sure
-        # We don't want to show the eligibility checks during the contribution period.
-        if not (self.current_round.appsopen <= self.today < self.current_round.appslate):
+        #
+        # We want to show the eligibility prompts (which include prompts to
+        # fill out an initial application, record a contribution, and create a
+        # final application) during the initial application and contribution
+        # period.
+        if not (self.current_round.initial_applications_open <= self.today < self.current_round.initial_applications_close):
             return False
         return not self.is_volunteer and not self.is_applicant
 

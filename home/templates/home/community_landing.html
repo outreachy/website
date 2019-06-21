@@ -22,8 +22,8 @@ Outreachy internships working with {{ community.name }}
 			You may need to <a href="{% url 'login' %}?next={{ request.path|urlencode }}">log in</a> to see this information.</p>
 		{% elif role.needs_application %}
 			<p>This information is only available to applicants who have their initial application approved.
-			Please <a href="{% url 'eligibility' %}">fill out an initial application</a>.</p>
-		{% elif role.application.is_rejected %}
+			The deadline for initial applications passed on {{ current_round.initial_applications_close }} at 4pm UTC</p>
+		{% elif role.application.is_rejected or role.application.is_pending %}
 			<p>This information is only available to applicants who have their initial application approved.
 			Unfortunately, your initial application is not approved.
 			</p>
