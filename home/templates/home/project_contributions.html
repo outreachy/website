@@ -14,11 +14,7 @@
 
 {% block content %}
 
-{% with project_contributions=role.application.get_projects_contributed_to %}
-{% if project_contributions %}
-{% include "home/snippet/apply_prompt.html" %}
-{% endif %}
-{% endwith %}
+{% include "home/snippet/eligibility_prompts.html" %}
 
 <p><a href="/apply/">Why apply to Outreachy?</a>
 &gt; <a href="/apply/eligibility/">Outreachy Eligibility Rules</a>
