@@ -1,24 +1,252 @@
 {% if request.user.comrade and not request.user.comrade.agreed_to_code_of_conduct %}
-{% include "home/snippet/coc_prompt.html" %}
+<div class="card border-warning mb-3">
+    <div class="card-header text-white bg-warning">Agree to the Code of Conduct</div>
+    <div class="card-body">
+	<p class="card-text">
+	By participating in the Outreachy program, you agree to abide by our Code of Conduct.
+	</p>
+	<p class="card-text">
+	<a href="/account/">Please go to your account page</a> to agree to the Code of Conduct.
+	</p>
+    </div>
+</div>
 {% endif %}
 
 {% if role.needs_application %}
-{% include "home/snippet/eligibility_prompt.html" %}
+	{% if not current_round.has_application_period_started %}
+		<div class="card border-info mb-3">
+			<div class="card-header text-white bg-info">Applications are not open</div>
+			<div class="card-body">
+				<p class="card-text">
+				The Outreachy applications are not open until {{ current_round.appsopen }} at 4pm UTC.
+				Information about projects are unavailable until applications open.
+				</p>
+				<p class="card-text">
+				Please <a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">sign up for the Outreachy announcements mailing list</a>
+				for an email when the round begins.
+				</p>
+			</div>
+		</div>
+	{% elif not current_round.has_application_deadline_passed %}
+		<div class="card border-info mb-3">
+			<div class="card-header text-white bg-warning">Complete your initial application!</div>
+			<div class="card-body">
+				<p class="card-text">
+				In order to see all project information,
+				you must fill out a short initial application.
+				</p>
+				<p class="card-text"><a href="{% url 'eligibility' %}" class="btn btn-success">Start Initial Application</a></p>
+				<p class="card-text">
+				Until your initial application is approved, some information about the internships will be hidden,
+				including full project details, mentor contact information, and how to make contributions
+				to internship projects.
+				</p>
+			</div>
+		</div>
+	{% else %}
+		<div class="card border-info mb-3">
+			<div class="card-header text-white bg-info">Internship applications are now closed</div>
+			<div class="card-body">
+				<div class="card-text">
+					{% include 'home/snippet/deadline_passed.html' %}
+				</div>
+			</div>
+		</div>
+	{% endif %}
 {% elif role.application.is_rejected %}
-{% include "home/snippet/ineligible_prompt.html" %}
+	<div class="card border-info mb-3">
+	    <div class="card-header text-white bg-warning">Initial Application Not Approved</div>
+	    <div class="card-body">
+		<p class="card-text">
+		We're sorry, but after reviewing <a href="{% url 'eligibility-results' %}">your application</a>,
+		we have determined that you are not a strong applicant for the Outreachy internship program.
+		</p>
+		<p class="card-text">
+		If you want to spread the word about Outreachy,
+		there are <a href="/promote">posters and other resources</a> to help you do that.
+		</p>
+		<p class="card-text">
+		If you want to be notified when the next Outreachy application round opens,
+		you can sign up for our
+		<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">announcements mailing list</a>.
+		</p>
+	    </div>
+	</div>
 {% elif role.application.is_pending %}
-{% include "home/snippet/pending_prompt.html" %}
+	<div class="card border-info mb-3">
+		{% if not current_round.has_application_deadline_passed %}
+			<div class="card-header text-white bg-warning">Outreachy Initial Application Under Review</div>
+			<div class="card-body">
+				<p class="card-text">
+				{% if role.application.barrierstoparticipation.applicant_should_update %}
+				You need to <a href="{% url 'essay-revision' applicant_username=request.user.comrade.account.username %}">update your essay questions</a>.
+				The Outreachy organizer found them unclear or not having enough information.
+				{% else %}
+				The Outreachy organizers are reviewing <a href="{% url 'eligibility-results' %}">your initial application</a>.
+				{% endif %}
+				</p>
+				<p class="card-text">
+				Until your initial application is approved, some information about the internships will be hidden,
+				including full project details, mentor contact information, and how to make contributions
+				to internship projects.
+				</p>
+			</div>
+		{% else %}
+			<div class="card-header text-white bg-info">Internship applications are now closed</div>
+			<div class="card-body">
+				<div class="card-text">
+					{% include 'home/snippet/deadline_passed.html' %}
+				</div>
+			</div>
+		{% endif %}
+	</div>
 {% elif role.application.is_approved %}
 	{% with project_contributions=role.application.get_projects_contributed_to %}
 	{% if not project_contributions %}
-	{% include "home/snippet/contribute_prompt.html" %}
+		<div class="card border-warning mb-3">
+			{% if not current_round.has_application_deadline_passed %}
+				<div class="card-header text-white bg-warning">A Contribution is Required</div>
+				<div class="card-body">
+					<p class="card-text">
+					Only applicants who have made a contribution will be eligible to be accepted as an Outreachy intern.
+					Please look over the <a href="/apply/project-selection">projects list</a> and
+					work with a mentor to start a contribution to a project.
+					If you're having trouble figuring out how to contribute,
+					<a href="https://www.outreachy.org/apply/make-contributions/">check out our contribution tips</a>.
+					</p>
+					<p class="card-text">
+					In order to be eligible to be selected as an intern, you'll need to
+					record your contributions to each project. You can record your
+					contributions by going to the <a href="/apply/project-selection">projects list</a>,
+					finding your project,
+					and clicking the link to 'record your contributions and create a final application'.
+					</p>
+				</div>
+			{% else %}
+				<div class="card-header text-white bg-info">Application deadlines are passed</div>
+				<div class="card-body">
+					<div class="card-text">
+						{% include 'home/snippet/deadline_passed.html' %}
+					</div>
+				</div>
+			{% endif %}
+		</div>
 	{% else %}
-	{% include "home/snippet/apply_prompt.html" %}
+		{% with project_applications=role.application.get_projects_applied_to %}
+
+		{% if project_applications %}
+			<div class="card border-info mb-3">
+			    <div class="card-header bg-warning"><a data-toggle="collapse" data-parent="applicant-action-accordion" {% if show_reminders == 1 %}aria-expanded="true"{% else %}aria-expanded="false"{% endif %} aria-controls="#applicant-action-accordion" href="#applicant-action-accordion">+ My Contributions and Applications</a></div>
+			    <div class="collapse{% if show_reminders == 1 %} show{% endif %}" id="applicant-action-accordion">
+			    <div class="card-body">
+				<p class="card-text">
+				Thank you for recording your contributions and creating {{ project_applications|pluralize:"a project final application, project final applications" }}. You will need to create a final application for each project, in order to be eligible to be selected as an intern for that project.
+				</p>
+				<p class="card-text">
+				{% if not current_round.has_application_deadline_passed %}
+					The final application deadline is {{ current_round.appslate|date:"F d, Y" }} at 4pm UTC.
+				{% else %}
+					The deadline to submit a final application was {{ current_round.appslate|date:"F d, Y" }} at 4pm UTC. Your final application{{ project_applications|pluralize }} will be reviewed.
+				{% endif %}
+				</p>
+		{% elif current_round.has_application_deadline_passed %}
+			<div class="card border-info mb-3">
+			    <div class="card-header text-white bg-info">Internship Applications are Closed</div>
+			    <div class="card-body">
+				<div class="card-text">
+					{% include 'home/snippet/deadline_passed.html' %}
+				</div>
+		{% else %}
+			<div class="card border-warning mb-3">
+			    <div class="card-header text-white bg-warning">Submit a Project Application</div>
+			    <div class="card-body">
+				<p class="card-text">
+				<strong>Your next step is to create a final application.</strong> You will need to create a final application for each project, in order to be eligible to be selected as an intern for that project.
+				</p>
+				<p class="card-text">
+				The final application deadline is {{ current_round.appslate|date:"F d, Y" }} at 4pm UTC.
+				</p>
+		{% endif %}
+			<h5 class="card-text">My Contributions</h5>
+			<p class="card-text">
+			You've recorded that you made a contribution to the following projects:
+			</p>
+			<ul class="card-text">
+				{% for p in project_contributions %}
+					<li>{{ p.project_round.community.name }} - {{ p.short_title }}
+						<ul>
+							<li>Application deadline: {{ p.application_deadline }} 4pm UTC</li>
+							{% if not p.has_application_deadline_passed %}
+								<li><a href="{{ p.get_contributions_url }}">Record your contributions</a></li>
+								<li><a href="{{ p.get_contributions_url }}">Edit or create a final application</a></li>
+								<li><a href="{% url 'community-landing' round_slug=current_round.slug community_slug=p.project_round.community.slug %}">View project information</a></li>
+							{% else %}
+								{% if p in project_applications %}
+									<li><a href="{{ p.get_contributions_url }}">Record your contributions</a></li>
+									<li><a href="{{ p.get_contributions_url }}">View your final application</a></li>
+								{% else %}
+									<li>The project deadline has passed, and since you have not submitted a final application,
+										you are not eligible to be selected as an intern for this project.</li>
+									<li><a href="{{ p.get_contributions_url }}">View your contributions</a></li>
+								{% endif %}
+								<li><a href="{% url 'community-landing' round_slug=current_round.slug community_slug=p.project_round.community.slug %}">View project information</a></li>
+							{% endif %}
+						</ul>
+					</li>
+				{% endfor %}
+			</ul>
+			{% if not current_round.has_application_deadline_passed %}
+				<p class="card-text">
+				Interested in applying to another project?
+				You'll need to record a contribution for a project in order to be eligible to create a final application.
+				You can see the full list of projects and their deadlines on the
+				<a href="{% url 'project-selection' %}">project selection page</a>.
+				</p>
+			{% endif %}
+
+			{% if project_applications %}
+			<h5 class="card-text">Applications</h5>
+				<p class="card-text">
+				Only applicants who submit a final application for a project will be eligible to be selected as an intern for that project. You've created final applications for the following projects:
+				</p>
+
+				<ul class="card-text">
+					{% for p in project_applications %}
+						<li>{% if p.is_withdrawn %}(Withdrawn application) {% endif %}<a href="{{ p.get_contributions_url }}">{{ p.short_title }}</a></li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+			{% if project_applications %}</div>{% endif %}
+		    </div>
+		</div>
+		{% endwith %}
 	{% endif %}
 	{% endwith %}
 {% endif %}
+
 {% with communities=role.approved_coordinator_communities %}
 {% if communities %}
-{% include "home/snippet/coordinator_reminder_prompt.html" %}
+	<div class="card border-info mb-3">
+		<div class="card-header bg-warning"><a data-toggle="collapse" data-parent="coordinator-action-accordion" {% if show_reminders == 1 %}aria-expanded="true"{% else %}aria-expanded="false"{% endif %} aria-controls="#coordinator-action-accordion" href="#coordinator-action-accordion">+ Coordinator Actions</a></div>
+		<div class="collapse{% if show_reminders == 1 %} show{% endif %}" id="coordinator-action-accordion">
+	    <div class="card-body">
+		<p class="card-text">
+		Below is a list of all communities you are approved to be a coordinator for,
+		where the community is also approved to participate in this round.
+		You can find unapproved communities linked from the <a href="{% url 'community-cfp' %}">community CFP page</a>.
+		</p>
+		<p><a href="{% url 'account' %}">Edit your personal or coordinator information</a></p>
+
+		{% for c in communities %}
+		<h4>Coordinator actions for {{ c.name }}</h4>
+		<ul>
+			<li><a href="{% url 'community-landing' round_slug=current_round.slug community_slug=c.slug %}">View the community projects page applicants see</a></li>
+			<li><a href="{% url 'community-read-only' community_slug=c.slug %}">Edit the community info</a></li>
+			<li><a href="{% url 'community-applicants' round_slug=current_round.slug community_slug=c.slug %}">Review community applicants</a></li>
+		</ul>
+		{% endfor %}
+	    </div>
+	    </div>
+	</div>
 {% endif %}
 {% endwith %}
