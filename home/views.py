@@ -839,7 +839,7 @@ def current_round_page(request):
         approved_participations = current_round.participation_set.approved().order_by('community__name')
 
         for p in approved_participations:
-            if not p.approved_to_see_all_project_details(request.user):
+            if not p.approved_to_see_project_overview(request.user):
                 continue
             projects = p.project_set.approved().filter(new_contributors_welcome=False)
             if projects:
