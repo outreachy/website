@@ -704,12 +704,7 @@ def eligibility_prompts(request):
     except RoundPage.DoesNotExist:
         return None
 
-    role = Role(request.user, current_round)
-
-    return {
-        'current_round': current_round,
-        'role': role,
-    }
+    return Role(request.user, current_round)
 
 
 def unselected_intern(request):
