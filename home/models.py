@@ -297,8 +297,14 @@ class RoundPage(Page):
     def has_initial_application_period_started(self):
         return has_deadline_passed(self.initial_applications_open)
 
+    def has_initial_application_deadline_passed(self):
+        return has_deadline_passed(self.initial_applications_close)
+
     def has_contribution_period_started(self):
         return has_deadline_passed(self.contributions_open)
+
+    def has_contribution_deadline_passed(self):
+        return has_deadline_passed(self.contributions_close)
 
     def has_application_period_started(self):
         return has_deadline_passed(self.appsopen)
@@ -1721,12 +1727,6 @@ class Project(ApprovalStatus):
 
     def submission_and_approval_deadline(self):
         return self.project_round.participating_round.lateprojects
-
-    def has_initial_application_deadline_passed(self):
-        return self.project_round.participating_round.initial_application_deadline()
-
-    def has_contribution_deadline_passed(self):
-        return self.project_round.participating_round.contribution_deadline()
 
     def has_application_deadline_passed(self):
         return has_deadline_passed(self.application_deadline())
