@@ -793,6 +793,7 @@ class ViewInitialApplication(LoginRequiredMixin, ComradeRequiredMixin, DetailVie
     def get_object(self):
         current_round = get_current_round_for_initial_application_review()
 
+        # FIXME: ought to use the value of `today` that was computed in get_current_round
         self.role = Role(self.request.user, current_round)
 
         if not self.role.is_organizer and not self.role.is_reviewer:
@@ -1772,6 +1773,7 @@ def contribution_tips(request):
     except PermissionDenied:
         current_round = None # don't display any eligibility prompts
 
+    # FIXME: ought to use the value of `today` that was computed in get_current_round
     role = Role(request.user, current_round)
 
     return render(request, 'home/contribution_tips.html', {

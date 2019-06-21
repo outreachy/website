@@ -117,7 +117,7 @@ def coordinator_reminder(request):
     except RoundPage.DoesNotExist:
         return None
 
-    role = Role(request.user, current_round)
+    role = Role(request.user, current_round, today=today)
     if not role.approved_coordinator_communities:
         return None
 
@@ -704,7 +704,7 @@ def eligibility_prompts(request):
     except RoundPage.DoesNotExist:
         return None
 
-    return Role(request.user, current_round)
+    return Role(request.user, current_round, today=today)
 
 
 def unselected_intern(request):

@@ -734,6 +734,7 @@ class RoundPage(Page):
 
     def get_context(self, request, *args, **kwargs):
         context = super(RoundPage, self).get_context(request, *args, **kwargs)
+        # FIXME: ought to use the value of `today` that was computed in `serve`, above
         context['role'] = Role(request.user, self)
         return context
 
