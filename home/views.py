@@ -1777,7 +1777,6 @@ def contribution_tips(request):
     role = Role(request.user, current_round)
 
     return render(request, 'home/contribution_tips.html', {
-        'current_round': current_round,
         'role': role,
         })
 
