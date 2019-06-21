@@ -32,7 +32,7 @@ that timeline, taking into account any time commitments the applicant has.
 	{% if finalapps %}
 		<h2 id="rating">Applicant Ratings</h2>
 		<p>Please note that only mentors for this project can change applicant ratings or select interns.</p>
-		<p>The deadline for selecting an intern is {{ current_round.InternSelectionDeadline }} at 4pm UTC. Once mentors select their interns, the community coordinator will need to assign funding sources. The Outreachy organizers will then approve the intern selection and funding source.</p>
+		<p>The deadline for selecting an intern is {{ current_round.mentor_intern_selection_deadline }} at 4pm UTC. Once mentors select their interns, the community coordinator will need to assign funding sources. The Outreachy organizers will then approve the intern selection and funding source.</p>
 		<p>Do not communicate your intern selection choices to applicants until after the interns are announced on {{ current_round.internannounce }} at 4pm UTC on the <a href="/alums/">alums page</a></p>
 		<form method="post">
 		{% csrf_token %}

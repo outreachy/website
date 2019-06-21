@@ -242,11 +242,8 @@ class RoundPage(Page):
             return True
         return False
 
-    def ProjectsDeadline(self):
-        return(self.lateprojects)
-
     def has_project_submission_and_approval_deadline_passed(self):
-        return has_deadline_passed(self.ProjectsDeadline())
+        return has_deadline_passed(self.lateprojects)
 
     def initial_application_deadline(self):
         return datetime.datetime.combine(self.initial_applications_close, DEADLINE_TIME)
@@ -259,9 +256,6 @@ class RoundPage(Page):
 
     def LateApplicationsDeadline(self):
         return(self.appslate + datetime.timedelta(days=7))
-
-    def InternSelectionDeadline(self):
-        return(self.mentor_intern_selection_deadline)
 
     def has_intern_announcement_deadline_passed(self):
         return has_deadline_passed(self.internannounce)
@@ -1726,7 +1720,7 @@ class Project(ApprovalStatus):
         })
 
     def submission_and_approval_deadline(self):
-        return self.project_round.participating_round.ProjectsDeadline()
+        return self.project_round.participating_round.lateprojects
 
     def has_initial_application_deadline_passed(self):
         return self.project_round.participating_round.initial_application_deadline()

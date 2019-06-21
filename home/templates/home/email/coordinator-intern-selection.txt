@@ -1,8 +1,8 @@
-{{ current_round.InternSelectionDeadline|date:"F d" }}: Deadline to select Outreachy interns for {{ community.name }}
+{{ current_round.mentor_intern_selection_deadline|date:"F d" }}: Deadline to select Outreachy interns for {{ community.name }}
 
 Hi Outreachy coordinators and mentors,
 
-The deadline for {{ community.name }} mentors to select their intern is {{ current_round.InternSelectionDeadline|date:"F d" }}. This deadline is to ensure Outreachy organizers can sort out any duplicate intern selections and find additional funding. It is very important that you ensure all mentors have selected an intern by that date. Details on intern selection are below.
+The deadline for {{ community.name }} mentors to select their intern is {{ current_round.mentor_intern_selection_deadline|date:"F d" }}. This deadline is to ensure Outreachy organizers can sort out any duplicate intern selections and find additional funding. It is very important that you ensure all mentors have selected an intern by that date. Details on intern selection are below.
 
 Once mentors have selected their interns, {{ community.name }} coordinators need to review all interns and assign funding sources for those interns by {{ current_round.coordinator_funding_deadline|date:"F d" }}. More details on funding is below.
 
@@ -26,7 +26,7 @@ The deadline to submit a final application was {{ current_round.appslate|date:"F
 Selecting an Intern
 -------------------
 
-Please select your intern by {{ current_round.InternSelectionDeadline|date:"F d" }}.
+Please select your intern by {{ current_round.mentor_intern_selection_deadline|date:"F d" }}.
 
 Mentors are encouraged to be selective about the applicants they accept.
 
