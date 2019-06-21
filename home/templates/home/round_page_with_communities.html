@@ -24,8 +24,6 @@ Outreachy Internships | Apply | Pick a Project
 				</p>
 			</div>
 		</div>
-	{% elif not current_round.has_initial_application_period_started %}
-		{% include "home/snippet/round_not_open.html" %}
 	{% elif not role.is_volunteer and not mentors_pending_projects %}
 		{% include "home/snippet/eligibility_prompts.html" %}
 	{% endif %}

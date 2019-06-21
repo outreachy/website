@@ -34,8 +34,19 @@ Outreachy internships working with {{ community.name }}
 		{% endif %}
 	{% else %}{# allowed to see project details #}
 
-		{% if not current_round.has_application_period_started %}
-			{% include "home/snippet/round_not_open.html" %}
+		{% if not current_round.has_contribution_period_started %}
+			<div class="card border-info mb-3">
+				<div class="card-header text-white bg-warning">Contribution period is not open</div>
+				<div class="card-body">
+					<p class="card-text">
+					Information about projects are hidden from applicants until the contribution period opens.
+					Only mentors and coordinators can see this information.
+					</p>
+					<p class="card-text">
+					Please don't share this link until the contribution period opens on {{ current_round.contributions_open }} at 4pm UTC.
+					</p>
+				</div>
+			</div>
 		{% else %}
 			{% include "home/snippet/eligibility_prompts.html" %}
 		{% endif %}
