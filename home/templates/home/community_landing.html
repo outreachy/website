@@ -75,8 +75,8 @@ Outreachy internships working with {{ community.name }}
 		{% else %}
 			<a href="/apply/eligibility/">Outreachy Eligibility Rules</a>
 		{% endif %}
-		{% if current_round.has_application_deadline_passed %}
-			&gt; <a href="/{{ current_round.slug }}/"> {{ current_round.official_name }}</a>
+		{% if current_round.has_contribution_deadline_passed %}
+			&gt; <a href="/{{ current_round.slug }}/">{{ current_round.official_name }}</a>
 		{% else %}
 			&gt; <a href="/apply/project-selection/">Find a Mentor and Internship Project</a>
 		{% endif %}
