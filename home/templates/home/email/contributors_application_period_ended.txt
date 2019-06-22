@@ -1,6 +1,6 @@
 {% load tz %}
 {% timezone comrade.timezone %}
-{% with applied_projects=role.application.get_projects_applied_to contribution_deadline=current_round.appslate.deadline %}
+{% with applied_projects=role.application.get_projects_applied_to contribution_deadline=current_round.contributions_close.deadline %}
 {% if applied_projects %}Your Outreachy application will be reviewed{% else %}Outreachy application period closed{% endif %}
 
 Thank you for making a contribution to a project during the Outreachy internship application period! Project applications are now closed, and the intern selection will begin. Interns will be announced on {{ current_round.internannounce }} at 4pm UTC:
@@ -22,7 +22,7 @@ In order to be eligible to be selected as an Outreachy intern, you must have:
 
 1. Recorded at least one in-progress contribution you've made to an Outreachy internship project.
 
-2. Created a final application for that project by {{ current_round.appslate }} at 4pm UTC{% if comrade.timezone %} / {{ contribution_deadline }} {{ comrade.timezone }}{% endif %}
+2. Created a final application for that project by {{ current_round.contributions_close }} at 4pm UTC{% if comrade.timezone %} / {{ contribution_deadline }} {{ comrade.timezone }}{% endif %}
 
 {% if applied_projects %}Final Applications
 ----------------
