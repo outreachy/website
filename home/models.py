@@ -157,6 +157,16 @@ class Deadline(datetime.date):
         new = super(Deadline, self).__add__(other)
         return Deadline(new, self.today)
 
+    def __sub__(self, other):
+        new = super(Deadline, self).__sub__(other)
+
+        if type(new) is datetime.date:
+            return Deadline(new, self.today)
+
+        # If it isn't a date, it's probably a timedelta, which we don't need to
+        # do anything with.
+        return new
+
     def deadline(self):
         """
         Returns this deadline with time and timezone set from
