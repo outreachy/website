@@ -181,7 +181,54 @@ class Deadline(datetime.date):
         return self <= self.today
 
 
-class RoundPage(Page):
+class AugmentDeadlines(object):
+    """
+    Mixin to transparently make date fields return Deadline objects instead.
+    """
+
+    def __init__(self, *args, **kwargs):
+        now = datetime.datetime.now(DEADLINE_TIME.tzinfo)
+        self.today = get_deadline_date_for(now)
+        super(AugmentDeadlines, self).__init__(*args, **kwargs)
+
+    def __getattribute__(self, name):
+        """
+        Extend all fields that are plain dates to return an instance of
+        Deadline instead, where the Deadline's idea of ``today`` is set from
+        ``self.today``. For example:
+
+        >>> rp = RoundPage(internstarts=datetime.date(2019, 1, 1))
+        >>> rp.internstarts.deadline()
+        datetime.datetime(2019, 1, 1, 16, 0, tzinfo=datetime.timezone.utc)
+        >>> rp.today = datetime.date(2018, 12, 1)
+        >>> rp.internstarts.has_passed()
+        False
+        >>> rp.today = datetime.date(2019, 1, 1)
+        >>> rp.internstarts.has_passed()
+        True
+
+        Any Python class can override what ``obj.field`` means by implementing
+        this method, which then gets called like
+        ``obj.__getattribute__("field")``. See:
+
+        https://docs.python.org/3/reference/datamodel.html#object.__getattribute__
+        """
+        # Call the default implementation first...
+        value = super(AugmentDeadlines, self).__getattribute__(name)
+
+        if name != "today" and type(value) is datetime.date:
+            # This is a plain date; augment it with the Deadline extras. Note
+            # that accessing ``self.today`` triggers a recursive call to this
+            # function with name="today", so we have to be very careful: that
+            # call must not reach this same statement or it will recurse
+            # forever.
+            return Deadline(value, self.today)
+
+        # This was not a date, so return it as-is.
+        return value
+
+
+class RoundPage(AugmentDeadlines, Page):
     roundnumber = models.IntegerField()
     pingnew = models.DateField("Date to start pinging new orgs")
     pingold = models.DateField("Date to start pinging past orgs")
@@ -264,47 +311,6 @@ class RoundPage(Page):
 
     def official_name(self):
         return(self.internstarts.strftime("%B %Y") + " to " + self.internends.strftime("%B %Y") + " Outreachy internships")
-
-    def __init__(self, *args, **kwargs):
-        now = datetime.datetime.now(DEADLINE_TIME.tzinfo)
-        self.today = get_deadline_date_for(now)
-        super(RoundPage, self).__init__(*args, **kwargs)
-
-    def __getattribute__(self, name):
-        """
-        Extend all fields that are plain dates to return an instance of
-        Deadline instead, where the Deadline's idea of ``today`` is set from
-        ``self.today``. For example:
-
-        >>> rp = RoundPage(internstarts=datetime.date(2019, 1, 1))
-        >>> rp.internstarts.deadline()
-        datetime.datetime(2019, 1, 1, 16, 0, tzinfo=datetime.timezone.utc)
-        >>> rp.today = datetime.date(2018, 12, 1)
-        >>> rp.internstarts.has_passed()
-        False
-        >>> rp.today = datetime.date(2019, 1, 1)
-        >>> rp.internstarts.has_passed()
-        True
-
-        Any Python class can override what ``obj.field`` means by implementing
-        this method, which then gets called like
-        ``obj.__getattribute__("field")``. See:
-
-        https://docs.python.org/3/reference/datamodel.html#object.__getattribute__
-        """
-        # Call the default implementation first...
-        value = super(RoundPage, self).__getattribute__(name)
-
-        if name != "today" and type(value) is datetime.date:
-            # This is a plain date; augment it with the Deadline extras. Note
-            # that accessing ``self.today`` triggers a recursive call to this
-            # function with name="today", so we have to be very careful: that
-            # call must not reach this same statement or it will recurse
-            # forever.
-            return Deadline(value, self.today)
-
-        # This was not a date, so return it as-is.
-        return value
 
     def project_soft_deadline(self):
         return self.lateprojects - datetime.timedelta(days=7)
@@ -3468,7 +3474,7 @@ class SignedContract(models.Model):
     ip_address = models.GenericIPAddressField(protocol="both")
     date_signed = models.DateField(verbose_name="Date contract was signed")
 
-class InternSelection(models.Model):
+class InternSelection(AugmentDeadlines, models.Model):
     applicant = models.ForeignKey(ApplicantApproval)
     project = models.ForeignKey(Project)
     intern_contract = models.OneToOneField(SignedContract, null=True, blank=True, on_delete=models.SET_NULL)
@@ -3536,7 +3542,7 @@ class InternSelection(models.Model):
         return False
 
     def is_initial_feedback_on_intern_open(self):
-        if not has_deadline_passed(self.initial_feedback_opens):
+        if not self.initial_feedback_opens.has_passed():
             return False
         try:
             return self.initialmentorfeedback.can_edit()
@@ -3544,12 +3550,12 @@ class InternSelection(models.Model):
             return True
 
     def is_initial_feedback_on_intern_past_due(self):
-        if has_deadline_passed(self.initial_feedback_due):
+        if self.initial_feedback_due.has_passed():
             return True
         return False
 
     def is_initial_feedback_on_mentor_open(self):
-        if not has_deadline_passed(self.initial_feedback_opens):
+        if not self.initial_feedback_opens.has_passed():
             return False
         try:
             return self.initialinternfeedback.can_edit()
@@ -3557,7 +3563,7 @@ class InternSelection(models.Model):
             return True
 
     def is_midpoint_feedback_on_intern_open(self):
-        if not has_deadline_passed(self.midpoint_feedback_opens):
+        if not self.midpoint_feedback_opens.has_passed():
             return False
         try:
             return self.midpointmentorfeedback.can_edit()
@@ -3565,12 +3571,12 @@ class InternSelection(models.Model):
             return True
 
     def is_midpoint_feedback_on_intern_past_due(self):
-        if has_deadline_passed(self.midpoint_feedback_due):
+        if self.midpoint_feedback_due.has_passed():
             return True
         return False
 
     def is_midpoint_feedback_on_mentor_open(self):
-        if not has_deadline_passed(self.midpoint_feedback_opens):
+        if not self.midpoint_feedback_opens.has_passed():
             return False
         try:
             return self.midpointinternfeedback.can_edit()
@@ -3578,7 +3584,7 @@ class InternSelection(models.Model):
             return True
 
     def is_final_feedback_on_intern_open(self):
-        if not has_deadline_passed(self.final_feedback_opens):
+        if not self.final_feedback_opens.has_passed():
             return False
         try:
             return self.finalmentorfeedback.can_edit()
@@ -3586,12 +3592,12 @@ class InternSelection(models.Model):
             return True
 
     def is_final_feedback_on_intern_past_due(self):
-        if has_deadline_passed(self.final_feedback_due):
+        if self.final_feedback_due.has_passed():
             return True
         return False
 
     def is_final_feedback_on_mentor_open(self):
-        if not has_deadline_passed(self.final_feedback_opens):
+        if not self.final_feedback_opens.has_passed():
             return False
         try:
             return self.finalinternfeedback.can_edit()
@@ -3889,7 +3895,7 @@ class InitialMentorFeedback(BaseMentorFeedback):
             return False
 
         # XXX: I guess we open the feedback form at 4pm UTC?
-        if has_deadline_passed(self.intern_selection.initial_feedback_opens):
+        if self.intern_selection.initial_feedback_opens.has_passed():
             return True
         return False
 
@@ -3995,7 +4001,7 @@ class InitialInternFeedback(BaseInternFeedback):
         if not self.allow_edits:
             return False
 
-        if has_deadline_passed(self.intern_selection.initial_feedback_opens):
+        if self.intern_selection.initial_feedback_opens.has_passed():
             return True
         return False
 
@@ -4064,7 +4070,7 @@ class MidpointMentorFeedback(BaseMentorFeedback):
         if not self.allow_edits:
             return False
 
-        if has_deadline_passed(self.intern_selection.midpoint_feedback_opens):
+        if self.intern_selection.midpoint_feedback_opens.has_passed():
             return True
         return False
 
@@ -4140,7 +4146,7 @@ class MidpointInternFeedback(BaseInternFeedback):
         if not self.allow_edits:
             return False
 
-        if has_deadline_passed(self.intern_selection.midpoint_feedback_opens):
+        if self.intern_selection.midpoint_feedback_opens.has_passed():
             return True
         return False
 
@@ -4250,7 +4256,7 @@ class FinalMentorFeedback(BaseMentorFeedback):
         if not self.allow_edits:
             return False
 
-        if has_deadline_passed(self.intern_selection.final_feedback_opens):
+        if self.intern_selection.final_feedback_opens.has_passed():
             return True
         return False
 
@@ -4379,7 +4385,7 @@ class FinalInternFeedback(BaseInternFeedback):
         if not self.allow_edits:
             return False
 
-        if has_deadline_passed(self.intern_selection.final_feedback_opens):
+        if self.intern_selection.final_feedback_opens.has_passed():
             return True
         return False
 
