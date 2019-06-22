@@ -93,7 +93,7 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 			    {% else %}
 				    <tr><td><span class="badge badge-pill badge-success">{{ approved_projects|length }} Projects Approved</span></td><td>The coordinator has approved {{ approved_projects|length }} project{{ approved_projects|length|pluralize }}. There are {{ participation_info.project_set.pending|length }} project{{ participation_info.project_set.pending|length|pluralize }} pending approval.</td></tr>
 			    {% endif %}
-			    {% if not current_round.has_project_submission_and_approval_deadline_passed %}
+			    {% if not current_round.project_soft_deadline.has_passed %}
 				    {% if participation_info %}
 				    <tr><td><span class="badge badge-pill badge-info">Open to New Projects</span></td><td>Mentors can submit projects for Outreachy applicants until {{ current_round.project_soft_deadline }} at 4pm UTC.</td></tr>
 				    {% endif %}
@@ -204,7 +204,7 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 		</p>
 	{% endif %}
 
-	{% if coordinator and coordinator.approval_status == coordinator.APPROVED and not current_round.has_project_submission_and_approval_deadline_passed %}
+	{% if coordinator and coordinator.approval_status == coordinator.APPROVED and not current_round.project_soft_deadline.has_passed %}
 	<h2>Need more projects?</h2>
 	<p>Send this page URL out to your community communication channels
 	and ask contributors to submit proposals. Mentors must submit their own
@@ -260,7 +260,7 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 		<p>An Outreachy organizer has rejected this community to participate in this round of Outreachy.</p>
 		{% endif %}
 
-		{% if current_round.has_project_submission_and_approval_deadline_passed %}
+		{% if current_round.lateprojects.has_passed %}
 			<p>The deadline to approve new communities and mentored projects has passed. Outreachy organizers cannot approve new communities through the web interface. If absolutely necessary, Sage can approve the communities from the Django admin interface.</p>
 		{% else %}
 			<p>Outreachy organizers should read over the information coordinators provided about participating in this round (including intern funding information) and information about new communities. Then decide whether the community should participate in this round and either accept or reject the community.</p>
@@ -346,7 +346,7 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 			{% endif %}
 			<li><a href="{% url 'community-landing' round_slug=current_round.slug community_slug=community.slug %}">Community landing page</a></li>
 		</ul>
-		{% if participation_info.approval_status != participation_info.APPROVED and not current_round.has_project_submission_and_approval_deadline_passed %}
+		{% if participation_info.approval_status != participation_info.APPROVED and not current_round.lateprojects.has_passed %}
 			<a href="{{ participation_info.get_approve_url }}" class="btn btn-success">Approve Community</a>
 		{% endif %}
 		{% if participation_info.approval_status != participation_info.REJECTED %}

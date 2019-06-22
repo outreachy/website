@@ -18,7 +18,7 @@
 	<p>This project has been approved by the {{ community.name }} coordinator(s) to participate in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
 
 {% elif project.approval_status == project.PENDING %}
-	{% if not current_round.has_project_submission_and_approval_deadline_passed %}
+	{% if not current_round.project_soft_deadline.has_passed %}
 		<p>This project is waiting to be approved by the {{ community.name }} coordinator(s) for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round. Mentors will receive an email when the project is approved. In the meantime, please see the instructions below for getting ready for the application period.</p>
 	{% else %}
 		<p>Unfortunately, the deadline to approve new Outreachy intern proposals has passed, and the coordinator did not approve this project before the deadline.</p>
@@ -73,7 +73,7 @@
 {% if coordinator %}
 	<h2>Next Steps for Coordinators</h2>
 	<h3>Project Approval</h3>
-	{% if current_round.has_project_submission_and_approval_deadline_passed %}
+	{% if current_round.lateprojects.has_passed %}
 		<p>The deadline to approve new projects has passed. You can reject the project to let the mentor know their project wasn't accepted, or (if absolutely necessary) contact the Outreachy organizers to have them manually approve the project.</p>
 	{% else %}
 		{% if not project.approved_license or not project.no_proprietary_software or project.longevity == project.THREE_MONTHS or project.longevity == project.SIX_MONTHS or project.community_size == project.SMOL %}
@@ -132,7 +132,7 @@
 
 	{% if project.approval_status != project.WITHDRAWN %}
 		<p>
-		{% if project.approval_status != project.APPROVED and not current_round.has_project_submission_and_approval_deadline_passed %}
+		{% if project.approval_status != project.APPROVED and not current_round.lateprojects.has_passed %}
 			<a href="{{ project.get_approve_url }}" class="btn btn-success">Approve Project</a>
 		{% endif %}
 		{% if project.approval_status != project.REJECTED %}
@@ -168,7 +168,7 @@
 
 {% endif %}
 
-{% if current_round.has_project_submission_and_approval_deadline_passed and project.approval_status != project.APPROVED %}
+{% if current_round.lateprojects.has_passed and project.approval_status != project.APPROVED %}
 	<h3>Unapproved Project Proposal</h3>
 	<p>The deadline to approve Outreachy project proposals has passed. You cannot edit an unapproved project after the project proposal deadline.</p>
 {% elif user.is_staff or coordinator or mentor_request and mentor_request.approval_status == mentor_request.APPROVED %}
@@ -190,7 +190,7 @@
 {% endif %}
 
 {% if user.is_staff or coordinator or mentor_request and mentor_request.approval_status == mentor_request.APPROVED %}
-	{% if project.approval_status == project.APPROVED or project.approval_status == project.PENDING and not current_round.has_project_submission_and_approval_deadline_passed %}
+	{% if project.approval_status == project.APPROVED or project.approval_status == project.PENDING and not current_round.contribution_opens.has_passed %}
 		<div class="card">
 			<div class="card-header">Preview - Project Proposal Information Shown to Applicants</div>
 			<div class="card-body">

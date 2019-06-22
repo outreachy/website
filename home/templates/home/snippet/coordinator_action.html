@@ -9,7 +9,7 @@
 						<a class="btn btn-primary" href="{{ participation_info.get_submit_url }}">Update Funding</a>
 						</p>
 					{% endif %}
-					{% if current_round and not current_round.has_project_submission_and_approval_deadline_passed %}
+					{% if current_round and not current_round.lateprojects.has_passed %}
 						<p class="card-text">
 						<a class="btn btn-primary" href="{% url 'dashboard' %}#actions">Approve Projects</a>
 						</p>

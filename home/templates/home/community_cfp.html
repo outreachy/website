@@ -7,7 +7,7 @@ Call for Outreachy community coordinators and mentors
 
 <p><a href="{% url 'community-cfp' %}">Timeline and FAQ for Outreachy Communities</a></p>
 
-{% if current_round.has_project_submission_and_approval_deadline_passed %}
+{% if current_round.project_soft_deadline.has_passed %}
 	{% include "home/snippet/cfp_closed_warning.html" %}
 {% endif %}
 
@@ -16,10 +16,14 @@ Call for Outreachy community coordinators and mentors
 
 <p>Outreachy interns come from a wide range of backgrounds. Outreachy is open to applicants from underrepresented groups over 18 who fit our <a href="/apply/eligibility/">intern eligibility rules</a>. Interns could be university students, code school graduates, people switching careers, or people coming back to tech after starting a family or other long absence. Most Outreachy interns already have some exposure to using FOSS and technical knowledge, but many of them have not contributed to FOSS communities before. During our six-week application period, potential interns make contributions to the participating FOSS communities, which allows mentors to accurately evaluate their skills.</p>
 
-{% if current_round.has_project_submission_and_approval_deadline_passed %}
-	<p>The current Outreachy internship round is now closed to new participating communities,
-	and is closed to new intern project listings.
-	Coordinators and mentors who missed the deadline are welcome to sign up for the
+{% if current_round.lateorgs.has_passed %}
+	<p>The current Outreachy internship round is now closed to new participating communities.</p>
+{% endif %}
+{% if current_round.project_soft_deadline.has_passed %}
+	<p>The current Outreachy internship round is now closed to new intern project listings.</p>
+{% endif %}
+{% if current_round.lateorgs.has_passed or current_round.project_soft_deadline.has_passed %}
+	<p>Coordinators and mentors who missed the deadline are welcome to sign up for the
 	<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">Outreachy announcement list</a>
 	to receive a notification for next round.</p>
 {% endif %}
@@ -34,7 +38,7 @@ Call for Outreachy community coordinators and mentors
 {% include "home/snippet/roles.html" %}
 
 <h2>Who can participate?</h2>
-{% if not current_round.has_project_submission_and_approval_deadline_passed %}
+{% if not current_round.project_soft_deadline.has_passed %}
 <p>Outreachy welcomes participation from FOSS communities and people seeking to help out as Outreachy coordinators and mentors.</p>
 {% endif %}
 
@@ -64,7 +68,7 @@ Call for Outreachy community coordinators and mentors
 
 	{% if approved_communities or pending_communities %}
 		<h2>Mentor for a Participating FOSS Community</h2>
-		{% if current_round.has_project_submission_and_approval_deadline_passed %}
+		{% if current_round.project_soft_deadline %}
 			{% include "home/snippet/cfp_closed_warning.html" %}
 		{% else %}
 			<p>Outreachy internships run twice a year. You can look at community and project listing <a href="{% url 'past-rounds' %}">from all past Outreachy rounds</a> to understand what types of internships Outreachy typically offers.</p>
@@ -86,7 +90,7 @@ Call for Outreachy community coordinators and mentors
 {% endif %}
 
 {% if pending_communities %}
-	{% if current_round.has_project_submission_and_approval_deadline_passed %}
+	{% if current_round.project_soft_deadline.has_passed %}
 		<p>The community coordinator had indicated interest in participating in this Outreachy internship round,
 		however, the project listing deadline passed before they could list any mentored projects.</p>
 	{% else %}

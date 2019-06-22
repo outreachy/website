@@ -324,9 +324,6 @@ class RoundPage(AugmentDeadlines, Page):
     def project_soft_deadline(self):
         return self.lateprojects - datetime.timedelta(days=7)
 
-    def has_project_submission_and_approval_deadline_passed(self):
-        return self.lateprojects.has_passed()
-
     def LateApplicationsDeadline(self):
         return(self.appslate + datetime.timedelta(days=7))
 
