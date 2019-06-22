@@ -21,7 +21,7 @@ In order to be eligible to be selected as an Outreachy intern, each applicant mu
 2. Record a contribution to a {{ community }} project listed on the Outreachy site: {{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
 3. Complete a final application for the project.
 
-The deadline to submit a final application was {{ current_round.appslate|date:"F d" }} at 4pm UTC. Each round, we get a few applicants who miss the deadline. If this happens, **and** this is a strong applicant you are considering for the internship, please ask the applicant to send an email to organizers@outreachy.org with you on Cc. Only applicants who have already filled out an initial application and who have completed a contribution, or have a contribution in progress for your project are eligible to submit their final applications manually.
+The deadline to submit a final application was {{ current_round.contributions_close|date:"F d" }} at 4pm UTC. Each round, we get a few applicants who miss the deadline. If this happens, **and** this is a strong applicant you are considering for the internship, please ask the applicant to send an email to organizers@outreachy.org with you on Cc. Only applicants who have already filled out an initial application and who have completed a contribution, or have a contribution in progress for your project are eligible to submit their final applications manually.
 
 Selecting an Intern
 -------------------
