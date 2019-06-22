@@ -240,7 +240,7 @@ class MentorCheckDeadlinesReminder(SendEmailView):
 
     @staticmethod
     def instance(current_round):
-        return current_round.appslate - datetime.timedelta(weeks=2)
+        return current_round.contributions_close - datetime.timedelta(weeks=2)
 
     def generate_messages(self, current_round, connection):
         if not self.request.user.is_staff:
@@ -259,8 +259,8 @@ class MentorApplicationDeadlinesReminder(SendEmailView):
 
     @staticmethod
     def instance(current_round):
-        # Warn on a Monday at least 3 days before appslate:
-        due = current_round.appslate - datetime.timedelta(days=3)
+        # Warn on a Monday at least 3 days before contributions_close:
+        due = current_round.contributions_close - datetime.timedelta(days=3)
         due -= datetime.timedelta(days=due.weekday())
         return due
 
@@ -284,7 +284,7 @@ class MentorInternSelectionReminder(SendEmailView):
 
     @staticmethod
     def instance(current_round):
-        return current_round.appslate
+        return current_round.contributions_close
 
     def generate_messages(self, current_round, connection):
         if not self.request.user.is_staff:
@@ -308,7 +308,7 @@ class CoordinatorInternSelectionReminder(SendEmailView):
 
     @staticmethod
     def instance(current_round):
-        return current_round.appslate
+        return current_round.contributions_close
 
     def generate_messages(self, current_round, connection):
         if not self.request.user.is_staff:
@@ -348,7 +348,7 @@ class ContributorsApplicationPeriodEndedReminder(SendEmailView):
 
     @staticmethod
     def instance(current_round):
-        return current_round.appslate
+        return current_round.contributions_close
 
     def generate_messages(self, current_round, connection):
         if not self.request.user.is_staff:
@@ -373,11 +373,11 @@ class ContributorsDeadlinesReminder(SendEmailView):
 
     @staticmethod
     def first_reminder(current_round):
-        return current_round.appslate - datetime.timedelta(weeks=1)
+        return current_round.contributions_close - datetime.timedelta(weeks=1)
 
     @staticmethod
     def second_reminder(current_round):
-        return current_round.appslate - datetime.timedelta(days=1)
+        return current_round.contributions_close - datetime.timedelta(days=1)
 
     @classmethod
     def instances(cls):
