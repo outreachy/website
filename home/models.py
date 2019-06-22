@@ -153,6 +153,10 @@ class Deadline(datetime.date):
         self.today = today
         return self
 
+    def __add__(self, other):
+        new = super(Deadline, self).__add__(other)
+        return Deadline(new, self.today)
+
     def deadline(self):
         """
         Returns this deadline with time and timezone set from
@@ -355,7 +359,7 @@ class RoundPage(Page):
 
     # Interns get a five week extension at most.
     def has_internship_ended(self):
-        return has_deadline_passed(self.internends + datetime.timedelta(days=7*5))
+        return (self.internends + datetime.timedelta(days=7 * 5)).has_passed()
 
     def is_internship_active(self):
         if self.internstarts.has_passed():
@@ -372,7 +376,7 @@ class RoundPage(Page):
         return self.internstarts + datetime.timedelta(days=365*2)
 
     def is_travel_stipend_active(self):
-        return not has_deadline_passed(self.travel_stipend_deadline())
+        return not self.travel_stipend_deadline().has_passed()
 
     def has_application_deadline_passed(self):
         return self.appslate.has_passed()
@@ -387,7 +391,7 @@ class RoundPage(Page):
     # In some cases, we've changed or added an intern after the official announcement date.
     # The very latest we could do that would be five weeks after the official start date.
     def has_last_day_to_add_intern_passed(self):
-        return has_deadline_passed(self.internstarts + datetime.timedelta(days=5*7))
+        return (self.internstarts + datetime.timedelta(days=5 * 7)).has_passed()
 
     def gsoc_round(self):
         # The internships would start before August
@@ -548,12 +552,12 @@ class RoundPage(Page):
 
     # Interns have up to 90 days to submit their travel stipend request
     def has_travel_stipend_ended(self):
-        return has_deadline_passed(self.travel_stipend_ends() + datetime.timedelta(days=90))
+        return (self.travel_stipend_ends() + datetime.timedelta(days=90)).has_passed()
 
     # Travel stipends are good for travel starting the day the internship is announced
     # Until one year after their internship begins.
     def is_travel_stipend_valid(self):
-        return not has_deadline_passed(self.internstarts + datetime.timedelta(days=365))
+        return not self.travel_stipend_ends().has_passed()
 
     def get_common_skills_counter(self):
         approved_projects = Project.objects.filter(project_round__participating_round=self, approval_status=Project.APPROVED)
@@ -1770,7 +1774,7 @@ class Project(ApprovalStatus):
         return self.project_round.participating_round.lateprojects
 
     def has_application_deadline_passed(self):
-        return has_deadline_passed(self.application_deadline())
+        return self.application_deadline().has_passed()
 
     def application_deadline(self):
         return self.project_round.participating_round.appslate
