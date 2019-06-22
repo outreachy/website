@@ -1,21 +1,20 @@
 Outreachy internship deadlines
 
-{{ current_round.appslate }} is the deadline for making contributions and submitting your final application for the {{ current_round.official_name }}. If you haven't started a contribution yet, now is the time to pick a project, get in contact with the project mentor, and start working with them on your project contribution:
+{{ current_round.contributions_close }} at 4pm UTC is the deadline for making contributions and submitting your final application for the {{ current_round.official_name }}. If you haven't started a contribution yet, now is the time to pick a project, get in contact with the project mentor, and start working with them on your project contribution:
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
 {% if closed_projects %}
-Some projects have enough applicants, and they are closed to new applicants. If you are currently working with a mentor of one of these projects, make sure to record your contributions and create your final application before the deadline of {{ current_round.appslate }}:
+Some projects have enough applicants, and they are closed to new applicants. If you are currently working with a mentor of one of these projects, make sure to record your contributions and create your final application before the deadline:
 
 {% for project in closed_projects %}{{ request.scheme }}://{{ request.get_host }}{{ project.get_landing_url }}
 {% endfor %}{% endif %}
-All projects have a deadline of {{ current_round.appslate }}. You will need to record a contribution and create a final application in order to be eligible to be selected as an intern.
+You will need to record a contribution and create a final application in order to be eligible to be selected as an intern.
 
 If you are currently working on a contribution with a mentor (even if the contribution is not merged or accepted yet), make sure to record the contribution in the Outreachy website, and submit a final application for your project. You can record your contributions by finding your project listed on the project selection page, and following the link 'record your contributions and create a final application' on that project's detailed listing:
 {{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
 
-If you don't see any links to project details or a link to record a contribution, you either aren't logged in, or you haven't filled out the initial application at:
-{{ request.scheme }}://{{ request.get_host }}{% url 'eligibility' %}
+If you don't see any links to project details or a link to record a contribution, you probably aren't logged in.
 
-If you have any questions about selecting a project or you are having trouble contacting a mentor who has not closed their project to applicants, please email the Outreachy mentors mailing list at mentors@lists.outreachy.org. If you have questions about the initial application, please email the Outreachy applicant helpers applicant-help@outreachy.org
+If you have any questions about selecting a project or you are having trouble contacting a mentor who has not closed their project to applicants, please email the Outreachy mentors mailing list at mentors@lists.outreachy.org. If you need to privately contact Outreachy organizers, please email the Outreachy applicant helpers at applicant-help@outreachy.org
 
 Outreachy Organizers
