@@ -123,7 +123,7 @@ def get_deadline_date_for(dt):
     >>> RoundPage.objects.filter(
     ...     internannounce__lte=today,
     ...     internends__gt=today,
-    ... )
+    ... ) # doctest: +ELLIPSIS
     <PageQuerySet [...]>
     """
     if dt.timetz() < DEADLINE_TIME:
