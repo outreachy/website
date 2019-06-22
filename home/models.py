@@ -289,6 +289,9 @@ class RoundPage(Page):
         # This was not a date, so return it as-is.
         return value
 
+    def project_soft_deadline(self):
+        return self.lateprojects - datetime.timedelta(days=7)
+
     def has_project_submission_and_approval_deadline_passed(self):
         return self.lateprojects.has_passed()
 
