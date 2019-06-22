@@ -48,10 +48,8 @@
 {% if not current_round.has_internship_ended %}
 	<h3>Adding Co-mentors</h3>
 	{% if mentor_request or coordinator %}
-		{% if not current_round.has_application_deadline_passed %}
-			<p>The Outreachy organizers encourage projects to have more than one mentor. Each co-mentor for this project will need to sign up, so that they can view applicants' recorded contributions and final applications. You can send them this link so they can sign up as a co-mentor:
-			{{ request.scheme }}://{{ request.get_host }}{% url 'mentorapproval-action' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' %}
-		{% endif %}
+		<p>The Outreachy organizers encourage projects to have more than one mentor. Each co-mentor for this project will need to sign up, so that they can view applicants' recorded contributions and final applications. You can send them this link so they can sign up as a co-mentor:
+		{{ request.scheme }}://{{ request.get_host }}{% url 'mentorapproval-action' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' %}
 
 		{% if mentor_request %}
 			<p>Your request to mentor this project is:
