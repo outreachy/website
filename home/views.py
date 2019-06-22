@@ -2461,10 +2461,8 @@ class InternAgreementSign(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
 
 def round_statistics(request, round_slug):
     current_round = get_object_or_404(RoundPage, slug=round_slug)
-    todays_date = datetime.now()
     return render(request, 'home/blog/round-statistics.html', {
         'current_round': current_round,
-        'todays_date': todays_date,
         })
 
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
