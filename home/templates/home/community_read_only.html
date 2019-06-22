@@ -179,10 +179,8 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 		<ul>
 		{% for project in approved_projects %}
 			<li>
-				{% if project.new_contributors_welcome %}
-				(Application deadline is {{ current_round.appslate }})
-				{% else %}
-				(Closed to new applicants. Deadline is {{ current_round.appslate }})
+				{% if not project.new_contributors_welcome %}
+				(Closed to new applicants)
 				{% endif %}
 				<a href="{{ project.get_landing_url }}">{{ project.short_title }}</a>
 			</li>
