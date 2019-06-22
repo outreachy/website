@@ -1783,12 +1783,6 @@ class Project(ApprovalStatus):
     def submission_and_approval_deadline(self):
         return self.project_round.participating_round.lateprojects
 
-    def has_application_deadline_passed(self):
-        return self.application_deadline().has_passed()
-
-    def application_deadline(self):
-        return self.project_round.participating_round.appslate
-
     def has_intern_announcement_deadline_passed(self):
         return self.project_round.participating_round.internannounce.has_passed()
 
@@ -3432,7 +3426,7 @@ class FinalApplication(ApprovalStatus):
             })
 
     def submission_and_approval_deadline(self):
-        return self.project.application_deadline()
+        return self.project.project_round.participating_round.contribution_closes
 
     def number_contributions(self):
         return Contribution.objects.filter(

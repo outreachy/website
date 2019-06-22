@@ -28,7 +28,7 @@
 	<p>The {{ community.name }} coordinator(s) or Outreachy organizers do not think this project is suitable for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
 {% endif %}
 
-{% if not project.has_application_deadline_passed %}
+{% if not current_round.contributions_close.has_passed %}
 	{% if user.is_staff or coordinator or mentor_request and mentor_request.approval_status == mentor_request.APPROVED %}
 		<h2>Next Steps for Mentors</h2>
 		<h3>Prepping for the application period</h3>
@@ -36,7 +36,7 @@
 	{% endif %}
 {% endif %}
 
-{% if project.approval_status == project.APPROVED and not project.has_application_deadline_passed %}
+{% if project.approval_status == project.APPROVED and not current_round.contributions_close.has_passed %}
 	{% if user.is_staff or coordinator or mentor_request and mentor_request.approval_status == mentor_request.APPROVED %}
 		<h2>Promoting To Outreachy Applicants</h2>
 

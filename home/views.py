@@ -1592,7 +1592,7 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, EligibleAppli
         if not current_round.has_application_period_started():
             raise PermissionDenied("You cannot record a contribution until the Outreachy application period opens.")
 
-        if project.has_application_deadline_passed() and application == None:
+        if current_round.contributions_close.has_passed() and application == None:
             raise PermissionDenied("Editing or recording new contributions is closed at this time to applicants who have not created a final application.")
 
         if current_round.has_intern_announcement_deadline_passed():
@@ -1682,7 +1682,7 @@ class FinalApplicationAction(ApprovalStatusAction):
         if not current_round.has_application_period_started():
             raise PermissionDenied("You can't submit a final application until the Outreachy application period opens.")
 
-        if project.has_application_deadline_passed():
+        if current_round.contributions_close.has_passed():
             raise PermissionDenied("This project is closed to final applications.")
 
         applicant = get_object_or_404(ApplicantApproval,

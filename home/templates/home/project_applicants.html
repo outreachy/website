@@ -124,7 +124,7 @@ that timeline, taking into account any time commitments the applicant has.
 			</tbody>
 		</table>
 		</form>
-	{% elif project.has_application_deadline_passed %}
+	{% elif current_round.contributions_close.has_passed %}
 		<div class="card border-warning mb-3">
 			<div class="card-header text-white bg-warning">No Interns Available</div>
 			<div class="card-body">
