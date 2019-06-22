@@ -327,9 +327,6 @@ class RoundPage(AugmentDeadlines, Page):
     def has_project_submission_and_approval_deadline_passed(self):
         return self.lateprojects.has_passed()
 
-    def LateApplicationsDeadline(self):
-        return(self.appslate + datetime.timedelta(days=7))
-
     def has_intern_announcement_deadline_passed(self):
         return self.internannounce.has_passed()
 
@@ -2248,7 +2245,7 @@ class ApplicantApproval(ApprovalStatus):
         return [email.organizers]
 
     def submission_and_editing_deadline(self):
-        return self.application_round.appslate
+        return self.application_round.initial_applications_close
 
     def get_preview_url(self):
         return reverse('applicant-review-detail', kwargs={'applicant_username': self.applicant.account.username})
@@ -4871,13 +4868,13 @@ class Role(object):
 
     @property
     def projects_with_upcoming_deadlines(self):
-        if self.current_round.appslate.has_passed():
+        if self.current_round.contributions_close.has_passed():
             return ()
         return self.projects_contributed_to
 
     @property
     def projects_with_passed_deadlines(self):
-        if not self.current_round.appslate.has_passed():
+        if not self.current_round.contributions_close.has_passed():
             return ()
         return self.projects_contributed_to
 
