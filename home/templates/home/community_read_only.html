@@ -95,7 +95,7 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 			    {% endif %}
 			    {% if not current_round.has_project_submission_and_approval_deadline_passed %}
 				    {% if participation_info %}
-				    <tr><td><span class="badge badge-pill badge-info">Open to New Projects</span></td><td>Mentors can submit projects for Outreachy applicants. The deadline to submit a new project is {{ current_round.lateprojects }}, but we highly encourage mentors to submit proposals ASAP.</td></tr>
+				    <tr><td><span class="badge badge-pill badge-info">Open to New Projects</span></td><td>Mentors can submit projects for Outreachy applicants until {{ current_round.project_soft_deadline }} at 4pm UTC.</td></tr>
 				    {% endif %}
 			    {% else %}
 				    <tr><td><span class="badge badge-pill badge-warning">Closed to New Projects</span></td><td>The deadline to submit new projects for this Outreachy round is closed.</td></tr>
