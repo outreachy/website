@@ -227,33 +227,27 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 	    <div class="card-body">
 		<h5>Subject: Seeking Outreachy internship project proposals</h5>
 		<p class="card-text">
-		{{ community.name }} is participating in the Outreachy
-		{{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} internships.
+		{{ community.name }} is participating in the Outreachy internship program.
+		Outreachy's goal is to support people from groups underrepresented in the technology industry.
+		Interns will work remotely with mentors from our community.</p>
+
+		<p>
 		We are seeking mentors to propose projects that Outreachy interns can work on during their internship.
-		Project proposals will be reviewed by the {{ community.name }} coordinator{{ approved_coordinator_list|length|pluralize }}:
+		</p>
+
+		<p>{{ current_round.project_soft_deadline }} at 4 pm UTC is the deadline to submit projects:
+		<a href="{{ community.get_preview_url }}">{{ request.scheme }}://{{ request.get_host }}{{ community.get_preview_url }}</a></p>
+
+		<p>
+		If you want help crafting your project proposal, please contact the {{ community.name }} coordinator{{ approved_coordinator_list|length|pluralize }}:
+		{% for approval in approved_coordinator_list %}"{{ approval.coordinator.public_name }}" &lt;{{ approval.coordinator.account.email }}&gt;{% if not forloop.last %},{% endif %}. {% endfor %}
+		<p>Mentors should read the mentor FAQ: <a href="/mentor/mentor-faq/">{{ request.scheme }}://{{ request.get_host }}/mentor/mentor-faq</a>
 		</p>
 		<p class="card-text">
-		{% for approval in approved_coordinator_list %}
-			{% if user.is_authenticated %}
-			- "{{ approval.coordinator.public_name }}"
-				&lt;{{ approval.coordinator.account.email }}&gt;
-			{% else %}
-			- {{ approval.coordinator.public_name }}
-			{% endif %}
-			{% if not forloop.last %}<br />{% endif %}
-		{% endfor %}
+		Full details about the Outreachy program and the internship timeline
+		can be found on the Call for Participation page on the Outreachy website:
 		</p>
-		<p class="card-text">
-		When the application period opens on {{ current_round.appsopen }}, applicants will start making
-		contributions to approved projects.
-		Mentors should submit projects as soon as possible, but no later than
-		{{ current_round.lateprojects }}.
-		</p>
-		<p class="card-text">
-		Full details about the Outreachy program, the internship timeline, and mentor duties and time commitments
-		can be found on our community's Call for Participation page on the Outreachy website:
-		</p>
-		<p class="card-text"><a href="{{ community.get_preview_url }}">{{ request.scheme }}://{{ request.get_host }}{{ community.get_preview_url }}</a></p>
+		<p><a href="{% url 'community-cfp' %}">{{ request.scheme }}://{{ request.get_host }}{% url 'community-cfp' %}</a>
 	    </div>
 	</div>
 	{% endif %}
