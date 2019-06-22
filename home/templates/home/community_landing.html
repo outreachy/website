@@ -22,7 +22,7 @@ Outreachy internships working with {{ community.name }}
 	{% elif not role.application.is_approved and not mentors_pending_projects and not approved_to_see_all_project_details and not role.is_reviewer %}
 		{% if not user.comrade %}
 			You may need to <a href="{% url 'login' %}?next={{ request.path|urlencode }}">log in</a> to see this information.</p>
-		{% elif role.needs_application %}
+		{% elif role.is_potential_applicant %}
 			<p>This information is only available to applicants who have their initial application approved.
 			The deadline for initial applications passed on {{ current_round.initial_applications_close }} at 4pm UTC</p>
 		{% elif role.application.is_rejected or role.application.is_pending %}
@@ -68,7 +68,7 @@ Outreachy internships working with {{ community.name }}
 		{% endif %}
 
 		<p><a href="/apply/">Why apply to Outreachy?</a> &gt;
-		{% if role.needs_application %}
+		{% if role.is_potential_applicant %}
 			<a href="{% url 'eligibility' %}">Start your initial application</a>
 		{% elif role.needs_review %}
 			<a href="{% url 'eligibility-results' %}">Review your initial application</a>

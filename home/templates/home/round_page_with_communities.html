@@ -28,15 +28,9 @@ Outreachy Internships | Apply | Pick a Project
 		{% include "home/snippet/eligibility_prompts.html" %}
 	{% endif %}
 
-<p><a href="/apply/">Why apply to Outreachy?</a> &gt;
-{% if role.needs_application %}
-	<a href="{% url 'eligibility' %}">Start your initial application</a>
-{% elif role.needs_review %}
-	<a href="{% url 'eligibility-results' %}">Review your initial application</a>
-{% else %}
-	<a href="/apply/eligibility/">Outreachy Eligibility Rules</a>
-{% endif %}
-	 &gt; Find a Mentor and Internship Project</p>
+<p><a href="/apply/">Why apply to Outreachy?</a>
+&gt; <a href="/apply/eligibility/">Outreachy Eligibility Rules</a>
+&gt; Find a Mentor and Internship Project</p>
 
 {% if current_round %}
 	<h1>Outreachy {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} Internships</h1>

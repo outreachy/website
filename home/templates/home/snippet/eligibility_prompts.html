@@ -14,14 +14,13 @@
 </div>
 {% endif %}
 
-{% if role.needs_application %}
-	{% if not role.current_round.has_application_period_started %}
+{% if role.is_potential_applicant %}
+	{% if not role.current_round.initial_applications_open.has_passed %}
 		<div class="card border-info mb-3">
 			<div class="card-header text-white bg-info">Applications are not open</div>
 			<div class="card-body">
 				<p class="card-text">
-				The Outreachy applications are not open until {{ role.current_round.appsopen }} at 4pm UTC.
-				Information about projects are unavailable until applications open.
+				You cannot submit an initial application until {{ role.current_round.initial_applications_open }} at 4pm UTC.
 				</p>
 				<p class="card-text">
 				Please <a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">sign up for the Outreachy announcements mailing list</a>
@@ -29,7 +28,7 @@
 				</p>
 			</div>
 		</div>
-	{% elif not role.current_round.has_application_deadline_passed %}
+	{% elif not role.current_round.initial_applications_closed.has_passed %}
 		<div class="card border-info mb-3">
 			<div class="card-header text-white bg-warning">Complete your initial application!</div>
 			<div class="card-body">
@@ -38,6 +37,12 @@
 				you must fill out a short initial application.
 				</p>
 				<p class="card-text"><a href="{% url 'eligibility' %}" class="btn btn-success">Start Initial Application</a></p>
+
+				<p class="card-text">{{ role.current_round.initial_applications_closed }} at 4pm UTC
+				is the deadline for submitting an initial application.
+				Applicants will be notified of their initial application status on {{ role.current_round.contributions_open }}.
+				</p>
+
 				<p class="card-text">
 				Until your initial application is approved, some information about the internships will be hidden,
 				including full project details, mentor contact information, and how to make contributions
