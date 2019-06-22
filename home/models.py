@@ -394,9 +394,6 @@ class RoundPage(AugmentDeadlines, Page):
     def is_travel_stipend_active(self):
         return not self.travel_stipend_deadline().has_passed()
 
-    def has_application_deadline_passed(self):
-        return self.appslate.has_passed()
-
     def has_intern_announcement_deadline_passed(self):
         return self.internannounce.has_passed()
 
