@@ -11,7 +11,7 @@ We want to make sure that all Outreachy applicants get a chance to make a contri
 
 {{ request.scheme }}://{{ request.get_host }}{{ project.get_submit_url }}
 
-Closing your project to new applicants simply changes how the project is displayed on the projects list. Your project will be moved to a section at the end called "Closed Projects". Any applicant can still record contributions and create final applications for your project until {{ current_round.appslate }}.
+Closing your project to new applicants simply changes how the project is displayed on the projects list. Your project will be moved to a section at the end called "Closed Projects". Any applicant can still record contributions and create final applications for your project until {{ current_round.contributions_close }} at 4pm UTC.
 
 Please follow this link to edit your project description. The option to close your project to new applicants is at the bottom of this page, in the "Project Deadline and Advertisement" section:
 
@@ -20,7 +20,7 @@ Please follow this link to edit your project description. The option to close yo
 Application Deadlines
 ---------------------
 
-Applicants must record a contribution to your project and submit a final application by {{ current_round.appslate }}.
+Applicants must record a contribution to your project and submit a final application by {{ current_round.contributions_close }} at 4pm UTC.
 
 Your Project Applicants
 -----------------------
