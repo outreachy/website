@@ -373,9 +373,6 @@ class RoundPage(AugmentDeadlines, Page):
     def has_contribution_deadline_passed(self):
         return self.contributions_close.has_passed()
 
-    def has_application_period_started(self):
-        return self.appsopen.has_passed()
-
     # Interns get a five week extension at most.
     def has_internship_ended(self):
         return (self.internends + datetime.timedelta(days=7 * 5)).has_passed()
