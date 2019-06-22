@@ -251,11 +251,16 @@ class RoundPage(Page):
     def official_name(self):
         return(self.internstarts.strftime("%B %Y") + " to " + self.internends.strftime("%B %Y") + " Outreachy internships")
 
+    def __init__(self, *args, **kwargs):
+        now = datetime.datetime.now(DEADLINE_TIME.tzinfo)
+        self.today = get_deadline_date_for(now)
+        super(RoundPage, self).__init__(*args, **kwargs)
+
     def __getattribute__(self, name):
         """
         Extend all fields that are plain dates to return an instance of
         Deadline instead, where the Deadline's idea of ``today`` is set from
-        this RoundPage's ``today`` field.
+        ``self.today``. For example:
 
         >>> rp = RoundPage(internstarts=datetime.date(2019, 1, 1))
         >>> rp.internstarts.deadline()
@@ -266,25 +271,23 @@ class RoundPage(Page):
         >>> rp.today = datetime.date(2019, 1, 1)
         >>> rp.internstarts.has_passed()
         True
+
+        Any Python class can override what ``obj.field`` means by implementing
+        this method, which then gets called like
+        ``obj.__getattribute__("field")``. See:
+
+        https://docs.python.org/3/reference/datamodel.html#object.__getattribute__
         """
         # Call the default implementation first...
         value = super(RoundPage, self).__getattribute__(name)
 
-        if type(value) is datetime.date:
-            # This is a plain date, so it's time for magic!
-
-            # Because we're overriding how attributes get accessed, we have to
-            # use the superclass implementation of this method to get at the
-            # field dictionary, or else we'd infinitely recurse.
-            instance_fields = super(RoundPage, self).__getattribute__("__dict__")
-
-            # Set self.today if nobody else did it already.
-            if "today" not in instance_fields:
-                now = datetime.datetime.now(DEADLINE_TIME.tzinfo)
-                instance_fields["today"] = get_deadline_date_for(now)
-
-            # Return the real deadline paired up with self.today.
-            return Deadline(value, instance_fields["today"])
+        if name != "today" and type(value) is datetime.date:
+            # This is a plain date; augment it with the Deadline extras. Note
+            # that accessing ``self.today`` triggers a recursive call to this
+            # function with name="today", so we have to be very careful: that
+            # call must not reach this same statement or it will recurse
+            # forever.
+            return Deadline(value, self.today)
 
         # This was not a date, so return it as-is.
         return value
