@@ -785,7 +785,7 @@ class RoundPage(AugmentDeadlines, Page):
     def serve(self, request, *args, **kwargs):
         # If the project selection page (views.current_round_page) would
         # consider this a current_round, redirect there.
-        if self.pingnew.has_passed() and not self.contributions_close.has_passed():
+        if self.pingnew.has_passed() and not self.internannounce.has_passed():
             return redirect('project-selection')
 
         # Only show this page if we shouldn't be showing the project selection page.

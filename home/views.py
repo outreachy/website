@@ -823,12 +823,13 @@ def current_round_page(request):
     now = datetime.now(timezone.utc)
     today = get_deadline_date_for(now)
 
-    # For the purposes of this view, a round is current until its contribution
-    # period closes, and then it becomes one of the "previous" rounds.
+    # For the purposes of this view, a round is current until its
+    # intern selections are announced, and then it becomes one of
+    # the "previous" rounds.
 
     try:
         previous_round = RoundPage.objects.filter(
-            contributions_close__lte=today,
+            internannounce__lte=today,
         ).latest('internstarts')
         previous_round.today = today
     except RoundPage.DoesNotExist:
@@ -838,7 +839,7 @@ def current_round_page(request):
         # Keep RoundPage.serve() in sync with this.
         current_round = RoundPage.objects.get(
             pingnew__lte=today,
-            contributions_close__gt=today,
+            internannounce__gt=today,
         )
         current_round.today = today
     except RoundPage.DoesNotExist:
@@ -1787,10 +1788,16 @@ def community_applicants(request, round_slug, community_slug):
         })
 
 def contribution_tips(request):
+    now = datetime.now(timezone.utc)
+    today = get_deadline_date_for(now)
+
     try:
-        # TODO: check which date should replace appsopen for eligibility prompts
-        current_round = get_current_round_for_initial_application()
-    except PermissionDenied:
+        current_round = RoundPage.objects.get(
+            pingnew__lte=today,
+            internannounce__gt=today,
+        )
+        current_round.today = today
+    except RoundPage.DoesNotExist:
         current_round = None # don't display any eligibility prompts
 
     role = Role(request.user, current_round)

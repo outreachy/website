@@ -697,7 +697,7 @@ def intern(request, today):
 def eligibility_prompts(request, today):
     try:
         current_round = RoundPage.objects.get(
-            appsopen__lte=today,
+            pingnew__lte=today,
             internannounce__gt=today,
         )
         current_round.today = today
