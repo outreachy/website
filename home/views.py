@@ -823,9 +823,12 @@ def current_round_page(request):
     now = datetime.now(timezone.utc)
     today = get_deadline_date_for(now)
 
+    # For the purposes of this view, a round is current until its contribution
+    # period closes, and then it becomes one of the "previous" rounds.
+
     try:
         previous_round = RoundPage.objects.filter(
-            appslate__lte=today,
+            contributions_close__lte=today,
         ).latest('internstarts')
         previous_round.today = today
     except RoundPage.DoesNotExist:
@@ -835,8 +838,7 @@ def current_round_page(request):
         # Keep RoundPage.serve() in sync with this.
         current_round = RoundPage.objects.get(
             pingnew__lte=today,
-            # If the application period is closed, don't show projects from the current round
-            appslate__gt=today,
+            contributions_close__gt=today,
         )
         current_round.today = today
     except RoundPage.DoesNotExist:
@@ -971,12 +973,16 @@ def community_cfp_view(request):
             },
             )
 
-# This is the page for volunteers, mentors, and coordinators.
-# It's a read-only page that displays information about the community,
-# what projects are accepted, and how volunteers can help.
-# If the community isn't participating in this round, the page displays
-# instructions for being notified or signing the community up to participate.
+
 def community_read_only_view(request, community_slug):
+    """
+    This is the page for volunteers, mentors, and coordinators. It's a
+    read-only page that displays information about the community, what projects
+    are accepted, and how volunteers can help. If the community isn't
+    participating in this round, the page displays instructions for being
+    notified or signing the community up to participate.
+    """
+
     community = get_object_or_404(Community, slug=community_slug)
 
     now = datetime.now(timezone.utc)
@@ -984,11 +990,13 @@ def community_read_only_view(request, community_slug):
 
     participation_info = None
 
+    # For the purposes of this view, a round is current until its interns start
+    # their internships, and then it becomes one of the "previous" rounds.
+
     try:
         current_round = RoundPage.objects.get(
             pingnew__lte=today,
-            # If the application period is closed, don't show projects from the current round
-            appslate__gt=today,
+            internstarts__gt=today,
         )
         current_round.today = today
         previous_round = None
@@ -996,7 +1004,7 @@ def community_read_only_view(request, community_slug):
         current_round = None
         try:
             previous_round = community.rounds.filter(
-                appslate__lte=today,
+                internstarts__lte=today,
                 participation__approval_status=ApprovalStatus.APPROVED,
             ).latest('internstarts')
             previous_round.today = today
