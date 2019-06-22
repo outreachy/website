@@ -82,7 +82,67 @@ Outreachy internships working with {{ community.name }}
 		{% endif %}
 		&gt; {{ community.name }}</p>
 
-		{% include "home/snippet/community_landing_snippet.html" %}
+		<h1>Outreachy internships</h1>
+
+		<div id="outreachy-information-parent" class="accordion">
+			<div class="card">
+				<div class="card-header" role="tab">
+					<h4 class="mb-0"><a data-toggle="collapse" data-parent="outreachy-information-parent" href="#outreachy-information"
+							{% if role.needs_application %}aria-expanded="true"{% endif %}
+							aria-controls="outreachy-information"
+							 >+ Outreachy Internship Information</a></h4>
+				</div>
+				<div class="collapse {% if role.needs_application %}show{% endif %} card-body" id="outreachy-information">
+					<h2>What is Outreachy?</h2>
+
+					<p>Outreachy is a program that provides internships for people from groups traditionally underrepresented in tech.
+					Interns are paid a stipend of $5,500 for a three month internship.
+					The internship is completely remote, and interns come from around the world.
+					</p>
+					<p>
+					Interns work one-on-one with a mentor from Free and Open Source Software (FOSS) communities.
+					The internship projects range from programming, user experience, documentation, illustration and graphical design, to data science.
+					</p>
+					<p>
+					Interns have $500 travel stipend available to use to attend tech events.
+					Many interns use the travel stipend to network and find a job.
+					Interns often find employment after their internship with <a href="/opportunities/">Outreachy sponsors</a> or in jobs that use the skills they learned during their internship.
+					</p>
+
+					<p>For more information on who is eligible for Outreachy internships, see the <a href="/apply/eligibility/">eligibility page</a>.
+					A description of the application process can be found on the <a href="/apply/">application instructions page</a>
+					</p>
+
+					<h2>Outreachy Timeline</h2>
+					<table class=table>
+						<tr><td>{{ current_round.appsopen }}</td><td>Outreachy application period opens and applicants make their required contributions to projects</td></tr>
+						<tr><td>{{ current_round.appslate }}</td><td>Outreachy contributions and final applications due for all {{ community.name }} projects</td></tr>
+						<tr><td>{{ current_round.internannounce }}</td><td>Interns are publicly announced at 4pm UTC on <a href="/alums/">the alums page</a></td></tr>
+						<tr><td>{{ current_round.internstarts }} to {{ current_round.internends }}</td><td>Internships period</td></tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<br>
+
+		<h2>Outreachy Internships with {{ community.name }}</h2>
+		{% if approved_to_see_all_project_details %}
+			<p><a href="{{ community.website }}">{{ community.name }}</a>
+			is a Free and Open Source Software (FOSS) community
+			that is offering internship projects through the Outreachy program.
+			</p>
+			<p>
+			Internships with other FOSS communities can be found on the <a href="{{ current_round.url }}">the current round page</a>.
+			</p>
+
+			<h2>What is {{ community.name }}?</h2>
+			<p>{{ community.description }}</p>
+
+			{{ community.long_description|safe }}
+		{% else %}
+			<p>Community details are hidden until you are approved to participate as a mentor or coordinator.</p>
+		{% endif %}
+
 		{% if approved_coordinator %}
 			{% include 'home/snippet/coordinator_action.html' %}
 		{% endif %}
