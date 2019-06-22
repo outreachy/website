@@ -64,13 +64,6 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 	<div class="card mb-3">
 	    <div class="card-header">Community status</div>
 	    <div class="card-body">
-		    <p class="card-text">
-		    {% if not current_round.has_project_submission_and_approval_deadline_passed %}
-			    Mentors are encouraged to start promoting their project proposals as soon as the Outreachy round opens on {{ current_round.appsopen }}.
-		    {% elif not current_round.has_application_deadline_passed %}
-			    Mentors are encouraged to make sure applicants record their contributions and submit a final application before the final application deadline.
-		    {% endif %}
-		    </p>
 		    <table class=table>
 			    {% if not participation_info %}
 				    <tr>
