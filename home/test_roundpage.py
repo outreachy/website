@@ -151,5 +151,7 @@ class RoundPageTestCase(TestCase):
 
         # Grab the community and project CFP page
         response = self.client.post(reverse('community-cfp'))
+        # Make sure it includes the community as currently participating
+        self.assertContains(response, 'review the list of participating communities below who are looking for help', status_code=200)
         # Make sure the page shows the community
         self.assertContains(response, community_name, status_code=200)
