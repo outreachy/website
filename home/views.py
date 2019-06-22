@@ -408,12 +408,15 @@ def get_current_round_for_initial_application():
     today = get_deadline_date_for(now)
 
     try:
-        return RoundPage.objects.get(
+        current_round = RoundPage.objects.get(
             initial_applications_open__lte=today,
             initial_applications_close__gt=today,
         )
+        current_round.today = today
     except RoundPage.DoesNotExist:
         raise PermissionDenied('The Outreachy application period is closed. If you are an applicant who has submitted an application for an internship project and your time commitments have increased, please contact the Outreachy organizers (see contact link above). Eligibility checking will become available when the next application period opens. Please sign up for the announcements mailing list for an email when the next application period opens: https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce')
+
+    return current_round
 
 
 def get_current_round_for_initial_application_review():
@@ -426,12 +429,15 @@ def get_current_round_for_initial_application_review():
     today = get_deadline_date_for(now)
 
     try:
-        return RoundPage.objects.get(
+        current_round = RoundPage.objects.get(
             initial_applications_open__lte=today,
             contributions_open__gt=today,
         )
+        current_round.today = today
     except RoundPage.DoesNotExist:
         raise PermissionDenied('It is too late to review applications.')
+
+    return current_round
 
 
 class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, SessionWizardView):
@@ -767,6 +773,7 @@ class EligibilityResults(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
                 initial_applications_open__lte=today,
                 contributions_close__gt=today,
             )
+            current_round.today = today
         except RoundPage.DoesNotExist:
             raise PermissionDenied('The Outreachy application period is closed. Eligibility checking will become available when the next application period opens. Please sign up for the announcements mailing list for an email when the next application period opens: https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce')
 
@@ -793,7 +800,6 @@ class ViewInitialApplication(LoginRequiredMixin, ComradeRequiredMixin, DetailVie
     def get_object(self):
         current_round = get_current_round_for_initial_application_review()
 
-        # FIXME: ought to use the value of `today` that was computed in get_current_round
         self.role = Role(self.request.user, current_round)
 
         if not self.role.is_organizer and not self.role.is_reviewer:
@@ -822,6 +828,7 @@ def current_round_page(request):
         previous_round = RoundPage.objects.filter(
             appslate__lte=today,
         ).latest('internstarts')
+        previous_round.today = today
     except RoundPage.DoesNotExist:
         previous_round = None
 
@@ -832,10 +839,11 @@ def current_round_page(request):
             # If the application period is closed, don't show projects from the current round
             appslate__gt=today,
         )
+        current_round.today = today
     except RoundPage.DoesNotExist:
         current_round = None
 
-    role = Role(request.user, current_round, today=today)
+    role = Role(request.user, current_round)
     if current_round is not None:
         approved_participations = current_round.participation_set.approved().order_by('community__name')
 
@@ -914,6 +922,7 @@ def community_cfp_view(request):
         previous_round = RoundPage.objects.filter(
             internstarts__lte=today,
         ).latest('internstarts')
+        previous_round.today = today
     except RoundPage.DoesNotExist:
         previous_round = None
 
@@ -922,6 +931,7 @@ def community_cfp_view(request):
             pingnew__lte=today,
             internstarts__gt=today,
         )
+        current_round.today = today
     except RoundPage.DoesNotExist:
         current_round = None
         not_participating_communities = all_communities.filter(
@@ -981,6 +991,7 @@ def community_read_only_view(request, community_slug):
             # If the application period is closed, don't show projects from the current round
             appslate__gt=today,
         )
+        current_round.today = today
         previous_round = None
     except RoundPage.DoesNotExist:
         current_round = None
@@ -989,6 +1000,7 @@ def community_read_only_view(request, community_slug):
                 appslate__lte=today,
                 participation__approval_status=ApprovalStatus.APPROVED,
             ).latest('internstarts')
+            previous_round.today = today
         except RoundPage.DoesNotExist:
             previous_round = None
     else:
@@ -1127,6 +1139,7 @@ class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
             self.current_round = RoundPage.objects.filter(
                 lateorgs__gt=today,
             ).earliest('lateorgs')
+            self.current_round.today = today
         except RoundPage.DoesNotExist:
             raise PermissionDenied("There is no round you can participate in right now.")
         return super(CommunityCreate, self).get_form()
@@ -1773,7 +1786,6 @@ def contribution_tips(request):
     except PermissionDenied:
         current_round = None # don't display any eligibility prompts
 
-    # FIXME: ought to use the value of `today` that was computed in get_current_round
     role = Role(request.user, current_round)
 
     return render(request, 'home/contribution_tips.html', {
@@ -1798,6 +1810,8 @@ def eligibility_information(request):
             current_round = RoundPage.objects.latest('internstarts')
         except RoundPage.DoesNotExist:
             raise Http404("No internship rounds configured yet!")
+
+    current_round.today = today
 
     return render(request, 'home/eligibility.html', {
         'current_round': current_round,

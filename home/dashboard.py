@@ -72,6 +72,7 @@ def intern_announcement(request):
         current_round = RoundPage.objects.filter(
             internannounce__lte=today,
         ).latest('internannounce')
+        current_round.today = today
     except RoundPage.DoesNotExist:
         return None
 
@@ -114,10 +115,11 @@ def coordinator_reminder(request):
         current_round = RoundPage.objects.filter(
             internstarts__gt=today,
         ).earliest('internstarts')
+        current_round.today = today
     except RoundPage.DoesNotExist:
         return None
 
-    role = Role(request.user, current_round, today=today)
+    role = Role(request.user, current_round)
     if not role.approved_coordinator_communities:
         return None
 
@@ -136,6 +138,7 @@ def application_summary(request):
             initial_applications_open__lte=today,
             contributions_open__gt=today,
         )
+        current_round.today = today
     except RoundPage.DoesNotExist:
         return None
 
@@ -593,11 +596,14 @@ def sponsor_statistics(request):
     now = datetime.datetime.now(datetime.timezone.utc)
     today = get_deadline_date_for(now)
     try:
-        return RoundPage.objects.filter(
+        current_round = RoundPage.objects.filter(
             initial_applications_open__lte=today,
         ).latest('initial_applications_open')
+        current_round.today = today
     except RoundPage.DoesNotExist:
         return None
+
+    return current_round
 
 
 def staff_intern_progress(request):
@@ -607,12 +613,15 @@ def staff_intern_progress(request):
     now = datetime.datetime.now(datetime.timezone.utc)
     today = get_deadline_date_for(now)
     try:
-        return RoundPage.objects.get(
+        current_round = RoundPage.objects.get(
             initialfeedback__lte=today + datetime.timedelta(days=7),
             finalfeedback__gt=today - datetime.timedelta(days=30),
         )
+        current_round.today = today
     except RoundPage.DoesNotExist:
         return None
+
+    return current_round
 
 
 def staff_intern_selection(request):
@@ -624,12 +633,15 @@ def staff_intern_selection(request):
     try:
         # There can't be any interns selected until they start making
         # contributions, so don't display this section until then.
-        return RoundPage.objects.get(
+        current_round = RoundPage.objects.get(
             contributions_open__lte=today,
             initialfeedback__gt=today + datetime.timedelta(days=7),
         )
+        current_round.today = today
     except RoundPage.DoesNotExist:
         return None
+
+    return current_round
 
 
 def staff_community_progress(request):
@@ -646,6 +658,7 @@ def staff_community_progress(request):
             pingnew__lte=today,
             internannounce__gt=today,
         )
+        current_round.today = today
     except RoundPage.DoesNotExist:
         return None
 
@@ -701,10 +714,11 @@ def eligibility_prompts(request):
             appsopen__lte=today,
             internannounce__gt=today,
         )
+        current_round.today = today
     except RoundPage.DoesNotExist:
         return None
 
-    return Role(request.user, current_round, today=today)
+    return Role(request.user, current_round)
 
 
 def unselected_intern(request):
@@ -718,15 +732,18 @@ def unselected_intern(request):
     now = datetime.datetime.now(datetime.timezone.utc)
     today = get_deadline_date_for(now)
     try:
-        return ApplicantApproval.objects.exclude(
+        applicant = ApplicantApproval.objects.exclude(
             internselection__organizer_approved=True,
-        ).get(
+        ).select_related('application_round').get(
             applicant__account=request.user,
             application_round__internannounce__lte=today,
             application_round__internstarts__gte=today,
         )
+        applicant.application_round.today = today
     except ApplicantApproval.DoesNotExist:
         return None
+
+    return applicant
 
 
 def mentor(request):
@@ -750,6 +767,7 @@ def mentor_projects(request):
         current_round = RoundPage.objects.filter(
             internstarts__gt=today,
         ).earliest('internstarts')
+        current_round.today = today
     except RoundPage.DoesNotExist:
         return None
 

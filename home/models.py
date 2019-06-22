@@ -762,9 +762,7 @@ class RoundPage(Page):
     def serve(self, request, *args, **kwargs):
         # If the project selection page (views.current_round_page) would
         # consider this a current_round, redirect there.
-        now = datetime.datetime.now(datetime.timezone.utc)
-        today = get_deadline_date_for(now)
-        if self.pingnew <= today and self.appslate > today:
+        if self.pingnew.has_passed() and not self.appslate.has_passed():
             return redirect('project-selection')
 
         # Only show this page if we shouldn't be showing the project selection page.
@@ -772,7 +770,6 @@ class RoundPage(Page):
 
     def get_context(self, request, *args, **kwargs):
         context = super(RoundPage, self).get_context(request, *args, **kwargs)
-        # FIXME: ought to use the value of `today` that was computed in `serve`, above
         context['role'] = Role(request.user, self)
         return context
 
@@ -4719,21 +4716,11 @@ class Role(object):
     anywhere outside models.py.
     """
 
-    def __init__(self, user, current_round, today=None):
+    def __init__(self, user, current_round):
         self.user = user
         self.current_round = current_round
 
-        if today is not None:
-            # This magic overrides the cached_property below and ensures that
-            # self.today always returns the specified date.
-            self.__dict__['today'] = today
-
     # Any properties that do database queries should be cached:
-
-    @cached_property
-    def today(self):
-        now = datetime.datetime.now(datetime.timezone.utc)
-        return get_deadline_date_for(now)
 
     @cached_property
     def application(self):
@@ -4848,7 +4835,9 @@ class Role(object):
         # fill out an initial application, record a contribution, and create a
         # final application) during the initial application and contribution
         # period.
-        if not (self.current_round.initial_applications_open <= self.today < self.current_round.initial_applications_close):
+        if not self.current_round.initial_applications_open.has_passed():
+            return False
+        if self.current_round.initial_applications_close.has_passed():
             return False
         return not self.is_volunteer and not self.is_applicant
 
@@ -4864,13 +4853,13 @@ class Role(object):
 
     @property
     def projects_with_upcoming_deadlines(self):
-        if self.current_round.appslate <= self.today:
+        if self.current_round.appslate.has_passed():
             return ()
         return self.projects_contributed_to
 
     @property
     def projects_with_passed_deadlines(self):
-        if self.current_round.appslate > self.today:
+        if not self.current_round.appslate.has_passed():
             return ()
         return self.projects_contributed_to
 
