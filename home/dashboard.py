@@ -50,7 +50,6 @@ from .models import Project
 from .models import Role
 from .models import RoundPage
 from .models import get_deadline_date_for
-from .models import has_deadline_passed
 
 __all__ = ('get_dashboard_sections',)
 
@@ -790,7 +789,7 @@ def approval_status(request, today):
     for model in DASHBOARD_MODELS:
         by_model = defaultdict(list)
         for obj in model.objects_for_dashboard(request.user).distinct():
-            if obj.approval_status == ApprovalStatus.APPROVED or not has_deadline_passed(obj.submission_and_approval_deadline()):
+            if obj.approval_status == ApprovalStatus.APPROVED or not obj.submission_and_approval_deadline().has_passed():
                 by_model[obj.approval_status].append(obj)
 
         label = model._meta.verbose_name

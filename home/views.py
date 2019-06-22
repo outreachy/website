@@ -71,7 +71,6 @@ from .models import MidpointMentorFeedback
 from .models import MidpointInternFeedback
 from .models import FinalMentorFeedback
 from .models import FinalInternFeedback
-from .models import has_deadline_passed
 from .models import MentorApproval
 from .models import MentorRelationship
 from .models import NewCommunity
@@ -1485,7 +1484,7 @@ class BaseProjectEditPage(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
         # Only allow adding new project communication channels or skills
         # for approved projects after the deadline has passed.
         deadline = project.submission_and_approval_deadline()
-        if project.approval_status != ApprovalStatus.APPROVED and has_deadline_passed(deadline):
+        if project.approval_status != ApprovalStatus.APPROVED and deadline.has_passed():
             raise PermissionDenied("The project submission and approval deadline ({date}) has passed. Please sign up for the announcement mailing list for a call for mentors for the next Outreachy internship round. https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce".format(date=deadline))
         return project
 

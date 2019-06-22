@@ -14,7 +14,6 @@ import reversion
 from .models import ApplicantApproval
 from .models import ApprovalStatus
 from .models import Comrade
-from .models import has_deadline_passed
 from .models import Role
 from .models import RoundPage
 
@@ -144,7 +143,7 @@ class ApprovalStatusAction(LoginRequiredMixin, ComradeRequiredMixin, reversion.v
         # - editing an approved object (which is the same as submit) is ok
         if action == 'approve' or (action == 'submit' and self.prior_status != ApprovalStatus.APPROVED):
             deadline = self.object.submission_and_approval_deadline()
-            if has_deadline_passed(deadline):
+            if deadline.has_passed():
                 raise PermissionDenied("Not allowed to {} a {} after its submission and approval deadline ({}).".format(
                     action, self.object._meta.model_name, deadline))
 

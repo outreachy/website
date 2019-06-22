@@ -130,13 +130,6 @@ def get_deadline_date_for(dt):
         return dt.date() - datetime.timedelta(days=1)
     return dt.date()
 
-def has_deadline_passed(deadline_date):
-    if not deadline_date:
-        return False
-    now = datetime.datetime.now(DEADLINE_TIME.tzinfo)
-    today = get_deadline_date_for(now)
-    return deadline_date <= today
-
 
 class Deadline(datetime.date):
     """
@@ -179,6 +172,22 @@ class Deadline(datetime.date):
         Returns whether this deadline is in the past.
         """
         return self <= self.today
+
+
+class NoDeadline(object):
+    """
+    Like ``Deadline``, but for situations where there is no expiration date.
+    This class can't act like a ``date`` or implement the ``deadline`` method.
+    But it does work if the caller only needs to know whether the deadline has
+    passed yet, because the answer is always: no, it hasn't.
+
+    There's no need to construct instances of this class. Instead of using
+    ``NoDeadline()``, just use ``NoDeadline``.
+    """
+
+    @staticmethod
+    def has_passed():
+        return False
 
 
 class AugmentDeadlines(object):
@@ -1191,11 +1200,10 @@ class ApprovalStatus(models.Model):
 
     def submission_and_approval_deadline(self):
         """
-        Override in subclasses to return a date if people ought not to be
+        Override in subclasses to return a Deadline if people ought not to be
         editing or approving this request because a deadline has passed.
-        Calling code should use the has_deadline_passed helper above.
         """
-        return None
+        return NoDeadline
 
     def is_approver(self, user):
         """
