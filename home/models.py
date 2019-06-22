@@ -221,27 +221,6 @@ class RoundPage(Page):
     def official_name(self):
         return(self.internstarts.strftime("%B %Y") + " to " + self.internends.strftime("%B %Y") + " Outreachy internships")
 
-    def is_initial_application_period_open(self):
-        if has_deadline_passed(self.initial_applications_close):
-            return False
-        if has_deadline_passed(self.initial_applications_open):
-            return True
-        return False
-
-    def is_contribution_period_open(self):
-        if has_deadline_passed(self.contributions_close):
-            return False
-        if has_deadline_passed(self.contributions_open):
-            return True
-        return False
-
-    def is_application_period_open(self):
-        if has_deadline_passed(self.appslate):
-            return False
-        if has_deadline_passed(self.appsopen):
-            return True
-        return False
-
     def has_project_submission_and_approval_deadline_passed(self):
         return has_deadline_passed(self.lateprojects)
 

@@ -27,11 +27,9 @@ Past community participation in Outreachy
 	{% include 'home/snippet/cfp_read_only_closed_warning.html' %}
 {% endif %}
 
-{% if current_round.is_application_period_open %}
-	<p>
-	If you are an Outreachy applicant, you should look over the <a href="{% url 'project-selection' %}">list of projects</a> and pick a project from that list.
-	</p>
-{% endif %}
+<p>
+This page is for potential mentors and coordinators only. If you are an Outreachy applicant, please see the <a href="/apply/">application instructions</a> or <a href="{% url 'project-selection' %}">current list of projects</a>.
+</p>
 
 <h2>{{ community.name }} coordinator</h2>
 <p>Coordinators find and advise mentors who want to participate in Outreachy. Coordinators also provide information about the community for the landing page shown to applicants.</p>
