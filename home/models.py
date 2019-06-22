@@ -137,6 +137,36 @@ def has_deadline_passed(deadline_date):
     today = get_deadline_date_for(now)
     return deadline_date <= today
 
+
+class Deadline(datetime.date):
+    """
+    An extension of datetime.date which adds extra methods that are useful when
+    the date represents a deadline. This class also stores an extra ``today``
+    value that's used to determine whether the deadline has already passed.
+    """
+
+    def __new__(cls, base, today):
+        # datetime.date does magic with __new__ instead of __init__, which
+        # forces us to do it too. But if you pretend like this is just a weird
+        # way of writing __init__, I hope it's clear enough.
+        self = super(Deadline, cls).__new__(cls, base.year, base.month, base.day)
+        self.today = today
+        return self
+
+    def deadline(self):
+        """
+        Returns this deadline with time and timezone set from
+        ``DEADLINE_TIME``.
+        """
+        return datetime.datetime.combine(self, DEADLINE_TIME)
+
+    def has_passed(self):
+        """
+        Returns whether this deadline is in the past.
+        """
+        return self <= self.today
+
+
 class RoundPage(Page):
     roundnumber = models.IntegerField()
     pingnew = models.DateField("Date to start pinging new orgs")
@@ -220,6 +250,44 @@ class RoundPage(Page):
 
     def official_name(self):
         return(self.internstarts.strftime("%B %Y") + " to " + self.internends.strftime("%B %Y") + " Outreachy internships")
+
+    def __getattribute__(self, name):
+        """
+        Extend all fields that are plain dates to return an instance of
+        Deadline instead, where the Deadline's idea of ``today`` is set from
+        this RoundPage's ``today`` field.
+
+        >>> rp = RoundPage(internstarts=datetime.date(2019, 1, 1))
+        >>> rp.internstarts.deadline()
+        datetime.datetime(2019, 1, 1, 16, 0, tzinfo=datetime.timezone.utc)
+        >>> rp.today = datetime.date(2018, 12, 1)
+        >>> rp.internstarts.has_passed()
+        False
+        >>> rp.today = datetime.date(2019, 1, 1)
+        >>> rp.internstarts.has_passed()
+        True
+        """
+        # Call the default implementation first...
+        value = super(RoundPage, self).__getattribute__(name)
+
+        if type(value) is datetime.date:
+            # This is a plain date, so it's time for magic!
+
+            # Because we're overriding how attributes get accessed, we have to
+            # use the superclass implementation of this method to get at the
+            # field dictionary, or else we'd infinitely recurse.
+            instance_fields = super(RoundPage, self).__getattribute__("__dict__")
+
+            # Set self.today if nobody else did it already.
+            if "today" not in instance_fields:
+                now = datetime.datetime.now(DEADLINE_TIME.tzinfo)
+                instance_fields["today"] = get_deadline_date_for(now)
+
+            # Return the real deadline paired up with self.today.
+            return Deadline(value, instance_fields["today"])
+
+        # This was not a date, so return it as-is.
+        return value
 
     def has_project_submission_and_approval_deadline_passed(self):
         return has_deadline_passed(self.lateprojects)
