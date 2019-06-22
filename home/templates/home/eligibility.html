@@ -49,23 +49,25 @@
 
 <p>If you are concerned about these forms, please note that Outreachy has experience with people in the middle of a legal name change and transgender people who cannot change their legal name. Only Outreachy organizers and the Software Freedom Conservancy accounting team will see these legal documents. Your mentors will not see your tax form or your signed intern agreement.</p>
 
-{% if not current_round.has_application_period_started %}
+{% if not current_round.initial_applications_open.has_passed %}
 	<h2>Initial Application</h2>
 
 	<p>All Outreachy applicants will need to fill out an initial application.</p>
 
 	<p>The application system for Outreachy internships is currently closed.
-	The application system will be available when the application period opens on {{ current_round.appsopen }} 4pm UTC.
+	The application system will be available when the application period opens on {{ current_round.initial_applications_open }} at 4pm UTC.
+	Initial applications are due on {{ current_round.initial_applications_close }} 4pm UTC.
 	</p>
 	<p>
 	To get an email when the round opens, subscribe to the
 	<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">Outreachy announcement mailing list</a>.</p>
-{% elif not current_round.has_application_deadline_passed %}
+{% elif not current_round.initial_applications_close.has_passed %}
 	<h2>Initial Application</h2>
 
-	<p>All Outreachy applicants will need to fill out an initial application.
-	We encourage you to complete it as soon as possible.
-	It should only take you 5 minutes to 30 minutes.
+	<p>All Outreachy applicants must fill out an initial application by {{ current_round.initial_applications_close }} at 4pm UTC.
+	Applicants will not be able to move onto the contribution period without an approved initial application.</p>
+
+	<p>It should only take you 5 minutes to 30 minutes.
 	If you're unsure if you meet the above eligibility rules,
 	it's better to fill out the initial application.
 	Once you've submitted your initial application, if you have any questions,
