@@ -81,7 +81,7 @@
 	</div>
 {% elif role.application.is_pending %}
 	<div class="card border-info mb-3">
-		{% if not role.current_round.has_application_deadline_passed %}
+		{% if not role.current_round.contribution_opens.has_passed %}
 			<div class="card-header text-white bg-warning">Outreachy Initial Application Under Review</div>
 			<div class="card-body">
 				<p class="card-text">
@@ -111,7 +111,7 @@
 	{% with project_contributions=role.application.get_projects_contributed_to %}
 	{% if not project_contributions %}
 		<div class="card border-warning mb-3">
-			{% if not role.current_round.has_application_deadline_passed %}
+			{% if not role.current_round.contribution_closes.has_passed %}
 				<div class="card-header text-white bg-warning">A Contribution is Required</div>
 				<div class="card-body">
 					<p class="card-text">
@@ -150,13 +150,13 @@
 				Thank you for recording your contributions and creating {{ project_applications|pluralize:"a project final application, project final applications" }}. You will need to create a final application for each project, in order to be eligible to be selected as an intern for that project.
 				</p>
 				<p class="card-text">
-				{% if not role.current_round.has_application_deadline_passed %}
-					The final application deadline is {{ role.current_round.appslate|date:"F d, Y" }} at 4pm UTC.
+				{% if not role.current_round.contribution_closes.has_passed %}
+					The final application deadline is {{ role.current_round.contribution_closes|date:"F d, Y" }} at 4pm UTC.
 				{% else %}
-					The deadline to submit a final application was {{ role.current_round.appslate|date:"F d, Y" }} at 4pm UTC. Your final application{{ project_applications|pluralize }} will be reviewed.
+					The deadline to submit a final application was {{ role.current_round.contribution_closes|date:"F d, Y" }} at 4pm UTC. Your final application{{ project_applications|pluralize }} will be reviewed.
 				{% endif %}
 				</p>
-		{% elif role.current_round.has_application_deadline_passed %}
+		{% elif role.current_round.contribution_closes.has_passed %}
 			<div class="card border-info mb-3">
 			    <div class="card-header text-white bg-info">Internship Applications are Closed</div>
 			    <div class="card-body">
@@ -171,7 +171,7 @@
 				<strong>Your next step is to create a final application.</strong> You will need to create a final application for each project, in order to be eligible to be selected as an intern for that project.
 				</p>
 				<p class="card-text">
-				The final application deadline is {{ role.current_round.appslate|date:"F d, Y" }} at 4pm UTC.
+				The final application deadline is {{ role.current_round.contribution_closes|date:"F d, Y" }} at 4pm UTC.
 				</p>
 		{% endif %}
 			<h5 class="card-text">My Contributions</h5>
@@ -202,7 +202,7 @@
 					</li>
 				{% endfor %}
 			</ul>
-			{% if not role.current_round.has_application_deadline_passed %}
+			{% if not role.current_round.contribution_closes.has_passed %}
 				<p class="card-text">
 				Interested in applying to another project?
 				You'll need to record a contribution for a project in order to be eligible to create a final application.

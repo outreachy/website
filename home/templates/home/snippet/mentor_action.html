@@ -2,10 +2,10 @@
 	<div class="card-header text-white bg-info">Mentor actions</div>
 	<div class="card-body">
 		{% if project.approval_status == project.APPROVED %}
-			{% if project.project_round.participating_round.has_application_period_started %}
+			{% if project.project_round.participating_round.initial_applications_open.has_passed %}
 				<p class="card-text">This project is approved.
-				You should
-				<a href="{% url 'community-landing' round_slug=project.project_round.participating_round.slug community_slug=project.project_round.community.slug %}#{{ project.slug }}">promote your project listing</a>.</p>
+				You should promote your project listing:
+				<a href="{% url 'project-selection' %}#{{ project.project_round.community.slug }}"><pre>{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}#{{ project.project_round.community.slug }}</pre></a>
 				</p>
 				<p>
 				{{ project.get_applicants_and_contributions_list|length }} applicant{{ project.get_applicants_and_contributions_list|pluralize }} recorded their contributions
@@ -18,12 +18,13 @@
 				Please note: You can only accept an applicant as an intern if they have recorded their contributions and submitted a final application. If you have an applicant who has been making contributions but not recording it, you can tell them to record their contributions at this link:</p>
 				<p><pre>{{ request.scheme }}://{{ request.get_host }}{% url 'contributions' round_slug=current_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}</pre></p>
 				<p>
-				{{ current_round.appslate }} 4pm UTC is the deadline for applicants to record contributions and create a final application.
+				{{ current_round.contributions_close }} 4pm UTC is the deadline for applicants to record contributions and create a final application.
 				</p>
 			{% else %}
 				<p class="card-text">This project is approved.
-				Once applications are open, you can
-				<a href="{% url 'community-landing' round_slug=project.project_round.participating_round.slug community_slug=project.project_round.community.slug %}#{{ project.slug }}">promote your project listing</a>.</p>
+				Once initial applications open on {{ project.project_round.participating_round.initial_applications_open }}, you can
+				promote your project listing:
+				<a href="{% url 'project-selection' %}#{{ project.project_round.community.slug }}"><pre>{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}#{{ project.project_round.community.slug }}</pre></a></p>
 			{% endif %}
 			{% if project.project_round.approval_status == project.project_round.APPROVED %}
 				<p class="card-text">
