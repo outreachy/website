@@ -55,18 +55,19 @@ from .models import has_deadline_passed
 __all__ = ('get_dashboard_sections',)
 
 def get_dashboard_sections(request):
+    now = datetime.datetime.now(datetime.timezone.utc)
+    today = get_deadline_date_for(now)
+
     sections = []
     for section in DASHBOARD_SECTIONS:
-        context = section(request)
+        context = section(request, today)
         if context:
             template_name = "home/dashboard/{}.html".format(section.__name__)
             sections.append((template_name, context))
     return sections
 
 
-def intern_announcement(request):
-    now = datetime.datetime.now(datetime.timezone.utc)
-    today = get_deadline_date_for(now)
+def intern_announcement(request, today):
     try:
         # Find the newest round whose intern announcement date has passed.
         current_round = RoundPage.objects.filter(
@@ -103,10 +104,7 @@ def intern_announcement(request):
     }
 
 
-def coordinator_reminder(request):
-    now = datetime.datetime.now(datetime.timezone.utc)
-    today = get_deadline_date_for(now)
-
+def coordinator_reminder(request, today):
     # It's possible that some intern selections may not work out, and a mentor
     # will have to select another intern after the intern announcement date.
     # Show coordinator's communities until the day after their mentors' interns
@@ -126,13 +124,11 @@ def coordinator_reminder(request):
     return role
 
 
-def application_summary(request):
+def application_summary(request, today):
     # This should return non-None if, and only if,
     # views.applicant_review_summary doesn't raise an exception like
     # PermissionDenied.
 
-    now = datetime.datetime.now(datetime.timezone.utc)
-    today = get_deadline_date_for(now)
     try:
         current_round = RoundPage.objects.get(
             initial_applications_open__lte=today,
@@ -175,7 +171,7 @@ def application_summary(request):
     }
 
 
-def staff_subscriptions(request):
+def staff_subscriptions(request, today):
     # This template doesn't need any data, it just needs to be
     # hidden for non-staff.
     return request.user.is_staff
@@ -244,7 +240,7 @@ class MentorCheckDeadlinesReminder(SendEmailView):
 
     @staticmethod
     def instance(current_round):
-        return current_round.appslate - datetime.timedelta(weeks=2)
+        return current_round.contributions_close - datetime.timedelta(weeks=2)
 
     def generate_messages(self, current_round, connection):
         if not self.request.user.is_staff:
@@ -263,8 +259,8 @@ class MentorApplicationDeadlinesReminder(SendEmailView):
 
     @staticmethod
     def instance(current_round):
-        # Warn on a Monday at least 3 days before appslate:
-        due = current_round.appslate - datetime.timedelta(days=3)
+        # Warn on a Monday at least 3 days before contributions_close:
+        due = current_round.contributions_close - datetime.timedelta(days=3)
         due -= datetime.timedelta(days=due.weekday())
         return due
 
@@ -288,7 +284,7 @@ class MentorInternSelectionReminder(SendEmailView):
 
     @staticmethod
     def instance(current_round):
-        return current_round.appslate
+        return current_round.contributions_close
 
     def generate_messages(self, current_round, connection):
         if not self.request.user.is_staff:
@@ -312,7 +308,7 @@ class CoordinatorInternSelectionReminder(SendEmailView):
 
     @staticmethod
     def instance(current_round):
-        return current_round.appslate
+        return current_round.contributions_close
 
     def generate_messages(self, current_round, connection):
         if not self.request.user.is_staff:
@@ -352,7 +348,7 @@ class ContributorsApplicationPeriodEndedReminder(SendEmailView):
 
     @staticmethod
     def instance(current_round):
-        return current_round.appslate
+        return current_round.contributions_close
 
     def generate_messages(self, current_round, connection):
         if not self.request.user.is_staff:
@@ -377,11 +373,11 @@ class ContributorsDeadlinesReminder(SendEmailView):
 
     @staticmethod
     def first_reminder(current_round):
-        return current_round.appslate - datetime.timedelta(weeks=1)
+        return current_round.contributions_close - datetime.timedelta(weeks=1)
 
     @staticmethod
     def second_reminder(current_round):
-        return current_round.appslate - datetime.timedelta(days=1)
+        return current_round.contributions_close - datetime.timedelta(days=1)
 
     @classmethod
     def instances(cls):
@@ -549,12 +545,9 @@ all_round_events = (
     FinalFeedbackInstructions,
 )
 
-def round_events(request):
+def round_events(request, today):
     if not request.user.is_staff:
         return None
-
-    now = datetime.datetime.now(datetime.timezone.utc)
-    today = get_deadline_date_for(now)
 
     # How long before and after the ideal date should we display each reminder?
     early = datetime.timedelta(weeks=2)
@@ -589,12 +582,10 @@ def round_events(request):
         }
 
 
-def sponsor_statistics(request):
+def sponsor_statistics(request, today):
     if not request.user.is_staff:
         return None
 
-    now = datetime.datetime.now(datetime.timezone.utc)
-    today = get_deadline_date_for(now)
     try:
         current_round = RoundPage.objects.filter(
             initial_applications_open__lte=today,
@@ -606,12 +597,10 @@ def sponsor_statistics(request):
     return current_round
 
 
-def staff_intern_progress(request):
+def staff_intern_progress(request, today):
     if not request.user.is_staff:
         return None
 
-    now = datetime.datetime.now(datetime.timezone.utc)
-    today = get_deadline_date_for(now)
     try:
         current_round = RoundPage.objects.get(
             initialfeedback__lte=today + datetime.timedelta(days=7),
@@ -624,12 +613,10 @@ def staff_intern_progress(request):
     return current_round
 
 
-def staff_intern_selection(request):
+def staff_intern_selection(request, today):
     if not request.user.is_staff:
         return None
 
-    now = datetime.datetime.now(datetime.timezone.utc)
-    today = get_deadline_date_for(now)
     try:
         # There can't be any interns selected until they start making
         # contributions, so don't display this section until then.
@@ -644,12 +631,10 @@ def staff_intern_selection(request):
     return current_round
 
 
-def staff_community_progress(request):
+def staff_community_progress(request, today):
     if not request.user.is_staff:
         return None
 
-    now = datetime.datetime.now(datetime.timezone.utc)
-    today = get_deadline_date_for(now)
     try:
         # Show staff this table as soon as communities can start applying to
         # participate in a round, but nothing in it is relevant any more after
@@ -679,7 +664,7 @@ def staff_community_progress(request):
     }
 
 
-def selected_intern(request):
+def selected_intern(request, today):
     try:
         intern_selection = request.user.comrade.get_intern_selection()
     except Comrade.DoesNotExist:
@@ -688,7 +673,9 @@ def selected_intern(request):
         return None
 
     # No peeking! Wait for the announcement!
-    if not intern_selection.round().has_intern_announcement_deadline_passed():
+    current_round = intern_selection.round()
+    current_round.today = today
+    if not current_round.has_intern_announcement_deadline_passed():
         return None
 
     # We could check here how long ago this intern's round was, and
@@ -697,7 +684,7 @@ def selected_intern(request):
     return intern_selection
 
 
-def intern(request):
+def intern(request, today):
     # TODO: move this function somewhere common
     # or TODO: merge with selected_intern above
     # This import can't be at top-level because views.py imports this
@@ -706,9 +693,7 @@ def intern(request):
     return intern_in_good_standing(request.user)
 
 
-def eligibility_prompts(request):
-    now = datetime.datetime.now(datetime.timezone.utc)
-    today = get_deadline_date_for(now)
+def eligibility_prompts(request, today):
     try:
         current_round = RoundPage.objects.get(
             appsopen__lte=today,
@@ -721,7 +706,7 @@ def eligibility_prompts(request):
     return Role(request.user, current_round)
 
 
-def unselected_intern(request):
+def unselected_intern(request, today):
     """
     Display a message for people who filled out the eligibility form
     but didn't get selected. But only display it once the
@@ -729,8 +714,6 @@ def unselected_intern(request):
     away a few weeks later when the selected interns start working on
     their internships.
     """
-    now = datetime.datetime.now(datetime.timezone.utc)
-    today = get_deadline_date_for(now)
     try:
         applicant = ApplicantApproval.objects.exclude(
             internselection__organizer_approved=True,
@@ -746,18 +729,15 @@ def unselected_intern(request):
     return applicant
 
 
-def mentor(request):
+def mentor(request, today):
     return MentorRelationship.objects.filter(mentor__mentor__account=request.user)
 
 
-def mentor_projects(request):
+def mentor_projects(request, today):
     try:
         comrade = request.user.comrade
     except Comrade.DoesNotExist:
         return None
-
-    now = datetime.datetime.now(datetime.timezone.utc)
-    today = get_deadline_date_for(now)
 
     # It's possible that some intern selections may not work out,
     # and a mentor will have to select another intern
@@ -801,7 +781,7 @@ def mentor_projects(request):
     }
 
 
-def approval_status(request):
+def approval_status(request, today):
     """
     Find objects for which the current user is either an approver or a
     submitter, and list them all in one place.
