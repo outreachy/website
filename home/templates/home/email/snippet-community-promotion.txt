@@ -1,8 +1,6 @@
 Promoting To Outreachy Applicants
 ---------------------------------
 
-Once the Outreachy round opens on {{ current_round.appsopen }}, you can promote your community to Outreachy applicants by sending them the link to either the project round page, or your community's landing page:
+After the Outreachy initial application period opens on {{ current_round.initial_applications_open }}, you can promote your community to applicants by linking to the community projects list:
 
-{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
-
-{{ request.scheme }}://{{ request.get_host }}{% url 'community-landing' round_slug=current_round.slug community_slug=community.slug %}
+{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}#{{ community.slug }}
