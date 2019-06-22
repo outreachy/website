@@ -170,11 +170,11 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 
 	{% if approved_projects %}
 		<h2>Approved Projects for {{ community.name}}</h2>
-		{% if participation_info.approval_status == participation_info.APPROVED and participation_info.participating_round.has_application_period_started %}
-			<p>After the Outreachy round opens on {{ current_round.appsopen }}, you can promote this community to applicants by linking to the community landing page:</p>
-			<p><pre>{{ request.scheme }}://{{ request.get_host }}{% url 'community-landing' round_slug=current_round.slug community_slug=community.slug %}</pre></p>
-		{% endif %}
-		<p>The links below will take you to the {{ community.name }} project page for Outreachy applicants. The project details will be hidden from applicants unless the application period is open{% if participation_info.approval_status != participation_info.APPROVED %} and your community is approved{% endif %}.</p>
+
+		<p>You can promote your community's projects by linking to the current projects page:</p>
+		<p><pre>{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}#{{ community.slug }}</pre></p>
+
+		<p>Applicants cannot see the project details linked below until the contribution person opens on {{ current_round.contributions_open }}.</p>
 
 		<ul>
 		{% for project in approved_projects %}

@@ -232,7 +232,7 @@ Outreachy Internships | Apply | Pick a Project
 	{% endif %}
 
 	{% for community, funded_interns, projects in ontime_projects %}
-		<h4>{{ community.name }} - {{ funded_interns }} intern{{ funded_interns|pluralize }}</h4>
+		<h4 id='{{community.slug }}'>{{ community.name }} - {{ funded_interns }} intern{{ funded_interns|pluralize }}</h4>
 		<p>{{ community.description }}</p>
 		{% if role.application.is_approved or role.is_volunteer %}
 			{% if not current_round.has_contribution_deadline_passed %}
