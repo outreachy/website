@@ -23,7 +23,7 @@ Past community participation in Outreachy
 <p>Outreachy provides paid, remote, three-month internships. Outreachy's goal is to support diversity in Free and Open Source Software (FOSS). For more information about what Outreachy is and the deadlines for mentors and coordinators, <a href="/communities/cfp">read the Community Call for Participation page</a>.
 </p>
 
-{% if not current_round or current_round.has_application_deadline_passed %}
+{% if not current_round or current_round.project_soft_deadline.has_passed %}
 	{% include 'home/snippet/cfp_read_only_closed_warning.html' %}
 {% endif %}
 
@@ -128,7 +128,7 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 
 {% else %}
 {% if participation_info.approval_status == participation_info.PENDING or participation_info.approval_status == participation_info.APPROVED %}
-	{% if not current_round.has_project_submission_and_approval_deadline_passed %}
+	{% if not current_round.project_soft_deadline.has_passed %}
 		<h2>Submit an Outreachy Intern Project Proposal</h2>
 
 		<p>{{ community.name }} welcomes experienced community contributors to help out as mentors. Each mentor will need to submit their an intern project proposal. The project proposal will then be reviewed and approved by the FOSS community coordinator{{ approved_coordinator_list|length|pluralize }}. Additional co-mentors for the intern project will be able to sign up for the project after it has been approved by the community coordinator.</p>
