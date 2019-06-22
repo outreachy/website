@@ -1,4 +1,4 @@
-{% with community=project.project_round.community %}{% with current_round=project.project_round.participating_round %}{% with contributors=project.get_applicants_and_contributions_list %} {% with applicants=project.get_applications %}{% with coordinators=community.get_coordinator_email_list %}{{ project.application_deadline|date:"F d" }} 4pm UTC: Application deadline for your Outreachy {{ community.name }} project
+{% with community=project.project_round.community %}{% with current_round=project.project_round.participating_round %}{% with contributors=project.get_applicants_and_contributions_list %} {% with applicants=project.get_applications %}{% with coordinators=community.get_coordinator_email_list %}{{ current_round.contributions_close|date:"F d" }} 4pm UTC: Final application deadline for your Outreachy {{ community.name }} project
 
 Hi Outreachy mentor,
 
@@ -8,7 +8,7 @@ In order to be eligible to be selected as an Outreachy intern, each applicant mu
 2. Record a contribution to your project on the Outreachy site.
 3. Complete a final application for your project.
 
-The deadline for final applications is {{ current_round.appslate }} at 4pm UTC. Applicants will not be able to create a final application after the deadline. Applicants can edit their final application until the deadline.
+The deadline for final applications is {{ current_round.contributions_close }} at 4pm UTC. Applicants will not be able to create a final application after the deadline. Applicants can edit their final application until the deadline.
 
 Applicants who submit a final application will be able to continue recording and editing their contributions to your project. They can record contributions until the intern announcement deadline on {{ current_round.internannounce }} at 4pm UTC. Applicants who have not submitted a final application will not be able to record or edit their contributions.
 
