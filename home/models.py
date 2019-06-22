@@ -153,6 +153,20 @@ class Deadline(datetime.date):
         self.today = today
         return self
 
+    def __add__(self, other):
+        new = super(Deadline, self).__add__(other)
+        return Deadline(new, self.today)
+
+    def __sub__(self, other):
+        new = super(Deadline, self).__sub__(other)
+
+        if type(new) is datetime.date:
+            return Deadline(new, self.today)
+
+        # If it isn't a date, it's probably a timedelta, which we don't need to
+        # do anything with.
+        return new
+
     def deadline(self):
         """
         Returns this deadline with time and timezone set from
@@ -251,11 +265,16 @@ class RoundPage(Page):
     def official_name(self):
         return(self.internstarts.strftime("%B %Y") + " to " + self.internends.strftime("%B %Y") + " Outreachy internships")
 
+    def __init__(self, *args, **kwargs):
+        now = datetime.datetime.now(DEADLINE_TIME.tzinfo)
+        self.today = get_deadline_date_for(now)
+        super(RoundPage, self).__init__(*args, **kwargs)
+
     def __getattribute__(self, name):
         """
         Extend all fields that are plain dates to return an instance of
         Deadline instead, where the Deadline's idea of ``today`` is set from
-        this RoundPage's ``today`` field.
+        ``self.today``. For example:
 
         >>> rp = RoundPage(internstarts=datetime.date(2019, 1, 1))
         >>> rp.internstarts.deadline()
@@ -266,25 +285,23 @@ class RoundPage(Page):
         >>> rp.today = datetime.date(2019, 1, 1)
         >>> rp.internstarts.has_passed()
         True
+
+        Any Python class can override what ``obj.field`` means by implementing
+        this method, which then gets called like
+        ``obj.__getattribute__("field")``. See:
+
+        https://docs.python.org/3/reference/datamodel.html#object.__getattribute__
         """
         # Call the default implementation first...
         value = super(RoundPage, self).__getattribute__(name)
 
-        if type(value) is datetime.date:
-            # This is a plain date, so it's time for magic!
-
-            # Because we're overriding how attributes get accessed, we have to
-            # use the superclass implementation of this method to get at the
-            # field dictionary, or else we'd infinitely recurse.
-            instance_fields = super(RoundPage, self).__getattribute__("__dict__")
-
-            # Set self.today if nobody else did it already.
-            if "today" not in instance_fields:
-                now = datetime.datetime.now(DEADLINE_TIME.tzinfo)
-                instance_fields["today"] = get_deadline_date_for(now)
-
-            # Return the real deadline paired up with self.today.
-            return Deadline(value, instance_fields["today"])
+        if name != "today" and type(value) is datetime.date:
+            # This is a plain date; augment it with the Deadline extras. Note
+            # that accessing ``self.today`` triggers a recursive call to this
+            # function with name="today", so we have to be very careful: that
+            # call must not reach this same statement or it will recurse
+            # forever.
+            return Deadline(value, self.today)
 
         # This was not a date, so return it as-is.
         return value
@@ -352,7 +369,7 @@ class RoundPage(Page):
 
     # Interns get a five week extension at most.
     def has_internship_ended(self):
-        return has_deadline_passed(self.internends + datetime.timedelta(days=7*5))
+        return (self.internends + datetime.timedelta(days=7 * 5)).has_passed()
 
     def is_internship_active(self):
         if self.internstarts.has_passed():
@@ -369,7 +386,7 @@ class RoundPage(Page):
         return self.internstarts + datetime.timedelta(days=365*2)
 
     def is_travel_stipend_active(self):
-        return not has_deadline_passed(self.travel_stipend_deadline())
+        return not self.travel_stipend_deadline().has_passed()
 
     def has_application_deadline_passed(self):
         return self.appslate.has_passed()
@@ -384,7 +401,7 @@ class RoundPage(Page):
     # In some cases, we've changed or added an intern after the official announcement date.
     # The very latest we could do that would be five weeks after the official start date.
     def has_last_day_to_add_intern_passed(self):
-        return has_deadline_passed(self.internstarts + datetime.timedelta(days=5*7))
+        return (self.internstarts + datetime.timedelta(days=5 * 7)).has_passed()
 
     def gsoc_round(self):
         # The internships would start before August
@@ -545,12 +562,12 @@ class RoundPage(Page):
 
     # Interns have up to 90 days to submit their travel stipend request
     def has_travel_stipend_ended(self):
-        return has_deadline_passed(self.travel_stipend_ends() + datetime.timedelta(days=90))
+        return (self.travel_stipend_ends() + datetime.timedelta(days=90)).has_passed()
 
     # Travel stipends are good for travel starting the day the internship is announced
     # Until one year after their internship begins.
     def is_travel_stipend_valid(self):
-        return not has_deadline_passed(self.internstarts + datetime.timedelta(days=365))
+        return not self.travel_stipend_ends().has_passed()
 
     def get_common_skills_counter(self):
         approved_projects = Project.objects.filter(project_round__participating_round=self, approval_status=Project.APPROVED)
@@ -1767,7 +1784,7 @@ class Project(ApprovalStatus):
         return self.project_round.participating_round.lateprojects
 
     def has_application_deadline_passed(self):
-        return has_deadline_passed(self.application_deadline())
+        return self.application_deadline().has_passed()
 
     def application_deadline(self):
         return self.project_round.participating_round.appslate
