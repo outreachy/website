@@ -1,6 +1,6 @@
 {% load tz %}
 {% timezone comrade.timezone %}
-{% with applied_projects=role.application.get_projects_applied_to contribution_deadline=current_round.application_deadline %}
+{% with applied_projects=role.application.get_projects_applied_to contribution_deadline=current_round.appslate.deadline %}
 Complete your Outreachy internship applications
 
 In order to be eligible to be selected as an Outreachy intern, you must:

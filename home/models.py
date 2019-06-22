@@ -292,15 +292,6 @@ class RoundPage(Page):
     def has_project_submission_and_approval_deadline_passed(self):
         return has_deadline_passed(self.lateprojects)
 
-    def initial_application_deadline(self):
-        return datetime.datetime.combine(self.initial_applications_close, DEADLINE_TIME)
-
-    def contribution_deadline(self):
-        return datetime.datetime.combine(self.contributions_close, DEADLINE_TIME)
-
-    def application_deadline(self):
-        return datetime.datetime.combine(self.appslate, DEADLINE_TIME)
-
     def LateApplicationsDeadline(self):
         return(self.appslate + datetime.timedelta(days=7))
 
