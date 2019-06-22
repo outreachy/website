@@ -324,9 +324,6 @@ class RoundPage(AugmentDeadlines, Page):
     def project_soft_deadline(self):
         return self.lateprojects - datetime.timedelta(days=7)
 
-    def LateApplicationsDeadline(self):
-        return(self.appslate + datetime.timedelta(days=7))
-
     def has_intern_announcement_deadline_passed(self):
         return self.internannounce.has_passed()
 
@@ -794,7 +791,7 @@ class RoundPage(AugmentDeadlines, Page):
     def serve(self, request, *args, **kwargs):
         # If the project selection page (views.current_round_page) would
         # consider this a current_round, redirect there.
-        if self.pingnew.has_passed() and not self.appslate.has_passed():
+        if self.pingnew.has_passed() and not self.contributions_close.has_passed():
             return redirect('project-selection')
 
         # Only show this page if we shouldn't be showing the project selection page.
@@ -2245,7 +2242,7 @@ class ApplicantApproval(ApprovalStatus):
         return [email.organizers]
 
     def submission_and_editing_deadline(self):
-        return self.application_round.appslate
+        return self.application_round.initial_applications_close
 
     def get_preview_url(self):
         return reverse('applicant-review-detail', kwargs={'applicant_username': self.applicant.account.username})
@@ -4868,13 +4865,13 @@ class Role(object):
 
     @property
     def projects_with_upcoming_deadlines(self):
-        if self.current_round.appslate.has_passed():
+        if self.current_round.contributions_close.has_passed():
             return ()
         return self.projects_contributed_to
 
     @property
     def projects_with_passed_deadlines(self):
-        if not self.current_round.appslate.has_passed():
+        if not self.current_round.contributions_close.has_passed():
             return ()
         return self.projects_contributed_to
 
