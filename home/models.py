@@ -290,13 +290,13 @@ class RoundPage(Page):
         return value
 
     def has_project_submission_and_approval_deadline_passed(self):
-        return has_deadline_passed(self.lateprojects)
+        return self.lateprojects.has_passed()
 
     def LateApplicationsDeadline(self):
         return(self.appslate + datetime.timedelta(days=7))
 
     def has_intern_announcement_deadline_passed(self):
-        return has_deadline_passed(self.internannounce)
+        return self.internannounce.has_passed()
 
     def intern_agreement_deadline(self):
         return(self.internannounce + datetime.timedelta(days=7))
@@ -333,26 +333,26 @@ class RoundPage(Page):
         return self.internends + datetime.timedelta(days=7*5)
 
     def has_initial_application_period_started(self):
-        return has_deadline_passed(self.initial_applications_open)
+        return self.initial_applications_open.has_passed()
 
     def has_initial_application_deadline_passed(self):
-        return has_deadline_passed(self.initial_applications_close)
+        return self.initial_applications_close.has_passed()
 
     def has_contribution_period_started(self):
-        return has_deadline_passed(self.contributions_open)
+        return self.contributions_open.has_passed()
 
     def has_contribution_deadline_passed(self):
-        return has_deadline_passed(self.contributions_close)
+        return self.contributions_close.has_passed()
 
     def has_application_period_started(self):
-        return has_deadline_passed(self.appsopen)
+        return self.appsopen.has_passed()
 
     # Interns get a five week extension at most.
     def has_internship_ended(self):
         return has_deadline_passed(self.internends + datetime.timedelta(days=7*5))
 
     def is_internship_active(self):
-        if has_deadline_passed(self.internstarts):
+        if self.internstarts.has_passed():
             if not self.has_internship_ended():
                 return True
         return False
@@ -369,13 +369,13 @@ class RoundPage(Page):
         return not has_deadline_passed(self.travel_stipend_deadline())
 
     def has_application_deadline_passed(self):
-        return has_deadline_passed(self.appslate)
+        return self.appslate.has_passed()
 
     def has_intern_announcement_deadline_passed(self):
-        return has_deadline_passed(self.internannounce)
+        return self.internannounce.has_passed()
 
     def has_internship_start_date_passed(self):
-        return has_deadline_passed(self.internstarts)
+        return self.internstarts.has_passed()
 
     # Outreachy internships can be extended for up to five weeks past the official end date.
     # In some cases, we've changed or added an intern after the official announcement date.
@@ -1773,7 +1773,7 @@ class Project(ApprovalStatus):
         return self.project_round.participating_round.appslate
 
     def has_intern_announcement_deadline_passed(self):
-        return has_deadline_passed(self.project_round.participating_round.internannounce)
+        return self.project_round.participating_round.internannounce.has_passed()
 
     def is_approver(self, user):
         return self.project_round.community.is_coordinator(user)

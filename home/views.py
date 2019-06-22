@@ -1399,7 +1399,7 @@ class MentorApprovalAction(ApprovalStatusAction):
                 # approved intern selections, then only tell the new co-mentor
                 # about the approved interns.
                 current_round = self.object.project.project_round.participating_round
-                if has_deadline_passed(current_round.internapproval):
+                if current_round.internapproval.has_passed():
                     interns = interns.filter(organizer_approved=True)
 
                 for intern_selection in interns:
