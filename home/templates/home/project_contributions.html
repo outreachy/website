@@ -45,7 +45,7 @@
 	You need to submit a final application for each project you want to apply to.
 	You'll need to record one contribution to the project in the Outreachy website before you can submit a final application.
 	</p>
-	<p><b>{{ current_round.appslate }} 4pm UTC is the final application deadline.</b> You can edit your final application until the final application deadline.</p>
+	<p><b>{{ current_round.contributions_close }} 4pm UTC is the final application deadline.</b> You can edit your final application until the final application deadline.</p>
 	<p>
 	If you're having trouble figuring out how to contribute,
 	<a href="https://www.outreachy.org/apply/make-contributions/">check out our contribution tips</a>.
@@ -60,7 +60,7 @@
 		<p>You're viewing contributions to the following project:</p>
 		<p><strong>{{ project.short_title }}</strong></p>
 	{% endif %}
-		<p>Deadline was {{ current_round.appslate }} 4pm UTC to record your contributions and create a final application.
+		<p>Deadline was {{ current_round.contributions_close }} 4pm UTC to record your contributions and create a final application.
 	{% if final_application %}
 		Since you submitted a final application by the deadline, you are eligible to be selected as an intern for this project. You may continue recording your contributions to this project until the intern announcement on {{ current_round.internannounce }} at 4pm UTC.</p>
 	{% else %}
@@ -124,8 +124,7 @@
 		{% endif %}
 		If you wish to withdraw your application, there is a button at the bottom of your application to do so.<p>
 
-		<p>After the application deadline ({{ current_round.appslate }})
-		or the late application deadline ({{ current_round.appslate }}),
+		<p>After the final application deadline ({{ current_round.contributions_close }})
 		project mentors will take a couple weeks to decide who they want to accept as an intern.
 		They will review all applications in the application system,
 		and communicate their intern selection to Outreachy organizers.
