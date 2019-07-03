@@ -48,7 +48,7 @@ On {{ current_round.week_eight_chat_text_date }} UTC we will host a chat for bot
 
 {{ current_round.week_eight_timeline_chat_url }}
 
-Interns can share the link to their progress report blog post in the chat. We encourage you to share one project goal that you thought would be easy and why it took more time to complete than you thought.
+We encourage interns to share one project goal that they thought would be easy and why it took more time to complete.
 
 Mentors are encouraged to share what project goal they thought would take less time, but turned out to be more complex.
 
