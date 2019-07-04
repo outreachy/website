@@ -3259,9 +3259,6 @@ class Contribution(models.Model):
         except FinalApplication.DoesNotExist:
             return None
 
-    def get_submission_and_approval_deadline(self):
-        return self.project.project_round.participating_round.internannounce
-
     def __str__(self):
         return '{applicant} contribution for {community} - {project}'.format(
                 applicant = self.applicant.applicant.public_name,
