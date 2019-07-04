@@ -344,7 +344,7 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 				{% if community.newcommunity.cla %}<li>Code Licensing Agreement: {{ community.newcommunity.cla }}</li>{% endif %}
 				{% if community.newcommunity.dco %}<li>Developer Certificate of Origin: {{ community.newcommunity.dco }}</li>{% endif %}
 			{% endif %}
-			<li><a href="{% url 'community-landing' round_slug=participation_info.participating_round.slug community_slug=participation_info.community.slug %}">Community landing page</a></li>
+			<li><a href="{{ participation_info.get_absolute_url }}">Community landing page</a></li>
 		</ul>
 		{% if participation_info.approval_status != participation_info.APPROVED and not current_round.lateprojects.has_passed %}
 			<a href="{{ participation_info.get_approve_url }}" class="btn btn-success">Approve Community</a>

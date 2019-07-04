@@ -9,6 +9,6 @@ Details about community projects will only be visible to applicants with an appr
 
 The next step is for applicants to work with mentors on a contribution, AND record those in-progress contributions in the Outreachy website. Eligible applicants will see a 'Record Contributions' button on the community landing page next to each project proposal.
 
-{{ request.scheme }}://{{ request.get_host }}{% url 'community-landing' round_slug=participation.participating_round.slug community_slug=participation.community.slug %}
+{{ request.scheme }}://{{ request.get_host }}{{ participation.get_absolute_url }}
 
 Once applicants have recorded at least one contribution through the Outreachy, they will be able to start their application on the same page. The button text will change from 'Record Contributions' to 'Update Contibutions and Apply to This Project'.

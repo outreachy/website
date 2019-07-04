@@ -6,7 +6,7 @@ Add Project Communication Channels
 
 {% block content %}
 <p><a href="{% url 'community-cfp' %}">Timeline and FAQ for Outreachy Communities</a> &gt;
-<a href="{% url 'community-landing' round_slug=project.round.slug community_slug=project.project_round.community.slug %}">{{ project.project_round.community.name }}</a> &gt;
+<a href="{{ project.project_round.get_absolute_url }}">{{ project.project_round.community.name }}</a> &gt;
 Submit or edit a Project
 </p>
 

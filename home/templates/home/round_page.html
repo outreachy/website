@@ -32,7 +32,7 @@
 			<h4>{{ community.name }}</h4>
 			<p>{{ community.description }}</p>
 			{% if page.has_intern_announcement_deadline_passed %}
-				<p>Learn more on the <a href="{% url 'community-landing' round_slug=page.slug community_slug=participation.community.slug %}">{{ community.name }} community landing page</a>.</p>
+				<p>Learn more on the <a href="{{ participation.get_absolute_url }}">{{ community.name }} community landing page</a>.</p>
 			{% endif %}
 			{% with project_status="closed " current_round=page projects=participation.project_set.approved %}
 				{% include 'home/snippet/projects_for_round_page.html' %}

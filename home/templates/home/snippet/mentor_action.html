@@ -41,7 +41,7 @@
 		{% elif project.approval_status == project.PENDING %}
 			<p class="card-text">This project is pending.
 				Once applications are open and your project is approved, you can
-				<a href="{% url 'community-landing' round_slug=project.round.slug community_slug=project.project_round.community.slug %}#{{ project.slug }}">promote your project listing</a>.</p>
+				<a href="{{ project.project_round.get_absolute_url }}#{{ project.slug }}">promote your project listing</a>.</p>
 			<p class="card-text">After your project is approved, you will be able to review project applicants.
 				</p>
 		{% endif %}

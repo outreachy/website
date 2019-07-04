@@ -14,7 +14,7 @@
 			<p><strong>{{ project.short_title }}</strong></p>
 			<div class="card-text">{% include 'home/snippet/project_hidden.html' %}</div>
 		{% else %}
-			<p><strong><a href="{% url 'community-landing' round_slug=current_round.slug community_slug=project.project_round.community.slug %}#{{ project.slug }}">{{ project.short_title }}</a></strong></p>
+			<p><strong><a href="{{ project.project_round.get_absolute_url }}#{{ project.slug }}">{{ project.short_title }}</a></strong></p>
 		{% endif %}
 
 		{% include "home/snippet/project_deadline.html" %}
