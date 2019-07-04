@@ -33,7 +33,7 @@ During the five week contribution period, Outreachy applicants will make contrib
 
 Applicants will record their contributions through the Outreachy website. Eligible applicants will see a 'Record Contributions' button on the community landing page next to each project proposal. During the contribution period, you can send them the following link to ask them to record their contributions:
 
-{{ request.scheme }}://{{ request.get_host }}{% url 'community-landing' round_slug=current_round.slug community_slug=community.slug %}
+{{ request.scheme }}://{{ request.get_host }}{{ participation.get_absolute_url }}
 
 Final Application
 -----------------
@@ -42,7 +42,7 @@ Once an applicant has recorded a contribution, the next step is to make a final 
 
 You can send applicants the following link to ask them to create a final application:
 
-{{ request.scheme }}://{{ request.get_host }}{% url 'community-landing' round_slug=current_round.slug community_slug=community.slug %}
+{{ request.scheme }}://{{ request.get_host }}{{ participation.get_absolute_url }}
 
 There should be an 'Update Contributions and Apply to This Project' link visible to applicants on that page. Mentors will need to work with applicants to create a project timeline, taking into account the time constraints for both the applicant and the mentors.
 

@@ -216,7 +216,7 @@ def notify_accepted_intern(intern_selection, request, **kwargs):
     send_group_template_mail('home/email/interns-notify.txt', {
         'intern_selection': intern_selection,
         'coordinator_names': intern_selection.project.project_round.community.get_coordinator_names(),
-        'current_round': intern_selection.project.project_round.participating_round,
+        'current_round': intern_selection.project.round(),
         },
         request=request,
         recipient_list=emails,
@@ -231,7 +231,7 @@ def biweekly_internship_email(intern_selection, request, template, **kwargs):
         'intern_selection': intern_selection,
         'project': intern_selection.project,
         'community': intern_selection.project.project_round.community,
-        'current_round': intern_selection.project.project_round.participating_round,
+        'current_round': intern_selection.project.round(),
         },
         request=request,
         recipient_list=emails,
@@ -253,7 +253,7 @@ def feedback_email(intern_selection, request, stage, past_due, **kwargs):
         template = 'home/email/' + stage + '-feedback-instructions.txt'
     send_group_template_mail(template, {
         'intern_selection': intern_selection,
-        'current_round': intern_selection.project.project_round.participating_round,
+        'current_round': intern_selection.project.round(),
         },
         request=request,
         recipient_list=emails,
@@ -264,8 +264,8 @@ def notify_survey(survey_tracker, request):
         name = survey_tracker.intern_info.applicant.applicant.public_name
         email = survey_tracker.intern_info.applicant.applicant.email_address()
         community = survey_tracker.intern_info.project.project_round.community.name
-        internstarts = survey_tracker.intern_info.project.project_round.participating_round.internstarts
-        internends = survey_tracker.intern_info.project.project_round.participating_round.internends
+        internstarts = survey_tracker.intern_info.project.round().internstarts
+        internends = survey_tracker.intern_info.project.round().internends
     elif survey_tracker.alumni_info:
         name = survey_tracker.alumni_info.name
         email = Address(name, addr_spec=survey_tracker.alumni_info.email)

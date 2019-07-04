@@ -9,7 +9,7 @@
 			<div class="card-header bg-warning">Keep intern decisions private from mentees until {{ rel.round.internannounce }} at 4pm UTC</div>
 			<div class="card-body">
 				<p class="card-text">
-				You have selected {{ rel.intern_name }} as an intern for the {{ rel.community_name }} project "<a href="{% url 'community-landing' round_slug=rel.round.slug community_slug=rel.intern_selection.project.project_round.community.slug %}#{{ rel.intern_selection.project.slug }}">{{ rel.project_name }}</a>".</p>
+				You have selected {{ rel.intern_name }} as an intern for the {{ rel.community_name }} project "<a href="{{ rel.intern_selection.project.project_round.get_absolute_url }}#{{ rel.intern_selection.project.slug }}">{{ rel.project_name }}</a>".</p>
 				<p class="card-text">
 				{% if rel.intern_selection.organizer_approved == True %}
 					Your intern selection has been approved by Organizers.</p>
@@ -37,7 +37,7 @@
 		{% endif %}
 
 		{% if rel.intern_selection.organizer_approved == True %}
-			<p>You {% if rel.round.has_internship_ended %}mentored{% else %}are mentoring{% endif %} {{ rel.intern_name }} for the {{ rel.community_name }} project "<a href="{% url 'community-landing' round_slug=rel.round.slug community_slug=rel.intern_selection.project.project_round.community.slug %}#{{ rel.intern_selection.project.slug }}">{{ rel.project_name }}</a>".{% if not rel.round.has_internship_ended %} Please <a href="/mentor/mentor-faq/#during-the-internship">review our tips</a> for ensuring your mentee is successful.{% endif %}</p>
+			<p>You {% if rel.round.has_internship_ended %}mentored{% else %}are mentoring{% endif %} {{ rel.intern_name }} for the {{ rel.community_name }} project "<a href="{{ rel.intern_selection.project.project_round.get_absolute_url }}#{{ rel.intern_selection.project.slug }}">{{ rel.project_name }}</a>".{% if not rel.round.has_internship_ended %} Please <a href="/mentor/mentor-faq/#during-the-internship">review our tips</a> for ensuring your mentee is successful.{% endif %}</p>
 
 			{% if not rel.round.has_internship_ended %}
 				<h3>Co-mentors</h3>

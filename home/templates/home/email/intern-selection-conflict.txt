@@ -1,4 +1,4 @@
-{% with project=intern_selection.project %}{% with community=intern_selection.project.project_round.community %}{% with current_round=intern_selection.project.project_round.participating_round %}{% with conflicts=intern_selection.get_intern_selection_conflicts %}URGENT - Outreachy intern selection conflict with {{ community.name }} and {% for conflict in conflicts %}{{ conflict.project.project_round.community.name }}{% if not forloop.last %} and {% endif %}{% endfor %}
+{% with project=intern_selection.project %}{% with community=intern_selection.project.project_round.community %}{% with current_round=intern_selection.project.round %}{% with conflicts=intern_selection.get_intern_selection_conflicts %}URGENT - Outreachy intern selection conflict with {{ community.name }} and {% for conflict in conflicts %}{{ conflict.project.project_round.community.name }}{% if not forloop.last %} and {% endif %}{% endfor %}
 
 The Outreachy applicant {{ intern_selection.applicant.applicant.public_name }} has been selected for multiple projects:
 

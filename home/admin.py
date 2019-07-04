@@ -178,7 +178,7 @@ class ProjectAdmin(reversion.admin.VersionAdmin):
     community.admin_order_field = 'project_round__community__name'
 
     def round(self, obj):
-        return obj.project_round.participating_round
+        return obj.round()
     round.admin_order_field = '-project_round__participating_round__roundnumber'
 
 class MentorApprovalAdmin(reversion.admin.VersionAdmin):
@@ -210,7 +210,7 @@ class MentorApprovalAdmin(reversion.admin.VersionAdmin):
     community.admin_order_field = 'project__project_round__community__name'
 
     def round(self, obj):
-        return obj.project.project_round.participating_round
+        return obj.project.round()
     round.admin_order_field = '-project__project_round__participating_round__roundnumber'
 
 class CoordinatorApprovalAdmin(reversion.admin.VersionAdmin):

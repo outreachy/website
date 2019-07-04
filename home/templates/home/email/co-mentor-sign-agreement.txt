@@ -1,4 +1,4 @@
-{% with project=intern_selection.project %}{% with community=intern_selection.project.project_round.community %}{% with current_round=intern_selection.project.project_round.participating_round %}Outreachy intern selected - please sign mentoring agreement
+{% with project=intern_selection.project %}{% with community=intern_selection.project.project_round.community %}{% with current_round=intern_selection.project.round %}Outreachy intern selected - please sign mentoring agreement
 
 Your co-mentor selected an intern for your {{ community.name }} project "{{ project.short_title }}":
 

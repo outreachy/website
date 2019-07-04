@@ -361,18 +361,6 @@ class RoundPage(AugmentDeadlines, Page):
     def sfc_payment_last_date(self):
         return self.internends + datetime.timedelta(days=7*5)
 
-    def has_initial_application_period_started(self):
-        return self.initial_applications_open.has_passed()
-
-    def has_initial_application_deadline_passed(self):
-        return self.initial_applications_close.has_passed()
-
-    def has_contribution_period_started(self):
-        return self.contributions_open.has_passed()
-
-    def has_contribution_deadline_passed(self):
-        return self.contributions_close.has_passed()
-
     # Interns get a five week extension at most.
     def has_internship_ended(self):
         return (self.internends + datetime.timedelta(days=7 * 5)).has_passed()
@@ -391,15 +379,6 @@ class RoundPage(AugmentDeadlines, Page):
     def travel_stipend_deadline(self):
         return self.internstarts + datetime.timedelta(days=365*2)
 
-    def is_travel_stipend_active(self):
-        return not self.travel_stipend_deadline().has_passed()
-
-    def has_intern_announcement_deadline_passed(self):
-        return self.internannounce.has_passed()
-
-    def has_internship_start_date_passed(self):
-        return self.internstarts.has_passed()
-
     # Outreachy internships can be extended for up to five weeks past the official end date.
     # In some cases, we've changed or added an intern after the official announcement date.
     # The very latest we could do that would be five weeks after the official start date.
@@ -411,14 +390,6 @@ class RoundPage(AugmentDeadlines, Page):
         # for rounds aligned with GSoC
         # GSoC traditionally starts either in May or June
         return(self.internstarts.month < 8)
-
-    def get_approved_communities(self):
-        approved_participations = Participation.objects.filter(participating_round=self, approval_status=Participation.APPROVED).order_by('community__name')
-        return [p.community for p in approved_participations]
-
-    def get_approved_communities_and_projects(self):
-        approved_participations = Participation.objects.filter(participating_round=self, approval_status=Participation.APPROVED).order_by('community__name')
-        return [(p.community, p.project_set.approved()) for p in approved_participations]
 
     def number_approved_communities_with_projects(self):
         return Participation.objects.filter(participating_round=self,
@@ -560,17 +531,14 @@ class RoundPage(AugmentDeadlines, Page):
     def travel_stipend_starts(self):
         return self.internannounce
 
+    # Travel stipends are good for travel starting the day the internship is announced
+    # Until one year after their internship begins.
     def travel_stipend_ends(self):
         return self.internstarts + datetime.timedelta(days=365)
 
     # Interns have up to 90 days to submit their travel stipend request
     def has_travel_stipend_ended(self):
         return (self.travel_stipend_ends() + datetime.timedelta(days=90)).has_passed()
-
-    # Travel stipends are good for travel starting the day the internship is announced
-    # Until one year after their internship begins.
-    def is_travel_stipend_valid(self):
-        return not self.travel_stipend_ends().has_passed()
 
     def get_common_skills_counter(self):
         approved_projects = Project.objects.filter(project_round__participating_round=self, approval_status=Project.APPROVED)
@@ -1390,6 +1358,9 @@ class Participation(ApprovalStatus):
     community = models.ForeignKey(Community)
     participating_round = models.ForeignKey(RoundPage)
 
+    class Meta:
+        ordering = ('community__name',)
+
     def __str__(self):
         return '{start:%Y %B} to {end:%Y %B} round - {community}'.format(
                 community = self.community.name,
@@ -1472,7 +1443,7 @@ class Participation(ApprovalStatus):
         # Is the contribution period open and everyone should see the projects?
         # Note in the template, links are still hidden if the
         # initial application is pending or rejected
-        if self.participating_round.has_contribution_period_started():
+        if self.participating_round.contributions_open.has_passed():
             return True
 
         # Remaining conditions all require this person to be logged in
@@ -1518,7 +1489,7 @@ class Participation(ApprovalStatus):
         # Is the initial application period open?
         # Note in the template, links are still hidden if the
         # initial application is pending or rejected
-        if self.participating_round.has_initial_application_period_started():
+        if self.participating_round.initial_applications_open.has_passed():
             return True
 
         # Remaining conditions all require this person to be logged in
@@ -1749,15 +1720,15 @@ class Project(ApprovalStatus):
 
     def __str__(self):
         return '{start:%Y %B} to {end:%Y %B} round - {community} - {title}'.format(
-                start = self.project_round.participating_round.internstarts,
-                end = self.project_round.participating_round.internends,
-                community = self.project_round.community,
-                title = self.short_title,
-                )
+            start=self.round().internstarts,
+            end=self.round().internends,
+            community=self.project_round.community,
+            title=self.short_title,
+        )
 
     def get_preview_url(self):
         return reverse('project-read-only', kwargs={
-            'round_slug': self.project_round.participating_round.slug,
+            'round_slug': self.round().slug,
             'community_slug': self.project_round.community.slug,
             'project_slug': self.slug,
         })
@@ -1766,27 +1737,30 @@ class Project(ApprovalStatus):
         return reverse('project-selection') + '#' + self.project_round.community.slug + '-' + self.slug
 
     def get_landing_url(self):
-        return reverse('community-landing', kwargs={'round_slug': self.project_round.participating_round.slug, 'community_slug': self.project_round.community.slug}) + '#' + self.slug
+        return self.project_round.get_absolute_url() + '#' + self.slug
 
     def get_contributions_url(self):
-        return reverse('contributions', kwargs={'round_slug': self.project_round.participating_round.slug, 'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
+        return reverse('contributions', kwargs={'round_slug': self.round().slug, 'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
 
     def get_applicants_url(self):
-        return reverse('project-applicants', kwargs={'round_slug': self.project_round.participating_round.slug, 'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
+        return reverse('project-applicants', kwargs={'round_slug': self.round().slug, 'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
 
     def get_action_url(self, action):
         return reverse('project-action', kwargs={
-            'round_slug': self.project_round.participating_round.slug,
+            'round_slug': self.round().slug,
             'community_slug': self.project_round.community.slug,
             'project_slug': self.slug,
             'action': action,
         })
 
+    def round(self):
+        return self.project_round.participating_round
+
     def submission_and_approval_deadline(self):
-        return self.project_round.participating_round.lateprojects
+        return self.round().lateprojects
 
     def has_intern_announcement_deadline_passed(self):
-        return self.project_round.participating_round.internannounce.has_passed()
+        return self.round().internannounce.has_passed()
 
     def is_approver(self, user):
         return self.project_round.community.is_coordinator(user)
@@ -1945,12 +1919,12 @@ class ProjectSkill(models.Model):
 
     def __str__(self):
         return '{start:%Y %B} to {end:%Y %B} round - {community} - {title} - {skill}'.format(
-                start = self.project.project_round.participating_round.internstarts,
-                end = self.project.project_round.participating_round.internends,
-                community = self.project.project_round.community,
-                title = self.project.short_title,
-                skill = self.skill,
-                )
+            start=self.project.round().internstarts,
+            end=self.project.round().internends,
+            community=self.project.project_round.community,
+            title=self.project.short_title,
+            skill=self.skill,
+        )
 
 def mentor_read_instructions(value):
     if value is False:
@@ -2057,16 +2031,16 @@ class MentorApproval(ApprovalStatus):
 
     def __str__(self):
         return '{mentor} - {start:%Y %B} to {end:%Y %B} round - {community} - {title}'.format(
-                mentor = self.mentor.public_name,
-                start = self.project.project_round.participating_round.internstarts,
-                end = self.project.project_round.participating_round.internends,
-                community = self.project.project_round.community,
-                title = self.project.short_title,
-                )
+            mentor=self.mentor.public_name,
+            start=self.project.round().internstarts,
+            end=self.project.round().internends,
+            community=self.project.project_round.community,
+            title=self.project.short_title,
+        )
 
     def get_preview_url(self):
         return reverse('mentorapproval-preview', kwargs={
-            'round_slug': self.project.project_round.participating_round.slug,
+            'round_slug': self.project.round().slug,
             'community_slug': self.project.project_round.community.slug,
             'project_slug': self.project.slug,
             'username': self.mentor.account.username,
@@ -2074,7 +2048,7 @@ class MentorApproval(ApprovalStatus):
 
     def get_action_url(self, action, current_user=None):
         kwargs = {
-            'round_slug': self.project.project_round.participating_round.slug,
+            'round_slug': self.project.round().slug,
             'community_slug': self.project.project_round.community.slug,
             'project_slug': self.project.slug,
             'action': action,
@@ -2084,7 +2058,7 @@ class MentorApproval(ApprovalStatus):
         return reverse('mentorapproval-action', kwargs=kwargs)
 
     def submission_and_approval_deadline(self):
-        return self.project.project_round.participating_round.internends + datetime.timedelta(days=7*5)
+        return self.project.round().internends + datetime.timedelta(days=7 * 5)
 
     def is_approver(self, user):
         return self.project.project_round.community.is_coordinator(user)
@@ -3283,9 +3257,6 @@ class Contribution(models.Model):
         except FinalApplication.DoesNotExist:
             return None
 
-    def get_submission_and_approval_deadline(self):
-        return self.project.project_round.participating_round.internannounce
-
     def __str__(self):
         return '{applicant} contribution for {community} - {project}'.format(
                 applicant = self.applicant.applicant.public_name,
@@ -3420,7 +3391,7 @@ class FinalApplication(ApprovalStatus):
 
     def get_action_url(self, action, **kwargs):
         return reverse('application-action', kwargs={
-            'round_slug': self.project.project_round.participating_round.slug,
+            'round_slug': self.project.round().slug,
             'community_slug': self.project.project_round.community.slug,
             'project_slug': self.project.slug,
             'username': self.applicant.applicant.account.username,
@@ -3428,7 +3399,7 @@ class FinalApplication(ApprovalStatus):
             })
 
     def submission_and_approval_deadline(self):
-        return self.project.project_round.participating_round.contribution_closes
+        return self.project.round().contribution_closes
 
     def number_contributions(self):
         return Contribution.objects.filter(
@@ -3527,13 +3498,13 @@ class InternSelection(AugmentDeadlines, models.Model):
                 mentor__account=user).exists()
 
     def intern_has_custom_dates(self):
-        if self.intern_starts != self.project.project_round.participating_round.internstarts:
+        if self.intern_starts != self.project.round().internstarts:
             return True
-        if self.intern_ends != self.project.project_round.participating_round.internends:
+        if self.intern_ends != self.project.round().internends:
             return True
-        if self.initial_feedback_due != self.project.project_round.participating_round.initialfeedback:
+        if self.initial_feedback_due != self.project.round().initialfeedback:
             return True
-        if self.midpoint_feedback_due != self.project.project_round.participating_round.midfeedback:
+        if self.midpoint_feedback_due != self.project.round().midfeedback:
             return True
         return False
 
@@ -3604,7 +3575,7 @@ class InternSelection(AugmentDeadlines, models.Model):
         return self.applicant.applicant.public_name
 
     def round(self):
-        return self.project.project_round.participating_round
+        return self.project.round()
 
     def community_name(self):
         return self.project.project_round.community.name
@@ -3636,13 +3607,13 @@ class InternSelection(AugmentDeadlines, models.Model):
         if self.funding_source == self.NOT_FUNDED:
             return []
         return InternSelection.objects.filter(
-                project__project_round__participating_round=self.project.project_round.participating_round,
-                applicant=self.applicant,
-                ).exclude(funding_source=self.NOT_FUNDED).exclude(project=self.project).all()
+            project__project_round__participating_round=self.project.round(),
+            applicant=self.applicant,
+        ).exclude(funding_source=self.NOT_FUNDED).exclude(project=self.project).all()
 
     def get_mentor_agreement_url(self):
         return reverse('select-intern', kwargs={
-            'round_slug': self.project.project_round.participating_round.slug,
+            'round_slug': self.project.round().slug,
             'community_slug': self.project.project_round.community.slug,
             'project_slug': self.project.slug,
             'applicant_username': self.applicant.applicant.account.username,
@@ -3725,7 +3696,7 @@ class MentorRelationship(models.Model):
         return self.intern_selection.applicant.applicant.public_name
 
     def round(self):
-        return self.intern_selection.project.project_round.participating_round
+        return self.intern_selection.project.round()
 
     def community_name(self):
         return self.intern_selection.project.project_round.community.name
@@ -4790,11 +4761,9 @@ class Role(object):
         and the community is approved to participate in the current round.
         """
         if self.current_round is not None and self.user.is_authenticated:
-            return Community.objects.filter(
-                participation__participating_round=self.current_round,
-                participation__approval_status=ApprovalStatus.APPROVED,
-                coordinatorapproval__coordinator__account=self.user,
-                coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+            return self.current_round.participation_set.approved().filter(
+                community__coordinatorapproval__coordinator__account=self.user,
+                community__coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
             )
         return Community.objects.none()
 

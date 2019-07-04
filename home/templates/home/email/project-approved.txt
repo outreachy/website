@@ -1,5 +1,5 @@
 {% with community=project.project_round.community %}
-{% with current_round=project.project_round.participating_round %}
+{% with current_round=project.round %}
 Accepted Outreachy intern project: {{ project.short_title }}
 
 Hi {{ recipient.display_name }},
@@ -8,7 +8,7 @@ A {{ community.name }} coordinator has approved this Outreachy internship projec
 
 {{ request.scheme }}://{{ request.get_host }}{{ project.get_landing_url }}
 
-{% include 'home/email/snippet-volunteer-participation-approved.txt' %}
+{% include 'home/email/snippet-volunteer-participation-approved.txt' with participation=project.project_round %}
 
 Thank you for mentoring for {{ community.name }}! We appreciate the help you give Outreachy applicants and interns.
 

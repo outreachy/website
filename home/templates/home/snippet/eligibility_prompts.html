@@ -186,7 +186,7 @@
 							{% if not current_round.contributions_close.has_passed %}
 								<li><a href="{{ p.get_contributions_url }}">Record your contributions</a></li>
 								<li><a href="{{ p.get_contributions_url }}">Edit or create a final application</a></li>
-								<li><a href="{% url 'community-landing' round_slug=role.current_round.slug community_slug=p.project_round.community.slug %}">View project information</a></li>
+								<li><a href="{{ p.project_round.get_absolute_url }}">View project information</a></li>
 							{% else %}
 								{% if p in project_applications %}
 									<li><a href="{{ p.get_contributions_url }}">Record your contributions</a></li>
@@ -196,7 +196,7 @@
 										you are not eligible to be selected as an intern for this project.</li>
 									<li><a href="{{ p.get_contributions_url }}">View your contributions</a></li>
 								{% endif %}
-								<li><a href="{% url 'community-landing' round_slug=role.current_round.slug community_slug=p.project_round.community.slug %}">View project information</a></li>
+								<li><a href="{{ p.project_round.get_absolute_url }}">View project information</a></li>
 							{% endif %}
 						</ul>
 					</li>
@@ -244,12 +244,12 @@
 		</p>
 		<p><a href="{% url 'account' %}">Edit your personal or coordinator information</a></p>
 
-		{% for c in communities %}
-		<h4>Coordinator actions for {{ c.name }}</h4>
+		{% for participation in communities %}
+		<h4>Coordinator actions for {{ participation.community.name }}</h4>
 		<ul>
-			<li><a href="{% url 'community-landing' round_slug=role.current_round.slug community_slug=c.slug %}">View the community projects page applicants see</a></li>
-			<li><a href="{% url 'community-read-only' community_slug=c.slug %}">Edit the community info</a></li>
-			<li><a href="{% url 'community-applicants' round_slug=role.current_round.slug community_slug=c.slug %}">Review community applicants</a></li>
+			<li><a href="{{ participation.get_absolute_url }}">View the community projects page applicants see</a></li>
+			<li><a href="{{ participation.get_preview_url }}">Edit the community info</a></li>
+			<li><a href="{% url 'community-applicants' round_slug=role.current_round.slug community_slug=participation.community.slug %}">Review community applicants</a></li>
 		</ul>
 		{% endfor %}
 	    </div>

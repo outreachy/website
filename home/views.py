@@ -876,10 +876,10 @@ def current_round_page(request):
                 continue
             projects = p.project_set.approved().filter(new_contributors_welcome=False)
             if projects:
-                closed_approved_projects.append((p.community, projects))
+                closed_approved_projects.append((p, projects))
             projects = p.project_set.approved().filter(new_contributors_welcome=True)
             if projects:
-                ontime_approved_projects.append((p.community, p.interns_funded(), projects))
+                ontime_approved_projects.append((p, projects))
 
     return render(request, 'home/round_page_with_communities.html',
             {
@@ -1313,7 +1313,7 @@ def project_read_only_view(request, round_slug, community_slug, project_slug):
 
     return render(request, 'home/project_read_only.html',
         {
-            'current_round': project.project_round.participating_round,
+            'current_round': project.round(),
             'community': project.project_round.community,
             'project' : project,
             'approved_mentors': approved_mentors,
@@ -1425,7 +1425,7 @@ class MentorApprovalAction(ApprovalStatusAction):
         # project yet when they first sign up.
         if self.kwargs['action'] == 'submit' and self.object.project.is_submitter(self.request.user):
             return reverse('project-skills-edit', kwargs={
-                'round_slug': self.object.project.project_round.participating_round.slug,
+                'round_slug': self.object.project.round().slug,
                 'community_slug': self.object.project.project_round.community.slug,
                 'project_slug': self.object.project.slug,
                 })
@@ -1441,7 +1441,7 @@ class MentorApprovalAction(ApprovalStatusAction):
                 # If we're adding a co-mentor after Outreachy organizers have
                 # approved intern selections, then only tell the new co-mentor
                 # about the approved interns.
-                current_round = self.object.project.project_round.participating_round
+                current_round = self.object.project.round()
                 if current_round.internapproval.has_passed():
                     interns = interns.filter(organizer_approved=True)
 
@@ -1488,7 +1488,7 @@ class ProjectAction(ApprovalStatusAction):
             return mentor.get_action_url('submit', self.request.user)
         elif self.kwargs['action'] == 'submit':
             return reverse('project-skills-edit', kwargs={
-                'round_slug': self.object.project_round.participating_round.slug,
+                'round_slug': self.object.round().slug,
                 'community_slug': self.object.project_round.community.slug,
                 'project_slug': self.object.slug,
                 })
@@ -1560,7 +1560,7 @@ class ProjectContributions(LoginRequiredMixin, ComradeRequiredMixin, EligibleApp
                 project_round__participating_round__slug=self.kwargs['round_slug'],
                 project_round__approval_status=ApprovalStatus.APPROVED)
 
-        current_round = project.project_round.participating_round
+        current_round = project.round()
         role = Role(self.request.user, current_round)
 
         # Note that there's no reason to ever keep a past applicant from
@@ -1607,7 +1607,7 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, EligibleAppli
                 project_round__participating_round__slug=self.kwargs['round_slug'],
                 project_round__approval_status=ApprovalStatus.APPROVED)
 
-        current_round = project.project_round.participating_round
+        current_round = project.round()
 
         applicant = get_object_or_404(ApplicantApproval,
                 applicant=self.request.user.comrade,
@@ -1637,7 +1637,7 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, EligibleAppli
 
     def get_success_url(self):
         return reverse('contributions', kwargs={
-            'round_slug': self.object.project.project_round.participating_round.slug,
+            'round_slug': self.object.project.round().slug,
             'community_slug': self.object.project.project_round.community.slug,
             'project_slug': self.object.project.slug,
             })
@@ -1657,7 +1657,7 @@ class FinalApplicationRate(LoginRequiredMixin, ComradeRequiredMixin, View):
         if request.user.comrade not in [m.mentor for m in approved_mentors]:
             raise PermissionDenied("You are not an approved mentor for this project.")
 
-        current_round = project.project_round.participating_round
+        current_round = project.round()
 
         if not current_round.contributions_open.has_passed():
             raise PermissionDenied("You cannot rate an applicant until the Outreachy application period opens.")
@@ -1707,7 +1707,7 @@ class FinalApplicationAction(ApprovalStatusAction):
                 project_round__participating_round__slug=self.kwargs['round_slug'],
                 project_round__approval_status=ApprovalStatus.APPROVED)
 
-        current_round = project.project_round.participating_round
+        current_round = project.round()
 
         if not current_round.contributions_open.has_passed():
             raise PermissionDenied("You can't submit a final application until the Outreachy application period opens.")
@@ -1730,7 +1730,7 @@ class FinalApplicationAction(ApprovalStatusAction):
 
     def get_success_url(self):
         return reverse('contributions', kwargs={
-            'round_slug': self.object.project.project_round.participating_round.slug,
+            'round_slug': self.object.project.round().slug,
             'community_slug': self.object.project.project_round.community.slug,
             'project_slug': self.object.project.slug,
             })
@@ -1750,13 +1750,13 @@ class ProjectApplicants(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
                 project_round__participating_round__slug=kwargs['round_slug'],
                 project_round__approval_status=ApprovalStatus.APPROVED)
 
-        current_round = project.project_round.participating_round
+        current_round = project.round()
 
         # Note that there's no reason to ever keep someone who was a
         # coordinator or mentor in a past round from looking at who applied in
         # that round.
 
-        if not self.request.user.is_staff and not project.project_round.community.is_coordinator(self.request.user) and not project.project_round.participating_round.is_mentor(self.request.user):
+        if not self.request.user.is_staff and not project.project_round.community.is_coordinator(self.request.user) and not project.round().is_mentor(self.request.user):
             raise PermissionDenied("You are not an approved mentor for this project.")
 
         contributions = project.contribution_set.filter(
@@ -2121,7 +2121,7 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.
         context['community'] = self.project.project_round.community
         context['applicant'] = self.applicant
         context['intern_selection'] = intern_selection
-        context['current_round'] = self.project.project_round.participating_round
+        context['current_round'] = self.project.round()
         return context
 
     def form_valid(self, form):
@@ -2138,17 +2138,18 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.
         except InternSelection.DoesNotExist:
             was_intern_selection_created = True
 
+            current_round = self.project.round()
             intern_selection = InternSelection.objects.create(
                     applicant=self.applicant,
                     project=self.project,
-                    intern_starts=self.project.project_round.participating_round.internstarts,
-                    initial_feedback_opens=self.project.project_round.participating_round.initialfeedback - timedelta(days=7),
-                    initial_feedback_due=self.project.project_round.participating_round.initialfeedback,
-                    midpoint_feedback_opens=self.project.project_round.participating_round.midfeedback - timedelta(days=7),
-                    midpoint_feedback_due=self.project.project_round.participating_round.midfeedback,
-                    intern_ends=self.project.project_round.participating_round.internends,
-                    final_feedback_opens=self.project.project_round.participating_round.finalfeedback - timedelta(days=7),
-                    final_feedback_due=self.project.project_round.participating_round.finalfeedback,
+                    intern_starts=current_round.internstarts,
+                    initial_feedback_opens=current_round.initialfeedback - timedelta(days=7),
+                    initial_feedback_due=current_round.initialfeedback,
+                    midpoint_feedback_opens=current_round.midfeedback - timedelta(days=7),
+                    midpoint_feedback_due=current_round.midfeedback,
+                    intern_ends=current_round.internends,
+                    final_feedback_opens=current_round.finalfeedback - timedelta(days=7),
+                    final_feedback_due=current_round.finalfeedback,
                     )
 
         # Fill in the date and IP address of the signed contract
@@ -2228,7 +2229,7 @@ class InternRemoval(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Re
         context['project'] = self.project
         context['community'] = self.project.project_round.community
         context['applicant'] = self.applicant
-        context['current_round'] = self.project.project_round.participating_round
+        context['current_round'] = self.project.round()
         return context
 
     # get_success_url is called before the object is deleted in DeleteView.delete()
@@ -2271,7 +2272,7 @@ def project_timeline(request, round_slug, community_slug, project_slug, applican
         'intern_selection': intern_selection,
         'project': intern_selection.project,
         'community': intern_selection.project.project_round.community,
-        'current_round': intern_selection.project.project_round.participating_round,
+        'current_round': intern_selection.project.round(),
         'final_application': final_application,
         })
 
@@ -2994,8 +2995,8 @@ class Survey2018Notification(LoginRequiredMixin, ComradeRequiredMixin, TemplateV
         # Only send the survey to interns who have completed their internship
         past_interns = InternSelection.objects.filter(organizer_approved=True,
                 project__project_round__participating_round__internends__lte=date.today())
-        past_interns_opt_out = [p for p in past_interns if p.survey_opt_out == True or p.project.project_round.participating_round.internends >= date.today()]
-        past_interns = [p for p in past_interns if p.survey_opt_out == False and p.project.project_round.participating_round.internends >= date.today()]
+        past_interns_opt_out = [p for p in past_interns if p.survey_opt_out or p.project.round().internends >= date.today()]
+        past_interns = [p for p in past_interns if not p.survey_opt_out and p.project.round().internends >= date.today()]
 
         return alums, alums_opt_out, past_interns, past_interns_opt_out
 
