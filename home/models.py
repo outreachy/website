@@ -379,9 +379,6 @@ class RoundPage(AugmentDeadlines, Page):
     def travel_stipend_deadline(self):
         return self.internstarts + datetime.timedelta(days=365*2)
 
-    def has_intern_announcement_deadline_passed(self):
-        return self.internannounce.has_passed()
-
     # Outreachy internships can be extended for up to five weeks past the official end date.
     # In some cases, we've changed or added an intern after the official announcement date.
     # The very latest we could do that would be five weeks after the official start date.
