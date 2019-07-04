@@ -26,13 +26,13 @@ class RoundPageTestCase(TestCase):
                 project_round__participating_round__start_date=past)
 
         # Grab the current project selection page
-        response = self.client.post(reverse('project-selection'))
+        response = self.client.get(reverse('project-selection'))
         # Page should return a normal status code of 200
         # Make sure that the contents don't include the approved project title from last round
         self.assertNotContains(response, project_title, status_code=200)
 
         # Grab the community and project CFP page
-        response = self.client.post(reverse('community-cfp'))
+        response = self.client.get(reverse('community-cfp'))
         # Make sure that the contents don't include the community as currently participating
         self.assertNotContains(response, 'review the list of participating communities below who are looking for help', status_code=200)
         # Make sure the page shows the community as a past approved community
@@ -104,7 +104,7 @@ class RoundPageTestCase(TestCase):
         # Login as the pending mentor
         self.client.force_login(pending_mentor_approval.mentor.account)
 
-        response = self.client.post(reverse('project-selection'))
+        response = self.client.get(reverse('project-selection'))
         # Make sure that the contents does include the mentor's pending project title
         self.assertContains(response, '<h2>Your Pending Outreachy Internship Projects</h2>', status_code=200)
         self.assertContains(response, pending_project_title, status_code=200)
@@ -115,7 +115,7 @@ class RoundPageTestCase(TestCase):
         # Login as the approved mentor
         self.client.force_login(pending_mentor_approval.mentor.account)
 
-        response = self.client.post(reverse('project-selection'))
+        response = self.client.get(reverse('project-selection'))
         # Make sure that the contents does include the mentor's approved project title
         self.assertContains(response, approved_project_title, status_code=200)
         # Make sure that the contents does not include the other mentor's pending project title
@@ -142,7 +142,7 @@ class RoundPageTestCase(TestCase):
                 project_round__participating_round__start_date=open_date)
 
         # Grab the current project selection page
-        response = self.client.post(reverse('project-selection'))
+        response = self.client.get(reverse('project-selection'))
         # Page should return a normal status code of 200
         # Make sure that the contents does include the approved project title from this round
         self.assertContains(response, project_title, status_code=200)
@@ -150,7 +150,7 @@ class RoundPageTestCase(TestCase):
         self.assertContains(response, '<h2 id="open-projects">Outreachy Open Projects</h2>', status_code=200)
 
         # Grab the community and project CFP page
-        response = self.client.post(reverse('community-cfp'))
+        response = self.client.get(reverse('community-cfp'))
         # Make sure it includes the community as currently participating
         self.assertContains(response, 'review the list of participating communities below who are looking for help', status_code=200)
         # Make sure the page shows the community
