@@ -361,18 +361,6 @@ class RoundPage(AugmentDeadlines, Page):
     def sfc_payment_last_date(self):
         return self.internends + datetime.timedelta(days=7*5)
 
-    def has_initial_application_period_started(self):
-        return self.initial_applications_open.has_passed()
-
-    def has_initial_application_deadline_passed(self):
-        return self.initial_applications_close.has_passed()
-
-    def has_contribution_period_started(self):
-        return self.contributions_open.has_passed()
-
-    def has_contribution_deadline_passed(self):
-        return self.contributions_close.has_passed()
-
     # Interns get a five week extension at most.
     def has_internship_ended(self):
         return (self.internends + datetime.timedelta(days=7 * 5)).has_passed()
@@ -391,14 +379,8 @@ class RoundPage(AugmentDeadlines, Page):
     def travel_stipend_deadline(self):
         return self.internstarts + datetime.timedelta(days=365*2)
 
-    def is_travel_stipend_active(self):
-        return not self.travel_stipend_deadline().has_passed()
-
     def has_intern_announcement_deadline_passed(self):
         return self.internannounce.has_passed()
-
-    def has_internship_start_date_passed(self):
-        return self.internstarts.has_passed()
 
     # Outreachy internships can be extended for up to five weeks past the official end date.
     # In some cases, we've changed or added an intern after the official announcement date.
@@ -560,17 +542,14 @@ class RoundPage(AugmentDeadlines, Page):
     def travel_stipend_starts(self):
         return self.internannounce
 
+    # Travel stipends are good for travel starting the day the internship is announced
+    # Until one year after their internship begins.
     def travel_stipend_ends(self):
         return self.internstarts + datetime.timedelta(days=365)
 
     # Interns have up to 90 days to submit their travel stipend request
     def has_travel_stipend_ended(self):
         return (self.travel_stipend_ends() + datetime.timedelta(days=90)).has_passed()
-
-    # Travel stipends are good for travel starting the day the internship is announced
-    # Until one year after their internship begins.
-    def is_travel_stipend_valid(self):
-        return not self.travel_stipend_ends().has_passed()
 
     def get_common_skills_counter(self):
         approved_projects = Project.objects.filter(project_round__participating_round=self, approval_status=Project.APPROVED)
@@ -1472,7 +1451,7 @@ class Participation(ApprovalStatus):
         # Is the contribution period open and everyone should see the projects?
         # Note in the template, links are still hidden if the
         # initial application is pending or rejected
-        if self.participating_round.has_contribution_period_started():
+        if self.participating_round.contributions_open.has_passed():
             return True
 
         # Remaining conditions all require this person to be logged in
@@ -1518,7 +1497,7 @@ class Participation(ApprovalStatus):
         # Is the initial application period open?
         # Note in the template, links are still hidden if the
         # initial application is pending or rejected
-        if self.participating_round.has_initial_application_period_started():
+        if self.participating_round.initial_applications_open.has_passed():
             return True
 
         # Remaining conditions all require this person to be logged in

@@ -33,7 +33,7 @@ Outreachy internships working with {{ community.name }}
 
 	{% else %}{# allowed to see project details (this could be an approved mentor/coordinator before the contribution period opens or a person with an approved initial application after the contribution period opens) #}
 
-		{% if not current_round.has_contribution_period_started %}
+		{% if not current_round.contributions_open.has_passed %}
 			<div class="card border-info mb-3">
 				<div class="card-header text-white bg-warning">Contribution period is not open</div>
 				<div class="card-body">
@@ -75,7 +75,7 @@ Outreachy internships working with {{ community.name }}
 		{% else %}
 			<a href="/apply/eligibility/">Outreachy Eligibility Rules</a>
 		{% endif %}
-		{% if current_round.has_contribution_deadline_passed %}
+		{% if current_round.contributions_close.has_passed %}
 			&gt; <a href="/{{ current_round.slug }}/">{{ current_round.official_name }}</a>
 		{% else %}
 			&gt; <a href="/apply/project-selection/">Find a Mentor and Internship Project</a>

@@ -46,7 +46,7 @@ Outreachy Travel Stipend
 
 <ul>
 	{% for r in rounds %}
-		{% if r.is_travel_stipend_active %}
+		{% if r.travel_stipend_deadline.has_passed %}
 			<li><b>{{ r.official_name }}.</b> The travel stipend is available for travel that begins between {{ r.internannounce }} and {{ r.travel_stipend_deadline }}</li>
 		{% endif %}
 	{% endfor %}
@@ -56,7 +56,7 @@ Outreachy Travel Stipend
 
 <ul>
 	{% for r in rounds %}
-		{% if not r.is_travel_stipend_active %}
+		{% if not r.travel_stipend_deadline.has_passed %}
 			<li><b>{{ r.official_name }}.</b> The travel stipend is available for travel that begins between {{ r.internannounce }} and {{ r.travel_stipend_deadline }}</li>
 		{% endif %}
 	{% endfor %}

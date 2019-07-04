@@ -66,7 +66,7 @@ Outreachy Internships | Apply | Pick a Project
 </ul>
 </p>
 
-{% if previous_round and not current_round.has_contribution_period_started %}
+{% if previous_round and not current_round.contributions_open.has_passed %}
 	<p>You may want to brush up on your skills for contributing to free and open source software communities. Each project will use a different set of skills, and some mentors may be willing to teach you skills. Projects and the skills they use change each round. The most common skills used in projects last round were:
 	<ul>
 		{% for common_skill in previous_round.get_common_skills %}
@@ -76,12 +76,12 @@ Outreachy Internships | Apply | Pick a Project
 	</p>
 {% endif %}
 
-{% if current_round and not current_round.has_contribution_period_started %}
+{% if current_round and not current_round.contributions_open.has_passed %}
 	<p>Outreachy projects for the {{ current_round.official_name }} will begin to be listed on {{ current_round.initial_applications_open }}. The final list of projects will be available on {{ current_round.contributions_open }}</p>
 {% endif %}
 
 {% if role.application.is_approved %}
-	{% if not current_round.has_contribution_period_started %}
+	{% if not current_round.contributions_open.has_passed %}
 		<h2>Finding a Mentor and an Internship Project</h2>
 		<p><img src="{% static 'bot-find-a-mentor.png' %}"></p>
 		<p>
@@ -181,12 +181,12 @@ Outreachy Internships | Apply | Pick a Project
 	{% endif %}
 {% endif %}
 {% if ontime_projects %}
-	{% if not current_round.has_contribution_deadline_passed %}
+	{% if not current_round.contributions_close.has_passed %}
 		<h2 id="open-projects">Outreachy Open Projects</h2>
 	{% else %}
 		<h2 id="open-projects">Past Outreachy Projects</h2>
 	{% endif %}
-	{% if current_round.has_initial_application_period_started %}
+	{% if current_round.initial_applications_open.has_passed %}
 		<p>Outreachy is offering internship projects in the following areas:
 		<ul>
 			{% for common_skill in current_round.get_common_skills %}
@@ -216,7 +216,7 @@ Outreachy Internships | Apply | Pick a Project
 		{% endfor %}
 	</p>
 
-	{% if not current_round.has_contribution_deadline_passed %}
+	{% if not current_round.contributions_close.has_passed %}
 		<h3>Final Applications Due {{ current_round.contributions_close }} at 4pm UTC</h3>
 
 		<p> The following projects are accepting contributions and applications from new
@@ -229,7 +229,7 @@ Outreachy Internships | Apply | Pick a Project
 		<h4 id='{{community.slug }}'>{{ community.name }} - {{ funded_interns }} intern{{ funded_interns|pluralize }}</h4>
 		<p>{{ community.description }}</p>
 		{% if role.application.is_approved or role.is_volunteer %}
-			{% if not current_round.has_contribution_deadline_passed %}
+			{% if not current_round.contributions_close.has_passed %}
 				<p>Learn how to make a contribution to these internship projects on the
 			{% else %}
 				<p>Learn more about the {{ community.name }} on the
@@ -257,7 +257,7 @@ Outreachy Internships | Apply | Pick a Project
 	{% endwith %}
 {% endif %}
 {% if closed_projects %}
-	{% if not current_round.has_contribution_deadline_passed %}
+	{% if not current_round.contributions_close.has_passed %}
 		<h2>Closed Outreachy Internship Projects</h2>
 
 		<p>
