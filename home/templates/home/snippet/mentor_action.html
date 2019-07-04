@@ -64,8 +64,7 @@
 		<p class="card-text">
 		<a class="btn btn-warning" href="{{ project.get_withdraw_url }}">Withdraw Project</a>
 		<hr>
-		<p class="card-text">You can <a href="{% url 'community-read-only' community_slug=project.project_round.community.slug %}">submit another project</a>
-			or <a href="{% url 'community-read-only' community_slug=project.project_round.community.slug %}">co-mentor another project</a>
+		<p class="card-text">You can <a href="{{ project.project_round.community.get_preview_url }}">submit or co-mentor another project</a>
 			on the {{ project.project_round.community.name }} community CFP page.</p>
 		<p class="card-text">You can also <a href="{% url 'community-cfp' %}">submit a project for another community</a>.</p>
 	</div>
