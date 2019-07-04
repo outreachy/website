@@ -2888,12 +2888,25 @@ def alums_page(request):
     for p in pages:
         old_cohorts.append((p.round_start, p.round_end,
             AlumInfo.objects.filter(page=p).order_by('community', 'name')))
-    rounds = RoundPage.objects.all().order_by('-internstarts')
-    rounds = [x for x in rounds if x.has_intern_announcement_deadline_passed() and x.get_approved_intern_selections() != None]
+
+    now = datetime.now(timezone.utc)
+    today = get_deadline_date_for(now)
+    rounds = list(RoundPage.objects.filter(
+        internannounce__lte=today,
+    ).order_by('-internstarts'))
+
+    current_round = None
+    num_in_good_standing = 0
+    if rounds:
+        current_round = rounds[0]
+        num_in_good_standing = current_round.get_in_good_standing_intern_selections().count()
+
     return render(request, 'home/alums.html', {
+        'current_round': current_round,
+        'num_in_good_standing': num_in_good_standing,
         'old_cohorts': old_cohorts,
-        'rounds': rounds,
-        })
+        'rounds': [Role(request.user, past_round) for past_round in rounds],
+    })
 
 def privacy_policy(request):
     with open(path.join(settings.BASE_DIR, 'docs', 'privacy-policy.md')) as policy_file:

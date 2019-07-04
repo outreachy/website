@@ -4779,6 +4779,19 @@ class Role(object):
         all_projects.sort(key=lambda x: x.did_apply, reverse=True)
         return all_projects
 
+    @cached_property
+    def visible_intern_selections(self):
+        if self.current_round is None:
+            return InternSelection.objects.none()
+
+        if self.is_organizer:
+            return self.current_round.get_approved_intern_selections()
+
+        if not self.current_round.internannounce.has_passed():
+            return InternSelection.objects.none()
+
+        return self.current_round.get_in_good_standing_intern_selections()
+
     # Anything that just uses other properties does not need to be cached:
 
     @property
