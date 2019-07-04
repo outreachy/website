@@ -1,4 +1,4 @@
-{% with community=project.project_round.community %}{% with current_round=project.project_round.participating_round %}{% with contributors=project.get_applicants_and_contributions_list %} {% with applicants=project.get_applications %}{% with coordinators=community.get_coordinator_email_list %}{{ current_round.contributions_close|date:"F d" }} 4pm UTC: Final application deadline for your Outreachy {{ community.name }} project
+{% with community=project.project_round.community %}{% with current_round=project.round %}{% with contributors=project.get_applicants_and_contributions_list %} {% with applicants=project.get_applications %}{% with coordinators=community.get_coordinator_email_list %}{{ current_round.contributions_close|date:"F d" }} 4pm UTC: Final application deadline for your Outreachy {{ community.name }} project
 
 Hi Outreachy mentor,
 

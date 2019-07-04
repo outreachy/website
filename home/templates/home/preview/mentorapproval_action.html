@@ -9,7 +9,7 @@
 {% with mentor=mentorapproval.mentor project=mentorapproval.project community=mentorapproval.project.project_round.community %}
 {% if view.kwargs.action|title == 'Submit' and mentorapproval.approval_status == mentorapproval.APPROVED %}
 	<p><a href="{% url 'community-cfp' %}">Timeline and FAQ for Outreachy Communities</a> &gt;
-	<a href="{% url 'community-landing' round_slug=project.project_round.participating_round.slug community_slug=project.project_round.community.slug %}">{{ project.project_round.community.name }}</a> &gt;
+	<a href="{% url 'community-landing' round_slug=project.round.slug community_slug=project.project_round.community.slug %}">{{ project.project_round.community.name }}</a> &gt;
 	Submit or Edit a Project
 	</p>
 	<p>Steps to submit or edit a Project:

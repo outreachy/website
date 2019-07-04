@@ -1,5 +1,5 @@
 {% with community=project.project_round.community %}
-{% with current_round=project.project_round.participating_round %}
+{% with current_round=project.round %}
 {{ sender.display_name }} invites you to co-mentor for {{ community.name }}
 
 {% filter wordwrap:72 %}

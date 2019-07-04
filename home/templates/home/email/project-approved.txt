@@ -1,5 +1,5 @@
 {% with community=project.project_round.community %}
-{% with current_round=project.project_round.participating_round %}
+{% with current_round=project.round %}
 Accepted Outreachy intern project: {{ project.short_title }}
 
 Hi {{ recipient.display_name }},

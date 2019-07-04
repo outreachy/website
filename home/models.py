@@ -1725,15 +1725,15 @@ class Project(ApprovalStatus):
 
     def __str__(self):
         return '{start:%Y %B} to {end:%Y %B} round - {community} - {title}'.format(
-                start = self.project_round.participating_round.internstarts,
-                end = self.project_round.participating_round.internends,
-                community = self.project_round.community,
-                title = self.short_title,
-                )
+            start=self.round().internstarts,
+            end=self.round().internends,
+            community=self.project_round.community,
+            title=self.short_title,
+        )
 
     def get_preview_url(self):
         return reverse('project-read-only', kwargs={
-            'round_slug': self.project_round.participating_round.slug,
+            'round_slug': self.round().slug,
             'community_slug': self.project_round.community.slug,
             'project_slug': self.slug,
         })
@@ -1742,27 +1742,30 @@ class Project(ApprovalStatus):
         return reverse('project-selection') + '#' + self.project_round.community.slug + '-' + self.slug
 
     def get_landing_url(self):
-        return reverse('community-landing', kwargs={'round_slug': self.project_round.participating_round.slug, 'community_slug': self.project_round.community.slug}) + '#' + self.slug
+        return reverse('community-landing', kwargs={'round_slug': self.round().slug, 'community_slug': self.project_round.community.slug}) + '#' + self.slug
 
     def get_contributions_url(self):
-        return reverse('contributions', kwargs={'round_slug': self.project_round.participating_round.slug, 'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
+        return reverse('contributions', kwargs={'round_slug': self.round().slug, 'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
 
     def get_applicants_url(self):
-        return reverse('project-applicants', kwargs={'round_slug': self.project_round.participating_round.slug, 'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
+        return reverse('project-applicants', kwargs={'round_slug': self.round().slug, 'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
 
     def get_action_url(self, action):
         return reverse('project-action', kwargs={
-            'round_slug': self.project_round.participating_round.slug,
+            'round_slug': self.round().slug,
             'community_slug': self.project_round.community.slug,
             'project_slug': self.slug,
             'action': action,
         })
 
+    def round(self):
+        return self.project_round.participating_round
+
     def submission_and_approval_deadline(self):
-        return self.project_round.participating_round.lateprojects
+        return self.round().lateprojects
 
     def has_intern_announcement_deadline_passed(self):
-        return self.project_round.participating_round.internannounce.has_passed()
+        return self.round().internannounce.has_passed()
 
     def is_approver(self, user):
         return self.project_round.community.is_coordinator(user)
@@ -1921,12 +1924,12 @@ class ProjectSkill(models.Model):
 
     def __str__(self):
         return '{start:%Y %B} to {end:%Y %B} round - {community} - {title} - {skill}'.format(
-                start = self.project.project_round.participating_round.internstarts,
-                end = self.project.project_round.participating_round.internends,
-                community = self.project.project_round.community,
-                title = self.project.short_title,
-                skill = self.skill,
-                )
+            start=self.project.round().internstarts,
+            end=self.project.round().internends,
+            community=self.project.project_round.community,
+            title=self.project.short_title,
+            skill=self.skill,
+        )
 
 def mentor_read_instructions(value):
     if value is False:
@@ -2033,16 +2036,16 @@ class MentorApproval(ApprovalStatus):
 
     def __str__(self):
         return '{mentor} - {start:%Y %B} to {end:%Y %B} round - {community} - {title}'.format(
-                mentor = self.mentor.public_name,
-                start = self.project.project_round.participating_round.internstarts,
-                end = self.project.project_round.participating_round.internends,
-                community = self.project.project_round.community,
-                title = self.project.short_title,
-                )
+            mentor=self.mentor.public_name,
+            start=self.project.round().internstarts,
+            end=self.project.round().internends,
+            community=self.project.project_round.community,
+            title=self.project.short_title,
+        )
 
     def get_preview_url(self):
         return reverse('mentorapproval-preview', kwargs={
-            'round_slug': self.project.project_round.participating_round.slug,
+            'round_slug': self.project.round().slug,
             'community_slug': self.project.project_round.community.slug,
             'project_slug': self.project.slug,
             'username': self.mentor.account.username,
@@ -2050,7 +2053,7 @@ class MentorApproval(ApprovalStatus):
 
     def get_action_url(self, action, current_user=None):
         kwargs = {
-            'round_slug': self.project.project_round.participating_round.slug,
+            'round_slug': self.project.round().slug,
             'community_slug': self.project.project_round.community.slug,
             'project_slug': self.project.slug,
             'action': action,
@@ -2060,7 +2063,7 @@ class MentorApproval(ApprovalStatus):
         return reverse('mentorapproval-action', kwargs=kwargs)
 
     def submission_and_approval_deadline(self):
-        return self.project.project_round.participating_round.internends + datetime.timedelta(days=7*5)
+        return self.project.round().internends + datetime.timedelta(days=7 * 5)
 
     def is_approver(self, user):
         return self.project.project_round.community.is_coordinator(user)
@@ -3393,7 +3396,7 @@ class FinalApplication(ApprovalStatus):
 
     def get_action_url(self, action, **kwargs):
         return reverse('application-action', kwargs={
-            'round_slug': self.project.project_round.participating_round.slug,
+            'round_slug': self.project.round().slug,
             'community_slug': self.project.project_round.community.slug,
             'project_slug': self.project.slug,
             'username': self.applicant.applicant.account.username,
@@ -3401,7 +3404,7 @@ class FinalApplication(ApprovalStatus):
             })
 
     def submission_and_approval_deadline(self):
-        return self.project.project_round.participating_round.contribution_closes
+        return self.project.round().contribution_closes
 
     def number_contributions(self):
         return Contribution.objects.filter(
@@ -3500,13 +3503,13 @@ class InternSelection(AugmentDeadlines, models.Model):
                 mentor__account=user).exists()
 
     def intern_has_custom_dates(self):
-        if self.intern_starts != self.project.project_round.participating_round.internstarts:
+        if self.intern_starts != self.project.round().internstarts:
             return True
-        if self.intern_ends != self.project.project_round.participating_round.internends:
+        if self.intern_ends != self.project.round().internends:
             return True
-        if self.initial_feedback_due != self.project.project_round.participating_round.initialfeedback:
+        if self.initial_feedback_due != self.project.round().initialfeedback:
             return True
-        if self.midpoint_feedback_due != self.project.project_round.participating_round.midfeedback:
+        if self.midpoint_feedback_due != self.project.round().midfeedback:
             return True
         return False
 
@@ -3577,7 +3580,7 @@ class InternSelection(AugmentDeadlines, models.Model):
         return self.applicant.applicant.public_name
 
     def round(self):
-        return self.project.project_round.participating_round
+        return self.project.round()
 
     def community_name(self):
         return self.project.project_round.community.name
@@ -3609,13 +3612,13 @@ class InternSelection(AugmentDeadlines, models.Model):
         if self.funding_source == self.NOT_FUNDED:
             return []
         return InternSelection.objects.filter(
-                project__project_round__participating_round=self.project.project_round.participating_round,
-                applicant=self.applicant,
-                ).exclude(funding_source=self.NOT_FUNDED).exclude(project=self.project).all()
+            project__project_round__participating_round=self.project.round(),
+            applicant=self.applicant,
+        ).exclude(funding_source=self.NOT_FUNDED).exclude(project=self.project).all()
 
     def get_mentor_agreement_url(self):
         return reverse('select-intern', kwargs={
-            'round_slug': self.project.project_round.participating_round.slug,
+            'round_slug': self.project.round().slug,
             'community_slug': self.project.project_round.community.slug,
             'project_slug': self.project.slug,
             'applicant_username': self.applicant.applicant.account.username,
@@ -3698,7 +3701,7 @@ class MentorRelationship(models.Model):
         return self.intern_selection.applicant.applicant.public_name
 
     def round(self):
-        return self.intern_selection.project.project_round.participating_round
+        return self.intern_selection.project.round()
 
     def community_name(self):
         return self.intern_selection.project.project_round.community.name

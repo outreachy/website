@@ -1,6 +1,6 @@
 {% with project=mentorapproval.project %}
 {% with community=project.project_round.community %}
-{% with current_round=project.project_round.participating_round %}
+{% with current_round=project.round %}
 Approved as Outreachy mentor for {{ community.name }}
 
 Hi {{ recipient.display_name }},

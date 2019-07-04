@@ -2,7 +2,7 @@
 	<div class="card-header text-white bg-info">Mentor actions</div>
 	<div class="card-body">
 		{% if project.approval_status == project.APPROVED %}
-			{% if project.project_round.participating_round.initial_applications_open.has_passed %}
+			{% if project.round.initial_applications_open.has_passed %}
 				<p class="card-text">This project is approved.
 				You should promote your project listing:
 				<a href="{% url 'project-selection' %}#{{ project.project_round.community.slug }}"><pre>{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}#{{ project.project_round.community.slug }}</pre></a>
@@ -22,7 +22,7 @@
 				</p>
 			{% else %}
 				<p class="card-text">This project is approved.
-				Once initial applications open on {{ project.project_round.participating_round.initial_applications_open }}, you can
+				Once initial applications open on {{ project.round.initial_applications_open }}, you can
 				promote your project listing:
 				<a href="{% url 'project-selection' %}#{{ project.project_round.community.slug }}"><pre>{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}#{{ project.project_round.community.slug }}</pre></a></p>
 			{% endif %}
@@ -41,7 +41,7 @@
 		{% elif project.approval_status == project.PENDING %}
 			<p class="card-text">This project is pending.
 				Once applications are open and your project is approved, you can
-				<a href="{% url 'community-landing' round_slug=project.project_round.participating_round.slug community_slug=project.project_round.community.slug %}#{{ project.slug }}">promote your project listing</a>.</p>
+				<a href="{% url 'community-landing' round_slug=project.round.slug community_slug=project.project_round.community.slug %}#{{ project.slug }}">promote your project listing</a>.</p>
 			<p class="card-text">After your project is approved, you will be able to review project applicants.
 				</p>
 		{% endif %}
@@ -53,13 +53,13 @@
 		<a class="btn btn-primary" href="{{ project.get_submit_url }}#contributors-welcome">Close project to new contributors</a>
 		</p>
 		<p class="card-text">
-		<a class="btn btn-primary" href="{% url 'project-skills-edit' round_slug=project.project_round.participating_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}">Update Project Skills</a>
+		<a class="btn btn-primary" href="{% url 'project-skills-edit' round_slug=project.round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}">Update Project Skills</a>
 		</p>
 		<p class="card-text">
-		<a class="btn btn-primary" href="{% url 'communication-channels-edit' round_slug=project.project_round.participating_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}">Update Communication Channels</a>
+		<a class="btn btn-primary" href="{% url 'communication-channels-edit' round_slug=project.round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}">Update Communication Channels</a>
 		</p>
 		<p class="card-text">
-		<a class="btn btn-primary" href="{% url 'mentorapproval-invite' round_slug=project.project_round.participating_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}">Invite a co-mentor</a>
+		<a class="btn btn-primary" href="{% url 'mentorapproval-invite' round_slug=project.round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}">Invite a co-mentor</a>
 		</p>
 		<p class="card-text">
 		<a class="btn btn-warning" href="{{ project.get_withdraw_url }}">Withdraw Project</a>
