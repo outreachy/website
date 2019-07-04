@@ -269,7 +269,7 @@ class MentorApplicationDeadlinesReminder(SendEmailView):
 
         # Don't ask mentors to encourage interns to apply if it's too late for
         # anyone to apply any more.
-        if current_round.has_application_deadline_passed():
+        if current_round.contributions_close.has_passed():
             return
 
         projects = Project.objects.filter(project_round__participating_round=current_round).approved()
@@ -386,14 +386,16 @@ class ContributorsDeadlinesReminder(SendEmailView):
         if not self.request.user.is_staff:
             raise PermissionDenied("You are not authorized to send reminder emails.")
 
+        # Don't ask contributors to submit final applications if it's too late
+        # for anyone to apply any more.
+        if current_round.contributions_close.has_passed():
+            return
+
         contributors = Comrade.objects.filter(
             applicantapproval__application_round=current_round,
             applicantapproval__approval_status=ApprovalStatus.APPROVED,
+            applicantapproval__contribution__isnull=False,
         ).distinct()
-        if not current_round.has_application_deadline_passed():
-            contributors = contributors.filter(applicantapproval__contribution__isnull=False)
-        else:
-            return
 
         for c in contributors:
             email.contributor_deadline_reminder(
@@ -695,7 +697,7 @@ def intern(request, today):
 def eligibility_prompts(request, today):
     try:
         current_round = RoundPage.objects.get(
-            appsopen__lte=today,
+            pingnew__lte=today,
             internannounce__gt=today,
         )
         current_round.today = today

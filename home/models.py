@@ -123,7 +123,7 @@ def get_deadline_date_for(dt):
     >>> RoundPage.objects.filter(
     ...     internannounce__lte=today,
     ...     internends__gt=today,
-    ... )
+    ... ) # doctest: +ELLIPSIS
     <PageQuerySet [...]>
     """
     if dt.timetz() < DEADLINE_TIME:
@@ -373,9 +373,6 @@ class RoundPage(AugmentDeadlines, Page):
     def has_contribution_deadline_passed(self):
         return self.contributions_close.has_passed()
 
-    def has_application_period_started(self):
-        return self.appsopen.has_passed()
-
     # Interns get a five week extension at most.
     def has_internship_ended(self):
         return (self.internends + datetime.timedelta(days=7 * 5)).has_passed()
@@ -396,9 +393,6 @@ class RoundPage(AugmentDeadlines, Page):
 
     def is_travel_stipend_active(self):
         return not self.travel_stipend_deadline().has_passed()
-
-    def has_application_deadline_passed(self):
-        return self.appslate.has_passed()
 
     def has_intern_announcement_deadline_passed(self):
         return self.internannounce.has_passed()
@@ -791,7 +785,7 @@ class RoundPage(AugmentDeadlines, Page):
     def serve(self, request, *args, **kwargs):
         # If the project selection page (views.current_round_page) would
         # consider this a current_round, redirect there.
-        if self.pingnew.has_passed() and not self.contributions_close.has_passed():
+        if self.pingnew.has_passed() and not self.internannounce.has_passed():
             return redirect('project-selection')
 
         # Only show this page if we shouldn't be showing the project selection page.

@@ -823,12 +823,13 @@ def current_round_page(request):
     now = datetime.now(timezone.utc)
     today = get_deadline_date_for(now)
 
-    # For the purposes of this view, a round is current until its contribution
-    # period closes, and then it becomes one of the "previous" rounds.
+    # For the purposes of this view, a round is current until its
+    # intern selections are announced, and then it becomes one of
+    # the "previous" rounds.
 
     try:
         previous_round = RoundPage.objects.filter(
-            contributions_close__lte=today,
+            internannounce__lte=today,
         ).latest('internstarts')
         previous_round.today = today
     except RoundPage.DoesNotExist:
@@ -838,7 +839,7 @@ def current_round_page(request):
         # Keep RoundPage.serve() in sync with this.
         current_round = RoundPage.objects.get(
             pingnew__lte=today,
-            contributions_close__gt=today,
+            internannounce__gt=today,
         )
         current_round.today = today
     except RoundPage.DoesNotExist:
@@ -1596,7 +1597,7 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, EligibleAppli
         except FinalApplication.DoesNotExist:
             application = None
 
-        if not current_round.has_application_period_started():
+        if not current_round.contributions_open.has_passed():
             raise PermissionDenied("You cannot record a contribution until the Outreachy application period opens.")
 
         if current_round.contributions_close.has_passed() and application == None:
@@ -1636,7 +1637,7 @@ class FinalApplicationRate(LoginRequiredMixin, ComradeRequiredMixin, View):
 
         current_round = project.project_round.participating_round
 
-        if not current_round.has_application_period_started():
+        if not current_round.contributions_open.has_passed():
             raise PermissionDenied("You cannot rate an applicant until the Outreachy application period opens.")
 
         if current_round.has_last_day_to_add_intern_passed():
@@ -1686,7 +1687,7 @@ class FinalApplicationAction(ApprovalStatusAction):
 
         current_round = project.project_round.participating_round
 
-        if not current_round.has_application_period_started():
+        if not current_round.contributions_open.has_passed():
             raise PermissionDenied("You can't submit a final application until the Outreachy application period opens.")
 
         if current_round.contributions_close.has_passed():
@@ -1787,10 +1788,16 @@ def community_applicants(request, round_slug, community_slug):
         })
 
 def contribution_tips(request):
+    now = datetime.now(timezone.utc)
+    today = get_deadline_date_for(now)
+
     try:
-        # TODO: check which date should replace appsopen for eligibility prompts
-        current_round = get_current_round_for_initial_application()
-    except PermissionDenied:
+        current_round = RoundPage.objects.get(
+            pingnew__lte=today,
+            internannounce__gt=today,
+        )
+        current_round.today = today
+    except RoundPage.DoesNotExist:
         current_round = None # don't display any eligibility prompts
 
     role = Role(request.user, current_round)
@@ -2025,7 +2032,7 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.
 
         current_round = get_object_or_404(RoundPage, slug=self.kwargs['round_slug'])
 
-        if not current_round.has_application_period_started():
+        if not current_round.contributions_open.has_passed():
             raise PermissionDenied("You can't select an intern until the Outreachy application period opens.")
 
         set_project_and_applicant(self, current_round)
@@ -2294,7 +2301,7 @@ class InternFund(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Revis
         username = kwargs['applicant_username']
         current_round = get_object_or_404(RoundPage, slug=kwargs['round_slug'])
 
-        if not current_round.has_application_period_started():
+        if not current_round.contributions_open.has_passed():
             raise PermissionDenied("You cannot set a funding source for an Outreachy intern until the application period opens.")
 
         if current_round.has_last_day_to_add_intern_passed():
@@ -2341,7 +2348,7 @@ class InternApprove(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Re
         username = kwargs['applicant_username']
         current_round = get_object_or_404(RoundPage, slug=kwargs['round_slug'])
 
-        if not current_round.has_application_period_started():
+        if not current_round.contributions_open.has_passed():
             raise PermissionDenied("You cannot approve an Outreachy intern until the application period opens.")
 
         if current_round.has_last_day_to_add_intern_passed():

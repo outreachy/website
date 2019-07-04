@@ -68,7 +68,7 @@ Call for Outreachy community coordinators and mentors
 
 	{% if approved_communities or pending_communities %}
 		<h2>Mentor for a Participating FOSS Community</h2>
-		{% if current_round.project_soft_deadline %}
+		{% if current_round.project_soft_deadline.has_passed %}
 			{% include "home/snippet/cfp_closed_warning.html" %}
 		{% else %}
 			<p>Outreachy internships run twice a year. You can look at community and project listing <a href="{% url 'past-rounds' %}">from all past Outreachy rounds</a> to understand what types of internships Outreachy typically offers.</p>
