@@ -808,6 +808,28 @@ class ViewInitialApplication(LoginRequiredMixin, ComradeRequiredMixin, DetailVie
                     applicant__account__username=self.kwargs['applicant_username'],
                     application_round=current_round)
 
+def promote_page(request):
+    now = datetime.now(timezone.utc)
+    today = get_deadline_date_for(now)
+
+    # For the purposes of this view, a round is current until
+    # initial application period ends. After that, there's
+    # no point in getting people to apply to that round.
+    try:
+        current_round = RoundPage.objects.get(
+            pingnew__lte=today,
+            initial_applications_close__gt=today,
+        )
+        current_round.today = today
+    except RoundPage.DoesNotExist:
+        current_round = None
+
+    return render(request, 'home/promote.html',
+            {
+            'current_round' : current_round,
+            },
+            )
+
 def past_rounds_page(request):
     return render(request, 'home/past_rounds.html',
             {
