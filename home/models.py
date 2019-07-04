@@ -391,14 +391,6 @@ class RoundPage(AugmentDeadlines, Page):
         # GSoC traditionally starts either in May or June
         return(self.internstarts.month < 8)
 
-    def get_approved_communities(self):
-        approved_participations = Participation.objects.filter(participating_round=self, approval_status=Participation.APPROVED).order_by('community__name')
-        return [p.community for p in approved_participations]
-
-    def get_approved_communities_and_projects(self):
-        approved_participations = Participation.objects.filter(participating_round=self, approval_status=Participation.APPROVED).order_by('community__name')
-        return [(p.community, p.project_set.approved()) for p in approved_participations]
-
     def number_approved_communities_with_projects(self):
         return Participation.objects.filter(participating_round=self,
                 approval_status=ApprovalStatus.APPROVED,
@@ -1365,6 +1357,9 @@ class NewCommunity(Community):
 class Participation(ApprovalStatus):
     community = models.ForeignKey(Community)
     participating_round = models.ForeignKey(RoundPage)
+
+    class Meta:
+        ordering = ('community__name',)
 
     def __str__(self):
         return '{start:%Y %B} to {end:%Y %B} round - {community}'.format(
@@ -4766,11 +4761,9 @@ class Role(object):
         and the community is approved to participate in the current round.
         """
         if self.current_round is not None and self.user.is_authenticated:
-            return Community.objects.filter(
-                participation__participating_round=self.current_round,
-                participation__approval_status=ApprovalStatus.APPROVED,
-                coordinatorapproval__coordinator__account=self.user,
-                coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+            return self.current_round.participation_set.approved().filter(
+                community__coordinatorapproval__coordinator__account=self.user,
+                community__coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
             )
         return Community.objects.none()
 

@@ -24,18 +24,20 @@
 	{% endwith %}
 	{{ page.specific.sponsordetails|richtext }}
 
-	{% with communities=page.get_approved_communities %}
+	{% with communities=page.participation_set.approved %}
 	{% if communities %}
 		<h1>Past Participating Communities</h1>
-		{% for community, projects in page.get_approved_communities_and_projects %}
+		{% for participation in communities %}
+		{% with community=participation.community %}
 			<h4>{{ community.name }}</h4>
 			<p>{{ community.description }}</p>
 			{% if page.has_intern_announcement_deadline_passed %}
-				<p>Learn more on the <a href="{% url 'community-landing' round_slug=page.slug community_slug=community.slug %}">{{ community.name }} community landing page</a>.</p>
+				<p>Learn more on the <a href="{% url 'community-landing' round_slug=page.slug community_slug=participation.community.slug %}">{{ community.name }} community landing page</a>.</p>
 			{% endif %}
-			{% with project_status="closed " current_round=page %}
+			{% with project_status="closed " current_round=page projects=participation.project_set.approved %}
 				{% include 'home/snippet/projects_for_round_page.html' %}
 			{% endwith %}
+		{% endwith %}
 		{% endfor %}
 	{% endif %}
 	{% endwith %}

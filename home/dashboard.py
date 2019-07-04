@@ -767,12 +767,10 @@ def mentor_projects(request, today):
     # approved project, and the community is approved to participate in the
     # current round.
 
-    mentored_communities = Community.objects.filter(
-        participation__participating_round=current_round,
-        participation__approval_status=ApprovalStatus.APPROVED,
-        participation__project__approval_status=ApprovalStatus.APPROVED,
-        participation__project__mentorapproval__mentor=comrade,
-        participation__project__mentorapproval__approval_status=ApprovalStatus.APPROVED,
+    mentored_communities = current_round.participation_set.approved().filter(
+        project__approval_status=ApprovalStatus.APPROVED,
+        project__mentorapproval__mentor=comrade,
+        project__mentorapproval__approval_status=ApprovalStatus.APPROVED,
     ).distinct()
 
     return {

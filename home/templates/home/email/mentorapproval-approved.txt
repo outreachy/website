@@ -14,7 +14,7 @@ You now have access to applicant data and the ability to edit the project inform
 {% include 'home/email/snippet-email-filters.txt' %}
 {% if not current_round.contributions_close.has_passed %}{% include 'home/email/snippet-application-prep.txt' %}
 {% include 'home/email/snippet-community-promotion.txt' %}
-{% include 'home/email/snippet-application-process.txt' %}
+{% include 'home/email/snippet-application-process.txt' with participation=mentorapproval.project.project_round %}
 {% endif %}{% include 'home/email/snippet-application-dashboard.txt' %}
 
 Thank you for mentoring for {{ community.name }}! We appreciate the help you give Outreachy applicants and interns.

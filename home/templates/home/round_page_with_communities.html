@@ -225,8 +225,9 @@ Outreachy Internships | Apply | Pick a Project
 		<h3>Final Applications Closed {{ current_round.contributions_close }} at 4pm UTC</h3>
 	{% endif %}
 
-	{% for community, funded_interns, projects in ontime_projects %}
-		<h4 id='{{community.slug }}'>{{ community.name }} - {{ funded_interns }} intern{{ funded_interns|pluralize }}</h4>
+	{% for participation, projects in ontime_projects %}
+	{% with community=participation.community funded_interns=participation.interns_funded %}
+		<h4 id='{{ community.slug }}'>{{ community.name }} - {{ funded_interns }} intern{{ funded_interns|pluralize }}</h4>
 		<p>{{ community.description }}</p>
 		{% if role.application.is_approved or role.is_volunteer %}
 			{% if not current_round.contributions_close.has_passed %}
@@ -234,13 +235,14 @@ Outreachy Internships | Apply | Pick a Project
 			{% else %}
 				<p>Learn more about the {{ community.name }} on the
 			{% endif %}
-			<a href="{% url 'community-landing' round_slug=current_round.slug community_slug=community.slug %}">{{ community.name }} community landing page</a>.</p>
+			<a href="{% url 'community-landing' round_slug=participation.participating_round.slug community_slug=participation.community.slug %}">{{ community.name }} community landing page</a>.</p>
 		{% else %}
 			{% include 'home/snippet/project_hidden.html' %}
 		{% endif %}
 		{% with project_status="" %}
 			{% include 'home/snippet/projects_for_round_page.html' %}
 		{% endwith %}
+	{% endwith %}
 	{% endfor %}
 {% endif %}
 {% if mentors_pending_projects %}
@@ -280,16 +282,18 @@ Outreachy Internships | Apply | Pick a Project
 		to similar projects.
 	{% endif %}
 
-	{% for community, projects in closed_projects %}
+	{% for participation, projects in closed_projects %}
+	{% with community=participation.community %}
 		<h3>{{ community.name }}</h3>
 		<p>{{ community.description }}</p>
 		{% if role.application.is_approved or role.is_volunteer %}
 			<p>Document your contributions to these internship projects on the
-			<a href="{% url 'community-landing' round_slug=current_round.slug community_slug=community.slug %}">{{ community.name }} community landing page</a>.</p>
+			<a href="{% url 'community-landing' round_slug=participation.participating_round.slug community_slug=participation.community.slug %}">{{ community.name }} community landing page</a>.</p>
 		{% endif %}
 		{% with project_status="closed " %}
 			{% include 'home/snippet/projects_for_round_page.html' %}
 		{% endwith %}
+	{% endwith %}
 	{% endfor %}
 {% endif %}
 {% endwith %}

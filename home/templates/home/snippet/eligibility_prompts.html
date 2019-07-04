@@ -244,12 +244,12 @@
 		</p>
 		<p><a href="{% url 'account' %}">Edit your personal or coordinator information</a></p>
 
-		{% for c in communities %}
-		<h4>Coordinator actions for {{ c.name }}</h4>
+		{% for participation in communities %}
+		<h4>Coordinator actions for {{ participation.community.name }}</h4>
 		<ul>
-			<li><a href="{% url 'community-landing' round_slug=role.current_round.slug community_slug=c.slug %}">View the community projects page applicants see</a></li>
-			<li><a href="{{ c.get_preview_url }}">Edit the community info</a></li>
-			<li><a href="{% url 'community-applicants' round_slug=role.current_round.slug community_slug=c.slug %}">Review community applicants</a></li>
+			<li><a href="{% url 'community-landing' round_slug=role.current_round.slug community_slug=participation.community.slug %}">View the community projects page applicants see</a></li>
+			<li><a href="{{ participation.get_preview_url }}">Edit the community info</a></li>
+			<li><a href="{% url 'community-applicants' round_slug=role.current_round.slug community_slug=participation.community.slug %}">Review community applicants</a></li>
 		</ul>
 		{% endfor %}
 	    </div>

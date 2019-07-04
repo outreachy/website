@@ -854,10 +854,10 @@ def current_round_page(request):
                 continue
             projects = p.project_set.approved().filter(new_contributors_welcome=False)
             if projects:
-                closed_approved_projects.append((p.community, projects))
+                closed_approved_projects.append((p, projects))
             projects = p.project_set.approved().filter(new_contributors_welcome=True)
             if projects:
-                ontime_approved_projects.append((p.community, p.interns_funded(), projects))
+                ontime_approved_projects.append((p, projects))
 
     return render(request, 'home/round_page_with_communities.html',
             {
