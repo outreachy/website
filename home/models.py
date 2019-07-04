@@ -1759,9 +1759,6 @@ class Project(ApprovalStatus):
     def submission_and_approval_deadline(self):
         return self.round().lateprojects
 
-    def has_intern_announcement_deadline_passed(self):
-        return self.round().internannounce.has_passed()
-
     def is_approver(self, user):
         return self.project_round.community.is_coordinator(user)
 
