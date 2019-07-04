@@ -8,11 +8,7 @@ A {{ community.name }} coordinator has approved this Outreachy internship projec
 
 {{ request.scheme }}://{{ request.get_host }}{{ project.get_landing_url }}
 
-{% include 'home/email/snippet-email-filters.txt' %}
-{% if not current_round.contributions_close.has_passed %}{% include 'home/email/snippet-application-prep.txt' %}
-{% include 'home/email/snippet-community-promotion.txt' %}
-{% include 'home/email/snippet-application-process.txt' %}
-{% endif %}{% include 'home/email/snippet-application-dashboard.txt' %}
+{% include 'home/email/snippet-volunteer-participation-approved.txt' %}
 
 Thank you for mentoring for {{ community.name }}! We appreciate the help you give Outreachy applicants and interns.
 

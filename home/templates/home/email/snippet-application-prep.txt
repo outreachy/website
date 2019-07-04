@@ -1,8 +1,0 @@
-Preparing for Applicants
-------------------------
-
-During the five week contribution period, Outreachy applicants will make a contribution to your project. Only applicants that have made a contribution (and recorded the contribution on the Outreachy website) will be eligible to be selected as an intern.
-
-You should read more about how to prepare contribution tasks for the application period:
-
-{{ request.scheme }}://{{ request.get_host }}/mentor/mentor-faq/#define-starter-tasks

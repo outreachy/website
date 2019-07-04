@@ -11,11 +11,7 @@ The community coordinator can edit community information (description, funding, 
 
 Each mentor will need to submit their project proposals through the Outreachy website. You cannot list projects on an external page.
 
-{% include 'home/email/snippet-email-filters.txt' %}
-{% if not current_round.contributions_close.has_passed %}{% include 'home/email/snippet-application-prep.txt' %}
-{% include 'home/email/snippet-community-promotion.txt' %}
-{% include 'home/email/snippet-application-process.txt' %}
-{% endif %}{% include 'home/email/snippet-application-dashboard.txt' %}
+{% include 'home/email/snippet-volunteer-participation-approved.txt' %}
 
 Thank you for volunteering to help {{ community.name }} participate in Outreachy!
 

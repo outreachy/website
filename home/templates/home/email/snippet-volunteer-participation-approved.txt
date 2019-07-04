@@ -1,0 +1,40 @@
+{% include 'home/email/snippet-email-filters.txt' %}
+{% if not current_round.contributions_close.has_passed %}Preparing for Applicants
+------------------------
+
+During the five week contribution period, Outreachy applicants will make a contribution to your project. Only applicants that have made a contribution (and recorded the contribution on the Outreachy website) will be eligible to be selected as an intern.
+
+You should read more about how to prepare contribution tasks for the application period:
+
+{{ request.scheme }}://{{ request.get_host }}/mentor/mentor-faq/#define-starter-tasks
+
+Promoting To Outreachy Applicants
+---------------------------------
+
+After the Outreachy initial application period opens on {{ current_round.initial_applications_open }}, you can promote your community to applicants by linking to the community projects list:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}#{{ community.slug }}
+
+Application Process
+-------------------
+
+The first step for applicants is to fill out an initial application:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'eligibility' %}
+
+Details about community projects will only be visible to applicants with an approved initial application.
+
+The next step is for applicants to work with mentors on a contribution, AND record those in-progress contributions in the Outreachy website. Eligible applicants will see a 'Record Contributions' button on the community landing page next to each project proposal.
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'community-landing' round_slug=current_round.slug community_slug=community.slug %}
+
+Once applicants have recorded at least one contribution through the Outreachy, they will be able to start their application on the same page. The button text will change from 'Record Contributions' to 'Update Contibutions and Apply to This Project'.
+{% endif %}
+Application Dashboard
+---------------------
+
+Coordinators and mentors can see which applicants have recorded a contribution and made an application on the community application dashboard:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'community-applicants' round_slug=current_round.slug community_slug=community.slug %}
+
+Each project has an applicant details page, which is linked from the community application dashboard. The project applicant details page lists applicant's information, time commitments, recorded contributions, and application text. Co-mentors can sign up to mentor a selected intern by following the project links from the community application dashboard.

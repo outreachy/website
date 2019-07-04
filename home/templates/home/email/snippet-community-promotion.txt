@@ -1,6 +1,0 @@
-Promoting To Outreachy Applicants
----------------------------------
-
-After the Outreachy initial application period opens on {{ current_round.initial_applications_open }}, you can promote your community to applicants by linking to the community projects list:
-
-{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}#{{ community.slug }}
