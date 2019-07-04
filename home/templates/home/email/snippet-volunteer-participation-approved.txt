@@ -1,36 +1,52 @@
 {% include 'home/email/snippet-email-filters.txt' %}
-{% if not current_round.contributions_close.has_passed %}Preparing for Applicants
-------------------------
+Important Dates
+---------------
 
-During the five week contribution period, Outreachy applicants will make a contribution to your project. Only applicants that have made a contribution (and recorded the contribution on the Outreachy website) will be eligible to be selected as an intern.
+{{ current_round.initial_applications_open }} - Initial applications open for applicants
+{{ current_round.project_soft_deadline }} - Deadline for mentors to submit new projects
+{{ current_round.initial_applications_close }} at 4pm UTC - Initial applications deadline
+{{ current_round.contributions_open }} - Approved applicants start making contributions to projects
+{{ current_round.contributions_close }} at 4pm UTC - Final application deadline
+{{ current_round.mentor_intern_selection_deadline }} - Deadline for mentors to select interns
 
-You should read more about how to prepare contribution tasks for the application period:
+{% if not current_round.contributions_close.has_passed %}Initial Application Period
+--------------------------
 
-{{ request.scheme }}://{{ request.get_host }}/mentor/mentor-faq/#define-starter-tasks
-
-Promoting To Outreachy Applicants
----------------------------------
-
-After the Outreachy initial application period opens on {{ current_round.initial_applications_open }}, you can promote your community to applicants by linking to the community projects list:
+The Outreachy initial application period opens on {{ current_round.initial_applications_open }}. After that date, you can promote your community to applicants by linking to the community projects list:
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}#{{ community.slug }}
 
-Application Process
+Promoting your community helps encourage applicants to complete an initial application. Only applicants who have an approved initial application will move onto the contribution period. The initial application deadline is {{ current_round.initial_applications_close }} at 4pm UTC.
+
+Please see the Outreachy promotion page for sample emails, tweets, and information about the dates for the #OutreachyChat on Twitter:
+
+{{ request.scheme }}://{{ request.get_host }}/promote/
+
+Contribution Period
 -------------------
 
-The first step for applicants is to fill out an initial application:
+All Outreachy applicants will be notified of the status of their initial application when the contribution period starts on {{ current_round.contributions_open }}. Details about community projects will only be visible to applicants with an approved initial application.
 
-{{ request.scheme }}://{{ request.get_host }}{% url 'eligibility' %}
+During the five week contribution period, Outreachy applicants will make contributions to Outreachy projects. You should read more about how to prepare a list of tasks for the contribution period:
 
-Details about community projects will only be visible to applicants with an approved initial application.
+{{ request.scheme }}://{{ request.get_host }}/mentor/mentor-faq/#define-starter-tasks
 
-The next step is for applicants to work with mentors on a contribution, AND record those in-progress contributions in the Outreachy website. Eligible applicants will see a 'Record Contributions' button on the community landing page next to each project proposal.
+Applicants will record their contributions through the Outreachy website. Eligible applicants will see a 'Record Contributions' button on the community landing page next to each project proposal. During the contribution period, you can send them the following link to ask them to record their contributions:
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'community-landing' round_slug=current_round.slug community_slug=community.slug %}
 
-Once applicants have recorded at least one contribution through the Outreachy, they will be able to start their application on the same page. The button text will change from 'Record Contributions' to 'Update Contibutions and Apply to This Project'.
-{% endif %}
-Application Dashboard
+Final Application
+-----------------
+
+Once an applicant has recorded a contribution, the next step is to make a final application for each project they wish to apply for. Only applicants that have recorded a contribution and created a final application for a project will be eligible to be selected as an intern for that project.
+
+You can send applicants the following link to ask them to create a final application:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'community-landing' round_slug=current_round.slug community_slug=community.slug %}
+
+There should be an 'Update Contributions and Apply to This Project' link visible to applicants on that page. Mentors will need to work with applicants to create a project timeline, taking into account the time constraints for both the applicant and the mentors.
+
+{% endif %}Application Dashboard
 ---------------------
 
 Coordinators and mentors can see which applicants have recorded a contribution and made an application on the community application dashboard:
