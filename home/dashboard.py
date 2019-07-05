@@ -676,7 +676,7 @@ def selected_intern(request, today):
     # No peeking! Wait for the announcement!
     current_round = intern_selection.round()
     current_round.today = today
-    if not current_round.has_intern_announcement_deadline_passed():
+    if not current_round.internannounce.has_passed():
         return None
 
     # We could check here how long ago this intern's round was, and

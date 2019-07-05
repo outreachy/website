@@ -4,7 +4,7 @@
 		{% ifchanged %}
 			<h2>{{ rel.round.official_name }}</h2>
 		{% endifchanged %}
-		{% if not rel.round.has_intern_announcement_deadline_passed %}
+		{% if not rel.round.internannounce.has_passed %}
 		<div class="card border-info mb-3">
 			<div class="card-header bg-warning">Keep intern decisions private from mentees until {{ rel.round.internannounce }} at 4pm UTC</div>
 			<div class="card-body">

@@ -1603,7 +1603,7 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, EligibleAppli
         if current_round.contributions_close.has_passed() and application == None:
             raise PermissionDenied("Editing or recording new contributions is closed at this time to applicants who have not created a final application.")
 
-        if current_round.has_intern_announcement_deadline_passed():
+        if current_round.internannounce.has_passed():
             raise PermissionDenied("Editing or recording new contributions is closed at this time.")
 
         if 'contribution_slug' not in self.kwargs:
@@ -1905,7 +1905,7 @@ def intern_in_good_standing(user):
                 organizer_approved = True,
                 in_good_standing = True,
                 )
-        if not internship.round().has_intern_announcement_deadline_passed():
+        if not internship.round().internannounce.has_passed():
             internship = None
     except InternSelection.DoesNotExist:
         internship = None
@@ -2413,7 +2413,7 @@ class InternAgreementSign(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
 
     def set_project_and_intern_selection(self):
         self.current_round = get_object_or_404(RoundPage, slug=self.kwargs['round_slug'])
-        if not self.current_round.has_intern_announcement_deadline_passed():
+        if not self.current_round.internannounce.has_passed():
             raise PermissionDenied("Intern agreements cannot be signed before the interns are announced.")
 
         # Since interns can't sign the contract twice, the only people who

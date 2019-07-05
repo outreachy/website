@@ -1,4 +1,4 @@
-{% with current_round=section announced=section.has_intern_announcement_deadline_passed interns=section.get_intern_selections %}
+{% with current_round=section announced=section.internannounce.has_passed interns=section.get_intern_selections %}
 <hr>
 <h2>Intern Selection</h2>
 

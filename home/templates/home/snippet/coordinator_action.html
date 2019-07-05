@@ -4,7 +4,7 @@
 					<p class="card-text">
 					<a class="btn btn-primary" href="{% url 'community-update' community_slug=community.slug %}">Update Community Info</a>
 					</p>
-					{% if current_round and not current_round.has_intern_announcement_deadline_passed %}
+					{% if current_round and not current_round.internannounce.has_passed %}
 						<p class="card-text">
 						<a class="btn btn-primary" href="{{ participation_info.get_submit_url }}">Update Funding</a>
 						</p>

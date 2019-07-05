@@ -31,7 +31,7 @@
 		{% with community=participation.community %}
 			<h4>{{ community.name }}</h4>
 			<p>{{ community.description }}</p>
-			{% if page.has_intern_announcement_deadline_passed %}
+			{% if page.internannounce.has_passed %}
 				<p>Learn more on the <a href="{{ participation.get_absolute_url }}">{{ community.name }} community landing page</a>.</p>
 			{% endif %}
 			{% with project_status="closed " current_round=page projects=participation.project_set.approved %}
