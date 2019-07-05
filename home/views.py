@@ -2398,7 +2398,7 @@ class AlumStanding(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Rev
             self.intern_selection.in_good_standing = False
         self.intern_selection.save()
 
-        return redirect(reverse('alums'))
+        return redirect('alums')
 
 # Passed round_slug, community_slug, project_slug, (get applicant from request.user)
 class InternAgreementSign(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
@@ -3012,7 +3012,7 @@ class Survey2018Notification(LoginRequiredMixin, ComradeRequiredMixin, TemplateV
             AlumSurveyTracker.objects.create(alumni_info=a)
         for p in past_interns:
             AlumSurveyTracker.objects.create(intern_info=i)
-        return redirect(reverse('dashboard'))
+        return redirect('dashboard')
 
 @login_required
 def applicant_review_summary(request, status):
@@ -3079,7 +3079,7 @@ class DeleteApplication(LoginRequiredMixin, ComradeRequiredMixin, View):
 
         # We need to delete both pending and rejected applications,
         # so I'm not sure which to redirect to.
-        return redirect(reverse('dashboard'))
+        return redirect('dashboard')
 
 class NotifyEssayNeedsUpdating(LoginRequiredMixin, ComradeRequiredMixin, View):
 

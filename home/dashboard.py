@@ -32,7 +32,6 @@ from django.core.exceptions import PermissionDenied
 from django.core.mail.backends.base import BaseEmailBackend
 from django.db import models
 from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse
 from django.views.generic import TemplateView
 import datetime
 
@@ -230,7 +229,7 @@ class SendEmailView(RoundEvent, LoginRequiredMixin, ComradeRequiredMixin, BaseEm
         """
         with mail.get_connection() as connection:
             self.generate_messages(current_round=self.get_round(), connection=connection)
-        return redirect(reverse('dashboard'))
+        return redirect('dashboard')
 
 
 class MentorCheckDeadlinesReminder(SendEmailView):
