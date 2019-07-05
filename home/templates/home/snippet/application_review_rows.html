@@ -19,5 +19,5 @@
 			<p>{% include 'home/snippet/red_flags_display.html' %}</p>
 		{% endfor %}
 	</td>
-	<td><a class='btn btn-info' href="{% url 'applicant-review-detail' applicant_username=app.applicant.account.username %}">Review Application</a></td>
+	<td><a class='btn btn-info' href="{{ app.get_preview_url }}">Review Application</a></td>
 </tr>

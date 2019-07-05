@@ -101,14 +101,14 @@
 						</div>
 					</div>
 				</td>
-				<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=intern.project.project_round.community.slug project_slug=intern.project.slug %}">{{ intern.project.short_title }}</a></td>
+				<td><a href="{{ intern.project.get_applicants_url }}">{{ intern.project.short_title }}</a></td>
 				<td>{{ intern.mentor_names }}</td>
 				{% with tcs=intern.applicant.get_time_commitments applicant=intern.applicant.applicant application=intern.get_application %}
-					<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=intern.project.project_round.community.slug project_slug=intern.project.slug %}#{{ applicant.pk }}">{{ applicant.public_name }}</a></td>
+					<td><a href="{{ intern.project.get_applicants_url }}#{{ applicant.pk }}">{{ applicant.public_name }}</a></td>
 					<td>{{ application.get_rating_display }}</td>
 					<td>{{ tcs.longest_period_free }} / {{ tcs.internship_total_days.days }} days</td>
 					<td>{{ application.number_contributions }}</td>
-					<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=intern.project.project_round.community.slug project_slug=intern.project.slug %}#{{ intern.applicant.applicant.pk }}">details</a></td>
+					<td><a href="{{ intern.project.get_applicants_url }}#{{ intern.applicant.applicant.pk }}">details</a></td>
 					<td>{% if application.applying_to_gsoc %}Yes{% else %} - {% endif %}</td>
 					<td>{% if intern.needs_cpt %}Yes{% else %} - {% endif %}</td>
 			</tr>

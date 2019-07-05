@@ -71,7 +71,7 @@
 {% if contributions %}
 	{% if not final_application and not current_round.contributions_close.has_passed %}
 		<h2>Project Application</h2>
-		<p><a class='btn btn-success' href="{% url 'application-action' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' %}">Apply for This Project</a></p>
+		<p><a class='btn btn-success' href="{{ project.get_apply_url }}">Apply for This Project</a></p>
 	{% else %}
 		<h2>{{ community.name }} Internship Project Application</h2>
 	{% endif %}

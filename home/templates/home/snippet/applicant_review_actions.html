@@ -13,7 +13,7 @@
 		<tr>
 			<td>
 				{% if application.approval_status != application.APPROVED %}
-				<form action="{% url 'application-action' action='approve' applicant_username=application.applicant.account.username %}" method="post">
+				<form action="{{ application.get_approve_url }}" method="post">
 				    {% csrf_token %}
 				    <input type="submit" class="btn btn-success" value="Approve Application" />
 				</form>
@@ -28,7 +28,7 @@
 				{% endif %}
 			</td>
 			<td>{% if application.approval_status != application.REJECTED %}
-					<a class='btn btn-warning' href="{% url 'application-action' action='reject' applicant_username=application.applicant.account.username %}">Reject Application</a>
+					<a class='btn btn-warning' href="{{ application.get_reject_url }}">Reject Application</a>
 				{% endif %}
 			</td>
 			<td>

@@ -3,4 +3,4 @@
 <p><a href="{% url 'project-selection' %}#{{ community.slug }}"><pre>{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}#{{ community.slug }}</pre></a></p>
 
 <p>Once you have started work with an applicant on a contribution, you should remind them to record their in-progress contributions at this URL:</p>
-<p>{{ request.scheme }}://{{ request.get_host }}{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}</p>
+<p>{{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}</p>

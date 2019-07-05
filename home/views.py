@@ -1636,11 +1636,7 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, EligibleAppli
                 pk=self.kwargs['contribution_slug'])
 
     def get_success_url(self):
-        return reverse('contributions', kwargs={
-            'round_slug': self.object.project.round().slug,
-            'community_slug': self.object.project.project_round.community.slug,
-            'project_slug': self.object.project.slug,
-            })
+        return self.object.project.get_contributions_url()
 
 class FinalApplicationRate(LoginRequiredMixin, ComradeRequiredMixin, View):
     def post(self, request, *args, **kwargs):
@@ -1676,11 +1672,7 @@ class FinalApplicationRate(LoginRequiredMixin, ComradeRequiredMixin, View):
             application.rating = kwargs['rating']
             application.save()
 
-        return redirect(reverse('project-applicants', kwargs={
-            'round_slug': kwargs['round_slug'],
-            'community_slug': kwargs['community_slug'],
-            'project_slug': project.slug,
-            }) + "#rating")
+        return redirect(project.get_applicants_url() + "#rating")
 
 class FinalApplicationAction(ApprovalStatusAction):
     fields = [
@@ -1729,11 +1721,7 @@ class FinalApplicationAction(ApprovalStatusAction):
             return FinalApplication(applicant=applicant, project=project)
 
     def get_success_url(self):
-        return reverse('contributions', kwargs={
-            'round_slug': self.object.project.round().slug,
-            'community_slug': self.object.project.project_round.community.slug,
-            'project_slug': self.object.project.slug,
-            })
+        return self.object.project.get_contributions_url()
 
 class ProjectApplicants(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
     template_name = 'home/project_applicants.html'
@@ -2179,14 +2167,7 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.
 
         # Send emails about any project conflicts
         email.intern_selection_conflict_notification(intern_selection, self.request)
-        return redirect(self.get_success_url())
-
-    def get_success_url(self):
-        return reverse('project-applicants', kwargs={
-            'round_slug': self.kwargs['round_slug'],
-            'community_slug': self.kwargs['community_slug'],
-            'project_slug': self.kwargs['project_slug'],
-            }) + "#rating"
+        return redirect(self.project.get_applicants_url() + "#rating")
 
 # Passed round_slug, community_slug, project_slug, applicant_username
 class InternRemoval(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, DeleteView):
@@ -2243,11 +2224,7 @@ class InternRemoval(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Re
         for relationship in self.mentor_relationships:
             relationship.contract.delete()
 
-        return reverse('project-applicants', kwargs={
-            'round_slug': self.kwargs['round_slug'],
-            'community_slug': self.kwargs['community_slug'],
-            'project_slug': self.kwargs['project_slug'],
-            }) + "#rating"
+        return self.project.get_applicants_url() + "#rating"
 
 @login_required
 def project_timeline(request, round_slug, community_slug, project_slug, applicant_username):
@@ -2313,11 +2290,7 @@ class MentorResignation(LoginRequiredMixin, ComradeRequiredMixin, DeleteView):
 
     def get_success_url(self):
         # Store the signed mentor contract for resigned mentors
-        return reverse('project-applicants', kwargs={
-            'round_slug': self.kwargs['round_slug'],
-            'community_slug': self.kwargs['community_slug'],
-            'project_slug': self.kwargs['project_slug'],
-            }) + "#rating"
+        return self.project.get_applicants_url() + "#rating"
 
 class InternFund(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, View):
     def post(self, request, *args, **kwargs):
@@ -3086,10 +3059,6 @@ class ApplicantApprovalUpdate(ApprovalStatusAction):
             email.approval_status_changed(self.object, self.request,
                 from_email=email.applicant_help)
 
-    def get_success_url(self):
-        return reverse('applicant-review-detail', kwargs={
-            'applicant_username': self.kwargs['applicant_username'],
-            })
 
 class DeleteApplication(LoginRequiredMixin, ComradeRequiredMixin, View):
     def post(self, request, *args, **kwargs):
@@ -3128,9 +3097,7 @@ class NotifyEssayNeedsUpdating(LoginRequiredMixin, ComradeRequiredMixin, View):
         essay.save()
         # Notify applicant their essay needs review
         email.applicant_essay_needs_updated(essay.applicant.applicant, request)
-        return redirect(reverse('applicant-review-detail', kwargs={
-            'applicant_username': self.kwargs['applicant_username'],
-            }))
+        return redirect(essay.applicant.get_preview_url())
 
 class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     model = BarriersToParticipation
@@ -3176,9 +3143,7 @@ class NotifySchoolInformationUpdating(LoginRequiredMixin, ComradeRequiredMixin, 
         school_info.save()
         # Notify applicant their essay needs review
         email.applicant_school_info_needs_updated(school_info.applicant.applicant, request)
-        return redirect(reverse('applicant-review-detail', kwargs={
-            'applicant_username': self.kwargs['applicant_username'],
-            }))
+        return redirect(school_info.applicant.get_preview_url())
 
 class SchoolInformationUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     model = SchoolInformation
@@ -3259,9 +3224,7 @@ class SetReviewOwner(LoginRequiredMixin, ComradeRequiredMixin, View):
         application.review_owner = reviewer
         application.save()
 
-        return redirect(reverse('applicant-review-detail', kwargs={
-            'applicant_username': self.kwargs['applicant_username'],
-            }))
+        return redirect(application.get_preview_url())
 
 class EssayRating(LoginRequiredMixin, ComradeRequiredMixin, View):
     def post(self, request, *args, **kwargs):
@@ -3287,9 +3250,7 @@ class EssayRating(LoginRequiredMixin, ComradeRequiredMixin, View):
             review.essay_rating = review.SPAM
         review.save()
 
-        return redirect(reverse('applicant-review-detail', kwargs={
-            'applicant_username': self.kwargs['applicant_username'],
-            }))
+        return redirect(application.get_preview_url())
 
 # When reviewing the application's time commitments, there are several red flags
 # reviewers can set or unset.
@@ -3341,9 +3302,7 @@ class ChangeRedFlag(LoginRequiredMixin, ComradeRequiredMixin, View):
                 review.incorrect_dates = False
         review.save()
 
-        return redirect(reverse('applicant-review-detail', kwargs={
-            'applicant_username': self.kwargs['applicant_username'],
-            }))
+        return redirect(application.get_preview_url())
 
 class ReviewCommentUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     model = InitialApplicationReview
@@ -3354,9 +3313,7 @@ class ReviewCommentUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
         return review
 
     def get_success_url(self):
-        return reverse('applicant-review-detail', kwargs={
-            'applicant_username': self.kwargs['applicant_username'],
-            })
+        return self.object.application.get_preview_url()
 
 
 def travel_stipend(request):

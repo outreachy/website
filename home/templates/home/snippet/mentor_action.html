@@ -16,7 +16,7 @@
 				</p>
 				<p>
 				Please note: You can only accept an applicant as an intern if they have recorded their contributions and submitted a final application. If you have an applicant who has been making contributions but not recording it, you can tell them to record their contributions at this link:</p>
-				<p><pre>{{ request.scheme }}://{{ request.get_host }}{% url 'contributions' round_slug=current_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}</pre></p>
+				<p><pre>{{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}</pre></p>
 				<p>
 				{{ current_round.contributions_close }} 4pm UTC is the deadline for applicants to record contributions and create a final application.
 				</p>
@@ -28,7 +28,7 @@
 			{% endif %}
 			{% if project.project_round.approval_status == project.project_round.APPROVED %}
 				<p class="card-text">
-				<a class="btn btn-primary" href="{% url 'project-applicants' round_slug=current_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}">Review Project Applicants</a>
+				<a class="btn btn-primary" href="{{ project.get_applicants_url }}">Review Project Applicants</a>
 				</p>
 				<p class="card-text">
 				<a class="btn btn-primary" href="{% url 'community-applicants' round_slug=current_round.slug community_slug=project.project_round.community.slug %}">Review Community Applicants</a>

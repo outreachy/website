@@ -19,7 +19,7 @@
 			<tr>
 				<td>{% if p.approval_status != p.APPROVED %}{{ p.community.name }}{% else %}<a href="{% url 'community-applicants' round_slug=current_round.slug community_slug=p.community.slug %}">{{ p.community.name }}</a>{% endif %}</td>
 				<td>{{ p.get_approval_status_display }}</td>
-				<td>{% if p.approval_status == p.APPROVED and project.approval_status == project.APPROVED %}<a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=p.community.slug project_slug=project.slug %}">{{ project.short_title }}</a>{% else %}{{ project.short_title }}{% endif %}</td>
+				<td>{% if p.approval_status == p.APPROVED and project.approval_status == project.APPROVED %}<a href="{{ project.get_applicants_url }}">{{ project.short_title }}</a>{% else %}{{ project.short_title }}{% endif %}</td>
 				<td>{{ project.get_approval_status_display }}</td>
 			{% if project.approval_status != project.APPROVED or not applicants %}
 				<td> - </td>

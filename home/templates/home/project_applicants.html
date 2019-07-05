@@ -58,7 +58,7 @@ that timeline, taking into account any time commitments the applicant has.
 							<div class="dropdown-menu" aria-labelledby="InternRatingMenu">
 								{% for choice in fa.RATING_CHOICES %}
 								<button class="dropdown-item" formaction="{% url 'application-rate' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug username=fa.applicant.applicant.account.username rating=choice.0 %}">{{ choice.1 }}</button>
-				<p><a href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">
+				<p><a href="{{ project.get_contributions_url }}">
 								{% endfor %}
 							</div>
 						</div>
@@ -88,9 +88,9 @@ that timeline, taking into account any time commitments the applicant has.
 							{% if selection %}<p>{% for m in selection.mentors.all %}{{ m.mentor.public_name }}{% if not forloop.last %}, {% endif %}{% endfor %}<br>{% elif not approved_mentor %} - {% endif %}</p>
 							{% if approved_mentor %}
 								{% if not selection %}
-									<a href="{% url 'select-intern' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug applicant_username=fa.applicant.applicant.account.username %}"><input class="btn btn-success" value="Mentor Intern" />
+									<a href="{{ fa.get_mentor_agreement_url }}"><input class="btn btn-success" value="Mentor Intern" />
 								{% elif not mentor_approval in selection.mentors.all %}
-									<a href="{% url 'select-intern' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug applicant_username=fa.applicant.applicant.account.username %}"><input class="btn btn-success" value="Co-mentor Intern" />
+									<a href="{{ fa.get_mentor_agreement_url }}"><input class="btn btn-success" value="Co-mentor Intern" />
 								{% else %}
 									<p>You signed the mentor agreement.</p>
 									<a href="{% url 'resign-as-mentor' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug applicant_username=fa.applicant.applicant.account.username %}"><input class="btn btn-warning" value="Resign as Mentor" />
@@ -104,7 +104,7 @@ that timeline, taking into account any time commitments the applicant has.
 						<ul>
 							{% for conflict in conflicts %}
 								<li>{{ conflict.project.project_round.community.name }}
-									<a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=conflict.project.project_round.community.slug project_slug=conflict.project.slug %}#{{ intern.applicant.applicant.pk }}">(details)</a>
+									<a href="{{ conflict.project.get_applicants_url }}#{{ intern.applicant.applicant.pk }}">(details)</a>
 							{% endfor %}
 						</ul>
 						{% endif %}
@@ -230,7 +230,7 @@ that timeline, taking into account any time commitments the applicant has.
 			{% else %}
 				<p>This applicant has not submitted an application for your project. You cannot select them as an intern unless they submit an application.
 				Please remind this applicant to submit an application at this URL:</p>
-				<p>{{ request.scheme }}://{{ request.get_host }}{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}</p>
+				<p>{{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}</p>
 			{% endif %}
 		{% endwith %}
 
@@ -240,6 +240,6 @@ that timeline, taking into account any time commitments the applicant has.
 	<p>No applicant has recorded a contribution to your project.
 	If applicants have in-progress contributions, remind them to
 	record their contributions at this URL:
-	<br>{{ request.scheme }}://{{ request.get_host }}{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}</p>
+	<br>{{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}</p>
 {% endif %}
 {% endblock %}

@@ -4,11 +4,11 @@ The Outreachy applicant {{ intern_selection.applicant.applicant.public_name }} h
 
 {{ community.name }} project "{{ project.short_title }}
   - applicant contributions and application at
-    {{ request.scheme }}://{{ request.get_host }}{% url 'project-applicants' round_slug=current_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}#{{ intern_selection.applicant.applicant.pk }}
+    {{ request.scheme }}://{{ request.get_host }}{{ project.get_applicants_url }}#{{ intern_selection.applicant.applicant.pk }}
 
 {% for conflict in conflicts %}{{ conflict.project.project_round.community.name }} for "{{ conflict.project.short_title }}"
   - applicant contributions and application at
-    {{ request.scheme }}://{{ request.get_host }}{% url 'project-applicants' round_slug=current_round.slug community_slug=conflict.project.project_round.community.slug project_slug=conflict.project.slug %}#{{ intern_selection.applicant.applicant.pk }}
+    {{ request.scheme }}://{{ request.get_host }}{{ conflict.project.get_applicants_url }}#{{ intern_selection.applicant.applicant.pk }}
 {% endfor %}
 Mentors and coordinators, please review the applicant's contributions for each project. Sometimes it's obvious that an applicant is a stronger candidate for one project. If one project has many strong applicants and the other project doesn't, it may be best for the intern to work with the other project.
 

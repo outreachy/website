@@ -49,7 +49,7 @@
 	<h3>Adding Co-mentors</h3>
 	{% if mentor_request or coordinator %}
 		<p>The Outreachy organizers encourage projects to have more than one mentor. Each co-mentor for this project will need to sign up, so that they can view applicants' recorded contributions and final applications. You can send them this link so they can sign up as a co-mentor:
-		{{ request.scheme }}://{{ request.get_host }}{% url 'mentorapproval-action' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' %}
+		{{ request.scheme }}://{{ request.get_host }}{{ project.get_mentor_signup_url }}
 
 		{% if mentor_request %}
 			<p>Your request to mentor this project is:
@@ -64,7 +64,7 @@
 	{% else %}
 	<p>This page allows Outreachy mentors to sign up to co-mentor this project. Outreachy applicants should not sign up to co-mentor projects. Applicants should wait for projects to appear on the <a href="{% pageurl current_round %}">intern project page</a>.</p>
 		<p>If you need to sign up to co-mentor this project, please click the button below to create an account. Once you're approved by the coordinator, you will receive instructions on how to sign the mentor agreement for the selected intern.</p>
-		<p><a href="{% url 'mentorapproval-action' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' %}" class="btn btn-success">Co-mentor This Project</a></p>
+		<p><a href="{{ project.get_mentor_signup_url }}" class="btn btn-success">Co-mentor This Project</a></p>
 	{% endif %}
 {% else %}
 	<h3>Co-mentor</h3>

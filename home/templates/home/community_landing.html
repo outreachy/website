@@ -182,9 +182,9 @@ Outreachy internships working with {{ community.name }}
 					{% include "home/snippet/project_deadline.html" %}
 					{% if role.application.is_approved %}
 						{% if project in contributions %}
-							<p><a class='btn btn-success' href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Update Contibutions and Apply to This Project</a></p>
+							<p><a class='btn btn-success' href="{{ project.get_contributions_url }}">Update Contibutions and Apply to This Project</a></p>
 						{% else %}
-							<p><a class='btn btn-success' href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Record Contibutions and Apply to This Project</a></p>
+							<p><a class='btn btn-success' href="{{ project.get_contributions_url }}">Record Contibutions and Apply to This Project</a></p>
 						{% endif %}
 					{% endif %}
 					{% if role.application.is_approved or role.is_volunteer %}
@@ -215,9 +215,9 @@ Outreachy internships working with {{ community.name }}
 				{% include "home/snippet/project_deadline.html" %}
 				{% if role.application.is_approved %}
 					{% if project in contributions %}
-						<p><a class='btn btn-success' href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Update Contibutions and Apply to This Project</a></p>
+						<p><a class='btn btn-success' href="{{ project.get_contributions_url }}">Update Contibutions and Apply to This Project</a></p>
 					{% else %}
-						<p><a class='btn btn-success' href="{% url 'contributions' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">Record Contibutions and Apply to This Project</a></p>
+						<p><a class='btn btn-success' href="{{ project.get_contributions_url }}">Record Contibutions and Apply to This Project</a></p>
 					{% endif %}
 				{% endif %}
 				{% if role.application.is_approved or role.is_volunteer %}

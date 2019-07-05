@@ -41,7 +41,7 @@ Review {{ community.name }} Applicants
 			{% with interns=project.internselection_set.all %}
 				{% if not interns and project.approval_status == project.APPROVED %}
 				<tr>
-					<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></td>
+					<td><a href="{{ project.get_applicants_url }}">{{ project.short_title }}</a></td>
 					<td>{% if project.approval_status == project.APPROVED %}No selected interns{% else %} - {% endif %}</td>
 					<td> - </td>
 					<td> - </td>
@@ -56,9 +56,9 @@ Review {{ community.name }} Applicants
 				{% for intern in interns %}
 					{% with tcs=intern.applicant.get_time_commitments applicant=intern.applicant application=intern.get_application %}
 						<tr>
-							<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></td>
+							<td><a href="{{ project.get_applicants_url }}">{{ project.short_title }}</a></td>
 							<td>{{ intern.mentor_names }}</td>
-							<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=intern.project.project_round.community.slug project_slug=intern.project.slug %}#{{ applicant.applicant.pk }}">{{ applicant.applicant.public_name }}</a></td>
+							<td><a href="{{ intern.project.get_applicants_url }}#{{ applicant.applicant.pk }}">{{ applicant.applicant.public_name }}</a></td>
 							<td>{{ intern.get_funding_source_display }}
 								{% if is_coordinator or is_staff %}
 								<div class="dropdown">
@@ -75,7 +75,7 @@ Review {{ community.name }} Applicants
 							<td>{{ application.get_rating_display }}</td>
 							<td>{{ tcs.longest_period_free }} / {{ tcs.internship_total_days.days }} days</td>
 							<td>{{ application.number_contributions }}</td>
-							<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}#{{ intern.applicant.applicant.pk }}">details</a></td>
+							<td><a href="{{ project.get_applicants_url }}#{{ intern.applicant.applicant.pk }}">details</a></td>
 							<td>{% if application.applying_to_gsoc %}Yes{% else %} - {% endif %}</td>
 						</tr>
 						{% with conflicts=intern.get_intern_selection_conflicts %}
@@ -130,7 +130,7 @@ Review {{ community.name }} Applicants
 			{% with applicants=project.get_applicants_and_contributions_list %}
 				{% if not applicants %}
 				<tr>
-					<td>{% if project.approval_status == project.APPROVED %}<a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">{% endif %}{{ project.short_title }}{% if project.approval_status == project.APPROVED %}</a>{% endif %}</td>
+					<td>{% if project.approval_status == project.APPROVED %}<a href="{{ project.get_applicants_url }}">{% endif %}{{ project.short_title }}{% if project.approval_status == project.APPROVED %}</a>{% endif %}</td>
 					<td>{{ project.get_approval_status_display }}</td>
 					<td>{% if project.approval_status == project.APPROVED %}No applicants{% else %} - {% endif %}</td>
 					<td> - </td>
@@ -144,16 +144,16 @@ Review {{ community.name }} Applicants
 				{% for application in applicants %}
 					{% with tcs=application.get_time_commitments applicant=application.applicant %}
 						<tr>
-							<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug %}">{{ project.short_title }}</a></td>
+							<td><a href="{{ project.get_applicants_url }}">{{ project.short_title }}</a></td>
 							<td>{{ project.get_approval_status_display }}</td>
-							<td><a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}#{{ applicant.pk }}">{{ applicant.public_name }}</a></td>
+							<td><a href="{{ project.get_applicants_url }}#{{ applicant.pk }}">{{ applicant.public_name }}</a></td>
 							<td>
 								{% with conflicts=application.get_intern_selection_conflicts %}
 								{% if conflicts %}
 								<ul>
 									{% for conflict in conflicts %}
 										<li>{{ conflict.project.project_round.community.name }}
-											<a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=conflict.project.project_round.community.slug project_slug=conflict.project.slug %}#{{ intern.applicant.applicant.pk }}">(details)</a>
+											<a href="{{ conflict.project.get_applicants_url }}#{{ intern.applicant.applicant.pk }}">(details)</a>
 									{% endfor %}
 								</ul>
 								{% endif %}

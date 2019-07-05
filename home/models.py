@@ -1249,6 +1249,12 @@ class Community(models.Model):
     def __str__(self):
         return self.name
 
+    def get_coordinator_signup_url(self):
+        return reverse('coordinatorapproval-action', kwargs={
+            'community_slug': self.slug,
+            'action': 'submit',
+        })
+
     def get_preview_url(self):
         return reverse('community-read-only', kwargs={'community_slug': self.slug})
 
@@ -1742,6 +1748,22 @@ class Project(ApprovalStatus):
     def get_applicants_url(self):
         return reverse('project-applicants', kwargs={'round_slug': self.round().slug, 'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
 
+    def get_apply_url(self):
+        return reverse('application-action', kwargs={
+            'round_slug': self.round().slug,
+            'community_slug': self.project_round.community.slug,
+            'project_slug': self.slug,
+            'action': 'submit',
+        })
+
+    def get_mentor_signup_url(self):
+        return reverse('mentorapproval-action', kwargs={
+            'round_slug': self.round().slug,
+            'community_slug': self.project_round.community.slug,
+            'project_slug': self.slug,
+            'action': 'submit',
+        })
+
     def get_action_url(self, action):
         return reverse('project-action', kwargs={
             'round_slug': self.round().slug,
@@ -2208,6 +2230,12 @@ class ApplicantApproval(ApprovalStatus):
 
     def get_preview_url(self):
         return reverse('applicant-review-detail', kwargs={'applicant_username': self.applicant.account.username})
+
+    def get_action_url(self, action):
+        return reverse('application-action', kwargs={
+            'applicant_username': self.applicant.account.username,
+            'action': action,
+        })
 
     def get_submitter_email_list(self):
         return [self.applicant.email_address()]
@@ -3383,7 +3411,7 @@ class FinalApplication(ApprovalStatus):
     def objects_for_dashboard(cls, user):
         return None
 
-    def get_action_url(self, action, **kwargs):
+    def get_action_url(self, action):
         return reverse('application-action', kwargs={
             'round_slug': self.project.round().slug,
             'community_slug': self.project.project_round.community.slug,
@@ -3391,6 +3419,14 @@ class FinalApplication(ApprovalStatus):
             'username': self.applicant.applicant.account.username,
             'action': action,
             })
+
+    def get_mentor_agreement_url(self):
+        return reverse('select-intern', kwargs={
+            'round_slug': self.project.round().slug,
+            'community_slug': self.project.project_round.community.slug,
+            'project_slug': self.project.slug,
+            'applicant_username': self.applicant.applicant.account.username,
+        })
 
     def submission_and_approval_deadline(self):
         return self.project.round().contribution_closes
@@ -3604,14 +3640,6 @@ class InternSelection(AugmentDeadlines, models.Model):
             project__project_round__participating_round=self.project.round(),
             applicant=self.applicant,
         ).exclude(funding_source=self.NOT_FUNDED).exclude(project=self.project).all()
-
-    def get_mentor_agreement_url(self):
-        return reverse('select-intern', kwargs={
-            'round_slug': self.project.round().slug,
-            'community_slug': self.project.project_round.community.slug,
-            'project_slug': self.project.slug,
-            'applicant_username': self.applicant.applicant.account.username,
-            })
 
     SUBMITTED = 'SUB'
     MISSING = 'MIS'

@@ -45,7 +45,7 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 
 {% if not coordinator %}
 	<p>If you have been a community coordinator in the past but have not yet created an account on this site, or you would like to volunteer to be a new coordinator and you understand the <a href="/mentor/">coordinator duties</a>, you can sign up to be a community coordinator.</p>
-	<p><a href="{% url 'coordinatorapproval-action' action='submit' community_slug=community.slug %}" class="btn btn-success">Coordinate for This Community</a></p>
+	<p><a href="{{ community.get_coordinator_signup_url }}" class="btn btn-success">Coordinate for This Community</a></p>
 {% elif coordinator.approval_status != coordinator.APPROVED %}
 	<p>Your request to coordinate for this community is: <strong>{{ coordinator.get_approval_status_display }}</strong></p>
 {% else %}
@@ -196,7 +196,7 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 				<button class="btn btn-success dropdown-toggle" type="button" id="CoMentorMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select project to co-mentor</button>
 				<div class="dropdown-menu" aria-labelledby="CoMentorMenu">
 					{% for project in approved_projects %}
-						<button class="dropdown-item" formaction="{% url 'mentorapproval-action' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' %}">{{ project.short_title }}</button>
+						<button class="dropdown-item" formaction="{{ project.get_mentor_signup_url }}">{{ project.short_title }}</button>
 					{% endfor %}
 				</div>
 			</div>

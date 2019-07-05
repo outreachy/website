@@ -6,11 +6,11 @@
 			<ul>
 		{% for conflict in conflicts %}
 				<li>{{ conflict.project.project_round.community.name }} for "{{ conflict.project.short_title }}" -
-					<a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=conflict.project.project_round.community.slug project_slug=conflict.project.slug %}#{{ intern.applicant.applicant.pk }}">contribution and application details</a>
+					<a href="{{ conflict.project.get_applicants_url }}#{{ intern.applicant.applicant.pk }}">contribution and application details</a>
 				</li>
 		{% endfor %}
 				<li>{{ project.project_round.community.name }} for "{{ project.short_title }}" -
-					<a href="{% url 'project-applicants' round_slug=current_round.slug community_slug=project.project_round.community.slug project_slug=project.slug %}#{{ intern.applicant.applicant.pk }}">contribution and application details</a>
+					<a href="{{ project.get_applicants_url }}#{{ intern.applicant.applicant.pk }}">contribution and application details</a>
 				</li>
 			</ul>
 			</p>

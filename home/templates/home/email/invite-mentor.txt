@@ -9,7 +9,7 @@ Hi {{ recipient.display_name }},
 
 To accept this invitation, visit this page:
 {% endfilter %}
-{{ request.scheme }}://{{ request.get_host }}{% url 'mentorapproval-action' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug action='submit' %}
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_mentor_signup_url }}
 
 Outreachy Organizers
 
