@@ -66,7 +66,7 @@ Outreachy Internships | Apply | Pick a Project
 </ul>
 </p>
 
-{% if previous_round and not current_round.contributions_open.has_passed %}
+{% if previous_round and not ontime_projects %}{# if we're showing projects we're probably showing skills too #}
 	<p>You may want to brush up on your skills for contributing to free and open source software communities. Each project will use a different set of skills, and some mentors may be willing to teach you skills. Projects and the skills they use change each round. The most common skills used in projects last round were:
 	<ul>
 		{% for common_skill in previous_round.get_common_skills %}
@@ -76,12 +76,8 @@ Outreachy Internships | Apply | Pick a Project
 	</p>
 {% endif %}
 
-{% if current_round and not current_round.contributions_open.has_passed %}
-	<p>Outreachy projects for the {{ current_round.official_name }} will begin to be listed on {{ current_round.initial_applications_open }}. The final list of projects will be available on {{ current_round.contributions_open }}</p>
-{% endif %}
-
 {% if role.application.is_approved %}
-	{% if not current_round.contributions_open.has_passed %}
+	{% if not current_round.contributions_close.has_passed %}
 		<h2>Finding a Mentor and an Internship Project</h2>
 		<p><img src="{% static 'bot-find-a-mentor.png' %}"></p>
 		<p>
@@ -186,20 +182,22 @@ Outreachy Internships | Apply | Pick a Project
 	{% else %}
 		<h2 id="open-projects">Past Outreachy Projects</h2>
 	{% endif %}
-	{% if current_round.initial_applications_open.has_passed %}
+
+	{% with common_skills=current_round.get_common_skills %}
+	{% if common_skills %}
 		<p>Outreachy is offering internship projects in the following areas:
 		<ul>
-			{% for common_skill in current_round.get_common_skills %}
+			{% for common_skill in common_skills %}
 			{% if common_skill.1 > 2 %}<li>{{ common_skill.0 }} - {{ common_skill.1 }} project{{ common_skill.1|pluralize }}</li>{% endif %}
 			{% endfor %}
-			<li>{% for common_skill in current_round.get_common_skills %}
+			<li>{% for common_skill in common_skills %}
 				{% if common_skill.1 <= 2 %}{{ common_skill.0 }}, {% endif %}
 				{% endfor %}
 			</li>
 		</ul>
 		</p>
 	{% endif %}
-
+	{% endwith %}
 
 	<p>Each project mentor looks for applicants who have
 	different skills. Sometimes a skill is a hard requirement for
@@ -216,7 +214,15 @@ Outreachy Internships | Apply | Pick a Project
 		{% endfor %}
 	</p>
 
-	{% if not current_round.contributions_close.has_passed %}
+	{% if not current_round.contributions_open.has_passed %}
+		<h3>Contributions Begin {{ current_round.contributions_open }} at 4pm UTC</h3>
+
+		<p>This is a preview of the projects which will begin accepting
+		contributions and internship applications on
+		{{ current_round.contributions_open }} at 4pm UTC. You'll be
+		able to see all project details at that point if your initial
+		application has been approved.</p>
+	{% elif not current_round.contributions_close.has_passed %}
 		<h3>Final Applications Due {{ current_round.contributions_close }} at 4pm UTC</h3>
 
 		<p> The following projects are accepting contributions and applications from new
