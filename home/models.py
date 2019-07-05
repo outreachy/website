@@ -1249,14 +1249,15 @@ class Community(models.Model):
     def __str__(self):
         return self.name
 
+    def reverse(self, view_name, **kwargs):
+        kwargs['community_slug'] = self.slug
+        return reverse(view_name, kwargs=kwargs)
+
     def get_coordinator_signup_url(self):
-        return reverse('coordinatorapproval-action', kwargs={
-            'community_slug': self.slug,
-            'action': 'submit',
-        })
+        return self.reverse('coordinatorapproval-action', action='submit')
 
     def get_preview_url(self):
-        return reverse('community-read-only', kwargs={'community_slug': self.slug})
+        return self.reverse('community-read-only')
 
     def is_coordinator(self, user):
         return self.coordinatorapproval_set.approved().filter(
@@ -1388,21 +1389,17 @@ class Participation(ApprovalStatus):
             details = details + '\n' + sponsor.name + ' $' + str(sponsor.amount) + secured
         return details
 
+    def reverse(self, view_name, **kwargs):
+        return self.community.reverse(view_name, round_slug=self.participating_round.slug, **kwargs)
+
     def get_absolute_url(self):
-        return reverse('community-landing', kwargs={
-            'round_slug': self.participating_round.slug,
-            'community_slug': self.community.slug,
-        })
+        return self.reverse('community-landing')
 
     def get_preview_url(self):
         return self.community.get_preview_url()
 
     def get_action_url(self, action):
-        return reverse('participation-action', kwargs={
-            'round_slug': self.participating_round.slug,
-            'community_slug': self.community.slug,
-            'action': action,
-        })
+        return self.reverse('participation-action', action=action)
 
     def submission_and_approval_deadline(self):
         return self.participating_round.lateorgs
@@ -1729,12 +1726,11 @@ class Project(ApprovalStatus):
             title=self.short_title,
         )
 
+    def reverse(self, view_name, **kwargs):
+        return self.project_round.reverse(view_name, project_slug=self.slug, **kwargs)
+
     def get_preview_url(self):
-        return reverse('project-read-only', kwargs={
-            'round_slug': self.round().slug,
-            'community_slug': self.project_round.community.slug,
-            'project_slug': self.slug,
-        })
+        return self.reverse('project-read-only')
 
     def get_project_selection_url(self):
         return reverse('project-selection') + '#' + self.project_round.community.slug + '-' + self.slug
@@ -1743,34 +1739,19 @@ class Project(ApprovalStatus):
         return self.project_round.get_absolute_url() + '#' + self.slug
 
     def get_contributions_url(self):
-        return reverse('contributions', kwargs={'round_slug': self.round().slug, 'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
+        return self.reverse('contributions')
 
     def get_applicants_url(self):
-        return reverse('project-applicants', kwargs={'round_slug': self.round().slug, 'community_slug': self.project_round.community.slug, 'project_slug': self.slug})
+        return self.reverse('project-applicants')
 
     def get_apply_url(self):
-        return reverse('application-action', kwargs={
-            'round_slug': self.round().slug,
-            'community_slug': self.project_round.community.slug,
-            'project_slug': self.slug,
-            'action': 'submit',
-        })
+        return self.reverse('application-action', action='submit')
 
     def get_mentor_signup_url(self):
-        return reverse('mentorapproval-action', kwargs={
-            'round_slug': self.round().slug,
-            'community_slug': self.project_round.community.slug,
-            'project_slug': self.slug,
-            'action': 'submit',
-        })
+        return self.reverse('mentorapproval-action', action='submit')
 
     def get_action_url(self, action):
-        return reverse('project-action', kwargs={
-            'round_slug': self.round().slug,
-            'community_slug': self.project_round.community.slug,
-            'project_slug': self.slug,
-            'action': action,
-        })
+        return self.reverse('project-action', action=action)
 
     def round(self):
         return self.project_round.participating_round
@@ -2055,23 +2036,13 @@ class MentorApproval(ApprovalStatus):
         )
 
     def get_preview_url(self):
-        return reverse('mentorapproval-preview', kwargs={
-            'round_slug': self.project.round().slug,
-            'community_slug': self.project.project_round.community.slug,
-            'project_slug': self.project.slug,
-            'username': self.mentor.account.username,
-            })
+        return self.project.reverse('mentorapproval-preview', username=self.mentor.account.username)
 
     def get_action_url(self, action, current_user=None):
-        kwargs = {
-            'round_slug': self.project.round().slug,
-            'community_slug': self.project.project_round.community.slug,
-            'project_slug': self.project.slug,
-            'action': action,
-            }
+        kwargs = {}
         if self.mentor.account != current_user:
             kwargs['username'] = self.mentor.account.username
-        return reverse('mentorapproval-action', kwargs=kwargs)
+        return self.project.reverse('mentorapproval-action', action=action, **kwargs)
 
     def submission_and_approval_deadline(self):
         return self.project.round().internends + datetime.timedelta(days=7 * 5)
@@ -2145,19 +2116,13 @@ class CoordinatorApproval(ApprovalStatus):
                 )
 
     def get_preview_url(self):
-        return reverse('coordinatorapproval-preview', kwargs={
-            'community_slug': self.community.slug,
-            'username': self.coordinator.account.username,
-            })
+        return self.community.reverse('coordinatorapproval-preview', username=self.coordinator.account.username)
 
     def get_action_url(self, action, current_user=None):
-        kwargs = {
-                'community_slug': self.community.slug,
-                'action': action,
-                }
+        kwargs = {}
         if self.coordinator.account != current_user:
             kwargs['username'] = self.coordinator.account.username
-        return reverse('coordinatorapproval-action', kwargs=kwargs)
+        return self.community.reverse('coordinatorapproval-action', action=action, **kwargs)
 
     def is_approver(self, user):
         return user.is_staff or self.community.is_coordinator(user)
@@ -2228,14 +2193,15 @@ class ApplicantApproval(ApprovalStatus):
     def submission_and_editing_deadline(self):
         return self.application_round.initial_applications_close
 
+    def reverse(self, view_name, **kwargs):
+        kwargs['applicant_username'] = self.applicant.account.username
+        return reverse(view_name, kwargs=kwargs)
+
     def get_preview_url(self):
-        return reverse('applicant-review-detail', kwargs={'applicant_username': self.applicant.account.username})
+        return self.reverse('applicant-review-detail')
 
     def get_action_url(self, action):
-        return reverse('application-action', kwargs={
-            'applicant_username': self.applicant.account.username,
-            'action': action,
-        })
+        return self.reverse('application-action', action=action)
 
     def get_submitter_email_list(self):
         return [self.applicant.email_address()]
@@ -3412,21 +3378,17 @@ class FinalApplication(ApprovalStatus):
         return None
 
     def get_action_url(self, action):
-        return reverse('application-action', kwargs={
-            'round_slug': self.project.round().slug,
-            'community_slug': self.project.project_round.community.slug,
-            'project_slug': self.project.slug,
-            'username': self.applicant.applicant.account.username,
-            'action': action,
-            })
+        return self.project.reverse(
+            'application-action',
+            username=self.applicant.applicant.account.username,
+            action=action,
+        )
 
     def get_mentor_agreement_url(self):
-        return reverse('select-intern', kwargs={
-            'round_slug': self.project.round().slug,
-            'community_slug': self.project.project_round.community.slug,
-            'project_slug': self.project.slug,
-            'applicant_username': self.applicant.applicant.account.username,
-        })
+        return self.project.reverse(
+            'select-intern',
+            applicant_username=self.applicant.applicant.account.username,
+        )
 
     def submission_and_approval_deadline(self):
         return self.project.round().contribution_closes

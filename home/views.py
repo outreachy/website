@@ -1424,11 +1424,7 @@ class MentorApprovalAction(ApprovalStatusAction):
         # that route because they haven't been approved to edit the
         # project yet when they first sign up.
         if self.kwargs['action'] == 'submit' and self.object.project.is_submitter(self.request.user):
-            return reverse('project-skills-edit', kwargs={
-                'round_slug': self.object.project.round().slug,
-                'community_slug': self.object.project.project_round.community.slug,
-                'project_slug': self.object.project.slug,
-                })
+            return self.object.project.reverse('project-skills-edit')
 
         return self.object.project.get_preview_url()
 
@@ -1487,11 +1483,7 @@ class ProjectAction(ApprovalStatusAction):
                     approval_status=ApprovalStatus.APPROVED)
             return mentor.get_action_url('submit', self.request.user)
         elif self.kwargs['action'] == 'submit':
-            return reverse('project-skills-edit', kwargs={
-                'round_slug': self.object.round().slug,
-                'community_slug': self.object.project_round.community.slug,
-                'project_slug': self.object.slug,
-                })
+            return self.object.reverse('project-skills-edit')
         return self.object.get_preview_url()
 
     def notify(self):
@@ -2334,10 +2326,7 @@ class InternFund(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Revis
             if past_funding == InternSelection.NOT_FUNDED and funding != InternSelection.NOT_FUNDED:
                 email.intern_selection_conflict_notification(self.intern_selection, self.request)
 
-        return redirect(reverse('community-applicants', kwargs={
-            'round_slug': kwargs['round_slug'],
-            'community_slug': kwargs['community_slug'],
-            }) + "#interns")
+        return redirect(self.project.project_round.reverse('community-applicants') + "#interns")
 
 class InternApprove(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, View):
     def post(self, request, *args, **kwargs):
