@@ -1,4 +1,5 @@
 import datetime
+from django.core import mail
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from reversion.models import Version
@@ -6,6 +7,7 @@ from reversion.models import Version
 from home.models import *
 from home.factories import *
 from home.scenarios import *
+from home.email import organizers
 
 # don't try to use the static files manifest during tests
 @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
@@ -179,8 +181,20 @@ class ProjectSubmissionTestCase(TestCase):
             'sponsorship_set-0-funding_decision_date': str(datetime.date.today()),
         })
         self.assertEqual(response.status_code, 302)
+
+        # Ensure the database reflects the community sign-up
         participation = Participation.objects.get(community__slug=scenario.participation.community.slug, participating_round__slug=current_round.slug, approval_status=ApprovalStatus.PENDING)
         sponsorship = Sponsorship.objects.get(participation=participation, coordinator_can_update=True, name=sponsor_name, amount=sponsor_amount, funding_secured=True)
+
+        # Make sure the email to the Outreachy organizers was sent
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, 'Approve community participation - Debian')
+        self.assertEqual(mail.outbox[0].from_email, organizers)
+        self.assertEqual(mail.outbox[0].to, [organizers])
+        self.assertIn(community_read_only_path, mail.outbox[0].body)
+        self.assertIn('Number of interns funded: 2', mail.outbox[0].body)
+        self.assertIn(sponsor_name, mail.outbox[0].body)
+        self.assertIn(str(sponsor_amount), mail.outbox[0].body)
 
         for visitor_type, visitor in visitors:
             with self.subTest(visitor_type=visitor_type):
@@ -262,7 +276,7 @@ class ProjectSubmissionTestCase(TestCase):
         #    x 'Open to new projects' - mentors can submit projects
         #    x 'Submit a Project Proposal' button for mentors to submit projects
         #    - A link to the mentor FAQ should be visible 'mentor requirements'
-        #  - Outreachy organizers should get an email about the community sign up
+        #  x Outreachy organizers should get an email about the community sign up
         #
         # Mentor should be able to submit a project:
         #  - FIXME - need detailed description of this process
