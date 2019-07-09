@@ -102,6 +102,99 @@ class ProjectSubmissionTestCase(TestCase):
                 self.assertNotContains(response, '<h2>Submit an Outreachy Intern Project Proposal</h2>', html=True)
                 self.assertNotContains(response, '<a class="btn btn-success" href="{}">Submit a Project Proposal</a>'.format(project_submission_path), html=True)
 
+    def test_community_participation_signup_too_early(self):
+        """
+        This tests submitting an older community to participate in this round.
+         - Create a community that has been approved to participate in a past round
+         - Create a new RoundPage for the upcoming round where the CFP hasn't opened
+         - Try to submit the community to participate in the round through the form
+         - It should fail
+        """
+        scenario = InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
+        current_round = RoundPageFactory(start_from='pingnew', start_date=datetime.date.today() + datetime.timedelta(days=1))
+
+        community_does_participate_path = reverse('participation-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
+        self.client.force_login(scenario.coordinator.account)
+        sponsor_name = 'Software in the Public Interest - Debian'
+        sponsor_amount = 13000
+        response = self.client.post(community_does_participate_path, {
+            'sponsorship_set-TOTAL_FORMS': '1',
+            'sponsorship_set-INITIAL_FORMS': '0',
+            'sponsorship_set-MIN_NUM_FORMS': '0',
+            'sponsorship_set-MAX_NUM_FORMS': '1000',
+            'sponsorship_set-0-name': sponsor_name,
+            'sponsorship_set-0-amount': sponsor_amount,
+            'sponsorship_set-0-funding_secured': 'on',
+            'sponsorship_set-0-funding_decision_date': str(datetime.date.today()),
+        })
+        with self.assertRaises(Participation.DoesNotExist):
+            p = Participation.objects.get(community__slug=scenario.participation.community.slug, participating_round__slug=current_round.slug)
+        self.assertNotEqual(response.status_code, 302)
+        pass
+
+    def test_community_participation_signup(self):
+        """
+        This tests submitting an older community to participate in this round.
+         - Create a community that has been approved to participate in a past round
+         - Create a new RoundPage for the upcoming round
+         - Submit the community to participate in the round through the form
+         - There should be an email sent to the Outreachy organizers about the participation
+         - There should be a Participation object for this community in the current round marked as PENDING
+
+        Test home/templates/home/community_read_only.html:
+         - Check:
+           - The 'Pending Participation' status is visible
+           - Funding for 1 intern is visible
+           - The 'Coordinate for This Community' button is visible to anyone who is not a coordinator
+           - The 'Submit a Project Proposal' button is visible
+           - The 'Submit an Outreachy Intern Project Proposal' heading is visible
+           - The 'Community will participate' button is visible to a coordinator
+           - The 'Community will not participate' button is visible to a coordinator
+        """
+        scenario = InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
+        current_round = RoundPageFactory(start_from='pingnew')
+
+        community_read_only_path = reverse('community-read-only', kwargs={ 'community_slug': scenario.participation.community.slug, })
+        project_submission_path = reverse('project-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
+        coordinator_signup_path = reverse('coordinatorapproval-action', kwargs={'action': 'submit', 'community_slug': scenario.participation.community.slug, })
+        community_does_participate_path = reverse('participation-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
+        community_does_not_participate_path = reverse('participation-action', kwargs={'action': 'withdraw', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
+
+        visitors = self.get_visitors_from_past_round(scenario)
+        # There should not be a Participation for Debian in the current round yet
+        with self.assertRaises(Participation.DoesNotExist):
+            p = Participation.objects.get(community__slug=scenario.participation.community.slug, participating_round__slug=current_round.slug)
+
+        self.client.force_login(scenario.coordinator.account)
+        sponsor_name = 'Software in the Public Interest - Debian'
+        sponsor_amount = 13000
+        response = self.client.post(community_does_participate_path, {
+            'sponsorship_set-TOTAL_FORMS': '1',
+            'sponsorship_set-INITIAL_FORMS': '0',
+            'sponsorship_set-MIN_NUM_FORMS': '0',
+            'sponsorship_set-MAX_NUM_FORMS': '1000',
+            'sponsorship_set-0-name': sponsor_name,
+            'sponsorship_set-0-amount': sponsor_amount,
+            'sponsorship_set-0-funding_secured': 'on',
+            'sponsorship_set-0-funding_decision_date': str(datetime.date.today()),
+        })
+        self.assertEqual(response.status_code, 302)
+        participation = Participation.objects.get(community__slug=scenario.participation.community.slug, participating_round__slug=current_round.slug, approval_status=ApprovalStatus.PENDING)
+        sponsorship = Sponsorship.objects.get(participation=participation, coordinator_can_update=True, name=sponsor_name, amount=sponsor_amount, funding_secured=True)
+
+        for visitor_type, visitor in visitors:
+            with self.subTest(visitor_type=visitor_type):
+                self.client.logout()
+                if visitor:
+                    self.client.force_login(visitor)
+                response = self.client.get(community_read_only_path)
+                self.assertEqual(response.status_code, 200)
+                self.assertContains(response, '<span class="badge badge-pill badge-info">Pending Participation</span>', html=True)
+                if visitor_type != 'coordinator':
+                    self.assertContains(response, '<a href="{}" class="btn btn-success">Coordinate for This Community</a>'.format(coordinator_signup_path), html=True)
+                self.assertContains(response, '<h2>Submit an Outreachy Intern Project Proposal</h2>', html=True)
+                self.assertContains(response, '<a class="btn btn-success" href="{}">Submit a Project Proposal</a>'.format(project_submission_path), html=True)
+
     def test_community_cfp_closed(self):
         # This is before we have a new RoundPage for the upcoming round,
         # and after the interns are announced for the last round.
