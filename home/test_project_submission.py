@@ -190,6 +190,10 @@ class ProjectSubmissionTestCase(TestCase):
                 response = self.client.get(community_read_only_path)
                 self.assertEqual(response.status_code, 200)
                 self.assertContains(response, '<span class="badge badge-pill badge-info">Pending Participation</span>', html=True)
+                self.assertContains(response, '<span class="badge badge-pill badge-success">Funded</span>', html=True)
+                self.assertContains(response, '<td>This community has funding for 2 interns.</td>', html=True)
+                self.assertContains(response, '<span class="badge badge-pill badge-warning">No Projects</span>', html=True)
+                self.assertContains(response, '<span class="badge badge-pill badge-info">Open to New Projects</span>', html=True)
                 if visitor_type != 'coordinator':
                     self.assertContains(response, '<a href="{}" class="btn btn-success">Coordinate for This Community</a>'.format(coordinator_signup_path), html=True)
                 self.assertContains(response, '<h2>Submit an Outreachy Intern Project Proposal</h2>', html=True)
@@ -247,16 +251,16 @@ class ProjectSubmissionTestCase(TestCase):
         #  - Go to /community/cfp/
         #  - Follow the link for your community
         #  - Get confused by why there's a 'sign-up to coordinate' button when you're a coordinator
-        #  - Log into the website, which should redirect back to the community read-only page
-        #  - There should be a success color 'Community Will Participate' button
-        #  - Click that button, fill out funding form
+        #  x Log into the website, which should redirect back to the community read-only page
+        #  x There should be a success color 'Community Will Participate' button
+        #  x Click that button, fill out funding form
         #  - The community read-only page should now reflect that the community has signed up
         #    - Coordinator actions box with 'Update community info' button
-        #    - Community status box should read 'Pending Participation'
-        #    - Funding should reflect funding levels coordinator put in
-        #    - 'No projects' are approved by the coordinator yet
-        #    - 'Open to new projects' - mentors can submit projects
-        #    - 'Submit a Project Proposal' button for mentors to submit projects
+        #    x Community status box should read 'Pending Participation'
+        #    x Funding should reflect funding levels coordinator put in
+        #    x 'No projects' are approved by the coordinator yet
+        #    x 'Open to new projects' - mentors can submit projects
+        #    x 'Submit a Project Proposal' button for mentors to submit projects
         #    - A link to the mentor FAQ should be visible 'mentor requirements'
         #  - Outreachy organizers should get an email about the community sign up
         #
