@@ -3,10 +3,105 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from reversion.models import Version
 
-from . import models
-from .factories import *
+from home.models import *
+from home.factories import *
+from home.scenarios import *
 
+# don't try to use the static files manifest during tests
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class ProjectSubmissionTestCase(TestCase):
+
+    # The following tests apply to the community read-only page text
+    # e.g. home/templates/home/community_read_only.html
+
+    def get_visitors_from_past_round(self, scenario):
+        return (
+            ("not logged in", None),
+            ("no comrade", factories.UserFactory()),
+            ("only comrade", factories.ComradeFactory().account),
+            ("organizer", factories.ComradeFactory(account__is_staff=True).account),
+            ("applicant", scenario.applicant1.applicant.account),
+            ("mentor", scenario.mentor.account),
+            ("coordinator", scenario.coordinator.account),
+            ("reviewer", scenario.reviewer.account),
+        )
+
+    def test_community_read_only_submission_text_cfp_closed(self):
+        """
+        This tests how the page for coordinators and mentors of a community
+        looks between rounds (after interns have been selected
+        but before the next round has been announced).
+
+        Test home/templates/home/community_read_only.html:
+         - Create a community that has been approved to participate in a past round
+         - No new RoundPage for the upcoming round
+         - Check:
+           - Warning card about CFP not being open is visible
+           - The 'Submit a Project Proposal' button is not visible
+           - The 'Submit an Outreachy Intern Project Proposal' heading is not visible
+         - Ensure those checks are true for all visitor types
+        """
+        scenario = InternshipWeekScenario(week = 1, community__name='Debian', community__slug='debian')
+        community_read_only_path = reverse('community-read-only', kwargs={ 'community_slug': scenario.participation.community.slug, })
+        project_submission_path = reverse('project-action', kwargs={'action': 'submit', 'round_slug': scenario.participation.participating_round.slug, 'community_slug': scenario.participation.community.slug, })
+
+        visitors = self.get_visitors_from_past_round(scenario)
+
+        for visitor_type, visitor in visitors:
+            with self.subTest(visitor_type=visitor_type):
+                self.client.logout()
+                if visitor:
+                    self.client.force_login(visitor)
+                response = self.client.get(community_read_only_path)
+                self.assertEqual(response.status_code, 200)
+                self.assertContains(response, '<div class="card-header text-white bg-warning">Project and community CFP is currently closed</div>', html=True)
+                self.assertNotContains(response, '<h2>Submit an Outreachy Intern Project Proposal</h2>', html=True)
+                self.assertNotContains(response, '<a class="btn btn-success" href="{}">Submit a Project Proposal</a>'.format(project_submission_path), html=True)
+
+    def test_community_read_only_submission_text_cfp_open_uncertain_participation(self):
+        """
+        This tests how the page for coordinators and mentors of a community
+        looks after a new round has been announced,
+        but before the community signs up to participate.
+
+        Test home/templates/home/community_read_only.html:
+         - Create a community that has been approved to participate in a past round
+         - Create a new RoundPage for the upcoming round
+         - Check:
+           - The 'Not Participating' status is visible
+           - The 'Coordinate for This Community' button is visible to anyone who is not a coordinator
+           - The 'Community will participate' button is visible to a coordinator
+           - The 'Community will not participate' button is visible to a coordinator
+           - The 'Submit a Project Proposal' button is not visible
+           - The 'Submit an Outreachy Intern Project Proposal' heading is not visible
+        """
+        scenario = InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
+        community_read_only_path = reverse('community-read-only', kwargs={ 'community_slug': scenario.participation.community.slug, })
+        current_round = RoundPageFactory(start_from='pingnew', start_date=datetime.date.today() - datetime.timedelta(days=1))
+
+        project_submission_path = reverse('project-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
+        coordinator_signup_path = reverse('coordinatorapproval-action', kwargs={'action': 'submit', 'community_slug': scenario.participation.community.slug, })
+        community_does_participate_path = reverse('participation-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
+        community_does_not_participate_path = reverse('participation-action', kwargs={'action': 'withdraw', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
+
+        visitors = self.get_visitors_from_past_round(scenario)
+
+        for visitor_type, visitor in visitors:
+            with self.subTest(visitor_type=visitor_type):
+                self.client.logout()
+                if visitor:
+                    self.client.force_login(visitor)
+                response = self.client.get(community_read_only_path)
+                self.assertEqual(response.status_code, 200)
+                self.assertContains(response, '<span class="badge badge-pill badge-warning">Not Participating</span>', html=True)
+                if visitor_type != 'coordinator':
+                    self.assertContains(response, '<a href="{}" class="btn btn-success">Coordinate for This Community</a>'.format(coordinator_signup_path), html=True)
+                else:
+                    self.assertContains(response, '<a href="{}" class="btn btn-success">Community will participate</a>'.format(community_does_participate_path), html=True)
+                    self.assertContains(response, '<a href="{}" class="btn btn-warning">Community will not participate</a>'.format(community_does_not_participate_path), html=True)
+                self.assertNotContains(response, '<h2>Submit an Outreachy Intern Project Proposal</h2>', html=True)
+                self.assertNotContains(response, '<a class="btn btn-success" href="{}">Submit a Project Proposal</a>'.format(project_submission_path), html=True)
+
     def test_community_cfp_closed(self):
         # This is before we have a new RoundPage for the upcoming round,
         # and after the interns are announced for the last round.
@@ -27,10 +122,8 @@ class ProjectSubmissionTestCase(TestCase):
         #
         # New community coordinators should be able to sign up for the upcoming round:
         #  - Click on a community from /community/cfp/
-        #  - The page should have a warning box about community sign up being closed
-        #    "Project and community CFP is currently closed"
         #  - There should be a link to the coordinator duties "/mentor/#coordinator"
-        #  - There should be a button "Coordinate for this Community"
+        #  x There should be a button "Coordinate for this Community"
         #  - CoordinatorApproval submission form should work
         #  - Outreachy organizers and current approved Coordinators should get an email notification
         #  - following the link sent from that email should allow both approval and rejection
