@@ -396,6 +396,59 @@ The relationship between an InternSelection and a MentorRelationship is shown be
 
 ![An InternSelection is related to a MentorApproval through a MentorRelationship](https://github.com/outreachy/website/raw/master/docs/graphics/MentorApproval-MentorRelationship-Project-ApplicantApproval-InternSelection.png)
 
+# Running tests manually
+
+## Starting tests manually
+
+If you want to run the test suite manually, you can run the command:
+
+```
+PATH="$PWD/node_modules/.bin:$PATH" ./manage.py test home/
+```
+
+You can add verbosity flags to get more output from the tests:
+
+```
+PATH="$PWD/node_modules/.bin:$PATH" ./manage.py test -v2 home/
+```
+
+You can run tests from a particular file by passing the file name without the .py extension:
+
+```
+PATH="$PWD/node_modules/.bin:$PATH" ./manage.py test home.<file name>
+```
+
+You can run one test in a particular file:
+
+```
+PATH="$PWD/node_modules/.bin:$PATH" ./manage.py test home.<file name>.<class name>.<function name>
+```
+
+## Running test code in the shell
+
+Sometimes when writing a new test, you want to test your code in the shell first. The test suite will do some set up automatically to create a local test Client that uses your local code and a new test database. You can replicate that by running the following commands:
+
+```
+PATH="$PWD/node_modules/.bin:$PATH" ./manage.py shell
+Python 3.6.8 (default, Jan  3 2019, 03:42:36) 
+[GCC 8.2.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from django.test import Client
+>>> c = Client(HTTP_HOST='localhost')
+```
+
+Now you can create objects and look at responses from page requests against your local database, e.g.:
+
+```
+>>> from django.urls import reverse
+>>> from home.scenarios import *
+>>> InternshipWeekScenario(week = 1, community__name='Debian', community__slug='debian')
+<home.scenarios.Scenario object at 0x7f5797f6c438>
+>>> response = c.get('/communities/cfp/debian')
+>>> response.status_code
+200
+```
 
 # Adding a new Django app
 
