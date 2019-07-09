@@ -77,7 +77,7 @@ class ProjectSubmissionTestCase(TestCase):
         """
         scenario = InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
         community_read_only_path = reverse('community-read-only', kwargs={ 'community_slug': scenario.participation.community.slug, })
-        current_round = RoundPageFactory(start_from='pingnew', start_date=datetime.date.today() - datetime.timedelta(days=1))
+        current_round = RoundPageFactory(start_from='pingnew')
 
         project_submission_path = reverse('project-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
         coordinator_signup_path = reverse('coordinatorapproval-action', kwargs={'action': 'submit', 'community_slug': scenario.participation.community.slug, })
