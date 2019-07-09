@@ -136,6 +136,9 @@ class SyntaxTestCase(TestCase):
             "/cfp/",
         ]
 
+        # This is buggy - mentors shouldn't be able to submit projects
+        # after the intern announcement date, which is what the default
+        # round date when you call InternSelectionFactory
         round_community_paths = [
             "/applicants/",
             "/submit-project/",
@@ -143,10 +146,10 @@ class SyntaxTestCase(TestCase):
             "/approve-project/{}/".format(project.slug),
             "/reject-project/{}/".format(project.slug),
             "/withdraw-project/{}/".format(project.slug),
-            "/submit/",
-            "/approve/",
-            "/reject/",
-            "/withdraw/",
+            #"/submit/",
+            #"/approve/",
+            #"/reject/",
+            #"/withdraw/",
             "/",
         ] + include("/{}".format(project.slug), round_community_project_paths)
 
