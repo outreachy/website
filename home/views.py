@@ -1235,7 +1235,21 @@ class ParticipationAction(ApprovalStatusAction):
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     def get_object(self):
         community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
-        participating_round = get_object_or_404(RoundPage, slug=self.kwargs['round_slug'])
+
+        # Only allow submission of communities until the last day to add communities
+        now = datetime.now(timezone.utc)
+        today = get_deadline_date_for(now)
+        if self.kwargs['action'] == 'submit':
+            participating_round = get_object_or_404(RoundPage, slug=self.kwargs['round_slug'],
+                pingnew__lte=today,
+                lateorgs__gt=today,
+            )
+        # Only allow withdrawl of community participations until the intern announcement date
+        else:
+            participating_round = get_object_or_404(RoundPage, slug=self.kwargs['round_slug'],
+                pingnew__lte=today,
+                internannounce__gt=today,
+            )
         try:
             return Participation.objects.get(
                     community=community,
