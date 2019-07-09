@@ -191,9 +191,7 @@ class ApprovalStatusAction(LoginRequiredMixin, ComradeRequiredMixin, reversion.v
         reversion.set_comment(self.kwargs['action'].title() + ".")
         self.object = self.save_form(form)
 
-        # Delay calling notify() until the database transaction is fully
-        # written to disk.
-        transaction.on_commit(self.notify)
+        self.notify()
 
         return HttpResponseRedirect(self.get_success_url())
 
