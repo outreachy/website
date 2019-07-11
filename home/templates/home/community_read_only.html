@@ -346,12 +346,23 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 			{% endif %}
 			<li><a href="{{ participation_info.get_absolute_url }}">Community landing page</a></li>
 		</ul>
-		{% if participation_info.approval_status != participation_info.APPROVED and not current_round.lateprojects.has_passed %}
-			<a href="{{ participation_info.get_approve_url }}" class="btn btn-success">Approve Community</a>
-		{% endif %}
-		{% if participation_info.approval_status != participation_info.REJECTED %}
-			<a href="{{ participation_info.get_reject_url }}" class="btn btn-warning">Reject Community</a>
-		{% endif %}
+		<div class="container">
+			<div class="row">
+				<div class="col">
+				{% if participation_info.approval_status != participation_info.APPROVED and not current_round.lateprojects.has_passed %}
+						<form action="{{ participation_info.get_approve_url }}" method="post">
+							{% csrf_token %}
+							<input type="submit" class="btn btn-success m-2" value="Approve Community" />
+						</form>
+				{% endif %}
+				</div>
+				<div class="col">
+					{% if participation_info.approval_status != participation_info.REJECTED %}
+						<a href="{{ participation_info.get_reject_url }}" class="btn btn-warning m-2">Reject Community</a>
+					{% endif %}
+				</div>
+			</div>
+		</div>
 	{% endif %}
 {% endif %}
 
