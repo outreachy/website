@@ -226,6 +226,90 @@ class ProjectSubmissionTestCase(TestCase):
                 self.assertContains(response, '<h2>Submit an Outreachy Intern Project Proposal</h2>', html=True)
                 self.assertContains(response, '<a class="btn btn-success" href="{}">Submit a Project Proposal</a>'.format(project_submission_path), html=True)
 
+    def test_community_participation_approval(self):
+        """
+        This tests approving a community to participate in this round.
+         - Create a new RoundPage for the upcoming round, with a pending community
+         - Go to the community read-only page
+         - Log in as an organizer
+         - The community read-only page should have an 'Approve Community' and a 'Reject Community' button
+         - Post to the Participation approval URL
+         - This should redirect back to community read-only page
+         - Participation should now marked as approved in the database
+         - Coordinator receives email that the community was approved to participate
+         - The community read-only page should now reflect that the community has been approved
+           - Community status box should read 'Participating'
+         - There should still be a way to submit projects
+
+        Test home/templates/home/community_read_only.html:
+         - Check:
+           - The 'Participating' status is visible
+           - Funding for 1 intern is visible
+           - The 'Coordinate for This Community' button is visible to anyone who is not a coordinator
+           - The 'Submit a Project Proposal' button is visible
+           - The 'Submit an Outreachy Intern Project Proposal' heading is visible
+           - The 'Community will participate' button is visible to a coordinator
+           - The 'Community will not participate' button is visible to a coordinator
+        """
+        scenario = InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
+        current_round = RoundPageFactory(start_from='pingnew')
+
+        community_read_only_path = reverse('community-read-only', kwargs={ 'community_slug': scenario.participation.community.slug, })
+        project_submission_path = reverse('project-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
+        coordinator_signup_path = reverse('coordinatorapproval-action', kwargs={'action': 'submit', 'community_slug': scenario.participation.community.slug, })
+        community_does_participate_path = reverse('participation-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
+        approve_participation_path = reverse('participation-action', kwargs={'action': 'approve', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
+        reject_participation_path = reverse('participation-action', kwargs={'action': 'reject', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
+        visitors = self.get_visitors_from_past_round(scenario)
+
+        # Set up the community with a pending participation in the current round
+        participation = factories.ParticipationFactory(community=scenario.community, participating_round=current_round, approval_status=ApprovalStatus.PENDING)
+        sponsorship = factories.SponsorshipFactory(participation=participation, name='Software in the Public Interest - Debian', amount=13000)
+        
+        organizer_account = User.objects.get(is_staff=True)
+        self.client.force_login(organizer_account)
+
+        # Double check that the community read-only page has links to approve or reject
+        response = self.client.get(community_read_only_path)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '<span class="badge badge-pill badge-info">Pending Participation</span>', html=True)
+        self.assertContains(response, '<input type="submit" class="btn btn-success m-2" value="Approve Community" />', html=True)
+        self.assertContains(response, '<a href="{}" class="btn btn-warning m-2">Reject Community</a>'.format(reject_participation_path), html=True)
+
+        # Approve the community
+        response = self.client.post(approve_participation_path)
+        self.assertEqual(response.status_code, 302)
+
+        # Check the database status
+        approved_participation = Participation.objects.get(community__slug=participation.community.slug, participating_round__slug=current_round.slug, approval_status=ApprovalStatus.APPROVED)
+
+        # Check that the email to the community coordinator was sent
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, '{} is participating in Outreachy!'.format(scenario.community.name))
+        self.assertEqual(mail.outbox[0].from_email, organizers)
+        self.assertEqual(mail.outbox[0].to, scenario.community.get_coordinator_email_list())
+        self.assertIn('The Outreachy organizers have approved {} to participate in the current round of Outreachy!'.format(scenario.community.name), mail.outbox[0].body)
+        # TODO: we should probably check that other information is correct,
+        # like the round dates, but this is enough for now.
+
+        # Check that the community read-only page reflects the database status
+        for visitor_type, visitor in visitors:
+            with self.subTest(visitor_type=visitor_type):
+                self.client.logout()
+                if visitor:
+                    self.client.force_login(visitor)
+                response = self.client.get(community_read_only_path)
+                self.assertEqual(response.status_code, 200)
+                self.assertContains(response, '<span class="badge badge-pill badge-success">Participating</span>', html=True)
+                self.assertContains(response, '<span class="badge badge-pill badge-success">Funded</span>', html=True)
+                self.assertContains(response, '<td>This community has funding for 2 interns.</td>', html=True)
+                self.assertContains(response, '<span class="badge badge-pill badge-warning">No Projects</span>', html=True)
+                self.assertContains(response, '<span class="badge badge-pill badge-info">Open to New Projects</span>', html=True)
+                if visitor_type != 'coordinator':
+                    self.assertContains(response, '<a href="{}" class="btn btn-success">Coordinate for This Community</a>'.format(coordinator_signup_path), html=True)
+                self.assertContains(response, '<h2>Submit an Outreachy Intern Project Proposal</h2>', html=True)
+                self.assertContains(response, '<a class="btn btn-success" href="{}">Submit a Project Proposal</a>'.format(project_submission_path), html=True)
+
     def test_community_cfp_closed(self):
         # This is before we have a new RoundPage for the upcoming round,
         # and after the interns are announced for the last round.
@@ -295,15 +379,14 @@ class ProjectSubmissionTestCase(TestCase):
         #  - FIXME - need detailed description of this process
         #
         # Organizer approving the community:
-        #  - Outreachy organizers should follow the link from the email, log in, and be able to approve the community
-        #  - The link should have an 'Approve Community' button
-        #  - Need to click a second approve button on the double confirmation page
-        #  - Redirect back to community read-only page
-        #  - Coordinator receives email that the community was approved to participate
-        #  - The community read-only page should now reflect that the community has been approved
-        #    - Community status box should read 'Participating'
+        #  x Outreachy organizers should follow the link from the email, log in, and be able to approve the community
+        #  x The link should have an 'Approve Community' button
+        #  x Redirect back to community read-only page
+        #  x Coordinator receives email that the community was approved to participate
+        #  x The community read-only page should now reflect that the community has been approved
+        #    x Community status box should read 'Participating'
         #
-        # Organizer approving the community:
+        # Organizer rejecting the community:
         #  - Outreachy organizers should follow the link from the email, log in, and be able to reject the community
         #  - The link should have an warning color 'Reject Community' button
         #  - Need to click a second reject button on the double confirmation page, and provide a reason for rejection
