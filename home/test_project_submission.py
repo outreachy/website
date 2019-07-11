@@ -5,8 +5,8 @@ from django.urls import reverse
 from reversion.models import Version
 
 from home.models import *
-from home.factories import *
-from home.scenarios import *
+from home import factories
+from home import scenarios
 from home.email import organizers
 
 # don't try to use the static files manifest during tests
@@ -43,7 +43,7 @@ class ProjectSubmissionTestCase(TestCase):
            - The 'Submit an Outreachy Intern Project Proposal' heading is not visible
          - Ensure those checks are true for all visitor types
         """
-        scenario = InternshipWeekScenario(week = 1, community__name='Debian', community__slug='debian')
+        scenario = scenarios.InternshipWeekScenario(week = 1, community__name='Debian', community__slug='debian')
         community_read_only_path = reverse('community-read-only', kwargs={ 'community_slug': scenario.participation.community.slug, })
         project_submission_path = reverse('project-action', kwargs={'action': 'submit', 'round_slug': scenario.participation.participating_round.slug, 'community_slug': scenario.participation.community.slug, })
 
@@ -77,9 +77,9 @@ class ProjectSubmissionTestCase(TestCase):
            - The 'Submit a Project Proposal' button is not visible
            - The 'Submit an Outreachy Intern Project Proposal' heading is not visible
         """
-        scenario = InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
+        scenario = scenarios.InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
         community_read_only_path = reverse('community-read-only', kwargs={ 'community_slug': scenario.participation.community.slug, })
-        current_round = RoundPageFactory(start_from='pingnew')
+        current_round = factories.RoundPageFactory(start_from='pingnew')
 
         project_submission_path = reverse('project-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
         coordinator_signup_path = reverse('coordinatorapproval-action', kwargs={'action': 'submit', 'community_slug': scenario.participation.community.slug, })
@@ -118,7 +118,7 @@ class ProjectSubmissionTestCase(TestCase):
         })
 
     def submit_failed_community_signup(self, current_round):
-        scenario = InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
+        scenario = scenarios.InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
 
         response = self.coordinator_signs_up_community_to_participate(
                 scenario.coordinator.account,
@@ -137,7 +137,7 @@ class ProjectSubmissionTestCase(TestCase):
          - Try to submit the community to participate in the round through the form
          - It should fail
         """
-        current_round = RoundPageFactory(start_from='pingnew', start_date=datetime.date.today() + datetime.timedelta(days=1))
+        current_round = factories.RoundPageFactory(start_from='pingnew', start_date=datetime.date.today() + datetime.timedelta(days=1))
         self.submit_failed_community_signup(current_round)
 
     def test_community_participation_signup_too_late(self):
@@ -149,7 +149,7 @@ class ProjectSubmissionTestCase(TestCase):
          - Try to submit the community to participate in the round through the form
          - It should fail
         """
-        current_round = RoundPageFactory(start_from='lateorgs')
+        current_round = factories.RoundPageFactory(start_from='lateorgs')
         self.submit_failed_community_signup(current_round)
 
     def test_old_community_participation_signup(self):
@@ -171,8 +171,8 @@ class ProjectSubmissionTestCase(TestCase):
            - The 'Community will participate' button is visible to a coordinator
            - The 'Community will not participate' button is visible to a coordinator
         """
-        scenario = InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
-        current_round = RoundPageFactory(start_from='pingnew')
+        scenario = scenarios.InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
+        current_round = factories.RoundPageFactory(start_from='pingnew')
 
         community_read_only_path = reverse('community-read-only', kwargs={ 'community_slug': scenario.participation.community.slug, })
         project_submission_path = reverse('project-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
@@ -251,8 +251,8 @@ class ProjectSubmissionTestCase(TestCase):
            - The 'Community will participate' button is visible to a coordinator
            - The 'Community will not participate' button is visible to a coordinator
         """
-        scenario = InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
-        current_round = RoundPageFactory(start_from='pingnew')
+        scenario = scenarios.InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
+        current_round = factories.RoundPageFactory(start_from='pingnew')
 
         community_read_only_path = reverse('community-read-only', kwargs={ 'community_slug': scenario.participation.community.slug, })
         project_submission_path = reverse('project-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
