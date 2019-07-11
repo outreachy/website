@@ -104,22 +104,9 @@ class ProjectSubmissionTestCase(TestCase):
                 self.assertNotContains(response, '<h2>Submit an Outreachy Intern Project Proposal</h2>', html=True)
                 self.assertNotContains(response, '<a class="btn btn-success" href="{}">Submit a Project Proposal</a>'.format(project_submission_path), html=True)
 
-    def test_community_participation_signup_too_early(self):
-        """
-        This tests submitting an older community to participate in this round.
-         - Create a community that has been approved to participate in a past round
-         - Create a new RoundPage for the upcoming round where the CFP hasn't opened
-         - Try to submit the community to participate in the round through the form
-         - It should fail
-        """
-        scenario = InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
-        current_round = RoundPageFactory(start_from='pingnew', start_date=datetime.date.today() + datetime.timedelta(days=1))
-
-        community_does_participate_path = reverse('participation-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
-        self.client.force_login(scenario.coordinator.account)
-        sponsor_name = 'Software in the Public Interest - Debian'
-        sponsor_amount = 13000
-        response = self.client.post(community_does_participate_path, {
+    def coordinator_signs_up_community_to_participate(self, account, community_does_participate_path, sponsor_name='Software in the Public Interest - Debian', sponsor_amount=13000):
+        self.client.force_login(account)
+        return self.client.post(community_does_participate_path, {
             'sponsorship_set-TOTAL_FORMS': '1',
             'sponsorship_set-INITIAL_FORMS': '0',
             'sponsorship_set-MIN_NUM_FORMS': '0',
@@ -129,10 +116,41 @@ class ProjectSubmissionTestCase(TestCase):
             'sponsorship_set-0-funding_secured': 'on',
             'sponsorship_set-0-funding_decision_date': str(datetime.date.today()),
         })
+
+    def submit_failed_community_signup(self, current_round):
+        scenario = InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
+
+        response = self.coordinator_signs_up_community_to_participate(
+                scenario.coordinator.account,
+                reverse('participation-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, }),
+                )
         with self.assertRaises(Participation.DoesNotExist):
             p = Participation.objects.get(community__slug=scenario.participation.community.slug, participating_round__slug=current_round.slug)
         self.assertNotEqual(response.status_code, 302)
-        pass
+
+    def test_community_participation_signup_too_early(self):
+        """
+        This tests submitting an older community to participate in this round.
+         - Create a community that has been approved to participate in a past round
+           (the past round is currently in week 10 of the internship)
+         - Create a new RoundPage for the upcoming round where the CFP hasn't opened
+         - Try to submit the community to participate in the round through the form
+         - It should fail
+        """
+        current_round = RoundPageFactory(start_from='pingnew', start_date=datetime.date.today() + datetime.timedelta(days=1))
+        self.submit_failed_community_signup(current_round)
+
+    def test_community_participation_signup_too_late(self):
+        """
+        This tests submitting an older community to participate in this round.
+         - Create a community that has been approved to participate in a past round
+           (the past round is currently in week 10 of the internship)
+         - Create a new RoundPage for the upcoming round where the CFP is closed to new communities
+         - Try to submit the community to participate in the round through the form
+         - It should fail
+        """
+        current_round = RoundPageFactory(start_from='lateorgs')
+        self.submit_failed_community_signup(current_round)
 
     def test_community_participation_signup(self):
         """
@@ -161,25 +179,20 @@ class ProjectSubmissionTestCase(TestCase):
         coordinator_signup_path = reverse('coordinatorapproval-action', kwargs={'action': 'submit', 'community_slug': scenario.participation.community.slug, })
         community_does_participate_path = reverse('participation-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
         community_does_not_participate_path = reverse('participation-action', kwargs={'action': 'withdraw', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
+        sponsor_name = 'Software in the Public Interest - Debian'
+        sponsor_amount = 13000
 
         visitors = self.get_visitors_from_past_round(scenario)
         # There should not be a Participation for Debian in the current round yet
         with self.assertRaises(Participation.DoesNotExist):
             p = Participation.objects.get(community__slug=scenario.participation.community.slug, participating_round__slug=current_round.slug)
 
-        self.client.force_login(scenario.coordinator.account)
-        sponsor_name = 'Software in the Public Interest - Debian'
-        sponsor_amount = 13000
-        response = self.client.post(community_does_participate_path, {
-            'sponsorship_set-TOTAL_FORMS': '1',
-            'sponsorship_set-INITIAL_FORMS': '0',
-            'sponsorship_set-MIN_NUM_FORMS': '0',
-            'sponsorship_set-MAX_NUM_FORMS': '1000',
-            'sponsorship_set-0-name': sponsor_name,
-            'sponsorship_set-0-amount': sponsor_amount,
-            'sponsorship_set-0-funding_secured': 'on',
-            'sponsorship_set-0-funding_decision_date': str(datetime.date.today()),
-        })
+        response = self.coordinator_signs_up_community_to_participate(
+                scenario.coordinator.account,
+                reverse('participation-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, }),
+                sponsor_name,
+                sponsor_amount,
+                )
         self.assertEqual(response.status_code, 302)
 
         # Ensure the database reflects the community sign-up
