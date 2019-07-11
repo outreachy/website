@@ -73,6 +73,7 @@
 </ul>
 {% endif %}
 
+{% if view.kwargs.action == "submit" %}
 <p><form action="" method="post">
 	{% csrf_token %}
 	{{ form.management_form }}
@@ -123,6 +124,9 @@
 	{% endfor %}
 	<input type="submit" class="btn btn-{% if view.kwargs.action == 'withdraw' %}warning{% elif view.kwargs.action == 'reject' %}danger{% else %}success{% endif %}" value="{{ view.kwargs.action|title }}" />
 </form></p>
+{% else %}{# action is something other than submit #}
+{% include "home/snippet/action_form.html" %}
+{% endif %}
 
 {% if view.kwargs.action == 'submit' %}
 	<h2>Funding for Additional Outreachy Interns</h2>
