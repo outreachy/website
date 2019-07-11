@@ -152,7 +152,7 @@ class ProjectSubmissionTestCase(TestCase):
         current_round = RoundPageFactory(start_from='lateorgs')
         self.submit_failed_community_signup(current_round)
 
-    def test_community_participation_signup(self):
+    def test_old_community_participation_signup(self):
         """
         This tests submitting an older community to participate in this round.
          - Create a community that has been approved to participate in a past round
@@ -164,7 +164,7 @@ class ProjectSubmissionTestCase(TestCase):
         Test home/templates/home/community_read_only.html:
          - Check:
            - The 'Pending Participation' status is visible
-           - Funding for 1 intern is visible
+           - Funding for 2 interns is visible
            - The 'Coordinate for This Community' button is visible to anyone who is not a coordinator
            - The 'Submit a Project Proposal' button is visible
            - The 'Submit an Outreachy Intern Project Proposal' heading is visible
