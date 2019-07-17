@@ -34,10 +34,18 @@ Outreachy Internships | Apply | Pick a Project
 
 {% if current_round %}
 	<h1>Outreachy {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} Internships</h1>
+	<h2>Timeline</h2>
+
 	{% include 'home/snippet/round_timeline.html' %}
 	{% include 'home/snippet/payment_schedule.html' %}
 	{{ current_round.sponsordetails|safe }}
 {% else %}
+	<h2>Outreachy Internship Timelines</h2>
+
+	<p>Outreachy internships run twice a year.
+	The last Outreachy application period was for the {{ previous_round.official_name }}.
+	You can <a href="{% url 'past-rounds' %}">view projects from all past Outreachy rounds</a>.</p>
+
 	{% include 'home/snippet/generic_timeline.html' %}
 {% endif %}
 
