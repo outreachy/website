@@ -542,6 +542,30 @@ class ProjectSubmissionTestCase(TestCase):
 
         self.check_project_submission(scenario, current_round, participation)
 
+    def test_project_soft_deadline(self):
+        """
+        This tests submitting a project after the deadline for project approval fails:
+         - Create a new RoundPage for the upcoming round with the project submission deadline passed
+         - Create an approved community
+         - Go to the community read-only page
+         - There should not be a 'Submit Project' button
+         - Submitting a project directly via the URL should still work
+        """
+        scenario = scenarios.InternshipWeekScenario(week = 14, community__name='Debian', community__slug='debian')
+
+        # The "soft" deadline is actually six days before lateprojects
+        # (denoted by RoundPage.project_soft_deadline())
+        # On the soft deadline, the community CFP page shows project submission is closed.
+        # The community read-only page doesn't show the submit button.
+        # *But* mentors can still submit if they know the URL.
+        # This allows us to deal with the few mentors who always miss the deadline.
+        current_round = factories.RoundPageFactory(start_from='lateprojects', start_date=datetime.date.today() + datetime.timedelta(days=6))
+        participation = factories.ParticipationFactory(community=scenario.community, participating_round=current_round, approval_status=ApprovalStatus.APPROVED)
+
+        # TODO: check community read-only page to ensure submission button is missing
+
+        self.check_project_submission(scenario, current_round, participation)
+
     def test_project_display_on_community_read_only(self):
         pass
 
