@@ -230,8 +230,8 @@ class InternshipWeekScenario(InternSelectionScenario):
         week = 1
 
     round__start_from = 'internstarts'
-    round__start_date = factory.LazyAttribute(
-        lambda round: datetime.date.today() - datetime.timedelta(weeks=round.factory_parent.week - 1)
+    round__days_after_today = factory.LazyAttribute(
+        lambda round: -7 * (round.factory_parent.week - 1)
     )
 
     # Make sure two intern selections have been approved, and one is not approved.

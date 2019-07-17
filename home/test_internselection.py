@@ -100,7 +100,7 @@ class InternSelectionTestCase(TestCase):
                 self.assertEqual(intern_selection.organizer_approved, True)
 
     def test_mentor_can_resign(self):
-        current_round = RoundPageFactory(start_from='midfeedback', start_date=datetime.date.today())
+        current_round = RoundPageFactory(start_from='midfeedback')
         for mentors_count in (1, 2):
             with self.subTest(mentors_count=mentors_count):
                 internselection = InternSelectionFactory(
@@ -166,7 +166,7 @@ class InternSelectionTestCase(TestCase):
         })
 
     def test_mentor_can_give_initial_feedback(self):
-        current_round = RoundPageFactory(start_from='initialfeedback', start_date=datetime.date.today())
+        current_round = RoundPageFactory(start_from='initialfeedback')
         for request_extension in (False, True):
             with self.subTest(request_extension=request_extension):
                 internselection = InternSelectionFactory(
@@ -197,13 +197,12 @@ class InternSelectionTestCase(TestCase):
                 self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
 
     def test_invalid_duplicate_mentor_feedback(self):
-        today = datetime.date.today()
+        current_round = RoundPageFactory(start_from='initialfeedback')
         week = datetime.timedelta(weeks=1)
         disallowed_when = (
-            { 'allow_edits': False, 'intern_selection__initial_feedback_opens': today - week },
-            { 'allow_edits': True, 'intern_selection__initial_feedback_opens': today + week },
+            {'allow_edits': False, 'intern_selection__initial_feedback_opens': current_round.initialfeedback - week},
+            {'allow_edits': True, 'intern_selection__initial_feedback_opens': current_round.initialfeedback + week},
         )
-        current_round = RoundPageFactory(start_from='initialfeedback', start_date=today)
         for params in disallowed_when:
             with self.subTest(params=params):
                 prior = InitialMentorFeedbackFactory(intern_selection__round=current_round, **params)
@@ -349,7 +348,7 @@ class InternSelectionTestCase(TestCase):
         return defaults
 
     def test_mentor_can_give_midpoint_feedback(self):
-        current_round = RoundPageFactory(start_from='midfeedback', start_date=datetime.date.today())
+        current_round = RoundPageFactory(start_from='midfeedback')
         for request_extension in (False, True):
             with self.subTest(request_extension=request_extension):
                 internselection = InternSelectionFactory(
@@ -380,14 +379,13 @@ class InternSelectionTestCase(TestCase):
                 self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
 
     def test_invalid_duplicate_midpoint_mentor_feedback(self):
-        today = datetime.date.today()
+        # The dates of the round don't matter because the views check the dates in the InternSelection
+        current_round = RoundPageFactory(start_from='midfeedback')
         week = datetime.timedelta(weeks=1)
         disallowed_when = (
-            { 'allow_edits': False, 'intern_selection__midpoint_feedback_opens': today - week },
-            { 'allow_edits': True, 'intern_selection__midpoint_feedback_opens': today + week },
+            {'allow_edits': False, 'intern_selection__midpoint_feedback_opens': current_round.midfeedback - week},
+            {'allow_edits': True, 'intern_selection__midpoint_feedback_opens': current_round.midfeedback + week},
         )
-        # The dates of the round don't matter because the views check the dates in the InternSelection
-        current_round = RoundPageFactory(start_from='midfeedback', start_date=today)
         for params in disallowed_when:
             with self.subTest(params=params):
                 prior = MidpointMentorFeedbackFactory(intern_selection__round=current_round, **params)
@@ -482,7 +480,7 @@ class InternSelectionTestCase(TestCase):
         return defaults
 
     def test_mentor_can_give_final_feedback(self):
-        current_round = RoundPageFactory(start_from='finalfeedback', start_date=datetime.date.today())
+        current_round = RoundPageFactory(start_from='finalfeedback')
         for request_extension in (False, True):
             with self.subTest(request_extension=request_extension):
                 internselection = InternSelectionFactory(

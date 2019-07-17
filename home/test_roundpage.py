@@ -14,7 +14,6 @@ class RoundPageTestCase(TestCase):
     def test_round_closed_no_new_round(self):
         # Make a round where the internship start date was a month ago
         # Make an approved project in an approved community that is under that round
-        past = datetime.now(timezone.utc) - timedelta(days=30)
         project_title = "AAAAAAAAHHHHHHH! This is a bug!!"
         community_name = "AAAAAAAAHHHHHHH! This is a community name!!"
         past_project = ProjectFactory(
@@ -23,7 +22,7 @@ class RoundPageTestCase(TestCase):
                 project_round__community__name=community_name,
                 short_title=project_title,
                 project_round__participating_round__start_from='internstarts',
-                project_round__participating_round__start_date=past)
+                project_round__participating_round__days_after_today=-30)
 
         # Grab the current project selection page
         response = self.client.get(reverse('project-selection'))
@@ -83,7 +82,6 @@ class RoundPageTestCase(TestCase):
         # We allow mentors with an approved project in an approved community
         # to see all other approved projects (even if it's not in their community).
         # Mentors with pending projects should only see their own project.
-        future = datetime.now(timezone.utc) - timedelta(days=10)
         pending_project_title = "AAAAAAAAHHHHHHH! This project is pending!!"
         pending_mentor_approval = MentorApprovalFactory(
                 approval_status=models.ApprovalStatus.APPROVED,
@@ -91,7 +89,7 @@ class RoundPageTestCase(TestCase):
                 project__project_round__approval_status=models.ApprovalStatus.APPROVED,
                 project__short_title=pending_project_title,
                 project__project_round__participating_round__start_from='appsopen',
-                project__project_round__participating_round__start_date=future)
+                project__project_round__participating_round__days_after_today=-10)
 
         # Make a different mentor with an approved project under the same community
         approved_project_title = "AAAAAAAAHHHHHHH! This project is approved!!"
@@ -130,7 +128,6 @@ class RoundPageTestCase(TestCase):
     def test_application_round_open(self):
         # Make a round where the application period is open
         # Make an approved project in an approved community
-        open_date = datetime.now(timezone.utc) - timedelta(days=10)
         project_title = "AAAAAAAAHHHHHHH! The code works!!"
         community_name = "AAAAAAAAHHHHHHH! This is a community name!!"
         past_project = ProjectFactory(
@@ -139,7 +136,7 @@ class RoundPageTestCase(TestCase):
                 project_round__community__name=community_name,
                 short_title=project_title,
                 project_round__participating_round__start_from='appsopen',
-                project_round__participating_round__start_date=open_date)
+                project_round__participating_round__days_after_today=-10)
 
         # Grab the current project selection page
         response = self.client.get(reverse('project-selection'))
