@@ -544,7 +544,17 @@ class ProjectSubmissionTestCase(TestCase):
 
     def test_project_soft_deadline(self):
         """
-        This tests submitting a project after the deadline for project approval fails:
+        Mentors are told that projects are due one week before they're actually due.
+        This is a "soft" project submission deadline.
+        It's seven days before lateprojects - can be found by calling RoundPage.project_soft_deadline().
+
+        After the soft project submission deadline,
+        the community CFP page shows project submission is closed.
+        The community read-only page doesn't show the submit project button.
+        *But* mentors can still submit if they know the URL.
+        This allows us to deal with the few mentors who always miss the deadline.
+
+        This tests submitting a project after the soft deadline succeeds:
          - Create a new RoundPage for the upcoming round with the project submission deadline passed
          - Create an approved community
          - Go to the community read-only page
@@ -553,12 +563,6 @@ class ProjectSubmissionTestCase(TestCase):
         """
         scenario = scenarios.InternshipWeekScenario(week = 14, community__name='Debian', community__slug='debian')
 
-        # The "soft" deadline is actually six days before lateprojects
-        # (denoted by RoundPage.project_soft_deadline())
-        # On the soft deadline, the community CFP page shows project submission is closed.
-        # The community read-only page doesn't show the submit button.
-        # *But* mentors can still submit if they know the URL.
-        # This allows us to deal with the few mentors who always miss the deadline.
         current_round = factories.RoundPageFactory(start_from='lateprojects', start_date=datetime.date.today() + datetime.timedelta(days=6))
         participation = factories.ParticipationFactory(community=scenario.community, participating_round=current_round, approval_status=ApprovalStatus.APPROVED)
 
@@ -573,6 +577,7 @@ class ProjectSubmissionTestCase(TestCase):
 
         # Check that there is not a submit project button
         self.assertNotContains(response, '<h2>Submit an Outreachy Intern Project Proposal</h2>', html=True)
+        self.assertContains(response, '<h2>Project Submission Deadline Passed</h2>', html=True)
         project_submission_path = reverse('project-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
         self.assertNotContains(response, '<a class="btn btn-success" href="{}">Submit a Project Proposal</a>'.format(project_submission_path), html=True)
 
