@@ -1665,10 +1665,10 @@ class FinalApplicationRate(LoginRequiredMixin, ComradeRequiredMixin, View):
         if current_round.has_last_day_to_add_intern_passed():
             raise PermissionDenied("Outreachy interns cannot be rated at this time.")
 
-        applicant = get_object_or_404(ApplicantApproval,
-                applicant__account__username=kwargs['username'],
-                application_round=current_round,
-                approval_status=ApprovalStatus.APPROVED)
+        applicant = get_object_or_404(
+            current_round.applicantapproval_set.approved(),
+            applicant__account__username=kwargs['username'],
+        )
 
         application = get_object_or_404(FinalApplication, applicant=applicant, project=project)
         rating = kwargs['rating']
@@ -1756,10 +1756,9 @@ class ProjectApplicants(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
                 "applicant__applicant__public_name", "date_started")
         internship_total_days = current_round.internends - current_round.internstarts
         try:
-            mentor_approval = MentorApproval.objects.get(
-                    project=project,
-                    mentor=self.request.user.comrade,
-                    approval_status=MentorApproval.APPROVED)
+            mentor_approval = project.mentorapproval_set.approved().get(
+                mentor__account=self.request.user,
+            )
         except MentorApproval.DoesNotExist:
             mentor_approval = None
 
@@ -2031,10 +2030,10 @@ def set_project_and_applicant(self, current_round):
             project_round__community__slug=self.kwargs['community_slug'],
             project_round__participating_round=current_round,
             project_round__approval_status=ApprovalStatus.APPROVED)
-    self.applicant = get_object_or_404(ApplicantApproval,
-            applicant__account__username=self.kwargs['applicant_username'],
-            approval_status=ApplicantApproval.APPROVED,
-            application_round=current_round)
+    self.applicant = get_object_or_404(
+        current_round.applicantapproval_set.approved(),
+        applicant__account__username=self.kwargs['applicant_username'],
+    )
 
 # Passed round_slug, community_slug, project_slug, applicant_username
 class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, FormView):
@@ -2075,10 +2074,9 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.
 
         # Only allow approved mentors to select interns
         try:
-            self.mentor_approval = MentorApproval.objects.get(
-                    mentor=self.request.user.comrade,
-                    project=self.project,
-                    approval_status=MentorApproval.APPROVED)
+            self.mentor_approval = self.project.mentorapproval_set.approved().get(
+                mentor__account=self.request.user,
+            )
         except MentorApproval.DoesNotExist:
             raise PermissionDenied("Only approved mentors can select an applicant as an intern")
 
@@ -2201,10 +2199,9 @@ class InternRemoval(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Re
         # Coordinators can set the funding to 'Not funded'
         # Organizers can set the InternSelection.organizer_approved to False
         try:
-            self.mentor_approval = MentorApproval.objects.get(
-                    mentor=self.request.user.comrade,
-                    project=self.project,
-                    approval_status=MentorApproval.APPROVED)
+            self.mentor_approval = self.project.mentorapproval_set.approved().get(
+                mentor__account=self.request.user,
+            )
         except MentorApproval.DoesNotExist:
             raise PermissionDenied("Only approved mentors can select an applicant as an intern")
         return self.intern_selection
@@ -2275,10 +2272,9 @@ class MentorResignation(LoginRequiredMixin, ComradeRequiredMixin, DeleteView):
 
         # Only allow approved mentors to resign from the internship
         try:
-            self.mentor_approval = MentorApproval.objects.get(
-                    mentor=self.request.user.comrade,
-                    project=self.project,
-                    approval_status=MentorApproval.APPROVED)
+            self.mentor_approval = self.project.mentorapproval_set.approved().get(
+                mentor__account=self.request.user,
+            )
         except MentorApproval.DoesNotExist:
             raise PermissionDenied("Only approved mentors can resign from an internship.")
         return get_object_or_404(self.intern_selection.mentorrelationship_set,
@@ -3187,10 +3183,8 @@ def get_or_create_application_reviewer_and_review(self):
     current_round = get_current_round_for_initial_application_review()
 
     try:
-        reviewer = ApplicationReviewer.objects.get(
-            comrade=self.request.user.comrade,
-            reviewing_round=current_round,
-            approval_status=ApprovalStatus.APPROVED,
+        reviewer = current_round.applicationreviewer_set.approved().get(
+            comrade__account=self.request.user,
         )
     except ApplicationReviewer.DoesNotExist:
         raise PermissionDenied("You are not currently an approved application reviewer.")
@@ -3217,10 +3211,10 @@ class SetReviewOwner(LoginRequiredMixin, ComradeRequiredMixin, View):
         if self.kwargs['owner'] == 'None':
             reviewer = None
         else:
-            reviewer = get_object_or_404(ApplicationReviewer,
-                    comrade__account__username=self.kwargs['owner'],
-                    reviewing_round=application.application_round,
-                    approval_status=ApprovalStatus.APPROVED)
+            reviewer = get_object_or_404(
+                application.application_round.applicationreviewer_set.approved(),
+                comrade__account__username=self.kwargs['owner'],
+            )
 
         application.review_owner = reviewer
         application.save()
