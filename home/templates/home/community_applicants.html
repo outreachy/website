@@ -39,10 +39,10 @@ Review {{ community.name }} Applicants
 			</thread>
 		{% for project in projects %}
 			{% with interns=project.internselection_set.all %}
-				{% if not interns and project.approval_status == project.APPROVED %}
+				{% if not interns and project.is_approved %}
 				<tr>
 					<td><a href="{{ project.get_applicants_url }}">{{ project.short_title }}</a></td>
-					<td>{% if project.approval_status == project.APPROVED %}No selected interns{% else %} - {% endif %}</td>
+					<td>{% if project.is_approved %}No selected interns{% else %} - {% endif %}</td>
 					<td> - </td>
 					<td> - </td>
 					<td> - </td>
@@ -130,9 +130,9 @@ Review {{ community.name }} Applicants
 			{% with applicants=project.get_applicants_and_contributions_list %}
 				{% if not applicants %}
 				<tr>
-					<td>{% if project.approval_status == project.APPROVED %}<a href="{{ project.get_applicants_url }}">{% endif %}{{ project.short_title }}{% if project.approval_status == project.APPROVED %}</a>{% endif %}</td>
+					<td>{% if project.is_approved %}<a href="{{ project.get_applicants_url }}">{% endif %}{{ project.short_title }}{% if project.is_approved %}</a>{% endif %}</td>
 					<td>{{ project.get_approval_status_display }}</td>
-					<td>{% if project.approval_status == project.APPROVED %}No applicants{% else %} - {% endif %}</td>
+					<td>{% if project.is_approved %}No applicants{% else %} - {% endif %}</td>
 					<td> - </td>
 					<td> - </td>
 					<td> - </td>

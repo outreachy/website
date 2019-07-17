@@ -12,7 +12,7 @@
 		</thread>
 		<tr>
 			<td>
-				{% if application.approval_status != application.APPROVED %}
+				{% if not application.is_approved %}
 				<form action="{{ application.get_approve_url }}" method="post">
 				    {% csrf_token %}
 				    <input type="submit" class="btn btn-success" value="Approve Application" />
@@ -20,14 +20,14 @@
 				{% endif %}
 			</td>
 			<td>
-				{% if application.approval_status == application.PENDING %}
+				{% if application.is_pending %}
 				<form method="post" action="{% url 'request-essay-revision' applicant_username=application.applicant.account.username %}">
 					{% csrf_token %}
 					<input type='submit' class='btn btn-info' value="Request Essay Revision">
 				</form>
 				{% endif %}
 			</td>
-			<td>{% if application.approval_status != application.REJECTED %}
+			<td>{% if not application.is_rejected %}
 					<a class='btn btn-warning' href="{{ application.get_reject_url }}">Reject Application</a>
 				{% endif %}
 			</td>

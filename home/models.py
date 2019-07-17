@@ -389,9 +389,7 @@ class RoundPage(AugmentDeadlines, Page):
         return(self.internstarts.month < 8)
 
     def number_approved_communities_with_projects(self):
-        return Participation.objects.filter(participating_round=self,
-                approval_status=ApprovalStatus.APPROVED,
-                project__isnull=False).distinct().count()
+        return self.participation_set.approved().filter(project__isnull=False).distinct().count()
 
     def number_approved_projects(self):
         return Project.objects.filter(project_round__participating_round=self,
@@ -422,10 +420,7 @@ class RoundPage(AugmentDeadlines, Page):
     #   print("New @outreachy internship project:", p.project_round.community.name, '"' + p.short_title + '" - ', ', '.join([s.skill for s in p.projectskill_set.all()]), 'https://www.outreachy.org/apply/project-selection/#' + p.project_round.community.slug + '-' + p.slug)
 
     def number_funded_interns(self):
-        participations = Participation.objects.filter(
-                participating_round=self,
-                approval_status=Participation.APPROVED,
-                project__isnull=False).distinct()
+        participations = self.participation_set.approved().filter(project__isnull=False).distinct()
         funded = 0
         for p in participations:
             funded += p.interns_funded()
@@ -508,9 +503,7 @@ class RoundPage(AugmentDeadlines, Page):
         return interns
 
     def get_communities_with_unused_funding(self):
-        participations = Participation.objects.filter(
-                participating_round=self,
-                approval_status=Participation.APPROVED)
+        participations = self.participation_set.approved()
         communities = []
         for p in participations:
             funded = p.interns_funded()
@@ -594,45 +587,27 @@ class RoundPage(AugmentDeadlines, Page):
         return skill_counter.most_common(20)
 
     def number_accepted_initial_applications(self):
-        return ApplicantApproval.objects.filter(
-                approval_status=ApplicantApproval.APPROVED,
-                application_round=self).count()
+        return self.applicantapproval_set.approved().count()
 
     def number_contributors(self):
-        return ApplicantApproval.objects.filter(
-                application_round=self,
-                approval_status=ApprovalStatus.APPROVED,
-                contribution__isnull=False).distinct().count()
+        return self.applicantapproval_set.approved().filter(
+            contribution__isnull=False,
+        ).distinct().count()
 
     def get_statistics_on_eligibility_check(self):
-        count_all = ApplicantApproval.objects.filter(
-                application_round=self).count()
-        count_approved = ApplicantApproval.objects.filter(
-                approval_status=ApplicantApproval.APPROVED,
-                application_round=self).count()
-        count_rejected_all = ApplicantApproval.objects.filter(
-                approval_status=ApplicantApproval.REJECTED,
-                application_round=self).count()
-        count_rejected_time = ApplicantApproval.objects.filter(
-                approval_status=ApplicantApproval.REJECTED,
-                reason_denied="TIME",
-                application_round=self).count()
-        count_rejected_general = ApplicantApproval.objects.filter(
-                approval_status=ApplicantApproval.REJECTED,
-                reason_denied="GENERAL",
-                application_round=self).count()
-        count_rejected_essay = ApplicantApproval.objects.filter(
-                approval_status=ApplicantApproval.REJECTED,
-                reason_denied__contains="ALIGNMENT",
-                application_round=self).count()
+        applicants = self.applicantapproval_set
+        count_all = applicants.count()
+        count_approved = applicants.approved().count()
+        count_rejected_all = applicants.rejected().count()
+        count_rejected_time = applicants.rejected().filter(reason_denied="TIME").count()
+        count_rejected_general = applicants.rejected().filter(reason_denied="GENERAL").count()
+        count_rejected_essay = applicants.rejected().filter(reason_denied__contains="ALIGNMENT").count()
         if count_rejected_all == 0:
             return (count_all, count_approved, 0, 0, 0)
         return (count_all, count_approved, count_rejected_essay * 100 / count_rejected_all, count_rejected_time * 100 / count_rejected_all, count_rejected_general * 100 / count_rejected_all)
 
     def get_countries_stats(self):
-        all_apps = ApplicantApproval.objects.filter(
-                application_round=self,
-                approval_status=ApplicantApproval.APPROVED)
+        all_apps = self.applicantapproval_set.approved()
         countries = []
         cities = []
         for a in all_apps:
@@ -645,32 +620,28 @@ class RoundPage(AugmentDeadlines, Page):
         return Counter(countries).most_common(25)
 
     def get_contributor_demographics(self):
-        applicants = ApplicantApproval.objects.filter(
-                application_round=self,
-                approval_status=ApprovalStatus.APPROVED,
-                contribution__isnull=False).distinct().count()
+        contributors = self.applicantapproval_set.approved().filter(contribution__isnull=False).distinct()
 
-        us_apps = ApplicantApproval.objects.filter(
-                models.Q(paymenteligibility__us_national_or_permanent_resident=True) | models.Q(paymenteligibility__living_in_us=True),
-                application_round=self,
-                approval_status=ApprovalStatus.APPROVED,
-                contribution__isnull=False).distinct().count()
+        applicants = contributors.count()
 
-        us_people_of_color_apps = ApplicantApproval.objects.filter(
-                applicantraceethnicityinformation__us_resident_demographics=True,
-                application_round=self,
-                approval_status=ApprovalStatus.APPROVED,
-                contribution__isnull=False).distinct().count()
+        us_apps = contributors.filter(
+            models.Q(
+                paymenteligibility__us_national_or_permanent_resident=True
+            ) | models.Q(
+                paymenteligibility__living_in_us=True
+            )
+        ).count()
+
+        us_people_of_color_apps = contributors.filter(
+            applicantraceethnicityinformation__us_resident_demographics=True,
+        ).count()
         if us_apps == 0:
             return (applicants, 0, 0)
 
         return (applicants, (us_apps - us_people_of_color_apps) * 100 / us_apps, us_people_of_color_apps * 100 / us_apps)
 
     def get_contributor_gender_stats(self):
-        all_apps = ApplicantApproval.objects.filter(
-                application_round=self,
-                approval_status=ApprovalStatus.APPROVED,
-                contribution__isnull=False).distinct().count()
+        all_apps = self.applicantapproval_set.approved().filter(contribution__isnull=False).distinct().count()
 
         if all_apps == 0:
             return (0, 0, 0)
@@ -724,24 +695,14 @@ class RoundPage(AugmentDeadlines, Page):
         return (cis_apps * 100 / all_apps, trans_folks_apps * 100 / all_apps, genderqueer_folks_apps * 100 / all_apps)
 
     def get_contributor_applicant_funding_status(self):
-        eligible = ApplicantApproval.objects.filter(
-                approval_status=ApplicantApproval.APPROVED,
-                application_round=self).count()
+        eligible = self.applicantapproval_set.approved().count()
 
-        contributed = ApplicantApproval.objects.filter(
-                application_round=self,
-                approval_status=ApprovalStatus.APPROVED,
-                contribution__isnull=False).distinct().count()
+        contributed = self.applicantapproval_set.approved().filter(contribution__isnull=False).distinct().count()
 
-        applied = ApplicantApproval.objects.filter(
-                application_round=self,
-                approval_status=ApprovalStatus.APPROVED,
-                finalapplication__isnull=False).distinct().count()
+        applied = self.applicantapproval_set.approved().filter(finalapplication__isnull=False).distinct().count()
 
         funded = 0
-        participations = Participation.objects.filter(
-                approval_status=Participation.APPROVED,
-                participating_round=self)
+        participations = self.participation_set.approved()
         for p in participations:
             funded = funded + p.interns_funded()
 
@@ -1790,10 +1751,11 @@ class Project(ApprovalStatus):
         return ProjectSkill.objects.filter(project=self, required=ProjectSkill.BONUS)
 
     def get_applicants_and_contributions_list(self):
-        applicants = ApplicantApproval.objects.filter(
-                contribution__project = self,
-                approval_status=ApprovalStatus.APPROVED).annotate(
-                        number_contributions=models.Count('contribution'))
+        applicants = ApplicantApproval.objects.approved().filter(
+            contribution__project=self,
+        ).annotate(
+            number_contributions=models.Count('contribution'),
+        )
 
         for a in applicants:
             try:
@@ -1804,12 +1766,12 @@ class Project(ApprovalStatus):
                 else:
                     a.rating = fa.rating
                 a.rating_tip = fa.get_rating_display()
-                if a.finalapplication_set.filter(project=self, approval_status = ApprovalStatus.WITHDRAWN):
+                if a.finalapplication_set.filter(project=self).withdrawn().exists():
                     a.withdrew_application = True
                 else:
                     a.withdrew_application = False
 
-                if a.finalapplication_set.filter(project=self).exclude(applying_to_gsoc=""):
+                if a.finalapplication_set.filter(project=self).exclude(applying_to_gsoc="").exists():
                     a.applying_to_gsoc = True
                 else:
                     a.applying_to_gsoc = False
@@ -1819,19 +1781,19 @@ class Project(ApprovalStatus):
         return applicants
 
     def get_applications(self):
-        return FinalApplication.objects.filter(project = self, applicant__approval_status=ApprovalStatus.APPROVED)
+        return self.finalapplication_set.filter(applicant__approval_status=ApprovalStatus.APPROVED)
 
     def get_sorted_applications(self):
-        return FinalApplication.objects.filter(project = self, applicant__approval_status=ApprovalStatus.APPROVED).order_by("-rating")
+        return self.get_applications().order_by("-rating")
 
     def get_gsoc_applications(self):
-        return FinalApplication.objects.filter(project = self, applicant__approval_status=ApprovalStatus.APPROVED).exclude(applying_to_gsoc="")
+        return self.get_applications().exclude(applying_to_gsoc="")
 
     def get_withdrawn_applications(self):
-        return FinalApplication.objects.filter(project = self, approval_status=ApprovalStatus.WITHDRAWN)
+        return self.finalapplication_set.filter(applicant__approval_status=ApprovalStatus.WITHDRAWN)
 
     def get_approved_mentors(self):
-        return self.mentorapproval_set.filter(approval_status=ApprovalStatus.APPROVED)
+        return self.mentorapproval_set.approved()
 
     def get_mentor_email_list(self):
         emails = []
@@ -2242,7 +2204,7 @@ class ApplicantApproval(ApprovalStatus):
         return True
 
     def get_reason_for_status(self):
-        if self.approval_status == self.APPROVED:
+        if self.is_approved():
             return ''
         if self.reason_denied == 'GENERAL':
             if not self.workeligibility.over_18:
@@ -2285,7 +2247,7 @@ class ApplicantApproval(ApprovalStatus):
         except SchoolInformation.DoesNotExist:
             pass
 
-        if self.approval_status == self.PENDING:
+        if self.is_pending():
             return 'Essay review'
 
         return 'Unknown'
@@ -2406,9 +2368,7 @@ class ApplicantApproval(ApprovalStatus):
         return red_flags_list
 
     def get_possible_reviewers(self):
-        return ApplicationReviewer.objects.filter(
-                reviewing_round=self.application_round,
-                approval_status=ApprovalStatus.APPROVED)
+        return self.application_round.applicationreviewer_set.approved()
 
     def get_projects_contributed_to(self):
         return self.project_contributions.distinct().order_by(
@@ -3363,13 +3323,13 @@ class FinalApplication(ApprovalStatus):
             default=UNRATED)
 
     def is_approver(self, user):
-        approved_mentor = self.project.mentors_set.filter(approval_status=ApprovalStatus.APPROVED, mentor=user.comrade)
+        approved_mentor = self.project.mentors_set.approved().filter(mentor__account=user)
         if approved_mentor:
             return True
         return False
 
     def is_submitter(self, user):
-        if user.comrade == self.applicant.applicant:
+        if self.applicant.applicant.account_id == user.id:
             return True
         return False
 
@@ -3486,8 +3446,7 @@ class InternSelection(AugmentDeadlines, models.Model):
         if self.project.project_round.community.is_coordinator(user):
             return True
         # Allow any approved mentor to withdraw an intern
-        return self.mentors.approved().filter(
-                mentor__account=user).exists()
+        return self.mentors.approved().filter(mentor__account=user).exists()
 
     def intern_has_custom_dates(self):
         if self.intern_starts != self.project.round().internstarts:

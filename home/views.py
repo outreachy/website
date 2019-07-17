@@ -758,7 +758,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
 
 class EligibilityResults(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
     template_name = 'home/eligibility_results.html'
-    context_object_name = 'application'
+    context_object_name = 'role'
 
     def get_object(self):
         now = datetime.now(timezone.utc)
@@ -776,15 +776,11 @@ class EligibilityResults(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
         except RoundPage.DoesNotExist:
             raise PermissionDenied('The Outreachy application period is closed. Eligibility checking will become available when the next application period opens. Please sign up for the announcements mailing list for an email when the next application period opens: https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce')
 
-        return get_object_or_404(ApplicantApproval,
-                    applicant=self.request.user.comrade,
-                    application_round=current_round)
+        role = Role(self.request.user, current_round)
+        if not role.is_applicant:
+            raise Http404("No initial application in this round.")
+        return role
 
-    def get_context_data(self, **kwargs):
-        context = super(EligibilityResults, self).get_context_data(**kwargs)
-        context.update(self.object.get_time_commitments())
-        context['current_round'] = self.object.application_round
-        return context
 
 class ViewInitialApplication(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
     template_name = 'home/applicant_review_detail.html'
@@ -975,9 +971,9 @@ def community_cfp_view(request):
         for c in all_communities:
             participation_info = participating_communities.get(c.id)
             if participation_info is not None:
-                if participation_info.approval_status == ApprovalStatus.PENDING:
+                if participation_info.is_pending():
                     pending_communities.append(c)
-                elif participation_info.approval_status == ApprovalStatus.APPROVED:
+                elif participation_info.is_approved():
                     approved_communities.append(c)
                 else: # either withdrawn or rejected
                     rejected_communities.append(c)
@@ -1521,7 +1517,7 @@ class BaseProjectEditPage(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
         # Only allow adding new project communication channels or skills
         # for approved projects after the deadline has passed.
         deadline = project.submission_and_approval_deadline()
-        if project.approval_status != ApprovalStatus.APPROVED and deadline.has_passed():
+        if not project.is_approved() and deadline.has_passed():
             raise PermissionDenied("The project submission and approval deadline ({date}) has passed. Please sign up for the announcement mailing list for a call for mentors for the next Outreachy internship round. https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce".format(date=deadline))
         return project
 
@@ -1570,16 +1566,16 @@ class ProjectContributions(LoginRequiredMixin, ComradeRequiredMixin, EligibleApp
         role = Role(self.request.user, current_round)
 
         # Note that there's no reason to ever keep a past applicant from
-        # looking at their old contributions.
+        # looking at their old contributions, even if they got rejected after
+        # making those contributions.
 
-        applicant = role.application
-        if applicant is None or not applicant.is_approved():
-            raise Http404("No approved initial application in this round.")
+        if not role.is_applicant:
+            raise Http404("No initial application in this round.")
 
-        contributions = applicant.contribution_set.filter(
+        contributions = role.application.contribution_set.filter(
                 project=project)
         try:
-            final_application = applicant.finalapplication_set.get(
+            final_application = role.application.finalapplication_set.get(
                     project=project)
         except FinalApplication.DoesNotExist:
             final_application = None
@@ -1614,13 +1610,13 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, EligibleAppli
                 project_round__approval_status=ApprovalStatus.APPROVED)
 
         current_round = project.round()
+        role = Role(self.request.user, current_round)
 
-        applicant = get_object_or_404(ApplicantApproval,
-                applicant=self.request.user.comrade,
-                application_round=current_round)
+        if not role.is_applicant or not role.application.is_approved():
+            raise Http404("No approved initial application in this round.")
+
         try:
-            application = FinalApplication.objects.get(
-                    applicant=applicant,
+            application = role.application.finalapplication_set.get(
                     project=project)
         except FinalApplication.DoesNotExist:
             application = None
@@ -1635,11 +1631,13 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, EligibleAppli
             raise PermissionDenied("Editing or recording new contributions is closed at this time.")
 
         if 'contribution_slug' not in self.kwargs:
-            return Contribution(applicant=applicant, project=project)
-        return get_object_or_404(Contribution,
-                applicant=applicant,
-                project=project,
-                pk=self.kwargs['contribution_slug'])
+            return Contribution(applicant=role.application, project=project)
+        return get_object_or_404(
+            Contribution,
+            applicant=role.application,
+            project=project,
+            pk=self.kwargs['contribution_slug'],
+        )
 
     def get_success_url(self):
         return self.object.project.get_contributions_url()
@@ -1667,10 +1665,10 @@ class FinalApplicationRate(LoginRequiredMixin, ComradeRequiredMixin, View):
         if current_round.has_last_day_to_add_intern_passed():
             raise PermissionDenied("Outreachy interns cannot be rated at this time.")
 
-        applicant = get_object_or_404(ApplicantApproval,
-                applicant__account__username=kwargs['username'],
-                application_round=current_round,
-                approval_status=ApprovalStatus.APPROVED)
+        applicant = get_object_or_404(
+            current_round.applicantapproval_set.approved(),
+            applicant__account__username=kwargs['username'],
+        )
 
         application = get_object_or_404(FinalApplication, applicant=applicant, project=project)
         rating = kwargs['rating']
@@ -1693,9 +1691,9 @@ class FinalApplicationAction(ApprovalStatusAction):
     def get_object(self):
         username = self.kwargs.get('username')
         if username:
-            comrade = get_object_or_404(Comrade, account__username=username)
+            account = get_object_or_404(User, username=username)
         else:
-            comrade = self.request.user.comrade
+            account = self.request.user
 
         # Make sure both the Community and Project are approved
         project = get_object_or_404(Project,
@@ -1706,6 +1704,7 @@ class FinalApplicationAction(ApprovalStatusAction):
                 project_round__approval_status=ApprovalStatus.APPROVED)
 
         current_round = project.round()
+        role = Role(account, current_round)
 
         if not current_round.contributions_open.has_passed():
             raise PermissionDenied("You can't submit a final application until the Outreachy application period opens.")
@@ -1713,18 +1712,17 @@ class FinalApplicationAction(ApprovalStatusAction):
         if current_round.contributions_close.has_passed():
             raise PermissionDenied("This project is closed to final applications.")
 
-        applicant = get_object_or_404(ApplicantApproval,
-                applicant=comrade,
-                application_round=current_round)
+        if not role.is_applicant:
+            raise Http404("No initial application in this round.")
 
         # Only allow eligible applicants to apply
-        if not applicant.is_approved():
+        if not role.application.is_approved():
             raise PermissionDenied("You are not an eligible applicant or you have not filled out the eligibility check.")
 
         try:
-            return FinalApplication.objects.get(applicant=applicant, project=project)
+            return FinalApplication.objects.get(applicant=role.application, project=project)
         except FinalApplication.DoesNotExist:
-            return FinalApplication(applicant=applicant, project=project)
+            return FinalApplication(applicant=role.application, project=project)
 
     def get_success_url(self):
         return self.object.project.get_contributions_url()
@@ -1758,10 +1756,9 @@ class ProjectApplicants(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
                 "applicant__applicant__public_name", "date_started")
         internship_total_days = current_round.internends - current_round.internstarts
         try:
-            mentor_approval = MentorApproval.objects.get(
-                    project=project,
-                    mentor=self.request.user.comrade,
-                    approval_status=MentorApproval.APPROVED)
+            mentor_approval = project.mentorapproval_set.approved().get(
+                mentor__account=self.request.user,
+            )
         except MentorApproval.DoesNotExist:
             mentor_approval = None
 
@@ -2033,10 +2030,10 @@ def set_project_and_applicant(self, current_round):
             project_round__community__slug=self.kwargs['community_slug'],
             project_round__participating_round=current_round,
             project_round__approval_status=ApprovalStatus.APPROVED)
-    self.applicant = get_object_or_404(ApplicantApproval,
-            applicant__account__username=self.kwargs['applicant_username'],
-            approval_status=ApplicantApproval.APPROVED,
-            application_round=current_round)
+    self.applicant = get_object_or_404(
+        current_round.applicantapproval_set.approved(),
+        applicant__account__username=self.kwargs['applicant_username'],
+    )
 
 # Passed round_slug, community_slug, project_slug, applicant_username
 class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, FormView):
@@ -2077,10 +2074,9 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.
 
         # Only allow approved mentors to select interns
         try:
-            self.mentor_approval = MentorApproval.objects.get(
-                    mentor=self.request.user.comrade,
-                    project=self.project,
-                    approval_status=MentorApproval.APPROVED)
+            self.mentor_approval = self.project.mentorapproval_set.approved().get(
+                mentor__account=self.request.user,
+            )
         except MentorApproval.DoesNotExist:
             raise PermissionDenied("Only approved mentors can select an applicant as an intern")
 
@@ -2203,10 +2199,9 @@ class InternRemoval(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Re
         # Coordinators can set the funding to 'Not funded'
         # Organizers can set the InternSelection.organizer_approved to False
         try:
-            self.mentor_approval = MentorApproval.objects.get(
-                    mentor=self.request.user.comrade,
-                    project=self.project,
-                    approval_status=MentorApproval.APPROVED)
+            self.mentor_approval = self.project.mentorapproval_set.approved().get(
+                mentor__account=self.request.user,
+            )
         except MentorApproval.DoesNotExist:
             raise PermissionDenied("Only approved mentors can select an applicant as an intern")
         return self.intern_selection
@@ -2277,10 +2272,9 @@ class MentorResignation(LoginRequiredMixin, ComradeRequiredMixin, DeleteView):
 
         # Only allow approved mentors to resign from the internship
         try:
-            self.mentor_approval = MentorApproval.objects.get(
-                    mentor=self.request.user.comrade,
-                    project=self.project,
-                    approval_status=MentorApproval.APPROVED)
+            self.mentor_approval = self.project.mentorapproval_set.approved().get(
+                mentor__account=self.request.user,
+            )
         except MentorApproval.DoesNotExist:
             raise PermissionDenied("Only approved mentors can resign from an internship.")
         return get_object_or_404(self.intern_selection.mentorrelationship_set,
@@ -3189,10 +3183,8 @@ def get_or_create_application_reviewer_and_review(self):
     current_round = get_current_round_for_initial_application_review()
 
     try:
-        reviewer = ApplicationReviewer.objects.get(
-            comrade=self.request.user.comrade,
-            reviewing_round=current_round,
-            approval_status=ApprovalStatus.APPROVED,
+        reviewer = current_round.applicationreviewer_set.approved().get(
+            comrade__account=self.request.user,
         )
     except ApplicationReviewer.DoesNotExist:
         raise PermissionDenied("You are not currently an approved application reviewer.")
@@ -3219,10 +3211,10 @@ class SetReviewOwner(LoginRequiredMixin, ComradeRequiredMixin, View):
         if self.kwargs['owner'] == 'None':
             reviewer = None
         else:
-            reviewer = get_object_or_404(ApplicationReviewer,
-                    comrade__account__username=self.kwargs['owner'],
-                    reviewing_round=application.application_round,
-                    approval_status=ApprovalStatus.APPROVED)
+            reviewer = get_object_or_404(
+                application.application_round.applicationreviewer_set.approved(),
+                comrade__account__username=self.kwargs['owner'],
+            )
 
         application.review_owner = reviewer
         application.save()

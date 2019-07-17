@@ -142,24 +142,20 @@ def application_summary(request, today):
     except Comrade.DoesNotExist:
         return None
 
-    pending_revisions_count = ApplicantApproval.objects.filter(
-            application_round = current_round,
-            approval_status = ApprovalStatus.PENDING,
-            barrierstoparticipation__applicant_should_update=True).count() + ApplicantApproval.objects.filter(
-                    application_round = current_round,
-                    approval_status = ApprovalStatus.PENDING,
-                    schoolinformation__applicant_should_update=True).count()
+    current_applicants = current_round.applicantapproval_set
 
-    pending_applications_count = ApplicantApproval.objects.filter(
-            application_round = current_round,
-            approval_status = ApprovalStatus.PENDING).count() - pending_revisions_count
+    pending_revisions_count = current_applicants.pending().filter(
+        models.Q(
+            barrierstoparticipation__applicant_should_update=True
+        ) | models.Q(
+            schoolinformation__applicant_should_update=True
+        )
+    ).distinct().count()
 
-    rejected_applications_count = ApplicantApproval.objects.filter(
-            application_round = current_round,
-            approval_status = ApprovalStatus.REJECTED).count()
-    approved_applications_count = ApplicantApproval.objects.filter(
-            application_round = current_round,
-            approval_status = ApprovalStatus.APPROVED).count()
+    pending_applications_count = current_applicants.pending().count() - pending_revisions_count
+
+    rejected_applications_count = current_applicants.rejected().count()
+    approved_applications_count = current_applicants.approved().count()
 
     return {
         'pending_applications_count': pending_applications_count,
@@ -647,12 +643,8 @@ def staff_community_progress(request, today):
     except RoundPage.DoesNotExist:
         return None
 
-    pending_participations = Participation.objects.filter(
-            participating_round = current_round,
-            approval_status = ApprovalStatus.PENDING).order_by('community__name')
-    approved_participations = Participation.objects.filter(
-            participating_round = current_round,
-            approval_status = ApprovalStatus.APPROVED).order_by('community__name')
+    pending_participations = current_round.participation_set.pending().order_by('community__name')
+    approved_participations = current_round.participation_set.approved().order_by('community__name')
     participations = list(pending_participations) + list(approved_participations)
 
     if not participations:
@@ -788,7 +780,7 @@ def approval_status(request, today):
     for model in DASHBOARD_MODELS:
         by_model = defaultdict(list)
         for obj in model.objects_for_dashboard(request.user).distinct():
-            if obj.approval_status == ApprovalStatus.APPROVED or not obj.submission_and_approval_deadline().has_passed():
+            if obj.is_approved() or not obj.submission_and_approval_deadline().has_passed():
                 by_model[obj.approval_status].append(obj)
 
         label = model._meta.verbose_name
