@@ -97,6 +97,7 @@ urlpatterns = [
     url(r'^dashboard/active-trusted-volunteers/$', views.ActiveTrustedVolunteersListView.as_view(), name='active-trusted-volunteers-list'),
     url(r'^docs/$', views.docs_toc, name='docs'),
     url(r'^docs/applicant/$', views.docs_applicant, name='docs-applicant'),
+    url(r'^docs/internship/$', views.docs_internship, name='docs-internship'),
     url(r'^eligibility/$', views.EligibilityUpdateView.as_view(), name='eligibility'),
     url(r'^eligibility/essay-revision/(?P<applicant_username>[^/]+)/$', views.BarriersToParticipationUpdate.as_view(), name='essay-revision'),
     url(r'^eligibility/school-revision/(?P<applicant_username>[^/]+)/$', views.SchoolInformationUpdate.as_view(), name='school-revision'),

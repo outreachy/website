@@ -3319,6 +3319,32 @@ def docs_applicant(request):
         'current_round': current_round,
         })
 
+def docs_internship(request):
+    now = datetime.now(timezone.utc)
+    today = get_deadline_date_for(now)
+    five_weeks_ago = today - timedelta(days=7*5)
+
+    try:
+        applicant_round = RoundPage.objects.get(
+            pingnew__lte=today,
+            internannounce__gt=today,
+        )
+    except RoundPage.DoesNotExist:
+        applicant_round = None
+
+    try:
+        intern_round = RoundPage.objects.get(
+            internannounce__lte=today,
+            internends__gt=five_weeks_ago,
+        )
+    except RoundPage.DoesNotExist:
+        intern_round = None
+
+    return render(request, 'home/docs/internship_guide.html', {
+        'applicant_round': applicant_round,
+        'intern_round': intern_round,
+        })
+
 def travel_stipend(request):
     rounds = RoundPage.objects.all().order_by('-internstarts')
     return render(request, 'home/travel_stipend.html', {
