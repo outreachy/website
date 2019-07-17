@@ -128,6 +128,12 @@ class ProjectSubmissionTestCase(TestCase):
             p = Participation.objects.get(community__slug=scenario.participation.community.slug, participating_round__slug=current_round.slug)
         self.assertNotEqual(response.status_code, 302)
 
+    def check_community_signup_marked_closed(self):
+        response = self.client.get(reverse('community-cfp'))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, '<h2>Submit a New FOSS community for Organizer Review</h2>', html=True)
+        self.assertNotContains(response, '<a class="btn btn-success" href="{}">Submit a New Community</a>'.format(reverse('community-add')), html=True)
+
     def test_community_participation_signup_too_early(self):
         """
         This tests submitting an older community to participate in this round.
@@ -138,6 +144,8 @@ class ProjectSubmissionTestCase(TestCase):
          - It should fail
         """
         current_round = factories.RoundPageFactory(start_from='pingnew', days_after_today=1)
+
+        self.check_community_signup_marked_closed()
         self.submit_failed_community_signup(current_round)
 
     def test_community_participation_signup_too_late(self):
@@ -150,6 +158,8 @@ class ProjectSubmissionTestCase(TestCase):
          - It should fail
         """
         current_round = factories.RoundPageFactory(start_from='lateorgs')
+
+        self.check_community_signup_marked_closed()
         self.submit_failed_community_signup(current_round)
 
     def test_old_community_participation_signup(self):
@@ -173,6 +183,11 @@ class ProjectSubmissionTestCase(TestCase):
         """
         scenario = scenarios.InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
         current_round = factories.RoundPageFactory(start_from='pingnew')
+
+        response = self.client.get(reverse('community-cfp'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '<h2>Submit a New FOSS community for Organizer Review</h2>', html=True)
+        self.assertContains(response, '<a class="btn btn-success" href="{}">Submit a New Community</a>'.format(reverse('community-add')), html=True)
 
         community_read_only_path = reverse('community-read-only', kwargs={ 'community_slug': scenario.participation.community.slug, })
         project_submission_path = reverse('project-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
