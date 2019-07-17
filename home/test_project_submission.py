@@ -639,7 +639,7 @@ class ProjectSubmissionTestCase(TestCase):
             follow=True,
         )
         self.assertEqual(response.status_code, 403)
-        self.assertContains(response, 'Not allowed to submit a project after its submission and approval deadline ({})'.format(current_round.lateprojects), html=True, status_code=403)
+        self.assertContains(response, 'Not allowed to submit a project after its submission and approval deadline ({})'.format(current_round.lateprojects), status_code=403)
 
     def test_project_display_on_community_read_only(self):
         pass
