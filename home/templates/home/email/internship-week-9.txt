@@ -27,7 +27,9 @@ Your goal for this week's blog post is to write a post about what direction you 
 Week 10 Mentor & Intern Chat
 ----------------------------
 
-On {{ current_round.week_ten_chat_text_date }} UTC we will host a chat for both Outreachy interns and mentors:
+For this chat, we're also inviting past Outreachy interns to participate!
+
+On {{ current_round.week_ten_chat_text_date }} UTC we will host a chat for Outreachy interns, alums, and mentors:
 
 {{ current_round.week_ten_career_chat_url }}
 
@@ -35,7 +37,7 @@ We'll be discussing all the different ways you can advance your career by partic
 
 The first part of the discussion will be everyone brainstorming different career paths in the technology industry and free software. Many people have part-time or full-time jobs working in the technology industry. Some people may be self-employed contractors, paid to work on free software. People may have taken a while to find a job. They may have participated in other internship programs, volunteer opportunities, grants, or networked at conferences and events.
 
-We encourage both mentors and interns to share their stories of how they advanced their career. What did you try that didn't work? Where did you hear about opportunities? How did you network and connect with people who helped you advance your goals?
+We encourage everyone to share their stories of how they advanced their career. What did you try that didn't work? Where did you hear about opportunities? How did you network and connect with people who helped you advance your goals?
 
 The second part of the discussion is brainstorming additional opportunities to work on free software. We encourage both mentors and interns to provide information about paid opportunities, but information about unpaid opportunities is also welcome. Sharing information about resource groups or job posting boards is also encouraged.
 
