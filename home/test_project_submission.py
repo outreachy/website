@@ -310,20 +310,23 @@ class ProjectSubmissionTestCase(TestCase):
                 self.assertContains(response, '<h2>Submit an Outreachy Intern Project Proposal</h2>', html=True)
                 self.assertContains(response, '<a class="btn btn-success" href="{}">Submit a Project Proposal</a>'.format(project_submission_path), html=True)
 
-    def mentor_submits_project_description(self, project_submission_path,
-            short_title='Improve Debian bioinformatics packages test coverage',
-            long_description='The Debian Med project has packaged a lot of <a href="http://blends.debian.org/med/tasks/bio">applications for bioinformatics</a>. You will be improving the test coverage of those packages.',
-            minimum_system_requirements='A system running Debian Linux',
-            contribution_tasks='Look at issues marked newcomers-welcome.',
-            repository='https://salsa.debian.org/med-team',
-            issue_tracker='https://bugs.debian.org/',
-            newcomer_issue_tag='newcomers-welcome',
-            intern_tasks='Interns will work on new tests for <a href="http://blends.debian.org/med/tasks/bio">Debian bioinformatics packages</a>.',
-            intern_benefits='Interns will develop skills in quality assurance testing, learn Linux command-line tools, and gain knowledge in how Linux distributions like Debian package software.',
-            community_benefits='Debian maintainers will spend less time tracking down bugs in newly released software.',
-            new_contributors_welcome='True',
-            ):
-        return self.client.post(project_submission_path, {
+    def mentor_submits_project_description(self, current_round, scenario):
+        short_title = 'Improve Debian bioinformatics packages test coverage'
+        long_description = 'The Debian Med project has packaged a lot of <a href="http://blends.debian.org/med/tasks/bio">applications for bioinformatics</a>. You will be improving the test coverage of those packages.'
+        minimum_system_requirements = 'A system running Debian Linux'
+        contribution_tasks = 'Look at issues marked newcomers-welcome.'
+        repository = 'https://salsa.debian.org/med-team'
+        issue_tracker = 'https://bugs.debian.org/'
+        newcomer_issue_tag = 'newcomers-welcome'
+        intern_tasks = 'Interns will work on new tests for <a href="http://blends.debian.org/med/tasks/bio">Debian bioinformatics packages</a>.'
+        intern_benefits = 'Interns will develop skills in quality assurance testing, learn Linux command-line tools, and gain knowledge in how Linux distributions like Debian package software.'
+        community_benefits = 'Debian maintainers will spend less time tracking down bugs in newly released software.'
+
+        project_submission_path = reverse('project-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
+
+        # Submit project description
+        self.client.force_login(scenario.mentor.account)
+        response = self.client.post(project_submission_path, {
             'approved_license': 'on',
             'no_proprietary_software': 'on',
             'longevity': '2Y',
@@ -338,25 +341,42 @@ class ProjectSubmissionTestCase(TestCase):
             'intern_tasks': intern_tasks,
             'intern_benefits': intern_benefits,
             'community_benefits': community_benefits,
-            'new_contributors_welcome': new_contributors_welcome,
+            'new_contributors_welcome': True,
             },
             # This says we're supposed to follow any and all redirects to other pages after the post
             # This will allow us to record a history of where the redirect went to
             follow=True,
         )
 
-    def mentor_submits_project_mentor_profile(self, mentorapproval_submission_path,
-            instructions_read='on',
-            understands_intern_time_commitment='on',
-            understands_applicant_time_commitment='on',
-            understands_mentor_contract='on',
-            mentored_before='OUT',
-            mentorship_style='Weekly meetings by phone or video chat.',
-            longevity='2Y',
-            mentor_foss_contributions="I'm a Debian maintainer on the Debian Med team.",
-            communication_channel_username='foobar',
-            ):
-        return self.client.post(mentorapproval_submission_path, {
+        # Ensure the Project object has been saved
+        project = Project.objects.get(
+                short_title=short_title,
+                long_description=long_description,
+                minimum_system_requirements=minimum_system_requirements,
+                contribution_tasks=contribution_tasks,
+                repository=repository,
+                issue_tracker=issue_tracker,
+                newcomer_issue_tag=newcomer_issue_tag,
+                intern_tasks=intern_tasks,
+                intern_benefits=intern_benefits,
+                community_benefits=community_benefits,
+                new_contributors_welcome=True,
+        )
+        return response, project
+
+    def mentor_submits_project_mentor_profile(self, scenario, project, mentorapproval_submission_path):
+        # Mentor profile information
+        instructions_read='on',
+        understands_intern_time_commitment='on',
+        understands_applicant_time_commitment='on',
+        understands_mentor_contract='on',
+        mentored_before='OUT'
+        mentorship_style='Weekly meetings by phone or video chat.'
+        longevity='2Y'
+        mentor_foss_contributions="I'm a Debian maintainer on the Debian Med team."
+        communication_channel_username='foobar'
+
+        response = self.client.post(mentorapproval_submission_path, {
             'instructions_read': instructions_read,
             'understands_intern_time_commitment': understands_intern_time_commitment,
             'understands_applicant_time_commitment': understands_applicant_time_commitment,
@@ -370,12 +390,28 @@ class ProjectSubmissionTestCase(TestCase):
             follow=True,
         )
 
-    def mentor_submits_project_skill(self, projectskill_submission_path,
-            skill='Command-line skills',
-            experience_level='EXP',
-            required='OPT',
-            ):
-        return self.client.post(projectskill_submission_path, {
+        # Check that the MentorApproval was saved
+        mentorapproval = MentorApproval.objects.get(
+                mentor=scenario.mentor,
+                project=project,
+                mentored_before=mentored_before,
+                mentorship_style=mentorship_style,
+                longevity=longevity,
+                mentor_foss_contributions=mentor_foss_contributions,
+                communication_channel_username=communication_channel_username,
+                instructions_read=True,
+                understands_intern_time_commitment=True,
+                understands_applicant_time_commitment=True,
+                understands_mentor_contract=True,
+        )
+        return response
+
+    def mentor_submits_project_skill(self, project, projectskill_submission_path):
+        skill = 'Command-line skills'
+        experience_level = 'EXP'
+        required = 'OPT'
+
+        response = self.client.post(projectskill_submission_path, {
             'projectskill_set-TOTAL_FORMS': '1',
             'projectskill_set-INITIAL_FORMS': '0',
             'projectskill_set-MIN_NUM_FORMS': '0',
@@ -386,15 +422,22 @@ class ProjectSubmissionTestCase(TestCase):
             },
             follow=True,
         )
+        projectskill = ProjectSkill.objects.get(
+                project=project,
+                skill=skill,
+                experience_level=experience_level,
+                required=required,
+        )
+        return response
 
-    def mentor_submits_project_communication_channel(self, projectcommunicationchannel_submission_path,
-            tool_name='IRC',
-            url='irc://irc.debian.org/#debian-med',
-            instructions='Let the channel know you are an Outreachy applicant.',
-            norms="Please read Debian's <a href='https://wiki.debian.org/GettingHelpOnIrc'>instructions for asking for help on IRC</a>.",
-            communication_help='https://wiki.debian.org/GettingHelpOnIrc',
-            ):
-        return self.client.post(projectcommunicationchannel_submission_path, {
+    def mentor_submits_project_communication_channel(self, project, projectcommunicationchannel_submission_path):
+        tool_name='IRC'
+        url='irc://irc.debian.org/#debian-med'
+        instructions='Let the channel know you are an Outreachy applicant.'
+        norms="Please read Debian's <a href='https://wiki.debian.org/GettingHelpOnIrc'>instructions for asking for help on IRC</a>."
+        communication_help='https://wiki.debian.org/GettingHelpOnIrc'
+
+        response = self.client.post(projectcommunicationchannel_submission_path, {
             'communicationchannel_set-TOTAL_FORMS': '1',
             'communicationchannel_set-INITIAL_FORMS': '0',
             'communicationchannel_set-MIN_NUM_FORMS': '0',
@@ -407,6 +450,55 @@ class ProjectSubmissionTestCase(TestCase):
             },
             follow=True,
         )
+
+        communicationchannel = CommunicationChannel.objects.get(
+                project=project,
+                tool_name=tool_name,
+                url=url,
+                instructions=instructions,
+                norms=norms,
+                communication_help=communication_help,
+        )
+        return response
+
+    def check_project_submission(self, scenario, current_round, participation):
+        sponsorship = factories.SponsorshipFactory(participation=participation, name='Software in the Public Interest - Debian', amount=13000)
+
+        visitors = self.get_visitors_from_past_round(scenario)
+
+        response, project = self.mentor_submits_project_description(current_round, scenario)
+
+        # Make sure the redirect went to the right place
+        mentorapproval_submission_path = reverse('mentorapproval-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, 'project_slug': project.slug, })
+        self.assertRedirects(response, mentorapproval_submission_path)
+
+        response = self.mentor_submits_project_mentor_profile(scenario, project, mentorapproval_submission_path)
+
+        # Check that they're redirected to the project skills form
+        projectskill_submission_path = reverse('project-skills-edit', kwargs={'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, 'project_slug': project.slug, })
+        self.assertRedirects(response, projectskill_submission_path)
+
+        response = self.mentor_submits_project_skill(project, projectskill_submission_path)
+
+        # Check that they're redirected to the project communication channels form
+        projectcommunicationchannel_submission_path = reverse('communication-channels-edit', kwargs={'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, 'project_slug': project.slug, })
+        self.assertRedirects(response, projectcommunicationchannel_submission_path)
+
+        response = self.mentor_submits_project_communication_channel(project, projectcommunicationchannel_submission_path)
+
+        # Check that they're redirected to the project read only page
+        project_read_only_path = reverse('project-read-only', kwargs={'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, 'project_slug': project.slug, })
+        self.assertRedirects(response, project_read_only_path)
+
+        # Check coordinator receives email about the pending project
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, 'Approve Outreachy intern project proposal for {}'.format(scenario.community.name))
+        self.assertEqual(mail.outbox[0].from_email, organizers)
+        self.assertEqual(mail.outbox[0].to, scenario.community.get_coordinator_email_list())
+        self.assertIn('Please carefully review the project to ensure it is appropriate for Outreachy:', mail.outbox[0].body)
+        self.assertIn(project_read_only_path, mail.outbox[0].body)
+
+        # The community read-only page should not reflect the project was submitted, except to the mentor who submitted it
 
     def test_project_submission_by_old_mentor_to_pending_community(self):
         """
@@ -426,166 +518,29 @@ class ProjectSubmissionTestCase(TestCase):
 
         current_round = factories.RoundPageFactory(start_from='pingnew')
         participation = factories.ParticipationFactory(community=scenario.community, participating_round=current_round, approval_status=ApprovalStatus.PENDING)
-        sponsorship = factories.SponsorshipFactory(participation=participation, name='Software in the Public Interest - Debian', amount=13000)
 
-        visitors = self.get_visitors_from_past_round(scenario)
-        mentor_account = scenario.mentor.account
-
-        short_title='Improve Debian bioinformatics packages test coverage'
-        long_description='The Debian Med project has packaged a lot of <a href="http://blends.debian.org/med/tasks/bio">applications for bioinformatics</a>. You will be improving the test coverage of those packages.'
-        minimum_system_requirements='A system running Debian Linux'
-        contribution_tasks='Look at issues marked newcomers-welcome.'
-        repository='https://salsa.debian.org/med-team'
-        issue_tracker='https://bugs.debian.org/'
-        newcomer_issue_tag='newcomers-welcome'
-        intern_tasks='Interns will work on new tests for <a href="http://blends.debian.org/med/tasks/bio">Debian bioinformatics packages</a>.'
-        intern_benefits='Interns will develop skills in quality assurance testing, learn Linux command-line tools, and gain knowledge in how Linux distributions like Debian package software.'
-        community_benefits='Debian maintainers will spend less time tracking down bugs in newly released software.'
-        project_submission_path = reverse('project-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
-
-        # Submit project description
-        self.client.force_login(mentor_account)
-        response = self.mentor_submits_project_description(project_submission_path,
-                short_title,
-                long_description,
-                minimum_system_requirements,
-                contribution_tasks,
-                repository,
-                issue_tracker,
-                newcomer_issue_tag,
-                intern_tasks,
-                intern_benefits,
-                community_benefits,
-                )
-
-        # Ensure the Project object has been saved
-        project = Project.objects.get(
-                short_title=short_title,
-                long_description=long_description,
-                minimum_system_requirements=minimum_system_requirements,
-                contribution_tasks=contribution_tasks,
-                repository=repository,
-                issue_tracker=issue_tracker,
-                newcomer_issue_tag=newcomer_issue_tag,
-                intern_tasks=intern_tasks,
-                intern_benefits=intern_benefits,
-                community_benefits=community_benefits,
-                new_contributors_welcome=True,
-        )
-
-        # Make sure the redirect went to the right place
-        mentorapproval_submission_path = reverse('mentorapproval-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, 'project_slug': project.slug, })
-        self.assertRedirects(response, mentorapproval_submission_path)
-
-        # Mentor profile information
-        mentored_before='OUT'
-        mentorship_style='Weekly meetings by phone or video chat.'
-        longevity='2Y'
-        mentor_foss_contributions="I'm a Debian maintainer on the Debian Med team."
-        communication_channel_username='foobar'
-
-        response = self.mentor_submits_project_mentor_profile(mentorapproval_submission_path,
-                mentored_before=mentored_before,
-                mentorship_style=mentorship_style,
-                longevity=longevity,
-                mentor_foss_contributions=mentor_foss_contributions,
-                communication_channel_username=communication_channel_username,
-        )
-
-        # Check that the MentorApproval was saved
-        mentorapproval = MentorApproval.objects.get(
-                mentor=scenario.mentor,
-                project=project,
-                mentored_before=mentored_before,
-                mentorship_style=mentorship_style,
-                longevity=longevity,
-                mentor_foss_contributions=mentor_foss_contributions,
-                communication_channel_username=communication_channel_username,
-                instructions_read=True,
-                understands_intern_time_commitment=True,
-                understands_applicant_time_commitment=True,
-                understands_mentor_contract=True,
-        )
-
-        # Check that they're redirected to the right next form
-        projectskill_submission_path = reverse('project-skills-edit', kwargs={'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, 'project_slug': project.slug, })
-        self.assertRedirects(response, projectskill_submission_path)
-
-        skill = 'Command-line skills'
-        experience_level = 'EXP'
-        required = 'OPT'
-
-        response = self.mentor_submits_project_skill(projectskill_submission_path,
-                skill,
-                experience_level,
-                required,
-        )
-
-        projectskill = ProjectSkill.objects.get(
-                project=project,
-                skill=skill,
-                experience_level=experience_level,
-                required=required,
-        )
-
-        projectcommunicationchannel_submission_path = reverse('communication-channels-edit', kwargs={'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, 'project_slug': project.slug, })
-        self.assertRedirects(response, projectcommunicationchannel_submission_path)
-
-        tool_name='IRC'
-        url='irc://irc.debian.org/#debian-med'
-        instructions='Let the channel know you are an Outreachy applicant.'
-        norms="Please read Debian's <a href='https://wiki.debian.org/GettingHelpOnIrc'>instructions for asking for help on IRC</a>."
-        communication_help='https://wiki.debian.org/GettingHelpOnIrc'
-
-        response = self.mentor_submits_project_communication_channel(projectcommunicationchannel_submission_path,
-                tool_name,
-                url,
-                instructions,
-                norms,
-                communication_help,
-        )
-
-        communicationchannel = CommunicationChannel.objects.get(
-                project=project,
-                tool_name=tool_name,
-                url=url,
-                instructions=instructions,
-                norms=norms,
-                communication_help=communication_help,
-        )
-
-        project_read_only_path = reverse('project-read-only', kwargs={'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, 'project_slug': project.slug, })
-        self.assertRedirects(response, project_read_only_path)
-
-        # Check coordinator receives email about the pending project
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject, 'Approve Outreachy intern project proposal for {}'.format(scenario.community.name))
-        self.assertEqual(mail.outbox[0].from_email, organizers)
-        self.assertEqual(mail.outbox[0].to, scenario.community.get_coordinator_email_list())
-        self.assertIn('Please carefully review the project to ensure it is appropriate for Outreachy:', mail.outbox[0].body)
-        self.assertIn(project_read_only_path, mail.outbox[0].body)
-
-        # The community read-only page should not reflect the project was submitted, except to the mentor who submitted it
+        self.check_project_submission(scenario, current_round, participation)
 
     def test_project_submission_to_approved_community(self):
-        # Subtest #2: Submit a project to an approved community
+        """
+        This tests submitting a project to a community that is approved to participate in this round.
+         - Create a new RoundPage for the upcoming round, with an approved community
+         - Go to the community read-only page
+         - Log in as a mentor from the previous round for this community
+         - Click the 'Submit Project' button, fill out project description
+         - Be redirected to the MentorApproval form, fill that out
+         - Be redirected to the ProjectSkills form, fill that out
+         - Be redirected to the ProjectCommunicationChannels form, fill that out
+         - Finally be done! \o/
+         - Coordinator receives email about the pending project
+         - The community read-only page should not reflect the project was submitted, except to the mentor who submitted it
+        """
         scenario = scenarios.InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
 
         current_round = factories.RoundPageFactory(start_from='pingnew')
         participation = factories.ParticipationFactory(community=scenario.community, participating_round=current_round, approval_status=ApprovalStatus.APPROVED)
-        sponsorship = factories.SponsorshipFactory(participation=participation, name='Software in the Public Interest - Debian', amount=13000)
 
-        short_title='Improve Debian bioinformatics packages test coverage'
-        long_description='The Debian Med project has packaged a lot of <a href="http://blends.debian.org/med/tasks/bio">applications for bioinformatics</a>. You will be improving the test coverage of those packages.'
-        minimum_system_requirements='A system running Debian Linux'
-        contribution_tasks='Look at issues marked newcomers-welcome.'
-        repository='https://blends.debian.org/med/tasks/bio'
-        issue_tracker='https://bugs.debian.org/'
-        newcomer_issue_tag='newcomers-welcome'
-        intern_tasks='Interns will work on new tests for <a href="http://blends.debian.org/med/tasks/bio">Debian bioinformatics packages</a>.'
-        intern_benefits='Interns will develop skills in quality assurance testing, learn Linux command-line tools, and gain knowledge in how Linux distributions like Debian package software.'
-        community_benefits='Debian maintainers will spend less time tracking down bugs in newly released software.'
-        pass
+        self.check_project_submission(scenario, current_round, participation)
 
     def test_project_display_on_community_read_only(self):
         pass
