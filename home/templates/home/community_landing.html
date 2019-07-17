@@ -50,7 +50,7 @@ Outreachy internships working with {{ community.name }}
 			{% include "home/snippet/eligibility_prompts.html" %}
 		{% endif %}
 
-		{% if participation_info.approval_status == participation_info.PENDING %}
+		{% if participation_info.is_pending %}
 			<div class="card border-info mb-3">
 				<div class="card-header text-white bg-warning">Pending community participation</div>
 				<div class="card-body">

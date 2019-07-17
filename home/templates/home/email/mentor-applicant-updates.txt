@@ -27,7 +27,7 @@ Your Project Applicants
 
 You may receive this email for multiple projects you are mentoring for. This email is for the {{ community.name }} project "{{ project.short_title }}".
 
-{% if project.approval_status == project.PENDING %}Your coordinator has not yet approved your project for this round, and it is not yet listed on the applicant project selection page.{% else %}{{ contributors|length }} applicant{{ contributors|pluralize:" has,s have" }} recorded their contributions to your project{% if contributors|length > 0 %}: {% for c in contributors %}{{ c.applicant.public_name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}.
+{% if project.is_pending %}Your coordinator has not yet approved your project for this round, and it is not yet listed on the applicant project selection page.{% else %}{{ contributors|length }} applicant{{ contributors|pluralize:" has,s have" }} recorded their contributions to your project{% if contributors|length > 0 %}: {% for c in contributors %}{{ c.applicant.public_name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}.
 
 {{ applicants|length }} applicant{{ applicants|pluralize:" has,s have" }} created a final application for your project{% if applicants|length > 0 %}: {% for a in applicants %}{{ a.applicant.applicant.public_name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}.
 

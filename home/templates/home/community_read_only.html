@@ -2,7 +2,7 @@
 
 {% block title %}
 {{ community.name }}:
-{% if not current_round and participation_info and participation_info.approval_status != participation_info.REJECTED and participation_info.approval_status != participation_info.WITHDRAWN %}
+{% if not current_round and participation_info and not participation_info.is_rejected and not participation_info.is_withdrawn %}
 Call for Outreachy mentors and volunteers
 {% else %}
 Past community participation in Outreachy
@@ -13,7 +13,7 @@ Past community participation in Outreachy
 {% block content %}
 <p><a href="{% url 'community-cfp' %}">Timeline and FAQ for Outreachy Communities</a> &gt; {{ community.name }}</p>
 <h1>
-{% if current_round and participation_info and participation_info.approval_status != participation_info.REJECTED and participation_info.approval_status != participation_info.WITHDRAWN %}
+{% if current_round and participation_info and not participation_info.is_rejected and not participation_info.is_withdrawn %}
 {{ community.name }}: Call for Outreachy mentors
 {% else %}
 {{ community.name }} in Outreachy
@@ -46,14 +46,14 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 {% if not coordinator %}
 	<p>If you have been a community coordinator in the past but have not yet created an account on this site, or you would like to volunteer to be a new coordinator and you understand the <a href="/mentor/">coordinator duties</a>, you can sign up to be a community coordinator.</p>
 	<p><a href="{{ community.get_coordinator_signup_url }}" class="btn btn-success">Coordinate for This Community</a></p>
-{% elif coordinator.approval_status != coordinator.APPROVED %}
+{% elif not coordinator.is_approved %}
 	<p>Your request to coordinate for this community is: <strong>{{ coordinator.get_approval_status_display }}</strong></p>
 {% else %}
 	{% if not participation_info %}
-	{% elif participation_info.approval_status == participation_info.WITHDRAWN %}
+	{% elif participation_info.is_withdrawn %}
 		<p>Have you changed your mind and decided your community can participate in this round of Outreachy?</p>
 		<p><a class="btn btn-success" href="{{ participation_info.get_submit_url }}">Community will participate</a></p>
-	{% elif participation_info.approval_status == participation_info.REJECTED %}
+	{% elif participation_info.is_rejected %}
 	<p>Unfortunately, the Outreachy organizers have determined your community should not participate in this round. Please <a href="{% url 'contact-us' %}">contact us</a> for more details.</p>
 	{% else %}
 		{% include 'home/snippet/coordinator_action.html' %}
@@ -74,11 +74,11 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 						    to indicate your community will participate.{% endif %}
 					    </td>
 				    </tr>
-			    {% elif participation_info.approval_status == participation_info.PENDING %}
+			    {% elif participation_info.is_pending %}
 				    <tr><td><span class="badge badge-pill badge-info">Pending Participation</span></td><td>Outreachy organizers have not approved this community to participate in the {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} internship round</td></tr>
-			    {% elif participation_info.approval_status == participation_info.REJECTED %}
+			    {% elif participation_info.is_rejected %}
 				    <tr><td><span class="badge badge-pill badge-warning">Not Participating</span></td><td>Unfortunately, either the community coordinator{{ approved_coordinator_list|length|pluralize }} or the Outreachy organizers have determined that the community will not participate in the {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</td></tr>
-			    {% elif participation_info.approval_status == participation_info.APPROVED %}
+			    {% elif participation_info.is_approved %}
 				    <tr><td><span class="badge badge-pill badge-success">Participating</span></td><td>This community is approved to participate in the {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} internship round</td></tr>
 			    {% endif %}
 			    {% if participation_info and participation_info.interns_funded <= 0 %}
@@ -105,7 +105,7 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 	</div>
 {% endif %}
 
-{% if current_round and coordinator and coordinator.approval_status == coordinator.APPROVED and not participation_info %}
+{% if current_round and coordinator and coordinator.is_approved and not participation_info %}
 <hr />
 	<h2>Participate in This Round</h2>
 	<p>You can sign the community up to participate in the current round.</p>
@@ -127,7 +127,7 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 	{% endif %}
 
 {% else %}
-{% if participation_info.approval_status == participation_info.PENDING or participation_info.approval_status == participation_info.APPROVED %}
+{% if participation_info.is_pending or participation_info.is_approved %}
 	{% if not current_round.project_soft_deadline.has_passed %}
 		<h2>Submit an Outreachy Intern Project Proposal</h2>
 
@@ -204,7 +204,7 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 		</p>
 	{% endif %}
 
-	{% if coordinator and coordinator.approval_status == coordinator.APPROVED and not current_round.project_soft_deadline.has_passed %}
+	{% if coordinator and coordinator.is_approved and not current_round.project_soft_deadline.has_passed %}
 	<h2>Need more projects?</h2>
 	<p>Send this page URL out to your community communication channels
 	and ask contributors to submit proposals. Mentors must submit their own
@@ -251,12 +251,12 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 <hr />
 	<h2>Outreachy Organizer Actions</h2>
 
-	{% if participation_info.approval_status == participation_info.WITHDRAWN %}
+	{% if participation_info.is_withdrawn %}
 		<p>The coordinator has indicated that they will not be participating in this Outreachy internship round:</p>
 		<p>"{{ participation_info.reason_denied }}"</p>
 
 	{% else %}
-		{% if participation_info.approval_status == participation_info.REJECTED %}
+		{% if participation_info.is_rejected %}
 		<p>An Outreachy organizer has rejected this community to participate in this round of Outreachy.</p>
 		{% endif %}
 
@@ -349,7 +349,7 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 		<div class="container">
 			<div class="row">
 				<div class="col">
-				{% if participation_info.approval_status != participation_info.APPROVED and not current_round.lateprojects.has_passed %}
+				{% if not participation_info.is_approved and not current_round.lateprojects.has_passed %}
 						<form action="{{ participation_info.get_approve_url }}" method="post">
 							{% csrf_token %}
 							<input type="submit" class="btn btn-success m-2" value="Approve Community" />
@@ -357,7 +357,7 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 				{% endif %}
 				</div>
 				<div class="col">
-					{% if participation_info.approval_status != participation_info.REJECTED %}
+					{% if not participation_info.is_rejected %}
 						<a href="{{ participation_info.get_reject_url }}" class="btn btn-warning m-2">Reject Community</a>
 					{% endif %}
 				</div>

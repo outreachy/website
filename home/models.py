@@ -2242,7 +2242,7 @@ class ApplicantApproval(ApprovalStatus):
         return True
 
     def get_reason_for_status(self):
-        if self.approval_status == self.APPROVED:
+        if self.is_approved():
             return ''
         if self.reason_denied == 'GENERAL':
             if not self.workeligibility.over_18:
@@ -2285,7 +2285,7 @@ class ApplicantApproval(ApprovalStatus):
         except SchoolInformation.DoesNotExist:
             pass
 
-        if self.approval_status == self.PENDING:
+        if self.is_pending():
             return 'Essay review'
 
         return 'Unknown'

@@ -1,7 +1,7 @@
 <div class="card border-info mb-3">
 	<div class="card-header text-white bg-info">Mentor actions</div>
 	<div class="card-body">
-		{% if project.approval_status == project.APPROVED %}
+		{% if project.is_approved %}
 			{% if project.round.initial_applications_open.has_passed %}
 				<p class="card-text">This project is approved.
 				You should promote your project listing:
@@ -26,7 +26,7 @@
 				promote your project listing:
 				<a href="{% url 'project-selection' %}#{{ project.project_round.community.slug }}"><pre>{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}#{{ project.project_round.community.slug }}</pre></a></p>
 			{% endif %}
-			{% if project.project_round.approval_status == project.project_round.APPROVED %}
+			{% if project.project_round.is_approved %}
 				<p class="card-text">
 				<a class="btn btn-primary" href="{{ project.get_applicants_url }}">Review Project Applicants</a>
 				</p>
@@ -38,7 +38,7 @@
 				You cannot review applicants until the community is approved to participate in Outreachy.
 				</p>
 			{% endif %}
-		{% elif project.approval_status == project.PENDING %}
+		{% elif project.is_pending %}
 			<p class="card-text">This project is pending.
 				Once applications are open and your project is approved, you can
 				<a href="{{ project.project_round.get_absolute_url }}#{{ project.slug }}">promote your project listing</a>.</p>

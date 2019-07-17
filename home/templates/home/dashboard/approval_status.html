@@ -10,25 +10,25 @@
 			<div class="card-body">
 				<p class="card-text"><a href="{{ obj.get_preview_url }}">{{ obj }}</a></p>
 				<div class="mx-auto mr-sm-0" role="group" aria-label="Actions">
-				{% if obj.approval_status == obj.APPROVED %}
+				{% if obj.is_approved %}
 					{% if obj|is_submitter:request.user %}
 					<a href="{{ obj.get_withdraw_url }}" class="btn btn-warning">Withdraw</a>
 					{% endif %}
 					{% if obj|is_approver:request.user %}
 					<a href="{{ obj.get_reject_url }}" class="btn btn-danger">Reject</a>
 					{% endif %}
-				{% elif obj.approval_status == obj.PENDING %}
+				{% elif obj.is_pending %}
 					{% if obj|is_approver:request.user %}
 					<a href="{{ obj.get_preview_url }}" class="btn btn-primary">Review</a>
 					{% endif %}
 					{% if obj|is_submitter:request.user %}
 					<a href="{{ obj.get_withdraw_url }}" class="btn btn-warning">Withdraw</a>
 					{% endif %}
-				{% elif obj.approval_status == obj.WITHDRAWN %}
+				{% elif obj.is_withdrawn %}
 					{% if obj|is_submitter:request.user %}
 					<a href="{{ obj.get_submit_url }}" class="btn btn-success">Resubmit</a>
 					{% endif %}
-				{% elif obj.approval_status == obj.REJECTED %}
+				{% elif obj.is_rejected %}
 					{% if obj|is_approver:request.user %}
 					<a href="{{ obj.get_approve_url }}" class="btn btn-success">Approve</a>
 					{% endif %}

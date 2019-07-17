@@ -14,10 +14,10 @@
 
 <p>Project title: "{{ project.short_title }}"</p>
 
-{% if project.approval_status == project.APPROVED %}
+{% if project.is_approved %}
 	<p>This project has been approved by the {{ community.name }} coordinator(s) to participate in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round.</p>
 
-{% elif project.approval_status == project.PENDING %}
+{% elif project.is_pending %}
 	{% if not current_round.project_soft_deadline.has_passed %}
 		<p>This project is waiting to be approved by the {{ community.name }} coordinator(s) for participation in the {{ current_round.internstarts|date:"F" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round. Mentors will receive an email when the project is approved. In the meantime, please see the instructions below for getting ready for the application period.</p>
 	{% else %}
@@ -29,15 +29,15 @@
 {% endif %}
 
 {% if not current_round.contributions_close.has_passed %}
-	{% if user.is_staff or coordinator or mentor_request and mentor_request.approval_status == mentor_request.APPROVED %}
+	{% if user.is_staff or coordinator or mentor_request and mentor_request.is_approved %}
 		<h2>Next Steps for Mentors</h2>
 		<h3>Prepping for the application period</h3>
 		<p>During the six-week application period, Outreachy applicants will make a contribution to this project. Only applicants that have made a contribution (and recorded the contribution on this website) will be eligible to be selected as an intern. Mentors should <a href="/mentor/mentor-faq/#define-starter-tasks">read more about how to prep for the application period</a>.</p>
 	{% endif %}
 {% endif %}
 
-{% if project.approval_status == project.APPROVED and not current_round.contributions_close.has_passed %}
-	{% if user.is_staff or coordinator or mentor_request and mentor_request.approval_status == mentor_request.APPROVED %}
+{% if project.is_approved and not current_round.contributions_close.has_passed %}
+	{% if user.is_staff or coordinator or mentor_request and mentor_request.is_approved %}
 		<h2>Promoting To Outreachy Applicants</h2>
 
 		{% include 'home/snippet/project_promotion.html' %}
@@ -54,9 +54,9 @@
 		{% if mentor_request %}
 			<p>Your request to mentor this project is:
 			<strong>{{ mentor_request.get_approval_status_display }}</strong></p>
-			{% if mentor_request.approval_status == mentor_request.PENDING or mentor_request.approval_status == mentor_request.APPROVED %}
+			{% if mentor_request.is_pending or mentor_request.is_approved %}
 				<p><a href="{{ mentor_request.get_withdraw_url }}" class="btn btn-warning">Withdraw From Mentoring</a></p>
-			{% elif mentor_request.approval_status == mentor_request.WITHDRAWN %}
+			{% elif mentor_request.is_withdrawn %}
 				<p><a href="{{ mentor_request.get_submit_url }}" class="btn btn-success">Mentor This Project</a></p>
 			{% endif %}
 		{% endif %}
@@ -130,12 +130,12 @@
 		{% endif %}
 	{% endif %}
 
-	{% if project.approval_status != project.WITHDRAWN %}
+	{% if not project.is_withdrawn %}
 		<p>
-		{% if project.approval_status != project.APPROVED and not current_round.lateprojects.has_passed %}
+		{% if not project.is_approved and not current_round.lateprojects.has_passed %}
 			<a href="{{ project.get_approve_url }}" class="btn btn-success">Approve Project</a>
 		{% endif %}
-		{% if project.approval_status != project.REJECTED %}
+		{% if not project.is_rejected %}
 			<a href="{{ project.get_reject_url }}" class="btn btn-warning">Reject Project</a>
 		{% endif %}
 		</p>
@@ -146,10 +146,10 @@
 		{% for approval in unapproved_mentors %}
 			<p>"{{ approval.mentor.public_name }}" &lt;{{ approval.mentor.account.email }}&gt;</p>
 			{% include "home/snippet/mentor_approval_warnings.html" %}
-			{% if approval.approval_status != approval.APPROVED %}
+			{% if not approval.is_approved %}
 			<a href="{{ approval.get_approve_url }}" class="btn btn-success">Approve Mentor</a>
 			{% endif %}
-			{% if approval.approval_status != approval.REJECTED %}
+			{% if not approval.is_rejected %}
 			<a href="{{ approval.get_reject_url }}" class="btn btn-warning">Reject Mentor</a>
 			{% endif %}
 			{% include "home/snippet/mentor_info.html" %}
@@ -168,10 +168,10 @@
 
 {% endif %}
 
-{% if current_round.lateprojects.has_passed and project.approval_status != project.APPROVED %}
+{% if current_round.lateprojects.has_passed and not project.is_approved %}
 	<h3>Unapproved Project Proposal</h3>
 	<p>The deadline to approve Outreachy project proposals has passed. You cannot edit an unapproved project after the project proposal deadline.</p>
-{% elif user.is_staff or coordinator or mentor_request and mentor_request.approval_status == mentor_request.APPROVED %}
+{% elif user.is_staff or coordinator or mentor_request and mentor_request.is_approved %}
 	<h3>Preview of Project Proposal</h3>
 
 	{% if project|is_submitter:request.user %}
@@ -189,8 +189,8 @@
 	{% endif %}
 {% endif %}
 
-{% if user.is_staff or coordinator or mentor_request and mentor_request.approval_status == mentor_request.APPROVED %}
-	{% if project.approval_status == project.APPROVED or project.approval_status == project.PENDING and not current_round.contribution_opens.has_passed %}
+{% if user.is_staff or coordinator or mentor_request and mentor_request.is_approved %}
+	{% if project.is_approved or project.is_pending and not current_round.contribution_opens.has_passed %}
 		<div class="card">
 			<div class="card-header">Preview - Project Proposal Information Shown to Applicants</div>
 			<div class="card-body">

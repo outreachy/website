@@ -788,7 +788,7 @@ def approval_status(request, today):
     for model in DASHBOARD_MODELS:
         by_model = defaultdict(list)
         for obj in model.objects_for_dashboard(request.user).distinct():
-            if obj.approval_status == ApprovalStatus.APPROVED or not obj.submission_and_approval_deadline().has_passed():
+            if obj.is_approved() or not obj.submission_and_approval_deadline().has_passed():
                 by_model[obj.approval_status].append(obj)
 
         label = model._meta.verbose_name

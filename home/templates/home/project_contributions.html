@@ -159,7 +159,7 @@
 		You're viewing your application for the following {{ community.name }} project:
 		<br><strong>{{ project.short_title }}</strong>
 		</p>
-		{% if final_application.approval_status == final_application.WITHDRAWN %}
+		{% if final_application.is_withdrawn %}
 			<div class="card border-warning mb-3">
 				<div class="card-header text-white bg-warning">Withdrawn Application</div>
 				<div class="card-body">
@@ -193,7 +193,7 @@
 		{% endif %}
 		<p><i>Timeline of tasks for the internship period:</i></p>
 		<pre>{% if final_application.timeline %}{{ final_application.timeline }}{% else %}TBD{% endif %}</pre>
-		{% if final_application.approval_status != final_application.WITHDRAWN %}
+		{% if not final_application.is_withdrawn %}
 		<p><a class='btn btn-warning' href="{{ final_application.get_withdraw_url }}">Withdraw Your Application</a></p>
 		{% endif %}
 	{% endif %}

@@ -971,9 +971,9 @@ def community_cfp_view(request):
         for c in all_communities:
             participation_info = participating_communities.get(c.id)
             if participation_info is not None:
-                if participation_info.approval_status == ApprovalStatus.PENDING:
+                if participation_info.is_pending():
                     pending_communities.append(c)
-                elif participation_info.approval_status == ApprovalStatus.APPROVED:
+                elif participation_info.is_approved():
                     approved_communities.append(c)
                 else: # either withdrawn or rejected
                     rejected_communities.append(c)
@@ -1517,7 +1517,7 @@ class BaseProjectEditPage(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
         # Only allow adding new project communication channels or skills
         # for approved projects after the deadline has passed.
         deadline = project.submission_and_approval_deadline()
-        if project.approval_status != ApprovalStatus.APPROVED and deadline.has_passed():
+        if not project.is_approved() and deadline.has_passed():
             raise PermissionDenied("The project submission and approval deadline ({date}) has passed. Please sign up for the announcement mailing list for a call for mentors for the next Outreachy internship round. https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce".format(date=deadline))
         return project
 

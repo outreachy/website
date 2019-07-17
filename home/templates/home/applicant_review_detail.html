@@ -7,11 +7,11 @@
 {% endblock %}
 
 {% block content %}
-	{% if application.approval_status == application.APPROVED %}
+	{% if application.is_approved %}
 		<td><a class='btn btn-secondary' href="{% url 'approved-applicants-summary' %}"> &lt;- Back to summary of approved applications</a></td>
-	{% elif application.approval_status == application.PENDING %}
+	{% elif application.is_pending %}
 		<td><a class='btn btn-secondary' href="{% url 'pending-applicants-summary' %}"> &lt;- Back to summary of pending applications</a></td>
-	{% elif application.approval_status == application.REJECTED %}
+	{% elif application.is_rejected %}
 		<td><a class='btn btn-secondary' href="{% url 'rejected-applicants-summary' %}"> &lt;- Back to summary of rejected applications</a></td>
 	{% endif %}
 
@@ -36,11 +36,11 @@
 
 	<h1>Initial Application</h1>
 
-	{% if application.approval_status == application.REJECTED %}
+	{% if application.is_rejected %}
 		<p><b>Reason for rejection:</b> {{ application.get_reason_for_status }}</p>
-	{% elif application.approval_status == application.PENDING %}
+	{% elif application.is_pending %}
 		<p><b>Reason for pending status:</b> {{ application.get_reason_for_status }}</p>
-	{% elif application.approval_status == application.APPROVED %}
+	{% elif application.is_approved %}
 		<p><b>Application has been approved</b></p>
 	{% endif %}
 

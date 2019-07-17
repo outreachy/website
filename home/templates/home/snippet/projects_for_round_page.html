@@ -1,12 +1,12 @@
 {% for project in projects %}
-	{% if project.approval_status != project.APPROVED %}
+	{% if not project.is_approved %}
 	<div class="card border border-warning" id="{{ project.project_round.community.slug}}-{{ project.slug }}">
 		<div class="card-header bg-warning text-light">
 	{% else %}
 	<div class="card border" id="{{ project.project_round.community.slug}}-{{ project.slug }}">
 		<div class="card-header bg-light">
 	{% endif %}
-		{% if project.approval_status != project.APPROVED %}{{ project.get_approval_status_display }} {% endif %}{{ project.project_round.community.name }} {% if not project.new_contributors_welcome %}closed {% endif %}project #{{ forloop.counter }}
+		{% if not project.is_approved %}{{ project.get_approval_status_display }} {% endif %}{{ project.project_round.community.name }} {% if not project.new_contributors_welcome %}closed {% endif %}project #{{ forloop.counter }}
 		</div>
 		<div class="card-body">
 		{% comment %}If this view didn't set any mentors_pending_projects, it means there's no pending mentored projects {% endcomment %}
