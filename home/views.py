@@ -758,7 +758,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
 
 class EligibilityResults(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
     template_name = 'home/eligibility_results.html'
-    context_object_name = 'application'
+    context_object_name = 'role'
 
     def get_object(self):
         now = datetime.now(timezone.utc)
@@ -776,15 +776,11 @@ class EligibilityResults(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
         except RoundPage.DoesNotExist:
             raise PermissionDenied('The Outreachy application period is closed. Eligibility checking will become available when the next application period opens. Please sign up for the announcements mailing list for an email when the next application period opens: https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce')
 
-        return get_object_or_404(ApplicantApproval,
-                    applicant=self.request.user.comrade,
-                    application_round=current_round)
+        role = Role(self.request.user, current_round)
+        if not role.is_applicant:
+            raise Http404("No initial application in this round.")
+        return role
 
-    def get_context_data(self, **kwargs):
-        context = super(EligibilityResults, self).get_context_data(**kwargs)
-        context.update(self.object.get_time_commitments())
-        context['current_round'] = self.object.application_round
-        return context
 
 class ViewInitialApplication(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
     template_name = 'home/applicant_review_detail.html'
@@ -1570,16 +1566,16 @@ class ProjectContributions(LoginRequiredMixin, ComradeRequiredMixin, EligibleApp
         role = Role(self.request.user, current_round)
 
         # Note that there's no reason to ever keep a past applicant from
-        # looking at their old contributions.
+        # looking at their old contributions, even if they got rejected after
+        # making those contributions.
 
-        applicant = role.application
-        if applicant is None or not applicant.is_approved():
-            raise Http404("No approved initial application in this round.")
+        if not role.is_applicant:
+            raise Http404("No initial application in this round.")
 
-        contributions = applicant.contribution_set.filter(
+        contributions = role.application.contribution_set.filter(
                 project=project)
         try:
-            final_application = applicant.finalapplication_set.get(
+            final_application = role.application.finalapplication_set.get(
                     project=project)
         except FinalApplication.DoesNotExist:
             final_application = None
@@ -1614,13 +1610,13 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, EligibleAppli
                 project_round__approval_status=ApprovalStatus.APPROVED)
 
         current_round = project.round()
+        role = Role(self.request.user, current_round)
 
-        applicant = get_object_or_404(ApplicantApproval,
-                applicant=self.request.user.comrade,
-                application_round=current_round)
+        if not role.is_applicant or not role.application.is_approved():
+            raise Http404("No approved initial application in this round.")
+
         try:
-            application = FinalApplication.objects.get(
-                    applicant=applicant,
+            application = role.application.finalapplication_set.get(
                     project=project)
         except FinalApplication.DoesNotExist:
             application = None
@@ -1635,11 +1631,13 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, EligibleAppli
             raise PermissionDenied("Editing or recording new contributions is closed at this time.")
 
         if 'contribution_slug' not in self.kwargs:
-            return Contribution(applicant=applicant, project=project)
-        return get_object_or_404(Contribution,
-                applicant=applicant,
-                project=project,
-                pk=self.kwargs['contribution_slug'])
+            return Contribution(applicant=role.application, project=project)
+        return get_object_or_404(
+            Contribution,
+            applicant=role.application,
+            project=project,
+            pk=self.kwargs['contribution_slug'],
+        )
 
     def get_success_url(self):
         return self.object.project.get_contributions_url()
@@ -1693,9 +1691,9 @@ class FinalApplicationAction(ApprovalStatusAction):
     def get_object(self):
         username = self.kwargs.get('username')
         if username:
-            comrade = get_object_or_404(Comrade, account__username=username)
+            account = get_object_or_404(User, username=username)
         else:
-            comrade = self.request.user.comrade
+            account = self.request.user
 
         # Make sure both the Community and Project are approved
         project = get_object_or_404(Project,
@@ -1706,6 +1704,7 @@ class FinalApplicationAction(ApprovalStatusAction):
                 project_round__approval_status=ApprovalStatus.APPROVED)
 
         current_round = project.round()
+        role = Role(account, current_round)
 
         if not current_round.contributions_open.has_passed():
             raise PermissionDenied("You can't submit a final application until the Outreachy application period opens.")
@@ -1713,18 +1712,17 @@ class FinalApplicationAction(ApprovalStatusAction):
         if current_round.contributions_close.has_passed():
             raise PermissionDenied("This project is closed to final applications.")
 
-        applicant = get_object_or_404(ApplicantApproval,
-                applicant=comrade,
-                application_round=current_round)
+        if not role.is_applicant:
+            raise Http404("No initial application in this round.")
 
         # Only allow eligible applicants to apply
-        if not applicant.is_approved():
+        if not role.application.is_approved():
             raise PermissionDenied("You are not an eligible applicant or you have not filled out the eligibility check.")
 
         try:
-            return FinalApplication.objects.get(applicant=applicant, project=project)
+            return FinalApplication.objects.get(applicant=role.application, project=project)
         except FinalApplication.DoesNotExist:
-            return FinalApplication(applicant=applicant, project=project)
+            return FinalApplication(applicant=role.application, project=project)
 
     def get_success_url(self):
         return self.object.project.get_contributions_url()

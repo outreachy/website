@@ -1,17 +1,17 @@
-{% if school_time_commitments %}
+{% if tcs.school_time_commitments %}
 	<h5>School Term Information</h5>
 {% endif %}
-{% for term in school_time_commitments %}
+{% for term in tcs.school_time_commitments %}
 	<p>{{ term.term_name }}</p>
 	<ul>
 		<li>Date classes start for all students: <strong>{{ term.start_date|date:"F d, Y" }}</strong></li>
 		<li>Date exams end for all students: <strong>{{ term.end_date|date:"F d, Y" }}</strong></li>
 	</ul>
 {% endfor %}
-{% if noncollege_school_time_commitments %}
+{% if tcs.noncollege_school_time_commitments %}
 	<h5>Code School or Online Courses Information</h5>
 {% endif %}
-{% for course in noncollege_school_time_commitments %}
+{% for course in tcs.noncollege_school_time_commitments %}
 	<p>Course #{{ forloop.counter }}</p>
 	<ul>
 		<li>Date your coding school or online course starts: <strong>{{ course.start_date|date:"F d, Y" }}</strong></li>
@@ -22,10 +22,10 @@
 	</ul>
 {% endfor %}
 
-{% if employment_time_commitments %}
+{% if tcs.employment_time_commitments %}
 	<h5>Employment or Contract Information</h5>
 {% endif %}
-{% for contract in employment_time_commitments %}
+{% for contract in tcs.employment_time_commitments %}
 	<p>Employment Period #{{ forloop.counter }}</p>
 	<ul>
 		<li>Job title: {{ contract.job_title }}</li>
@@ -38,10 +38,10 @@
 	</ul>
 {% endfor %}
 
-{% if volunteer_time_commitments %}
+{% if tcs.volunteer_time_commitments %}
 	<h5>Volunteer Information</h5>
 {% endif %}
-{% for position in volunteer_time_commitments %}
+{% for position in tcs.volunteer_time_commitments %}
 	<p>Volunteer Period #{{ forloop.counter }}</p>
 	<ul>
 		<li>Date your volunteer time commitments start: <strong>{{ position.start_date|date:"F d, Y" }}</strong></li>

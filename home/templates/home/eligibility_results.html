@@ -5,10 +5,11 @@ Outreachy eligibility results
 {% endblock %}
 
 {% block content %}
+{% with tcs=role.application.get_time_commitments %}
 
 <p><b>Do not use the browser back button to update your initial application. You will experience website errors.</b> If you filled out the application wrong, <a href="{% url 'contact-applicant-help' %}">contact the Outreachy applicant helpers.</a></p>
 
-{% if application.approval_status == application.APPROVED %}
+{% if role.application.is_approved %}
 
 	<h1>Initial application approved for Outreachy</h1>
 
@@ -28,11 +29,11 @@ Outreachy eligibility results
 	<p>
 	If you get stuck at any time, please reach out to the mentors or <a href="{% url 'contact-applicant-help' %}">contact the Outreachy applicant helpers.</a>.
 	</p>
-	<p><a class='btn btn-success' href="{{ current_round.url }}">View Internship Projects</a></p>
+	<p><a class='btn btn-success' href="{{ role.current_round.url }}">View Internship Projects</a></p>
 
 	{% include 'home/snippet/initial_application.html' %}
 
-{% elif application.approval_status == application.REJECTED and application.reason_denied != 'TIME' and application.reason_denied|slice:":5" != 'ALIGN' %}
+{% elif role.application.is_rejected and role.application.reason_denied != 'TIME' and role.application.reason_denied|slice:":5" != 'ALIGN' %}
 	<h1>Initial application is not approved</h1>
 	<p>We're sorry, but after reviewing your application,
 	we have determined that you are not a strong applicant for the Outreachy internship program.
@@ -51,7 +52,7 @@ Outreachy eligibility results
 	</p>
 
 	{% include 'home/snippet/initial_application.html' %}
-{% elif application.approval_status == application.REJECTED and application.reason_denied|slice:":5" == 'ALIGN' %}
+{% elif role.application.is_rejected and role.application.reason_denied|slice:":5" == 'ALIGN' %}
 	<h1>Initial application is not approved</h1>
 	<p>The Outreachy organizers have been reviewing your initial application, including your essay questions.</p>
 
@@ -71,13 +72,13 @@ Outreachy eligibility results
 	<p>If the information is correct, please take a look at the list of <a href="/opportunities">other opportunities</a> that may be a better fit for you.</p>
 
 	{% include 'home/snippet/initial_application.html' %}
-{% elif application.approval_status == application.REJECTED and application.reason_denied == 'TIME' %}
+{% elif role.application.is_rejected and role.application.reason_denied == 'TIME' %}
 
 	<h1>Initial application is not approved</h1>
 
 	<p>After reviewing your time commitments, we have determined you do not
 	meet our minimum free time criteria.</p>
-	{% if school_time_commitments %}
+	{% if tcs.school_time_commitments %}
 		<p>{% include 'home/snippet/student_hemisphere.html' %}</p>
 	{% else %}
 		<p>All applicants must have 49 consecutive days free from
@@ -102,23 +103,23 @@ Outreachy eligibility results
 	including volunteer work, employment, contract work, and
 	student's academic calendar.</p>
 	
-	{% if not school_time_commitments %}
+	{% if not tcs.school_time_commitments %}
 
 		<h2>Weeks Free From Full-Time Commitments</h2>
 
-		{% if free_period_start_date %}
+		{% if tcs.free_period_start_date %}
 			<p>Based on the information you provided, you have the
 			following consecutive days free from full-time commitments:
-			<strong>{{ free_period_start_date|date:"F d, Y" }} to {{ free_period_end_date|date:"F d, Y" }}</strong>.</p>
+			<strong>{{ tcs.free_period_start_date|date:"F d, Y" }} to {{ tcs.free_period_end_date|date:"F d, Y" }}</strong>.</p>
 			<p>Outreachy interns must have a minimum number of 49 consecutive days free from full-time commitments
-			from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
+			from {{ role.current_round.internstarts|date:"F d, Y" }} to {{ role.current_round.internends|date:"F d, Y" }}.
 			</p>
-			<p>You have {{ longest_period_free }} consecutive days free from full-time commitments.
+			<p>You have {{ tcs.longest_period_free }} consecutive days free from full-time commitments.
 			We cannot lower the minimum number of days for any applicant.</p>
 		{% else %}
 			<p>Based on the information you provided, you have no
 			consecutive days free from full-time commitments during the Outreachy internship from
-			<strong>{{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}</strong>.</p>
+			<strong>{{ role.current_round.internstarts|date:"F d, Y" }} to {{ role.current_round.internends|date:"F d, Y" }}</strong>.</p>
 			<p>Outreachy interns must have a minimum number of 49 consecutive days free from full-time commitments.
 			</p>
 		{% endif %}
@@ -179,7 +180,7 @@ Outreachy eligibility results
 		<li>Which question was filled out incorrectly?</li>
 	</ul>
 
-{% elif application.approval_status == application.PENDING %}
+{% elif role.application.is_pending %}
 
 	<h1>Your Initial Application is Under Review</h1>
 
@@ -192,7 +193,7 @@ Outreachy eligibility results
 	You will receive an email when your initial application has been approved.
 	</p>
 	<p>
-	You submitted your application on {{ application.submission_date }}. If you have not received a follow up email within 10 business days,
+	You submitted your application on {{ role.application.submission_date }}. If you have not received a follow up email within 10 business days,
 	please <a href="/contact">contact the Outreachy organizers</a>.
 	</p>
 	<p>You will not be able to record contributions or make a final application until your initial application has been approved.
@@ -202,4 +203,5 @@ Outreachy eligibility results
 
 {% endif %}
 
+{% endwith %}
 {% endblock %}
