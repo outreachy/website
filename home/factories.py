@@ -131,8 +131,9 @@ class RoundPageFactory(PageFactory):
     ``pingnew`` is set to today and all the later deadlines are set from there.
 
     But you can override which deadline you build the timeline from by setting,
-    for example, ``start_from="internstarts"``; and you can set the date for
-    that deadline with ``start_date``.
+    for example, ``start_from="internstarts"``. If you want that deadline to
+    occur some number of days after today, set ``days_after_today``; set it to
+    a negative number to make it occur before today instead.
 
     Finally, you can change the delay between adjacent deadlines: for example,
     if you want a shorter delay between ``orgreminder`` and ``landingdue``, you
@@ -147,11 +148,7 @@ class RoundPageFactory(PageFactory):
 
     class Params:
         start_from = 'pingnew'
-        start_date = factory.LazyFunction(
-            lambda: models.get_deadline_date_for(
-                datetime.datetime.now(datetime.timezone.utc)
-            )
-        )
+        days_after_today = 0
         chat_text_time = datetime.time(13, 0, tzinfo=datetime.timezone.utc)
 
     roundnumber = factory.Sequence(int)
@@ -227,7 +224,11 @@ class RoundPageFactory(PageFactory):
         walk it back through all the specified timedeltas to find the date of
         the event which is supposed to be earliest in the round.
         """
-        start = obj.start_date
+        start = models.get_deadline_date_for(
+            datetime.datetime.now(datetime.timezone.utc)
+        )
+        start += datetime.timedelta(days=obj.days_after_today)
+
         if obj.start_from != 'pingnew':
             assert obj.start_from in round_dates, "unknown RoundPage field: " + repr(obj.start_from)
             for field_name in round_dates:

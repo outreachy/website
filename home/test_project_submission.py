@@ -137,7 +137,7 @@ class ProjectSubmissionTestCase(TestCase):
          - Try to submit the community to participate in the round through the form
          - It should fail
         """
-        current_round = factories.RoundPageFactory(start_from='pingnew', start_date=datetime.date.today() + datetime.timedelta(days=1))
+        current_round = factories.RoundPageFactory(start_from='pingnew', days_after_today=1)
         self.submit_failed_community_signup(current_round)
 
     def test_community_participation_signup_too_late(self):
@@ -563,7 +563,7 @@ class ProjectSubmissionTestCase(TestCase):
         """
         scenario = scenarios.InternshipWeekScenario(week = 14, community__name='Debian', community__slug='debian')
 
-        current_round = factories.RoundPageFactory(start_from='lateprojects', start_date=datetime.date.today() + datetime.timedelta(days=6))
+        current_round = factories.RoundPageFactory(start_from='lateprojects', days_after_today=6)
         participation = factories.ParticipationFactory(community=scenario.community, participating_round=current_round, approval_status=ApprovalStatus.APPROVED)
 
         # Check community CFP page to ensure the message about the CFP being closed is displayed
@@ -682,8 +682,7 @@ class ProjectSubmissionTestCase(TestCase):
 
     def test_community_cfp_open(self):
         # This is when we have a new RoundPage and the community sign-ups are open
-        # today = datetime.date.today()
-        # NewRoundScenario(round__start_from='pingnew', round__start_date=today)
+        # NewRoundScenario(round__start_from='pingnew')
         #
         # On /community/cfp:
         #  - The timeline for this round should now be visible.
