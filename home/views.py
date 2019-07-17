@@ -3310,6 +3310,17 @@ class ReviewCommentUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     def get_success_url(self):
         return self.object.application.get_preview_url()
 
+def docs_toc(request):
+    return render(request, 'home/docs/toc.html')
+
+def docs_applicant(request):
+    current_round = RoundPage.objects.get(
+        pingnew__lte=today,
+        internannounce__gt=today,
+    )
+    return render(request, 'home/docs/applicant_guide.html', {
+        'current_round': current_round,
+        })
 
 def travel_stipend(request):
     rounds = RoundPage.objects.all().order_by('-internstarts')
