@@ -3314,10 +3314,7 @@ def docs_toc(request):
     return render(request, 'home/docs/toc.html')
 
 def docs_applicant(request):
-    current_round = RoundPage.objects.get(
-        pingnew__lte=today,
-        internannounce__gt=today,
-    )
+    current_round = RoundPage.objects.latest('internannounce')
     return render(request, 'home/docs/applicant_guide.html', {
         'current_round': current_round,
         })
