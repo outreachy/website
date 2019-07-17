@@ -37,9 +37,11 @@ Outreachy Internships | Apply | Pick a Project
 	<h2>Timeline</h2>
 
 	{% include 'home/snippet/round_timeline.html' %}
-	<h2>Intern Payment Schedule</h2>
-	{% include 'home/snippet/payment_schedule.html' %}
-	{{ current_round.sponsordetails|safe }}
+	<h2>Documentation</h2>
+	<p>
+	<a href='{% url 'docs-applicant' %}#payments'>Applicant guide</a><br>
+	<a href='{% url 'docs-internship' %}#payments'>Intern payment schedule</a><br>
+	</p>
 {% else %}
 	<h2>Outreachy Internship Timelines</h2>
 

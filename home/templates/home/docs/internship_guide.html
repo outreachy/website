@@ -19,5 +19,40 @@ Internship Guide | Outreachy Documentation
 
 <h2 id='payments'><a href='#payments'>Payments</a></h2>
 
+<p>Outreachy interns are paid $5,500 USD total for three months of work. The stipend is paid in three parts:</p>
+<ul>
+	{% if applicant_round %}
+		<li>${{ applicant_round.initialpayment }} initial stipend</li>
+		<li>${{ applicant_round.midpayment }} mid-point stipend</li>
+		<li>${{ applicant_round.finalpayment }} final stipend</li>
+	{% elif intern_round %}
+		<li>${{ intern_round.initialpayment }} initial stipend</li>
+		<li>${{ intern_round.midpayment }} mid-point stipend</li>
+		<li>${{ intern_round.finalpayment }} final stipend</li>
+	{% else %}
+		<li>$1000 initial stipend</li>
+		<li>$2000 mid-point stipend</li>
+		<li>$2500 final stipend</li>
+	{% endif %}
+</ul>
+
+<p>The stipend is paid after organizers receive successful feedback from the project mentor. Interns will be required to fill out tax forms (either a W8-BEN or a W-9) in order to be paid.</p>
+
+{% if applicant_round %}
+	<p><b>{{ applicant_round.internstarts|date:'M Y' }} internships payment schedule:</b></p>
+
+	{% with current_round=applicant_round %}
+		{% include 'home/snippet/payment_schedule.html' %}
+	{% endwith %}
+{% endif %}
+
+{% if intern_round %}
+	<p><b>{{ intern_round.internstarts|date:'M Y' }} internships payment schedule:</b></p>
+
+	{% with current_round=intern_round %}
+		{% include 'home/snippet/payment_schedule.html' %}
+	{% endwith %}
+{% endif %}
+
 <p><a href='#toc'><u>↑ table of contents</u></a></p>
 {% endblock %}
