@@ -562,7 +562,19 @@ class ProjectSubmissionTestCase(TestCase):
         current_round = factories.RoundPageFactory(start_from='lateprojects', start_date=datetime.date.today() + datetime.timedelta(days=6))
         participation = factories.ParticipationFactory(community=scenario.community, participating_round=current_round, approval_status=ApprovalStatus.APPROVED)
 
-        # TODO: check community read-only page to ensure submission button is missing
+        # Check community CFP page to ensure the message about the CFP being closed is displayed
+        response = self.client.get(reverse('community-cfp'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '<div class="card-header text-white bg-warning">Project and community CFP is currently closed</div>', html=True)
+
+        # Check community CFP page to ensure the message about the CFP being closed is displayed
+        response = self.client.get(reverse('community-read-only', kwargs={ 'community_slug': scenario.participation.community.slug, }))
+        self.assertContains(response, '<div class="card-header text-white bg-warning">Project and community CFP is currently closed</div>', html=True)
+
+        # Check that there is not a submit project button
+        self.assertNotContains(response, '<h2>Submit an Outreachy Intern Project Proposal</h2>', html=True)
+        project_submission_path = reverse('project-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
+        self.assertNotContains(response, '<a class="btn btn-success" href="{}">Submit a Project Proposal</a>'.format(project_submission_path), html=True)
 
         self.check_project_submission(scenario, current_round, participation)
 
