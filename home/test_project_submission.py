@@ -557,6 +557,57 @@ class ProjectSubmissionTestCase(TestCase):
 
         self.check_project_submission(scenario, current_round, participation)
 
+    def test_project_submission_no_community_participation(self):
+        """
+        This tests submitting a project when the community is not signed up to participate
+         - Create a new RoundPage for the upcoming round with project submission open
+         - Do not add the old community to participate in the round
+         - Go to the community read-only page
+         - There should not be a 'Submit Project' button
+         - Submitting a project directly via the URL should fail
+        """
+        scenario = scenarios.InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
+
+        current_round = factories.RoundPageFactory(start_from='pingnew')
+
+        # Check community CFP page to ensure the message about the CFP being closed is displayed
+        response = self.client.get(reverse('community-cfp'))
+        self.assertEqual(response.status_code, 200)
+
+        # Check community CFP page to ensure the message about the CFP being closed is displayed
+        response = self.client.get(reverse('community-read-only', kwargs={ 'community_slug': scenario.participation.community.slug, }))
+        self.assertContains(response, '<span class="badge badge-pill badge-warning">Not Participating</span>', html=True)
+
+        # Check that there is not a submit project button
+        self.assertNotContains(response, '<h2>Submit an Outreachy Intern Project Proposal</h2>', html=True)
+        project_submission_path = reverse('project-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
+        self.assertNotContains(response, '<a class="btn btn-success" href="{}">Submit a Project Proposal</a>'.format(project_submission_path), html=True)
+
+        # Submit project description
+        self.client.force_login(scenario.mentor.account)
+        response = self.client.post(project_submission_path, {
+            'approved_license': 'on',
+            'no_proprietary_software': 'on',
+            'longevity': '2Y',
+            'community_size': '20',
+            'short_title': 'Improve Debian bioinformatics packages test coverage',
+            'long_description': 'The Debian Med project has packaged a lot of <a href="http://blends.debian.org/med/tasks/bio">applications for bioinformatics</a>. You will be improving the test coverage of those packages.',
+            'minimum_system_requirements': 'A system running Debian Linux',
+            'contribution_tasks': 'Look at issues marked newcomers-welcome.',
+            'repository': 'https://salsa.debian.org/med-team',
+            'issue_tracker': 'https://bugs.debian.org/',
+            'newcomer_issue_tag': 'newcomers-welcome',
+            'intern_tasks': 'Interns will work on new tests for <a href="http://blends.debian.org/med/tasks/bio">Debian bioinformatics packages</a>.',
+            'intern_benefits': 'Interns will develop skills in quality assurance testing, learn Linux command-line tools, and gain knowledge in how Linux distributions like Debian package software.',
+            'community_benefits': 'Debian maintainers will spend less time tracking down bugs in newly released software.',
+            'new_contributors_welcome': True,
+            },
+            # This says we're supposed to follow any and all redirects to other pages after the post
+            # This will allow us to record a history of where the redirect went to
+            follow=True,
+        )
+        self.assertEqual(response.status_code, 404)
+
     def test_project_soft_deadline(self):
         """
         Mentors are told that projects are due one week before they're actually due.
