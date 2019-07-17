@@ -583,6 +583,64 @@ class ProjectSubmissionTestCase(TestCase):
 
         self.check_project_submission(scenario, current_round, participation)
 
+    def test_project_hard_deadline(self):
+        """
+        This tests submitting a project after the deadline for project approval fails:
+         - Create a new RoundPage for the upcoming round with the project submission deadline passed
+         - Create an approved community
+         - Go to the community read-only page
+         - There should not be a 'Submit Project' button
+         - Submitting a project directly via the URL should fail
+        """
+        scenario = scenarios.InternshipWeekScenario(week = 15, community__name='Debian', community__slug='debian')
+
+        current_round = factories.RoundPageFactory(start_from='lateprojects')
+        participation = factories.ParticipationFactory(community=scenario.community, participating_round=current_round, approval_status=ApprovalStatus.APPROVED)
+
+        # Check community CFP page to ensure the message about the CFP being closed is displayed
+        response = self.client.get(reverse('community-cfp'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '<div class="card-header text-white bg-warning">Project and community CFP is currently closed</div>', html=True)
+
+        # Check community CFP page to ensure the message about the CFP being closed is displayed
+        response = self.client.get(reverse('community-read-only', kwargs={ 'community_slug': scenario.participation.community.slug, }))
+        self.assertContains(response, '<div class="card-header text-white bg-warning">Project and community CFP is currently closed</div>', html=True)
+
+        # Check that there is not a submit project button
+        self.assertNotContains(response, '<h2>Submit an Outreachy Intern Project Proposal</h2>', html=True)
+        self.assertContains(response, '<h2>Project Submission Deadline Passed</h2>', html=True)
+        project_submission_path = reverse('project-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
+        self.assertNotContains(response, '<a class="btn btn-success" href="{}">Submit a Project Proposal</a>'.format(project_submission_path), html=True)
+
+        sponsorship = factories.SponsorshipFactory(participation=participation, name='Software in the Public Interest - Debian', amount=13000)
+        visitors = self.get_visitors_from_past_round(scenario)
+
+        # Submit project description
+        self.client.force_login(scenario.mentor.account)
+        response = self.client.post(project_submission_path, {
+            'approved_license': 'on',
+            'no_proprietary_software': 'on',
+            'longevity': '2Y',
+            'community_size': '20',
+            'short_title': 'Improve Debian bioinformatics packages test coverage',
+            'long_description': 'The Debian Med project has packaged a lot of <a href="http://blends.debian.org/med/tasks/bio">applications for bioinformatics</a>. You will be improving the test coverage of those packages.',
+            'minimum_system_requirements': 'A system running Debian Linux',
+            'contribution_tasks': 'Look at issues marked newcomers-welcome.',
+            'repository': 'https://salsa.debian.org/med-team',
+            'issue_tracker': 'https://bugs.debian.org/',
+            'newcomer_issue_tag': 'newcomers-welcome',
+            'intern_tasks': 'Interns will work on new tests for <a href="http://blends.debian.org/med/tasks/bio">Debian bioinformatics packages</a>.',
+            'intern_benefits': 'Interns will develop skills in quality assurance testing, learn Linux command-line tools, and gain knowledge in how Linux distributions like Debian package software.',
+            'community_benefits': 'Debian maintainers will spend less time tracking down bugs in newly released software.',
+            'new_contributors_welcome': True,
+            },
+            # This says we're supposed to follow any and all redirects to other pages after the post
+            # This will allow us to record a history of where the redirect went to
+            follow=True,
+        )
+        self.assertEqual(response.status_code, 403)
+        self.assertContains(response, 'Not allowed to submit a project after its submission and approval deadline ({})'.format(current_round.lateprojects), html=True, status_code=403)
+
     def test_project_display_on_community_read_only(self):
         pass
 
