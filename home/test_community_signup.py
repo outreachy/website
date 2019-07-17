@@ -1,4 +1,5 @@
 import datetime
+from django.conf import settings
 from django.core import mail
 from django.test import TestCase, override_settings
 from django.urls import reverse
@@ -25,8 +26,19 @@ class ProjectSubmissionTestCase(TestCase):
             ("reviewer", scenario.reviewer.account),
         )
 
-    def coordinator_signs_up_community_to_participate(self, account, community_does_participate_path, sponsor_name='Software in the Public Interest - Debian', sponsor_amount=13000):
-        self.client.force_login(account)
+    def check_community_signup_marked_closed(self):
+        response = self.client.get(reverse('community-cfp'))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, '<h2>Submit a New FOSS community for Organizer Review</h2>', html=True)
+        self.assertNotContains(response, '<a class="btn btn-success" href="{}">Submit a New Community</a>'.format(reverse('community-add')), html=True)
+
+    def check_community_signup_marked_open(self):
+        response = self.client.get(reverse('community-cfp'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '<h2>Submit a New FOSS community for Organizer Review</h2>', html=True)
+        self.assertContains(response, '<a class="btn btn-success" href="{}">Submit a New Community</a>'.format(reverse('community-add')), html=True)
+
+    def coordinator_signs_up_community_to_participate(self, community_does_participate_path, sponsor_name='Software in the Public Interest - Debian', sponsor_amount=13000):
         return self.client.post(community_does_participate_path, {
             'sponsorship_set-TOTAL_FORMS': '1',
             'sponsorship_set-INITIAL_FORMS': '0',
@@ -38,22 +50,60 @@ class ProjectSubmissionTestCase(TestCase):
             'sponsorship_set-0-funding_decision_date': str(datetime.date.today()),
         })
 
+    def test_new_coordinator_signs_up_community_to_participate(self):
+        """
+        This tests submitting a new community to participate in this round.
+         - Create a new RoundPage for the upcoming round where the CFP is open
+         - Check that the community CFP page shows community participation sign up is open
+        """
+        current_round = factories.RoundPageFactory(start_from='pingnew')
+
+        self.client.logout()
+        self.check_community_signup_marked_open()
+
+        new_community_signup_path = reverse('community-add')
+        response = self.client.get(new_community_signup_path)
+        self.assertRedirects(response, settings.LOGIN_URL + '?next={}'.format(new_community_signup_path))
+
+        # Assume Comrade account sign up works - TODO: test this separately
+        coordinator = factories.ComradeFactory()
+        self.client.force_login(coordinator.account)
+        response = self.client.post(new_community_signup_path, {
+            'name': 'Debian',
+            'approved_license': 'on',
+            'no_proprietary_software': 'on',
+            'approved_advertising': 'on',
+            'community_size': '999',
+            'longevity': 'OL',
+            'participating_orgs': 'Debian is comprised of volunteers from around the world. Some corporations pay maintainers to participate.',
+            'description': 'Debian is a free operating system (OS) for your computer. An operating system is the set of basic programs and utilities that make your computer run.',
+            },
+            follow=True,
+        )
+
+        # Ensure the Community object and NewCommunity object was created
+        community = Community.objects.get(name='Debian')
+        newcommunity = NewCommunity.objects.get(community=community)
+        coordinatorapproval = CoordinatorApproval.objects.get(
+                coordinator=coordinator,
+                community=community,
+                approval_status=ApprovalStatus.APPROVED)
+
+        new_community_participation_path = reverse('participation-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': community.slug, })
+        self.assertRedirects(response, new_community_participation_path)
+
+        # Usage case test continues in test_old_community_participation_signup
+
     def submit_failed_community_signup(self, current_round):
         scenario = scenarios.InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
 
+        self.client.force_login(scenario.coordinator.account)
         response = self.coordinator_signs_up_community_to_participate(
-                scenario.coordinator.account,
                 reverse('participation-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, }),
                 )
         with self.assertRaises(Participation.DoesNotExist):
             p = Participation.objects.get(community__slug=scenario.participation.community.slug, participating_round__slug=current_round.slug)
         self.assertNotEqual(response.status_code, 302)
-
-    def check_community_signup_marked_closed(self):
-        response = self.client.get(reverse('community-cfp'))
-        self.assertEqual(response.status_code, 200)
-        self.assertNotContains(response, '<h2>Submit a New FOSS community for Organizer Review</h2>', html=True)
-        self.assertNotContains(response, '<a class="btn btn-success" href="{}">Submit a New Community</a>'.format(reverse('community-add')), html=True)
 
     def test_community_participation_signup_too_early(self):
         """
@@ -105,11 +155,6 @@ class ProjectSubmissionTestCase(TestCase):
         scenario = scenarios.InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
         current_round = factories.RoundPageFactory(start_from='pingnew')
 
-        response = self.client.get(reverse('community-cfp'))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, '<h2>Submit a New FOSS community for Organizer Review</h2>', html=True)
-        self.assertContains(response, '<a class="btn btn-success" href="{}">Submit a New Community</a>'.format(reverse('community-add')), html=True)
-
         community_read_only_path = reverse('community-read-only', kwargs={ 'community_slug': scenario.participation.community.slug, })
         project_submission_path = reverse('project-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
         coordinator_signup_path = reverse('coordinatorapproval-action', kwargs={'action': 'submit', 'community_slug': scenario.participation.community.slug, })
@@ -123,8 +168,8 @@ class ProjectSubmissionTestCase(TestCase):
         with self.assertRaises(Participation.DoesNotExist):
             p = Participation.objects.get(community__slug=scenario.participation.community.slug, participating_round__slug=current_round.slug)
 
+        self.client.force_login(scenario.coordinator.account)
         response = self.coordinator_signs_up_community_to_participate(
-                scenario.coordinator.account,
                 reverse('participation-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, }),
                 sponsor_name,
                 sponsor_amount,
