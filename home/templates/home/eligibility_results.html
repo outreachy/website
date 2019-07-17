@@ -8,11 +8,12 @@ Outreachy eligibility results
 
 <p><b>Do not use the browser back button to update your initial application. You will experience website errors.</b> If you filled out the application wrong, <a href="{% url 'contact-applicant-help' %}">contact the Outreachy applicant helpers.</a></p>
 
+{% include 'home/set_gmail_filters_warning.html' %}
+
 {% if application.approval_status == application.APPROVED %}
 
 	<h1>Initial application approved for Outreachy</h1>
 
-	{% include 'home/set_gmail_filters_warning.html' %}
 
 	<p>Your initial application for Outreachy has been approved. You can now proceed with the next step of your application.
 	</p>
@@ -179,11 +180,9 @@ Outreachy eligibility results
 		<li>Which question was filled out incorrectly?</li>
 	</ul>
 
-{% elif application.approval_status == application.PENDING %}
+{% else %}
 
 	<h1>Your Initial Application is Under Review</h1>
-
-	{% include 'home/set_gmail_filters_warning.html' %}
 
 	<p>
 	Your initial application for Outreachy internships is being reviewed by the Outreachy organizers.
