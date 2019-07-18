@@ -3315,8 +3315,19 @@ def docs_toc(request):
 
 def docs_applicant(request):
     current_round = RoundPage.objects.latest('internannounce')
+    now = datetime.now(timezone.utc)
+    today = get_deadline_date_for(now)
+    try:
+        previous_round = RoundPage.objects.filter(
+            contributions_open__lte=today,
+        ).latest('internstarts')
+        previous_round.today = today
+    except RoundPage.DoesNotExist:
+        previous_round = None
+
     return render(request, 'home/docs/applicant_guide.html', {
         'current_round': current_round,
+        'previous_round': previous_round,
         })
 
 def docs_internship(request):

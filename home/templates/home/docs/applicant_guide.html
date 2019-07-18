@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
 Applicant Guide | Outreachy Documentation
@@ -15,6 +16,9 @@ Applicant Guide | Outreachy Documentation
 <a href='#what-is-free-software'>What is free software and open source?</a></br>
 <a href='#outreachy-schedule'>Outreachy schedule</a><br>
 <a href='#eligibility'>Eligibility</a><br>
+<a href="#application-prep">Preparing for the Application Process</a><br>
+<a href="#find-mentor">Finding a Mentor and an Internship Project</a><br>
+<a href="#make-contributions">Making Contributions</a><br>
 </p>
 
 <hr>
@@ -64,4 +68,134 @@ Applicant Guide | Outreachy Documentation
 
 {% include 'home/snippet/eligibility_rules.html' %}
 
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<h2 id='application-prep'><a href="#application-prep">Preparing for the Application Process</a></h2>
+
+<p>You can read about what it's like to apply to Outreachy:
+<ul>
+	<li><a href="/apply/#how-to-apply">Outreachy's application process</a></li>
+	<li><a href="/blog/outreachy-interns-talk-about-application-process/">December 2018 Outreachy interns talk about the application process</a></li>
+	<li><a href="/alums/">Read past Outreachy intern's blogs</a></li>
+	<li><a href="https://medium.freecodecamp.org/get-the-most-out-of-your-outreachy-application-process-937d4a8ab4bf">Get the most out of your Outreachy intern application process</a></li>
+	<li><a href="https://medium.freecodecamp.org/outreachy-what-how-why-4fb60d10a228">How I got into the Outreachy open source internship program</a></li>
+	<li><a href="https://blog.ihsavru.me/node/9">Application tips from an Outreachy intern who just completed their internship</a></li>
+	<li><a href="http://exploreshaifali.github.io/2015/06/08/getting-into-summer-of-code-programs/">Getting into Summer of Code Programs</a></li>
+	<li><a href="http://www.litacho.com/opw_the_end.html">The end of my internship</a> - note that Outreachy used to be called OPW</li>
+	<li><a href="https://web.archive.org/web/20130410022646/http://anteaya.info/blog/2013/03/29/suggestions-for-gnome-opw-applicants">Suggestions for Outreachy Applicants</a></li>
+</ul>
+</p>
+
+<p>Outreachy recommends the following resources for learning about contributing to free and open source software projects:
+<ul>
+	<li><a href="https://opensource.com/resources/what-open-source">"What is open source?"</a> an article by opensource.com</li>
+	<li><a href="https://pragprog.com/book/vbopens/forge-your-future-with-open-source">"Forge Your Future With Open Source"</a>, an introduction book for newcomers</li>
+	<li><a href="https://lab.github.com/">GitHub Lab</a>, a free resource for learning git</li>
+	<li><a href="https://www.freecodecamp.org/">FreeCodeCamp</a>, a free resource for learning programming skills</li>
+	<li><a href="https://up-for-grabs.net">Up for Grabs</a> (unaffiliated with Outreachy) - find projects to volunteer your time with</li>
+</ul>
+</p>
+
+{% if previous_round %}
+	<p>You may want to brush up on your skills for contributing to free and open source software communities. Each project will use a different set of skills, and some mentors may be willing to teach you skills. Projects and the skills they use change each round. The most common skills used in projects last round were:
+	<ul>
+		{% for common_skill in previous_round.get_common_skills %}
+		{% if common_skill.1 > 2 %}<li>{{ common_skill.0 }} - {{ common_skill.1 }} project{{ common_skill.1|pluralize }}</li>{% endif %}
+		{% endfor %}
+	</ul>
+	</p>
+{% endif %}
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<h2 id='find-mentor'><a href="#find-mentor">Finding a Mentor and an Internship Project</a></h2>
+<p><img src="{% static 'bot-find-a-mentor.png' %}" class="img-fluid"></p>
+
+<p>
+Once your initial application is approved, the contribution period will open.
+The next step
+in the Outreachy application process is to look through the list of
+participating communities and internship projects. Pick one
+or two projects that look interesting to you.  Then you'll
+start working on a contribution for the project.
+</p>
+<p>
+Only applicants that make a contribution to a project
+will be accepted as an intern, so it's good to not pick too
+many projects to apply to.
+We don't recommend applying to more than two projects.
+</p>
+<p>
+Many people apply to communities that are accepting multiple
+interns in order to increase their chances of getting accepted.
+However, when all the applicants think that way, it means
+projects that are only accepting one intern don't get a lot of
+applicants. You should pick a project that looks interesting to
+you, and will help you improve the skills you want to learn.
+</p>
+<p>
+Many people get overwhelmed with the list of projects and don't
+know how to choose a project! Our advice is to pick a project
+whose mission resonates with you.
+</p>
+<p>
+Once you've narrowed down you list of projects,
+you can decide whether the project is right for you by:
+</p>
+<ul>
+	<li>
+	Introduce yourself to the project's mentor and discuss
+	the internship tasks or contribution tasks listed in the project details.
+	Outreachy mentors are friendly and welcome your questions!
+	</li>
+	<li>
+	Reading the project's documentation
+	</li>
+	<li>
+	Lurking on the project's chat, forum, or IRC
+	channel (if your project uses IRC and you've
+	never used it before, you can read more <a
+	href="https://wiki.gnome.org/Outreachy/IRC">here</a>)
+	</li>
+	<li>
+	Building any software projects
+	and running them to check out its latest capabilities (the
+	project website usually has the instructions for doing
+	this, but don't hesitate twice to ask the project's
+	mentor or people on the project's chat forums for help
+	if you encounter any problems)
+	</li>
+	<li>
+	Looking at the open issues or feature requests for the project
+	</li>
+	<li>
+	Looking at the recent changes in the project's repository
+	or recent contributions pages.
+	</li>
+	<li>
+	Reading the recent discussion on the project's mailing list or forum.
+	</li>
+	<li>
+	Reading the blogs of the project's mentor and other project contributors.
+	</li>
+</ul>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<h2 id='make-contributions'><a href="#make-contributions">Making Contributions</a></h2>
+<p><img src="https://www.outreachy.org/media/images/bot-contribution.original.png" class="img-fluid"></p>
+
+<p>
+Once you've picked a project that looks interesting to you,
+proceed to the next application process step, which is to start
+your contribution to the project.  You should record your
+in-progress contributions by logging them from the Outreachy
+community landing pages linked from this page.  Only applicants with
+recorded contributions will be eligible to be accepted as
+interns.
+</p>
+
+<p>
+Make your contributions early! Many applicants under-estimate
+the time it will take to complete a contribution.
+If a mentor with a popular project is working with several
+promising applicants, they may close the project to new applicants.
+</p>
 {% endblock %}
