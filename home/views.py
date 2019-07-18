@@ -1800,25 +1800,6 @@ def community_applicants(request, round_slug, community_slug):
         'is_staff': user_is_staff,
         })
 
-def contribution_tips(request):
-    now = datetime.now(timezone.utc)
-    today = get_deadline_date_for(now)
-
-    try:
-        current_round = RoundPage.objects.get(
-            pingnew__lte=today,
-            internannounce__gt=today,
-        )
-        current_round.today = today
-    except RoundPage.DoesNotExist:
-        current_round = None # don't display any eligibility prompts
-
-    role = Role(request.user, current_round)
-
-    return render(request, 'home/contribution_tips.html', {
-        'role': role,
-        })
-
 def eligibility_information(request):
     now = datetime.now(timezone.utc)
     today = get_deadline_date_for(now)
