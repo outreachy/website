@@ -27,15 +27,17 @@ Your goal for this week's blog post is to write a post about what direction you 
 Week 10 Mentor & Intern Chat
 ----------------------------
 
-On {{ current_round.week_ten_chat_text_date }} UTC we will host a chat for both Outreachy interns and mentors:
+For this chat, we're also inviting past Outreachy interns to participate!
 
-{{ current_round.week_ten_timeline_chat_url }}
+On {{ current_round.week_ten_chat_text_date }} UTC we will host a chat for Outreachy interns, alums, and mentors:
+
+{{ current_round.week_ten_career_chat_url }}
 
 We'll be discussing all the different ways you can advance your career by participating in free software. The discussion will have two parts.
 
-The first part of the discussion will be everyone brainstorming different career paths in the technology industry and free software. Many people have part-time or full-time jobs working in the technology industry. Some people may be self-employed contractors, paid to work on free software. People may have taken a while to find a job. They may have participated in other internship programs, volunteer opportunies, grants, or networked at conferences and events.
+The first part of the discussion will be everyone brainstorming different career paths in the technology industry and free software. Many people have part-time or full-time jobs working in the technology industry. Some people may be self-employed contractors, paid to work on free software. People may have taken a while to find a job. They may have participated in other internship programs, volunteer opportunities, grants, or networked at conferences and events.
 
-We encourage both mentors and interns to share their stories of how they advanced their career. What did you try that didn't work? Where did you hear about opportunities? How did you network and connect with people who helped you advance your goals?
+We encourage everyone to share their stories of how they advanced their career. What did you try that didn't work? Where did you hear about opportunities? How did you network and connect with people who helped you advance your goals?
 
 The second part of the discussion is brainstorming additional opportunities to work on free software. We encourage both mentors and interns to provide information about paid opportunities, but information about unpaid opportunities is also welcome. Sharing information about resource groups or job posting boards is also encouraged.
 
@@ -75,7 +77,7 @@ Here's some prompts that could get you started writing this blog post:
  - What interpersonal skills make you a collaborative team member?
  - What languages do you speak, and at what school grade level?
 
-You might also want to talk about how your identity or background will allow you to provide a unique perspective on a team. Companies often want a diverse set of perspectivies in their teams. A team will people who have all the same background makes products that don't fit everyone's needs. Parts of your identity to consider might be race, gender, or disability. Parts of your background could include things like your socioeconomic status or your nationality. You can mention anything that you think might provide a unique perspective to a team. Only share what you're comfortable with being public on the internet!
+You might also want to talk about how your identity or background will allow you to provide a unique perspective on a team. Companies often want a diverse set of perspectives in their teams. A team with people who have all the same background makes products that don't fit everyone's needs. Please only share what you're comfortable with being public on the internet!
 
 If you're looking for a job opportunity, here's some additional things you might want to mention:
 
