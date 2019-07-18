@@ -14,8 +14,9 @@ Applicant Guide | Outreachy Documentation
 <p>
 <a href='#what-is-outreachy'>What is Outreachy?</a><br>
 <a href='#what-is-free-software'>What is free software and open source?</a></br>
-<a href='#outreachy-schedule'>Outreachy schedule</a><br>
 <a href='#eligibility'>Eligibility</a><br>
+<a href='#outreachy-schedule'>Outreachy schedule</a><br>
+<a href='#application-period'>Application period overview</a><br>
 <a href="#application-prep">Preparing for the Application Process</a><br>
 <a href="#find-mentor">Finding a Mentor and an Internship Project</a><br>
 <a href="#make-contributions">Making Contributions</a><br>
@@ -45,6 +46,17 @@ Applicant Guide | Outreachy Documentation
 <p>Sometimes people work on open source in their spare time. Many contributors are employed by companies and non-profit organizations to work on open source. That includes the companies that are sponsoring Outreachy!  Experience with open source is highly valuable in the professional world. Your contributions to open source provide a public portfolio for you. Employers can see your history of public collaboration, which will give them confidence when making hiring decisions.</p>
 
 <p><a href='#toc'><u>↑ table of contents</u></a></p>
+<h2 id='eligibility'><a href='#eligibility'>Eligibility</a></h2>
+
+{% include 'home/snippet/diversity_statement.html' %}
+
+<h3>Outreachy Eligibility Rules</h3>
+
+<p>These eligibility rules apply to the {{ current_round.official_name }} round. Dates may change for future rounds.</p>
+
+{% include 'home/snippet/eligibility_rules.html' %}
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
 <h2 id='outreachy-schedule'><a href='#outreachy-schedule'>Outreachy yearly schedule</a></h2>
 
 <p>Outreachy internships run twice a year. Here is our general schedule for each year:</p>
@@ -58,15 +70,38 @@ Applicant Guide | Outreachy Documentation
 <hr>
 
 <p><a href='#toc'><u>↑ table of contents</u></a></p>
-<h2 id='eligibility'><a href='#eligibility'>Eligibility</a></h2>
+<h2 id='application-period'><a href='#application-period'>Application period overview</a></h2>
 
-{% include 'home/snippet/diversity_statement.html' %}
+<p>There are three parts to the Outreachy application process:</p>
 
-<h3>Outreachy Eligibility Rules</h3>
+<p><b>Initial application period:</b></p>
+<ul>
+	<li>{{ current_round.initial_applications_open }} to {{ current_round.initial_applications_close }}</li>
+	<li>During this period, applicants fill out an initial application form</li>
+	<li>Outreachy organizers review initial applications and their essays</li>
+	<li>If your application is rejected due to not meeting our eligibility rules, you will be notified immediately</li>
+	<li>If your application is rejected due to not meeting our time commitment rules, you will be notified immediately</li>
+	<li>All other applicants will receive an acceptance or rejection email when the contribution period starts on {{ current_round.contributions_open }}</li>
+	<li>Initial applications are due on {{ current_round.initial_applications_close }}</li>
+</ul>
 
-<p>These eligibility rules apply to the {{ current_round.official_name }} round. Dates may change for future rounds.</p>
+<p><b>Contribution period:</b></p>
+<ul>
+	<li>{{ current_round.contributions_open }} to {{ current_round.contributions_close }}</li>
+	<li>Applicants with an approved initial application will move onto the contribution period</li>
+	<li>During this period, applicants <a href='#find-mentor'>contact mentors</a> and <a href='#make-contributions'>make contributions</a></li>
+	<li>Applicants are required to <a href='#record-contributions'>record a contribution</a></li>
+	<li>Applicants are required to fill out a final application</li>
+	<li>Contributions and final applications are due on {{ current_round.contributions_close }}</li>
+</ul>
 
-{% include 'home/snippet/eligibility_rules.html' %}
+<p><b>Intern selection period:</b></p>
+<ul>
+	<li>{{ current_round.contributions_close }} to {{ current_round.internannounce }}</li>
+	<li>Mentors tell Outreachy organizers which interns they want to select</li>
+	<li>Applicants may be asked to verify their time commitment details</li>
+	<li>Intern selections are kept private until <a href='{% url 'alums' %}'>interns are announced</a> on {{ current_round.internannounce }}</li>
+</ul>
 
 <p><a href='#toc'><u>↑ table of contents</u></a></p>
 <h2 id='application-prep'><a href="#application-prep">Preparing for the Application Process</a></h2>
@@ -262,7 +297,7 @@ It's good to ask for suggestions when looking for a suitable contribution.
 Make sure to describe what your skills are and what you want to learn more about.
 </p>
 
-<p><b>Recording your contributions</b></p>
+<p id='record-contributions'><b>Recording your contributions</b></p>
 
 <p>
 Applicants are required to record their contributions in the Outreachy website.
@@ -276,7 +311,8 @@ You can go back and edit your recorded contribution at any time.
 
 <p>
 You can find a link to record a contribution on the project details page.
-Go to the Outreachy project list, and click the link for your project.
+Go to the <a href="{% url 'project-selection' %}">Outreachy project list</a>,
+and click the link for your project.
 On the page with project details, you should see a link to
 'record your contributions and create a final application'.
 </p>
