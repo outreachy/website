@@ -10,7 +10,7 @@ class Command(BaseCommand):
     help = 'Sends email updates about current-round initial applications'
 
     def handle(self, *args, **options):
-        template = get_template("home/email/notify-applicant.txt", using='plaintext')
+        template = get_template("home/email/applicantapproval-approved.txt", using='plaintext')
 
         now = datetime.datetime.now(datetime.timezone.utc)
         today = get_deadline_date_for(now)
