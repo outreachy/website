@@ -15,6 +15,8 @@ from home.email import organizers
 @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class ProjectSubmissionTestCase(TestCase):
 
+    # ----- eligibility information page tests (/apply/eligibility/) ----- #
+
     def test_initial_application_marked_closed(self):
         """
         This tests how the website works before we start accepting initial applications
@@ -38,6 +40,8 @@ class ProjectSubmissionTestCase(TestCase):
 
         response = self.client.get(reverse('eligibility'))
         self.assertEqual(response.status_code, 403)
+
+    # ----- initial application results page tests (/eligibility-results/) ----- #
 
     def test_initial_application_form_open_during_period(self):
         """
@@ -185,7 +189,8 @@ class ProjectSubmissionTestCase(TestCase):
         self.assertContains(response, '<h1>Initial application approved for Outreachy</h1>', html=True)
         self.assertEqual(response.status_code, 200)
 
-    # Applicant prompt tests - use dasboard, since that's the page with the least other content
+    # ----- applicant prompt snippet tests (various pages) ----- #
+
     def test_applicant_prompts_general_rejection(self):
         """
         This tests that the initial application results.
