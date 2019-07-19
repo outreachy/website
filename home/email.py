@@ -188,6 +188,7 @@ def contributor_deadline_reminder(contributor, current_round, request, **kwargs)
     from .models import Role # oops, circular import dependency :-(
     send_template_mail('home/email/contributors-deadline-reminder.txt', {
         'current_round': current_round,
+        # only use information available to the subject, not to request.user
         'role': Role(contributor.account, current_round),
         'timezone': contributor.timezone,
         'comrade': contributor,
@@ -200,6 +201,7 @@ def contributor_application_period_ended(contributor, current_round, request, **
     from .models import Role # oops, circular import dependency :-(
     send_template_mail('home/email/contributors_application_period_ended.txt', {
         'current_round': current_round,
+        # only use information available to the subject, not to request.user
         'role': Role(contributor.account, current_round),
         'timezone': contributor.timezone,
         'comrade': contributor,
