@@ -3031,13 +3031,6 @@ class ApplicantApprovalUpdate(ApprovalStatusAction):
                 applicant__account__username=self.kwargs['applicant_username'],
                 application_round=current_round)
 
-    def notify(self):
-        if self.prior_status != self.target_status:
-            # email applicant about their change in status
-            email.approval_status_changed(self.object, self.request,
-                from_email=email.applicant_help)
-
-
 class DeleteApplication(LoginRequiredMixin, ComradeRequiredMixin, View):
     def post(self, request, *args, **kwargs):
 
