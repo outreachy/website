@@ -58,7 +58,7 @@ This community requires applicants to complete a tutorial before they can make t
 		Community members discuss their contributions in a public chat.
 		Outreachy applicants can often learn from those discussions.
 		</p>
-		<p>Please introduce yourself on the public project chat:
+		<p>Please introduce yourself on the public project chat:</p>
 		<ul>
 		{% for channel in channels %}
 			<li><b>{{ channel.tool_name }}</b> -
@@ -104,11 +104,9 @@ This community requires applicants to complete a tutorial before they can make t
 			</li>
 		{% endfor %}
 		</ul>
-		</p>
 		<p>Outreachy mentors will often be in the community public chat. The project mentor's usernames are: {% for approval in project.get_approved_mentors %} {{ approval.communication_channel_username }}, {% endfor %}</p>
 	{% endif %}
 {% endwith %}
-</p>
 
 <h3>Who will I work with?</h3>
 <p>Each Outreachy intern works remotely with one or more mentors. Most Outreachy mentors only work with one intern per round. Mentors are your guides in learning more about free and open source software, technical and non-technical skills, and will always be there when you get stuck.</p>
