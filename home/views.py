@@ -1704,7 +1704,7 @@ class FinalApplicationAction(ApprovalStatusAction):
                 project_round__approval_status=ApprovalStatus.APPROVED)
 
         current_round = project.round()
-        role = Role(account, current_round)
+        role = Role(account, current_round, self.request.user)
 
         if not current_round.contributions_open.has_passed():
             raise PermissionDenied("You can't submit a final application until the Outreachy application period opens.")

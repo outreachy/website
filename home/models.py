@@ -4641,14 +4641,21 @@ class Role(object):
     a given round, and encapsulate that information in a single object that we
     can pass to templates.
 
+    Sometimes this is also used to provide information to an organizer (or
+    similar) about someone else. Under those circumstances, the ``requestor``
+    should be set to ``request.user`` while the ``user`` argument is set to the
+    subject of the inquiry. If this is not done then the requestor can only see
+    whatever information the subject is permitted to see.
+
     This is not a Django model and does not have a database representation, but
     it's too easy to get into circular import dependencies if this class lives
     anywhere outside models.py.
     """
 
-    def __init__(self, user, current_round):
+    def __init__(self, user, current_round, requestor=None):
         self.user = user
         self.current_round = current_round
+        self.requestor = requestor or user
 
     # Any properties that do database queries should be cached:
 
