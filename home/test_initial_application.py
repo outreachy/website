@@ -71,7 +71,6 @@ class ProjectSubmissionTestCase(TestCase):
     #
     # Pages to test:
     #  - /apply/eligibility/ - shouldn't have a button to submit an application after they've already done so
-    #  - community landing page - should not display details about the community or projects until contributions_open
     #  - /dashboard/
     #    - should not display any prompts to make a contribution or talk about the initial application status
     #    - should display a prompt to read the applicant guide - until interns are announced?
@@ -295,7 +294,9 @@ class ProjectSubmissionTestCase(TestCase):
                 project_round__participating_round=current_round,
                 project_round__approval_status=models.ApprovalStatus.APPROVED,
                 project_round__community__name='Debian',
-                project_round__community__slug='debian')
+                project_round__community__slug='debian',
+                contribution_tasks='<p>Just pick something from the issue tracker.</p>',
+                )
         sponsorship = factories.SponsorshipFactory(participation=project.project_round,
                 name='Software in the Public Interest - Debian',
                 amount=13000)
@@ -402,3 +403,143 @@ class ProjectSubmissionTestCase(TestCase):
         self.assertNotContains(response, 'Project details are hidden.')
         self.assertContains(response, '<a href="{}">Debian community landing page</a>'.format(reverse('community-landing', kwargs={'round_slug': project.project_round.participating_round.slug, 'community_slug': project.project_round.community.slug})), html=True)
         self.assertContains(response, '<a href="{}#{}">{}</a>'.format(project.project_round.get_absolute_url(), project.slug, project.short_title), html=True)
+
+
+    # ----- community landing page tests (/apply/eligibility/) ----- #
+
+    def test_community_landing_general_time_align_rejection_before_contribution_opens(self):
+        """
+        This tests that the initial application results.
+        Subtests:
+         - The applicant is rejected because of 'GENERAL' - they don't meet our eligibility rules
+         - The applicant is rejected because of 'TIME' - they don't have 49 out of 91 days free from full-time commitments.
+         - The applicant is rejected because of 'ALIGN' - mis-alignment with Outreachy program goals.
+        The round is in the initial application period.
+        They shouldn't be able to see projects on the community landing page.
+        """
+        project = self.setup_approved_project_approved_community('initial_applications_open')
+
+        for rejection_reason in ['GENERAL', 'TIME', 'ALIGN', ]:
+            with self.subTest(rejection_reason=rejection_reason):
+                applicant = factories.ApplicantApprovalFactory(approval_status=models.ApprovalStatus.REJECTED, reason_denied=rejection_reason, application_round=project.project_round.participating_round)
+                self.client.force_login(applicant.applicant.account)
+
+                response = self.client.get(reverse('community-landing', kwargs={'round_slug': project.project_round.participating_round.slug, 'community_slug': project.project_round.community.slug}))
+                self.assertEqual(response.status_code, 200)
+                self.assertContains(response,
+                        '<p>If you are an Outreachy applicant, this information will be available once the Outreachy contribution period starts on {} at 4pm UTC. You can sign up for an email notification when the round opens by <a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">subscribing to the Outreachy announcements mailing list</a>.</p>'.format(date_format(project.project_round.participating_round.contributions_open)),
+                        html=True)
+                self.assertNotContains(response, '<h1>Outreachy Internships with Debian</h1>', html=True)
+                self.assertNotContains(response, '<h1>Open Projects</h1>', html=True)
+                self.assertNotContains(response, '<div class="card border" id="debian-{}">'.format(project.slug), html=True)
+                self.assertNotContains(response, '<hr id="{}">'.format(project.slug), html=True)
+                self.assertNotContains(response, '<h2>{}</h2>'.format(project.short_title), html=True)
+
+    # FIXME - this test shouldn't fail if the new code works right
+    # (Technically this isn't a failure - the headings are there, but the project content is missing.
+    # This still meets the goal of making sure rejected applicants can't contact mentors,
+    # but it could use some UX improvements.)
+    @unittest.expectedFailure
+    def test_community_landing_general_time_align_rejection_after_contribution_opens(self):
+        """
+        This tests that the initial application results.
+        Subtests:
+         - The applicant is rejected because of 'GENERAL' - they don't meet our eligibility rules
+         - The applicant is rejected because of 'TIME' - they don't have 49 out of 91 days free from full-time commitments.
+         - The applicant is rejected because of 'ALIGN' - mis-alignment with Outreachy program goals.
+        The round is in the initial application period.
+        They shouldn't be able to see projects on the community landing page.
+        """
+        project = self.setup_approved_project_approved_community('contributions_open')
+
+        for rejection_reason in ['GENERAL', 'TIME', 'ALIGN', ]:
+            with self.subTest(rejection_reason=rejection_reason):
+                applicant = factories.ApplicantApprovalFactory(approval_status=models.ApprovalStatus.REJECTED, reason_denied=rejection_reason, application_round=project.project_round.participating_round)
+                self.client.force_login(applicant.applicant.account)
+
+                response = self.client.get(reverse('community-landing', kwargs={'round_slug': project.project_round.participating_round.slug, 'community_slug': project.project_round.community.slug}))
+                self.assertEqual(response.status_code, 200)
+                self.assertContains(response,
+                        '<p>If you are an Outreachy applicant, this information will be available once the Outreachy contribution period starts on {} at 4pm UTC. You can sign up for an email notification when the round opens by <a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">subscribing to the Outreachy announcements mailing list</a>.</p>'.format(date_format(project.project_round.participating_round.contributions_open)),
+                        html=True)
+                self.assertNotContains(response, '<h1>Outreachy Internships with Debian</h1>', html=True)
+                self.assertNotContains(response, '<h1>Open Projects</h1>', html=True)
+                self.assertNotContains(response, '<div class="card border" id="debian-{}">'.format(project.slug), html=True)
+                self.assertNotContains(response, '<hr id="{}">'.format(project.slug), html=True)
+                self.assertNotContains(response, '<h2>{}</h2>'.format(project.short_title), html=True)
+
+    # FIXME - this test shouldn't fail if the new code works right
+    # (Technically this isn't a failure - the headings are there, but the project content is missing.
+    # This still meets the goal of making sure rejected applicants can't contact mentors,
+    # but it could use some UX improvements.)
+    @unittest.expectedFailure
+    def test_community_landing_pending_after_contribution_opens(self):
+        """
+        This tests that the initial application results.
+        The applicant is approved.
+        The round is in the contribution period.
+        They should be able to see projects on the community landing page.
+        """
+        project = self.setup_approved_project_approved_community('contributions_open')
+
+        applicant = factories.ApplicantApprovalFactory(approval_status=models.ApprovalStatus.PENDING, application_round=project.project_round.participating_round)
+        self.client.force_login(applicant.applicant.account)
+
+        response = self.client.get(reverse('community-landing', kwargs={'round_slug': project.project_round.participating_round.slug, 'community_slug': project.project_round.community.slug}))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response,
+                '<p>If you are an Outreachy applicant, this information will be available once the Outreachy contribution period starts on {} at 4pm UTC. You can sign up for an email notification when the round opens by <a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">subscribing to the Outreachy announcements mailing list</a>.</p>'.format(date_format(project.project_round.participating_round.contributions_open)),
+                html=True)
+        self.assertNotContains(response, '<h1>Outreachy Internships with Debian</h1>', html=True)
+        self.assertNotContains(response, '<h1>Open Projects</h1>', html=True)
+        self.assertNotContains(response, '<hr id="{}">'.format(project.slug), html=True)
+        self.assertNotContains(response, '<h2>{}</h2>'.format(project.short_title), html=True)
+
+    def test_community_landing_approved_and_pending_before_contribution_opens(self):
+        """
+        This tests that the initial application results.
+        Subtests:
+         - The applicant is approved.
+         - The applicant is pending.
+        The round is in the initial application period.
+        They shouldn't be able to see projects on the community landing page.
+        """
+        project = self.setup_approved_project_approved_community('initial_applications_open')
+
+        for approval_status in [models.ApprovalStatus.APPROVED, models.ApprovalStatus.PENDING, ]:
+            with self.subTest(approval_status=approval_status):
+                applicant = factories.ApplicantApprovalFactory(approval_status=approval_status, application_round=project.project_round.participating_round)
+                self.client.force_login(applicant.applicant.account)
+
+                response = self.client.get(reverse('community-landing', kwargs={'round_slug': project.project_round.participating_round.slug, 'community_slug': project.project_round.community.slug}))
+                self.assertEqual(response.status_code, 200)
+                self.assertContains(response,
+                        '<p>If you are an Outreachy applicant, this information will be available once the Outreachy contribution period starts on {} at 4pm UTC. You can sign up for an email notification when the round opens by <a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">subscribing to the Outreachy announcements mailing list</a>.</p>'.format(date_format(project.project_round.participating_round.contributions_open)),
+                        html=True)
+                self.assertNotContains(response, '<h1>Outreachy Internships with Debian</h1>', html=True)
+                self.assertNotContains(response, '<h1>Open Projects</h1>', html=True)
+                self.assertNotContains(response, '<div class="card border" id="{}">'.format(project.slug), html=True)
+                self.assertNotContains(response, '<hr id="{}">'.format(project.slug), html=True)
+                self.assertNotContains(response, '<h2>{}</h2>'.format(project.short_title), html=True)
+
+    def test_community_landing_approved_after_contribution_opens(self):
+        """
+        This tests that the initial application results.
+        The applicant is approved.
+        The round is in the contribution period.
+        They should be able to see projects on the community landing page.
+        """
+        project = self.setup_approved_project_approved_community('contributions_open')
+
+        applicant = factories.ApplicantApprovalFactory(approval_status=models.ApprovalStatus.APPROVED, application_round=project.project_round.participating_round)
+        self.client.force_login(applicant.applicant.account)
+
+        response = self.client.get(reverse('community-landing', kwargs={'round_slug': project.project_round.participating_round.slug, 'community_slug': project.project_round.community.slug}))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response,
+                '<p>If you are an Outreachy applicant, this information will be available once the Outreachy contribution period starts on {} at 4pm UTC. You can sign up for an email notification when the round opens by <a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">subscribing to the Outreachy announcements mailing list</a>.</p>'.format(date_format(project.project_round.participating_round.contributions_open)),
+                html=True)
+        self.assertContains(response, '<h1>Outreachy Internships with Debian</h1>', html=True)
+        self.assertContains(response, '<h1>Open Projects</h1>', html=True)
+        self.assertContains(response, '<hr id="{}">'.format(project.slug), html=True)
+        self.assertContains(response, '<h2>{}</h2>'.format(project.short_title), html=True)
