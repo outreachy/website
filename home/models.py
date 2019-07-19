@@ -4780,6 +4780,18 @@ class Role(object):
         return not self.is_volunteer and not self.is_applicant
 
     @property
+    def is_approved_applicant(self):
+        return self.is_applicant and self.application.is_approved()
+
+    @property
+    def is_rejected_applicant(self):
+        return self.is_applicant and self.application.is_rejected()
+
+    @property
+    def is_pending_applicant(self):
+        return self.is_applicant and self.application.is_pending()
+
+    @property
     def needs_review(self):
         if self.application is not None:
             return self.application.approval_status in (ApprovalStatus.PENDING, ApprovalStatus.REJECTED)

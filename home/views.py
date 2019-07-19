@@ -1612,7 +1612,7 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, EligibleAppli
         current_round = project.round()
         role = Role(self.request.user, current_round)
 
-        if not role.is_applicant or not role.application.is_approved():
+        if not role.is_approved_applicant:
             raise Http404("No approved initial application in this round.")
 
         try:
@@ -1712,11 +1712,8 @@ class FinalApplicationAction(ApprovalStatusAction):
         if current_round.contributions_close.has_passed():
             raise PermissionDenied("This project is closed to final applications.")
 
-        if not role.is_applicant:
-            raise Http404("No initial application in this round.")
-
         # Only allow eligible applicants to apply
-        if not role.application.is_approved():
+        if not role.is_approved_applicant:
             raise PermissionDenied("You are not an eligible applicant or you have not filled out the eligibility check.")
 
         try:

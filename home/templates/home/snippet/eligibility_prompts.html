@@ -60,7 +60,7 @@
 			</div>
 		</div>
 	{% endif %}
-{% elif role.application.is_rejected %}
+{% elif role.is_rejected_applicant %}
 	<div class="card border-info mb-3">
 	    <div class="card-header text-white bg-warning">Initial Application Not Approved</div>
 	    <div class="card-body">
@@ -79,7 +79,7 @@
 		</p>
 	    </div>
 	</div>
-{% elif role.application.is_pending %}
+{% elif role.is_pending_applicant %}
 	<div class="card border-info mb-3">
 		{% if not role.current_round.contribution_opens.has_passed %}
 			<div class="card-header text-white bg-warning">Outreachy Initial Application Under Review</div>
@@ -107,7 +107,7 @@
 			</div>
 		{% endif %}
 	</div>
-{% elif role.application.is_approved %}
+{% elif role.is_approved_applicant %}
 	{% with project_contributions=role.application.get_projects_contributed_to %}
 	{% if not project_contributions %}
 		<div class="card border-warning mb-3">

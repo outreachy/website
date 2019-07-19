@@ -56,7 +56,7 @@ Outreachy Internships | Apply | Pick a Project
 	<li><a href="{% url 'docs-applicant' %}#make-contributions">Making Contributions</a></li>
 </ul>
 
-{% if role.application.is_approved %}
+{% if role.is_approved_applicant %}
 	{% if current_round.contributions_close.has_passed %}
 		{% include 'home/snippet/deadline_passed.html' %}
 	{% endif %}
@@ -121,7 +121,7 @@ Outreachy Internships | Apply | Pick a Project
 	{% with community=participation.community funded_interns=participation.interns_funded %}
 		<h4 id='{{ community.slug }}'>{{ community.name }} - {{ funded_interns }} intern{{ funded_interns|pluralize }}</h4>
 		<p>{{ community.description }}</p>
-		{% if role.application.is_approved or role.is_volunteer %}
+		{% if role.is_approved_applicant or role.is_volunteer %}
 			{% if not current_round.contributions_close.has_passed %}
 				<p>Learn how to make a contribution to these internship projects on the
 			{% else %}
@@ -178,7 +178,7 @@ Outreachy Internships | Apply | Pick a Project
 	{% with community=participation.community %}
 		<h3>{{ community.name }}</h3>
 		<p>{{ community.description }}</p>
-		{% if role.application.is_approved or role.is_volunteer %}
+		{% if role.is_approved_applicant or role.is_volunteer %}
 			<p>Document your contributions to these internship projects on the
 			<a href="{{ participation.get_absolute_url }}">{{ community.name }} community landing page</a>.</p>
 		{% endif %}

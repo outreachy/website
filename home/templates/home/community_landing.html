@@ -19,13 +19,13 @@ Outreachy internships working with {{ community.name }}
 		<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">subscribing to the Outreachy announcements mailing list</a>.</p>
 
 	{% comment %} If we've reached this else block, it's because the contribution period is open and the person is not a coordinator, mentor, or reviewer.{% endcomment %}
-	{% elif not role.application.is_approved and not mentors_pending_projects and not approved_to_see_all_project_details and not role.is_reviewer %}
+	{% elif not role.is_approved_applicant and not mentors_pending_projects and not approved_to_see_all_project_details and not role.is_reviewer %}
 		{% if not user.comrade %}
 			You may need to <a href="{% url 'login' %}?next={{ request.path|urlencode }}">log in</a> to see this information.</p>
 		{% elif role.is_potential_applicant %}
 			<p>This information is only available to applicants who have their initial application approved.
 			The deadline for initial applications passed on {{ current_round.initial_applications_close }} at 4pm UTC</p>
-		{% elif role.application.is_rejected or role.application.is_pending %}
+		{% elif role.is_rejected_applicant or role.is_pending_applicant %}
 			<p>This information is only available to applicants who have their initial application approved.
 			Unfortunately, your initial application is not approved.
 			</p>
@@ -180,14 +180,14 @@ Outreachy internships working with {{ community.name }}
 						{% include 'home/snippet/mentor_action.html' %}
 					{% endif %}
 					{% include "home/snippet/project_deadline.html" %}
-					{% if role.application.is_approved %}
+					{% if role.is_approved_applicant %}
 						{% if project in contributions %}
 							<p><a class='btn btn-success' href="{{ project.get_contributions_url }}">Update Contibutions and Apply to This Project</a></p>
 						{% else %}
 							<p><a class='btn btn-success' href="{{ project.get_contributions_url }}">Record Contibutions and Apply to This Project</a></p>
 						{% endif %}
 					{% endif %}
-					{% if role.application.is_approved or role.is_volunteer %}
+					{% if role.is_approved_applicant or role.is_volunteer %}
 							<div class="card">
 								<div class="card-header">
 									<h4 class="mb-0">Detailed Project Information</h4>
@@ -213,14 +213,14 @@ Outreachy internships working with {{ community.name }}
 				<hr id="{{ project.slug }}">
 				<h2>{{ project.short_title }}</h2>
 				{% include "home/snippet/project_deadline.html" %}
-				{% if role.application.is_approved %}
+				{% if role.is_approved_applicant %}
 					{% if project in contributions %}
 						<p><a class='btn btn-success' href="{{ project.get_contributions_url }}">Update Contibutions and Apply to This Project</a></p>
 					{% else %}
 						<p><a class='btn btn-success' href="{{ project.get_contributions_url }}">Record Contibutions and Apply to This Project</a></p>
 					{% endif %}
 				{% endif %}
-				{% if role.application.is_approved or role.is_volunteer %}
+				{% if role.is_approved_applicant or role.is_volunteer %}
 					<div id="project-closed-accordion-{{ forloop.counter }}" class="accordion">
 						<div class="card">
 							<div class="card-header" role="tab" id="project-closed-heading-{{ forloop.counter }}">

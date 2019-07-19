@@ -10,7 +10,7 @@
 		</div>
 		<div class="card-body">
 		{% comment %}If this view didn't set any mentors_pending_projects, it means there's no pending mentored projects {% endcomment %}
-		{% if not role.application.is_approved and not role.is_volunteer and not project in mentors_pending_projects %}
+		{% if not role.is_approved_applicant and not role.is_volunteer and not project in mentors_pending_projects %}
 			<p><strong>{{ project.short_title }}</strong></p>
 			<div class="card-text">{% include 'home/snippet/project_hidden.html' %}</div>
 		{% else %}

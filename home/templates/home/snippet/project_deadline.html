@@ -2,7 +2,7 @@
 	{% if not current_round.contributions_close.has_passed %}is{% else %}was{% endif %}
 	{{ current_round.contributions_close }} at 4pm UTC
 to
-{% if role.application.is_approved and not current_round.contributions_close.has_passed %}<a href="{{ project.get_contributions_url }}">{% endif %}
+{% if role.is_approved_applicant and not current_round.contributions_close.has_passed %}<a href="{{ project.get_contributions_url }}">{% endif %}
 	record your contributions and create a final application.
-{% if role.application.is_approved and not current_round.contributions_close.has_passed %}</a>{% endif %}
+{% if role.is_approved_applicant and not current_round.contributions_close.has_passed %}</a>{% endif %}
 	</p>
