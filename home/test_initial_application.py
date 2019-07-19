@@ -67,7 +67,6 @@ class ProjectSubmissionTestCase(TestCase):
     #
     # Pages to test:
     #  - /apply/eligibility/ - shouldn't have a button to submit an application after they've already done so
-    #  - /eligibility/ - shouldn't display results until after contributions open
     #  - /apply/project-selection/ - should not display detailed links to the project/community pages
     #  - community landing page - should not display details about the community or projects until contributions_open
     #  - /dashboard/
