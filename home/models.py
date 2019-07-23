@@ -1703,7 +1703,7 @@ class Project(ApprovalStatus):
         return self.reverse('project-applicants')
 
     def get_apply_url(self):
-        return self.reverse('application-action', action='submit')
+        return self.reverse('final-application-action', action='submit')
 
     def get_mentor_signup_url(self):
         return self.reverse('mentorapproval-action', action='submit')
@@ -2160,7 +2160,7 @@ class ApplicantApproval(ApprovalStatus):
         return self.reverse('applicant-review-detail')
 
     def get_action_url(self, action):
-        return self.reverse('application-action', action=action)
+        return self.reverse('initial-application-action', action=action)
 
     def get_submitter_email_list(self):
         return [self.applicant.email_address()]
@@ -3336,7 +3336,7 @@ class FinalApplication(ApprovalStatus):
 
     def get_action_url(self, action):
         return self.project.reverse(
-            'application-action',
+            'final-application-action',
             username=self.applicant.applicant.account.username,
             action=action,
         )
