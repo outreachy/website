@@ -2440,6 +2440,18 @@ def round_statistics(request, round_slug):
         'current_round': current_round,
         })
 
+def blog_schedule_changes(request):
+    try:
+        changed_round = RoundPage.objects.get(
+            contributions_open__gte='2019-07-23',
+            contributions_open__lte='2019-12-01',
+        )
+    except RoundPage.DoesNotExist:
+        changed_round = None
+    return render(request, 'home/blog/2019-07-23-outreachy-schedule-changes.html', {
+        'changed_round': changed_round,
+        })
+
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(InitialMentorFeedback,
             fields=(

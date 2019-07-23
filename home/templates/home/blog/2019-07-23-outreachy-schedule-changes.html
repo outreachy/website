@@ -1,0 +1,92 @@
+{% extends "base.html" %} 
+{% block title %}
+Schedule changes for Outreachy
+{% endblock %}
+
+{% block content %}
+{% load humanize %}
+
+<h1>Schedule changes for Outreachy</h1>
+
+<p>Outreachy is changing our schedule this round. The schedule changes impact both coordinators, mentors, and applicants. Please read this post carefully!</p>
+
+<p>If you want to apply to Outreachy, we encourage you read our <a href='{% url 'docs-applicant' %}'>Applicant Guide</a>. That provides the most up-to-date description of our application process and tips for getting your initial application accepted.</p>
+
+<h2>Impact for applicants</h2>
+
+<p>Outreachy is splitting our application period into two distinct periods: the <b>initial application period</b> and the <b>contribution period</b>.</p>
+
+<p>During the <a href='{% url 'docs-applicant' %}#initial-application'>initial application period</a>, applicants submit an eligibility form and essay questions (an initial application). During the <a href='{% url 'docs-applicant' %}#make-contributions'>contribution period</a>, accepted applicants contact mentors and complete project tasks (contributions).</p>
+
+<div class="card my-3">
+	<div class="card-header text-black bg-warning"><b>Important dates for applicants:</b></div>
+	<div class="card-body">
+		{% with current_round=changed_round %}
+		{% include 'home/snippet/round_timeline.html' %}
+		{% endwith %}
+	</div>
+</div>
+
+
+<p>The biggest change is that initial applications are due sooner, before the contribution period starts. Only applicants who have an approved initial application will move onto the contribution period.</p>
+
+<p>If your application is rejected due to not meeting our eligibility rules, you will be notified immediately on the initial application results page. If your application is rejected due to not meeting our time commitment rules, you will also be notified immediately on the initial application results page. Other applications will be reviewed by Outreachy organizers. You may get an email asking you to clarify your essay or provide more information about your time commitments. Otherwise, you won't hear from Outreachy organizers until the initial application results are announced.</p>
+
+<p>All accepted applicants will receive an email when the contribution period starts on {{ changed_round.contributions_open }} at 4pm UTC. At that time, all project details, including how to get in contact with a mentor, will be visible to approved applicants. This means that all applicants start making contributions at the same time, which is a change from previous rounds.</p>
+
+<p>Another change is that the contribution period is only five weeks, instead of six weeks. This round, all projects have the same final application deadline.</p>
+
+<h2>Impact for mentors and coordinators</h2>
+
+<p>The goal of the schedule changes is to ensure that the project list is finalized before the contribution period opens. This is a change from previous rounds. We need help from both coordinators and mentors to make this happen.</p>
+
+<div class="card my-3">
+	<div class="card-header text-black bg-warning"><b>Important dates for mentors and coordinators:</b></div>
+	<div class="card-body">
+		{% with current_round=changed_round %}
+		{% include 'home/snippet/mentor-timeline.html' %}
+		{% endwith %}
+	</div>
+</div>
+
+<p>Mentors who participated in Outreachy before will notice there's a change to when applicants will start making contributions. All approved applicants will start making contributions at the same time. Applicants will start contacting you when contribution period opens on {{ changed_round.contributions_open }} at 4pm UTC.</p>
+
+<p>Project details are hidden from applicants until the contribution period starts. However, your project title and project skills will still be visible on the <a href='{% url 'project-selection' %}'>project list page</a>. Please use that page to promote your community's participation in Outreachy! Promoting your project's participation means more people may decide to submit an initial application.</p>
+
+<p>Unlike previous rounds, all projects have the same contribution and final application deadline. There are no "on-time" or "late" projects any more. You can close your project to new applicants at any time during the contribution period. The only impact that has is moving your project listing to a 'Closed projects' section on the project selection page. This helps applicants to focus on projects with few applicants. Applicants can still record contributions and make final applications until the final application deadline at {{ changed_round.contributions_close }} at 4pm UTC.</p>
+
+<p>
+
+<h2>Why are we making these changes?</h2>
+
+<p>There are several reasons for making changes to our schedule. </p>
+
+<p>Separating out an initial application period from the contribution period helps Outreachy organizers. We have a small team of people who review over one thousand initial applications each round. If we focus on reviewing applications as fast as possible, people who have questions about how to pick a project or how to make a contribution don't get help. If we stop to answer questions about making project contributions, applicants with pending initial applications send us worried emails.</p>
+
+<p>We also hope the changes will improve the experience for applicants. In past rounds, the project list wasn't finalized before the contribution period started. Chances are that many applicants looked at the initial list, didn't find a project they were interested in, and then stopped applying. We hope that having the full project list when applicants are notified their initial application is approved will engage more applicants.</p>
+
+<p>In past rounds, we also allowed applicants to submit an initial application during the contribution period. Reviewing initial applications takes up to 10 business days. While waiting to hear about their initial application results, many applicants were worried about losing time to make contributions.</p>
+
+<p>We decided to do a statistical analysis on the December 2019 round. We used linear regression to see if when an applicant submitted their initial application had an impact on whether they recorded a contribution. This analysis controlled for many factors, including education, prior experience with free software, job status, gender identity, and other demographics.</p>
+
+<p>Impact of when the initial application is approved during the six week contribution period:</p>
+<ul>
+	<li>Week 1: -5.6% chance of recording a contribution</li>
+	<li>Week 2: +1.0% chance of recording a contribution</li>
+	<li>Week 3: +2.2% chance of recording a contribution</li>
+	<li>Week 4: +17.6% chance of recording a contribution</li>
+	<li>Week 5: +0.7% chance of recording a contribution</li>
+	<li>Week 6: -12.6% chance of recording a contribution</li>
+</ul>
+
+<p>In previous rounds, week 4 is when the full project list is available. During week 1, very few project listings were available (typically 25% of the total number of projects). Having an initial application approved during the last week of the contribution period means there's not enough time to make a contribution. Thus, we wanted to try to provide the same experience for all applicants by having them start a contribution at the same time.</p>
+
+<p>In previous rounds, projects could have an 'on-time' or 'late' deadline for the final application. We also heard that having different deadlines for final applications was confusing to applicants. Based on those conversations, we wanted all projects to have the same final application deadline.</p>
+
+<p>We also asked mentors whether the contribution period was too short or too long. We heard many stories of mentors being overwhelmed if they worked with applicants for the full six weeks. Some mentors were so overloaded they would stop responding to new applicants. Some mentors even put off listing their project until the week 4 mentor project submission deadline! We also heard stories from mentors who needed extra time for applicants to make complex contributions. The mentors were concerned they wouldn't be able to accurately judge applicant skills if the contribution period was shorter than four weeks.</p>
+
+<p>Based on feedback from applicants and mentors with different needs, we made a compromise. We decided to shorten the contribution period from six weeks to five weeks. All projects would have the same final application deadline. Projects could close to new applicants at any time during the application period. All projects would be listed when the contribution period begins.</p>
+
+<p>We hope this change is a good experience for both mentors and applicants. Based on how this round goes, we may make further schedule changes next round. If you want to give us feedback on this change after the contribution period is over on {{ changed_round.contributions_close }} please <a href='{% url 'contact-organizers' %}'>contact us</a>.
+
+{% endblock %}
