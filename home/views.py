@@ -1565,13 +1565,6 @@ class ProjectContributions(LoginRequiredMixin, ComradeRequiredMixin, EligibleApp
         current_round = project.round()
         role = Role(self.request.user, current_round)
 
-        # Note that there's no reason to ever keep a past applicant from
-        # looking at their old contributions, even if they got rejected after
-        # making those contributions.
-
-        if not role.is_applicant:
-            raise Http404("No initial application in this round.")
-
         contributions = role.application.contribution_set.filter(
                 project=project)
         try:
@@ -1611,9 +1604,6 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, EligibleAppli
 
         current_round = project.round()
         role = Role(self.request.user, current_round)
-
-        if not role.is_approved_applicant:
-            raise Http404("No approved initial application in this round.")
 
         try:
             application = role.application.finalapplication_set.get(

@@ -1401,17 +1401,14 @@ class Participation(ApprovalStatus):
         if user.is_staff:
             return True
 
-        # Is the contribution period open and everyone should see the projects?
-        # Note in the template, links are still hidden if the
-        # initial application is pending or rejected
-        if self.participating_round.contributions_open.has_passed():
-            return True
-
         # Remaining conditions all require this person to be logged in
         if not user.is_authenticated:
             return False
 
         role = Role(user, self.participating_round)
+
+        if role.is_approved_applicant:
+            return True
 
         # - an approved coordinator for any approved community
         if role.is_coordinator:
@@ -4781,15 +4778,64 @@ class Role(object):
 
     @property
     def is_approved_applicant(self):
-        return self.is_applicant and self.application.is_approved()
+        """
+        Is this application approved? Depends on who is viewing it and when.
+        Organizers and reviewers can see the true status of approved applications all the time.
+        Applicants get notified of acceptance after contributions open.
+        If the contributions period isn't open, applicants can't see they're approved.
+        """
+        if not self.is_applicant:
+            return False
+        if self.is_organizer or self.is_reviewer:
+            return self.application.is_approved()
+        elif self.current_round.contributions_open.has_passed():
+            return self.application.is_approved()
+        return False
 
     @property
     def is_rejected_applicant(self):
-        return self.is_applicant and self.application.is_rejected()
+        """
+        Is this application rejected? Depends on who is viewing it and when.
+        Organizers and reviewers can see the true status of rejected applications all the time.
+        If an application was rejected due to time or being ineligible, applicants can see that right away.
+        Otherwise applicants get notified of rejection after contributions open.
+        If the contributions period isn't open and applicants are rejected due to alignment, applicants can't see they're rejected.
+        """
+        if not self.is_applicant:
+            return False
+        if self.is_organizer or self.is_reviewer:
+            return self.is_applicant and self.application.is_rejected()
+        elif self.current_round.contributions_open.has_passed():
+            return self.application.is_rejected()
+        elif self.application.is_rejected() and (self.application.reason_denied == 'TIME' or self.application.reason_denied == 'GENERAL'):
+            return True
+        return False
 
     @property
     def is_pending_applicant(self):
-        return self.is_applicant and self.application.is_pending()
+        """
+        Is this application pending? Depends on who is viewing it and when.
+        Organizers and reviewers can see the true status of pending applications all the time.
+        If it's after the contribution period opens, show whether it's really pending.
+        If it's before the contributions open:
+         - If an application was rejected due to time or being ineligible, applicants can see that right away.
+         - If an application was rejected because of another reason, applicants see it as pending until the contribution period opens.
+         - If an application was approved, applicants see it as pending until the contribution period opens.
+         - If an application is pending before the contribution period ends, show that status.
+        """
+        if not self.is_applicant:
+            return False
+        if self.is_organizer or self.is_reviewer:
+            return self.application.is_pending()
+        elif self.current_round.contributions_open.has_passed():
+            return self.application.is_pending()
+        elif self.application.is_rejected() and (self.application.reason_denied == 'TIME' or self.application.reason_denied == 'GENERAL'):
+            return False
+        elif self.application.is_rejected():
+            return True
+        elif self.application.is_approved():
+            return True
+        return self.application.is_pending()
 
     @property
     def needs_review(self):

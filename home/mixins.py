@@ -57,7 +57,7 @@ class EligibleApplicantRequiredMixin(object):
                     url=reverse('eligibility'),
                     query_string=urlencode({'next': request.path})))
 
-        if role.needs_review:
+        if not role.is_approved_applicant:
             return redirect('eligibility-results')
 
         return super(EligibleApplicantRequiredMixin, self).dispatch(request, *args, **kwargs)

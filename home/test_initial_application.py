@@ -117,7 +117,6 @@ class ProjectSubmissionTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     # FIXME - this test shouldn't fail if the new code works right
-    @unittest.expectedFailure
     def test_initial_application_results_alignment_rejection_before_contributions_open(self):
         """
         This tests that the initial application results.
@@ -153,7 +152,6 @@ class ProjectSubmissionTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     # FIXME - this test shouldn't fail if the new code works right
-    @unittest.expectedFailure
     def test_initial_application_results_approved_before_contributions_open(self):
         """
         This tests that the initial application results.
@@ -220,7 +218,6 @@ class ProjectSubmissionTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     # FIXME - this test shouldn't fail if the new code works right
-    @unittest.expectedFailure
     def test_applicant_prompts_alignment_rejection_before_contributions_open(self):
         """
         This tests that the initial application results.
@@ -253,7 +250,6 @@ class ProjectSubmissionTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     # FIXME - this test shouldn't fail if the new code works right
-    @unittest.expectedFailure
     def test_applicant_prompts_approved_before_contributions_open(self):
         """
         This tests that the initial application results.
@@ -365,7 +361,6 @@ class ProjectSubmissionTestCase(TestCase):
                 self.assertNotContains(response, '<a href="{}#{}">{}</a>'.format(project.project_round.get_absolute_url(), project.slug, project.short_title), html=True)
 
     # FIXME - this test shouldn't fail if the new code works right
-    @unittest.expectedFailure
     def test_project_list_approved_before_contributions_open(self):
         """
         This tests that the initial application results.
@@ -439,7 +434,6 @@ class ProjectSubmissionTestCase(TestCase):
     # (Technically this isn't a failure - the headings are there, but the project content is missing.
     # This still meets the goal of making sure rejected applicants can't contact mentors,
     # but it could use some UX improvements.)
-    @unittest.expectedFailure
     def test_community_landing_general_time_align_rejection_after_contribution_opens(self):
         """
         This tests that the initial application results.
@@ -460,7 +454,7 @@ class ProjectSubmissionTestCase(TestCase):
                 response = self.client.get(reverse('community-landing', kwargs={'round_slug': project.project_round.participating_round.slug, 'community_slug': project.project_round.community.slug}))
                 self.assertEqual(response.status_code, 200)
                 self.assertContains(response,
-                        '<p>If you are an Outreachy applicant, this information will be available once the Outreachy contribution period starts on {} at 4pm UTC. You can sign up for an email notification when the round opens by <a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">subscribing to the Outreachy announcements mailing list</a>.</p>'.format(date_format(project.project_round.participating_round.contributions_open)),
+                        '<p>This information is only available to applicants who have their initial application approved. Check your <a href="{}">initial application results</a> for more details.</p>'.format(reverse('eligibility-results')),
                         html=True)
                 self.assertNotContains(response, '<h1>Outreachy Internships with Debian</h1>', html=True)
                 self.assertNotContains(response, '<h1>Open Projects</h1>', html=True)
@@ -472,7 +466,6 @@ class ProjectSubmissionTestCase(TestCase):
     # (Technically this isn't a failure - the headings are there, but the project content is missing.
     # This still meets the goal of making sure rejected applicants can't contact mentors,
     # but it could use some UX improvements.)
-    @unittest.expectedFailure
     def test_community_landing_pending_after_contribution_opens(self):
         """
         This tests that the initial application results.
@@ -589,14 +582,12 @@ class ProjectSubmissionTestCase(TestCase):
 
     # FIXME - this test shouldn't fail if the new code works right
     # approved case is failing
-    @unittest.expectedFailure
     def test_contribution_recording_approved_and_pending_before_contribution_opens(self):
         """
         This tests that the initial application results.
         Subtests:
-         - The applicant is rejected because of 'GENERAL' - they don't meet our eligibility rules
-         - The applicant is rejected because of 'TIME' - they don't have 49 out of 91 days free from full-time commitments.
-         - The applicant is rejected because of 'ALIGN' - mis-alignment with Outreachy program goals.
+         - The applicant is pending
+         - The applicant is approved
         The round is in the initial application period.
         They should NOT be able to record a contribution.
         """
@@ -640,5 +631,4 @@ class ProjectSubmissionTestCase(TestCase):
         self.client.force_login(applicant.applicant.account)
 
         response = self.client.get(reverse('contributions-add', kwargs={'round_slug': project.project_round.participating_round.slug, 'community_slug': project.project_round.community.slug, 'project_slug': project.slug }))
-        # If an applicant is still under review we direct back to the eligibility results page
         self.assertEqual(response.status_code, 200)
