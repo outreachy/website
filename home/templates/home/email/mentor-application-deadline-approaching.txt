@@ -31,7 +31,7 @@ Application - Project Timeline
 
 The Outreachy final application asks applicants to complete a internship project timeline, and they may ask you questions about it. The project timeline serves many purposes:
 
-1. Ensures the applicant understands the high-level details of the project, and can break down those goals into concrete milestones. The goal is for applicants to have an idea of what they will work during each of the 12 weeks of the internship. The applicants will be looking at the internship tasks listed on the project page, so now is a good time to update those if you don't want to answer the same questions over and over:
+1. Ensures the applicant understands the high-level details of the project, and can break down those goals into concrete milestones. The goal is for applicants to have an idea of what they will work during each of the 13 weeks of the internship. The applicants will be looking at the internship tasks listed on the project page, so now is a good time to update those if you don't want to answer the same questions over and over:
 
 {{ request.scheme }}://{{ request.get_host }}{{ project.get_submit_url }}
 
