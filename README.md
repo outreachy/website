@@ -136,15 +136,17 @@ We'll also need to import all the methods in `home/factories.py`:
 
 The advantage of using the factories methods is that it automatically computes reasonable dates for all round deadlines, based on what the Outreachy internship round schedule normally is. You just have to give it one date and it will calculate the rest.
 
-### Contributions open
+### Initial applications open
 
-Let's assume you want an internship round where we're in the middle of the contribution period. We can set the deadline for when the final applications for most projects are due (`appslate`) to be one week from today:
+The Outreachy application period has two distinct periods: the initial application period and the contribution period. During the initial application period, applicants submit an eligibility form and essays (an initial application). All people who have an approved initial application will be notified by email. Then the contribution period will start. Approved applicants will contact mentors and work on project tasks (contributions).
+
+Let's assume you want an internship round where we're in the middle of the initial application period. We can set the initial applications deadline (`initial_applications_close`) to be one week (seven days) after today:
 
 ```
 >>> import datetime
 >>> current_round = RoundPageFactory(
-	start_from="appslate",
-	start_date=datetime.date.today() + datetime.timedelta(days=7))
+	start_from="initial_applications_close",
+	days_after_today=7)
 ```
 
 Note: Normally in the Django shell, you need to call the `save()` method to write the RoundPage object in the local database. The factories code automatically calls the `save()` method for you. Should you need to delete an object from the database, you can call the `delete()` method. Don't call `save()` afterwards, because that will write the object back to the database.
@@ -155,8 +157,31 @@ If you get an error when running the factories code, it's often hard to tell wha
 >>> from django.db import transaction
 >>> with factory.debug(), transaction.atomic():
 ...     current_round = RoundPageFactory(
-...		start_from="appslate",
-...		start_date=datetime.date.today() + datetime.timedelta(days=7))
+...		start_from="initial_applications_close",
+...		days_after_today=7)
+>>>
+```
+### Contributions open
+
+Let's assume you want an internship round where we're in the middle of the contribution period. We can set the deadline for when the final applications for projects are due (`appslate`) to be one week from today:
+
+```
+>>> import datetime
+>>> current_round = RoundPageFactory(
+	start_from="contributions_close",
+	days_after_today=7)
+```
+
+Note: Normally in the Django shell, you need to call the `save()` method to write the RoundPage object in the local database. The factories code automatically calls the `save()` method for you. Should you need to delete an object from the database, you can call the `delete()` method. Don't call `save()` afterwards, because that will write the object back to the database.
+
+If you get an error when running the factories code, it's often hard to tell what exactly is wrong. Most often, the issue is that a variable is missing that needs to be passed to the factories method. That usually means the factories code needs to create that object from scratch, which will cause it to create a new RoundPage. That will show up as an error `django.core.exceptions.ValidationError: {'slug': ['This slug is already in use']}`. If the factories method you were calling was making multiple objects, you'll need to debug which call failed. You can do that by adding a with section to invoke the factories debugger, and an atomic transaction block to ensure that no objects that were created before the factory method failed are saved to the database:
+
+```
+>>> from django.db import transaction
+>>> with factory.debug(), transaction.atomic():
+...     current_round = RoundPageFactory(
+...		start_from="contributions_close",
+...		days_after_today=7)
 >>>
 ```
 
