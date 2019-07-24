@@ -229,6 +229,13 @@ class SendEmailView(RoundEvent, LoginRequiredMixin, ComradeRequiredMixin, BaseEm
 
 
 class MentorCheckDeadlinesReminder(SendEmailView):
+    """
+    Remind mentors that they should consider closing to new applicants.
+
+    When: 2 weeks before the contribution period closes
+
+    Template: home/templates/home/email/mentor-applicant-updates.txt
+    """
     description = 'Mentor Deadlines Email'
     slug = 'deadline-review'
 
@@ -248,6 +255,17 @@ class MentorCheckDeadlinesReminder(SendEmailView):
 
 
 class MentorApplicationDeadlinesReminder(SendEmailView):
+    """
+    Warn mentors of the upcoming final application deadline.
+    Tell them how to help applicants make a project timeline.
+    Tell them which applicants have filled out a final application.
+    Link to the page for them to view applicants.
+
+    When: On a Monday 1 week before the final application deadline.
+          (Will be at least three days before, not more than 10 days)
+
+    Template: home/templates/home/email/mentor-application-deadline-approaching.txt
+    """
     description = 'Mentor Deadline Email'
     slug = 'mentor-application-deadline-reminder'
 
@@ -273,6 +291,14 @@ class MentorApplicationDeadlinesReminder(SendEmailView):
             email.mentor_application_deadline_reminder(p, self.request, connection=connection)
 
 class MentorInternSelectionReminder(SendEmailView):
+    """
+    Tell mentors how to select an intern.
+    Remind them of when the intern selection deadline is.
+
+    When: After the contribution period closes.
+
+    Template: home/templates/home/email/mentor-choose-intern.txt
+    """
     description = 'Mentor Intern Selection Email'
     slug = 'mentor-intern-selection-reminder'
 
@@ -297,6 +323,14 @@ class MentorInternSelectionReminder(SendEmailView):
                 connection=connection)
 
 class CoordinatorInternSelectionReminder(SendEmailView):
+    """
+    Tell coordinators how to review intern selections.
+    Tell them they need to set the intern funding source.
+
+    When: After the contribution period closes.
+
+    Template: home/templates/home/email/coordinator-intern-selection.txt
+    """
     description = 'Coordinator Intern Selection Email'
     slug = 'coordinator-intern-selection-reminder'
 
@@ -312,6 +346,17 @@ class CoordinatorInternSelectionReminder(SendEmailView):
 
 
 class ApplicantsDeadlinesReminder(SendEmailView):
+    """
+    Send an email to the Outreachy announcement mailing list.
+    Remind everyone about the final application deadline.
+    List which projects are closed to new applicants.
+
+    When: Three days after the email to mentors asking them to close
+          their projects to new applicants (i.e. 11 days before
+          the contribution period ends).
+
+    Template: home/templates/home/email/applicants-deadline-reminder.txt
+    """
     description = 'Applicant Deadline Email'
     slug = 'deadline-reminder'
 
@@ -336,6 +381,10 @@ class ContributorsApplicationPeriodEndedReminder(SendEmailView):
     Email reminder to every applicant who made a contribution.
     This tells them which projects they made a final application to,
     and when to expect interns be announced.
+
+    When: After the final application deadline
+
+    Template: home/templates/home/email/contributors_application_period_ended.txt
     """
     description = 'Contributor Final Email'
     slug = 'application-period-ended'
@@ -362,6 +411,13 @@ class ContributorsApplicationPeriodEndedReminder(SendEmailView):
 
 
 class ContributorsDeadlinesReminder(SendEmailView):
+    """
+    Remind all applicants who recorded a contribution to create a final application.
+
+    When: On a Monday, 3 to 10 days before the final application deadline.
+
+    Template: home/templates/home/email/contributors-deadline-reminder.txt
+    """
     description = 'Contributor Deadline Email'
     slug = 'contributor-deadline-reminder'
 
@@ -402,6 +458,13 @@ class ContributorsDeadlinesReminder(SendEmailView):
 
 
 class InternNotification(SendEmailView):
+    """
+    Individual mail sent to interns notifying them of the internship.
+
+    When: After interns are announced on the website.
+
+    Template: home/templates/home/email/interns-notify.txt
+    """
     description = 'Intern Welcome Email'
     slug = 'intern-welcome'
 
@@ -419,6 +482,13 @@ class InternNotification(SendEmailView):
 
 
 class InternWeek(SendEmailView):
+    """
+    Send chat reminders and blog post prompts.
+
+    When: Every two weeks during the internship.
+
+    Template: home/templates/home/email/internship-week-{}.txt
+    """
     @classmethod
     def at(cls, week):
         # Create a subclass of this class where the week number is hard-coded.
@@ -458,6 +528,16 @@ class FeedbackInstructions(SendEmailView):
 
 
 class InitialFeedbackInstructions(FeedbackInstructions):
+    """
+    Send initial feedback instructions to mentors and interns.
+
+    When: When initial feedback forms open, and again if feedback is missing.
+          Emails may be sent with an URGENT subject if feedback is late.
+          Emails may be sent multiple times if there is a internship extension.
+
+    Templates: home/templates/home/email/initial-feedback-reminder.txt
+               home/templates/home/email/initial-feedback-instructions.txt
+    """
     description = 'Initial Feedback Reminder'
     slug = 'initial-feedback-instructions'
 
@@ -478,6 +558,16 @@ class InitialFeedbackInstructions(FeedbackInstructions):
 
 
 class MidpointFeedbackInstructions(FeedbackInstructions):
+    """
+    Send mid-point feedback instructions to mentors and interns.
+
+    When: When mid-point feedback forms open, and again if feedback is missing.
+          Emails may be sent with an URGENT subject if feedback is late.
+          Emails may be sent multiple times if there is a internship extension.
+
+    Templates: home/templates/home/email/midpoint-feedback-reminder.txt
+               home/templates/home/email/midpoint-feedback-instructions.txt
+    """
     description = 'Midpoint Feedback Reminder'
     slug = 'midpoint-feedback-instructions'
 
@@ -498,6 +588,16 @@ class MidpointFeedbackInstructions(FeedbackInstructions):
 
 
 class FinalFeedbackInstructions(FeedbackInstructions):
+    """
+    Send final feedback instructions to mentors and interns.
+
+    When: When final feedback forms open, and again if feedback is missing.
+          Emails may be sent with an URGENT subject if feedback is late.
+          Emails may be sent multiple times if there is a internship extension.
+
+    Templates: home/templates/home/email/final-feedback-reminder.txt
+               home/templates/home/email/final-feedback-instructions.txt
+    """
     description = 'Final Feedback Reminder'
     slug = 'final-feedback-instructions'
 
