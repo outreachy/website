@@ -6,15 +6,18 @@ Schedule changes for Outreachy
 {% block content %}
 {% load humanize %}
 
-<h1>Schedule changes for Outreachy</h1>
+<h1>2019 Internship Schedule Changes</h1>
 
-<p>Outreachy is changing our schedule this round. The schedule changes impact both coordinators, mentors, and applicants. Please read this post carefully!</p>
+<p><i>Date: July 24, 2019</i></p>
 
-<p>If you want to apply to Outreachy, we encourage you read our <a href='{% url 'docs-applicant' %}'>Applicant Guide</a>. That provides the most up-to-date description of our application process and tips for getting your initial application accepted.</p>
+<p>Outreachy is changing our schedule this round. The schedule changes impact applicants, mentors, and coordinators in the December 2019 to March 2020 round. Please read this post carefully!</p>
+
+<img src='https://www.outreachy.org/media/images/clock-hammer-flickr-cc-by-2.0-Marco-Verch-modif.original.jpg' class="img-fluid" alt="Hammer smashing clock CC-BY 2.0 Marco Verch">
+<p><i>Photo CC BY 2.0 <a href='https://foto.wuestenigel.com/break-the-clock/'>Marco Verch</a></i></p>
 
 <h2>Impact for applicants</h2>
 
-<p>Outreachy is splitting our application period into two distinct periods: the <b>initial application period</b> and the <b>contribution period</b>.</p>
+<p>Outreachy is splitting our application process into two distinct periods: the <b>initial application period</b> and the <b>contribution period</b>.</p>
 
 <p>During the <a href='{% url 'docs-applicant' %}#initial-application'>initial application period</a>, applicants submit an eligibility form and essay questions (an initial application). During the <a href='{% url 'docs-applicant' %}#make-contributions'>contribution period</a>, accepted applicants contact mentors and complete project tasks (contributions).</p>
 
@@ -30,11 +33,21 @@ Schedule changes for Outreachy
 
 <p>The biggest change is that initial applications are due sooner, before the contribution period starts. Only applicants who have an approved initial application will move onto the contribution period.</p>
 
-<p>If your application is rejected due to not meeting our eligibility rules, you will be notified immediately on the initial application results page. If your application is rejected due to not meeting our time commitment rules, you will also be notified immediately on the initial application results page. Other applications will be reviewed by Outreachy organizers. You may get an email asking you to clarify your essay or provide more information about your time commitments. Otherwise, you won't hear from Outreachy organizers until the initial application results are announced.</p>
+<p>If you want to apply to Outreachy, we encourage you read our <a href='{% url 'docs-applicant' %}'>Applicant Guide</a>. The Applicant Guide provides the most up-to-date description of our application process. The Applicant Guide includes <a href='{% url 'docs-applicant' %}#initial-application'>tips for getting your initial application accepted</a>.</p>
 
-<p>All accepted applicants will receive an email when the contribution period starts on {{ changed_round.contributions_open }} at 4pm UTC. At that time, all project details, including how to get in contact with a mentor, will be visible to approved applicants. This means that all applicants start making contributions at the same time, which is a change from previous rounds.</p>
+<p>The initial application system opens on {{ changed_round.initial_applications_open }} at 4pm UTC. The deadline for initial applications is {{ changed_round.initial_applications_close }} at 4pm UTC. We encourage you to submit your initial application early.</p>
 
-<p>Another change is that the contribution period is only five weeks, instead of six weeks. This round, all projects have the same final application deadline.</p>
+<p>If your application is rejected due to not meeting our eligibility rules, you will be notified immediately on the initial application results page. If your application is rejected due to not meeting our time commitment rules, you will also be notified immediately on the initial application results page.</p>
+
+<p>All other applications will be reviewed by Outreachy organizers. You may get an email asking you to clarify your essay or provide more information about your time commitments. Otherwise, you won't hear from Outreachy organizers until the contribution period opens.</p>
+
+<p>Everyone who has an accepted initial application will receive an email. You'll be emailed when the contribution period starts on {{ changed_round.contributions_open }} at 4pm UTC. During the contribution period, you'll get in contact with mentors and work on project tasks (contributions).</p>
+
+<p>All project details, including how to get in contact with a mentor, will only be visible to people with an approved initial application. Project details will only be visible after {{ changed_round.contributions_open }} at 4pm UTC. This means that all applicants start making contributions at the same time, which is a change from previous rounds.</p>
+
+<p>Another change is that the contribution period is only five weeks. In prior rounds, the contribution period was six weeks.</p>
+
+<p>All projects have the same deadline for final applications ({{ changed_round.contributions_close }} at 4pm UTC). In previous rounds, some projects had a late deadline. That's no longer true.</p>
 
 <h2>Impact for mentors and coordinators</h2>
 
@@ -53,23 +66,45 @@ Schedule changes for Outreachy
 
 <p>Project details are hidden from applicants until the contribution period starts. However, your project title and project skills will still be visible on the <a href='{% url 'project-selection' %}'>project list page</a>. Please use that page to promote your community's participation in Outreachy! Promoting your project's participation means more people may decide to submit an initial application.</p>
 
-<p>Unlike previous rounds, all projects have the same contribution and final application deadline. There are no "on-time" or "late" projects any more. You can close your project to new applicants at any time during the contribution period. The only impact that has is moving your project listing to a 'Closed projects' section on the project selection page. This helps applicants to focus on projects with few applicants. Applicants can still record contributions and make final applications until the final application deadline at {{ changed_round.contributions_close }} at 4pm UTC.</p>
+<p>Unlike previous rounds, all projects have the same contribution and final application deadline. There are no "on-time" or "late" projects any more.</p>
+
+<p>You can close your project to new applicants at any time during the contribution period. The only impact that has is moving your project listing to a 'Closed projects' section on the <a href='{% url 'project-selection' %}'>project list page</a>. This helps applicants to focus on projects with few applicants. Applicants can still record contributions and make final applications until the final application deadline at {{ changed_round.contributions_close }} at 4pm UTC.</p>
 
 <p>
+
+<h2>Impact on promotional materials</h2>
+
+<p>In order to ensure applicants are aware of the new initial application deadlines, we've updated our promotional materials. We used to list the application period as "February to March" for the May internships, and "September to October" as the application period for the December internships. However, the initial application is due before March and October.</p>
+
+<p>We're concerned people will try to apply too late, and miss the initial application deadline. So we've updated our promotional materials to clarify that the initial application period is February and September.</p>
+
+<p>You can find the latest promotional materials on our <a href='{% url 'promote' %}'>promotion</a> page. In particular, we've updated our:</p>
+
+<ul>
+	<li>US letter English poster (<a href='https://github.com/outreachy/creative-works-and-scripts/raw/master/creative-works/poster-applicants-USletter.pdf'>pdf</a> or <a href='https://github.com/outreachy/creative-works-and-scripts/raw/master/creative-works/poster-applicants-USletter.svg'>svg</a>)</li>
+	<li>A4 English poster (<a href='https://github.com/outreachy/creative-works-and-scripts/raw/master/creative-works/poster-applicants-A4.pdf'>pdf</a> or <a href='https://github.com/outreachy/creative-works-and-scripts/raw/master/creative-works/poster-applicants-A4.svg'>svg</a>)</li>
+	<li>A4 Brazilian Portuguese poster (<a href='https://github.com/outreachy/creative-works-and-scripts/raw/master/creative-works/poster-applicants-A4-Brasil.pdf'>pdf</a> or <a href='https://github.com/outreachy/creative-works-and-scripts/raw/master/creative-works/poster-applicants-A4-Brasil.svg'>svg</a>)</li>
+	<li>A3 Brazilian Portuguese poster (<a href='https://github.com/outreachy/creative-works-and-scripts/raw/master/creative-works/poster-applicants-A3-Brasil.pdf'>pdf</a> or <a href='https://github.com/outreachy/creative-works-and-scripts/raw/master/creative-works/poster-applicants-A3-Brasil.svg'>svg</a>)</li>
+	<li>English business cards sized to print on moo.com: front (<a href='https://github.com/outreachy/creative-works-and-scripts/raw/master/creative-works/business-card-sticker-3.5-inch-2-inch-front.pdf'>pdf</a> / <a href='https://github.com/outreachy/creative-works-and-scripts/raw/master/creative-works/business-card-sticker-3.5-inch-2-inch-front.svg'>svg</a>) and back (<a href='https://github.com/outreachy/creative-works-and-scripts/raw/master/creative-works/business-card-sticker-3.5-inch-2-inch-back.pdf'>pdf</a> / <a href='https://github.com/outreachy/creative-works-and-scripts/raw/master/creative-works/business-card-sticker-3.5-inch-2-inch-back.svg'>svg</a>)</li>
+	<li>Presentation to introduce free software, Outreachy, and Google Summer of Code: (<a href='https://github.com/outreachy/creative-works-and-scripts/raw/master/creative-works/open-source-101-gsoc-outreachy.pdf'>pdf</a>) or (<a href='https://github.com/outreachy/creative-works-and-scripts/raw/master/creative-works/open-source-101-gsoc-outreachy.odp'>odp</a>)</li>
+	<li>Sample email and sample tweets on the <a href='{% url 'promote' %}'>promotion page</a></li>
+</ul>
+
+<p>If you would like to help us improve the design of our promotional materials, improve our current translations, or translate our promotional materials to additional languages, you can open a <a href="https://github.com/outreachy/creative-works-and-scripts/tree/master/creative-works">GitHub issue</a> to provide updated svg and pdf files.</p>
 
 <h2>Why are we making these changes?</h2>
 
 <p>There are several reasons for making changes to our schedule. </p>
 
-<p>Separating out an initial application period from the contribution period helps Outreachy organizers. We have a small team of people who review over one thousand initial applications each round. If we focus on reviewing applications as fast as possible, people who have questions about how to pick a project or how to make a contribution don't get help. If we stop to answer questions about making project contributions, applicants with pending initial applications send us worried emails.</p>
+<p>Separating out the initial application period from the contribution period helps Outreachy organizers. We have a small team of people who review over one thousand initial applications each round. If we focus on reviewing applications as fast as possible, people who have questions about how to pick a project or how to make a contribution don't get help. If we stop to answer questions about making project contributions, applicants with pending initial applications send us worried emails.</p>
 
-<p>We also hope the changes will improve the experience for applicants. In past rounds, the project list wasn't finalized before the contribution period started. Chances are that many applicants looked at the initial list, didn't find a project they were interested in, and then stopped applying. We hope that having the full project list when applicants are notified their initial application is approved will engage more applicants.</p>
+<p>We also hope the changes will improve the experience for applicants. In past rounds, the project list wasn't finalized before the contribution period started. Applicants who applied the first week would only see about 25% of the total projects. If an applicant didn't find a project they were interested in, that may have caused them to not continue applying. We hope that having the full project list at the start of the contribution period will engage more applicants.</p>
 
-<p>In past rounds, we also allowed applicants to submit an initial application during the contribution period. Reviewing initial applications takes up to 10 business days. While waiting to hear about their initial application results, many applicants were worried about losing time to make contributions.</p>
+<p>In past rounds, we also allowed applicants to submit an initial application during the contribution period. Reviewing initial applications takes up to 10 business days. While waiting to hear about their initial application results, many applicants were worried about losing time to make contributions. Some applicants were approved during the last two weeks, which may not have given them enough time to make a contribution.</p>
 
-<p>We decided to do a statistical analysis on the December 2019 round. We used linear regression to see if when an applicant submitted their initial application had an impact on whether they recorded a contribution. This analysis controlled for many factors, including education, prior experience with free software, job status, gender identity, and other demographics.</p>
+<p>We decided to do a statistical analysis on the December 2019 round. We used linear regression to see if the date an applicant submitted their initial application had an impact on whether they recorded a contribution. This analysis controlled for many factors, including education, prior experience with free software, gender identity, race, and other factors.</p>
 
-<p>Impact of when the initial application is approved during the six week contribution period:</p>
+<p>Here is the impact of when the initial application is approved during the six week contribution period:</p>
 <ul>
 	<li>Week 1: -5.6% chance of recording a contribution</li>
 	<li>Week 2: +1.0% chance of recording a contribution</li>
@@ -81,12 +116,20 @@ Schedule changes for Outreachy
 
 <p>In previous rounds, week 4 is when the full project list is available. During week 1, very few project listings were available (typically 25% of the total number of projects). Having an initial application approved during the last week of the contribution period means there's not enough time to make a contribution. Thus, we wanted to try to provide the same experience for all applicants by having them start a contribution at the same time.</p>
 
-<p>In previous rounds, projects could have an 'on-time' or 'late' deadline for the final application. We also heard that having different deadlines for final applications was confusing to applicants. Based on those conversations, we wanted all projects to have the same final application deadline.</p>
+<p>In previous rounds, projects could have an 'on-time' or 'late' deadline for the final application. The final application deadline for late projects was delayed by one week. We heard that having different deadlines for final applications was confusing to applicants. Based on those conversations, we wanted all projects to have the same final application deadline.</p>
 
 <p>We also asked mentors whether the contribution period was too short or too long. We heard many stories of mentors being overwhelmed if they worked with applicants for the full six weeks. Some mentors were so overloaded they would stop responding to new applicants. Some mentors even put off listing their project until the week 4 mentor project submission deadline! We also heard stories from mentors who needed extra time for applicants to make complex contributions. The mentors were concerned they wouldn't be able to accurately judge applicant skills if the contribution period was shorter than four weeks.</p>
 
-<p>Based on feedback from applicants and mentors with different needs, we made a compromise. We decided to shorten the contribution period from six weeks to five weeks. All projects would have the same final application deadline. Projects could close to new applicants at any time during the application period. All projects would be listed when the contribution period begins.</p>
+<p>Based on feedback from applicants and mentors with different needs, we made a compromise. We decided to shorten the contribution period from six weeks to five weeks. All projects would be open to contributions at the same time. All projects would have the same final application deadline. Projects could close to new applicants at any time during the application period, hopefully providing relief to overloaded mentors.</p>
 
 <p>We hope this change is a good experience for both mentors and applicants. Based on how this round goes, we may make further schedule changes next round. If you want to give us feedback on this change after the contribution period is over on {{ changed_round.contributions_close }} please <a href='{% url 'contact-organizers' %}'>contact us</a>.
+
+<h2>How can I help Outreachy?</h2>
+
+<p>Please promote the new internship round to your networks! You can use resources on the updated <a href='{% url 'promote' %}'>promotion</a> page to print posters, send emails, or <a href='https://www.twitter.com/Outreachy/'>tweet about Outreachy</a>.</p>
+
+<p>You can also sign up to mentor or coordinate for Outreachy. We ask that Outreachy applicants don't sign up to be mentors or coordinators. If you're a contributor to a free software community, you can <a href='/mentor/'>read our documentation about how communities can sign up to participate</a>.</p>
+
+<p>Outreachy is currently seeking for sponsors for the next round. Please <a href='/sponsor/'>read more about Outreachy sponsorship</a>.</p>
 
 {% endblock %}
