@@ -198,7 +198,7 @@
 				{% for p in project_contributions %}
 					<li>{{ p.project_round.community.name }} - {{ p.short_title }}
 						<ul>
-							<li>Application deadline: {{ current_round.contributions_close }} 4pm UTC</li>
+							<li>Final application deadline: {{ current_round.contributions_close }} 4pm UTC</li>
 							{% if not current_round.contributions_close.has_passed %}
 								<li><a href="{{ p.get_contributions_url }}">Record your contributions</a></li>
 								<li><a href="{{ p.get_contributions_url }}">Edit or create a final application</a></li>
