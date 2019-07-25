@@ -244,13 +244,12 @@ class RoundPage(AugmentDeadlines, Page):
     orgreminder = models.DateField("Date to remind orgs to submit their home pages")
     landingdue = models.DateField("Date community landing pages are due")
     initial_applications_open = models.DateField("Date initial applications open")
+    outreachy_chat = models.DateTimeField("Date and time of the Outreachy Twitter chat")
     initial_applications_close = models.DateField("Date initial applications close")
     contributions_open = models.DateField("Date contributions open")
     contributions_close = models.DateField("Date contributions close")
-    appsopen = models.DateField("Date applications open")
     lateorgs = models.DateField("Last date to add community landing pages")
     lateprojects = models.DateField("Last date to add projects")
-    appslate = models.DateField("Date extended applications are due")
     mentor_intern_selection_deadline = models.DateField("Date mentors must select their intern by")
     coordinator_funding_deadline = models.DateField("Date coordinators must mark funding sources for interns by")
     internapproval = models.DateField("Date interns are approved by the Outreachy organizers")
@@ -287,10 +286,8 @@ class RoundPage(AugmentDeadlines, Page):
         FieldPanel('initial_applications_close'),
         FieldPanel('contributions_open'),
         FieldPanel('contributions_close'),
-        FieldPanel('appsopen'),
         FieldPanel('lateorgs'),
         FieldPanel('lateprojects'),
-        FieldPanel('appslate'),
         FieldPanel('mentor_intern_selection_deadline'),
         FieldPanel('coordinator_funding_deadline'),
         FieldPanel('internapproval'),
@@ -1641,26 +1638,6 @@ class Project(ApprovalStatus):
             verbose_name="How can applicants make a contribution to your project?",
             help_text='Instructions for how applicants can make contributions during the Outreachy application period.<br><br>Make sure to include links to getting started tutorials or documentation, how applicants can find contribution tasks on your project website or issue tracker, who they should ask for tasks, and everything they need to know to get started.')
 
-    CLOSED = 'NOW'
-    ONTIME = 'REG'
-    LATE = 'LAT'
-    DEADLINE_CHOICES = (
-            (CLOSED, 'Immediately close this project to new applicants'),
-            (ONTIME, 'Open applications until the application period ends'),
-            (LATE, 'Extend applications through the late application deadline'),
-            )
-    deadline = models.CharField(
-            max_length=3,
-            choices=DEADLINE_CHOICES,
-            verbose_name="Project deadline",
-            help_text="If you have too many applicants, and your most promising applicants have recorded both a contribution and a final application, you may want to close your project to new applicants.<br>If you have too few applicants, you may want to extend your project's application deadline by one week.",
-            )
-
-    needs_more_applicants = models.BooleanField(
-            default=False,
-            verbose_name="Does your project need more applicants?",
-            help_text='Check this box to advertise this project as needing more applicants. This is typically used by projects without a lot of strong applicants two weeks before the application deadline.<br><br>You should uncheck this box if you already have many strong applicants who have filled out a final application.')
-
     new_contributors_welcome = models.BooleanField(
         default=True,
         verbose_name="Is your project open to new contributors?",
@@ -2369,7 +2346,6 @@ class ApplicantApproval(ApprovalStatus):
 
     def get_projects_contributed_to(self):
         return self.project_contributions.distinct().order_by(
-            '-deadline',
             'project_round__community__name',
             'short_title',
         )

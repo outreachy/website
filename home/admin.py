@@ -158,14 +158,12 @@ class ProjectAdmin(reversion.admin.VersionAdmin):
             'short_title',
             'community',
             'approval_status',
-            'deadline',
             'reason_denied',
             'round',
             )
     list_filter = (
             'approval_status',
             'project_round__participating_round',
-            'deadline',
             )
     search_fields = (
             'short_title',

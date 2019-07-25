@@ -88,7 +88,7 @@ class RoundPageTestCase(TestCase):
                 project__approval_status=models.ApprovalStatus.PENDING,
                 project__project_round__approval_status=models.ApprovalStatus.APPROVED,
                 project__short_title=pending_project_title,
-                project__project_round__participating_round__start_from='appsopen',
+                project__project_round__participating_round__start_from='initial_applications_open',
                 project__project_round__participating_round__days_after_today=-10)
 
         # Make a different mentor with an approved project under the same community
@@ -135,7 +135,7 @@ class RoundPageTestCase(TestCase):
                 project_round__approval_status=models.ApprovalStatus.APPROVED,
                 project_round__community__name=community_name,
                 short_title=project_title,
-                project_round__participating_round__start_from='appsopen',
+                project_round__participating_round__start_from='initial_applications_open',
                 project_round__participating_round__days_after_today=-10)
 
         # Grab the current project selection page

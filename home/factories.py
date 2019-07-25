@@ -100,13 +100,12 @@ round_dates = (
     'pingold',
     'orgreminder',
     'initial_applications_open',
-    'appsopen',
     'lateorgs',
+    'outreachy_chat',
     'initial_applications_close',
     'landingdue',
     'lateprojects',
     'contributions_open',
-    'appslate',
     'contributions_close',
     'mentor_intern_selection_deadline',
     'coordinator_funding_deadline',
@@ -159,15 +158,15 @@ class RoundPageFactory(PageFactory):
     orgreminder = datetime.timedelta(days=7)
     # week 2 - Jan 22 / Aug 20
     initial_applications_open = datetime.timedelta(days=7)
-    appsopen = datetime.timedelta(days=0)
     # week 3
     # week 4 - Feb 5 / Sept 3
     lateorgs = datetime.timedelta(days=14)
-    # week 5
+    # week 5 - Monday Feb 12 / Sept 9
+    outreachy_chat = datetime.timedelta(days=7)
     # week 6
     # week 7 - Feb 26 / Sept 24 - "soft" deadline for project submission
     # week 7 - Feb 26 / Sept 24 - deadline for submitting initial applications
-    initial_applications_close = datetime.timedelta(days=21)
+    initial_applications_close = datetime.timedelta(days=14)
     landingdue = datetime.timedelta(days=0)
     # week 8 - Mar 5 / Oct 1 - deadline for approving initial apps & projects
     lateprojects = datetime.timedelta(days=7)
@@ -177,8 +176,7 @@ class RoundPageFactory(PageFactory):
     # week 11
     # week 12
     # week 13 - Apr 9 / Nov 5 - contribution and final application deadline
-    appslate = datetime.timedelta(days=35)
-    contributions_close = datetime.timedelta(days=0)
+    contributions_close = datetime.timedelta(days=35)
     # week 14
     # week 15 - Apr 18 / Nov 14 - deadline for intern selection
     mentor_intern_selection_deadline = datetime.timedelta(days=9)
@@ -190,7 +188,7 @@ class RoundPageFactory(PageFactory):
     # and when the interns start.
     #
     # week 17 - Nov 26
-    # week 18 - Dec 3
+    # week 18 - Dec 3 - interns start
     #
     # Pass the following parameters to set up the December round:
     # internapproval = datetime.timedelta(days=1),
@@ -248,6 +246,9 @@ class RoundPageFactory(PageFactory):
             previous += kwargs[field_name]
             if field_name.endswith('_chat_text_date'):
                 kwargs[field_name] = datetime.datetime.combine(previous, kwargs['chat_text_time'])
+            elif field_name == 'outreachy_chat':
+                chat_time = datetime.time(16, 0, tzinfo=datetime.timezone.utc)
+                kwargs[field_name] = datetime.datetime.combine(previous, chat_time)
             else:
                 kwargs[field_name] = previous
         kwargs['title'] = kwargs['internstarts'].strftime('Outreachy %B %Y internship round')
@@ -297,7 +298,6 @@ class ProjectFactory(factory.django.DjangoModelFactory):
     slug = factory.Faker('slug')
 
     contribution_tasks = factory.Faker('paragraph')
-    deadline = models.Project.ONTIME
 
 class MentorApprovalFactory(factory.django.DjangoModelFactory):
     class Meta:
@@ -342,7 +342,7 @@ class ContributionFactory(factory.django.DjangoModelFactory):
         django_get_or_create = ('applicant', 'project')
 
     class Params:
-        round = factory.SubFactory(RoundPageFactory, start_from='appslate')
+        round = factory.SubFactory(RoundPageFactory, start_from='contributions_close')
 
     applicant = factory.SubFactory(
         ApplicantApprovalFactory,
