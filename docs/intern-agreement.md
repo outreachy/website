@@ -2,7 +2,7 @@
 
 **Internship Terms of Participation**
 
-_last edited - May 13, 2019_
+_last edited - July 25, 2019_
 
 **Dear Participant:**
 
@@ -85,19 +85,19 @@ will make best efforts to send out payments quickly after internship progress
 confirmations. Payments may be issued earlier than scheduled deadlines below,
 but interns should not rely on earlier payments.
 
- * $1,000 will be sent to you by or around July 8, 2019 if your Volunteer Mentor
-   confirms confirms to Conservancy by June 8, 2019 that you are in good
+ * $1,000 will be sent to you by or around January 17, 2020 if your Volunteer Mentor
+   confirms confirms to Conservancy by December 18, 2019 that you are in good
    standing. If Conservancy receives such confirmation late, your payment will
    be delayed. If such confirmation is not received, you will not receive
    payment.
 
- * $2,000 will be sent to you by or around August 7, 2019 if your Volunteer
-   Mentor confirms to Conservancy by July 8, 2019 that you are in good standing.
+ * $2,000 will be sent to you by or around February 28, 2020 if your Volunteer
+   Mentor confirms to Conservancy by January 29, 2020 that you are in good standing.
    If Conservancy receives such confirmation late, your payment will be delayed.
    If such confirmation is not received, you will not receive payment.
 
- * $2,500 will be sent to you by or around September 24, 2019 if your Volunteer
-   Mentor confirms to Conservancy by August 25, 2019 that you successfully
+ * $2,500 will be sent to you by or around April 9, 2020 if your Volunteer
+   Mentor confirms to Conservancy by March 10, 2020 that you successfully
    completed your internship. If Conservancy receives such confirmation late,
    your payment will be delayed. If such confirmation is not received, you will
    not receive payment.
@@ -159,7 +159,7 @@ and are not currently residing in one of these countries;
 (c) you are not a person or entity restricted by US export controls or
 sanctions programs;
 
-(d) you are or will be 18 years of age or older by May 20, 2019;
+(d) you are or will be 18 years of age or older by December 3, 2019;
 
 (e) (i) the contents of your Application and information you submitted for your
 Initial Application, including your stated availability and time commitment to
@@ -200,7 +200,7 @@ which furthers Conservancy’s charitable purposes.
 
 **Termination.**
 
-The internship will take place between May 20, 2019 and August 20, 2019. In
+The internship will take place between December 3, 2019 and March 3, 2020. In
 exceptional situations, your internship can be extended for up to five weeks,
 provided that both you and your Volunteer Mentor send a written request for an
 extension specifying a new end date to the Outreachy Project's leadership
