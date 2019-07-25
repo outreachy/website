@@ -17,7 +17,7 @@
 {% if role.is_potential_applicant %}
 	{% if not role.current_round.initial_applications_open.has_passed %}
 		<div class="card border-info mb-3">
-			<div class="card-header text-white bg-info">Applications are not open</div>
+			<div class="card-header text-white bg-info">Initial applications are not open</div>
 			<div class="card-body">
 				<p class="card-text">
 				You cannot submit an initial application until {{ role.current_round.initial_applications_open }} at 4pm UTC.
@@ -52,10 +52,16 @@
 		</div>
 	{% else %}
 		<div class="card border-info mb-3">
-			<div class="card-header text-white bg-info">Internship applications are now closed</div>
+			<div class="card-header text-white bg-info">Initial applications are closed</div>
 			<div class="card-body">
 				<div class="card-text">
-					{% include 'home/snippet/deadline_passed.html' %}
+					<p>
+					The deadline to create an initial application has passed for the {{ role.current_round.official_name }}.
+					We are no longer accepting initial applications for internships.
+					We encourage you to sign up for the
+					<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">announcements mailing list</a>
+					to get an email when the next round opens.
+					</p>
 				</div>
 			</div>
 		</div>
@@ -99,10 +105,20 @@
 				</p>
 			</div>
 		{% else %}
-			<div class="card-header text-white bg-info">Internship applications are now closed</div>
+			<div class="card-header text-white bg-info">Initial applications are now closed</div>
 			<div class="card-body">
 				<div class="card-text">
-					{% include 'home/snippet/deadline_passed.html' %}
+					<p>
+					You submitted an initial application for the {{ role.current_round.official_name }}, but it has not been approved or rejected.
+					{% if role.application.barrierstoparticipation.applicant_should_update %}
+					Your initial application may be pending because you did not update your essay answers.
+					{% else %}
+					Your initial application may be pending because you did not respond to an email request for information by Outreachy organizers.
+					{% endif %}
+					We encourage you to sign up for the
+					<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">announcements mailing list</a>
+					to get an email when the next round opens.
+					</p>
 				</div>
 			</div>
 		{% endif %}
@@ -130,7 +146,7 @@
 					</p>
 				</div>
 			{% else %}
-				<div class="card-header text-white bg-info">Application deadlines are passed</div>
+				<div class="card-header text-white bg-info">The final application deadline has passed</div>
 				<div class="card-body">
 					<div class="card-text">
 						{% include 'home/snippet/deadline_passed.html' %}
@@ -158,7 +174,7 @@
 				</p>
 		{% elif role.current_round.contribution_closes.has_passed %}
 			<div class="card border-info mb-3">
-			    <div class="card-header text-white bg-info">Internship Applications are Closed</div>
+			    <div class="card-header text-white bg-info">The final application deadline has passed</div>
 			    <div class="card-body">
 				<div class="card-text">
 					{% include 'home/snippet/deadline_passed.html' %}

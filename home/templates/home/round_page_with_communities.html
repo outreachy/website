@@ -56,12 +56,6 @@ Outreachy Internships | Apply | Pick a Project
 	<li><a href="{% url 'docs-applicant' %}#make-contributions">Making Contributions</a></li>
 </ul>
 
-{% if role.is_approved_applicant %}
-	{% if current_round.contributions_close.has_passed %}
-		{% include 'home/snippet/deadline_passed.html' %}
-	{% endif %}
-{% endif %}
-
 {% if ontime_projects %}
 	{% if not current_round.contributions_close.has_passed %}
 		<h2 id="open-projects">Outreachy Open Projects</h2>
