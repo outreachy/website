@@ -2,7 +2,7 @@
 
 Hi Outreachy mentor,
 
-The application deadline has passed for your {{ community.name }} project "{{ project.short_title }}".
+The final application deadline has passed for your {{ community.name }} project "{{ project.short_title }}".
 
 {% if applicants|length == 0 %}Unfortunately, no applicants created a final application for your project this round. If an applicant has contacted you because they missed the deadline to submit a final application, please email Outreachy organizers <organizers@outreachy.org> with their name and email address. Otherwise, we encourage you to submit your project next round!
 
