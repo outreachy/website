@@ -101,6 +101,11 @@ class BlogIndex(RoutablePageMixin, Page):
     def feed(self, request):
         return self.feed_generator(request, self)
 
+    def get_context(self, request, *args, **kwargs):
+        context = super(BlogIndex, self).get_context(request, *args, **kwargs)
+        context['feed'] = self.feed_generator.get_feed(self, request)
+        return context
+
 # All dates in RoundPage below, if an exact time matters, actually represent
 # the given date at 4PM UTC.
 DEADLINE_TIME = datetime.time(hour=16, tzinfo=datetime.timezone.utc)

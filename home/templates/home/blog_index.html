@@ -20,14 +20,13 @@
 
 <p><a href="{% routablepageurl self "feed" %}"><img src="{% static 'Feed_Noun_project_104-32px.png' %}"> Subscribe to the Outreachy blog RSS feed</a> or <a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce"><img src="{% static 'email-postbox-j4p4n-public-domain-32px.png' %}"> Sign up for our announcements mailing list</a>.</p>
 
-{% for post in self.get_children.live.specific reversed %}
+{# feed is a django.utils.feedgenerator.SyndicationFeed subclass, so .items is a list of dictionaries #}
+{% for post in feed.items %}
 <div class="h-entry">
-<h2><a class="u-url p-name" href="{% pageurl post %}">{{ post.title }}</a></h2>
+<h2><a class="u-url p-name" href="{{ post.link }}">{{ post.title }}</a></h2>
 <p>Posted
-<time class="dt-published" datetime="{{ post.first_published_at|date:"c" }}">{{ post.first_published_at|naturaltime }}</time>
-{% with comrade=post.owner.comrade %}
-{% if comrade %}by <span class="p-author">{{ comrade.public_name }}</span>{% endif %}
-{% endwith %}
+<time class="dt-published" datetime="{{ post.pubdate|date:"c" }}">{{ post.pubdate|naturaltime }}</time>
+{% if post.author_name %}by <span class="p-author">{{ post.author_name }}</span>{% endif %}
 </p>
 </div>
 {% endfor %}
