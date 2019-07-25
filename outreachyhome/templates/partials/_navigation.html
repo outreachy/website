@@ -5,8 +5,9 @@
     </a>
 
     <div class="dropdown-menu" aria-labelledby="navbarApplicants">
-      <a class="dropdown-item" href="/apply/eligibility/">Eligibility Rules</a>
-      <a class="dropdown-item" href="/apply/">Application Process</a>
+      <a class="dropdown-item" href="{% url 'docs-applicant' %}">Applicant Guide</a>
+      <a class="dropdown-item" href="{% url 'docs-internship' %}">Internship Guide</a>
+      <a class="dropdown-item" href="/apply/">Apply to Outreachy</a>
       <a class="dropdown-item" href="{% url 'dashboard' %}">My Application</a>
       <a class="dropdown-item" href="{% url 'project-selection' %}">Current Projects</a>
       <a class="dropdown-item" href="{% url 'past-rounds' %}">Past Projects</a>
@@ -37,8 +38,9 @@
     </a>
 
     <div class="dropdown-menu" aria-labelledby="navbarInterns">
-      <a class="dropdown-item" href="{% url 'alums' %}">Past Interns</a>
+      <a class="dropdown-item" href="{% url 'docs-internship' %}">Internship Guide</a>
       <a class="dropdown-item" href="{% url 'dashboard' %}">My Internship</a>
+      <a class="dropdown-item" href="{% url 'alums' %}">Past Interns</a>
       <a class="dropdown-item" href="{% url 'travel-stipend' %}">Travel Stipend</a>
       <a class="dropdown-item" href="/opportunities/">Opportunities</a>
     </div>
