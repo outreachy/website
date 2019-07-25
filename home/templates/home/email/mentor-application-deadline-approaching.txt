@@ -10,7 +10,7 @@ In order to be eligible to be selected as an Outreachy intern, each applicant mu
 
 The deadline for final applications is {{ current_round.contributions_close }} at 4pm UTC. Applicants will not be able to create a final application after the deadline. Applicants can edit their final application until the deadline.
 
-Applicants who submit a final application will be able to continue recording and editing their contributions to your project. They can record contributions until the intern announcement deadline on {{ current_round.internannounce }} at 4pm UTC. Applicants who have not submitted a final application will not be able to record or edit their contributions.
+Applicants who submit a final application will be able to continue recording and editing their contributions to your project. They can record contributions until the intern announcement on {{ current_round.internannounce }} at 4pm UTC. Applicants who have not submitted a final application will not be able to record or edit their contributions.
 
 It's very important that you encourage the applicant(s) you want to accept for your project to complete their final application before the final application deadline. If you do not see the applicant you want to select on this list, contact them ASAP and tell them to record a contribution and submit a final application at this URL (which only works for eligible applicants, not mentors):
 
