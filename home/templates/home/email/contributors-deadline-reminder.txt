@@ -13,10 +13,10 @@ Contributions and final applications are due by {{ current_round.contributions_c
 
 We encourage you to submit your final applications early. You will be able to edit it until the final application deadline.
 
-{% if role.projects_with_upcoming_deadlines %}Your Project Contributions
+{% if role.projects_contributed_to %}Your Project Contributions
 --------------------------
 
-{% for project in role.projects_with_upcoming_deadlines %}
+{% for project in role.projects_contributed_to %}
 {{ project.project_round.community.name }} project "{{ project.short_title }}"
 {% if project in applied_projects %}Your final application will be reviewed: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% else %}You have NOT submitted a final application for this project. Create one here: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% endif %}{% if not forloop.last %}
 {% endif %}{% endfor %}

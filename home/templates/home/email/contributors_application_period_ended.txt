@@ -32,13 +32,13 @@ Our records indicate you have submitted a final application for the following pr
 {{ project.project_round.community.name }} project "{{ project.short_title }}"
 Your internship application will be reviewed: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% if not forloop.last %}
 {% endif %}{% endfor %}{% endif %}
-{% if role.passed_projects_not_applied_to %}
+{% if role.projects_not_applied_to %}
 Passed Deadlines
 ----------------
 
 Our records indicate you recorded a contribution but did not create a final application for the following projects:
 
-{% for project in role.passed_projects_not_applied_to %}{{ project.project_round.community.name }} project "{{ project.short_title }}"
+{% for project in role.projects_not_applied_to %}{{ project.project_round.community.name }} project "{{ project.short_title }}"
 {% if not forloop.last %}
 {% endif %}{% endfor %}{% endif %}
 

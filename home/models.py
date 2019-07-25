@@ -4844,24 +4844,8 @@ class Role(object):
         return False
 
     @property
-    def projects_with_upcoming_and_passed_deadlines(self):
-        return self.projects_with_upcoming_deadlines, self.projects_with_passed_deadlines
-
-    @property
-    def projects_with_upcoming_deadlines(self):
-        if self.current_round.contributions_close.has_passed():
-            return ()
-        return self.projects_contributed_to
-
-    @property
-    def projects_with_passed_deadlines(self):
-        if not self.current_round.contributions_close.has_passed():
-            return ()
-        return self.projects_contributed_to
-
-    @property
-    def passed_projects_not_applied_to(self):
-        return [ p for p in self.projects_with_passed_deadlines if not p.did_apply ]
+    def projects_not_applied_to(self):
+        return [ p for p in self.projects_contributed_to if not p.did_apply ]
 
 # Please keep this at the end of this file; it has to come after the
 # models it mentions, so just keep it after all other definitions.
