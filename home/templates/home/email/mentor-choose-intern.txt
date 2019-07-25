@@ -1,4 +1,4 @@
-{% with community=project.project_round.community %}{% with current_round=project.round %}{% with contributors=project.get_applicants_and_contributions_list %}{% with applicants=project.get_applications %}{% with coordinators=community.get_coordinator_email_list %}{% if applicants|length > 0 %}Select your Outreachy Intern by {{ current_round.mentor_intern_selection_deadline }}{% else %}Outreachy final application deadlines have passed{% endif %}
+{% with community=project.project_round.community %}{% with current_round=project.round %}{% with contributors=project.get_applicants_and_contributions_list %}{% with applicants=project.get_applications %}{% with coordinators=community.get_coordinator_email_list %}{% if applicants|length > 0 %}Select your Outreachy Intern by {{ current_round.mentor_intern_selection_deadline }}{% else %}Outreachy final application deadline has passed{% endif %}
 
 Hi Outreachy mentor,
 
