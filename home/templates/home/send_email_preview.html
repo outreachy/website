@@ -7,6 +7,15 @@ Send {{ view.description }}
 {% block content %}
 <p>You're about to send {{ messages|length }} emails. Please check that these are the messages you want to send.</p>
 
+{% if urls %}
+<p>These messages include the following links; are the links correct?</p>
+<ul>
+	{% for link in urls %}
+	<li><a href="{{ link }}" rel="noopener">{{ link }}</a></li>
+	{% endfor %}
+</ul>
+{% endif %}
+
 <div class="email-preview">
 {% for message in messages %}
 <div class="card">
