@@ -1,0 +1,117 @@
+Outreachy week 11: Assignments for mentors & interns
+
+Welcome to week eleven of your Outreachy internship!
+
+We have some goals and assignments for both mentors and interns. Please read the sections below.
+
+Week 11 Theme
+-------------
+
+The theme for this week is "Making connections".
+
+As we saw in last week's career chat, networking is really important to get a job! But many people are shy. They may not feel comfortable reaching out. Other people may not know who to reach out to.
+
+A low-stakes way to network is to ask people to participate in an informational interview. An informational interview is an informal conversation with another person about their career or their role as a free software contributor.
+
+An informational interview lets you get insight into what they work on, how they got their job or became a leader in free software, and who they network with. After you talk with the interviewee, you can ask them for three other people you can talk to. This helps you expand your network!
+
+
+Goals for Mentors & Interns
+---------------------------
+
+The goal for week 11 is for interns to brain storm with their mentors three people for them to approach for an informational interview. Outreachy organizers and other interns from your cohort don't count. You can have one (and only one) of your informational interviewees be an Outreachy mentor, coordinator, or alum. The other two people need to expand your network beyond Outreachy.
+
+An interviewee could be someone in your free software community. It could be someone at your mentor's company. It could be someone who you admire on social media. It could be a speaker that came into your classes. It could be someone who you know through learning forums who recently got a job. It could be someone you know in the local tech industry.
+
+
+Week 12 Mentor & Intern Chat
+----------------------------
+
+On {{ current_round.week_twelve_chat_text_date }} UTC we will host a chat for Outreachy interns, alums, and mentors:
+
+{{ current_round.week_twelve_interviewing_chat_url }}
+
+We'll be discussing how to conduct an informational interview. We'll cover:
+
+ - What an informational interview is
+ - Who you might want to approach
+ - How to approach them
+ - What questions you can ask
+ - How to maximize your networking
+
+For mentors and alums, we need your help brainstorming other ways to network.
+
+
+Goals for Mentors
+-----------------
+
+Week 11 goals:
+
+ - Brainstorm with your intern three people they can ask to do an informational interview
+
+
+Goals for Interns
+-----------------
+
+Week 11/12 goals:
+
+ - Brainstorm with your mentor who you can ask to do an informational interview
+ - Participate in the interviewing chat
+ - Contact three people to ask for an informational interview
+ - Get your resume reviewed (see instructions below)
+
+
+Informational Interviews
+------------------------
+
+The ideal candidate for an informational interview is someone who can expand on your own knowledge and network. Think about the blog post prompt from last week about what direction you want your career to go. Who do you admire who already has that role or job? Who do you know who might be networking with people in that field?
+
+The goal for week 12 is for interns to reach out to three people for an informational interview. You should have an interview scheduled with at least one person by the end of your internship. If none of the three people respond, that's fine! They may just be busy. We encourage you to continue reaching out to people. The worst that can happen is people don't reply, or they politely say no.
+
+Here's a script for reaching out to people:
+
+"Hi (name). I'm interested in your experience as (role) (with X company / in X open source project). I'm exploring different career paths, especially ones that involve open source. Would you be willing to do a 30 minute informational interview with me? I would love to learn more about your work!"
+
+Example questions you can ask during an informational interview:
+
+ - What is a typical day (or week) like for you working in this role?
+ - What skills, abilities, and personal attributes are essential to success in your role?
+ - What is the culture like at your company? or What is the culture like in your free software organization?
+ - How does your job affect your general lifestyle? or How does your free software work affect your general lifestyle?
+ - How did you become interested in this field?
+ - How did you begin your career? or How did you begin your free software contributions?
+ - What are the most effective strategies for seeking a job in this field? or What are the most effective strategies for making a contribution to this free sofware community?
+ - What steps would you recommend I take to prepare to enter this field? or What steps would you recommend I take to integrate myself into this free software community?
+ - What are some common career paths in this field? or What are some common paths towards being a leader in free software?
+ - I've read that the entry-level salary range for this field is usually in the range of _____ in ______ country? Does this fit with what you've seen? (Don't ask about the person's actual salary.) or I've read that many free software contributors are paid to work on their projects. What percentage of contributors in your community are paid to work on the project?
+ - What related fields do you think I should consider looking into? or What related free software communities would you recommend I take a look at?
+ - Can you suggest three other people I could contact for an informational interview?
+
+Resume Review
+-------------
+
+Instead of a blog post this week, we'd like interns to polish up their resume. We have an Outreachy helper who has offered to review resumes, so this is your chance to get expert help!
+
+Send your resume in .docx or .odt format to {{ current_round.resume_reviewer_name }} <{{ current_round.resume_reviewer_email }}>. You'll also need to send a link to a job posting that's similar to what you're looking for. The resume reviewer will turn on 'Track changes' on your resume and make some suggestions. We ask that you don't do more than two back-and-forth review sessions with the resume reviewer.
+
+On your resume, we ask that you list your Outreachy internship in a specific way. Don't say you're working "for" a sponsor or a community. That misrepresents your contractor status with Outreachy's fiscal sponsor, the Software Freedom Conservancy.
+
+On your resume, use the phrase "Outreachy intern working with {{ community }}".
+
+If you're updating your LinkedIn profile, make sure to list "Outreachy" as your employer:
+
+https://www.linkedin.com/company/18204091/
+
+If you've never written a resume before, here's a couple of good articles on how to start:
+
+https://www.davidhaney.io/writing-a-great-junior-tech-resume/
+https://medium.com/free-code-camp/writing-a-killer-software-engineering-resume-b11c91ef699d
+
+Resumes can be daunting, but that's why we have {{ current_round.resume_reviewer_name }} to help review yours! The resume review is completely private, and it will help you before you have to give your resume to a potential employer.
+
+Please send your resume in .docx or .odt format to {{ current_round.resume_reviewer_name }} <{{ current_round.resume_reviewer_email }}>. Don't forget to include a link to a job posting that's similar to what you're looking for.
+
+If you have any questions, please contact the Outreachy organizers organizers@outreachy.org
+
+Outreachy Organizers
+{% include 'home/email/footer-mentor-intern-coordinator.txt' %}

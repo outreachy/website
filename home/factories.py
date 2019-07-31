@@ -120,6 +120,7 @@ round_dates = (
     'midfeedback',
     'week_ten_chat_text_date',
     'week_twelve_chat_text_date',
+    'week_fourteen_chat_text_date',
     'internends',
     'finalfeedback',
 )
@@ -212,7 +213,8 @@ class RoundPageFactory(PageFactory):
     midfeedback = datetime.timedelta(days=8)
     week_ten_chat_text_date = datetime.timedelta(days=6)
     week_twelve_chat_text_date = datetime.timedelta(days=14)
-    internends = datetime.timedelta(days=13)
+    week_fourteen_chat_text_date = datetime.timedelta(days=14)
+    internends = datetime.timedelta(days=0)
     finalfeedback = datetime.timedelta(days=7)
 
     @factory.lazy_attribute

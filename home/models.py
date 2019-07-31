@@ -270,8 +270,12 @@ class RoundPage(AugmentDeadlines, Page):
     week_eight_timeline_chat_url = models.URLField(blank=True, verbose_name="URL of the week eight chat to talk about project timeline modifications")
     week_ten_chat_text_date = models.DateTimeField("Date and time of Outreachy week ten chat to talk about career opportunities")
     week_ten_career_chat_url = models.URLField(blank=True, verbose_name="URL of the week ten chat to talk about career opportunities")
-    week_twelve_chat_text_date = models.DateTimeField("Date and time of Outreachy week twelve chat to wrap up the Outreachy internship")
-    week_twelve_wrapup_chat_url = models.URLField(blank=True, verbose_name="URL of the week twelve chat to wrap up the Outreachy internship")
+    week_twelve_chat_text_date = models.DateTimeField("Date and time of Outreachy week twelve chat on interviewing")
+    week_twelve_interviewing_chat_url = models.URLField(blank=True, verbose_name="URL of the week twelve chat on interviewing")
+    resume_reviewer_name = models.CharField(blank=True, max_length=255, verbose_name='Name of the person doing resume review during week 12')
+    resume_reviewer_email = models.EmailField(blank=True, verbose_name='Email address of the person doing resume review during week 12')
+    week_fourteen_chat_text_date = models.DateTimeField(verbose_name="Date and time of Outreachy week twelve chat to wrap up the Outreachy internship")
+    week_fourteen_wrapup_chat_url = models.URLField(blank=True, verbose_name="URL of the week twelve chat to wrap up the Outreachy internship")
     initialfeedback = models.DateField("Date initial feedback is due")
     initialpayment = models.IntegerField(default=1000)
     midfeedback = models.DateField("Date mid-point feedback is due")
@@ -317,7 +321,9 @@ class RoundPage(AugmentDeadlines, Page):
         FieldPanel('week_ten_chat_text_date'),
         FieldPanel('week_ten_career_chat_url'),
         FieldPanel('week_twelve_chat_text_date'),
-        FieldPanel('week_twelve_wrapup_chat_url'),
+        FieldPanel('week_twelve_interviewing_chat_url'),
+        FieldPanel('week_fourteen_chat_text_date'),
+        FieldPanel('week_fourteen_wrapup_chat_url'),
     ]
 
     def official_name(self):
