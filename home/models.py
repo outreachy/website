@@ -2686,8 +2686,8 @@ class TimeCommitmentSummary(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
 
     enrolled_as_student = models.BooleanField(
-            verbose_name='Are you (or will you be) a university or college student during the internship period?',
-            help_text='Will you be enrolled in a university or college during the Outreachy internship period? Please state yes even if only a few days overlap with the internship period.')
+            verbose_name='Are you (or will you be) a university or college student?',
+            help_text='Will you be enrolled in a university or college? Please state yes even if only a few days overlap with the Outreachy internship period.')
 
     enrolled_as_noncollege_student = models.BooleanField(
             verbose_name='Are you enrolled in a coding school or self-paced online courses?',
