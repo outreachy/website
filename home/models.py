@@ -2416,7 +2416,7 @@ class WorkEligibility(models.Model):
 class PaymentEligibility(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
     us_national_or_permanent_resident = models.BooleanField(
-            verbose_name='Are you a national or permanent resident of the United States of America?',
+            verbose_name='Are you a citizen, national, or permanent resident of the United States of America?',
             help_text='Outreachy is open to applicants around the world. This question is only to determine which tax form you will need to fill out.')
 
     living_in_us = models.BooleanField(

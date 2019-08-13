@@ -13,30 +13,33 @@ Outreachy Initial Application
 Outreachy's goal is to support people from groups who are under-represented in the technology industry.
 The following essay questions help us determine if your application is aligned with our program goal.
 </p>
+
 <p>
 The answer to this question will only be seen by the <a href="{% url 'contact-us' %}">Outreachy organizers</a>.
 It will not be shared with mentors, coordinators, or other applicants.
 </p>
+
 <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
-<div class="card border-warning mb-3">
-	<div class="card-header text-white bg-warning">Please read these instructions carefully</div>
-	<div class="card-body">
-		<div class="card-text">
-			<p>
-			These essay questions are a very important part of your application.
-			You should spend at least 5-10 minutes thinking about how to answer them.
-			</p>
-			<p>
-			Please review the essay questions carefully.
-			Make sure to review the help text below the question.
-			</p>
-			<p>
-			Good essay answers have at least 2 to 3 sentences.
-			We prefer essays with detailed examples or stories from your life.
-			</p>
+
+<div class="card border-warning mb-3" id="essay-accordian">
+	<div class="card-header text-white bg-warning" id="essay-tips-header">
+		<h5 class="mb-0">
+			<button class="btn btn-link" data-toggle="collapse" data-target="#essay-tips-accordion" aria-expanded="true" aria-controls="essay-tips-accordion" href="#essay-tips-accordion">- Essay Tips</button>
+		</h5>
+	</div>
+	<div id="essay-tips-accordion" class="collapse show" aria-labelledby="essay-tips-header" data-parent="#essay-accordian">
+		<div class="card-body">
+			<div class="card-text">
+				<p>
+				These essay questions are a very important part of your application.
+				You should spend at least 5-10 minutes thinking about how to answer them.
+				</p>
+				{% include 'home/docs/essay-tips-snippet.html' %}
+			</div>
 		</div>
 	</div>
 </div>
+
 <hr>
 
 <form action="" method="post">{% csrf_token %}
