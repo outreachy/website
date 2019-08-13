@@ -1,0 +1,74 @@
+Outreachy week 13: Last assignments for mentors & interns
+
+Welcome to the last full week of your Outreachy internship! 🎉 We're so proud of you for making it this far! 💙
+
+We have some goals and assignments for both mentors and interns. Please read the sections below.
+
+Week 13 Theme
+-------------
+
+The theme for this week is "Internship wrap-up".
+
+For Outreachy interns without an extension, this week is the last week of the internship. We hope this has been a rewarding experience for you!
+
+Goals for Mentors & Interns
+---------------------------
+
+We know Outreachy interns learn and grow a lot during the internship! We encourage both you and your mentor to look at the blog post you made at the start of the internship about the ways you were struggling. Have you found new ways to cope with your worries? Have you gotten better about asking for help? How have you grown since the start of the internship? Then write a blog post reflecting on the ways you've grown and what skills you've learned.
+
+We'd like interns and mentors to take time this week to reflect on the progress you've made. Please provide each other with feedback on how the internship went. Feedback can include technical feedback, communication skills feedback, and mentor skills feedback.
+
+You can always provide private feedback to the Outreachy organizers in the final feedback form. Final internship feedback will be due on {{ current_round.finalfeedback }}. The form will open 1 week before the due date. You'll receive an email reminder to fill it out.
+
+Week 14 Mentor & Intern Chat
+----------------------------
+
+On {{ current_round.week_fourteen_chat_text_date }} UTC we will host a chat for Outreachy interns and mentors:
+
+{{ current_round.week_fourteen_wrapup_chat_url }}
+
+In this chat, we'll discuss how this internship has been for interns and mentors. Feel free to bring ideas of how Outreachy could improve, or leave comments in the private final feedback form.
+
+This will be the last chat for this round! All interns are welcome to continue to hang out in the Zulip chat. You can continue talking with your mentor and future Outreachy internship cohorts.
+
+Goals for Mentors
+-----------------
+
+Week 13 goals:
+
+ - Provide feedback on how you've seen your intern grow during the internship
+ - Feedback can include technical feedback or communication skills feedback
+ - Discuss ways your intern can continue to connect with you and the free software community
+ - Discuss any events or conferences your intern could use their travel stipend for: https://www.outreachy.org/travel-stipend/
+
+Goals for Interns
+-----------------
+
+Week 13 goals:
+
+ - Provide feedback to your mentor about how they helped you and any ways they could improve their mentorship skills
+ - Discuss ways you can continue to connect with your mentor and the free software community
+ - Discuss any events or conferences you could use your travel stipend for: https://www.outreachy.org/travel-stipend/
+ - Write a wrap-up blog post for your internship
+
+Week 13 Blog
+------------
+
+For this week's blog post, we'd like you to write about how the Outreachy internship has been for you.
+
+Here's some prompts that could get you started writing this blog post:
+
+ - What was one fear you had about the internship that turned out to not come true?
+ - What was one amazing thing that happened during the internship?
+ - How did your Outreachy internship help you grow your skills?
+ - How did your Outreachy mentor help you along the way?
+ - How did Outreachy help you feel more confident in making open source and free software contributions?
+ - What communication skills have you learned during the internship?
+ - What technical skills have you learned during the internship?
+ - What parts of your project did you complete?
+ - What are the next steps for you (or someone else) to complete the project?
+
+We're so proud of all of you! If you have any questions or feedback for us, please contact the Outreachy organizers organizers@outreachy.org
+
+Outreachy Organizers
+{% include 'home/email/footer-mentor-intern-coordinator.txt' %}
