@@ -29,7 +29,7 @@
 									{% endif %}
 								</div>
 								<div class="col">
-									<p>School terms during the internship ({{ current_round.internstarts|date:"Y-m-d" }} to {{ current_round.internends|date:"Y-m-d" }}):</p>
+									<p>School terms during the internship ({{ role.current_round.internstarts|date:"Y-m-d" }} to {{ role.current_round.internends|date:"Y-m-d" }}):</p>
 									<ul>
 										{% for term in tcs.school_time_commitments %}
 											<li>Term name/number: {{ term.term_name }}</li>
