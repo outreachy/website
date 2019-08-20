@@ -1,4 +1,4 @@
-{% with tcs=application.get_time_commitments applicant=application.applicant final_application=applicant_contributions.0.get_application %}
+{% with tcs=role.application.get_time_commitments applicant=role.application.applicant %}
 	<div class="card border mt-3" id="time-commitments">
 		<div class="card-header bg-secondary text-white">Time commitment information</div>
 		<div class="card-body">
@@ -11,7 +11,7 @@
 					<li>Applicant is free from {{ tcs.free_period_start_date|date:"Y-m-d" }} to {{ tcs.free_period_end_date|date:"Y-m-d" }}.</li>
 				</ul>
 				<h3>Details</h3>
-				{% with tcs=application.get_time_commitments applicant=application.applicant final_application=applicant_contributions.0.get_application %}
+				{% with tcs=role.application.get_time_commitments applicant=role.application.applicant %}
 					{% if not tcs.school_time_commitments and not tcs.volunteer_time_commitments and not tcs.employment_time_commitments and not tcs.noncollege_school_time_commitments %}
 						<p>Applicant has not listed any university/college, coding school/online courses, work, or volunteer time commitments.</p>
 					{% endif %}
@@ -19,13 +19,13 @@
 						<div class="container">
 							<div class="row">
 								<div class="col">
-									Applicant is enrolled at <a href="{{ application.schoolinformation.university_website }}">{{ application.schoolinformation.university_name }}</a>
-									<br>Degree: {{ application.schoolinformation.degree_name }}
-									{% if application.schoolinformation.current_academic_calendar %}
-									<br><a href="{{ application.schoolinformation.current_academic_calendar }}">Current term academic calendar</a>
+									Applicant is enrolled at <a href="{{ role.application.schoolinformation.university_website }}">{{ role.application.schoolinformation.university_name }}</a>
+									<br>Degree: {{ role.application.schoolinformation.degree_name }}
+									{% if role.application.schoolinformation.current_academic_calendar %}
+									<br><a href="{{ role.application.schoolinformation.current_academic_calendar }}">Current term academic calendar</a>
 									{% endif %}
-									{% if application.schoolinformation.next_academic_calendar %}
-									<br><a href="{{ application.schoolinformation.next_academic_calendar }}">Next term academic calendar</a>
+									{% if role.application.schoolinformation.next_academic_calendar %}
+									<br><a href="{{ role.application.schoolinformation.next_academic_calendar }}">Next term academic calendar</a>
 									{% endif %}
 								</div>
 								<div class="col">
@@ -36,9 +36,9 @@
 											<li>Term dates: {{ term.start_date }} to {{ term.end_date }}</li>
 										{% endfor %}
 									</ul>
-									{% if application.schoolinformation.school_term_updates %}
+									{% if role.application.schoolinformation.school_term_updates %}
 									<p>The applicant provided the following updates about their school term:</p>
-									<p>{{ application.schoolinformation.school_term_updates|linebreaksbr }}</p>
+									<p>{{ role.application.schoolinformation.school_term_updates|linebreaksbr }}</p>
 									{% endif %}
 								</div>
 							</div>

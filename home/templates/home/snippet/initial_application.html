@@ -4,7 +4,7 @@
 	</div>
 	<div class="card-body">
 		<div class="card-text">
-			{% for label, obj in application.get_question_models %}
+			{% for label, obj in role.application.get_question_models %}
 				<h4>{{ label }}</h4>
 				{% for field, answer in obj.get_answers %}
 					<div class="card">
