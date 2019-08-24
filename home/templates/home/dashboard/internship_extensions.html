@@ -1,0 +1,12 @@
+{% with internship=section my_round=section.round %}
+  {% load wagtailcore_tags %}
+  <h1>Internship Extensions</h1>
+  <form method="post" action="">
+  {% csrf_token %}
+	<p>Dates you should be updating for internship extension:
+	<ul>
+	<li><form action="{{ current_round.midfeedback }}" method="post"></li>
+  <li><form action="{{ current_round.finalfeedback }}" method="post"></li>
+  <li><form action="{{ term.end_date }}" method="post"></li>
+	</ul>
+{% endwith %}
