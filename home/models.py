@@ -3443,6 +3443,26 @@ class InternSelection(AugmentDeadlines, models.Model):
             return True
         return False
 
+    def internship_extension(self):
+        if not self.final_feedback_opens.has_passed():
+            return False
+        if not self.current_round.midfeedback.has_passed():
+            return False
+        if not self.term.end_date.has_passed():
+            return False
+        try:
+            return self.finalinternfeedback.can_edit()
+        except InitialInternFeedback.DoesNotExist:
+            return True
+        try:
+            return self.currentroundmidfeedback.can_edit()
+        except MidInternFeedback.DoesNotExist:
+            return True
+        try:
+            return self.termenddate.can_edit()
+        except TermEndDate.DoesNotExist:
+            return True
+
     def is_initial_feedback_on_intern_open(self):
         if not self.initial_feedback_opens.has_passed():
             return False
