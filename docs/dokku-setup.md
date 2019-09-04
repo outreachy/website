@@ -223,3 +223,18 @@ $ ssh -t dokku@www.outreachy.org run www env --unset=SENTRY_DSN python manage.py
 ...     send_mail(message=body.strip(), subject=subject.strip(), recipient_list=emails, from_email=Address("Outreachy Organizers", "organizers", "outreachy.org"))
 ... 
 ```
+
+# Marking interns as paid
+
+>>> from home.models import *
+current_round = RoundPage.objects.get(interstarts='YYYY-MM-DD')
+>>> interns = current_round.get_in_good_standing_intern_selections()
+>>> for i in interns:
+...     try:
+...             if i.finalmentorfeedback.payment_approved and not i.finalmentorfeedback.organizer_payment_approved:
+...                     i.finalmentorfeedback.organizer_payment_approved = True
+...                     i.finalmentorfeedback.save()
+...     except FinalMentorFeedback.DoesNotExist:
+...             pass
+... 
+>>> 
