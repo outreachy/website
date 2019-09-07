@@ -1370,8 +1370,11 @@ class Participation(ApprovalStatus):
     def get_action_url(self, action):
         return self.reverse('participation-action', action=action)
 
+    # Outreachy organizers can approve participations until the contribution period closes
+    # Other pages should hide the community participation submission button
+    # after RoundPage.lateorgs
     def submission_and_approval_deadline(self):
-        return self.participating_round.lateorgs
+        return self.participating_round.contributions_close
 
     def is_approver(self, user):
         return user.is_staff
