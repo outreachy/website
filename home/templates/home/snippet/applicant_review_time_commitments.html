@@ -10,115 +10,203 @@
 							<p>{% include 'home/snippet/red_flags_display.html' %}</p>
 						{% endfor %}
 					{% endif %}
-					{% if role.is_organizer %}
-						<h2>Request School Information Revision?</h2>
-						<p>If the applicant is missing school terms or you suspect the information they provided is incorrect, then you can ask the applicant to revise their school information.
-						They can revise their school information once after you click the button below.
-						Clicking the button will send an email to them asking them to revise their school information.
-						</p>
-						<p><form method="post" action="{% url 'request-school-info-revision' applicant_username=application.applicant.account.username %}">
-							{% csrf_token %}
-							<input type='submit' class='btn btn-warning' value="Request School Info Revision">
-						</form></p>
-					{% endif %}
-					<h2>Your Review of Time Commitments</h2>
-					<p>In order to help other reviewers follow up with applicants on inconsistent or unclear time commitment details, you'll need to set a series of warning flags. Once a flag is set, please coordinate with other application reviewers to determine who is following up with the applicant.</p>
-					<p>Please review whether the applicant's time commitments for the following inconsistencies:
-					</p>
-					<ol>
-						<li><b>Review school terms</b> - Does the application list school time commitments that need to be reviewed? Outreachy runs twice a year (May to August and December to March). We expect that students from the northern hemisphere are not eligible for the December to March internship round. Students from the southern hemisphere may not be eligible for the May to August round. Sometimes students who think they might be ineligible lie about their term dates. We need to double check everyone's academic calendar for the hemisphere we think may be ineligible. We assume that the other hemisphere is eligible (except for Sri Lanki, where school runs year round and students are unfortunately not eligible).
-						<div class="container">
-							<div class="row">
-								<div class="col">
-									<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='review_school' flag_value='True' %}">
-										{% csrf_token %}
-										<input type='submit' class="btn btn-warning" value="Set Warning Flag">
-									</form>
-								</div>
-								<div class="col">
-									<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='review_school' flag_value='False' %}">
-										{% csrf_token %}
-										<input type='submit' class="btn btn-secondary" value="Clear Warning Flag">
-									</form>
-								</div>
-							</div>
-						</div>
-						</li>
-						<li><b>Missing school terms</b> - Do the essay answers mention school, but the applicant has not provided school time commitments? Some applicants who think they may be ineligible leave off their term dates.
-						<div class="container">
-							<div class="row">
-								<div class="col">
+					<h2>Warning Flags</h2>
+					<table class="table table-bordered">
+						<tr>
+							<td><b>Review school terms</b></td>
+							<td>
+								<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='review_school' flag_value='True' %}">
+									{% csrf_token %}
+									<input type='submit' class="btn btn-warning" value="Set Warning Flag">
+								</form>
+							</td>
+							<td>
+								<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='review_school' flag_value='False' %}">
+									{% csrf_token %}
+									<input type='submit' class="btn btn-secondary" value="Clear Warning Flag">
+								</form>
+							</td>
+						</tr>
+						<tr>
+							<td><b>Missing school terms</b></td>
+							<td>
 									<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='missing_school' flag_value='True' %}">
 										{% csrf_token %}
 										<input type='submit' class="btn btn-warning" value="Set Warning Flag">
 									</form>
-								</div>
-								<div class="col">
+							</td>
+							<td>
 									<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='missing_school' flag_value='False' %}">
 										{% csrf_token %}
 										<input type='submit' class="btn btn-secondary" value="Clear Warning Flag">
 									</form>
-								</div>
-							</div>
-						</div>
-						</li>
-						<li><b>Review work commitments</b> - Does the work time commitments look suspicious based on the description of the job or the essay answers?
-						<div class="container">
-							<div class="row">
-								<div class="col">
+							</td>
+						</tr>
+						<tr>
+							<td><b>Review work commitments</b></td>
+							<td>
 									<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='review_work' flag_value='True' %}">
 										{% csrf_token %}
 										<input type='submit' class="btn btn-warning" value="Set Warning Flag">
 									</form>
-								</div>
-								<div class="col">
+							</td>
+							<td>
 									<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='review_work' flag_value='False' %}">
 										{% csrf_token %}
 										<input type='submit' class="btn btn-secondary" value="Clear Warning Flag">
 									</form>
-								</div>
-							</div>
-						</div>
-						</li>
-						<li><b>Missing work commitments</b> - Do the essay answers mention working, but the applicant has not provided the hours they are working and whether they will quit their job if they are accepted? Some applicants think they can work a full-time job and a full-time internship, which rarely works out. This flag means we need to double check the number of hours the person is required to work for under their employment contract. If it's more than 20 hours, we need to make sure they are willing to commit to quitting their job if they are accepted as an intern.
-						<div class="container">
-							<div class="row">
-								<div class="col">
+							</td>
+						</tr>
+						<tr>
+							<td><b>Missing work commitments</b></td>
+							<td>
 									<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='missing_work' flag_value='True' %}">
 										{% csrf_token %}
 										<input type='submit' class="btn btn-warning" value="Set Warning Flag">
 									</form>
-								</div>
-								<div class="col">
+							</td>
+							<td>
 									<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='missing_work' flag_value='False' %}">
 										{% csrf_token %}
 										<input type='submit' class="btn btn-secondary" value="Clear Warning Flag">
 									</form>
-								</div>
-							</div>
-						</div>
-						</li>
-						<li><b>Incorrect time commitment dates</b> - Does any time commitments look like they are too far in the past or in the future? Some applicants mis-type years or copy the term dates from an outdated guide that students have made for fellow applicants at their university.
-						<div class="container">
-							<div class="row">
-								<div class="col">
+							</td>
+						</tr>
+						<tr>
+							<td><b>Incorrect time commitment dates</b></td>
+							<td>
 									<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='incorrect_dates' flag_value='True' %}">
 										{% csrf_token %}
 										<input type='submit' class="btn btn-warning" value="Set Warning Flag">
 									</form>
-								</div>
-								<div class="col">
+							</td>
+							<td>
 									<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='incorrect_dates' flag_value='False' %}">
 										{% csrf_token %}
 										<input type='submit' class="btn btn-secondary" value="Clear Warning Flag">
 									</form>
+							</td>
+						</tr>
+					</table>
+
+					<div class="card border-info mb-3" id="essay-accordian">
+						<div class="card-header" id="essay-tips-header">
+							<h5 class="mb-0">
+								<button class="btn btn-link" data-toggle="collapse" data-target="#essay-tips-accordion" aria-expanded="false" aria-controls="essay-tips-accordion" href="#essay-tips-accordion">- Warning Flag Instructions</button>
+							</h5>
+						</div>
+						<div id="essay-tips-accordion" class="collapse hide" aria-labelledby="essay-tips-header" data-parent="#essay-accordian">
+							<div class="card-body">
+								<div class="card-text">
+									<p>In order to help other reviewers follow up with applicants on inconsistent or unclear time commitment details, you'll need to set a series of warning flags. Once a flag is set, please coordinate with other application reviewers to determine who is following up with the applicant.</p>
+									<p>Please review whether the applicant's time commitments for the following inconsistencies:
+									</p>
+									<ol>
+										<li><b>Review school terms</b> - Does the application list school time commitments that need to be reviewed? Outreachy runs twice a year (May to August and December to March). We expect that students from the northern hemisphere are not eligible for the December to March internship round. Students from the southern hemisphere may not be eligible for the May to August round. Sometimes students who think they might be ineligible lie about their term dates. We need to double check everyone's academic calendar for the hemisphere we think may be ineligible. We assume that the other hemisphere is eligible (except for Sri Lanki, where school runs year round and students are unfortunately not eligible).
+											<div class="container">
+												<div class="row">
+													<div class="col">
+														<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='review_school' flag_value='True' %}">
+															{% csrf_token %}
+															<input type='submit' class="btn btn-warning" value="Set Warning Flag">
+														</form>
+													</div>
+													<div class="col">
+														<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='review_school' flag_value='False' %}">
+															{% csrf_token %}
+															<input type='submit' class="btn btn-secondary" value="Clear Warning Flag">
+														</form>
+													</div>
+												</div>
+											</div>
+										</li>
+										<li><b>Missing school terms</b> - Do the essay answers mention school, but the applicant has not provided school time commitments? Some applicants who think they may be ineligible leave off their term dates.
+											<div class="container">
+												<div class="row">
+													<div class="col">
+														<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='missing_school' flag_value='True' %}">
+															{% csrf_token %}
+															<input type='submit' class="btn btn-warning" value="Set Warning Flag">
+														</form>
+													</div>
+													<div class="col">
+														<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='missing_school' flag_value='False' %}">
+															{% csrf_token %}
+															<input type='submit' class="btn btn-secondary" value="Clear Warning Flag">
+														</form>
+													</div>
+												</div>
+											</div>
+										</li>
+										<li><b>Review work commitments</b> - Does the work time commitments look suspicious based on the description of the job or the essay answers?
+											<div class="container">
+												<div class="row">
+													<div class="col">
+														<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='review_work' flag_value='True' %}">
+															{% csrf_token %}
+															<input type='submit' class="btn btn-warning" value="Set Warning Flag">
+														</form>
+													</div>
+													<div class="col">
+														<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='review_work' flag_value='False' %}">
+															{% csrf_token %}
+															<input type='submit' class="btn btn-secondary" value="Clear Warning Flag">
+														</form>
+													</div>
+												</div>
+											</div>
+										</li>
+										<li><b>Missing work commitments</b> - Do the essay answers mention working, but the applicant has not provided the hours they are working and whether they will quit their job if they are accepted? Some applicants think they can work a full-time job and a full-time internship, which rarely works out. This flag means we need to double check the number of hours the person is required to work for under their employment contract. If it's more than 20 hours, we need to make sure they are willing to commit to quitting their job if they are accepted as an intern.
+											<div class="container">
+												<div class="row">
+													<div class="col">
+														<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='missing_work' flag_value='True' %}">
+															{% csrf_token %}
+															<input type='submit' class="btn btn-warning" value="Set Warning Flag">
+														</form>
+													</div>
+													<div class="col">
+														<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='missing_work' flag_value='False' %}">
+															{% csrf_token %}
+															<input type='submit' class="btn btn-secondary" value="Clear Warning Flag">
+														</form>
+													</div>
+												</div>
+											</div>
+										</li>
+										<li><b>Incorrect time commitment dates</b> - Does any time commitments look like they are too far in the past or in the future? Some applicants mis-type years or copy the term dates from an outdated guide that students have made for fellow applicants at their university.
+											<div class="container">
+												<div class="row">
+													<div class="col">
+														<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='incorrect_dates' flag_value='True' %}">
+															{% csrf_token %}
+															<input type='submit' class="btn btn-warning" value="Set Warning Flag">
+														</form>
+													</div>
+													<div class="col">
+														<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='incorrect_dates' flag_value='False' %}">
+															{% csrf_token %}
+															<input type='submit' class="btn btn-secondary" value="Clear Warning Flag">
+														</form>
+													</div>
+												</div>
+											</div>
+										</li>
+									</ol>
 								</div>
 							</div>
 						</div>
-						</li>
-					</ol>
+						</form>
+					</div>
 				</div>
+						{% if role.is_organizer %}
+						<h2>Request School Information Revision?</h2>
+						<p>You can send an email to ask the applicant to fill out a form to revise their school information by clicking the button below.</p>
+						<p><form method="post" action="{% url 'request-school-info-revision' applicant_username=application.applicant.account.username %}">
+							{% csrf_token %}
+							<input type='submit' class='btn btn-warning' value="Request School Info Revision">
+						</form></p>
+						{% endif %}
 			</div>
 		</div>
-	</form>
-{% endif %}
+		{% endif %}

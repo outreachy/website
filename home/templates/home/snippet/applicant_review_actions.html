@@ -53,11 +53,13 @@
 {% if role.is_reviewer %}
 	<h2>Initial Application Review Owner</h2>
 	{% if application.review_owner %}
-		<p>Owner for this application: {{ application.review_owner.comrade.public_name }}.</p>
+		<p>Owner for this application: <b>{{ application.review_owner.comrade.public_name }}.</b>
 	{% else %}
-		<p>No reviewer owns this application.</p>
+		<p>No reviewer owns this application. If no one has claimed this application, feel free to claim it as something you're working on. 
 	{% endif %}
-	<p>If no one has claimed this application, feel free to claim it as something you're working on. You can also assign it to the best person to handle it. Assign an application to a staff member when all additional information has been gathered and/or reviewed, and the application is ready to be approved or denied.</p>
+	Assign an application to a staff member when all additional information has been gathered and/or reviewed, and the application is ready to be approved or denied.</p>
+
+	<p>
 	<form method="post">
 		{% csrf_token %}
 		<div class="dropdown">
@@ -70,4 +72,5 @@
 			</div>
 		</div>
 	</form>
+	</p>
 {% endif %}

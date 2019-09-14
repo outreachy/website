@@ -23,26 +23,11 @@
 		{% endwith %}
 	</table>
 	{% include 'home/snippet/applicant_review_actions.html' %}
-	<h2>Reviewer Comments</h2>
-	<p><a class='btn btn-info' href="{% url 'update-comment' applicant_username=application.applicant.account.username %}">Update your comments</a></p>
-	{% for reviewer, comment in application.get_reviewer_comments %}
-		<div class="card mb-3">
-			<div class="card-header">{{ reviewer }} - Reviewer Comments</div>
-			<div class="card-body">
-				<div class="card-text">{{ comment|linebreaks }}</div>
-			</div>
-		</div>
-	{% endfor %}
-
 	<h1>Initial Application</h1>
 
-	{% if application.is_rejected %}
-		<p><b>Reason for rejection:</b> {{ application.get_reason_for_status }}</p>
-	{% elif application.is_pending %}
-		<p><b>Reason for pending status:</b> {{ application.get_reason_for_status }}</p>
-	{% elif application.is_approved %}
-		<p><b>Application has been approved</b></p>
-	{% endif %}
+	<h2>Time Commitment Details</h2>
+	{% include 'home/snippet/time_commitment_overview.html' %}
+	{% include 'home/snippet/applicant_review_time_commitments.html' %}
 
 	<h2>Eligibility</h2>
 	<ul>
@@ -141,6 +126,18 @@
 		<li>Prior experiences contributing to FOSS as a volunteer or paid contributor: <b>{{ application.priorfossexperience.get_prior_contribution_types }}</b>{% if not application.priorfossexperience.get_prior_contribution_types %}None{% endif %}</li>
 	</ul>
 	</p>
+
+	<h2>Reviewer Comments</h2>
+	<p><a class='btn btn-info' href="{% url 'update-comment' applicant_username=application.applicant.account.username %}">Update your comments</a></p>
+	{% for reviewer, comment in application.get_reviewer_comments %}
+		<div class="card mb-3">
+			<div class="card-header">{{ reviewer }} - Reviewer Comments</div>
+			<div class="card-body">
+				<div class="card-text">{{ comment|linebreaks }}</div>
+			</div>
+		</div>
+	{% endfor %}
+
 	<h2>Essay Answers</h2>
 
 	{% for field, answer in application.barrierstoparticipation.get_original_answers %}
@@ -151,15 +148,24 @@
 			</p>
 		</div>
 		<div class="card-footer bg-white">
-			<p>Help text:</p> {{ field.help_text|safe }}
+			<div class="card border-info mb-3" id="essay-accordian-{{ forloop.counter }}">
+				<div class="card-header" id="essay-tips-header">
+					<h5 class="mb-0">
+						<button class="btn btn-link" data-toggle="collapse" data-target="#essay-tips-accordion-{{ forloop.counter }}" aria-expanded="false" aria-controls="essay-tips-accordion" href="#essay-tips-accordion">- Help text</button>
+					</h5>
+				</div>
+				<div id="essay-tips-accordion-{{ forloop.counter }}" class="collapse hide" aria-labelledby="essay-tips-header" data-parent="#essay-accordian-{{ forloop.counter }}">
+					<div class="card-body">
+						<div class="card-text">
+							<p>Help text:</p> {{ field.help_text|safe }}
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	{% endfor %}
 	{% include 'home/snippet/applicant_review_essay_rating.html' %}
-
-	<h2>Time Commitment Details</h2>
-	{% include 'home/snippet/time_commitment_overview.html' %}
-	{% include 'home/snippet/applicant_review_time_commitments.html' %}
 
 	{% include 'home/snippet/applicant_review_actions.html' %}
 {% endblock %}

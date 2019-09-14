@@ -9,6 +9,12 @@
 					{% for essay_rating in application.get_essay_ratings %}
 						<p>{% include 'home/snippet/essay_rating.html' %}</p>
 					{% endfor %}
+					<p>
+					<form method="post">
+						{% csrf_token %}
+						{% include 'home/snippet/applicant_essay_rating_form.html' %}
+					</form>
+					</p>
 				{% endif %}
 				{% if role.is_organizer %}
 					<h2>Request an Essay Revision?</h2>
@@ -22,35 +28,48 @@
 					</form></p>
 				{% endif %}
 				<h2>Rate Essay</h2>
-				<p>Please review whether the applicant provided details to support a strongly compelling argument that:
-				</p>
-				<ol>
-					<li>They face discrimination or systemic bias in their learning environment, or discrimination or bias by their society which was a barrier to accessing a learning environment</li>
-					<li>They are from a group who is underrepresented in the technology industry of their country</li>
-				</ol>
-				<form method="post">
-					{% csrf_token %}
-					<div class="container">
-						<div class="row">
-							<div class="col">
-								{% include 'home/snippet/applicant_essay_rating_form.html' %}
+				<div class="card border-info mb-3" id="essay-rating-accordian">
+					<div class="card-header" id="essay-rating-header">
+						<h5 class="mb-0">
+							<button class="btn btn-link" data-toggle="collapse" data-target="#essay-rating-accordion" aria-expanded="false" aria-controls="essay-rating-accordion" href="#essay-rating-accordion">- Essay Tips</button>
+						</h5>
+					</div>
+					<div id="essay-rating-accordion" class="collapse hide" aria-labelledby="essay-rating-header" data-parent="#essay-rating-accordian">
+						<div class="card-body">
+							<div class="card-text">
+								<p>Please review whether the applicant provided details to support a strongly compelling argument that:
+								</p>
+								<ol>
+									<li>They face discrimination or systemic bias in their learning environment, or discrimination or bias by their society which was a barrier to accessing a learning environment</li>
+									<li>They are from a group who is underrepresented in the technology industry of their country</li>
+								</ol>
+								<form method="post">
+									{% csrf_token %}
+									<div class="container">
+										<div class="row">
+											<div class="col">
+												{% include 'home/snippet/applicant_essay_rating_form.html' %}
+											</div>
+								</form>
+								<div class="col-9">
+									<p>Reviewers have the following essay ratings available to them:</p>
+									<ul>
+										<li><button type="button" class="btn btn-success">+3</button> means the person provided answers that are a <b>strongly</b> compelling case for <b>both</b> conditions.</li><br>
+										<li><button type="button" class="btn btn-success">+2</button> means the person provided answers that are a <b>strongly</b> compelling case for <b>one</b> of the conditions.</li><br>
+										<li><button type="button" class="btn btn-success">+1</button> means the person provided answers that are a <b>weakly</b> compelling case for <b>one</b> of the conditions, but neither of the answers are strongly compelling.</li><br>
+										<li><button type="button" class="btn btn-secondary">??</button> means the essay answers were to short or unclear to make a decision. We may need to follow up with the applicant and ask them to update their essay questions.</li><br>
+										<li><button type="button" class="btn btn-warning">-1</button> means the essay answers show that the applicant understands they do not face either condition.</li><br>
+										<li><button type="button" class="btn btn-warning">-2</button> means the applicant did not understand the instructions in the essay question and gave an answer unrelated to discrimination/bias and underrepresentation of a group based on identity or background.</li><br>
+										<li><button type="button" class="btn btn-warning">-3</button> means the essay answers contained spam or trolling.</li><br>
+									</ul>
+								</div>
+										</div>
+									</div>
 							</div>
-				</form>
-						<div class="col-9">
-							<p>Reviewers have the following essay ratings available to them:</p>
-							<ul>
-								<li><button type="button" class="btn btn-success">+3</button> means the person provided answers that are a <b>strongly</b> compelling case for <b>both</b> conditions.</li><br>
-								<li><button type="button" class="btn btn-success">+2</button> means the person provided answers that are a <b>strongly</b> compelling case for <b>one</b> of the conditions.</li><br>
-								<li><button type="button" class="btn btn-success">+1</button> means the person provided answers that are a <b>weakly</b> compelling case for <b>one</b> of the conditions, but neither of the answers are strongly compelling.</li><br>
-								<li><button type="button" class="btn btn-secondary">??</button> means the essay answers were to short or unclear to make a decision. We may need to follow up with the applicant and ask them to update their essay questions.</li><br>
-								<li><button type="button" class="btn btn-warning">-1</button> means the essay answers show that the applicant understands they do not face either condition.</li><br>
-								<li><button type="button" class="btn btn-warning">-2</button> means the applicant did not understand the instructions in the essay question and gave an answer unrelated to discrimination/bias and underrepresentation of a group based on identity or background.</li><br>
-								<li><button type="button" class="btn btn-warning">-3</button> means the essay answers contained spam or trolling.</li><br>
-							</ul>
 						</div>
 					</div>
-				</div>
 			</div>
 		</div>
 	</div>
+</div>
 {% endif %}
