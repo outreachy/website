@@ -261,12 +261,9 @@
 		<p><a href="{% url 'account' %}">Edit your personal or coordinator information</a></p>
 
 		{% for participation in communities %}
-		<h4>Coordinator actions for {{ participation.community.name }}</h4>
-		<ul>
-			<li><a href="{{ participation.get_absolute_url }}">View the community projects page applicants see</a></li>
-			<li><a href="{{ participation.get_preview_url }}">Edit the community info</a></li>
-			<li><a href="{% url 'community-applicants' round_slug=role.current_round.slug community_slug=participation.community.slug %}">Review community applicants</a></li>
-		</ul>
+		{% with community=participation.community current_round=role.current_round participation_info=participation %}
+			{% include 'home/snippet/coordinator_action.html' %}
+		{% endwith %}
 		{% endfor %}
 	    </div>
 	    </div>

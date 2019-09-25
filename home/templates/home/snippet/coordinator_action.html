@@ -1,5 +1,5 @@
 			<div class="card border-info mb-3">
-				<div class="card-header text-white bg-info">Coordinator actions</div>
+				<div class="card-header text-white bg-info">Coordinator actions for {{ community.name }}</div>
 				<div class="card-body">
 					<p class="card-text">
 					<a class="btn btn-primary" href="{% url 'community-update' community_slug=community.slug %}">Update Community Info</a>
@@ -14,5 +14,17 @@
 						<a class="btn btn-primary" href="{% url 'dashboard' %}#actions">Approve Projects</a>
 						</p>
 					{% endif %}
+					{% if current_round and not current_round.internannounce.has_passed %}
+						<p class="card-text">
+						<a class="btn btn-primary" href="{% url 'community-applicants' round_slug=current_round.slug community_slug=community.slug %}">Review Applicants</a>
+						</p>
+					{% endif %}
+					<p class="card-text">
+					Important links:
+					</p>
+					<ul>
+						<li><a href="{% url 'community-read-only' community_slug=community.slug %}">Community CFP page for mentors</a></li>
+						<li><a href="{{ participation.get_absolute_url }}">Projects page for applicants</a> (details hidden from applicants until {{ current_round.contributions_open }})</li>
+					</ul>
 				</div>
 			</div>
