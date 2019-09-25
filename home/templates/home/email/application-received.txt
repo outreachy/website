@@ -14,7 +14,7 @@ There's some things you can do to better prepare yourself for the Outreachy cont
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'docs-applicant' %}
 
-We highly recommend you buy the DRM-free e-book "Forge Your Future with Open Source". The book will help you pick an Outreachy open source project and give you tips for making your first contributions to open source. You can get a discount on the book price by using the coupon code "{% application.application_round.coupon_code %}":
+We highly recommend you buy the DRM-free e-book "Forge Your Future with Open Source". The book will help you pick an Outreachy open source project and give you tips for making your first contributions to open source. You can get a discount on the book price by using the coupon code "{{ application.application_round.coupon_code }}":
 
 https://pragprog.com/book/vbopens/forge-your-future-with-open-source
 
