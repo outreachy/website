@@ -4,7 +4,6 @@ from django.core import mail
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from reversion.models import Version
-import unittest
 
 from home.models import *
 from home import factories
@@ -120,10 +119,6 @@ class ProjectSubmissionTestCase(TestCase):
         self.check_community_signup_marked_closed()
         self.submit_failed_community_signup(current_round)
 
-    # FIXME - in order to allow coordinators to edit their funding,
-    # we need the participation submit URL to work until interns are announced.
-    # The code needs to be fixed to not allow a new community to participate.
-    @unittest.expectedFailure
     def test_community_participation_signup_too_late(self):
         """
         This tests submitting an older community to participate in this round.

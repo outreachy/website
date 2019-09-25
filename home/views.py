@@ -1232,28 +1232,31 @@ class ParticipationAction(ApprovalStatusAction):
     def get_object(self):
         community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
 
-        # Only allow submission of communities until the last day to add communities
-        # FIXME: coordinators need to update their funding status until interns are announced,
-        # see FIXME below
+        # FIXME: probably should raise PermissionDenied, not Http404, outside of deadlines
+
+        # For most purposes, this form is available right up to intern announcement...
         now = datetime.now(timezone.utc)
         today = get_deadline_date_for(now)
-        if self.kwargs['action'] == 'submit':
-            participating_round = get_object_or_404(RoundPage, slug=self.kwargs['round_slug'],
-                pingnew__lte=today,
-                internannounce__gt=today,
+        participating_round = get_object_or_404(
+            RoundPage,
+            slug=self.kwargs['round_slug'],
+            pingnew__lte=today,
+            internannounce__gt=today,
+        )
+
+        # ...except submitting new communities cuts off at the lateorgs deadline.
+        if participating_round.lateorgs.has_passed():
+            return get_object_or_404(
+                Participation,
+                community=community,
+                participating_round=participating_round,
             )
-        # Only allow withdrawl of community participations until the intern announcement date
-        else:
-            participating_round = get_object_or_404(RoundPage, slug=self.kwargs['round_slug'],
-                pingnew__lte=today,
-                internannounce__gt=today,
-            )
+
         try:
             return Participation.objects.get(
                     community=community,
                     participating_round=participating_round)
         except Participation.DoesNotExist:
-            # FIXME: deny submission of new communities if participating_round.lateorgs.has_passed():
             return Participation(
                     community=community,
                     participating_round=participating_round)
