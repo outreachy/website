@@ -248,6 +248,7 @@ class RoundPage(AugmentDeadlines, Page):
     pingold = models.DateField("Date to start pinging past orgs")
     orgreminder = models.DateField("Date to remind orgs to submit their home pages")
     landingdue = models.DateField("Date community landing pages are due")
+    coupon_code = models.CharField(blank=True, max_length=255, verbose_name='Coupon code for the book "Forge Your Future with Open Source"')
     initial_applications_open = models.DateField("Date initial applications open")
     outreachy_chat = models.DateTimeField("Date and time of the Outreachy Twitter chat")
     initial_applications_close = models.DateField("Date initial applications close")

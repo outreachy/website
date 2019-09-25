@@ -1,0 +1,30 @@
+Outreachy resources and application status
+
+Thank you for submitting your Outreachy initial application. Applicants who are approved to move onto the contribution period will be notified via email on {{ application.application_round.contributions_open }} at 4pm UTC. At that time, you can also check your initial application status on the eligibility results page:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'eligibility-results' %}
+
+Once your initial application is approved, you'll move onto the contribution period. During this time, you'll pick an Outreachy project, talk to the project mentor, and make a small contribution to the project. You make a contribution by completing a project task. A contribution could be something like fixing a bug in the project code or updating the project's documentation.
+
+Only applicants who make a contribution will be eligible to be accepted as an Outreachy intern. We recommend you start your contributions early, as it can take some time to set up your contribution environment.
+
+It's important for you to contact the project mentor. Ask questions about the project description. Introduce yourself on the community chat or forums as an Outreachy applicant. Make sure to reach out to the project mentor if you're stuck for more than a couple hours. Mentors are looking for applicants who are consistently in contact and ask for help when they get stuck.
+
+There's some things you can do to better prepare yourself for the Outreachy contribution period. First, make sure you've read through the Outreachy Applicant Guide:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'docs-applicant' %}
+
+We highly recommend you buy the DRM-free e-book "Forge Your Future with Open Source". The book will help you pick an Outreachy open source project and give you tips for making your first contributions to open source. You can get a discount on the book price by using the coupon code "{% application.application_round.coupon_code %}":
+
+https://pragprog.com/book/vbopens/forge-your-future-with-open-source
+
+If you're new to open source, we recommend brushing up on your GitHub skills by following the tutorials here:
+
+https://lab.github.com/
+
+If you want to brush up on your programming skills, we recommend accessing the free resources and community forums on FreeCodeCamp:
+
+https://www.freecodecamp.org/
+
+Outreachy Organizers
+{% include 'home/email/footer-applicant.txt' %}
