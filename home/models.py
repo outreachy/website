@@ -2260,7 +2260,7 @@ class ApplicantApproval(ApprovalStatus):
     def get_time_commitments(self):
         current_round = self.application_round
 
-        nearby_date = datetime.timedelta(days=30)
+        nearby_date = datetime.timedelta(days=30*3)
         relevant = models.Q(
             applicant=self,
             start_date__lte=current_round.internends + nearby_date,
@@ -2878,7 +2878,7 @@ class SchoolInformation(models.Model):
         )
 
         current_round = self.applicant.application_round
-        nearby_date = datetime.timedelta(days=30)
+        nearby_date = datetime.timedelta(days=30*3)
         start_date = current_round.internstarts - nearby_date
         end_date = current_round.internends + nearby_date
 
