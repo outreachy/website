@@ -457,6 +457,15 @@ class RoundPage(AugmentDeadlines, Page):
             comrade__account=user,
         ).exists()
 
+    def print_approved_project_list(self):
+        projects = Project.objects.filter(project_round__participating_round=self, approval_status=ApprovalStatus.APPROVED, project_round__approval_status=ApprovalStatus.APPROVED).order_by('project_round__community__name').distinct()
+        for p in projects:
+            skills = p.required_skills() + p.preferred_skills()
+            print("<p><a href='https://www.outreachy.org/{}'>{}</a>, ".format(p.get_landing_url(), p.short_title), end='')
+            for s in skills:
+                print("{} ({}), ".format(s.skill, s.get_requirement_short_code()), end='')
+            print("</p>")
+
     def get_intern_selections(self):
         return InternSelection.objects.filter(
                 project__project_round__participating_round=self,
@@ -1864,6 +1873,14 @@ class ProjectSkill(models.Model):
             return "4"
         if self.experience_level == self.CHALLENGE:
             return "5"
+
+    def get_requirement_short_code(self):
+        if self.required == STRONG:
+            return 'Required'
+        if self.required == OPTIONAL:
+            return 'Preferred'
+        else:
+            return 'Nice to have'
 
     def __str__(self):
         return '{start:%Y %B} to {end:%Y %B} round - {community} - {title} - {skill}'.format(
