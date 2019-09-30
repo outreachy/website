@@ -460,7 +460,7 @@ class RoundPage(AugmentDeadlines, Page):
     def print_approved_project_list(self):
         projects = Project.objects.filter(project_round__participating_round=self, approval_status=ApprovalStatus.APPROVED, project_round__approval_status=ApprovalStatus.APPROVED).order_by('project_round__community__name').distinct()
         for p in projects:
-            skills = p.required_skills() + p.preferred_skills()
+            skills = p.required_skills() | p.preferred_skills()
             print("<p><a href='https://www.outreachy.org/{}'>{}</a>, ".format(p.get_landing_url(), p.short_title), end='')
             for s in skills:
                 print("{} ({}), ".format(s.skill, s.get_requirement_short_code()), end='')
