@@ -1875,9 +1875,9 @@ class ProjectSkill(models.Model):
             return "5"
 
     def get_requirement_short_code(self):
-        if self.required == STRONG:
+        if self.required == self.STRONG:
             return 'Required'
-        if self.required == OPTIONAL:
+        if self.required == self.OPTIONAL:
             return 'Preferred'
         else:
             return 'Nice to have'
