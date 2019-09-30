@@ -79,20 +79,49 @@ Outreachy Internships | Apply | Pick a Project
 	{% endif %}
 	{% endwith %}
 
-	<p>Each project mentor looks for applicants who have
-	different skills. Sometimes a skill is a hard requirement for
-	an applicant to have. Other times, a mentor might prefer an
-	applicant to have a skill, but they would accept an applicant
-	as an intern who didn't have that skill. Some skills are "nice
-	to have" meaning it would be great if applicants have this
-	skill, but the mentor doesn't have a strong preference.</p>
+	<div class="card border-info mb-3">
+		<div class="card-header ">Project skills key</div>
+		<div class="card-body">
+			<p class="card-text">
+			Each project will require a different level of experience with different skills.
+			</p>
 
-	<p>Each project will require a different level of experience with a particular skill. Experience levels are indicated with numbers:
-	<br>
-		{% for i in example_skill.EXPERIENCE_CHOICES %}
-			<br><button type="button" class="btn btn-info">{{ forloop.counter }}</button> {{ i.1 }}
-		{% endfor %}
-	</p>
+			<p class="card-text">
+			<b>Experience level:</b> You don't need to be an expert to apply.
+			Each project will need a different skill experience level:
+			</p>
+			<table class="table">
+				{% for i in example_skill.EXPERIENCE_CHOICES %}
+				<tr>
+					<td><button type="button" class="btn btn-info">{{ forloop.counter }}</button></td>
+					<td>{{ i.1 }}</td>
+				</tr>
+				{% endfor %}
+			</table>
+
+			<p class="card-text">
+			<b>Required skills:</b> You don't need to have all project skills in order to apply.
+			Each project skill will be listed as:
+			</p>
+
+			<table class="table">
+				<tr>
+					<td>Required</td>
+					<td>Mentors will only select you as an intern if you have this skill</td>
+				</tr>
+				<tr>
+					<td>Preferred</td>
+					<td>Mentors prefer to select an intern who has this skill, but they may select you if you don't have this skill</td>
+				</tr>
+				<tr>
+					<td>Nice to have</td>
+					<td>Mentors will select you, even if you don't have this skill</td>
+				</tr>
+			</table>
+
+			<p>If you're unsure whether you have the project skills needed, reach out the mentor via email and ask them. It's better to ask than to not apply!</p>
+		</div>
+	</div>
 
 	{% if not current_round.contributions_open.has_passed %}
 		<h3>Contributions Begin {{ current_round.contributions_open }} at 4pm UTC</h3>
