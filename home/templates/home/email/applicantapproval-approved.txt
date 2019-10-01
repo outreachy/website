@@ -8,17 +8,30 @@ The next step is to pick one or two projects, talk to the project mentors, and m
 
 Only applicants who make a contribution will be eligible to be accepted as an Outreachy intern. We encourage you to start making on your contributions as soon as possible! The contribution period starts on {{ application.application_round.contributions_open }} at 4pm UTC. Contributions and final applications are due on {{ application.application_round.contributions_close }} at 4pm UTC.
 
-It's important for you be in contact with the project mentor during the contribution period. Ask questions about the project description. Introduce yourself on the community chat or forums as an Outreachy applicant. Make sure to reach out to the project mentor if you're stuck for more than a couple hours. Mentors are looking for applicants who are consistently in contact and ask for help when they get stuck.
+Contacting Mentors
+---
 
-The list of projects and project mentors can be found here:
+Mentors will not be assigned to you. You'll need to pick a project and contact the mentor. Many applicants are shy and prefer to contact mentors via email. However, you can often get your questions answered faster if you ask them on the community chat or forums.
+
+It's important for you be in contact with the project mentor during the whole contribution period. Ask questions about the project description. Introduce yourself on the community chat or forums as an Outreachy applicant. If the project description isn't clear, ask how you can make your first contribution.
+
+Make sure to reach out to the project mentor if you're stuck for more than a couple hours. Update your mentor with what you're working on and what progress you've made at least twice a week. Mentors are looking for applicants who have clear and consistent communication skills.
+
+Outreachy Project List
+---
+
+The list of projects sorted by community can be found here:
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
+
+Finding Help
+---
 
 Please review the applicant guide:
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'docs-applicant' %}
 
-If you get stuck at any time, please reach out to the mentors or contact the Outreachy applicant helpers:
+If you are having trouble finding a project or contacting a mentor, please reach out to the mentors mailing list or contact the Outreachy applicant helpers:
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'contact-mentors' %}
 {{ request.scheme }}://{{ request.get_host }}{% url 'contact-applicant-help' %}
