@@ -57,22 +57,6 @@ Outreachy Internships | Apply | Pick a Project
 </ul>
 
 {% if ontime_projects %}
-	{% with common_skills=current_round.get_common_skills %}
-	{% if common_skills %}
-		<p>Outreachy is offering internship projects in the following areas:
-		<ul>
-			{% for common_skill in common_skills %}
-			{% if common_skill.1 > 2 %}<li>{{ common_skill.0 }} - {{ common_skill.1 }} project{{ common_skill.1|pluralize }}</li>{% endif %}
-			{% endfor %}
-			<li>{% for common_skill in common_skills %}
-				{% if common_skill.1 <= 2 %}{{ common_skill.0 }}, {% endif %}
-				{% endfor %}
-			</li>
-		</ul>
-		</p>
-	{% endif %}
-	{% endwith %}
-
 	<div class="card border-info mb-3" id='project-skills-key'>
 		<div class="card-header ">Project skills key</div>
 		<div class="card-body">
@@ -118,6 +102,22 @@ Outreachy Internships | Apply | Pick a Project
 	</div>
 	{% if not current_round.contributions_close.has_passed %}
 		<h2 id="open-projects">Outreachy Open Projects</h2>
+		{% with common_skills=current_round.get_common_skills %}
+		{% if common_skills %}
+			<p>Outreachy is offering internship projects in the following areas:
+			<ul>
+				{% for common_skill in common_skills %}
+				{% if common_skill.1 > 2 %}<li>{{ common_skill.0 }} - {{ common_skill.1 }} project{{ common_skill.1|pluralize }}</li>{% endif %}
+				{% endfor %}
+				<li>{% for common_skill in common_skills %}
+					{% if common_skill.1 <= 2 %}{{ common_skill.0 }}, {% endif %}
+					{% endfor %}
+				</li>
+			</ul>
+			</p>
+		{% endif %}
+		{% endwith %}
+
 	{% else %}
 		<h2 id="open-projects">Past Outreachy Projects</h2>
 	{% endif %}
