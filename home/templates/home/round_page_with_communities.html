@@ -57,12 +57,6 @@ Outreachy Internships | Apply | Pick a Project
 </ul>
 
 {% if ontime_projects %}
-	{% if not current_round.contributions_close.has_passed %}
-		<h2 id="open-projects">Outreachy Open Projects</h2>
-	{% else %}
-		<h2 id="open-projects">Past Outreachy Projects</h2>
-	{% endif %}
-
 	{% with common_skills=current_round.get_common_skills %}
 	{% if common_skills %}
 		<p>Outreachy is offering internship projects in the following areas:
@@ -122,6 +116,12 @@ Outreachy Internships | Apply | Pick a Project
 			<p>If you're unsure whether you have the project skills needed, reach out the mentor via email and ask them. It's better to ask than to not apply!</p>
 		</div>
 	</div>
+	{% if not current_round.contributions_close.has_passed %}
+		<h2 id="open-projects">Outreachy Open Projects</h2>
+	{% else %}
+		<h2 id="open-projects">Past Outreachy Projects</h2>
+	{% endif %}
+
 
 	{% if not current_round.contributions_open.has_passed %}
 		<h3>Contributions Begin {{ current_round.contributions_open }} at 4pm UTC</h3>
@@ -136,9 +136,11 @@ Outreachy Internships | Apply | Pick a Project
 
 		<p> The following projects are accepting contributions and applications from new
 		applicants until {{ current_round.contributions_close }} at 4pm UTC.</p>
+
 	{% else %}
 		<h3>Final Applications Closed {{ current_round.contributions_close }} at 4pm UTC</h3>
 	{% endif %}
+	<hr>
 
 	{% for participation, projects in ontime_projects %}
 	{% with community=participation.community funded_interns=participation.interns_funded %}
