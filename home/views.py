@@ -2458,6 +2458,18 @@ def blog_schedule_changes(request):
         'changed_round': changed_round,
         })
 
+def blog_2019_pick_projects(request):
+    try:
+        changed_round = RoundPage.objects.get(
+            contributions_open__gte='2019-07-23',
+            contributions_open__lte='2019-12-01',
+        )
+    except RoundPage.DoesNotExist:
+        changed_round = None
+    return render(request, 'home/blog/2019-10-01-picking-a-project.html', {
+        'changed_round': changed_round,
+        })
+
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(InitialMentorFeedback,
             fields=(
