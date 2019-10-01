@@ -75,7 +75,7 @@ class WagtailFeed(Feed):
             full_url=reverse('2019-12-pick-a-project'),
             owner=author,
             first_published_at=pacific.localize(datetime.datetime(2019, 10, 1, 7, 26, 0)),
-            last_published_at=pacific.localize(datetime.datetime(2019, 10, 1, 7, 26, 1)),
+            last_published_at=pacific.localize(datetime.datetime(2019, 10, 1, 7, 50, 0)),
         ))
 
         # put the Wagtail pages and special posts together in the right order
