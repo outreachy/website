@@ -22,7 +22,11 @@ Outreachy Project List
 
 The list of projects sorted by community can be found here:
 
-{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
+{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}{% if application.application_round.pick_a_project_blog_url %}
+
+The list of projects sorted by topic and programming language is here:
+
+{{ application.application_round.pick_a_project_blog_url }}{% endif %}
 
 Finding Help
 ---

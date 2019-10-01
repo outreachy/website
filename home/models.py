@@ -252,6 +252,7 @@ class RoundPage(AugmentDeadlines, Page):
     initial_applications_open = models.DateField("Date initial applications open")
     outreachy_chat = models.DateTimeField("Date and time of the Outreachy Twitter chat")
     initial_applications_close = models.DateField("Date initial applications close")
+    pick_a_project_blog_url = models.URLField(blank=True, verbose_name="URL of the blog on how to pick a project")
     contributions_open = models.DateField("Date contributions open")
     contributions_close = models.DateField("Date contributions close")
     lateorgs = models.DateField("Last date to add community landing pages")
@@ -294,6 +295,7 @@ class RoundPage(AugmentDeadlines, Page):
         FieldPanel('landingdue'),
         FieldPanel('initial_applications_open'),
         FieldPanel('initial_applications_close'),
+        FieldPanel('pick_a_project_blog_url'),
         FieldPanel('contributions_open'),
         FieldPanel('contributions_close'),
         FieldPanel('lateorgs'),

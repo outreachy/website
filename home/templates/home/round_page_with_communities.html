@@ -132,6 +132,10 @@ Outreachy Internships | Apply | Pick a Project
 		able to see all project details at that point if your initial
 		application has been approved.</p>
 	{% elif not current_round.contributions_close.has_passed %}
+		{% if current_round.pick_a_project_blog_url %}
+			<p>Please also <a href='{{ current_round.pick_a_project_blog_url }}'>read our blog post that lists projects by topic and programming language</a>.</p>
+		{% endif %}
+
 		<h3>Final Applications Due {{ current_round.contributions_close }} at 4pm UTC</h3>
 
 		<p> The following projects are accepting contributions and applications from new
