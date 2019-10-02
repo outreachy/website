@@ -3358,7 +3358,7 @@ class FinalApplication(ApprovalStatus):
         )
 
     def submission_and_approval_deadline(self):
-        return self.project.round().contribution_closes
+        return self.project.round().contributions_close
 
     def number_contributions(self):
         return Contribution.objects.filter(
