@@ -2470,6 +2470,9 @@ def blog_2019_pick_projects(request):
         'changed_round': changed_round,
         })
 
+def blog_2019_10_18_open_projects(request):
+    return render(request, 'home/blog/2019-10-18-open-projects.html')
+
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(InitialMentorFeedback,
             fields=(

@@ -1,0 +1,458 @@
+{% extends "base.html" %} 
+{% block title %}
+Picking an Outreachy Project - December 2019 round
+{% endblock %}
+
+{% block content %}
+{% load humanize %}
+
+<h1>Projects that need more applicants - December 2019 round</h1>
+
+<p><i>Date: October 18, 2019</i></p>
+
+<img src='https://www.outreachy.org/media/images/projects-with-few-applicants-modified-cc-by-4.0.original.png' class="img-fluid" alt="An Asian disabled woman types on a laptop while wearing compression gloves. The hands and keyboard are the focal point. CC-BY 4.0 Disabled and Here (modified).">
+<p><i>Photo CC BY 4.0 <a href='https://affecttheverb.com/disabledandhere'>Disabled and Here</a></i></p>
+
+<p>The Outreachy contribution period has been running for two weeks, but there's still time to make a contribution!</p>
+
+<p>Many Outreachy applicants feel intimidated at the start of the contribution period. It may take you a while to work up the nerve to start on a task or contact a mentor. You've got this! Now's the time to take a deep breath, pick a project, and dive in.</p>
+
+<p>It's important to find a project that is still open to new applicants. There's a few projects which are closed to new applicants, listed under the 'Closed Outreachy Internship Projects' on the <a href='{% url 'project-selection' %}'>project list.</a> If a project isn't in that section, mentors are still accepting new applicants.</p>
+
+<p>Some Outreachy projects have few interested applicants. Below you'll find a list of projects where no applicant has recorded making a contribution. If you're still looking for a project to contribute to, these projects may be a good opportunity for you!</p>
+
+<h2>Outreachy projects with few applicants</h2>
+
+<p>We've listed the projects with few applicants below both by topic and by programming language.</p>
+
+<p>Once you've picked a project, we recommend you <a href='{% url 'docs-applicant' %}#find-mentor'>read our applicant guide</a>, especially the section on finding and contacting a mentor. Then contact a mentor, ask questions about the project, and start working on your first contribution!</p>
+
+<h2>Project List by Topic</h2>
+
+<table class="table">
+
+<tr>
+	<td>Documentation</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/creative-commons/#revamp-the-creative-commons-faq-so-that-its-easier'>Revamp the Creative Commons FAQ so that it's easier to use</a>, Writing in English (Required), CSS (Preferred), HTML (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/creative-commons/#revamp-ccs-platform-toolkit-guide-for-platforms-in'>Revamp CC's Platform Toolkit guide for platforms interested in offering CC licenses to users</a>, Graphic Design (Preferred), HTML (Preferred), Writing in English (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/debian/#create-fundraising-material-for-debconf20-document'>Create fundraising material for DebConf20+, document the fundraising processes and support a cycle</a>, Communication skill in English (Required), Past experience on fundraising and conference organization. (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/librehealth/#improve-code-and-documentation-for-the-librehealth'>Improve Code and Documentation for the LibreHealth EHR system</a>, English Grammar (Preferred), </p>
+		<p><a href='https://www.outreachy.org/december-2019-to-march-2020-internship-round/communities/kubernetes/#clusterapi-internship-project'>ClusterAPI Internship Project</a>, Technical Writing (Preferred), Go (Required), </p>
+		<p><a href='https://www.outreachy.org/december-2019-to-march-2020-internship-round/communities/kubernetes/#technical-writer'>Technical Writer</a>, technical writing (Required), go (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/openstack/#improve-sushy-documentation'>Improve sushy documentation</a>, English (Preferred), Python (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/tor-project/#help-tor-project-support-our-users'>Help Tor Project support our users</a>, Writing and editing (English) (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/wikimedia/#documentation-improvements-to-the-20-top-100-most-'>Documentation improvements to the ~20 top 100 most viewed MediaWiki Action API pages on-wiki</a>, </p>
+	</td>
+</tr>
+
+<tr>
+	<td>Marketing</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/debian/#create-fundraising-material-for-debconf20-document'>Create fundraising material for DebConf20+, document the fundraising processes and support a cycle</a>, Communication skill in English (Required), Past experience on fundraising and conference organization. (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#implement-an-awareness-strategy'>Implement an awareness strategy</a>, Writing (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/tor-project/#improve-tors-image-in-the-media-and-our-communicat'>Improve Tor’s image in the media and our communications resources</a>, Writing and editing in English (Required), Organization (Preferred), Research (Preferred), </p>
+	</td>
+</tr>
+
+<tr>
+	<td>Translation</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/creative-commons/#improving-the-creative-commons-license-chooser'>Improving the Creative Commons License Chooser</a>, Vue.js (Preferred), JavaScript (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/gnu-guix/#improve-internationalization-support-for-the-guix-'>Improve internationalization support for the Guix Data Service</a>, Software development in general (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#improve-ux-of-firefox-localization-for-indigenous-'>Improve UX of Firefox localization for indigenous languages</a>, Version control tool (Git) (Preferred), JavaScript, especially modern JavaScript (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#improvements-to-translation-process'>Improvements to translation process</a>, Frontend coding (Preferred), </p>
+	</td>
+</tr>
+
+<tr>
+	<td>User Experience (UX) and User Interface (UI) Design</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/creative-commons/#extend-the-scope-andor-usage-of-cc-vocabulary'>Extend the scope and/or usage of CC Vocabulary</a>, English proficiency (Required), HTML and CSS (Preferred), JavaScript (particularly Node.js) (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/creative-commons/#improving-the-creative-commons-license-chooser'>Improving the Creative Commons License Chooser</a>, Vue.js (Preferred), JavaScript (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/creative-commons/#revamp-ccs-platform-toolkit-guide-for-platforms-in'>Revamp CC's Platform Toolkit guide for platforms interested in offering CC licenses to users</a>, Graphic Design (Preferred), HTML (Preferred), Writing in English (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#prototype-an-in-browser-mechanism-to-report-web-co'>Prototype an in-browser mechanism to report Web Compatibility issues</a>, A sense for UX/UI flows designed for non-technical users (Preferred), JavaScript, CSS, HTML (Required), </p>
+		<p>(Closed to new applicants) <a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#ux-and-accessibility-improvements-to-treeherder-we'>UX and accessibility improvements to Treeherder web apps</a>, UX design and/or accessibility (a11y) (Preferred), git and Github (Required), React (Preferred), Javascript, HTML, CSS (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#perform-user-studies-with-students'>Perform user studies with students</a>, Data analysis (Preferred), Writing (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#implement-framework-for-organization-and-creation-'>Implement framework for organization and creation of graphics</a>, </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/public-lab/#refine-geographic-ui-and-js-integration-for-public'>Refine Geographic UI and JS Integration for PublicLab.org</a>, HTML UI (Preferred), JavaScript (Preferred), </p>
+	</td>
+</tr>
+
+
+<tr>
+	<td>Accessibility</td>
+	<td>
+		<p>(Closed to new applicants) <a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#ux-and-accessibility-improvements-to-treeherder-we'>UX and accessibility improvements to Treeherder web apps</a>, UX design and/or accessibility (a11y) (Preferred), git and Github (Required), React (Preferred), Javascript, HTML, CSS (Required), </p>
+	</td>
+</tr>
+
+<tr>
+	<td>Humanitarian Projects</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/librehealth/#improve-code-and-documentation-for-the-librehealth'>Improve Code and Documentation for the LibreHealth EHR system</a>, English Grammar (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/muzima/#muzima-form-builder'>Develop an HTML drag and drop form builder for mUzima mobile application forms</a>, Javascript (Preferred), HTML5 (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#improve-linting-and-startup-process'>Improve linting and startup process</a>, Bash and python scripting (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#validate-data-invariants-between-storage-models'>Validate data invariants between storage models</a>, Python (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#perform-user-studies-with-students'>Perform user studies with students</a>, Data analysis (Preferred), Writing (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#implement-an-awareness-strategy'>Implement an awareness strategy</a>, Writing (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#increase-frontend-test-coverage'>Increase frontend test coverage</a>, Karma testing (Preferred), Frontend (angular) (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#print-to-pdf-for-lessons'>Print-to-PDF for lessons</a>, Latex (Preferred), Python (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#improve-build-process-for-oppia'>Improve build process for Oppia</a>, Python (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#solve-all-typescript-and-webpack-issues-in-the-cod'>Solve all typescript and webpack issues in the codebase</a>, Webpack (Preferred), Typescript (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#create-a-reviewer-view-for-explorations-with-comme'>Implement reviewer view for explorations</a>, Frontend (Angular 2+) (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#improve-exploration-saving-workflow'>Improve exploration saving workflow</a>, Frontend (Angular 2+) (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#implement-framework-for-organization-and-creation-'>Implement framework for organization and creation of graphics</a>, </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#improvements-to-translation-process'>Improvements to translation process</a>, Frontend coding (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#highlight-text-in-a-lesson-as-audio-is-played'>Highlight text in a lesson as audio is played</a>, </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/public-lab/#refine-geographic-ui-and-js-integration-for-public'>Refine Geographic UI and JS Integration for PublicLab.org</a>, HTML UI (Preferred), JavaScript (Preferred), </p>
+	</td>
+</tr>
+<tr>
+	<td>Game Development and Graphics Development</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/linux-kernel/#vkms'>VKMS</a>, Able to talk in a public mailing list/irc (Preferred), C code (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/linux-kernel/#dri-devel-aka-kernel-gpu-subsystem'>dri-devel aka kernel GPU subsystem</a>, C Programming (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/the-terasology-foundation/#extend-metal-renegades'>Extend Metal Renegades</a>, Java programming (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/the-terasology-foundation/#create-modding-api-documentation-website'>Create Modding API Documentation Website</a>, Java (Preferred), Javascript/React (Preferred), HTML/CSS (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/the-terasology-foundation/#create-tutorial-journey-website-for-players-contri'>Create Tutorial Journey Website For Players, Contributors And Modders</a>, Javascript/React (Preferred), HTML/CSS (Preferred), </p>
+	</td>
+</tr>
+
+<tr>
+	<td>Desktop Applications</td>
+
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/creative-commons/#create-a-qr-code-generator-to-attribute-projects-w'>Create a QR code generator to attribute projects with CC licenses</a>, PHP, Python, Javascript, or similar general purpose programming language (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/git/#finish-converting-git-bisect-from-shell-to-c'>Finish converting `git bisect` from shell to C</a>, Git version control system (Preferred), Shell scripting (Preferred), C programming language (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/git/#refactor-git-index-pack-logic-into-library-code'>Refactor "git index-pack" logic into library code</a>, C programming language (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/git/#add-did-you-mean-hints'>Add "Did you mean?" hints</a>, C (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/gnome/#fractal-implement-video-player-in-message-list'>Fractal: Implement video player in message list</a>, Gstreamer or video library knowledge (Preferred), Rust kwowledge or interest in learn this new language. The project is written in Rust (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/gnome/#gtranslator-rework-the-search-and-replace-dialog'>Gtranslator: Rework the search and replace dialog</a>, Gtk+ knowledge or other GUI toolkit (Preferred), C kwowledge or interest in learn this new language. The project is written in C with Gtk+ (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/gnu-guix/#create-netlink-bindings-in-guile'>Create Netlink bindings in Guile</a>, Socket programming (Preferred), Good communication skills (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/the-terasology-foundation/#extend-metal-renegades'>Extend Metal Renegades</a>, Java programming (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/the-terasology-foundation/#create-modding-api-documentation-website'>Create Modding API Documentation Website</a>, Java (Preferred), Javascript/React (Preferred), HTML/CSS (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/the-terasology-foundation/#create-tutorial-journey-website-for-players-contri'>Create Tutorial Journey Website For Players, Contributors And Modders</a>, Javascript/React (Preferred), HTML/CSS (Preferred), </p>
+	</td>
+
+</tr>
+
+<tr>
+	<td>Mobile Applications</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/muzima/#muzima-form-builder'>Develop an HTML drag and drop form builder for mUzima mobile application forms</a>, Javascript (Preferred), HTML5 (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/wikimedia/#improvements-in-wiki-education-dashboard-android-a'>Improvements and User Testing of Wiki Education Dashboard Android App</a>, Kotlin (Preferred), Android Application Development (Required), </p>
+	</td>
+</tr>
+
+<tr>
+	<td>Web-based Applications</td>
+
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/apache/#migrate-apache-juneau-petstore-sample-application-'>Migrate Apache Juneau PetStore Sample Application To Spring Boot Standalone Application.</a>, Javascript (Preferred), Java (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/creative-commons/#improve-workflows-for-our-legal-tools'>Revamp the workflow and design of our legal tools</a>, CSS (Preferred), HTML (Preferred), Python (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/free-software-foundation/#create-and-deploy-payment-processing-code-for-bitc'>Create and deploy payment processing code for Bitcoin, CiviCRM and FSF sites</a>, Writing documentation of how to use software and explaining its design. (Preferred), Programming in PHP or another language and comfortable learning PHP quickly (Required), Sysadmin skills. Eg: scripting the installation of software for GNU/Linux with many steps. (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#standardize-and-implement-web-application-apis'>Standardize and Implement Web Application APIs</a>, JavaScript (ES2018) (Preferred), Technical writing (English) (Preferred), Quality assurance (testing) (Preferred), c++ (Required), </p>
+		<p>(Closed to new applicants) <a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#ux-and-accessibility-improvements-to-treeherder-we'>UX and accessibility improvements to Treeherder web apps</a>, UX design and/or accessibility (a11y) (Preferred), git and Github (Required), React (Preferred), Javascript, HTML, CSS (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#improve-linting-and-startup-process'>Improve linting and startup process</a>, Bash and python scripting (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#validate-data-invariants-between-storage-models'>Validate data invariants between storage models</a>, Python (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#perform-user-studies-with-students'>Perform user studies with students</a>, Data analysis (Preferred), Writing (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#implement-an-awareness-strategy'>Implement an awareness strategy</a>, Writing (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#increase-frontend-test-coverage'>Increase frontend test coverage</a>, Karma testing (Preferred), Frontend (angular) (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#print-to-pdf-for-lessons'>Print-to-PDF for lessons</a>, Latex (Preferred), Python (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#improve-build-process-for-oppia'>Improve build process for Oppia</a>, Python (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#solve-all-typescript-and-webpack-issues-in-the-cod'>Solve all typescript and webpack issues in the codebase</a>, Webpack (Preferred), Typescript (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#create-a-reviewer-view-for-explorations-with-comme'>Implement reviewer view for explorations</a>, Frontend (Angular 2+) (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#improve-exploration-saving-workflow'>Improve exploration saving workflow</a>, Frontend (Angular 2+) (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#implement-framework-for-organization-and-creation-'>Implement framework for organization and creation of graphics</a>, </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#improvements-to-translation-process'>Improvements to translation process</a>, Frontend coding (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#highlight-text-in-a-lesson-as-audio-is-played'>Highlight text in a lesson as audio is played</a>, </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/public-lab/#refine-geographic-ui-and-js-integration-for-public'>Refine Geographic UI and JS Integration for PublicLab.org</a>, HTML UI (Preferred), JavaScript (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/wikimedia/#convert-campaign-pages-to-react'>Convert Campaign pages to React</a>, Haml (Required), React(js) (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/wikimedia/#improve-mediawiki-action-api-integration-tests'>Improve MediaWiki Action API Integration Tests</a>, Knowledge of a programming language (Required), JavaScript (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/wikimedia/#create-command-line-runner-for-mediawiki-maintenan'>Create command-line runner for MediaWiki maintenance tasks</a>, The applicant should be comfortable building software in PHP or a similar language such as JS (Required), </p>
+	</td>
+
+</tr>
+
+<tr>
+	<td>Web Browsers</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#prototype-an-in-browser-mechanism-to-report-web-co'>Prototype an in-browser mechanism to report Web Compatibility issues</a>, A sense for UX/UI flows designed for non-technical users (Preferred), JavaScript, CSS, HTML (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#standardize-and-implement-web-application-apis'>Standardize and Implement Web Application APIs</a>, JavaScript (ES2018) (Preferred), Technical writing (English) (Preferred), Quality assurance (testing) (Preferred), c++ (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#build-a-component-that-can-display-a-json-schema'>Build a component that can display a JSON schema</a>, JavaScript (React) (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#improve-firefox-encrypted-media-dev-workflows'>Improve Firefox encrypted media dev workflows</a>, Version control tool: Git or Mercurial (Preferred), Javascript (Preferred), C++, especially modern C++ (lambdas, smart pointers) (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#improve-firefox-containers-add-ons'>Improve Firefox Containers Add-ons</a>, Browser Add-on/Extension Development (Preferred), HTML, CSS, and JavaScript (Required), git and GitHub (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#improve-understanding-of-firefox-growth-metrics'>Improve understanding of Firefox growth metrics</a>, Comfort with python.  R can be an alternative.  Should be able to do data manipulation. (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#create-tests-for-fenix-using-iris'>Create Tests for Fenix using Iris</a>, A basic or fair working knowledge of programming in the python language (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#finding-representative-users-of-prerelease-firefox'>Finding Representative Users of Prerelease Firefox</a>, Understanding of statistical inference and/or machine learning (Preferred), Comfortable with Python or R. Needs to be comfortable with data manipulation. (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#implement-short-circuit-evaluation'>Implement short-circuit evaluation to JSON-e language</a>, Version control tool: Git (Preferred), JavaScript (ES6 and newer) OR Python OR Go (Required), </p>
+	</td>
+</tr>
+
+<tr>
+	<td>Linux and GNU operating systems</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/debian/#packaging-gitlabs-js-modules'>Packaging GitLab's JS Modules</a>, Basic Shell Commands (Preferred), JavaScript (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/gnome/#fractal-implement-video-player-in-message-list'>Fractal: Implement video player in message list</a>, Gstreamer or video library knowledge (Preferred), Rust kwowledge or interest in learn this new language. The project is written in Rust (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/gnome/#gtranslator-rework-the-search-and-replace-dialog'>Gtranslator: Rework the search and replace dialog</a>, Gtk+ knowledge or other GUI toolkit (Preferred), C kwowledge or interest in learn this new language. The project is written in C with Gtk+ (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/gnu-guix/#create-netlink-bindings-in-guile'>Create Netlink bindings in Guile</a>, Socket programming (Preferred), Good communication skills (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/linux-kernel/#fix-lock-related-warnings-reported-by-sparse-for-c'>Fix lock-related warnings reported by sparse for core kernel code.</a>, C or C++ programming (Required), Basic locking and parallel programming concepts (Preferred), Basic operating system concepts (at the level of a university introductory class or book) (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/linux-kernel/#linux-kernel-trace-events-in-pstore'>Linux kernel trace events in pstore</a>, Linux Kernel Tracing usage (ftrace) (Preferred), Concurrent programming (locking etc). (Preferred), C programming (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/linux-kernel/#rcu-hardening'>RCU hardening</a>, C programming (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/linux-kernel/#develop-a-suite-of-litmus-tests-for-linux-kernel-s'>Develop a suite of litmus tests for Linux-kernel spinlocks and read-write locks</a>, Basic algebra concepts (university introductory class or book) (Preferred), Basic operating systems concepts (university introductory class or book) (Required), C programming (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/linux-kernel/#vkms'>VKMS</a>, Able to talk in a public mailing list/irc (Preferred), C code (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/linux-kernel/#dri-devel-aka-kernel-gpu-subsystem'>dri-devel aka kernel GPU subsystem</a>, C Programming (Required), </p>
+	</td>
+</tr>
+
+<tr>
+	<td>Virtualization</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/xen-project/#introduce-config_pdx-and-use-it-in-xen-hypervisor'>Introduce CONFIG_PDX and use it in Xen hypervisor</a>, Kernel level development (Required), C programming skills (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/xen-project/#improve-xen-testing-system'>Improve PCI passthrough tests in Xen as entry route to development</a>, Shell scripting (Preferred), C programming (Required), Perl programming (Required), </p>
+	</td>
+</tr>
+
+<tr>
+	<td>Cloud Computing</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/cncf-tracing/#performance-benchmarks-for-the-client-libraries'>Performance benchmarks for the client libraries</a>, Go (Preferred), Java (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/jenkins-x/#create-a-cloud-storage-backed-helm-repository-for-'>Create a Cloud Storage backed Helm repository for Jenkins X replacing ChartMuseum</a>, Good communication skills (Preferred), Go (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/jenkins-x/#improve-the-jenkins-x-apps-framework'>Improve the Jenkins X Apps Framework</a>, Be open to learning new technologies and programming languages (Jenkins X uses GO, Kubernetes, Helm) (Required), Previous experience with Kubernetes (Preferred), Programming experience with 1 static and 1 dynamic programming language (Preferred), </p>
+		<p><a href='https://www.outreachy.org/december-2019-to-march-2020-internship-round/communities/kubernetes/#clusterapi-internship-project'>ClusterAPI Internship Project</a>, Technical Writing (Preferred), Go (Required), </p>
+		<p><a href='https://www.outreachy.org/december-2019-to-march-2020-internship-round/communities/kubernetes/#multi-tenancy-working-group-intern'>multi-tenancy working group intern</a>, go (Required), </p>
+		<p><a href='https://www.outreachy.org/december-2019-to-march-2020-internship-round/communities/kubernetes/#technical-writer'>Technical Writer</a>, technical writing (Required), go (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/openstack/#build-a-redfish-command-line-client-tool'>Build a Redfish command-line client tool</a>, </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/openstack/#improve-cinder-tempest'>Improve Cinder Tempest</a>, python (Preferred), linux (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/tekton/#create-gitops-based-calendar-with-tekton'>Create Gitops Based Calendar with Tekton</a>, Golang (Preferred), Linux (Required), </p>
+	</td>
+</tr>
+
+<tr>
+	<td>Programming Language Design and Implementation</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#implement-short-circuit-evaluation'>Implement short-circuit evaluation to JSON-e language</a>, Version control tool: Git (Preferred), JavaScript (ES6 and newer) OR Python OR Go (Required), </p>
+	</td>
+</tr>
+
+<tr>
+	<td>Machine Learning</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#finding-representative-users-of-prerelease-firefox'>Finding Representative Users of Prerelease Firefox</a>, Understanding of statistical inference and/or machine learning (Preferred), Comfortable with Python or R. Needs to be comfortable with data manipulation. (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/wikimedia/#a-system-for-releasing-data-dumps-from-a-classifie'>A system for releasing data dumps from a classifier detecting unsourced sentences in Wikipedia</a>, Python or Java (Preferred), Machine learning (Preferred), </p>
+	</td>
+</tr>
+
+<tr>
+	<td>Data Research and Data Visualization</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/cncf-tracing/#research-alternative-data-visualizations-for-traci'>Research alternative data visualization possibilities for tracing data</a>, Statistics (Required), Data visualization (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/creative-commons/#better-visualization-tools-for-the-cc-network'>Better visualization tools for the CC Network</a>, Desired Wordpress knowledge in a deep level (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#improve-understanding-of-firefox-growth-metrics'>Improve understanding of Firefox growth metrics</a>, Comfort with python.  R can be an alternative.  Should be able to do data manipulation. (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#finding-representative-users-of-prerelease-firefox'>Finding Representative Users of Prerelease Firefox</a>, Understanding of statistical inference and/or machine learning (Preferred), Comfortable with Python or R. Needs to be comfortable with data manipulation. (Required), </p>
+	</td>
+	</td>
+</tr>
+
+<tr>
+	<td>Big Data</td>
+
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/apache/#improve-apache-beamsql-to-allow-users-write-big-da'>Improve Apache BeamSQL to allow users better write big data processing pipelines</a>, Java programming language (Preferred), </p>
+
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/apache/#extend-the-nexmark-benchmarking-suite-in-apache-be'>Extend the Nexmark Benchmarking Suite in Apache Beam to include Python and Portable runners</a>, Experience with collaborative Software Engineering tools: git/github/JIRA/Jenkins (Preferred), General big data knowledge (MapReduce/Partitioning/etc). Experience with Hadoop, Spark or Flink (Preferred), Python and Java programming experience are both required (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/creative-commons/#supercharge-our-elasticsearch-indexer'>Supercharge our Elasticsearch indexer</a>, </p>
+	</td>
+</tr>
+
+<tr>
+	<td>Benchmarking, Performance, and Tracing</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/apache/#extend-the-nexmark-benchmarking-suite-in-apache-be'>Extend the Nexmark Benchmarking Suite in Apache Beam to include Python and Portable runners</a>, Experience with collaborative Software Engineering tools: git/github/JIRA/Jenkins (Preferred), General big data knowledge (MapReduce/Partitioning/etc). Experience with Hadoop, Spark or Flink (Preferred), Python and Java programming experience are both required (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/cncf-tracing/#performance-benchmarks-for-the-client-libraries'>Performance benchmarks for the client libraries</a>, Go (Preferred), Java (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/cncf-tracing/#migrate-opentracing-instrumentation-to-opentelemet'>Migrate OpenTracing instrumentation to OpenTelemetry</a>, Java (Required), </p>
+	</td>
+</tr>
+
+<tr>
+	<td>Continuous Integration, Quality Assurance, and Testing</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/creative-commons/#improving-the-creative-commons-license-chooser'>Improving the Creative Commons License Chooser</a>, Vue.js (Preferred), JavaScript (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/jenkins/#integrate-jenkins-with-github-apps'>Integrate Jenkins with GitHub Apps</a>, Using HTTP/REST APIs (Preferred), Java programming (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/jenkins-x/#create-a-cloud-storage-backed-helm-repository-for-'>Create a Cloud Storage backed Helm repository for Jenkins X replacing ChartMuseum</a>, Good communication skills (Preferred), Go (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/jenkins-x/#improve-the-jenkins-x-apps-framework'>Improve the Jenkins X Apps Framework</a>, Be open to learning new technologies and programming languages (Jenkins X uses GO, Kubernetes, Helm) (Required), Previous experience with Kubernetes (Preferred), Programming experience with 1 static and 1 dynamic programming language (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#improve-firefox-encrypted-media-dev-workflows'>Improve Firefox encrypted media dev workflows</a>, Version control tool: Git or Mercurial (Preferred), Javascript (Preferred), C++, especially modern C++ (lambdas, smart pointers) (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#create-tests-for-fenix-using-iris'>Create Tests for Fenix using Iris</a>, A basic or fair working knowledge of programming in the python language (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/openstack/#improve-cinder-tempest'>Improve Cinder Tempest</a>, python (Preferred), linux (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#improve-linting-and-startup-process'>Improve linting and startup process</a>, Bash and python scripting (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#increase-frontend-test-coverage'>Increase frontend test coverage</a>, Karma testing (Preferred), Frontend (angular) (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/wikimedia/#create-regression-automated-tests-for-specialhomep'>Create regression automated tests for Special:Homepage functionality testing</a>, Selenium (Preferred), </p>
+	</td>
+</tr>
+
+</table>
+
+
+<h2>Project List by Programming Language</h2>
+
+<table class="table">
+<tr>
+	<td>C programming</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/git/#finish-converting-git-bisect-from-shell-to-c'>Finish converting `git bisect` from shell to C</a>, Git version control system (Preferred), Shell scripting (Preferred), C programming language (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/git/#refactor-git-index-pack-logic-into-library-code'>Refactor "git index-pack" logic into library code</a>, C programming language (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/git/#add-did-you-mean-hints'>Add "Did you mean?" hints</a>, C (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/gnome/#gtranslator-rework-the-search-and-replace-dialog'>Gtranslator: Rework the search and replace dialog</a>, Gtk+ knowledge or other GUI toolkit (Preferred), C kwowledge or interest in learn this new language. The project is written in C with Gtk+ (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/linux-kernel/#fix-lock-related-warnings-reported-by-sparse-for-c'>Fix lock-related warnings reported by sparse for core kernel code.</a>, C or C++ programming (Required), Basic locking and parallel programming concepts (Preferred), Basic operating system concepts (at the level of a university introductory class or book) (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/linux-kernel/#linux-kernel-trace-events-in-pstore'>Linux kernel trace events in pstore</a>, Linux Kernel Tracing usage (ftrace) (Preferred), Concurrent programming (locking etc). (Preferred), C programming (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/linux-kernel/#rcu-hardening'>RCU hardening</a>, C programming (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/linux-kernel/#develop-a-suite-of-litmus-tests-for-linux-kernel-s'>Develop a suite of litmus tests for Linux-kernel spinlocks and read-write locks</a>, Basic algebra concepts (university introductory class or book) (Preferred), Basic operating systems concepts (university introductory class or book) (Required), C programming (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/linux-kernel/#vkms'>VKMS</a>, Able to talk in a public mailing list/irc (Preferred), C code (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/linux-kernel/#dri-devel-aka-kernel-gpu-subsystem'>dri-devel aka kernel GPU subsystem</a>, C Programming (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/xen-project/#introduce-config_pdx-and-use-it-in-xen-hypervisor'>Introduce CONFIG_PDX and use it in Xen hypervisor</a>, Kernel level development (Required), C programming skills (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/xen-project/#improve-xen-testing-system'>Improve PCI passthrough tests in Xen as entry route to development</a>, Shell scripting (Preferred), C programming (Required), Perl programming (Required), </p>
+	</td>
+</tr>
+<tr>
+	<td>C++</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#standardize-and-implement-web-application-apis'>Standardize and Implement Web Application APIs</a>, JavaScript (ES2018) (Preferred), Technical writing (English) (Preferred), Quality assurance (testing) (Preferred), c++ (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#improve-firefox-encrypted-media-dev-workflows'>Improve Firefox encrypted media dev workflows</a>, Version control tool: Git or Mercurial (Preferred), Javascript (Preferred), C++, especially modern C++ (lambdas, smart pointers) (Required), </p>
+	</td>
+</tr>
+<tr>
+	<td>Java</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/apache/#improve-apache-beamsql-to-allow-users-write-big-da'>Improve Apache BeamSQL to allow users better write big data processing pipelines</a>, Java programming language (Preferred), </p>
+
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/apache/#migrate-apache-juneau-petstore-sample-application-'>Migrate Apache Juneau PetStore Sample Application To Spring Boot Standalone Application.</a>, Javascript (Preferred), Java (Preferred), </p>
+
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/apache/#extend-the-nexmark-benchmarking-suite-in-apache-be'>Extend the Nexmark Benchmarking Suite in Apache Beam to include Python and Portable runners</a>, Experience with collaborative Software Engineering tools: git/github/JIRA/Jenkins (Preferred), General big data knowledge (MapReduce/Partitioning/etc). Experience with Hadoop, Spark or Flink (Preferred), Python and Java programming experience are both required (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/cncf-tracing/#performance-benchmarks-for-the-client-libraries'>Performance benchmarks for the client libraries</a>, Go (Preferred), Java (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/cncf-tracing/#migrate-opentracing-instrumentation-to-opentelemet'>Migrate OpenTracing instrumentation to OpenTelemetry</a>, Java (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/jenkins/#integrate-jenkins-with-github-apps'>Integrate Jenkins with GitHub Apps</a>, Using HTTP/REST APIs (Preferred), Java programming (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/the-terasology-foundation/#extend-metal-renegades'>Extend Metal Renegades</a>, Java programming (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/wikimedia/#a-system-for-releasing-data-dumps-from-a-classifie'>A system for releasing data dumps from a classifier detecting unsourced sentences in Wikipedia</a>, Python or Java (Preferred), Machine learning (Preferred), </p>
+	</td>
+</tr>
+<tr>
+	<td>JavaScript</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/creative-commons/#extend-the-scope-andor-usage-of-cc-vocabulary'>Extend the scope and/or usage of CC Vocabulary</a>, English proficiency (Required), HTML and CSS (Preferred), JavaScript (particularly Node.js) (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/creative-commons/#improving-the-creative-commons-license-chooser'>Improving the Creative Commons License Chooser</a>, Vue.js (Preferred), JavaScript (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/creative-commons/#create-a-qr-code-generator-to-attribute-projects-w'>Create a QR code generator to attribute projects with CC licenses</a>, PHP, Python, Javascript, or similar general purpose programming language (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/debian/#packaging-gitlabs-js-modules'>Packaging GitLab's JS Modules</a>, Basic Shell Commands (Preferred), JavaScript (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#prototype-an-in-browser-mechanism-to-report-web-co'>Prototype an in-browser mechanism to report Web Compatibility issues</a>, A sense for UX/UI flows designed for non-technical users (Preferred), JavaScript, CSS, HTML (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#standardize-and-implement-web-application-apis'>Standardize and Implement Web Application APIs</a>, JavaScript (ES2018) (Preferred), Technical writing (English) (Preferred), Quality assurance (testing) (Preferred), c++ (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#build-a-component-that-can-display-a-json-schema'>Build a component that can display a JSON schema</a>, JavaScript (React) (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#improve-ux-of-firefox-localization-for-indigenous-'>Improve UX of Firefox localization for indigenous languages</a>, Version control tool (Git) (Preferred), JavaScript, especially modern JavaScript (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#improve-firefox-containers-add-ons'>Improve Firefox Containers Add-ons</a>, Browser Add-on/Extension Development (Preferred), HTML, CSS, and JavaScript (Required), git and GitHub (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#implement-short-circuit-evaluation'>Implement short-circuit evaluation to JSON-e language</a>, Version control tool: Git (Preferred), JavaScript (ES6 and newer) OR Python OR Go (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/muzima/#muzima-form-builder'>Develop an HTML drag and drop form builder for mUzima mobile application forms</a>, Javascript (Preferred), HTML5 (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#increase-frontend-test-coverage'>Increase frontend test coverage</a>, Karma testing (Preferred), Frontend (angular) (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#create-a-reviewer-view-for-explorations-with-comme'>Implement reviewer view for explorations</a>, Frontend (Angular 2+) (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#improve-exploration-saving-workflow'>Improve exploration saving workflow</a>, Frontend (Angular 2+) (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#improvements-to-translation-process'>Improvements to translation process</a>, Frontend coding (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/public-lab/#refine-geographic-ui-and-js-integration-for-public'>Refine Geographic UI and JS Integration for PublicLab.org</a>, HTML UI (Preferred), JavaScript (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/the-terasology-foundation/#create-modding-api-documentation-website'>Create Modding API Documentation Website</a>, Java (Preferred), Javascript/React (Preferred), HTML/CSS (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/the-terasology-foundation/#create-tutorial-journey-website-for-players-contri'>Create Tutorial Journey Website For Players, Contributors And Modders</a>, Javascript/React (Preferred), HTML/CSS (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/wikimedia/#convert-campaign-pages-to-react'>Convert Campaign pages to React</a>, Haml (Required), React(js) (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/wikimedia/#create-regression-automated-tests-for-specialhomep'>Create regression automated tests for Special:Homepage functionality testing</a>, Selenium (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/wikimedia/#improve-mediawiki-action-api-integration-tests'>Improve MediaWiki Action API Integration Tests</a>, Knowledge of a programming language (Required), JavaScript (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/wikimedia/#create-command-line-runner-for-mediawiki-maintenan'>Create command-line runner for MediaWiki maintenance tasks</a>, The applicant should be comfortable building software in PHP or a similar language such as JS (Required), </p>
+	</td>
+</tr>
+
+<tr>
+	<td>Kotlin</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/wikimedia/#improvements-in-wiki-education-dashboard-android-a'>Improvements and User Testing of Wiki Education Dashboard Android App</a>, Kotlin (Preferred), Android Application Development (Required), </p>
+	</td>
+</tr>
+
+<tr>
+	<td>HTML/CSS</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/creative-commons/#extend-the-scope-andor-usage-of-cc-vocabulary'>Extend the scope and/or usage of CC Vocabulary</a>, English proficiency (Required), HTML and CSS (Preferred), JavaScript (particularly Node.js) (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/creative-commons/#revamp-the-creative-commons-faq-so-that-its-easier'>Revamp the Creative Commons FAQ so that it's easier to use</a>, Writing in English (Required), CSS (Preferred), HTML (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/creative-commons/#revamp-ccs-platform-toolkit-guide-for-platforms-in'>Revamp CC's Platform Toolkit guide for platforms interested in offering CC licenses to users</a>, Graphic Design (Preferred), HTML (Preferred), Writing in English (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/creative-commons/#improve-workflows-for-our-legal-tools'>Revamp the workflow and design of our legal tools</a>, CSS (Preferred), HTML (Preferred), Python (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#prototype-an-in-browser-mechanism-to-report-web-co'>Prototype an in-browser mechanism to report Web Compatibility issues</a>, A sense for UX/UI flows designed for non-technical users (Preferred), JavaScript, CSS, HTML (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#improve-firefox-containers-add-ons'>Improve Firefox Containers Add-ons</a>, Browser Add-on/Extension Development (Preferred), HTML, CSS, and JavaScript (Required), git and GitHub (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/muzima/#muzima-form-builder'>Develop an HTML drag and drop form builder for mUzima mobile application forms</a>, Javascript (Preferred), HTML5 (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/public-lab/#refine-geographic-ui-and-js-integration-for-public'>Refine Geographic UI and JS Integration for PublicLab.org</a>, HTML UI (Preferred), JavaScript (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/the-terasology-foundation/#create-modding-api-documentation-website'>Create Modding API Documentation Website</a>, Java (Preferred), Javascript/React (Preferred), HTML/CSS (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/the-terasology-foundation/#create-tutorial-journey-website-for-players-contri'>Create Tutorial Journey Website For Players, Contributors And Modders</a>, Javascript/React (Preferred), HTML/CSS (Preferred), </p>
+	</td>
+</tr>
+<tr>
+	<td>Go</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/cncf-tracing/#performance-benchmarks-for-the-client-libraries'>Performance benchmarks for the client libraries</a>, Go (Preferred), Java (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/jenkins-x/#create-a-cloud-storage-backed-helm-repository-for-'>Create a Cloud Storage backed Helm repository for Jenkins X replacing ChartMuseum</a>, Good communication skills (Preferred), Go (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/jenkins-x/#improve-the-jenkins-x-apps-framework'>Improve the Jenkins X Apps Framework</a>, Be open to learning new technologies and programming languages (Jenkins X uses GO, Kubernetes, Helm) (Required), Previous experience with Kubernetes (Preferred), Programming experience with 1 static and 1 dynamic programming language (Preferred), </p>
+		<p><a href='https://www.outreachy.org/december-2019-to-march-2020-internship-round/communities/kubernetes/#clusterapi-internship-project'>ClusterAPI Internship Project</a>, Technical Writing (Preferred), Go (Required), </p>
+		<p><a href='https://www.outreachy.org/december-2019-to-march-2020-internship-round/communities/kubernetes/#multi-tenancy-working-group-intern'>multi-tenancy working group intern</a>, go (Required), </p>
+		<p><a href='https://www.outreachy.org/december-2019-to-march-2020-internship-round/communities/kubernetes/#technical-writer'>Technical Writer</a>, technical writing (Required), go (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#implement-short-circuit-evaluation'>Implement short-circuit evaluation to JSON-e language</a>, Version control tool: Git (Preferred), JavaScript (ES6 and newer) OR Python OR Go (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/tekton/#create-gitops-based-calendar-with-tekton'>Create Gitops Based Calendar with Tekton</a>, Golang (Preferred), Linux (Required), </p>
+	</td>
+</tr>
+<tr>
+	<td>Perl</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/xen-project/#improve-xen-testing-system'>Improve PCI passthrough tests in Xen as entry route to development</a>, Shell scripting (Preferred), C programming (Required), Perl programming (Required), </p>
+	</td>
+</tr>
+<tr>
+	<td>PHP</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/creative-commons/#create-a-qr-code-generator-to-attribute-projects-w'>Create a QR code generator to attribute projects with CC licenses</a>, PHP, Python, Javascript, or similar general purpose programming language (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/free-software-foundation/#create-and-deploy-payment-processing-code-for-bitc'>Create and deploy payment processing code for Bitcoin, CiviCRM and FSF sites</a>, Writing documentation of how to use software and explaining its design. (Preferred), Programming in PHP or another language and comfortable learning PHP quickly (Required), Sysadmin skills. Eg: scripting the installation of software for GNU/Linux with many steps. (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/wikimedia/#create-command-line-runner-for-mediawiki-maintenan'>Create command-line runner for MediaWiki maintenance tasks</a>, The applicant should be comfortable building software in PHP or a similar language such as JS (Required), </p>
+	</td>
+</tr>
+<tr>
+	<td>Python</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/apache/#extend-the-nexmark-benchmarking-suite-in-apache-be'>Extend the Nexmark Benchmarking Suite in Apache Beam to include Python and Portable runners</a>, Experience with collaborative Software Engineering tools: git/github/JIRA/Jenkins (Preferred), General big data knowledge (MapReduce/Partitioning/etc). Experience with Hadoop, Spark or Flink (Preferred), Python and Java programming experience are both required (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/creative-commons/#improve-workflows-for-our-legal-tools'>Revamp the workflow and design of our legal tools</a>, CSS (Preferred), HTML (Preferred), Python (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/creative-commons/#create-a-qr-code-generator-to-attribute-projects-w'>Create a QR code generator to attribute projects with CC licenses</a>, PHP, Python, Javascript, or similar general purpose programming language (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#improve-understanding-of-firefox-growth-metrics'>Improve understanding of Firefox growth metrics</a>, Comfort with python.  R can be an alternative.  Should be able to do data manipulation. (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#create-tests-for-fenix-using-iris'>Create Tests for Fenix using Iris</a>, A basic or fair working knowledge of programming in the python language (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#finding-representative-users-of-prerelease-firefox'>Finding Representative Users of Prerelease Firefox</a>, Understanding of statistical inference and/or machine learning (Preferred), Comfortable with Python or R. Needs to be comfortable with data manipulation. (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#implement-short-circuit-evaluation'>Implement short-circuit evaluation to JSON-e language</a>, Version control tool: Git (Preferred), JavaScript (ES6 and newer) OR Python OR Go (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/openstack/#build-a-redfish-command-line-client-tool'>Build a Redfish command-line client tool</a>, </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/openstack/#improve-sushy-documentation'>Improve sushy documentation</a>, English (Preferred), Python (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/openstack/#improve-cinder-tempest'>Improve Cinder Tempest</a>, python (Preferred), linux (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#improve-linting-and-startup-process'>Improve linting and startup process</a>, Bash and python scripting (Preferred), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#validate-data-invariants-between-storage-models'>Validate data invariants between storage models</a>, Python (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#print-to-pdf-for-lessons'>Print-to-PDF for lessons</a>, Latex (Preferred), Python (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/wikimedia/#a-system-for-releasing-data-dumps-from-a-classifie'>A system for releasing data dumps from a classifier detecting unsourced sentences in Wikipedia</a>, Python or Java (Preferred), Machine learning (Preferred), </p>
+	</td>
+</tr>
+<tr>
+	<td>Rust</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/gnome/#fractal-implement-video-player-in-message-list'>Fractal: Implement video player in message list</a>, Gstreamer or video library knowledge (Preferred), Rust kwowledge or interest in learn this new language. The project is written in Rust (Preferred), </p>
+	</td>
+</tr>
+<tr>
+	<td>R programming</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#improve-understanding-of-firefox-growth-metrics'>Improve understanding of Firefox growth metrics</a>, Comfort with python.  R can be an alternative.  Should be able to do data manipulation. (Required), </p>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/mozilla/#finding-representative-users-of-prerelease-firefox'>Finding Representative Users of Prerelease Firefox</a>, Understanding of statistical inference and/or machine learning (Preferred), Comfortable with Python or R. Needs to be comfortable with data manipulation. (Required), </p>
+	</td>
+</tr>
+<tr>
+	<td>Typescript</td>
+	<td>
+		<p><a href='https://www.outreachy.org//december-2019-to-march-2020-internship-round/communities/oppia/#solve-all-typescript-and-webpack-issues-in-the-cod'>Solve all typescript and webpack issues in the codebase</a>, Webpack (Preferred), Typescript (Preferred), </p>
+	</td>
+</tr>
+</table>
+
+<hr>
+
+{% endblock %}
