@@ -1,20 +1,53 @@
-Outreachy internship deadlines
+{{ current_round.contributions_close|date:"M d" }} deadline for Outreachy {{ current_round.internstarts|date:"M Y" }} internships
 
-{{ current_round.contributions_close }} at 4pm UTC is the deadline for making contributions and submitting your final application for the {{ current_round.official_name }}. If you haven't started a contribution yet, now is the time to pick a project, get in contact with the project mentor, and start working with them on your project contribution:
+{{ current_round.contributions_close }} at 4pm UTC is the deadline for Outreachy internship final applications. Final applications are only open to applicants with an approved initial application for the {{ current_round.official_name }} round.
+
+Only applicants who record a contribution and create a final application will be eligible to be selected as an intern. We encourage you to create a final application well before the deadline. You can edit your final application until the deadline at {{ current_round.contributions_close }} at 4pm UTC.
+
+Please let the Outreachy organizers know if your time commitments have changed since you filled out an initial application. See the section below for details.
+
+Recording Contributions
+-----------------------
+
+You will need to record your contributions for each project you're applying for. Please record your contributions even if the contribution is not merged or accepted yet.
+
+You can record your contributions by finding your project listed on the project selection page:
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
-{% if closed_projects %}
-Some projects have enough applicants, and they are closed to new applicants. If you are currently working with a mentor of one of these projects, make sure to record your contributions and create your final application before the deadline:
 
-{% for project in closed_projects %}{{ request.scheme }}://{{ request.get_host }}{{ project.get_landing_url }}
-{% endfor %}{% endif %}
-You will need to record a contribution and create a final application in order to be eligible to be selected as an intern.
-
-If you are currently working on a contribution with a mentor (even if the contribution is not merged or accepted yet), make sure to record the contribution in the Outreachy website, and submit a final application for your project. You can record your contributions by finding your project listed on the project selection page, and following the link 'record your contributions and create a final application' on that project's detailed listing:
-{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
+Then follow the 'record your contributions and create a final application' link.
 
 If you don't see any links to project details or a link to record a contribution, you probably aren't logged in.
 
-If you have any questions about selecting a project or you are having trouble contacting a mentor who has not closed their project to applicants, please email the Outreachy mentors mailing list at mentors@lists.outreachy.org. If you need to privately contact Outreachy organizers, please email the Outreachy applicant helpers at applicant-help@outreachy.org
+Final Applications
+------------------
+
+You will need to create a final application for each project you're applying for. Only applicants that complete a final application for that project will be eligible to be selected as an intern for that project.
+
+You can create a final application by finding your project listed on the project selection page:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
+
+Then follow the 'create a final application' link.
+
+You can edit your final application until {{ current_round.contributions_close }} at 4pm UTC. A link to edit your final application is on your dashboard:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}
+
+Time Commitment Changes
+-----------------------
+
+If your time commitments have changed since you filled out the initial application, please email applicant-help@outreachy.org. You can see the time commitments listed on your initial application here:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'eligibility-results' %}
+
+If your initial application is missing your current or future job, your school time commitments, your online classes, or your coding school information, get in touch with us to correct it. If the hours of your time commitments are incorrect, get in touch with us to fix it. Please email applicant-help@outreachy.org.
+
+If you are selected as an intern, you will be required to sign a legal internship agreement which asserts that the details in your initial application are correct. It's very important that your time commitments stated in the initial application are correct.
+
+Questions?
+----------
+
+Please email your questions to the Outreachy mentors mailing list at mentors@lists.outreachy.org. If you need to privately contact Outreachy organizers, please email the Outreachy applicant helpers at applicant-help@outreachy.org
 
 Outreachy Organizers
