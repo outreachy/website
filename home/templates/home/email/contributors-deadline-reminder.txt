@@ -1,7 +1,7 @@
 {% load tz %}
 {% timezone comrade.timezone %}
 {% with applied_projects=role.application.get_projects_applied_to contribution_deadline=current_round.contributions_close.deadline %}
-Complete your Outreachy internship applications
+Complete your Outreachy internship final application
 
 In order to be eligible to be selected as an Outreachy intern, you must:
 
@@ -12,6 +12,8 @@ In order to be eligible to be selected as an Outreachy intern, you must:
 Contributions and final applications are due by {{ current_round.contributions_close }} at 4pm UTC{% if comrade.timezone %} / {{ contribution_deadline }} {{ comrade.timezone }}{% endif %}
 
 We encourage you to submit your final applications early. You will be able to edit it until the final application deadline.
+
+Please let the Outreachy organizers know if your time commitments have changed since you filled out an initial application. See the section below for details.
 
 {% if role.projects_contributed_to %}Your Project Contributions
 --------------------------
@@ -36,6 +38,20 @@ Don't see your project listed?
 If you haven't recorded a contribution to a project yet, please follow the project link from this page and click 'Record contributions' button:
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
+
+Time Commitment Changes
+-----------------------
+
+If your time commitments have changed since you filled out the initial application, please email applicant-help@outreachy.org. You can see the time commitments listed on your initial application here:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'eligibility-results' %}
+
+If your initial application is missing your current or future job, your school time commitments, your online classes, or your coding school information, get in touch with us to correct it. If the hours of your time commitments are incorrect, get in touch with us to fix it. Please email applicant-help@outreachy.org.
+
+If you are selected as an intern, you will be required to sign a legal internship agreement which asserts that the details in your initial application are correct. It's very important that your time commitments stated in the initial application are correct.
+
+Deadline Reminders
+------------------
 
 As an Outreachy project applicant, you'll receive emailed reminders:
  - The week before the contribution and final application deadline
