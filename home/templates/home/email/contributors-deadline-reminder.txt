@@ -9,6 +9,8 @@ In order to be eligible to be selected as an Outreachy intern, you must:
 
 2. Create a final application for that project.
 
+You must create a final application for each project. If you don't create a final application for a project, you aren't eligible to be selected as an intern for that project.
+
 Contributions and final applications are due by {{ current_round.contributions_close }} at 4pm UTC{% if comrade.timezone %} / {{ contribution_deadline }} {{ comrade.timezone }}{% endif %}
 
 We encourage you to submit your final applications early. You will be able to edit it until the final application deadline.
@@ -18,8 +20,7 @@ Please let the Outreachy organizers know if your time commitments have changed s
 {% if role.projects_contributed_to %}Your Project Contributions
 --------------------------
 
-{% for project in role.projects_contributed_to %}
-{{ project.project_round.community.name }} project "{{ project.short_title }}"
+{% for project in role.projects_contributed_to %}{{ project.project_round.community.name }} project "{{ project.short_title }}"
 {% if project in applied_projects %}Your final application will be reviewed: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% else %}You have NOT submitted a final application for this project. Create one here: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% endif %}{% if not forloop.last %}
 {% endif %}{% endfor %}
 
