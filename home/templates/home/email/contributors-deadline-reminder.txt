@@ -22,6 +22,7 @@ Please let the Outreachy organizers know if your time commitments have changed s
 
 {% for project in role.projects_contributed_to %}{{ project.project_round.community.name }} project "{{ project.short_title }}"
 {% if project in applied_projects %}Your final application will be reviewed: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% else %}You have NOT submitted a final application for this project. Create one here: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% endif %}{% if not forloop.last %}
+
 {% endif %}{% endfor %}
 
 Final Application
