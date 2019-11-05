@@ -17,11 +17,15 @@ Each Outreachy project mentors will need to select their own intern. Coordinator
 
 In order to be eligible to be selected as an Outreachy intern, each applicant must:
 
-1. Fill out an initial application at {{ request.scheme }}://{{ request.get_host }}{% url 'eligibility' %}
+1. Have an approved initial application
 2. Record a contribution to a {{ community }} project listed on the Outreachy site: {{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
-3. Complete a final application for the project.
+3. Complete a final application for the project
 
-The deadline to submit a final application was {{ current_round.contributions_close|date:"F d" }} at 4pm UTC. Each round, we get a few applicants who miss the deadline. If this happens, **and** this is a strong applicant you are considering for the internship, please ask the applicant to send an email to organizers@outreachy.org with you on Cc. Only applicants who have already filled out an initial application and who have completed a contribution, or have a contribution in progress for your project are eligible to submit their final applications manually.
+The deadline to submit a final application was {{ current_round.contributions_close|date:"F d" }} at 4pm UTC. Each round, we get a few applicants who miss the deadline. If this happens, **and** this is a strong applicant you are considering for the internship, the Outreachy organizers can enter a final application manually. Only applicants who have an approved initial application and who have a contribution completed or in progress are eligible to submit their final applications manually.
+
+If a community coordinator has a strong applicant who missed the deadline:
+ - ask the applicant to send an email to organizers@outreachy.org with the coordinators on Cc
+ - the email should include answers to the final application questions listed here: {{ request.scheme }}://{{ request.get_host }}{% url 'docs-applicant' %}/#final-application
 
 Selecting an Intern
 -------------------
