@@ -1,11 +1,13 @@
 import datetime
+from django.core import mail
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from reversion.models import Version
 
 from . import models
 from .factories import *
-
+from home import scenarios
+from home.email import organizers
 
 # don't try to use the static files manifest during tests
 @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
@@ -98,6 +100,60 @@ class InternSelectionTestCase(TestCase):
 
                 intern_selection = models.InternSelection.objects.get(project=project)
                 self.assertEqual(intern_selection.organizer_approved, True)
+
+    def test_intern_selection_emails(self):
+        scenario = scenarios.ContributionsClosedScenario()
+
+        rejected_mentor = MentorApprovalFactory(
+            project=scenario.project, approval_status=models.ApprovalStatus.REJECTED
+        )
+        withdrawn_mentor = MentorApprovalFactory(
+            project=scenario.project, approval_status=models.ApprovalStatus.WITHDRAWN
+        )
+        approved_comentor = MentorApprovalFactory(
+            project=scenario.project, approval_status=models.ApprovalStatus.APPROVED
+        )
+
+        post_params = {
+            "round_slug": scenario.round.slug,
+            "community_slug": scenario.project.project_round.community.slug,
+            "project_slug": scenario.project.slug,
+            "applicant_username": scenario.applicant1.applicant.account.username,
+        }
+        legal_name = scenario.mentor.public_name
+
+        # mentor selects the intern.
+        self.client.force_login(scenario.mentor.account)
+        path = reverse("select-intern", kwargs={**post_params})
+        response = self.client.post(path, {
+            "rating-rating": models.FinalApplication.AMAZING,
+            "contract-legal_name": legal_name,
+        })
+
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, 'Outreachy intern selected - please sign mentoring agreement')
+        self.assertEqual(mail.outbox[0].from_email, organizers)
+
+        # Check important links are in the email body
+        comentor_sign_up_link = reverse('select-intern', kwargs={
+            'round_slug': scenario.round.slug,
+            'community_slug': scenario.community.slug,
+            'project_slug' : scenario.project.slug,
+            'applicant_username': scenario.applicant1.applicant.account.username,
+        })
+        project_applicants_link = reverse('project-applicants', kwargs={
+            'round_slug': scenario.round.slug,
+            'community_slug': scenario.community.slug,
+            'project_slug' : scenario.project.slug,
+        })
+        self.assertIn(comentor_sign_up_link, mail.outbox[0].body)
+        self.assertIn(project_applicants_link, mail.outbox[0].body)
+        self.assertIn(reverse('alums'), mail.outbox[0].body)
+
+        # The rejected and withdrawn mentors
+        # should not get an email about the intern selection,
+        # but the approved co-mentor should get an email.
+        self.assertEqual(mail.outbox[0].to, [approved_comentor.mentor.email_address()])
 
     def test_mentor_can_resign(self):
         current_round = RoundPageFactory(start_from='midfeedback')

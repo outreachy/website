@@ -2134,7 +2134,7 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                 intern_selection,
                 [
                     mentor_approval.mentor.email_address()
-                    for mentor_approval in self.project.mentorapproval_set.all()
+                    for mentor_approval in self.project.mentorapproval_set.approved()
                     # skip the current visitor, who just signed
                     if mentor_approval != self.mentor_approval
                 ],

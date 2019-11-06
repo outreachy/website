@@ -139,14 +139,13 @@ class InitialApplicationsUnderwayScenario(CommunitySignupUnderwayScenario):
         reason_denied='GENERAL',
     )
 
-class InternSelectionScenario(InitialApplicationsUnderwayScenario):
+class ContributionsClosedScenario(InitialApplicationsUnderwayScenario):
     """
-    Create samples of the objects which matter once mentors start to
-    select the interns they want to work with, and coordinators
-    need to set funding sources for the selected interns.
+    Create samples of the objects which matter before mentors start to
+    select the interns they want to work with.
     """
 
-    round__start_from = 'mentor_intern_selection_deadline'
+    round__start_from = 'contributions_close'
     sponsorship__amount = 13000
 
     mentor2 = factory.SubFactory(factories.MentorFactory)
@@ -175,6 +174,35 @@ class InternSelectionScenario(InitialApplicationsUnderwayScenario):
         project=factory.SelfAttribute('..project3'),
         approval_status=ApprovalStatus.APPROVED,
     )
+
+    # Create final applications.
+    # This will automatically create 1 recorded contribution per application.
+    final_application1 = factory.SubFactory(
+        factories.FinalApplicationFactory,
+        round=factory.SelfAttribute('..round'),
+        applicant=factory.SelfAttribute('..applicant1'),
+        project=factory.SelfAttribute('..project'),
+    )
+    final_application2 = factory.SubFactory(
+        factories.FinalApplicationFactory,
+        round=factory.SelfAttribute('..round'),
+        applicant=factory.SelfAttribute('..applicant2'),
+        project=factory.SelfAttribute('..project2'),
+    )
+    final_application3 = factory.SubFactory(
+        factories.FinalApplicationFactory,
+        round=factory.SelfAttribute('..round'),
+        applicant=factory.SelfAttribute('..applicant3'),
+        project=factory.SelfAttribute('..project3'),
+    )
+
+class InternSelectionScenario(ContributionsClosedScenario):
+    """
+    Create samples of the objects which matter once mentors have
+    selected the interns they want to work with, and coordinators
+    need to set funding sources for the selected interns.
+    """
+    round__start_from = 'mentor_intern_selection_deadline'
 
     intern_selection1 = factory.SubFactory(
         factories.InternSelectionFactory,
