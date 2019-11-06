@@ -51,7 +51,7 @@ class InternSelectionTestCase(TestCase):
                 self.client.force_login(mentorapproval.mentor.account)
                 path = reverse("select-intern", kwargs={**post_params})
 
-                legal_name = applicantapproval.applicant.public_name
+                legal_name = mentorapproval.mentor.public_name
                 response = self.client.post(path, {
                     "rating-rating": models.FinalApplication.AMAZING,
                     "contract-legal_name": legal_name,
