@@ -150,11 +150,14 @@ class CommunityAdmin(admin.ModelAdmin):
 
     list_display = (
             'name',
-            'website',
+            )
+    list_filter = (
+            'rounds',
             )
     search_fields = (
             'name',
             'website',
+            'description',
             )
 
 class SkillsInline(admin.StackedInline):
