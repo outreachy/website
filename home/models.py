@@ -929,7 +929,12 @@ class Comrade(models.Model):
         return self.public_name + ' <' + self.account.email + '> (' + self.legal_name + ')'
 
     def email_address(self):
-        return Address(self.public_name, addr_spec=self.account.email)
+        if self.account.email:
+            return Address(self.public_name, addr_spec=self.account.email)
+        return ''
+
+    def username(self):
+        return self.account.username
 
     def get_pronouns_html(self):
         return "<a href=http://pronoun.is/{short_name}>{pronouns}</a>".format(

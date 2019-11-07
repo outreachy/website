@@ -106,6 +106,20 @@ class OnlyComradeAdmin(reversion.admin.VersionAdmin):
             'location',
             'timezone',
             )
+    search_fields = (
+            'public_name',
+            'legal_name',
+            'account__username',
+            'account__email',
+            )
+    list_display = (
+            'public_name',
+            'username',
+            'email_address',
+            )
+    raw_id_fields = (
+            'account',
+            )
 
 class SponsorshipInline(admin.StackedInline):
     model = Sponsorship
