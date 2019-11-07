@@ -121,6 +121,18 @@ class OnlyComradeAdmin(reversion.admin.VersionAdmin):
             'account',
             )
 
+class RoundPageAdmin(reversion.admin.VersionAdmin):
+    model = RoundPage
+    list_display = (
+            'official_name',
+            'internstarts',
+            'internends',
+            )
+    search_fields = (
+            'internstarts',
+            'internends',
+            )
+
 class SponsorshipInline(admin.StackedInline):
     model = Sponsorship
 
@@ -586,6 +598,6 @@ admin.site.register(NewCommunity, CommunityAdmin)
 admin.site.register(Notification)
 admin.site.register(OfficialSchool, OfficialSchoolAdmin)
 admin.site.register(Participation, ParticipationAdmin)
-admin.site.register(RoundPage)
+admin.site.register(RoundPage, RoundPageAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(SignedContract, SignedContractAdmin)
