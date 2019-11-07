@@ -140,7 +140,6 @@ class ParticipationAdmin(reversion.admin.VersionAdmin):
     list_display = (
             'community',
             'approval_status',
-            'reason_denied',
             'round',
             )
     list_filter = (
@@ -149,6 +148,10 @@ class ParticipationAdmin(reversion.admin.VersionAdmin):
             )
     search_fields = (
             'community__name',
+            )
+    raw_id_fields =  (
+            'community',
+            'participating_round',
             )
     inlines = (SponsorshipInline,)
 
