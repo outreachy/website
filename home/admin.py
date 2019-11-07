@@ -201,6 +201,9 @@ class ProjectAdmin(reversion.admin.VersionAdmin):
             'short_title',
             'project_round__community__name',
             )
+    raw_id_fields = (
+            'project_round',
+            )
     inlines = (ChannelsInline, SkillsInline)
 
     def community(self, obj):
