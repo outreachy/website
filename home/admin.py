@@ -234,6 +234,10 @@ class MentorApprovalAdmin(reversion.admin.VersionAdmin):
             '=mentor__account__username',
             '=mentor__account__email',
             )
+    raw_id_fields = (
+            'mentor',
+            'project',
+            )
 
     def project_name(self, obj):
         return obj.project.short_title
