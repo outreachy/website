@@ -286,6 +286,10 @@ class ApplicationReviewerAdmin(reversion.admin.VersionAdmin):
             '=comrade__account__username',
             '=comrade__account__email',
             )
+    raw_id_fields = (
+            'comrade',
+            'reviewing_round',
+            )
 
 class WorkEligibilityInline(admin.StackedInline):
     model = WorkEligibility
