@@ -266,6 +266,10 @@ class CoordinatorApprovalAdmin(reversion.admin.VersionAdmin):
             '=coordinator__account__username',
             '=coordinator__account__email',
             )
+    raw_id_fields = (
+            'coordinator',
+            'community',
+            )
 
 class ApplicationReviewerAdmin(reversion.admin.VersionAdmin):
     list_display = (
