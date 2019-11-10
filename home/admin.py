@@ -514,6 +514,11 @@ class MentorRelationshipAdmin(admin.ModelAdmin):
             'intern_selection__applicant__applicant__account__email',
             'intern_selection__applicant__applicant__account__username',
             )
+    raw_id_fields = (
+            'intern_selection',
+            'mentor',
+            'contract',
+            )
 
 class SignedContractAdmin(admin.ModelAdmin):
     list_display = (
