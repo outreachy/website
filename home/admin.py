@@ -575,6 +575,11 @@ class InternSelectionAdmin(reversion.admin.VersionAdmin):
             'mentors__mentor__public_name',
             'mentors__mentor__account__email',
             )
+    raw_id_fields = (
+            'applicant',
+            'project',
+            'intern_contract',
+            )
     inlines = (InitialMentorFeedbackInline, InitialInternFeedbackInline, MidpointMentorFeedbackInline, MidpointInternFeedbackInline, FinalMentorFeedbackInline, FinalInternFeedbackInline)
 
 class FeedbackAdmin(reversion.admin.VersionAdmin):
