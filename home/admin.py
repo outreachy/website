@@ -415,6 +415,9 @@ class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
         'application_round',
         'ip_address',
     )
+    raw_id_fields = (
+        'review_owner',
+        )
 
     inlines = (WorkEligibilityInline, PaymentEligibilityInline, ApplicantGenderIdentityInline, ApplicantRaceEthnicityInformationInline, PriorFOSSExperienceInline, BarriersToParticipationInline, TimeCommitmentSummaryInline, SchoolInformationInline, SchoolTimeCommitmentsInline, NonCollegeSchoolTimeCommitmentsInline, EmploymentTimeCommitmentsInline, ContractorInformationInline, VolunteerTimeCommitmentsInline, ContributionsInline, ApplicationsInline, PromotionTrackingInline)
 
