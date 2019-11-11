@@ -614,6 +614,11 @@ class RoundPage(AugmentDeadlines, Page):
             contribution__isnull=False,
         ).distinct().count()
 
+    def number_final_applicants(self):
+        return self.applicantapproval_set.approved().filter(
+            finalapplication__isnull=False,
+        ).distinct().count()
+
     def get_statistics_on_eligibility_check(self):
         applicants = self.applicantapproval_set
         count_all = applicants.count()
