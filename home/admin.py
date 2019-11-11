@@ -497,6 +497,10 @@ class FinalApplicationAdmin(reversion.admin.VersionAdmin):
             '=applicant__applicant__account__username',
             '=applicant__applicant__account__email',
             )
+    raw_id_fields = (
+            'applicant',
+            'project'
+            )
 
 class MentorRelationshipAdmin(admin.ModelAdmin):
     list_display = (
