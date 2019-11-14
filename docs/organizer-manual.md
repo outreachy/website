@@ -22,6 +22,40 @@ After final applications are closed, the following steps need to be taken:
  - Outreachy PLC members approve or reject any general funding requests
  - Outreachy organizers approve or reject any additional interns
 
+## Conflicting intern selections
+
+In the case where applicants are selected for multiple projects, we go
+through a few steps:
+
+0. Are there enough co-mentors for the project such that the interns will have
+a 1:1 mentor ratio? If one community has more interns than they have mentors,
+then the applicant should be an intern for the other community.
+
+1. Start a discussion with the mentors about the quality of the
+applicant's contributions.
+
+Mentors - Has NAME shown they have the skills to be a successful intern?
+Are their contributions of high quality? Have they been consistent about
+communicating with mentors? Have they been consistently contributing?
+
+2. Does one project have another strong applicant they want to accept?
+
+If one project has no other strong applicants, the preference is that
+applicant interns with that project. The goal is to have as many interns
+as possible.
+
+3. What is the source of the intern funding for both projects?
+
+There is a slight preference from the Outreachy organizers to have
+the intern accepted by a community who is funding them from community
+sponsors. This maximized the number of interns we can accept.
+
+4. What is the intern's preference?
+
+If both mentors still want to accept the applicant after the
+discussion, the Outreachy organizer should contact the applicant and
+ask them which project they want to work on.
+
 ## Coordinating with Google Summer of Code
 
 If the internship aligns with Google Summer of Code, some Outreachy applicants may have applied for both Outreachy and Google Summer of Code.
