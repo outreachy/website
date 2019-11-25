@@ -278,12 +278,16 @@ class RoundPage(AugmentDeadlines, Page):
     resume_reviewer_email = models.EmailField(blank=True, verbose_name='Email address of the person doing resume review during week 12')
     week_fourteen_chat_text_date = models.DateTimeField(verbose_name="Date and time of Outreachy week fourteen chat to wrap up the Outreachy internship")
     week_fourteen_wrapup_chat_url = models.URLField(blank=True, verbose_name="URL of the week fourteen chat to wrap up the Outreachy internship")
+    tax_form_deadline = models.DateField("Date tax forms must be received by in order to have on-time initial payments")
     initialfeedback = models.DateField("Date initial feedback is due")
+    initial_payment_date = models.DateField("Date initial payment will be received by")
     initialpayment = models.IntegerField(default=1000)
     midfeedback = models.DateField("Date mid-point feedback is due")
+    midpoint_payment_date = models.DateField("Date mid-point payment will be received by")
     midpayment = models.IntegerField(default=2000)
     internends = models.DateField("Date internships end")
     finalfeedback = models.DateField("Date final feedback is due")
+    final_payment_date = models.DateField("Date final payment will be received by")
     finalpayment = models.IntegerField(default=2500)
     sponsordetails = RichTextField(default='<p>Outreachy is hosted by the <a href="https://sfconservancy.org/">Software Freedom Conservancy</a> with special support from Red Hat, GNOME, and <a href="http://otter.technology">Otter Tech</a>. We invite companies and free and open source communities to sponsor internships in the next round.</p>')
 
@@ -351,13 +355,13 @@ class RoundPage(AugmentDeadlines, Page):
         return(self.initialfeedback)
 
     def initial_stipend_payment_deadline(self):
-        return self.initialfeedback + datetime.timedelta(days=30)
+        return self.initial_payment_date
 
     def midpoint_stipend_payment_deadline(self):
-        return self.midfeedback + datetime.timedelta(days=30)
+        return self.midpoint_payment_date
 
     def final_stipend_payment_deadline(self):
-        return self.finalfeedback + datetime.timedelta(days=30)
+        return self.final_payment_date
 
     # There is a concern about paying interns who are in a country
     # where they are not eligible to work in (usually due to visa restrictions).
