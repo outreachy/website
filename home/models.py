@@ -340,7 +340,7 @@ class RoundPage(AugmentDeadlines, Page):
         return self.lateprojects - datetime.timedelta(days=7)
 
     def intern_agreement_deadline(self):
-        return(self.internannounce + datetime.timedelta(days=7))
+        return(self.internannounce + datetime.timedelta(days=5))
 
     def intern_initial_feedback_opens(self):
         return(self.initialfeedback - datetime.timedelta(days=7))
