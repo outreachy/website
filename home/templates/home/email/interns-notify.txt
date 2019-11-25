@@ -8,37 +8,48 @@ This email outlines the next steps for participating in the program, so please r
 
  1. Log into the Outreachy website and click the 'Accept Internship' button on your dashboard: https://www.outreachy.org/dashboard This will prompt you to sign the internship agreement.
 
- 2. Double check that your public information on the announcement page is correct: https://www.outreachy.org/alums/ If you want to add a photo or you need any changes, you can change your public name, location, pronouns (and their public visibility settings), and links to Twitter, GitLab, and GitHub on your account page. https://www.outreachy.org/account/
+ 2. Respond to the Software Freedom Conservancy with your tax form W-9 or W8-BEN by {{ current_round.tax_form_deadline }}.
 
- 3. Create a blog to use to document your Outreachy internship. You will be required to blog every two weeks (more details on that below).
+ 3. Double check that your public information on the announcement page is correct: https://www.outreachy.org/alums/ If you want to add a photo or you need any changes, you can change your public name, location, pronouns (and their public visibility settings), and links to Twitter, GitLab, and GitHub on your account page. https://www.outreachy.org/account/
 
- 4. Add the blog URL and RSS feed link to your profile: https://www.outreachy.org/account/
+ 4. Create a blog to use to document your Outreachy internship. You will be required to blog every two weeks (more details on that below).
+
+ 5. Add the blog URL and RSS feed link to your profile: https://www.outreachy.org/account/
 
 The rest of the email outlines important steps to take in the next week.
 
 Internship Agreement
 --------------------
 
+If you don't plan on participating as an intern or signing the internship agreement, please let organizers@outreachy.org know as soon as possible.
+
 You will need to log into the Outreachy site and accept the Outreachy internship agreement by {{ current_round.intern_agreement_deadline }}:
 
 https://www.outreachy.org/dashboard 
 
-This is a legal document that asserts the information you provided on your initial and final application (including your eligibility information, school academic calendar, and work information) is accurate and correct. Please review your time commitment information to ensure it is accurate, and email organizers@outreachy.org if you need to make any corrections. Your initial application, with your stated time commitment information can be viewed here:
+This is a legal document. You cannot participate in the internship unless you sign the internship agreement. The internship agreement asserts the information you provided on your initial and final application is accurate and correct. This includes the time commitments you provided on your initial application.
+
+Make sure to email organizers@outreachy.org if your time commitments have changed or will change. Your time commitments can be viewed here:
 
 https://www.outreachy.org/eligibility-results/
 
-You cannot participate in the internship unless you sign the internship agreement. If you don't plan on participating or signing this document, please let organizers@outreachy.org know as soon as possible.
+Legal Name
+----------
 
-You will need to review the agreement and provide your full legal name as your electronic signature. You may use a nickname or a shortened name for working with Outreachy mentors, but you must provide your full legal name on the internship agreement. Only Outreachy organizers (Marina, Sage, Karen, Cindy, and Tony) and Software Freedom Conservancy staff (Bradley and Brett) will see your legal name.
+You will need to provide your full legal name as your electronic signature on the internship agreement. You will also need to use your full legal name on your tax paperwork. Please make sure the names match.
+
+Only Outreachy organizers (Marina, Sage, Karen, Cindy, and Tony) and Software Freedom Conservancy staff (Bradley, Brett, and Rosanne) will see your legal name. You may use a nickname, pseudonym, or a shortened name for working with Outreachy mentors. You can also use a nickname, pseudonym, or shortened name for display on the Outreachy alums page.
 
 Payments and tax information
 -----------------------------
 
-Outreachy's fiscal sponsor, Software Freedom Conservancy (SFC) will be handling tax information and payment processing. They will contact you through their accounting ticketing system to collect information for sending your payments and any tax-related information.
+Outreachy's fiscal sponsor, Software Freedom Conservancy, will be handling tax information and payment processing. They will contact you through their accounting ticketing system to collect information for sending your payments and any tax-related information. You will receive the emails to collect payment and tax information sometime after {{ current_round.internstarts }} when we notify Conservancy that you have started your internships.
 
-We ask mentors to notify us if an intern hasn't started their work by {{ current_round.intern_not_started_deadline }}. You will receive the emails to collect payment and tax information sometime after {{ current_round.intern_sfc_initial_payment_notification_deadline }} when we notify SFC that you have started your internships, and before {{ current_round.initial_stipend_payment_deadline }} when Conservancy will issue your initial stipend payment.
+Tax forms and payment routing information are due by {{ current_round.tax_form_deadline }}. Tax forms are required in order to be paid the internship stipend. If you send tax documents or payment routing information after {{ current_round.tax_form_deadline }}, your initial payment may be delayed.
 
-Please note that the SFC payment and tax email addresses are part of a ticketing queue that is an automated system. Please send any questions to organizers@outreachy.org and we will respond to them or properly route them.
+The Conservancy payment and tax email addresses are part of a ticketing queue that is an automated system. Please make sure to reply-all and keep the ticket number in the email subject line. If you try to contact individual Conservancy employees, that will not be recorded on the ticket, and it may slow down the processing of your accounting ticket.
+
+Please treat Conservancy accounting staff with respect. The Outreachy Code of Conduct also applies to communication with Conservancy employees.
 
 Your payments will be sent on the following schedule, provided you start your internship and your mentor notifies us on time that you are in good standing for mid-point and final evaluation. (See "Stipend" section of your internship agreement for full details on this.)
 
@@ -49,7 +60,7 @@ Your payments will be sent on the following schedule, provided you start your in
 W-9 and W8-BEN forms
 --------------------
 
-Depending on the country you reside in, you will be asked to provide either a W-9 or a W8-BEN form. We cannot pay you until you fill out one of these two forms. You may be dropped from the program if you are asked for a form and you do not provide it within a month.
+Depending on the country you reside in, you will be asked to provide either a W-9 or a W8-BEN form. Conservancy cannot pay you until you fill out one of these two forms. You may be dropped from the program if you are asked for a form and you do not provide it within a month.
 
 Travel Allowance
 ----------------
