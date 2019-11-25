@@ -86,7 +86,7 @@ confirmations. Payments may be issued earlier than scheduled deadlines below,
 but interns should not rely on earlier payments.
 
  * $1,000 will be sent to you by or around January 23, 2020 if your Volunteer Mentor
-   confirms confirms to Conservancy by December 18, 2019 that you are in good
+   confirms to Conservancy by December 18, 2019 that you are in good
    standing. If Conservancy receives such confirmation late, your payment will
    be delayed. If such confirmation is not received, you will not receive
    payment.
