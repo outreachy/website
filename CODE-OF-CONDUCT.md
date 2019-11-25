@@ -1,5 +1,7 @@
 # Outreachy Community Code of Conduct
   
+_last edited - November 25, 2019_
+
 ## Our Pledge
 
 In the interest of fostering an open and welcoming environment, we as Outreachy applicants, interns, alumni, mentors, coordinators, organizers, and other contributors (collectively known as Outreachy community members) pledge to make participation in Outreachy and the Outreachy community a harassment-free experience for everyone, regardless of age, body size, caste, disability, ethnicity, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual identity and orientation.
@@ -56,6 +58,7 @@ This Code of Conduct applies within Outreachy project spaces:
   * [https://github.com/outreachy/website/](https://github.com/outreachy/website/)
   * [https://github.com/outreachy/creative-works-and-scripts](https://github.com/outreachy/creative-works-and-scripts)
   * [https://gitlab.com/sagesharp/outreachy-notes](https://gitlab.com/sagesharp/outreachy-notes)
+* The Outreachy private Zulip chat
 * Any additional Outreachy project spaces added in the future
 
 When Outreachy community members make contributions and participate in public discussion during the application period, during the internship period, and at other times when their affiliation with Outreachy is relevant, they represent the Outreachy project and its reputation. Therefore, this Code of Conduct applies to:
@@ -64,6 +67,7 @@ When Outreachy community members make contributions and participate in public di
 * Public communication between Outreachy community members at gatherings related to Outreachy and at free software events
 * Public Outreachy intern blog posts and comments by Outreachy community members on those blog posts
 * Private communication between Outreachy community members related to an Outreachy application or internship
+* Private communication between Outreachy community members and Software Freedom Conservancy staff that is related to an Outreachy internship, either through the accounting request ticket system or private email
 
 This Code of Conduct also applies to official Outreachy communication, such as:
 
