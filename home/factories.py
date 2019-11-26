@@ -113,16 +113,20 @@ round_dates = (
     'internannounce',
     'internstarts',
     'week_two_chat_text_date',
+    'tax_form_deadline',
     'initialfeedback',
     'week_four_chat_text_date',
     'week_six_chat_text_date',
     'week_eight_chat_text_date',
+    'initial_payment_date',
     'midfeedback',
     'week_ten_chat_text_date',
     'week_twelve_chat_text_date',
+    'midpoint_payment_date',
     'week_fourteen_chat_text_date',
     'internends',
     'finalfeedback',
+    'final_payment_date',
 )
 
 class RoundPageFactory(PageFactory):
@@ -206,16 +210,20 @@ class RoundPageFactory(PageFactory):
     # week 20 - May 20
     internstarts = datetime.timedelta(days=14)
     week_two_chat_text_date = datetime.timedelta(days=7)
-    initialfeedback = datetime.timedelta(days=8)
+    tax_form_deadline = datetime.timedelta(days=5)
+    initialfeedback = datetime.timedelta(days=3)
     week_four_chat_text_date = datetime.timedelta(days=6)
     week_six_chat_text_date = datetime.timedelta(days=14)
     week_eight_chat_text_date = datetime.timedelta(days=14)
-    midfeedback = datetime.timedelta(days=8)
+    initial_payment_date = datetime.timedelta(days=1)
+    midfeedback = datetime.timedelta(days=7)
     week_ten_chat_text_date = datetime.timedelta(days=6)
     week_twelve_chat_text_date = datetime.timedelta(days=14)
-    week_fourteen_chat_text_date = datetime.timedelta(days=14)
+    midpoint_payment_date = datetime.timedelta(days=9)
+    week_fourteen_chat_text_date = datetime.timedelta(days=5)
     internends = datetime.timedelta(days=0)
     finalfeedback = datetime.timedelta(days=7)
+    final_payment_date = datetime.timedelta(days=30)
 
     @factory.lazy_attribute
     def pingnew(obj):
