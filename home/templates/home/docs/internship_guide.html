@@ -13,6 +13,8 @@ Internship Guide | Outreachy Documentation
 
 <p>
 <a href='#payments'>Payments</a><br>
+<a href='#blog'>Blogging</a><br>
+<a href='#chats'>Chats with interns, mentors, and alums</a>
 </p>
 
 <hr>
@@ -51,6 +53,100 @@ Internship Guide | Outreachy Documentation
 
 	{% with current_round=intern_round %}
 		{% include 'home/snippet/payment_schedule.html' %}
+	{% endwith %}
+{% endif %}
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+
+<h2 id='blog'><a href='#blog'>Blogging</a></h2>
+
+<p>Interns are required to blog every two weeks about your internship. The Outreachy organizers will provide blog post prompts via email the week before a blog is due. If your mentor has a different topic in mind, you can blog about that instead of using the blog post prompts.<p>
+
+<h3>Blog schedule</h3>
+
+<p>The Outreachy organizers will send blog prompts on the following dates:</p>
+
+{% if applicant_round %}
+	{% with current_round=applicant_round %}
+		<table class="table">
+			<tr><th width="175">{{ current_round.internship_week_1_email_date }}</th><td>Blog prompt: "Experiences applying to Outreachy"</td></tr>
+			<tr><th>{{ current_round.internship_week_3_email_date }}</th><td>Blog prompt: "Everybody struggles"</td></tr>
+			<tr><th>{{ current_round.internship_week_5_email_date }}</th><td>Blog prompt: "Think about your audience"</td></tr>
+			<tr><th>{{ current_round.internship_week_7_email_date }}</th><td>Mid-point project progress blog post</td></tr>
+			<tr><th>{{ current_round.internship_week_9_email_date }}</th><td>Blog prompt: "Career opportunities"</td></tr>
+			<tr><th>{{ current_round.internship_week_11_email_date }}</th><td>No blog post - interns work on their resume</td></tr>
+			<tr><th>{{ current_round.internship_week_13_email_date }}</th><td>Final project progress blog post</td></tr>
+		</table>
+	{% endwith %}
+{% endif %}
+
+{% if intern_round %}
+	{% with current_round=intern_round %}
+		<table class="table">
+			<tr><th width="175">{{ current_round.internship_week_1_email_date }}</th><td>Blog prompt: "Experiences applying to Outreachy"</td></tr>
+			<tr><th>{{ current_round.internship_week_3_email_date }}</th><td>Blog prompt: "Everybody struggles"</td></tr>
+			<tr><th>{{ current_round.internship_week_5_email_date }}</th><td>Blog prompt: "Think about your audience"</td></tr>
+			<tr><th>{{ current_round.internship_week_7_email_date }}</th><td>Mid-point project progress blog post</td></tr>
+			<tr><th>{{ current_round.internship_week_9_email_date }}</th><td>Blog prompt: "Career opportunities"</td></tr>
+			<tr><th>{{ current_round.internship_week_11_email_date }}</th><td>No blog post - interns work on their resume</td></tr>
+			<tr><th>{{ current_round.internship_week_13_email_date }}</th><td>Final project progress blog post</td></tr>
+		</table>
+	{% endwith %}
+{% endif %}
+
+<h3>How long should a blog post take to write?</h3>
+
+<p>Blog posts don't need to be perfect! You shouldn't spend more than 1-3 hours on the post. Your mid-point and final project progress blog post may take longer than your other blog posts. Blogging shouldn't take priority over working on your internship project.</p>
+
+<h3>Where should I create a blog?</h3>
+
+<p>Outreachy organizers recommend creating a blog that runs on free software. Our recommendations is to use <a href="https://wordpress.com/">Wordpress</a> or <a href="http://www.dreamwidth.org">Dreamwidth</a>.
+
+<p>It can be tempting to use static site generators to create your own blog. However, interns often spend too much time configuring their blog than working on their project.</p>
+
+<p>Outreachy organizers do not recommend using proprietary social media blogs, such as Medium or Tumblr. If your community already has a blog on Medium and wants you to post progress reports to that blog, that's is okay. However, you will still need your own blog to publish other posts on.</p>
+
+<p>Please update your profile https://www.outreachy.org/account/ with a link to both the URL for your blog, and the RSS feed for your blog. For the RSS feed, you can specify either the entire blog feed, or a specific feed you want to be aggregated. Some interns add the RSS feed for their "outreachy" tag on their blog, so they can also blog about personal things.</p>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+
+<h2 id='chats'><a href='#chats'>Chats with interns, mentors, and alums</a></h2>
+
+<p>Every two weeks, Outreachy interns, mentors, and alums will have an informal chat on the private Outreachy Zulip chat server. The goal of these chats is to encourage the interns to connect with each other.<p>
+
+<p>We encourage you to honestly share your experiences. We are all learning, and no one will judge you. We especially encourage you to participate if you're shy. You may make some new friends or find a new support group!</p>
+
+<p>You may not be able to make the chat because of your timezone. If so, it's okay to read through the log and comment later.</p>
+
+<p>Interns will receive an invitation to the Outreachy Zulip chat once interns are announced. The login will expire in a week. If you need us to send another invitation, email the Outreachy organizers.</p>
+
+<h3>Chat schedule</h3>
+
+{% if applicant_round %}
+	{% with current_round=applicant_round %}
+		<table class="table">
+			<tr><th width="175">{{ current_round.week_two_chat_text_date }}</th><td>Introduction chat - come get your questions answered!</td></tr>
+			<tr><th>{{ current_round.week_four_chat_text_date }}</th><td>Share something you're stuck on</td></tr>
+			<tr><th>{{ current_round.week_six_chat_text_date }}</th><td>Share why you're passionate about your project or community</td></tr>
+			<tr><th>{{ current_round.week_eight_chat_text_date }}</th><td>Share one "easy" project goal that took longer than expected</td></tr>
+			<tr><th>{{ current_round.week_ten_chat_text_date }}</th><td>(Alums invited!) Advancing your career</td></tr>
+			<tr><th>{{ current_round.week_twelve_chat_text_date }}</th><td>Networking skills</td></tr>
+			<tr><th>{{ current_round.week_fourteen_chat_text_date }}</th><td>Internship wrap up chat</td></tr>
+		</table>
+	{% endwith %}
+{% endif %}
+
+{% if intern_round %}
+	{% with current_round=intern_round %}
+		<table class="table">
+			<tr><th width="175">{{ current_round.internship_week_1_email_date }}</th><td>Blog prompt: "Experiences applying to Outreachy"</td></tr>
+			<tr><th>{{ current_round.internship_week_3_email_date }}</th><td>Blog prompt: "Everybody struggles"</td></tr>
+			<tr><th>{{ current_round.internship_week_5_email_date }}</th><td>Blog prompt: "Think about your audience"</td></tr>
+			<tr><th>{{ current_round.internship_week_7_email_date }}</th><td>Mid-point project progress blog post</td></tr>
+			<tr><th>{{ current_round.internship_week_9_email_date }}</th><td>Blog prompt: "Career opportunities"</td></tr>
+			<tr><th>{{ current_round.internship_week_11_email_date }}</th><td>No blog post - interns work on their resume</td></tr>
+			<tr><th>{{ current_round.internship_week_13_email_date }}</th><td>Final project progress blog post</td></tr>
+		</table>
 	{% endwith %}
 {% endif %}
 

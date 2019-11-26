@@ -339,6 +339,27 @@ class RoundPage(AugmentDeadlines, Page):
     def project_soft_deadline(self):
         return self.lateprojects - datetime.timedelta(days=7)
 
+    def internship_week_1_email_date(self):
+        return(self.internannounce)
+
+    def internship_week_3_email_date(self):
+        return self.internannounce + datetime.timedelta(days=7*(3-1))
+
+    def internship_week_5_email_date(self):
+        return self.internannounce + datetime.timedelta(days=7*(5-1))
+
+    def internship_week_7_email_date(self):
+        return self.internannounce + datetime.timedelta(days=7*(7-1))
+
+    def internship_week_9_email_date(self):
+        return self.internannounce + datetime.timedelta(days=7*(9-1))
+
+    def internship_week_11_email_date(self):
+        return self.internannounce + datetime.timedelta(days=7*(11-1))
+
+    def internship_week_13_email_date(self):
+        return self.internannounce + datetime.timedelta(days=7*(13-1))
+
     def intern_agreement_deadline(self):
         return(self.internannounce + datetime.timedelta(days=5))
 
