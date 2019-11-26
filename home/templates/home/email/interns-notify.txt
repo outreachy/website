@@ -4,24 +4,42 @@ Congratulations on being accepted for the {{ current_round.internstarts|date:"F 
 
 You have been selected as an intern for {{ intern_selection.community_name }} working with your mentor{{ intern_selection.mentors.all|pluralize }} {{ intern_selection.mentor_names }} on the project "{{ intern_selection.project_name }}". The {{ intern_selection.community_name }} coordinator{{ coordinator_names|pluralize:" is,s are" }} {{ coordinator_names|join:" and " }}, who {{ coordinator_names|pluralize:"is,are" }} on Cc.
 
+If you don't plan on participating as an intern, please let us know as soon as possible. The later you wait, the less likely it is we'll be able to fill the internship with another candidate.
+
+Internship Guide
+----------------
+
+Please bookmark the Outreachy Internship Guide:
+
+https://www.outreachy.org/docs/internship/
+
+The internship guide has important dates such as feedback deadlines, payment dates, and intern/mentor chat dates. It also provides information on blog prompt topics and dates.
+
+What happens next
+-----------------
+
 This email outlines the next steps for participating in the program, so please read it carefully. The first most important steps are:
 
  1. Log into the Outreachy website and click the 'Accept Internship' button on your dashboard: https://www.outreachy.org/dashboard This will prompt you to sign the internship agreement.
 
- 2. Respond to the Software Freedom Conservancy with your tax form W-9 or W8-BEN by {{ current_round.tax_form_deadline }}.
+ 2. Double check that your public information on the announcement page is correct: https://www.outreachy.org/alums/ If you want to add a photo or you need any changes, you can change your public name, location, pronouns (and their public visibility settings), and links to Twitter, GitLab, and GitHub on your account page. https://www.outreachy.org/account/
 
- 3. Double check that your public information on the announcement page is correct: https://www.outreachy.org/alums/ If you want to add a photo or you need any changes, you can change your public name, location, pronouns (and their public visibility settings), and links to Twitter, GitLab, and GitHub on your account page. https://www.outreachy.org/account/
+ 3. Set an email filter to ensure all emails from outreachy.org and sfconservancy.org go to your Inbox.
 
- 4. Create a blog to use to document your Outreachy internship. You will be required to blog every two weeks (more details on that below).
+ 4. Respond to the Software Freedom Conservancy with your tax form W-9 or W8-BEN by {{ current_round.tax_form_deadline }}.
 
- 5. Add the blog URL and RSS feed link to your profile: https://www.outreachy.org/account/
+ 5. Create a blog to use to document your Outreachy internship. You will be required to blog every two weeks (more details on that below).
+
+ 6. Add the blog URL and RSS feed link to your profile: https://www.outreachy.org/account/
+
+ 7. Contact your mentor.
+
+ 8. Start your internship on {{ current_round.internstarts }}.
 
 The rest of the email outlines important steps to take in the next week.
 
 Internship Agreement
 --------------------
-
-If you don't plan on participating as an intern or signing the internship agreement, please let organizers@outreachy.org know as soon as possible.
 
 You will need to log into the Outreachy site and accept the Outreachy internship agreement by {{ current_round.intern_agreement_deadline }}:
 
@@ -40,27 +58,38 @@ You will need to provide your full legal name as your electronic signature on th
 
 Only Outreachy organizers (Marina, Sage, Karen, Cindy, and Tony) and Software Freedom Conservancy staff (Bradley, Brett, and Rosanne) will see your legal name. You may use a nickname, pseudonym, or a shortened name for working with Outreachy mentors. You can also use a nickname, pseudonym, or shortened name for display on the Outreachy alums page.
 
-Payments and tax information
------------------------------
+Payment Accounting
+------------------
 
-Outreachy's fiscal sponsor, Software Freedom Conservancy, will be handling tax information and payment processing. They will contact you through their accounting ticketing system to collect information for sending your payments and any tax-related information. You will receive the emails to collect payment and tax information sometime after {{ current_round.internstarts }} when we notify Conservancy that you have started your internships.
+Outreachy's fiscal sponsor, Software Freedom Conservancy, will be handling payment processing.
 
-Tax forms and payment routing information are due by {{ current_round.tax_form_deadline }}. Tax forms are required in order to be paid the internship stipend. If you send tax documents or payment routing information after {{ current_round.tax_form_deadline }}, your initial payment may be delayed.
-
-The Conservancy payment and tax email addresses are part of a ticketing queue that is an automated system. Please make sure to reply-all and keep the ticket number in the email subject line. If you try to contact individual Conservancy employees, that will not be recorded on the ticket, and it may slow down the processing of your accounting ticket.
+Conservancy uses an email-based accounting ticketing system. Please make sure to reply-all and keep the ticket number in the email subject line. If you try to contact individual Conservancy employees, that will not be recorded on the ticket, and it may slow down the processing of your accounting ticket.
 
 Please treat Conservancy accounting staff with respect. The Outreachy Code of Conduct also applies to communication with Conservancy employees.
 
-Your payments will be sent on the following schedule, provided you start your internship and your mentor notifies us on time that you are in good standing for mid-point and final evaluation. (See "Stipend" section of your internship agreement for full details on this.)
+Payments schedule
+-----------------
+
+Your payments will be sent on the following schedule. See the Internship Guide for full details: http://www.outreachy.org/docs/internship/#payments
 
  * The ${{ current_round.initialpayment }} initial payment will be issued by {{ current_round.initial_stipend_payment_deadline }}
  * The ${{ current_round.midpayment }} mid-point payment will be issued by {{ current_round.midpoint_stipend_payment_deadline }}
  * The ${{ current_round.finalpayment }} final payment will be issued by {{ current_round.final_stipend_payment_deadline }}
 
-W-9 and W8-BEN forms
---------------------
+Your payments may be delayed if:
 
-Depending on the country you reside in, you will be asked to provide either a W-9 or a W8-BEN form. Conservancy cannot pay you until you fill out one of these two forms. You may be dropped from the program if you are asked for a form and you do not provide it within a month.
+ * You do not turn in payment routing and tax forms by {{ current_round.tax_form_deadline }}
+ * Your mentor does not provide feedback by the initial, mid-point, or final feedback deadlines
+ * You have a custom internship start date or an internship extension
+
+Tax forms
+---------
+
+Once the deadline to sign the internship agreement is passed ({{ current_round.intern_agreement_deadline }}), we will send the intern agreements to Conservancy. They will then email you to ask for tax forms.
+
+Depending on the country you reside in, you will be asked to provide either a W-9 or a W8-BEN form.
+
+Tax forms and payment routing information are due by {{ current_round.tax_form_deadline }}. Tax forms are required in order to be paid the internship stipend. You may be dropped from the program if you are asked for a form and you do not provide it within a month.
 
 Travel Allowance
 ----------------
@@ -74,39 +103,38 @@ Please note that before you book any flights, you will need to take a screenshot
 Intern Blog
 -----------
 
-You are required to blog every two weeks about your internship. Blog posts don't need to be perfect, and often times writing a blog post will help you find the solution to what you're working on. Blog posts are often details about what the interns are working on, but can also include things that you find surprising about working in open source, techniques for working efficiently, your feelings about the internship, or even talking about what you find confusing. We find the best blog posts are honest and open.
+You are required to blog every two weeks about your internship. The Outreachy organizers will email you blog post prompts. Please see the Internship Guide for the blog post prompt schedule, and recommendations on how to set up your blog:
 
-Your blog is required to have an RSS feed so that it can be added to the Outreachy blog planet. A "planet" or "planetaria" is a page with a list of posts from community blogs. The Outreachy planet includes current and past Outreachy interns: http://www.planeteria.info/outreach/
+http://www.outreachy.org/docs/internship/#blog
 
-It's not recommended that you hand-create an RSS feed, as people often get links or syntax wrong. Hosted blogging platforms will create an RSS feed for you. Suggested open source blogging platforms are http://wordpress.com or http://www.dreamwidth.org. Some interns set up a blog on GitHub, but that means they may need to manually add RSS feeds. Do not use Medium as your blogging platform, as your past posts will not be easily accessible for people who aren't a paid subscriber.
-
-Please update your profile https://www.outreachy.org/account/ with a link to both the URL for your blog, and the RSS feed for your blog. For the RSS feed, you can specify either the entire blog feed, or a specific feed you want to be aggregated. Some interns add the RSS feed for their "outreachy" tag on their blog, so they can also blog about personal things without it ending up on the Outreachy planet.
-
-Many of the participating FOSS communities have planets for aggregating contributors' blogs. Please ask the coordinator from your organization about it and get your blog added to it too.
+Please update your profile https://www.outreachy.org/account/ with a link to both the URL for your blog, and (optionally) the RSS feed for your blog.
 
 E-mails for coordinators and mentors
 ------------------------------------
 
 mentors@lists.outreachy.org is a private list for all of the program's coordinators and mentors. It may include past coordinators and mentors.
 
-organizers@outreachy.org is an email shared by the coordinators of the program (Cindy Pallares, Karen Sandler, Tony Sebro, Sage Sharp, and Marina Zhurakhinskaya). Please feel free to e-mail either address if you have any general questions about the program at any time. Please always e-mail the list or the alias, and not one of us individually, and keep the list or the alias on CC in subsequent discussion, to ensure you get a faster response and all of us are in the loop. For the questions specific to your organization, please contact your mentor, the organization's coordinator or a relevant mailing list.
+organizers@outreachy.org is an email shared by the coordinators of the program (Cindy Pallares, Karen Sandler, Tony Sebro, Sage Sharp, and Marina Zhurakhinskaya).
 
-Outreachy communications
-------------------------
+Please feel free to e-mail either address if you have any general questions about the program at any time. Please always e-mail the list or the alias, and not one of us individually. Keep the list or the alias on CC in subsequent discussion, to ensure you get a faster response and all of us are in the loop. For the questions specific to your organization, please contact your mentor, the organization's coordinator or a relevant mailing list.
 
-You will receive an invitiation to a private Outreachy chat server. The chat server includes all accepted interns for this round, Outreachy mentors, coordinators, and organizers. The chat server is meant for you to connect on a person level to other Outreachy participants. You should still also participate in the public communication channels for your project and community.
+Outreachy chat server
+---------------------
+
+You will receive an invitation to a private Outreachy chat server. The chat server includes all accepted interns for this round, Outreachy mentors, coordinators, and organizers. The chat server is meant for you to connect on a person level to other Outreachy participants. You should still also participate in the public communication channels for your project and community.
 
 If you haven't received an email invitation to the Outreachy chat server in a week, please let the Outreachy organizers know.
 
-There are two mailing lists you may want to sign up for.
+Outreachy opportunities
+---------------------
 
-https://lists.outreachy.org/cgi-bin/mailman/listinfo/community
-
-The community mailing list is only for current interns, alumni, and current and past mentors of Outreachy. You can chit-chat on the list, ask for help, talk about conferences, ask for career advice, and more.
+Outreachy wants to ensure you find additional opportunities. We have an opportunities mailing list that is open to sponsors, current interns, alumni, and current and past mentors of Outreachy. Members are encouraged to post job opportunities, other internship programs, conference speaking calls for proposals, and conference travel grant opportunities.
 
 https://lists.outreachy.org/cgi-bin/mailman/listinfo/opportunities
 
-This list is open to anyone who is eligible for the community list, and it is also open to sponsors of the Outreachy program. People use this list to send job postings, other internships, conference CFPs, or other opportunities.
+You can also see a list of sponsor job pages here:
+
+https://www.outreachy.org/opportunities/
 
 Twitter
 -------
