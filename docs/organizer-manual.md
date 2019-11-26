@@ -76,6 +76,40 @@ When reviewing all interns, please do the following:
  * **Check final applications for mentions of jobs or other time commitments** Sometimes applicants aren't truthful, and don't include all their time commitments on their initial application. If you notice they mention a job or classes, email them with a sternly worded warning and ask questions about their time commitments.
  * **Check for mentors over-committing themselves** Review all the mentors in each community. If one mentor has selected two interns, ask if they have a co-mentor who can help them. If they don't, and the community is new to Outreachy, tell them they shouldn't select more than one intern.
 
+### Intern strength checking
+
+If you see an applicant who doesn't seem strong (e.g. ranked as a 3),
+send the following email to the mentor and coordinator:
+
+I've been checking on the strength of selected Outreachy interns. I have
+some concerned about your intern selection.
+
+I noticed that you selected APPLICANT for the COMMUNITY project
+"PROJECT". You rated them as a RATING.
+
+I looked through their contributions, and I noticed CONCERN.
+
+1. How has the applicant shown they have the skills to be a successful
+   Outreachy intern?
+2. How has the applicant shown they have good communication skills?
+3. How often does the applicant ask questions when they're stuck?
+4. How often have they been in contact with mentors?
+5. Have they joined the community's public chat? How active are they?
+
+In order for the internship to be successful, we need Outreachy mentors
+to only accept applicants who have a good chance of being successful. We
+especially look for applicants who have strong communication skills and
+are in contact with their mentors.
+
+Outreachy organizers view this internship as a fellowship. Mentors
+should not expect a certain project to be completed by the intern, but
+rather expect that the intern's work will be adjusted to the level of
+their ability, their interests, and the project's priorities throughout
+the internship.
+
+If you are unsure of the applicant's skills for this project, are you
+flexible with modifying the project tasks to fit the applicant's skills?
+
 ## Invoicing
 
 ### Billing Information
