@@ -1,0 +1,46 @@
+{% extends "base.html" %} 
+
+{% block title %}
+Active Internships Email Contacts
+{% endblock %}
+
+{% block content %}
+
+<h1>All Intern Emails</h1>
+
+<p>
+<textarea rows="{{ interns|length }}" class="form-control" readonly>{% for intern in interns %}
+{{ intern.applicant.applicant.email_address }}{% endfor %}</textarea>
+</p>
+
+<h1>All Mentor and Coordinator Emails</h1>
+
+<p>
+<textarea rows="{{ mentors_and_coordinators|length }}" class="form-control" readonly>{% for comrade in mentors_and_coordinators %}
+{{ comrade.email_address }}{% endfor %}</textarea>
+</p>
+
+<h1>Internship Contact List</h1>
+
+{% for intern in interns %}
+<hr>
+<p>Community: {{ intern.project.project_round.community }}<br>
+Project: "{{ intern.project.short_title }}"<br>
+{% if not intern_has_custom_dates %}
+	Standard internship dates
+{% else %}
+	Internship start date: {{ intern.intern_starts }}<br>
+	Initial feedback opens: {{ intern.initial_feedback_opens }}<br>
+	Initial feedback due: {{ intern.initial_feedback_due }}<br>
+	Mid-point feedback opens: {{ intern.midpoint_feedback_opens }}<br>
+	Mid-point feedback due: {{ intern.midpoint_feedback_due }}<br>
+	Final feedback opens: {{ intern.final_feedback_opens }}<br>
+	Final feedback due: {{ intern.final_feedback_due }}<br>
+	Internship end date: {{ intern.intern_ends }}
+{% endif %}</p>
+<p>Intern: {{ intern.applicant.applicant.email_address }},</p>
+<p>Mentors: {% for email in intern.mentor_emails %}{{ email }},{% endfor %}<br>
+Coordinators: {% for email in intern.project.project_round.community.get_coordinator_email_list %}{{ email }},{% endfor %}</p>
+{% endfor %}
+
+{% endblock %}

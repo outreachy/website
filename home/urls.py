@@ -95,6 +95,7 @@ urlpatterns = [
     url(r'^dashboard/feedback/intern/final/$', views.FinalInternFeedbackUpdate.as_view(), name='final-intern-feedback'),
     url(r'^dashboard/trusted-volunteers/$', views.TrustedVolunteersListView.as_view(), name='trusted-volunteers-list'),
     url(r'^dashboard/active-trusted-volunteers/$', views.ActiveTrustedVolunteersListView.as_view(), name='active-trusted-volunteers-list'),
+    url(r'^dashboard/active-internship-contacts/$', views.ActiveInternshipContactsView.as_view(), name='active-internship-contacts'),
     url(r'^docs/$', views.docs_toc, name='docs'),
     url(r'^docs/applicant/$', views.docs_applicant, name='docs-applicant'),
     url(r'^docs/internship/$', views.docs_internship, name='docs-internship'),

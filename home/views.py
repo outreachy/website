@@ -1878,6 +1878,38 @@ class ActiveTrustedVolunteersListView(UserPassesTestMixin, ListView):
     def test_func(self):
         return self.request.user.is_staff
 
+class ActiveInternshipContactsView(UserPassesTestMixin, TemplateView):
+    template_name = 'home/active_internship_contacts.html'
+
+    def get_context_data(self, **kwargs):
+        now = datetime.now(timezone.utc)
+        today = get_deadline_date_for(now)
+
+        # For all interns with active internships, who are approved by Outreachy organizers,
+        interns = InternSelection.objects.filter(
+                organizer_approved=True,
+                project__project_round__participating_round__internannounce__lte=today,
+                intern_ends__gte=today).order_by('applicant__applicant__public_name').order_by('project__project_round__community__name')
+
+        mentors_and_coordinators = Comrade.objects.filter(
+                models.Q(
+                    mentorapproval__approval_status=ApprovalStatus.APPROVED,
+                    mentorapproval__mentorrelationship__intern_selection__in=interns,
+                ) | models.Q(
+                    coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+                    coordinatorapproval__community__in=[i.project.project_round.community for i in interns],
+                )
+            ).order_by('public_name').distinct()
+
+        context = super(ActiveInternshipContactsView, self).get_context_data(**kwargs)
+        context.update({
+            'interns': interns,
+            'mentors_and_coordinators': mentors_and_coordinators,
+            })
+        return context
+
+    def test_func(self):
+        return self.request.user.is_staff
 
 # Is this a current or past intern in good standing?
 # This will return None if the internship hasn't been announced yet.
