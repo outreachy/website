@@ -224,6 +224,17 @@ def notify_accepted_intern(intern_selection, request, **kwargs):
         recipient_list=emails,
         **kwargs)
 
+def reminder_sign_internship_agreement(intern_selection, request, **kwargs):
+    emails = [intern_selection.applicant.applicant.email_address()]
+    emails.append(organizers)
+    send_group_template_mail('home/email/reminder-sign-internship-agreement.txt', {
+        'intern_selection': intern_selection,
+        'current_round': intern_selection.project.round(),
+        },
+        request=request,
+        recipient_list=emails,
+        **kwargs)
+
 def biweekly_internship_email(intern_selection, request, template, **kwargs):
     emails = [intern_selection.applicant.applicant.email_address()]
     for m in intern_selection.mentors.all():

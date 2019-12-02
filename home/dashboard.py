@@ -493,6 +493,28 @@ class InternNotification(SendEmailView):
         for i in interns:
             email.notify_accepted_intern(i, self.request, connection=connection)
 
+class ContractReminder(SendEmailView):
+    """
+    Individual mail sent to interns who have not signed the internship agreement.
+
+    When: Five days after interns are announced on the website.
+
+    Template: home/templates/home/email/reminder-sign-internship-agreement.txt
+    """
+    description = 'Reminder to sign internship agreement'
+    slug = 'reminder-sign-internship-agreement'
+
+    @staticmethod
+    def instance(current_round):
+        return current_round.intern_agreement_deadline()
+
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+        interns = current_round.get_approved_intern_selections().filter(intern_contract__isnull=True)
+
+        for i in interns:
+            email.reminder_sign_internship_agreement(i, self.request, connection=connection)
 
 class InternWeek(SendEmailView):
     """
@@ -644,6 +666,7 @@ all_round_events = (
     CoordinatorInternSelectionReminder,
     ContributorsApplicationPeriodEndedReminder,
     InternNotification,
+    ContractReminder,
     InternWeek.at(week=1),
     InitialFeedbackInstructions,
     InternWeek.at(week=3),

@@ -1,0 +1,14 @@
+URGENT - Sign Outreachy internship agreement
+
+Hi {{ intern_selection.intern_name }},
+
+According to our records, you have not signed the Outreachy internship agreement. We cannot start your Outreachy internship until the agreement is signed.
+
+To sign the internship agreement, log into the Outreachy website and click the 'Accept Internship' button on your dashboard:
+
+https://www.outreachy.org/dashboard
+
+We sent you an email on {{ current_round.internannounce }} with the subject "{{ intern_selection.intern_name }} accepted for Outreachy". Please refer to it for additional tasks to complete.
+
+Outreachy Organizers
+{% include 'home/email/footer-mentor-intern-coordinator.txt' %}
