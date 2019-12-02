@@ -26,6 +26,9 @@ Active Internships Email Contacts
 <hr>
 <p>Community: {{ intern.project.project_round.community }}<br>
 Project: "{{ intern.project.short_title }}"<br>
+{% if not intern.intern_contract %}
+	<span class="badge badge-pill badge-warning">Internship agreement not signed</span><br>
+{% endif %}
 {% if not intern.intern_has_custom_dates %}
 	Standard internship dates
 {% else %}
