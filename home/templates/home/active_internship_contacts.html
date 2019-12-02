@@ -26,7 +26,7 @@ Active Internships Email Contacts
 <hr>
 <p>Community: {{ intern.project.project_round.community }}<br>
 Project: "{{ intern.project.short_title }}"<br>
-{% if not intern_has_custom_dates %}
+{% if not intern.intern_has_custom_dates %}
 	Standard internship dates
 {% else %}
 	Internship start date: {{ intern.intern_starts }}<br>
