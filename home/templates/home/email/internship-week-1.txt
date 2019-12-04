@@ -1,13 +1,22 @@
 Outreachy week 1: Assignments for mentors & interns
 
-Welcome to the first week of your Outreachy internship! We’re so happy to support you through this journey.
+Welcome to the first week of your Outreachy internship! We're happy to support you through this journey.
 
 This is the first of several messages Outreachy organizers will send throughout the internship period. Each message will have a section for interns and a section for mentors. We hope this transparency provides better understanding of expectations and goals for both parties and ultimately creates a successful internship!
 
 We have some goals and assignments for both mentors and interns. Please read the sections below to ensure that the first internship feedback (due on {{ current_round.initialfeedback }}) is successful. Contact us at organizers@outreachy.org anytime with questions or comments.
 
-Mentors
--------
+Internship chats
+----------------
+
+Every two weeks during the internship, interns, mentors, coordinators, and Outreachy organizers have a chat on the Outreachy Zulip server. The chat schedule is here:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'docs-internship' %}#chats
+
+The first internship chat will take place on {{ current_round.week_two_chat_text_date|date:"D M d, Y" }} {{ current_round.week_two_chat_text_date|time:"H:i" }} UTC on {{ current_round.week_two_chat_text_url }}
+
+Mentor Goals
+------------
 
 Week 1 goals:
 
@@ -23,8 +32,8 @@ Week 1 tips:
  - if you need any help or advice, you can email the mentors mailing list, or ask on the private mentors stream on the Outreachy Zulip chat
  - you've got this!
 
-Interns
--------
+Intern Goals
+------------
 
 Save the date for an introduction chat and Q&A! We want to let you ask any questions of Outreachy organizers, and give you time to connect to other Outreachy interns. The chat will be text-based, using the Outreachy Zulip chat.
 
@@ -48,7 +57,11 @@ Week 1 tips:
 Week 1 Blog
 -----------
 
-The goal of this blog post is to explain to someone who is interested in applying for Outreachy what it's like to apply, and give them tips for making the most out of the application process. A secondary goal is to help Outreachy organizers fix anything that is confusing or unwelcoming about our application process. (If you don't feel comfortable putting feedback about the process in a public post, you can always email organizers@outreachy.org with your feedback.)
+During your internship, you're expected to blog every two weeks. Please take a look at our blog guidelines and blogging schedule:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'docs-internship' %}#blog
+
+The goal of your first internship blog post is to explain to someone who is interested in applying for Outreachy what it's like to apply. Many applicants learn about how to apply to Outreachy by following the tips past interns gave for making the most out of the Outreachy application process. This is your chance to help others get an Outreachy internship!
 
 Here's some prompts that could get you started writing this blog post:
 
@@ -60,6 +73,8 @@ Here's some prompts that could get you started writing this blog post:
  - Who did you ask questions of when you were stuck?
  - How did you mentor help you during the application process? 
  - What would you tell someone who is worried about applying to Outreachy? 
+
+You don't have to include all the prompts above in your blog post. See the blog guidelines linked above for suggested blog post length.
 
 Again, if you have any questions, please contact us!
 
