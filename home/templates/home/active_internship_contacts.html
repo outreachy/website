@@ -43,7 +43,9 @@ Project: "{{ intern.project.short_title }}"<br>
 	Final feedback due: {{ intern.final_feedback_due }}<br>
 	Internship end date: {{ intern.intern_ends }}
 {% endif %}</p>
-<p>Intern: {{ intern.applicant.applicant.email_address }},</p>
+<p>Intern pronouns to use in emails to mentors and coordinators: {% if intern.applicant.applicant.pronouns_to_participants %}{{ intern.applicant.applicant.get_pronouns_html|safe }}{% else %}<a href='http://pronoun.is/they'>they/them/theirs</a>{% endif %}
+<br>Intern pronouns to use publicly: {% if intern.applicant.applicant.pronouns_public %}{{ intern.applicant.applicant.get_pronouns_html|safe }}{% else %}<a href='http://pronoun.is/they'>they/them/theirs</a>{% endif %}
+<br>Intern: {{ intern.applicant.applicant.email_address }},</p>
 <p>Mentors: {% for email in intern.mentor_emails %}{{ email }}, {% endfor %}<br>
 Coordinators: {% for email in intern.project.project_round.community.get_coordinator_email_list %}{{ email }}, {% endfor %}</p>
 {% endfor %}
