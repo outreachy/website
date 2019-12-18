@@ -22,7 +22,7 @@
 		</thread>
 		{% for intern in interns %}
 			<tr>
-				<td>{{ intern.applicant.applicant.public_name }}</td>
+				<td>{{ intern.applicant.applicant.public_name }}{% if not intern.in_good_standing %} <span class="badge badge-pill badge-warning">internship terminated</span>{% endif %}</td>
 				<td>
 					{% include 'home/snippet/mentor-feedback-status.html' with mentor_status=intern.get_mentor_initial_feedback_status extension_date=intern.initialmentorfeedback.extension_date %}
 				</td>

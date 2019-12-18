@@ -29,7 +29,9 @@ Project: "{{ intern.project.short_title }}"<br>
 {% if not intern.intern_contract %}
 	<span class="badge badge-pill badge-warning">Internship agreement not signed</span><br>
 {% endif %}
-{% if not intern.intern_has_custom_dates %}
+{% if not intern.in_good_standing %}
+	<span class="badge badge-pill badge-warning">Internship terminated</span>
+{% elif not intern.intern_has_custom_dates %}
 	Standard internship dates
 {% else %}
 	Internship start date: {{ intern.intern_starts }}<br>
