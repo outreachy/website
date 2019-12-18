@@ -169,6 +169,15 @@ Finally, we can destroy the older database (use whatever was the old name):
 ssh dokku@outreachy.org postgres:destroy test-database-updated-old
 ```
 
+Resetting dokku
+---------------
+
+Sometimes after you do a server update, dokku is not serving the website. You can restart dokku by running this command:
+
+```
+ssh -t dokku@outreachy.org ps:restart www
+```
+
 Sending mass emails
 -------------------
 
