@@ -50,9 +50,7 @@ Next, you'll need to create a new virtualenv. A "virtualenv" is a separate virtu
 
 These instructions will help you create a new virtualenv that will have all the python packages installed that you need to work on the Outreachy website. We use [pipenv](https://pipenv.readthedocs.io/en/latest/) for this purpose.
 
-To install pipenv, you'll need to either [install Homebrew](https://brew.sh/) (if you're on a Mac or Windows) or (if you're running Linux) [install Linuxbrew](http://linuxbrew.sh/).
-
-Then [install pipenv](https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv).
+If you're using Linux, you may be able to install pipenv through your Linux package manager. On Debian or Ubuntu, you can run `sudo aptitude install pipenv`. Otherwise, you can follow the instructions for [install pipenv](https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv).
 
 The following command will automatically create a virtual environment and install the Python dependencies specified in the `Pipfile`. If you need help understanding pipenv, run `pipenv --help`
 Make sure that you are in the `website` directory first, and have *not* run `pipenv shell` yet, then:
@@ -94,6 +92,10 @@ PATH="$PWD/node_modules/.bin:$PATH" ./manage.py test
 ```
 
 You'll need to set up a new internship round, following the instructions in the next section.
+
+# Removing a virtual env
+
+If you made a mistake in the directions above, you may need to remove your pipenv virtual environment. You can do that by running `pipenv --rm` in the website directory. If needed, you can delete the website directory and start over at the git clone command.
 
 # Django shell
 
@@ -551,6 +553,28 @@ Sometimes a field doesn't work out exactly the way you wanted it to, and you wan
 5. Remove the `null=True` argument from your model, and delete the old field. You might need to remove the field from admin.py and the views. Then run `./manage.py makemigrations && ./manage.py migrate`. That will generate a third migration to make sure the field must be non-null, but the second migration will set the field on all objects. When Django prompts you about changing a nullable field to a non-nullable field, choose 'Ignore for now'.
 
 6. The third migration will fail if someone has added a new model object between the second migration and the third migration. In this case, you should roll back to the first migration (where you first added the field). You can pass the migration number to go back to: `./manage.py migrate home PREFIX` This should be a unique prefix (like the first four numbers of the migration). Then you can try to run the migration again: `./manage.py migrate`. Repeat as necessary.
+
+# Updating Packages
+
+The Outreachy website is built using several different Python packages. The Django web framework is one such Python package. Python projects have different ways of automatically installing packages, but for this project, we use [pipenv](https://pipenv.readthedocs.io/en/latest/).
+
+Python packages the website needs to install on are listed in the top-level file `Pipfile`. Pip uses this file to figure out what packages and what versions of packages to install. If you edit `Pipfile`, you'll see some of the other Python packages we use. For example, [django-ckeditor](https://github.com/django-ckeditor/django-ckeditor) is the Django package of [CKEditor](https://ckeditor.com/). It provides the rich-text WSIWIG editor for form fields used by Outreachy mentors.
+
+The other file to be aware of is `Pipfile.lock`. Pipfile lists the important Python packages the website depends on. However, those packages also have dependencies on other Python packages. Pipfile.lock lists the versions of all the packages to install. It also lists the sha1 hash for the source code of each Python package. The sha1 hash ensures that if you try to reinstall packages, you'll always get the exact version you installed previously.
+
+The pipenv documentation has [examples of how to upgrade packages](https://pipenv.readthedocs.io/en/latest/basics/#example-pipenv-upgrade-workflow). You'll need to run `pipenv shell` before any of these commands.
+
+Upgrade all Python packages with this command:
+```
+pipenv update
+```
+
+If you want to update just one package, you can use this command:
+```
+pipenv update <pkg>
+```
+
+These commands will update `Pipfile` and `Pipfile.lock`. You'll need to commit both files.
 
 # Why Django?
 
