@@ -4,6 +4,13 @@ Hi {{ recipient.display_name }},
 
 Welcome to the contribution period of the Outreachy {{ application.application_round.internstarts|date:"F Y" }} internship round! Your initial application for Outreachy has been approved.
 
+Your approval to participate in Outreachy is based on the time commitments you listed in your initial application: {{ request.scheme }}://{{ request.get_host }}{% url 'eligibility-results' %}
+
+If your time commitments are incorrect (such as if you have a job that is not listed on your initial application), please contact us immediately. If your time commitments change, please contact us immediately to correct your initial application: {{ request.scheme }}://{{ request.get_host }}{% url 'contact-applicant-help' %}
+
+Next Steps
+---
+
 The next step is to pick one or two projects, talk to the project mentors, and make a contribution to the project. You make a contribution by completing a project task. A contribution could be something like fixing a bug in the project code or updating the project's documentation.
 
 Only applicants who make a contribution will be eligible to be accepted as an Outreachy intern. We encourage you to start making on your contributions as soon as possible! The contribution period starts on {{ application.application_round.contributions_open }} at 4pm UTC. Contributions and final applications are due on {{ application.application_round.contributions_close }} at 4pm UTC.

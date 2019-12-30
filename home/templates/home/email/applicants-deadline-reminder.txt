@@ -4,7 +4,9 @@
 
 Only applicants who record a contribution and create a final application will be eligible to be selected as an intern. We encourage you to create a final application well before the deadline. You can edit your final application until the deadline at {{ current_round.contributions_close }} at 4pm UTC.
 
-Please let the Outreachy organizers know if your time commitments have changed since you filled out an initial application. See the section below for details.
+Your approval to participate in Outreachy is based on the time commitments you listed in your initial application: {{ request.scheme }}://{{ request.get_host }}{% url 'eligibility-results' %}
+
+If your time commitments are incorrect (such as if you have a job that is not listed on your initial application), please contact us immediately. If your time commitments change, please contact us immediately to correct your initial application: {{ request.scheme }}://{{ request.get_host }}{% url 'contact-applicant-help' %}
 
 Recording Contributions
 -----------------------

@@ -4,6 +4,10 @@ Congratulations on being accepted for the {{ current_round.internstarts|date:"F 
 
 You have been selected as an intern for {{ intern_selection.community_name }} working with your mentor{{ intern_selection.mentors.all|pluralize }} {{ intern_selection.mentor_names }} on the project "{{ intern_selection.project_name }}". The {{ intern_selection.community_name }} coordinator{{ coordinator_names|pluralize:" is,s are" }} {{ coordinator_names|join:" and " }}, who {{ coordinator_names|pluralize:"is,are" }} on Cc.
 
+Your approval to participate in Outreachy is based on the time commitments you listed in your initial application: {{ request.scheme }}://{{ request.get_host }}{% url 'eligibility-results' %}
+
+If your time commitments are incorrect or have changed (such as if you have a job that is not listed on your initial application), please contact us immediately.
+
 If you don't plan on participating as an intern, please let us know as soon as possible. The later you wait, the less likely it is we'll be able to fill the internship with another candidate.
 
 Internship Guide
