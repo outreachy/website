@@ -81,7 +81,6 @@
 			<th scope="col">Applicant rating</th>
 			<th scope="col">Number of days available</th>
 			<th scope="col">Number of contribs</th>
-			<th scope="col">Applicant details</th>
 			<th scope="col">Applying to GSoC?</th>
 			<th scope="col">CPT?</th>
 		</tr>
@@ -108,7 +107,6 @@
 					<td>{{ application.get_rating_display }}</td>
 					<td>{{ tcs.longest_period_free }} / {{ tcs.internship_total_days.days }} days</td>
 					<td>{{ application.number_contributions }}</td>
-					<td><a href="{{ intern.project.get_applicants_url }}#{{ intern.applicant.applicant.pk }}">details</a></td>
 					<td>{% if application.applying_to_gsoc %}Yes{% else %} - {% endif %}</td>
 					<td>{% if intern.needs_cpt %}Yes{% else %} - {% endif %}</td>
 			</tr>

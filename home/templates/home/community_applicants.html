@@ -33,7 +33,6 @@ Review {{ community.name }} Applicants
 				<th scope="col">Applicant rating</th>
 				<th scope="col">Number of days available</th>
 				<th scope="col">Number of contributions</th>
-				<th scope="col">Applicant details</th>
 				<th scope="col">Applying to GSoC?</th>
 			</tr>
 			</thread>
@@ -43,7 +42,6 @@ Review {{ community.name }} Applicants
 				<tr>
 					<td><a href="{{ project.get_applicants_url }}">{{ project.short_title }}</a></td>
 					<td>{% if project.is_approved %}No selected interns{% else %} - {% endif %}</td>
-					<td> - </td>
 					<td> - </td>
 					<td> - </td>
 					<td> - </td>
@@ -75,7 +73,6 @@ Review {{ community.name }} Applicants
 							<td>{{ application.get_rating_display }}</td>
 							<td>{{ tcs.longest_period_free }} / {{ tcs.internship_total_days.days }} days</td>
 							<td>{{ application.number_contributions }}</td>
-							<td><a href="{{ project.get_applicants_url }}#{{ intern.applicant.applicant.pk }}">details</a></td>
 							<td>{% if application.applying_to_gsoc %}Yes{% else %} - {% endif %}</td>
 						</tr>
 						{% with conflicts=intern.get_intern_selection_conflicts %}
