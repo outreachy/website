@@ -12,6 +12,108 @@ This manual will document the common tasks that an Outreachy organizer has durin
  * [Invoice Ninja account](https://www.invoiceninja.com/) for tracking invoices
  * [Organizer dashboard](https://www.outreachy.org/dasboard/) for sending semi-automated emails and tracking progress during the internship round
  * [Rackspace account](https://mycloud.rackspace.com/) for managing Outreachy web servers
+ * [Announce mailing list](https://lists.outreachy.org/cgi-bin/mailman/admin/announce) admin interface
+ * [Community mailing list](https://lists.outreachy.org/cgi-bin/mailman/admin/community) admin interface (depreciated in favor of the Zulip chat, but occasionally gets spam that needs to be deleted)
+ * [Mentor's mailing list](https://lists.outreachy.org/cgi-bin/mailman/admin/mentors) admin interface
+ * [Opportunities mailing list](https://lists.outreachy.org/cgi-bin/mailman/admin/opportunities) admin interface
+
+# Pre-application period
+
+**Date: August 6 / Jan 6**
+
+Two weeks before the initial application period opens, organizers start trying
+to find communities and mentors to participate.
+
+## Subscribing Tapia Sign-ups
+
+Each year, Outreachy has a booth at the Tapia conference. We talk to potential
+applicants. They can sign up to be added to the announcements mailing list. We
+collect email addresses through an Open Data Kit survey, with tablets running an
+Android app called kobotools.
+
+The end result is a exported .ods (Libre Office spreadsheet) with contact
+information. That year's contact information is commited in the GitLab notes
+repository in a folder named tapia-YEAR (e.g. tapia-2019).
+
+If this is the May to August round, subscribe to the announcements mailing list
+any students who signed up at the Tapia booth who were only interested in the
+May round. We don't subscribe them to the announcements mailing list until after
+all the emails from the December round have been sent.
+
+The mailing list interface will ask for a message to send them when subscribing
+them to the mailing list. Use the message in the GitLab notes repo file named
+email/email-tapia-welcome-to-mailing-list.txt
+
+For the December to March round, Tapia falls during the initial application
+period. Sign up all people who expressed interest in the December round
+immediately. Also sign up anyone who said they weren't interested in applying,
+but wanted to be subscribed. This is generally people who have already graduated
+or are teachers, who want to help spread the word about Outreachy.
+
+## Announcing Mentor CFP
+
+Send an email to the mentor's mailing list (template email in the Private GitLab
+notes repository in the file email/email-open-round-mentor-cfp-to-mentors-list.txt)
+
+After subscribing any Tapia sign-ups for the May round, send an email to the
+announce list for a call for mentors (template email in the Private GitLab notes
+repository in the file email/email-open-round-mentor-cfp-to-announce-list.txt)
+
+There will sometimes be communities who have privately contacted Outreachy
+organizers expressing interest in participating. Send them a separate email with
+the CFP info, since they may not be on the announcement mailing list.
+
+We typically document community interest in the round folder in a file called
+communities.txt. For example, communities that expressed interest in the May
+2020 round would be in 2020-05-round/communities.txt. We also sometimes document
+that in the etherpad. Find the community status for the last round and see which
+communities said they wanted to participate in this round.
+
+## Pinging coordinators
+
+**Date: August 13 / Jan 13**
+
+The opening of the round usually falls after the winter holidays or in August
+when many mentors in the Northern Hemisphere are on vacation. Coordinators
+sometimes miss them, so it's important to individually ping them a week after
+the CFP has been announced.
+
+Before pinging the coordinators, make sure you're aware if their community has
+any internship sponsorship credits from previous rounds. A community may have
+credits if a sponsor earmarked funds for them, or an intern was terminated. You
+can find out what credits communities have by looking at Invoice Ninja.
+
+It's also good to be aware of whether the organization participated in the last
+round, or why they couldn't participate. That's usually documented in the
+etherpad. E.g. see the "Outreachy communities for Dec 2019 round" section. You
+can look up past conversations with community coordinators by searching for "in
+Outreachy" in the subject line of the organizer's email box in the
+common/organizer/old folder.
+
+# Initial application period opens
+
+**Date: August 20 / Jan 20**
+
+Send personalized emails inviting anyone who signed up at the Tapia booth to
+apply for that round. Email templates are in the GitLab notes repository in files
+named email/email-tapia-dec-mar-potential-applicants.txt and
+email/email-tapia-may-potential-applicants.txt.
+
+You can use a Python script to automatically generate personalized emails. The
+script is in the GitHub creative works and misc repo. The script file is
+code/emailgeneric.py. You'll have to pass in command-line arguments for the
+email template, csv file with contacts, and directory to generate emails in.
+The script will generate text files you can pass into the email client mutt to
+send. You can send emails with the following mutt command:
+
+`for i in `ls .`; do mutt -F ~/.muttrc-outreachy -H $i; rm $i; done`
+
+Send emails to our standard list of organizations. You can find the list of
+organizations in the GitLab private repository in the file
+contacts/promotion.txt.
+
+Pay and submit job advertisements for the websites listed in
+contacts/promotion.txt.
 
 # Intern selection period
 
