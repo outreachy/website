@@ -3183,7 +3183,7 @@ class InitialApplicationReview(models.Model):
         if self.missing_work:
             red_flags.append('Missing work hours')
         if self.incorrect_dates:
-            red_flags.append('Incorrect time commitment dates')
+            red_flags.append('Needs organizer follow-up')
 
         return (red_flags, self.reviewer.comrade.public_name)
 

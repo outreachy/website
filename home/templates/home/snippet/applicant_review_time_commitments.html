@@ -73,7 +73,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td><b>Incorrect time commitment dates</b></td>
+							<td><b>Needs organizer follow-up</b></td>
 							<td>
 									<form method="post" action="{% url 'change-red-flag' applicant_username=application.applicant.account.username flag='incorrect_dates' flag_value='True' %}">
 										{% csrf_token %}
@@ -174,7 +174,7 @@
 												</div>
 											</div>
 										</li>
-										<li><b>Incorrect time commitment dates</b> - Does any time commitments look like they are too far in the past or in the future? Some applicants mis-type years or copy the term dates from an outdated guide that students have made for fellow applicants at their university.
+										<li><b>Needs organizer follow-up</b> - Does any information look incorrect? Do you need to follow up with an applicant that mentioned a sanctioned country or region?
 											<div class="container">
 												<div class="row">
 													<div class="col">
