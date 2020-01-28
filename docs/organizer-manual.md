@@ -90,6 +90,54 @@ can look up past conversations with community coordinators by searching for "in
 Outreachy" in the subject line of the organizer's email box in the
 common/organizer/old folder.
 
+## Mentor and coordinator subscriptions
+
+**Date: Aug 13 - Dec 10 / Jan 13 - May 30**
+
+Mentors and coordinators have two ways of keeping connected to the Outreachy
+community. They have the private mentor's mailing list, and they can also keep
+in contact with other interns in the Outreachy Zulip chat.
+
+As coordinators for new communities are approved, or new mentors are approved,
+you will need to manually subscribe them to the mentor's mailing list and the
+Outreachy Zulip chat:
+
+ - Go to the [trusted contacts
+   list](https://www.outreachy.org/dashboard/trusted-volunteers/), which shows
+   all participants from approved communities (approved mentors and approved
+   coordinators). This list is only accessible to people who have "staff"
+   privileges on the Outreachy website.
+
+ - Go to the [mentor's mailing list subscription
+   page](https://lists.outreachy.org/cgi-bin/mailman/admin/mentors/members/add).
+   You'll need to have the admin password for the mentor's mailing list. Sage has
+   that password. Subscribe people to the list with an invitation message like the one in
+   the private GitLab repo, in email/email-mentor-welcome-mailing-list.txt. Make
+   sure to update the dates for the current round.
+
+ - When you subscribe mentors to the list, mailman will let you know which ones
+   were successfully subscribed. Everyone else already was subscribed, and thus
+   probably already has access to the Zulip chat. Only invite those new
+   subscribers to the Outreachy Zulip chat.
+
+ - In the Outreachy Zulip chat, go to the settings gear in the upper right, then
+   click 'Invite users'. Add the new subscribers to the list to invite. Give the
+   mentors and coordinators access to the following streams:
+
+    - introductions
+    - mentors & coordinators (private stream)
+    - chat
+    - conferences
+    - connections - location & language
+    - help
+    - internship procedures questions
+    - thank you!
+    - victories
+
+This needs to be done several times each round. I usually do it every Monday.
+This also needs to be done about a week into the internship, as some mentors get
+added as co-mentors when the internship starts.
+
 # Initial application period opens
 
 **Date: August 20 / Jan 20**
