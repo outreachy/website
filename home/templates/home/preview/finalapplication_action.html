@@ -31,14 +31,36 @@
     {% for field in form.visible_fields %}
     <div class="form-group">
 	{{ field.errors }}
-	{% if 'Reason denied' in field.label_tag %}
+	{% if 'time commitments listed' in field.label_tag %}
+		<div class="card border-info mb-3">
+			<div class="card-header text-white bg-info">Time commitments on initial application</div>
+			<div class="card-body">
+				<p class="card-text">
+				You listed the following time commitments on your initial application.
+				Please make sure they are correct and reflect your current time commitments:
+				</p>
+				{% with tcs=form.instance.applicant.get_time_commitments %}
+					{% include 'home/snippet/time_commitments.html' %}
+					{% if not tcs.school_time_commitments and not tcs.volunteer_time_commitments and not tcs.employment_time_commitments and not tcs.noncollege_school_time_commitments %}
+						<p><i>You have not listed any university/college, coding school/online courses, work, or volunteer time commitments.</i></p>
+					{% endif %}
+				{% endwith %}
+			</div>
+		</div>
+		{{ field.label_tag }}
+		{{ field }}
+		{% if field.help_text %}
+		<div class="text-muted">{{ field.help_text|safe }}</div>
+		{% endif %}
+	{% elif 'Reason denied' in field.label_tag %}
 		<p>Please let us know why you're withdrawing your application (e.g. time commitments changed, you want to focus on applying for another Outreachy project, you've accepted a full-time job, etc). This reason will be shared with your mentor, the community coordinator, and the Outreachy organizers.</p>
+		{{ field }}
 	{% else %}
 		{{ field.label_tag }}
-	{% endif %}
-	{{ field }}
-	{% if field.help_text %}
-	<div class="text-muted">{{ field.help_text|safe }}</div>
+		{{ field }}
+		{% if field.help_text %}
+		<div class="text-muted">{{ field.help_text|safe }}</div>
+		{% endif %}
 	{% endif %}
     </div>
     {% endfor %}

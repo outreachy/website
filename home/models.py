@@ -1810,8 +1810,16 @@ class Project(ApprovalStatus):
                     a.applying_to_gsoc = True
                 else:
                     a.applying_to_gsoc = False
+
+                if a.finalapplication_set.filter(project=self).exclude(time_commitments_correct="True").exists():
+                    a.incorrect_time_commitments = True
+                elif a.finalapplication_set.filter(project=self).exclude(time_commitments_upate="").exists():
+                    a.incorrect_time_commitments = True
+                else:
+                    a.incorrect_time_commitments = False
             except:
                 a.submitted_application = False
+                a.incorrect_time_commitments = False
 
         return applicants
 
@@ -1823,6 +1831,15 @@ class Project(ApprovalStatus):
 
     def get_gsoc_applications(self):
         return self.get_applications().exclude(applying_to_gsoc="")
+
+    def get_applicants_with_time_commitment_updates(self):
+        return self.get_applications().filter(
+                models.Q(
+                    time_commitments_correct=False
+                ) | ~models.Q(
+                    time_commitment_updates=''
+                )
+            )
 
     def get_withdrawn_applications(self):
         return self.finalapplication_set.filter(applicant__approval_status=ApprovalStatus.WITHDRAWN)
@@ -3278,6 +3295,17 @@ class FinalApplication(ApprovalStatus):
             blank=True,
             verbose_name="(Optional) Please describe which Google Summer of Code communities and projects you are applying for, and provide mentor contact information",
             help_text='If you are a student at an accredited university or college, we highly encourage you to also apply to <a href="https://summerofcode.withgoogle.com/">Google Summer of Code</a> during the May to August internship round. Many Outreachy communities participate in both programs, and applying to Google Summer of Code increases your chances of being accepted as an intern. Please note that <a href="https://developers.google.com/open-source/gsoc/help/student-stipends">Google Summer of Code has stipend amounts that vary per country</a>.<br><br>Please keep the list of communities and projects you are applying to under Google Summer of Code up-to-date, since we often try to coordinate with Google Summer of Code mentors during the intern selection period.<br><br>If this application is for the December to March internship period, or you are not applying to Google Summer of Code, please leave this question blank.')
+
+    time_commitments_correct = models.BooleanField(
+            verbose_name="Are the time commitments listed above correct?",
+            help_text='If any time commitments (like a job or school) are missing, say no.',
+            default=False)
+
+    time_commitment_updates = models.TextField(
+            max_length=EIGHT_PARAGRAPH_LENGTH,
+            blank=True,
+            verbose_name="(Optional) If your time commitments are incorrect or have changed, please provide your updated time commitments.",
+            help_text='Make sure your time commitments lists any current or future jobs you have, even if you are taking a leave of absence.')
 
     community_specific_questions = models.TextField(
             max_length=EIGHT_PARAGRAPH_LENGTH,

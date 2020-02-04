@@ -1680,6 +1680,8 @@ class FinalApplicationAction(ApprovalStatusAction):
             'foss_experience',
             'relevant_projects',
             'applying_to_gsoc',
+            'time_commitments_correct',
+            'time_commitment_updates',
             'community_specific_questions',
             'timeline',
             ]

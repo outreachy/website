@@ -393,6 +393,7 @@ class FinalApplicationFactory(factory.django.DjangoModelFactory):
     experience = factory.Faker('paragraph')
     foss_experience = factory.Faker('paragraph')
     relevant_projects = factory.Faker('paragraph')
+    time_commitments_correct = True
 
     spread_the_word = factory.Iterator(models.FinalApplication.HEARD_CHOICES, getter=lambda c: c[0])
 

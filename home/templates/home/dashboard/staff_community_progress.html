@@ -11,6 +11,7 @@
 		<th scope="col">Number Final Applications</th>
 		<th scope="col">Number Withdrawn Final Applications</th>
 		<th scope="col">Number Applicants For GSoC</th>
+		<th scope="col">Number Applicants with Time Commitment Updates</th>
 	</tr>
 	</thread>
 {% for p in section.participations %}
@@ -26,11 +27,13 @@
 				<td> - </td>
 				<td> - </td>
 				<td> - </td>
+				<td> - </td>
 			{% else %}
 				<td>{{ applicants|length }}</td>
 				<td>{{ project.get_applications|length }}</td>
 				<td>{{ project.get_withdrawn_applications|length }}</td>
 				<td>{{ project.get_gsoc_applications|length }}</td>
+				<td>{{ project.get_applicants_with_time_commitment_updates|length }}</td>
 			{% endif %}
 			</tr>
 		{% endwith %}

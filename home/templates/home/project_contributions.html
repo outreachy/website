@@ -179,6 +179,12 @@
 		<pre>{{ final_application.foss_experience }}</pre>
 		<p><i>Your relevant personal or class projects that relate to this project:</i></p>
 		<pre>{{ final_application.relevant_projects }}</pre>
+		{% if final_application.time_commitments_correct %}
+			<p><i>You verified the time commitments listed on your initial application are correct.</i></p>
+		{% else %}
+			<p><i>Your time commitments listed on your initial application are incorrect. You provided the following updates about your time commitments:</i></p>
+			<pre>{{ final_application.time_commitment_updates }}</pre>
+		{% endif %}
 		{% if final_application.community_specific_questions %}
 		<p><i>Answers to community-specific questions:</i></p>
 		<pre>{{ final_application.community_specific_questions }}</pre>

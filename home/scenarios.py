@@ -139,13 +139,11 @@ class InitialApplicationsUnderwayScenario(CommunitySignupUnderwayScenario):
         reason_denied='GENERAL',
     )
 
-class ContributionsClosedScenario(InitialApplicationsUnderwayScenario):
+class ContributionsUnderwayScenario(InitialApplicationsUnderwayScenario):
     """
-    Create samples of the objects which matter before mentors start to
-    select the interns they want to work with.
+    Create samples of the objects in the middle of the contribution period.
     """
-
-    round__start_from = 'contributions_close'
+    round__start_from = 'contributions_open'
     sponsorship__amount = 13000
 
     mentor2 = factory.SubFactory(factories.MentorFactory)
@@ -183,6 +181,23 @@ class ContributionsClosedScenario(InitialApplicationsUnderwayScenario):
         applicant=factory.SelfAttribute('..applicant1'),
         project=factory.SelfAttribute('..project'),
     )
+    contribution_applicant2 = factory.SubFactory(
+        factories.ContributionFactory,
+        round=factory.SelfAttribute('..round'),
+        applicant=factory.SelfAttribute('..applicant1'),
+        project=factory.SelfAttribute('..project2'),
+    )
+
+class ContributionsClosedScenario(ContributionsUnderwayScenario):
+    """
+    Create samples of the objects which matter before mentors start to
+    select the interns they want to work with.
+    """
+
+    round__start_from = 'contributions_close'
+
+    # Create final applications.
+    # This will automatically create 1 recorded contribution per application.
     final_application2 = factory.SubFactory(
         factories.FinalApplicationFactory,
         round=factory.SelfAttribute('..round'),
