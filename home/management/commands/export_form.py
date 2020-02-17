@@ -1,10 +1,10 @@
 from django.core.management.base import LabelCommand
-from django.forms import BoundField, BaseFormSet
+from django.forms import BaseForm, BaseFormSet
 from home import views
 
 
 class Command(LabelCommand):
-    help = "Export a form definition from home.views for other uses"
+    help = "Export a form definition from home.views as HTML"
     args = "[form_path]"
     label = 'Python path to form'
 
@@ -14,42 +14,30 @@ class Command(LabelCommand):
             obj = getattr(obj, segment)
         self.go(obj)
 
-    def go(self, obj, indent=0):
+    def go(self, obj):
         if isinstance(obj, str):
-            self.indented(obj, indent)
+            self.stdout.write('<h1>{}</h1>'.format(obj))
 
         elif isinstance(obj, BaseFormSet):
+            self.stdout.write('<ol>')
             for idx, form in enumerate(obj, 1):
-                self.indented("#{}:".format(idx), indent)
-                self.go(form, indent + 1)
+                self.stdout.write('<li>')
+                self.stdout.write(form.as_p())
+                self.stdout.write('</li>')
+            self.stdout.write('</ol>')
 
-        elif isinstance(obj, BoundField):
-            if obj.is_hidden:
-                return
-            self.indented(obj.label, indent)
-            try:
-                for choice in obj.field.widget.choices:
-                    self.indented(choice[1], indent + 1)
-            except AttributeError:
-                pass
-            if obj.help_text:
-                self.indented(obj.help_text, indent)
-            self.stdout.write("")
+        elif isinstance(obj, BaseForm):
+            self.stdout.write(obj.as_p())
 
         elif callable(obj):
-            self.go(obj(), indent=indent)
+            self.go(obj())
 
         else:
             try:
-                children = list(iter(obj))
+                children = iter(obj)
             except TypeError:
-                self.indented(repr(obj), indent)
+                self.stdout.write("<p><code>{!r}</code></p>".format(obj))
 
             else:
-                if len(children) > 1:
-                    indent = indent + 1
                 for child in children:
-                    self.go(child, indent)
-
-    def indented(self, msg, indent):
-        self.stdout.write(("    " * indent) + msg)
+                    self.go(child)
