@@ -4842,9 +4842,7 @@ class Role(object):
         """
         Is this application rejected? Depends on who is viewing it and when.
         Organizers and reviewers can see the true status of rejected applications all the time.
-        If an application was rejected due to time or being ineligible, applicants can see that right away.
         Otherwise applicants get notified of rejection after contributions open.
-        If the contributions period isn't open and applicants are rejected due to alignment, applicants can't see they're rejected.
         """
         if not self.is_applicant:
             return False
@@ -4852,8 +4850,6 @@ class Role(object):
             return self.is_applicant and self.application.is_rejected()
         elif self.current_round.contributions_open.has_passed():
             return self.application.is_rejected()
-        elif self.application.is_rejected() and (self.application.reason_denied == 'TIME' or self.application.reason_denied == 'GENERAL'):
-            return True
         return False
 
     @property
@@ -4861,12 +4857,8 @@ class Role(object):
         """
         Is this application pending? Depends on who is viewing it and when.
         Organizers and reviewers can see the true status of pending applications all the time.
+        If it's before the contributions open, all applicants see their application as pending until the contribution period opens.
         If it's after the contribution period opens, show whether it's really pending.
-        If it's before the contributions open:
-         - If an application was rejected due to time or being ineligible, applicants can see that right away.
-         - If an application was rejected because of another reason, applicants see it as pending until the contribution period opens.
-         - If an application was approved, applicants see it as pending until the contribution period opens.
-         - If an application is pending before the contribution period ends, show that status.
         """
         if not self.is_applicant:
             return False
@@ -4874,13 +4866,7 @@ class Role(object):
             return self.application.is_pending()
         elif self.current_round.contributions_open.has_passed():
             return self.application.is_pending()
-        elif self.application.is_rejected() and (self.application.reason_denied == 'TIME' or self.application.reason_denied == 'GENERAL'):
-            return False
-        elif self.application.is_rejected():
-            return True
-        elif self.application.is_approved():
-            return True
-        return self.application.is_pending()
+        return True
 
     @property
     def needs_review(self):

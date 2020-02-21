@@ -50,17 +50,17 @@ Outreachy eligibility results
 	<p>We're sorry, but after reviewing your application,
 	we have determined that you are not a strong applicant for the Outreachy internship program.
 	This may be due to one of two reasons:
+	</p>
+
 	<ul>
 		<li>You may not be eligible to be paid as a contractor of a non-profit based in the United States of America. This could be due to you not being eligible to work in all the countries you are living in during your internship, you being a legal minor (under 18), visa restrictions, U.S. sanctions programs, or U.S. export restrictions.</li>
 		<li>You may have already participated in Google Summer of Code or a previous Outreachy round.</li>
 	</ul>
-	Please review your application below to ensure the information you submitted is correct.
-	</p>
+
 	<p>
-	If the information is incorrect, please <a href="/contact">contact the Outreachy organizers</a> to update it.
-	</p>
-	<p>
-	If the information is correct, please take a look at the list of <a href="/opportunities">other opportunities</a> that may be a better fit for you.
+	Some applicants may have provided incorrect information that caused their application to be rejected.
+	Due to the large number of applications we receive, we are not able to make corrections to applications.
+	Please apply to a future round, and make sure to answer yes or no to all questions on the first section of the initial application form.
 	</p>
 
 	{% include 'home/snippet/initial_application.html' %}
@@ -75,21 +75,16 @@ Outreachy eligibility results
 	of supporting people from groups underrepresented in the technology
 	industry of their country.</p>
 
-	<p>We're sorry to say your initial application was not approved.</p>
-
-	<p>Please review your application below to ensure the information you submitted is correct.</p>
-
-	<p>If the information is incorrect, please <a href="/contact">contact the Outreachy organizers</a> to update it.</p>
-
-	<p>If the information is correct, please take a look at the list of <a href="/opportunities">other opportunities</a> that may be a better fit for you.</p>
+	<p>
+	We're sorry to say your initial application was not approved.
+	</p>
 
 	{% include 'home/snippet/initial_application.html' %}
 {% elif role.is_rejected_applicant and role.application.reason_denied == 'TIME' %}
 
 	<h1>Initial application is not approved</h1>
 
-	<p>After reviewing your time commitments, we have determined you do not
-	meet our minimum free time criteria.</p>
+	<p>After reviewing your time commitments, we have determined you do not meet our minimum free time criteria.</p>
 	{% if tcs.school_time_commitments %}
 		<p>{% include 'home/snippet/student_hemisphere.html' %}</p>
 	{% else %}
@@ -168,6 +163,7 @@ Outreachy eligibility results
 	We cannot accept manager approval for an employee to work for less than the hours in their employment contract.
 	We cannot allow students from schools in the Northern Hemisphere to participate in the December to March round.
 	We cannot allow students from schools in the Southern Hemisphere to participate in the May to August round.
+	We follow the term dates listed in official school calendars, and we cannot make exceptions.
 	</p>
 	<p>
 	We hope your time commitments change in the future such that you
@@ -180,8 +176,7 @@ Outreachy eligibility results
 	</p>
 	<h2>What if the information is incorrect?</h2>
 	<p>
-	If any of the above information was filled out incorrectly
-	please contact the Outreachy organizers at organizers@outreachy.org
+	If any of the above information is incorrect, please <a href='{% url 'contact-applicant-help' %}'>contact the Outreachy applicant helpers.</a>
 	<p>
 	</p>
 	Please provide the following information:
