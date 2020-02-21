@@ -16,16 +16,27 @@ Outreachy eligibility results
 	<h1>Initial application approved for Outreachy</h1>
 
 
-	<p>Your initial application for Outreachy has been approved. You can now proceed with the next step of your application.
-	</p>
-
-	<p>Next, pick out one or two projects to apply for.
+	<p>Your initial application for Outreachy has been approved. You are approved to move onto the Outreachy contribution period.
 	</p>
 	<p>
-	You will need to make a contribution to the project.
-	Only applicants that make a contribution will be accepted as an intern.
+	The contribution period runs from {{ role.current_round.contributions_open }} to {{ role.current_round.contributions_close }} at 4pm UTC.
+	During the contribution phase, applicants complete Outreachy project tasks.
+	A completed or in-progress project task is called a contribution.
+	Submitting that project task for review by mentors is called making a contribution.
+	</p>
+	<p>
+	<b>You must make a contribution to be eligible for the internship.</b>
 	Some projects will have instructions for how to make your first contributions.
 	For other projects, you will need to contact the mentor to get directions on how to make your first contributions.
+	</p>
+	<p>
+	We encourage you to <a href='{% url 'docs' %}'>read our documentation</a>.
+	The <a href='{% url 'docs-applicant' %}'>Applicant Guide</a> has tips for being successful during the contribution period.
+	The <a href='{% url 'docs-internship' %}'>Internship Guide</a> has information about the intern payment schedule.
+	</p>
+	<p>
+	Then <a href='{% url 'project-selection' %}'>pick out one or two projects</a> to apply for.
+	The project list is now finalized.
 	</p>
 	<p>
 	If you get stuck at any time, please reach out to the mentors or <a href="{% url 'contact-applicant-help' %}">contact the Outreachy applicant helpers.</a>.
