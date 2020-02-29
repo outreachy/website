@@ -1,6 +1,6 @@
 from django.test import TestCase, override_settings
 from .models import FinalApplication
-from .scenarios import InitialApplicationsUnderwayScenario
+from . import scenarios
 
 
 # don't try to use the static files manifest during tests
@@ -23,7 +23,7 @@ class FinalApplicationTestCase(TestCase):
         return values
 
     def test_submit_valid(self):
-        scenario = InitialApplicationsUnderwayScenario(round__start_from='contributions_open')
+        scenario = scenarios.InitialApplicationsUnderwayScenario(round__start_from='contributions_open')
 
         expected = self.make_application_fields()
 
@@ -45,3 +45,12 @@ class FinalApplicationTestCase(TestCase):
 
         actual = {field: getattr(application, field) for field in expected.keys()}
         self.assertEqual(expected, actual)
+
+    def test_applied(self):
+        scenario = scenarios.ContributionsClosedScenario()
+
+        fa = scenario.final_application1
+        self.client.force_login(fa.applicant.applicant.account)
+        response = self.client.get(fa.project.get_contributions_url())
+
+        self.assertContains(response, "Record Contributions and View Application")
