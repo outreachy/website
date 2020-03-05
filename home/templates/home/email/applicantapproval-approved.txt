@@ -47,6 +47,14 @@ If you are having trouble finding a project or contacting a mentor, please reach
 {{ request.scheme }}://{{ request.get_host }}{% url 'contact-mentors' %}
 {{ request.scheme }}://{{ request.get_host }}{% url 'contact-applicant-help' %}
 
+Unofficial Resources
+---
+
+If you haven't participated in open source before, we recommend reading the book "Forge Your Future with Open Source". Please use the code "{{ application.application_round.coupon_code }}" for a discount:
+
+https://pragprog.com/book/vbopens/forge-your-future-with-open-source
+
+
 Good luck making your contributions!
 
 Outreachy Organizers
