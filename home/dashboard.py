@@ -132,7 +132,7 @@ def application_summary(request, today):
     try:
         current_round = RoundPage.objects.get(
             initial_applications_open__lte=today,
-            contributions_open__gt=today,
+            contributions_close__gt=today,
         )
         current_round.today = today
     except RoundPage.DoesNotExist:
