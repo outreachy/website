@@ -87,7 +87,7 @@
 	</div>
 {% elif role.is_pending_applicant %}
 	<div class="card border-info mb-3">
-		{% if not role.current_round.contribution_opens.has_passed %}
+		{% if not role.current_round.contributions_open.has_passed %}
 			<div class="card-header text-white bg-warning">Outreachy Initial Application Under Review</div>
 			<div class="card-body">
 				<p class="card-text">
