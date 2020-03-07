@@ -105,17 +105,14 @@
 				</p>
 			</div>
 		{% else %}
-			<div class="card-header text-white bg-info">Initial applications are now closed</div>
+			<div class="card-header text-white bg-warning">Initial Application Not Approved</div>
 			<div class="card-body">
 				<div class="card-text">
 					<p>
-					You submitted an initial application for the {{ role.current_round.official_name }}, but it has not been approved or rejected.
-					{% if role.application.barrierstoparticipation.applicant_should_update %}
-					Your initial application may be pending because you did not update your essay answers.
-					{% else %}
-					Your initial application may be pending because you did not respond to an email request for information by Outreachy organizers.
-					{% endif %}
-					We encourage you to sign up for the
+					You submitted an <a href="{% url 'eligibility-results' %}">initial application</a> for the {{ role.current_round.official_name }}. Unfortunately, it was not approved.
+					<p>
+					</p>
+					We encourage you to apply for a future round. Please sign up for the
 					<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">announcements mailing list</a>
 					to get an email when the next round opens.
 					</p>
