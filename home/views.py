@@ -1676,12 +1676,12 @@ class FinalApplicationRate(LoginRequiredMixin, ComradeRequiredMixin, View):
 
 class FinalApplicationAction(ApprovalStatusAction):
     fields = [
+            'time_correct',
+            'time_updates',
             'experience',
             'foss_experience',
             'relevant_projects',
             'applying_to_gsoc',
-            'time_commitments_correct',
-            'time_commitment_updates',
             'community_specific_questions',
             'timeline',
             ]
