@@ -138,6 +138,12 @@ class InitialApplicationsUnderwayScenario(CommunitySignupUnderwayScenario):
         approval_status=ApprovalStatus.REJECTED,
         reason_denied='GENERAL',
     )
+    applicant8 = factory.SubFactory(
+        factories.ApplicantApprovalFactory,
+        application_round=factory.SelfAttribute('..round'),
+        applicant=factory.SubFactory(factories.ApplicantFactory),
+        approval_status=ApprovalStatus.APPROVED,
+    )
 
 class ContributionsUnderwayScenario(InitialApplicationsUnderwayScenario):
     """
@@ -179,7 +185,9 @@ class ContributionsUnderwayScenario(InitialApplicationsUnderwayScenario):
         factories.FinalApplicationFactory,
         round=factory.SelfAttribute('..round'),
         applicant=factory.SelfAttribute('..applicant1'),
+        approval_status=ApprovalStatus.APPROVED,
         project=factory.SelfAttribute('..project'),
+        time_correct=True,
     )
     contribution_applicant2 = factory.SubFactory(
         factories.ContributionFactory,
@@ -202,13 +210,27 @@ class ContributionsClosedScenario(ContributionsUnderwayScenario):
         factories.FinalApplicationFactory,
         round=factory.SelfAttribute('..round'),
         applicant=factory.SelfAttribute('..applicant2'),
+        approval_status=ApprovalStatus.APPROVED,
         project=factory.SelfAttribute('..project2'),
+        time_correct=False,
     )
     final_application3 = factory.SubFactory(
         factories.FinalApplicationFactory,
         round=factory.SelfAttribute('..round'),
         applicant=factory.SelfAttribute('..applicant3'),
         project=factory.SelfAttribute('..project3'),
+        approval_status=ApprovalStatus.APPROVED,
+        time_correct=True,
+        time_updates="I didn't list my job on the initial application, but I am sure I can take a leave of absence.",
+    )
+    final_application8 = factory.SubFactory(
+        factories.FinalApplicationFactory,
+        round=factory.SelfAttribute('..round'),
+        applicant=factory.SelfAttribute('..applicant8'),
+        project=factory.SelfAttribute('..project3'),
+        approval_status=ApprovalStatus.APPROVED,
+        time_correct=False,
+        time_updates="My university has announced job placements, but I haven't signed a contract. I also don't expect to start my job until July. I can totally commit to 60 hours a week until then.",
     )
 
 class InternSelectionScenario(ContributionsClosedScenario):
