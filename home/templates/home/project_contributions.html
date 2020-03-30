@@ -179,11 +179,21 @@
 		<pre>{{ final_application.foss_experience }}</pre>
 		<p><i>Your relevant personal or class projects that relate to this project:</i></p>
 		<pre>{{ final_application.relevant_projects }}</pre>
-		{% if final_application.time_commitments_correct %}
-			<p><i>You verified the time commitments listed on your initial application are correct.</i></p>
+		{% if final_application.time_correct %}
+		<p><i>You verified the time commitments listed on your initial application are correct.{% if final_application.time_updates %} You provided the following updates about your time commitments:</i></p><pre>{{ final_application.time_updates }}</pre>{% else %}</i></p>{% endif %}
 		{% else %}
-			<p><i>Your time commitments listed on your initial application are incorrect. You provided the following updates about your time commitments:</i></p>
-			<pre>{{ final_application.time_commitment_updates }}</pre>
+			<p><i>On your final application, you said the time commitments listed on your initial application are not correct. You provided the following updates about your time commitments:</i></p>
+			{% if final_application.time_updates %}<pre>{{ final_application.time_updates }}</pre>
+			{% else %}
+			<div class="card border-warning mb-3">
+				<div class="card-header text-white bg-warning">Please provide time commitment updates</div>
+				<div class="card-body">
+					<p class="card-text">
+					You said the time commitments on your initial application are not correct. Please edit your final application to include updated time commitment information. Include updated start dates and end dates of your time commitments.
+					</p>
+				</div>
+			</div>
+			{% endif %}
 		{% endif %}
 		{% if final_application.community_specific_questions %}
 		<p><i>Answers to community-specific questions:</i></p>

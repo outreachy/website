@@ -109,7 +109,7 @@
 					<td>{{ tcs.longest_period_free }} / {{ tcs.internship_total_days.days }} days</td>
 					<td>{{ application.number_contributions }}</td>
 					<td>{% if application.applying_to_gsoc %}Yes{% else %} - {% endif %}</td>
-					<td>{% if not application.time_commitments_correct or application.time_commitment_updates %}Yes{% else %} - {% endif %}</td>
+					<td>{% if not application.time_correct or application.time_updates %}Yes{% else %} - {% endif %}</td>
 					<td>{% if intern.needs_cpt %}Yes{% else %} - {% endif %}</td>
 			</tr>
 				{% with conflicts=intern.get_intern_selection_conflicts project=intern.project %}

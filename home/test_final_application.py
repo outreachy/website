@@ -26,6 +26,8 @@ class FinalApplicationTestCase(TestCase):
         scenario = scenarios.InitialApplicationsUnderwayScenario(round__start_from='contributions_open')
 
         expected = self.make_application_fields()
+        expected['time_correct'] = True
+        expected['time_updates'] = ''
 
         self.client.force_login(scenario.applicant1.applicant.account)
         response = self.client.post(
