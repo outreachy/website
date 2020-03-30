@@ -46,6 +46,7 @@ that timeline, taking into account any time commitments the applicant has.
 					<th scope="col">Intern Selection Status</th>
 					<th scope="col">Intern Mentors</th>
 					<th scope="col">Selected by Another Project?</th>
+					{% if is_staff %}<th scope="col">Time commitment updates?</th>{% endif %}
 				</tr>
 			</thead>
 			<tbody>
@@ -110,6 +111,7 @@ that timeline, taking into account any time commitments the applicant has.
 						{% endif %}
 						{% endwith %}
 					</td>
+					{% if is_staff %}<td>{% if not fa.time_correct or fa.time_updates %}Yes{% else %} - {% endif %}</td>{% endif %}
 				</tr>
 				{% with intern=fa.get_intern_selection conflicts=fa.get_intern_selection.get_intern_selection_conflicts %}
 				{% if conflicts %}
@@ -170,6 +172,14 @@ that timeline, taking into account any time commitments the applicant has.
 								<p class="card-text"><pre>{% if final_application.time_correct %}Yes, my time commitments are correct. {% else %}No, my time commitments are incorrect. {% endif %}{{ final_application.time_updates }}</pre></p>
 							</div>
 						</div>
+					{% else %}
+						<div class="card border-success mb-3">
+							<div class="card-header text-white bg-success">Time Commitments Up-To-Date</div>
+							<div class="card-body">
+							<p class="card-text">Applicant says: <pre>"{% if final_application.time_correct %}Yes, my time commitments are correct.{% else %}No, my time commitments are incorrect. {% endif %}{{ final_application.time_updates }}"</pre></p>
+							</div>
+						</div>
+						<p>
 					{% endif %}
 				{% endif %}
 			{% endwith %}
