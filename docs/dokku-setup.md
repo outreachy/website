@@ -132,6 +132,18 @@ Add a cron job to auto-renew the certificate:
 $ ssh dokku@$DOMAIN letsencrypt:cron-job --add
 ```
 
+Updating dokku plugins
+----------------------
+
+Dokku has two types of plugins: core plugins and external plugins. Core plugins are updated when the base version of dokku is updated.
+
+Upgrading the base dokku version doesn't automatically upgrade external plugins. The two external plugins we have are git-rev and letsencrypt.
+
+You'll need to periodically update the dokku let's encypt plug in, following the instructions in the [README](https://github.com/dokku/dokku-letsencrypt#upgrading-from-previous-versions). You need to actually ssh into the machine; you can't run this command remotely:
+```
+dokku plugin:update letsencrypt
+```
+
 Updating the test database
 --------------------------
 

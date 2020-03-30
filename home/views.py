@@ -430,7 +430,7 @@ def get_current_round_for_initial_application_review():
     try:
         current_round = RoundPage.objects.get(
             initial_applications_open__lte=today,
-            contributions_open__gt=today,
+            contributions_close__gt=today,
         )
         current_round.today = today
     except RoundPage.DoesNotExist:
@@ -2506,6 +2506,9 @@ def blog_2019_pick_projects(request):
 
 def blog_2019_10_18_open_projects(request):
     return render(request, 'home/blog/2019-10-18-open-projects.html')
+
+def blog_2020_03_covid(request):
+    return render(request, 'home/blog/2020-03-27-outreachy-response-to-covid-19.html')
 
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(InitialMentorFeedback,

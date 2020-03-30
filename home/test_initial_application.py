@@ -82,15 +82,16 @@ class ProjectSubmissionTestCase(TestCase):
         This tests that the initial application results.
         The applicant is rejected because of 'GENERAL' - they don't meet our eligibility rules
         The round is in the initial application period.
-        /eligibility-results/ should show the person is rejected.
+        /eligibility-results/ should not show the person is rejected.
         """
         current_round = factories.RoundPageFactory(start_from='initial_applications_open')
         applicant = factories.ApplicantApprovalFactory(approval_status=models.ApprovalStatus.REJECTED, reason_denied='GENERAL', application_round=current_round)
         self.client.force_login(applicant.applicant.account)
 
         response = self.client.get(reverse('eligibility-results'))
-        self.assertContains(response, '<h1>Initial application is not approved</h1>', html=True)
-        self.assertContains(response, '<li>You may have already participated in Google Summer of Code or a previous Outreachy round.</li>', html=True)
+        self.assertContains(response, '<h1>Your Initial Application is Under Review</h1>', html=True)
+        self.assertNotContains(response, '<h1>Initial application is not approved</h1>', html=True)
+        self.assertNotContains(response, '<li>You may have already participated in Google Summer of Code or a previous Outreachy round.</li>', html=True)
         self.assertEqual(response.status_code, 200)
 
     # Implication:
@@ -105,15 +106,16 @@ class ProjectSubmissionTestCase(TestCase):
         This tests that the initial application results.
         The applicant is rejected because of 'TIME' - they don't have 49 out of 91 days free from full-time commitments.
         The round is in the initial application period.
-        /eligibility-results/ should show the person is rejected.
+        /eligibility-results/ should not show the person is rejected.
         """
         current_round = factories.RoundPageFactory(start_from='initial_applications_open')
         applicant = factories.ApplicantApprovalFactory(approval_status=models.ApprovalStatus.REJECTED, reason_denied='TIME', application_round=current_round)
         self.client.force_login(applicant.applicant.account)
 
         response = self.client.get(reverse('eligibility-results'))
-        self.assertContains(response, '<h1>Initial application is not approved</h1>', html=True)
-        self.assertContains(response, '<p>After reviewing your time commitments, we have determined you do not meet our minimum free time criteria.</p>', html=True)
+        self.assertContains(response, '<h1>Your Initial Application is Under Review</h1>', html=True)
+        self.assertNotContains(response, '<h1>Initial application is not approved</h1>', html=True)
+        self.assertNotContains(response, '<p>After reviewing your time commitments, we have determined you do not meet our minimum free time criteria.</p>', html=True)
         self.assertEqual(response.status_code, 200)
 
     # FIXME - this test shouldn't fail if the new code works right
@@ -149,6 +151,22 @@ class ProjectSubmissionTestCase(TestCase):
         self.assertNotContains(response, '<h1>Your Initial Application is Under Review</h1>', html=True)
         self.assertContains(response, '<h1>Initial application is not approved</h1>', html=True)
         self.assertContains(response, '<p>The Outreachy organizers have been reviewing your initial application, including your essay questions.</p>', html=True)
+        self.assertEqual(response.status_code, 200)
+
+    def test_initial_application_results_pending_after_contributions_open(self):
+        """
+        This tests that the initial application results.
+        The applicant was not reviewed, either because they didn't answer our emails, or we didn't have time to review all applications.
+        The round is in the contribution application period.
+        /eligibility-results/ should show the person is rejected.
+        """
+        current_round = factories.RoundPageFactory(start_from='contributions_open')
+        applicant = factories.ApplicantApprovalFactory(approval_status=models.ApprovalStatus.PENDING, application_round=current_round)
+        self.client.force_login(applicant.applicant.account)
+
+        response = self.client.get(reverse('eligibility-results'))
+        self.assertNotContains(response, '<h1>Your Initial Application is Under Review</h1>', html=True)
+        self.assertContains(response, '<h1>Initial application is not approved</h1>', html=True)
         self.assertEqual(response.status_code, 200)
 
     # FIXME - this test shouldn't fail if the new code works right
@@ -187,38 +205,7 @@ class ProjectSubmissionTestCase(TestCase):
 
     # ----- applicant prompt snippet tests (various pages) ----- #
 
-    def test_applicant_prompts_general_rejection(self):
-        """
-        This tests that the initial application results.
-        The applicant is rejected because of 'GENERAL' - they don't meet our eligibility rules
-        The round is in the initial application period.
-        /dashboard/ should show the person is rejected.
-        """
-        current_round = factories.RoundPageFactory(start_from='initial_applications_open')
-        applicant = factories.ApplicantApprovalFactory(approval_status=models.ApprovalStatus.REJECTED, reason_denied='GENERAL', application_round=current_round)
-        self.client.force_login(applicant.applicant.account)
-
-        response = self.client.get(reverse('dashboard'))
-        self.assertContains(response, '<div class="card-header text-white bg-warning">Initial Application Not Approved</div>', html=True)
-        self.assertEqual(response.status_code, 200)
-
-    def test_applicant_prompts_time_rejection(self):
-        """
-        This tests that the initial application results.
-        The applicant is rejected because of 'TIME' - they don't have 49 out of 91 days free from full-time commitments.
-        The round is in the initial application period.
-        /dashboard/ should show the person is rejected.
-        """
-        current_round = factories.RoundPageFactory(start_from='initial_applications_open')
-        applicant = factories.ApplicantApprovalFactory(approval_status=models.ApprovalStatus.REJECTED, reason_denied='TIME', application_round=current_round)
-        self.client.force_login(applicant.applicant.account)
-
-        response = self.client.get(reverse('dashboard'))
-        self.assertContains(response, '<div class="card-header text-white bg-warning">Initial Application Not Approved</div>', html=True)
-        self.assertEqual(response.status_code, 200)
-
-    # FIXME - this test shouldn't fail if the new code works right
-    def test_applicant_prompts_alignment_rejection_before_contributions_open(self):
+    def test_applicant_prompts_alignment_time_general_rejection_before_contributions_open(self):
         """
         This tests that the initial application results.
         The applicant is rejected because of 'ALIGN' - mis-alignment with Outreachy program goals.
@@ -226,13 +213,15 @@ class ProjectSubmissionTestCase(TestCase):
         /dashboard/ should NOT show the person is rejected.
         """
         current_round = factories.RoundPageFactory(start_from='initial_applications_open')
-        applicant = factories.ApplicantApprovalFactory(approval_status=models.ApprovalStatus.REJECTED, reason_denied='ALIGN', application_round=current_round)
-        self.client.force_login(applicant.applicant.account)
+        for rejection_reason in ['GENERAL', 'TIME', 'ALIGN', ]:
+            with self.subTest(rejection_reason=rejection_reason):
+                applicant = factories.ApplicantApprovalFactory(approval_status=models.ApprovalStatus.REJECTED, reason_denied=rejection_reason, application_round=current_round)
+                self.client.force_login(applicant.applicant.account)
 
-        response = self.client.get(reverse('dashboard'))
-        self.assertNotContains(response, '<div class="card-header text-white bg-warning">Initial Application Not Approved</div>', html=True)
-        self.assertContains(response, '<div class="card-header text-white bg-warning">Outreachy Initial Application Under Review</div>', html=True)
-        self.assertEqual(response.status_code, 200)
+                response = self.client.get(reverse('dashboard'))
+                self.assertNotContains(response, '<div class="card-header text-white bg-warning">Initial Application Not Approved</div>', html=True)
+                self.assertContains(response, '<div class="card-header text-white bg-warning">Outreachy Initial Application Under Review</div>', html=True)
+                self.assertEqual(response.status_code, 200)
 
     def test_applicant_prompts_alignment_rejection_after_contributions_open(self):
         """
@@ -243,6 +232,36 @@ class ProjectSubmissionTestCase(TestCase):
         """
         current_round = factories.RoundPageFactory(start_from='contributions_open')
         applicant = factories.ApplicantApprovalFactory(approval_status=models.ApprovalStatus.REJECTED, reason_denied='ALIGN', application_round=current_round)
+        self.client.force_login(applicant.applicant.account)
+
+        response = self.client.get(reverse('dashboard'))
+        self.assertContains(response, '<div class="card-header text-white bg-warning">Initial Application Not Approved</div>', html=True)
+        self.assertEqual(response.status_code, 200)
+
+    def test_applicant_prompts_general_rejection_after_contributions_open(self):
+        """
+        This tests that the initial application results.
+        The applicant is rejected because of 'GENERAL' - they don't meet our eligibility rules
+        The round is in the initial application period.
+        /dashboard/ should show the person is rejected.
+        """
+        current_round = factories.RoundPageFactory(start_from='contributions_open')
+        applicant = factories.ApplicantApprovalFactory(approval_status=models.ApprovalStatus.REJECTED, reason_denied='GENERAL', application_round=current_round)
+        self.client.force_login(applicant.applicant.account)
+
+        response = self.client.get(reverse('dashboard'))
+        self.assertContains(response, '<div class="card-header text-white bg-warning">Initial Application Not Approved</div>', html=True)
+        self.assertEqual(response.status_code, 200)
+
+    def test_applicant_prompts_time_rejection_after_contributions_open(self):
+        """
+        This tests that the initial application results.
+        The applicant is rejected because of 'TIME' - they don't have 49 out of 91 days free from full-time commitments.
+        The round is in the initial application period.
+        /dashboard/ should show the person is rejected.
+        """
+        current_round = factories.RoundPageFactory(start_from='contributions_open')
+        applicant = factories.ApplicantApprovalFactory(approval_status=models.ApprovalStatus.REJECTED, reason_denied='TIME', application_round=current_round)
         self.client.force_login(applicant.applicant.account)
 
         response = self.client.get(reverse('dashboard'))
@@ -441,7 +460,7 @@ class ProjectSubmissionTestCase(TestCase):
          - The applicant is rejected because of 'GENERAL' - they don't meet our eligibility rules
          - The applicant is rejected because of 'TIME' - they don't have 49 out of 91 days free from full-time commitments.
          - The applicant is rejected because of 'ALIGN' - mis-alignment with Outreachy program goals.
-        The round is in the initial application period.
+        The round is in the contribution period.
         They shouldn't be able to see projects on the community landing page.
         """
         project = self.setup_approved_project_approved_community('contributions_open')
@@ -461,6 +480,29 @@ class ProjectSubmissionTestCase(TestCase):
                 self.assertNotContains(response, '<div class="card border" id="debian-{}">'.format(project.slug), html=True)
                 self.assertNotContains(response, '<hr id="{}">'.format(project.slug), html=True)
                 self.assertNotContains(response, '<h2>{}</h2>'.format(project.short_title), html=True)
+
+    def test_community_landing_pending_after_contribution_opens(self):
+        """
+        This tests that the initial application results.
+        The applicant is pending because their application didn't get reviewed.
+        The round is in the contribution period.
+        They shouldn't be able to see projects on the community landing page.
+        """
+        project = self.setup_approved_project_approved_community('contributions_open')
+
+        applicant = factories.ApplicantApprovalFactory(approval_status=models.ApprovalStatus.PENDING, application_round=project.project_round.participating_round)
+        self.client.force_login(applicant.applicant.account)
+
+        response = self.client.get(reverse('community-landing', kwargs={'round_slug': project.project_round.participating_round.slug, 'community_slug': project.project_round.community.slug}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response,
+                '<p>This information is only available to applicants who have their initial application approved. Check your <a href="{}">initial application results</a> for more details.</p>'.format(reverse('eligibility-results')),
+                html=True)
+        self.assertNotContains(response, '<h1>Outreachy Internships with Debian</h1>', html=True)
+        self.assertNotContains(response, '<h1>Open Projects</h1>', html=True)
+        self.assertNotContains(response, '<div class="card border" id="debian-{}">'.format(project.slug), html=True)
+        self.assertNotContains(response, '<hr id="{}">'.format(project.slug), html=True)
+        self.assertNotContains(response, '<h2>{}</h2>'.format(project.short_title), html=True)
 
     # FIXME - this test shouldn't fail if the new code works right
     # (Technically this isn't a failure - the headings are there, but the project content is missing.

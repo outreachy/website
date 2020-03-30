@@ -72,7 +72,7 @@
 	    <div class="card-body">
 		<p class="card-text">
 		We're sorry, but after reviewing <a href="{% url 'eligibility-results' %}">your application</a>,
-		we have determined that you are not a strong applicant for the Outreachy internship program.
+		we have determined that your application is not strong enough for the Outreachy internship program.
 		</p>
 		<p class="card-text">
 		If you want to spread the word about Outreachy,
@@ -87,7 +87,7 @@
 	</div>
 {% elif role.is_pending_applicant %}
 	<div class="card border-info mb-3">
-		{% if not role.current_round.contribution_opens.has_passed %}
+		{% if not role.current_round.contributions_open.has_passed %}
 			<div class="card-header text-white bg-warning">Outreachy Initial Application Under Review</div>
 			<div class="card-body">
 				<p class="card-text">
@@ -105,17 +105,14 @@
 				</p>
 			</div>
 		{% else %}
-			<div class="card-header text-white bg-info">Initial applications are now closed</div>
+			<div class="card-header text-white bg-warning">Initial Application Not Approved</div>
 			<div class="card-body">
 				<div class="card-text">
 					<p>
-					You submitted an initial application for the {{ role.current_round.official_name }}, but it has not been approved or rejected.
-					{% if role.application.barrierstoparticipation.applicant_should_update %}
-					Your initial application may be pending because you did not update your essay answers.
-					{% else %}
-					Your initial application may be pending because you did not respond to an email request for information by Outreachy organizers.
-					{% endif %}
-					We encourage you to sign up for the
+					You submitted an <a href="{% url 'eligibility-results' %}">initial application</a> for the {{ role.current_round.official_name }}. Unfortunately, it was not approved.
+					<p>
+					</p>
+					We encourage you to apply for a future round. Please sign up for the
 					<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">announcements mailing list</a>
 					to get an email when the next round opens.
 					</p>

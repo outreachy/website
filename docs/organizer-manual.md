@@ -138,6 +138,37 @@ This needs to be done several times each round. I usually do it every Monday.
 This also needs to be done about a week into the internship, as some mentors get
 added as co-mentors when the internship starts.
 
+# Reviewing projects
+
+Occasionally a coordinator asks us about how to determine if a project should be approved.
+
+Here's the questions I asked a coordinator:
+
+1. If this is a new feature, is it likely to be accepted by the
+community? We don't want to have interns work on something that won't be
+merged upstream.
+
+2. Is the community ready to maintain any new features the intern
+contributes? Interns aren't required to stick around after the
+internship is done, and the community needs to be ready to maintain that
+project. For instance, if your intern creates a new repository, make
+sure it's under the community organization on GitHub and that community
+members have push access to it.
+
+3. Is the mentor who is proposing this new project a long-standing
+contributor to the community? Someone who is a knowledgable contributor
+will be able to identify any risks in a new project. Integrated
+community members can help shepherd the discussion around a new feature.
+
+4. Is this new feature or project critical path? We try to have mentors
+avoid giving interns projects that are time-critical.
+
+5. Will the intern get a good amount of interaction with the community?
+We try to have intern projects that allow interns to understand what
+it's like to communicate and collaborate with a community. If they're
+working on something new completely on their own, they may not get that
+experience.
+
 # Initial application period opens
 
 **Date: August 20 / Jan 20**
@@ -336,3 +367,20 @@ Ask Software Freedom Conservancy to invoice the sponsor, and they will send the 
 Conservancy does not update their request tracker ticket with when the invoice has been paid. Sometime during the year, they will update their ledger file to indicate when the invoice has been paid. The ledger file is in `Ledger/outreachy.ledger`. You can use this command to look at the accounts receivable entries in ledger: `ledger -V -f Ledger/outreachy.ledger --group-by date register /^Accrued:Accounts\ Receivable/` 
 
 Once the ledger shows the invoice amount as a negative amount in Accrued:Accounts Receivable:Outreachy, it means Conservancy has recorded the invoice as paid. Once the invoice shows up in ledger as being paid, then enter payment for the invoice in Invoice Ninja for that specific date in ledger.
+
+# Intern chats
+
+# Intern feedback
+
+To mark all interns with successful mid-point feedback as being authorized payment:
+
+```
+>>> from home import models
+>>> current_round = models.RoundPage.objects.get(internstarts='2019-12-03')
+>>> interns = models.InternSelection.objects.filter(applicant__application_round=current_round, midpointmentorfeedback__payment_approved=True, midpointmentorfeedback__extension_date__isnull=True)
+>>> len(interns) # make sure this matches the number of interns you say you're paying in the email
+>>> for i in interns:
+...     i.midpointmentorfeedback.organizer_payment_approved = True
+...     i.midpointmentorfeedback.save()
+... 
+>>> 
