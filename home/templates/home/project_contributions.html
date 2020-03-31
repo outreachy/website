@@ -229,7 +229,7 @@
 <p><i>Contribution #{{ forloop.counter }}: started {{ c.date_started }}{% if c.date_merged %}, merged {{ c.date_merged }}{% else %}. <strong>Not accepted or merged.</strong></i>{% endif %}
 	{% if not current_round.contributions_close.has_passed or not project.round.internannounce.has_passed and final_application%}
 		Update accepted date by editing this contribution.</p>
-		<p><a class='btn btn-primary' href="{% url 'contributions-edit' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug contribution_slug=c.pk %}">Edit Contribution</a></p>
+		<p><a class='btn btn-primary' href="{% url 'contributions-edit' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug contribution_id=c.pk %}">Edit Contribution</a></p>
 	{% else %}
 		</p>
 	{% endif %}
