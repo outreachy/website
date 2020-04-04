@@ -458,7 +458,6 @@ class ContributorsDeadlinesReminder(SendEmailView):
         contributors = Comrade.objects.filter(
             applicantapproval__application_round=current_round,
             applicantapproval__approval_status=ApprovalStatus.APPROVED,
-            applicantapproval__contribution__isnull=False,
         ).distinct()
 
         for c in contributors:
