@@ -1626,13 +1626,13 @@ class ContributionUpdate(LoginRequiredMixin, ComradeRequiredMixin, EligibleAppli
         if current_round.internannounce.has_passed():
             raise PermissionDenied("Editing or recording new contributions is closed at this time.")
 
-        if 'contribution_slug' not in self.kwargs:
+        if 'contribution_id' not in self.kwargs:
             return Contribution(applicant=role.application, project=project)
         return get_object_or_404(
             Contribution,
             applicant=role.application,
             project=project,
-            pk=self.kwargs['contribution_slug'],
+            pk=self.kwargs['contribution_id'],
         )
 
     def get_success_url(self):
