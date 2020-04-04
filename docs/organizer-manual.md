@@ -169,6 +169,17 @@ it's like to communicate and collaborate with a community. If they're
 working on something new completely on their own, they may not get that
 experience.
 
+# Updating contracts
+
+**Date: August 20 / Jan 20**
+
+Update the mentor agreement (docs/mentor-agreement.md) and intern agreement
+(docs/intern-agreement.md) to have the correct round dates. Change the 'last
+updated' date.
+
+You can see what needs to change each round by looking at the git commits to
+that file.
+
 # Initial application period opens
 
 **Date: August 20 / Jan 20**
