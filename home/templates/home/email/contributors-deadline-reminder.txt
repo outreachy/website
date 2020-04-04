@@ -83,13 +83,6 @@ If your initial application is missing your current or future job, your school t
 
 If you are selected as an intern, you will be required to sign a legal internship agreement which asserts that the details in your initial application are correct. It's very important that your time commitments stated in the initial application are correct.
 
-Deadline Reminders
-------------------
-
-As an Outreachy project applicant, you'll receive emailed reminders:
- - The week before the contribution and final application deadline
- - One day before the contribution and final application deadline
-
 Outreachy Organizers
 {% include 'home/email/footer-applicant.txt' %}
 {% endwith %}
