@@ -36,17 +36,17 @@ Final Application Process
 
 In order to be eligible to be selected as an Outreachy intern, you must:
 
-1. Record at least one in-progress contribution you've made to an Outreachy internship project.
+1. Record at least one in-progress contribution you've made to an Outreachy internship project. The contribution must be recorded through the Outreachy website.
 
-2. Create a final application for that project.
+2. Create a final application for that project. The final application must be submitted through the Outreachy website.
 
 You must create a final application for each project. If you don't create a final application for a project, you aren't eligible to be selected as an intern for that project.
 
-Contributions and final applications are due by {{ current_round.contributions_close }} at 4pm UTC{% if comrade.timezone %} / {{ contribution_deadline }} {{ comrade.timezone }}{% endif %}
+Final applications are due by {{ current_round.contributions_close }} at 4pm UTC{% if comrade.timezone %} / {{ contribution_deadline }} {{ comrade.timezone }}{% endif %}
 
 We encourage you to submit your final applications early. You will be able to edit it until the final application deadline.
 
-Please update your final application if your time commitments have changed. See the "Time Commitment Changes" section below.
+Please update your final applications if your time commitments have changed. See the "Time Commitment Changes" section below.
 
 {% if role.projects_contributed_to %}Your Project Contributions
 --------------------------
