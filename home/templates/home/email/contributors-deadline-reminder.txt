@@ -10,7 +10,7 @@ You are receiving this email because your initial application for the {{ current
 New Outreachy Policies
 ----------------------
 
-In order to help applicants who are impacted by COVID-19, Outreachy put in place new policies for this round:
+In order to help applicants who are impacted by COVID-19, Outreachy put in place new policies for this round. Please read our blog post:
 
 https://www.outreachy.org/blog/2020-03-27/outreachy-response-to-covid-19/
 
