@@ -6,7 +6,7 @@ Complete your Outreachy internship final application
 The deadline for Outreachy final applications is {{ current_round.contributions_close }} at 4pm UTC{% if comrade.timezone %} / {{ contribution_deadline }} {{ comrade.timezone }}{% endif %}.
 
 You are receiving this email because your initial application for the {{ current_round.official_name }} was approved. This email outlines the final steps you need to take to finish applying for an Outreachy internship.
-{% if current_round.internstarts == '2020-05-19' %}
+{% if current_round.internstarts|date:'Y-m-d' == '2020-05-19' %}
 New Outreachy Policies
 ----------------------
 
