@@ -217,7 +217,7 @@ that timeline, taking into account any time commitments the applicant has.
 		{% for c in applicant_contributions %}
 			<p><i>Contribution #{{ forloop.counter }}: started {{ c.date_started }}{% if c.date_merged %}, merged {{ c.date_merged }}{% else %}. Not accepted or merged.{% endif %}</i></p>
 			<p><a href="{{ c.url }}">{{ c.url }}</a></p>
-			<pre>{{ c.description }}</pre>
+			<blockquote>{{ c.description }}</blockquote>
 			{% if not forloop.last %}
 				<hr>
 			{% endif %}

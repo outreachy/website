@@ -66,3 +66,10 @@ body {
 .cc-description {
   font-size: $font-size-sm;
 }
+
+blockquote {
+  margin-left: 1rem;
+  padding-left: 1rem;
+  border-left: 3px solid theme-color();
+  white-space: pre-wrap;
+}
