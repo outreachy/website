@@ -102,7 +102,7 @@
 					</div>
 				</td>
 				<td><a href="{{ intern.project.get_applicants_url }}">{{ intern.project.short_title }}</a></td>
-				<td>{% for mentor in intern.mentors.all %}"{{ mentor.mentor.public_name }}" &gt;{{ mentor.mentor.account.email }}&lt;, {% endfor %}</td>
+				<td>{% for mentor in intern.mentors.all %}"{{ mentor.mentor.public_name }}" &lt;{{ mentor.mentor.account.email }}&gt;, {% endfor %}</td>
 				{% with tcs=intern.applicant.get_time_commitments applicant=intern.applicant.applicant application=intern.get_application %}
 					<td><a href="{{ intern.project.get_applicants_url }}#{{ applicant.pk }}">{{ applicant.public_name }}</a></td>
 					<td>{{ application.get_rating_display }}</td>
