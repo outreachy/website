@@ -53,7 +53,7 @@ This is a legal document. You cannot participate in the internship unless you si
 
 Make sure to email organizers@outreachy.org if your time commitments have changed or will change. Your time commitments can be viewed here:
 
-https://www.outreachy.org/eligibility-results/
+{{ request.scheme }}://{{ request.get_host }}{% url 'eligibility-results' %}
 
 Legal Name
 ----------
@@ -123,14 +123,14 @@ E-mails for coordinators and mentors
 
 mentors@lists.outreachy.org is a private list for all of the program's coordinators and mentors. It may include past coordinators and mentors.
 
-organizers@outreachy.org is an email shared by the coordinators of the program (Cindy Pallares, Karen Sandler, Tony Sebro, Sage Sharp, and Marina Zhurakhinskaya).
+organizers@outreachy.org is an email shared by the organizers of the program (Cindy Pallares, Karen Sandler, Tony Sebro, Sage Sharp, and Marina Zhurakhinskaya).
 
 Please feel free to e-mail either address if you have any general questions about the program at any time. Please always e-mail the list or the alias, and not one of us individually. Keep the list or the alias on CC in subsequent discussion, to ensure you get a faster response and all of us are in the loop. For the questions specific to your organization, please contact your mentor, the organization's coordinator or a relevant mailing list.
 
 Outreachy chat server
 ---------------------
 
-You will receive an invitation to a private Outreachy chat server. The chat server includes all accepted interns for this round, Outreachy mentors, coordinators, and organizers. The chat server is meant for you to connect on a person level to other Outreachy participants. You should still also participate in the public communication channels for your project and community.
+You will receive an invitation to a private Outreachy chat server. The chat server includes all accepted interns for this round, Outreachy mentors, coordinators, and organizers. The chat server is meant for you to connect on a personal level to other Outreachy participants. You should still also participate in the public communication channels for your project and community.
 
 If you haven't received an email invitation to the Outreachy chat server in a week, please let the Outreachy organizers know.
 
