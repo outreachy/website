@@ -4,11 +4,24 @@ Congratulations on being accepted for the {{ current_round.internstarts|date:"F 
 
 You have been selected as an intern for {{ intern_selection.community_name }} working with your mentor{{ intern_selection.mentors.all|pluralize }} {{ intern_selection.mentor_names }} on the project "{{ intern_selection.project_name }}". The {{ intern_selection.community_name }} coordinator{{ coordinator_names|pluralize:" is,s are" }} {{ coordinator_names|join:" and " }}, who {{ coordinator_names|pluralize:"is,are" }} on Cc.
 
+If you don't plan on participating as an intern, please let us know as soon as possible. The later you wait, the less likely it is we'll be able to fill the internship with another candidate.
+
+Time Commitment
+---------------
+
 Your approval to participate in Outreachy is based on the time commitments you listed in your initial application: {{ request.scheme }}://{{ request.get_host }}{% url 'eligibility-results' %}
 
 If your time commitments are incorrect or have changed (such as if you have a job that is not listed on your initial application), please contact us immediately.
 
-If you don't plan on participating as an intern, please let us know as soon as possible. The later you wait, the less likely it is we'll be able to fill the internship with another candidate.
+{% if current_round.internstarts|date:'Y-m-d' == '2020-05-19'%}Minimum hours per week policy:
+ - If an intern's school terms have shifted due to COVID-19 impacts, they will only be required to work 10 hours a week during classes and exams.
+ - If an intern is otherwise impacted by COVID-19, they will only be required to work 30 hours a week.
+ - Interns who are not impacted by COVID-19 are required to work 40 hours a week.
+ - Please read our COVID-19 blog post for details: {% url '2020-03-covid' %}
+
+Interns are required to work for 12 weeks of the Outreachy internship's 13 week duration.
+
+Please reach out to your mentor if you are impacted by COVID-19. You'll need to create a plan for a reduced project timeline.{% else %}Unless contrary to any laws where you are located, you should dedicate 40 hours per week to your project for at least 12 weeks of the Outreachy internship's 13 week duration. If you should need to not work on your project for a period of time, please see details in the Internship Guide: https://www.outreachy.org/docs/internship/#time-commitment{% endif %}
 
 Internship Guide
 ----------------
@@ -62,11 +75,6 @@ You will need to provide your full legal name as your electronic signature on th
 
 Only Outreachy organizers (Marina, Sage, Karen, Cindy, and Tony) and Software Freedom Conservancy staff (Bradley, Brett, and Rosanne) will see your legal name. You may use a nickname, pseudonym, or a shortened name for working with Outreachy mentors. You can also use a nickname, pseudonym, or shortened name for display on the Outreachy alums page.
 
-Time Commitment
----------------
-
-Unless contrary to any laws where you are located, you should dedicate 40 hours per week to your project for at least 12 weeks of the Outreachy internship's 13 week duration. If you should need to not work on your project for a period of time, please see details in the Internship Guide: https://www.outreachy.org/docs/internship/#time-commitment
-
 Payment Accounting
 ------------------
 
@@ -103,11 +111,11 @@ Tax forms and payment routing information are due by {{ current_round.tax_form_d
 Travel Allowance
 ----------------
 
-You have $500 travel allowance available to you for travel relevant to Outreachy. The travel allowance is good for one year from the date your internship starts. Please review the information at https://www.outreachy.org/travel-stipend
+{% if current_round.internstarts|date:'Y-m-d' == '2020-05-19'%}All travel using the Outreachy travel stipend is prohibited. You will receive your travel stipend as part of your internship payment.{% else %}You have $500 travel allowance available to you for travel relevant to Outreachy. The travel allowance is good for one year from the date your internship starts. Please review the information at https://www.outreachy.org/travel-stipend
 
 You will need to discuss the travel stipend with your mentor to determine which conference or event is most relevant to your internship. You mentor will need to approve the conference or event before you book your travel.
 
-Please note that before you book any flights, you will need to take a screenshot of your flight search using a widely-recognized airfare comparison site, such as Orbitz, Kayak or Hipmunk. You should also double check before booking travel if you will need to seek pre-approval from the Outreachy organizers for the travel. https://www.outreachy.org/travel-stipend#preapproval If you don't need pre-approval, and your mentor approves the travel as relevant to your internship, there is no need to email the organizers before your travel.
+Please note that before you book any flights, you will need to take a screenshot of your flight search using a widely-recognized airfare comparison site, such as Orbitz, Kayak or Hipmunk. You should also double check before booking travel if you will need to seek pre-approval from the Outreachy organizers for the travel. https://www.outreachy.org/travel-stipend#preapproval If you don't need pre-approval, and your mentor approves the travel as relevant to your internship, there is no need to email the organizers before your travel.{% endif %}
 
 Intern Blog
 -----------
