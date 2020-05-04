@@ -78,7 +78,7 @@ any contractual commitment on your part.
 
 **Stipend.**
 
-Conservancy will pay you a $5,500 USD stipend (“Stipend”) for the Project in
+Conservancy will pay you a $6,000 USD stipend (“Stipend”) for the Project in
 accordance with the following schedule, subject to Conservancy’s receipt of
 such funds from the relevant sponsor. Conservancy payments are generally paid
 on a NET-30 basis. Recognizing internship structure of Outreachy, Conservancy
