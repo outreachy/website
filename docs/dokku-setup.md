@@ -97,6 +97,11 @@ Set up Django to send email through your mail server by filling in these variabl
 $ ssh dokku@$DOMAIN config:set $APP EMAIL_HOST=mailhost EMAIL_PORT=port EMAIL_USE_SSL=True EMAIL_HOST_USER=emailusername EMAIL_HOST_PASSWORD=password
 ```
 
+In its default configuration, the `gunicorn` web server can only handle one request at a time. Ideally all requests would respond quickly and this wouldn't matter, but in practice it does. The documentation recommends that however many CPU cores you have, you should run 2-4 times as many worker processes. So if you have 8 cores and want to run twice as many worker processes, set this:
+```
+$ ssh dokku@$DOMAIN config:set $APP WEB_CONCURRENCY=16
+```
+
 Deploy
 ------
 
