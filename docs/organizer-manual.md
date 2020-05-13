@@ -381,6 +381,20 @@ Once the ledger shows the invoice amount as a negative amount in Accrued:Account
 
 # Intern chats
 
+The chat schedule is here: https://www.outreachy.org/docs/internship/#chats
+
+When running the chats, give about 2-5 minutes between asking a question and expecting a response from anyone. Zulip doesn't show when people are typing, so give people some time to compose. Most people tend to send a couple larger paragraphs, which takes some time to type.
+
+The most important part of the chats is to engage the interns. Ask questions or get them to provide more details. Talk about similarities with their experiences to other intern experiences, or your own experiences.
+
+If the conversation gets off topic, it's okay! That usually means the off-topic thing is interesting to many people.
+
+Some interns are more shy than others. They'll lurk in the channel while the chat is going on. I try to engage them by asking an open-ended question. Usually the question is related to the topic at hand. So if we're talking about struggling during the internship, I might ask them what kinds of internship tasks or topics took more time during the last few weeks.
+
+Near the end of the chat, I say, "I want to make sure we can hear from some of the quieter voices." And then I'll @ the people who haven't said anything this whole time. I keep a list of interns who have interacted, mostly in my head, sometimes in a text file.
+
+Chats typically take 1 hour.
+
 # Intern feedback
 
 To mark all interns with successful mid-point feedback as being authorized payment:
