@@ -47,7 +47,7 @@ Week 1 goals:
  - Join your free and open source software community's public community chat channels and introduce yourself
  - Sign up for the Outreachy Zulip chat (you should have received an email invitation)
  - Set up your blog, and link to it on your Outreachy profile: https://outreachy.org/account
- - Write a blog post about your experience applying to Outreachy (see guidelines below)
+ - Write a blog post introducing yourself (see guidelines below)
 
 Week 1 tips:
 
@@ -61,20 +61,34 @@ During your internship, you're expected to blog every two weeks. Please take a l
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'docs-internship' %}#blog
 
-The goal of your first internship blog post is to explain to someone who is interested in applying for Outreachy what it's like to apply. Many applicants learn about how to apply to Outreachy by following the tips past interns gave for making the most out of the Outreachy application process. This is your chance to help others get an Outreachy internship!
+In your first internship blog post, you should:
 
-Here's some prompts that could get you started writing this blog post:
+1. Introduce yourself.
+2. Pick 1-3 core values, and talk about why they are important to you.
+3. Tell people what motivated you to apply to Outreachy.
 
- - What motivated you to apply to Outreachy?
- - What were you excited about when thinking about applying? 
- - What made you passionate about the project you applied to?
- - What was confusing about the Outreachy application process?
- - How did you find information?
- - Who did you ask questions of when you were stuck?
- - How did you mentor help you during the application process? 
- - What would you tell someone who is worried about applying to Outreachy? 
+See the blog guidelines linked above for suggested blog post length.
 
-You don't have to include all the prompts above in your blog post. See the blog guidelines linked above for suggested blog post length.
+Core Values
+===
+
+Core values are important personality traits. Core values motivate you when you make decisions. Here's a list of some core values:
+
+https://jamesclear.com/core-values
+
+For example, if I (Sage Sharp) were to talk about my core values, I would say:
+
+"My core values are curiosity, growth, and compassion.
+
+I value curiosity. I always want to know how something works. I'm also curious about why things are built a particular way.
+
+Once I understand the how and why, I want to optimize and improve it. That's why I value growth. I want to be a better person. I want to help the world be a better place.
+
+I also value compassion. I want to support and understand people. I'm always curious about other people's lived experiences."
+
+Your values may be very different from mine. Maybe you're ambitious, you want to be a leader, and you want to influence others. Or maybe you value security, loyalty, and stability. That's great! You should write about the core values that resonate with you.
+
+Pick 1 to 3 core values. Talk about why they are important to you.
 
 Questions?
 ---
