@@ -76,7 +76,18 @@ Here's some prompts that could get you started writing this blog post:
 
 You don't have to include all the prompts above in your blog post. See the blog guidelines linked above for suggested blog post length.
 
-Again, if you have any questions, please contact us!
+Questions?
+---
+
+If you have any questions, please ask us! You can get help by:
+
+ - Talking to your mentor
+ - Talking to your community coordinator
+ - Asking questions on the Zulip chat #internship procedures or #help stream
+ - Direct messaging Outreachy organizers Sage Sharp or Anna e só
+ - Emailing organizers@outreachy.org
+
+Let us know what your questions are!
 
 Outreachy Organizers
 {% include 'home/email/footer-mentor-intern-coordinator.txt' %}
