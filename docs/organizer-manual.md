@@ -379,6 +379,12 @@ Conservancy does not update their request tracker ticket with when the invoice h
 
 Once the ledger shows the invoice amount as a negative amount in Accrued:Accounts Receivable:Outreachy, it means Conservancy has recorded the invoice as paid. Once the invoice shows up in ledger as being paid, then enter payment for the invoice in Invoice Ninja for that specific date in ledger.
 
+# Intern agreements
+
+Conservancy needs to get sent the signed intern agreements. They use a JSON file exported from the Outreachy website to automatically generate request tickets for the intern's tax, payment, and stipend tickets. You can export the JSON file from the [Outreachy dashboard](https://www.outreachy.org/dashboard/) once all interns have signed the contracts.
+
+The email draft format for sending the contracts in the private GitLab repository, in the file email/email-intern-signed-contracts-to-sfc.txt
+
 # Intern chats
 
 The chat schedule is here: https://www.outreachy.org/docs/internship/#chats
