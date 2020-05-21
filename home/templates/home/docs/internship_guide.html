@@ -24,38 +24,7 @@ Internship Guide | Outreachy Documentation
 <h2 id='time-commitment'><a href='#time-commitment'>Internship Time Commitment</a></h2>
 
 {% if intern_round.internstarts|date:'Y-m-d' == '2020-05-19' or applicant_round.internstarts|date:'Y-m-d' == '2020-05-19' %}
-	<div class="card border-warning mb-3">
-		<div class="card-header text-white bg-warning">Temporary policy for May to August 2020 round</div>
-		<div class="card-body">
-			<h5 class="card-title">May 2020 Round Time Commitment Policy</h5>
-			<table class="table table-striped table-bordered">
-				<thread class="thread-dark">
-				<tr>
-					<th scope="col">Who</th>
-					<th scope="col">Minimum time commitment</th>
-					<th scope="col">Duration</th>
-				</tr>
-				</thread>
-				<tr>
-					<td>Students with school term dates changed due to COVID-19 impacts</td>
-					<td>10 hours a week</td>
-					<td>During classes and exams</td>
-				</tr>
-				<tr>
-					<td>Anyone impacted by COVID-19</td>
-					<td>30 hours a week</td>
-					<td>The whole internship period</td>
-				</tr>
-				<tr>
-					<td>All other interns</td>
-					<td>40 hours a week</td>
-					<td>The whole internship period</td>
-				</tr>
-			</table>
-			<p class="card-text">All interns will be required to work for 12 out of 13 weeks during the internship.</p>
-			<p class="card-text">Please <a href='{% url '2020-03-covid' %}'>read our COVID-19 blog post</a> for more details.</p>
-		</div>
-	</div>
+	{% include 'home/snippet/covid-19-time-policy.html' %}
 {% endif %}
 
 <p>Your project should be your primary focus during your internship. Unless contrary to any laws where you are located, you should dedicate 40 hours per week to your project for at least 12 weeks of the Outreachy internship's 13 week duration.</p>
