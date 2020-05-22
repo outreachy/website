@@ -477,6 +477,17 @@ Now you can create objects and look at responses from page requests against your
 200
 ```
 
+Sometimes the page contains a form and the form has validation errors.
+That usually shows up as a '200' (OK) response code, rather than a '302' (Redirect) response code.
+
+You can access those form validation errors from the shell or within a test.
+The trick is that the response is not just an [HttpsResponse](https://docs.djangoproject.com/en/1.11/ref/request-response/#httpresponse-objects) class object, it's a [TemplateResponse](https://docs.djangoproject.com/en/1.11/ref/template-response/) class object.
+You can access the form through the TemplateResponse context dictionary. Then you can print any [form validation errors](https://docs.djangoproject.com/en/1.11/ref/forms/validation/):
+
+```
+>> print(response.context['form'].errors)
+```
+
 # Adding a new Django app
 
 If you have a set of Django models, views, and templates that is a discrete chunk of functionality, you may want to create a new app in the top-level directory. If we want to call our new app `contacts` we can run the helper script to set up our app:
