@@ -3613,6 +3613,9 @@ class InternSelection(AugmentDeadlines, models.Model):
             emails.append(m.mentor.email_address())
         return emails
 
+    def coordinator_names(self):
+        return " and ".join(self.project.project_round.community.get_coordinator_names())
+
     def get_application(self):
         return FinalApplication.objects.get(
                 project=self.project,
@@ -3750,6 +3753,8 @@ class BaseFeedback(models.Model):
 class BaseMentorFeedback(BaseFeedback):
     last_contact = models.DateField(verbose_name="What was the last date you were in contact with your intern?")
 
+    mentors_report = models.TextField(verbose_name="Please provide a paragraph describing what support you are providing as an Outreachy mentor. This will be shared with Outreachy organizers and your community coordinator.")
+
     full_time_effort = models.BooleanField(verbose_name="Do you believe your Outreachy intern is putting in a full-time, 40 hours a week effort into the internship?")
 
     # FIXME - send email to mentors and interns when organizers approve their payment and send documentation off to Conservancy
@@ -3862,9 +3867,7 @@ class InitialMentorFeedback(BaseMentorFeedback):
     intern_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="On average, how long does it take for <b>your intern</b> to respond to your questions or feedback?")
     mentor_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="On average, how long does it take for <b>you</b> to respond to your intern's questions or requests for feedback?")
 
-    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your intern's progress on establishing communication with you, connecting to your FOSS community, and ramping up on their first tasks. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.")
-
-    mentors_report = models.TextField(verbose_name="(Optional) Please provide a paragraph for Outreachy coordinators and other mentors describing your intern's progress. This will be shared on the mentors mailing list, but will not be made public.", blank=True, null=True)
+    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your intern's progress on establishing communication with you, connecting to your FOSS community, and ramping up on their first tasks. This will only be shown to Outreachy organizers, your community coordinators, and the Software Freedom Conservancy accounting staff.")
 
     payment_approved = models.BooleanField(verbose_name="Should your Outreachy intern be paid the initial $1,000 payment?", help_text="Please base your answer on whether your intern has put in a full-time, 40 hours a week effort. They should have established communication with you and other mentors, and have started learning how to tackle their first tasks. If you are going to ask for an internship extension, please say no to this question.")
 
@@ -3893,23 +3896,37 @@ class InitialMentorFeedback(BaseMentorFeedback):
 class BaseInternFeedback(BaseFeedback):
     last_contact = models.DateField(verbose_name="What was the last date you were in contact with your mentor?")
 
+    HOURS_5 = '5H'
     HOURS_10 = '10H'
+    HOURS_15 = '15H'
     HOURS_20 = '20H'
+    HOURS_25 = '25H'
     HOURS_30 = '30H'
+    HOURS_35 = '35H'
     HOURS_40 = '40H'
     HOURS_50 = '50H'
     HOURS_60 = '60H'
     WORK_HOURS_CHOICES = (
+        (HOURS_5, '5 hours'),
         (HOURS_10, '10 hours'),
+        (HOURS_15, '15 hours'),
         (HOURS_20, '20 hours'),
+        (HOURS_25, '25 hours'),
         (HOURS_30, '30 hours'),
+        (HOURS_35, '35 hours'),
         (HOURS_40, '40 hours'),
         (HOURS_50, '50 hours'),
         (HOURS_60, '60 hours'),
     )
     hours_worked = models.CharField(max_length=3, choices=WORK_HOURS_CHOICES, verbose_name="What is the average number of hours per week you spend on your Outreachy internship?", help_text="Include time you spend researching questions, communicating with your mentor and the community, reading about the project and the community, working on skills you need in order to complete your tasks, and working on the tasks themselves. Please be honest about the number of hours you are putting in.")
 
+    time_comments = models.TextField(
+            max_length=THREE_PARAGRAPH_LENGTH,
+            blank=True,
+            help_text="(Optional) If you have not been working 40 hours a week, please let us know why. We want to support you, so let us know if there's anything we can do to help.")
+
     mentor_support = models.TextField(verbose_name="Please provide a paragraph describing how your mentor has (or has not) been helping you. This information will only be seen by Outreachy mentors. We want you to be honest with us if you are having trouble with your mentor, so we can help you get a better internship experience.")
+    share_mentor_feedback_with_community_coordinator = models.BooleanField(default=False, verbose_name="(Optional) Do you want us to share feedback about your mentor with community coordinators?", help_text="If you say yes, community coordinators will be able to see your comments and the data you provided about your mentor. This helps coordinators ensure mentors are responsive, coach mentors if they are not responsive, and collect metrics they can use to fund more Outreachy internships.")
 
     def find_version_intern_edited(self):
         # When a staff member modifies the initial feedback to approve payment or change internship dates,
@@ -3975,7 +3992,7 @@ class InitialInternFeedback(BaseInternFeedback):
     intern_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="On average, how long does it take for <b>you</b> to respond to your mentor's questions or feedback?")
     mentor_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="On average, how long does it take for <b>your mentor</b> to respond to your questions or requests for feedback?")
 
-    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your progress on establishing communication with your mentor, and ramping up on your first tasks. This information will only be seen by Outreachy mentors. If you are having any difficulties or facing any barriers, please let us know, so we can help you.")
+    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your progress on establishing communication with your mentor, and ramping up on your first tasks. This information will only be seen by Outreachy organizers. If you are having any difficulties or facing any barriers, please let us know, so we can help you.")
 
     def can_edit(self):
         if not self.allow_edits:
@@ -4040,7 +4057,7 @@ class MidpointMentorFeedback(BaseMentorFeedback):
 
     intern_contribution_revision_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>your intern</b> to incorporate feedback and resubmit a contribution?")
 
-    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your intern's progress on their project. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.")
+    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your intern's progress on their project. This will only be shown to Outreachy organizers, your community coordinator, and the Software Freedom Conservancy accounting staff.")
 
     payment_approved = models.BooleanField(verbose_name="Should your Outreachy intern be paid the mid-point $2,000 payment?", help_text="Please base your answer on whether your intern has put in a full-time, 40 hours a week effort. They should have made project contributions, promptly responded to feedback on those contributions, and resubmitted their revised contributions. If they were stuck, they should have reached out to you or the community for help. If you are going to ask for an internship extension, please say no to this question.")
 
@@ -4120,7 +4137,7 @@ class MidpointInternFeedback(BaseInternFeedback):
 
     intern_contribution_revision_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>you</b> to incorporate your mentor's feedback and resubmit a contribution?")
 
-    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your progress on your project. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.")
+    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your progress on your project. This will only be shown to Outreachy organizers.")
 
     def can_edit(self):
         if not self.allow_edits:
@@ -4185,7 +4202,7 @@ class FinalMentorFeedback(BaseMentorFeedback):
 
     intern_contribution_revision_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>your intern</b> to incorporate feedback and resubmit a contribution?")
 
-    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your intern's progress on their project. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.")
+    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your intern's progress on their project. This will only be shown to Outreachy organizers, your community coordinator, and the Software Freedom Conservancy accounting staff.")
 
     payment_approved = models.BooleanField(verbose_name="Should your Outreachy intern be paid the final $2,500 payment?", help_text="Please base your answer on whether your intern has put in a full-time, 40 hours a week effort. They should have made project contributions, promptly responded to feedback on those contributions, and resubmitted their revised contributions. If they were stuck, they should have reached out to you or the community for help. If you are going to ask for an internship extension, please say no to this question.")
 
@@ -4306,7 +4323,7 @@ class FinalInternFeedback(BaseInternFeedback):
 
     intern_contribution_revision_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>you</b> to incorporate your mentor's feedback and resubmit a contribution?")
 
-    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your progress on your project. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.")
+    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your progress on your project. This will only be shown to Outreachy organizers.")
 
     # Survey for Outreachy organizers
 

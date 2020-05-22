@@ -43,6 +43,7 @@ Final Feedback for current_round.official_name
 						<td>How long does it take the mentor to review and give feedback on their intern's contributions?</td>
 					</tr>
 					{% if final_intern_status == i.SUBMITTED %}<tr><td colspan="3"><p>Intern's report on the support they received from their mentor:</p><p>{{ i.finalinternfeedback.mentor_support|linebreaksbr }}</p></td></tr>{% endif %}
+					{% if i.finalmentorfeedback %}<tr><td colspan="3"><p>Mentor's report on the support they are providing:</p><p>{{ i.finalmentorfeedback.mentor_report|linebreaksbr }}</p></td></tr>{% endif %}
 					<tr><td colspan="3"><b>Intern progress</b></td></tr>
 					<tr>
 						<td>{% if i.finalmentorfeedback %}{% if i.finalmentorfeedback.intern_help_requests_frequency == i.finalmentorfeedback.ONCE_DAILY or i.finalmentorfeedback.intern_help_requests_frequency == i.finalmentorfeedback.MULTIPLE_DAILY %}<button class="btn btn-warning">Frequent requests for help</button>{% elif i.finalmentorfeedback.intern_help_requests_frequency == i.finalmentorfeedback.MULTIPLE_WEEKLY or i.finalmentorfeedback.intern_help_requests_frequency == i.finalmentorfeedback.ONCE_WEEKLY %}<button class="btn btn-success">Asks for help at least weekly</button>{% else %}<button class="btn btn-danger">Infrequently asking for help</button>{% endif %}<br>{{ i.finalmentorfeedback.get_intern_help_requests_frequency_display }}{% endif %}</td>
@@ -64,6 +65,7 @@ Final Feedback for current_round.official_name
 						<td>{% if i.finalinternfeedback %}{% if i.finalinternfeedback.hours_worked == i.finalinternfeedback.HOURS_40 or i.finalinternfeedback.hours_worked == i.finalinternfeedback.HOURS_50 or i.finalinternfeedback.hours_worked == i.finalinternfeedback.HOURS_60 %}<button class="btn btn-success">Full-time effort</button>{% else %}<button class="btn btn-danger">Not a full-time effort</button>{% endif %}<br>{{ i.finalinternfeedback.get_hours_worked_display }} per week{% endif %}</td>
 						<td>Is the intern putting in a full-time effort?</td>
 					</tr>
+					{% if i.finalinternfeedback.time_comments %}<tr><td colspan="3"><p>Intern's comments on their time commitments:</p><p>{{ i.finalinternfeedback.time_comments }}</p></td></tr>{% endif %}
 					<tr>
 						<td>{% if i.finalmentorfeedback %}{{ i.finalmentorfeedback.last_contact }}{% endif %}</td>
 						<td>{% if i.finalinternfeedback %}{{ i.finalinternfeedback.last_contact }}{% endif %}</td>

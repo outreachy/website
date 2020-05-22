@@ -2514,17 +2514,18 @@ def blog_2020_03_covid(request):
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(InitialMentorFeedback,
             fields=(
+                'provided_onboarding',
+                'checkin_frequency',
+                'mentor_response_time',
+                'mentors_report',
                 'in_contact',
                 'asking_questions',
                 'active_in_public',
-                'provided_onboarding',
-                'checkin_frequency',
                 'last_contact',
                 'intern_response_time',
-                'mentor_response_time',
-                'payment_approved',
-                'full_time_effort',
                 'progress_report',
+                'full_time_effort',
+                'payment_approved',
                 'request_extension',
                 'extension_date',
                 'request_termination',
@@ -2535,6 +2536,7 @@ class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMi
                 'asking_questions': RadioBooleanField,
                 'active_in_public': RadioBooleanField,
                 'provided_onboarding': RadioBooleanField,
+                'share_mentor_feedback_with_community_coordinator': RadioBooleanField,
                 'full_time_effort': RadioBooleanField,
                 'payment_approved': RadioBooleanField,
                 'request_extension': RadioBooleanField,
@@ -2583,7 +2585,9 @@ class InitialInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMi
                 'intern_response_time',
                 'mentor_response_time',
                 'mentor_support',
+                'share_mentor_feedback_with_community_coordinator',
                 'hours_worked',
+                'time_comments',
                 'progress_report',
                 ),
             field_classes = {
@@ -2591,20 +2595,26 @@ class InitialInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMi
                 'asking_questions': RadioBooleanField,
                 'active_in_public': RadioBooleanField,
                 'provided_onboarding': RadioBooleanField,
+                'share_mentor_feedback_with_community_coordinator': RadioBooleanField,
                 },
             )
     def get_object(self):
-        internship = intern_in_good_standing(self.request.user)
-        if not internship:
+        self.internship = intern_in_good_standing(self.request.user)
+        if not self.internship:
             raise PermissionDenied("The account for {} is not associated with an intern in good standing".format(self.request.user.username))
 
         try:
-            feedback = InitialInternFeedback.objects.get(intern_selection=internship)
+            feedback = InitialInternFeedback.objects.get(intern_selection=self.internship)
             if not feedback.can_edit():
                 raise PermissionDenied("This feedback is already submitted and can't be updated right now.")
             return feedback
         except InitialInternFeedback.DoesNotExist:
-            return InitialInternFeedback(intern_selection=internship)
+            return InitialInternFeedback(intern_selection=self.internship)
+
+    def get_context_data(self, **kwargs):
+        context = super(InitialInternFeedbackUpdate, self).get_context_data(**kwargs)
+        context['internship'] = self.internship
+        return context
 
     def form_valid(self, form):
         feedback = form.save(commit=False)
@@ -2661,15 +2671,16 @@ def initial_feedback_summary(request, round_slug):
 class MidpointMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(MidpointMentorFeedback,
             fields=(
-                'intern_help_requests_frequency',
                 'mentor_help_response_time',
+                'mentor_review_response_time',
+                'mentors_report',
+                'intern_help_requests_frequency',
                 'last_contact',
                 'intern_contribution_frequency',
-                'mentor_review_response_time',
                 'intern_contribution_revision_time',
-                'payment_approved',
-                'full_time_effort',
                 'progress_report',
+                'full_time_effort',
+                'payment_approved',
                 'request_extension',
                 'extension_date',
                 'request_termination',
@@ -2716,30 +2727,40 @@ class MidpointMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionM
 class MidpointInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(MidpointInternFeedback,
             fields=(
-                'intern_help_requests_frequency',
                 'mentor_help_response_time',
-                'intern_contribution_frequency',
                 'mentor_review_response_time',
-                'intern_contribution_revision_time',
                 'last_contact',
                 'mentor_support',
+                'share_mentor_feedback_with_community_coordinator',
+                'intern_help_requests_frequency',
+                'intern_contribution_frequency',
+                'intern_contribution_revision_time',
                 'hours_worked',
+                'time_comments',
                 'progress_report',
                 ),
+            field_classes = {
+                'share_mentor_feedback_with_community_coordinator': RadioBooleanField,
+            },
             )
 
     def get_object(self):
-        internship = intern_in_good_standing(self.request.user)
-        if not internship:
+        self.internship = intern_in_good_standing(self.request.user)
+        if not self.internship:
             raise PermissionDenied("The account for {} is not associated with an intern in good standing".format(self.request.user.username))
 
         try:
-            feedback = MidpointInternFeedback.objects.get(intern_selection=internship)
+            feedback = MidpointInternFeedback.objects.get(intern_selection=self.internship)
             if not feedback.can_edit():
                 raise PermissionDenied("This feedback is already submitted and can't be updated right now.")
             return feedback
         except MidpointInternFeedback.DoesNotExist:
-            return MidpointInternFeedback(intern_selection=internship)
+            return MidpointInternFeedback(intern_selection=self.internship)
+
+    def get_context_data(self, **kwargs):
+        context = super(MidpointInternFeedbackUpdate, self).get_context_data(**kwargs)
+        context['internship'] = self.internship
+        return context
 
     def form_valid(self, form):
         feedback = form.save(commit=False)
@@ -2777,15 +2798,16 @@ def midpoint_feedback_summary(request, round_slug):
 class FinalMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(FinalMentorFeedback,
             fields=(
-                'intern_help_requests_frequency',
                 'mentor_help_response_time',
+                'mentor_review_response_time',
+                'mentors_report',
+                'intern_help_requests_frequency',
                 'last_contact',
                 'intern_contribution_frequency',
-                'mentor_review_response_time',
                 'intern_contribution_revision_time',
-                'payment_approved',
-                'full_time_effort',
                 'progress_report',
+                'full_time_effort',
+                'payment_approved',
                 'request_extension',
                 'extension_date',
                 'request_termination',
@@ -2848,7 +2870,9 @@ class FinalInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixi
                 'intern_contribution_revision_time',
                 'last_contact',
                 'mentor_support',
+                'share_mentor_feedback_with_community_coordinator',
                 'hours_worked',
+                'time_comments',
                 'progress_report',
                 'interning_recommended',
                 'tech_industry_prep',
@@ -2867,17 +2891,22 @@ class FinalInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixi
             )
 
     def get_object(self):
-        internship = intern_in_good_standing(self.request.user)
-        if not internship:
+        self.internship = intern_in_good_standing(self.request.user)
+        if not self.internship:
             raise PermissionDenied("The account for {} is not associated with an intern in good standing".format(self.request.user.username))
 
         try:
-            feedback = FinalInternFeedback.objects.get(intern_selection=internship)
+            feedback = FinalInternFeedback.objects.get(intern_selection=self.internship)
             if not feedback.can_edit():
                 raise PermissionDenied("This feedback is already submitted and can't be updated right now.")
             return feedback
         except FinalInternFeedback.DoesNotExist:
-            return FinalInternFeedback(intern_selection=internship)
+            return FinalInternFeedback(intern_selection=self.internship)
+
+    def get_context_data(self, **kwargs):
+        context = super(FinalInternFeedbackUpdate, self).get_context_data(**kwargs)
+        context['internship'] = self.internship
+        return context
 
     def form_valid(self, form):
         feedback = form.save(commit=False)

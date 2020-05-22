@@ -194,6 +194,7 @@ class InternSelectionTestCase(TestCase):
             'payment_approved': True,
             'full_time_effort': True,
             'progress_report': 'Everything is fine.',
+            'mentors_report': 'I am very supportive',
             'request_extension': False,
             'extension_date': None,
             'request_termination': False,
@@ -343,7 +344,9 @@ class InternSelectionTestCase(TestCase):
             'mentor_response_time': models.InitialInternFeedback.HOURS_12,
             'mentor_support': 'My mentor is awesome.',
             'hours_worked': models.InitialInternFeedback.HOURS_40,
+            'time_comments': '',
             'progress_report': 'Everything is fine.',
+            'share_mentor_feedback_with_community_coordinator': True,
         }
         defaults.update(kwargs)
         return defaults
@@ -395,6 +398,7 @@ class InternSelectionTestCase(TestCase):
             'payment_approved': True,
             'full_time_effort': True,
             'progress_report': 'Everything is fine.',
+            'mentors_report': 'I am very supportive',
             'request_extension': False,
             'extension_date': None,
             'request_termination': False,
@@ -464,7 +468,9 @@ class InternSelectionTestCase(TestCase):
             'last_contact': internselection.initial_feedback_opens,
             'mentor_support': 'My mentor is awesome.',
             'hours_worked': models.InitialInternFeedback.HOURS_40,
+            'time_comments': '',
             'progress_report': 'Everything is fine.',
+            'share_mentor_feedback_with_community_coordinator': True,
         }
         defaults.update(kwargs)
         return defaults
@@ -501,10 +507,46 @@ class InternSelectionTestCase(TestCase):
             'last_contact': internselection.final_feedback_opens,
             'mentor_support': 'My mentor is awesome.',
             'hours_worked': models.FinalInternFeedback.HOURS_40,
+            'time_comments': '',
             'progress_report': 'Everything is fine.',
+            'share_mentor_feedback_with_community_coordinator': True,
+            'interning_recommended': models.FinalInternFeedback.YES,
+            'recommend_intern_chat': models.FinalInternFeedback.NO_OPINION,
+            'chat_frequency': models.FinalInternFeedback.WEEK2,
+            'blog_frequency': models.FinalInternFeedback.WEEK3,
+            'blog_prompts_caused_writing': models.FinalInternFeedback.YES,
+            'blog_prompts_caused_overhead': models.FinalInternFeedback.YES,
+            'recommend_blog_prompts': models.FinalInternFeedback.YES,
+            'zulip_caused_intern_discussion': models.FinalInternFeedback.YES,
+            'zulip_caused_mentor_discussion': models.FinalInternFeedback.NO,
+            'recommend_zulip': models.FinalInternFeedback.YES,
+            'tech_industry_prep': models.FinalInternFeedback.NO,
+            'foss_confidence': models.FinalInternFeedback.YES,
+            'feedback_for_organizers': 'This was a really awesome internship!',
         }
         defaults.update(kwargs)
         return defaults
+
+    def test_intern_can_give_final_feedback(self):
+        internselection = InternSelectionFactory(
+            active=True,
+            round__start_from='finalfeedback',
+        )
+
+        answers = self._final_intern_feedback_form(internselection)
+        response = self._submit_intern_feedback_form(internselection, 'final', answers)
+        self.assertEqual(response.status_code, 302)
+
+        # will raise DoesNotExist if the view didn't create this
+        feedback = internselection.finalinternfeedback
+
+        for key, expected in answers.items():
+            self.assertEqual(getattr(feedback, key), expected)
+
+        # only allow submitting once
+        self.assertFalse(feedback.allow_edits)
+
+        self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
 
     @staticmethod
     def _final_mentor_feedback_form(internselection, **kwargs):
@@ -518,6 +560,7 @@ class InternSelectionTestCase(TestCase):
             'payment_approved': True,
             'full_time_effort': True,
             'progress_report': 'Everything is fine.',
+            'mentors_report': 'I am very supportive',
             'request_extension': False,
             'extension_date': None,
             'request_termination': False,

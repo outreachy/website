@@ -1,15 +1,18 @@
 {% extends "base.html" %}
+{% load humanize %}
 
 {% block title %}
 Initial mentor feedback
 {% endblock %}
 
 {% block content %}
-<h1>Feedback on {{ initialmentorfeedback.intern_selection.applicant.applicant.public_name }}</h1>
+<h1>Initial feedback on {{ initialmentorfeedback.intern_selection.applicant.applicant.public_name }}</h1>
 
-<p>Outreachy organizers collect intern feedback from mentors three times during the Outreachy internship. Please give yourself at least 5 to 15 minutes to complete this form.</p>
+<p>Outreachy organizers collect intern feedback from mentors three times during the Outreachy internship.</p>
 
 <h2>Instructions</h2>
+
+<p>Please give yourself at least 5 to 15 minutes to complete this form.</p>
 
 <p>Only one mentor can submit feedback for one intern. If you are co-mentoring an intern, please talk with your co-mentor to decide what your feedback should be.</p>
 
@@ -17,11 +20,13 @@ Initial mentor feedback
 
 <h2>Privacy</h2>
 
-<p>Your answers will only be seen by Outreachy organizers and by Software Freedom Conservancy accounting staff. Your intern will be able to see when you submit your feedback to us, but will not be able see what the feedback is. If Outreachy organizers need to discuss your feedback with your intern, we will draft a response with you before contacting your intern.</p>
+<p>Your answers will only be seen by Outreachy organizers, your community coordinators, and Software Freedom Conservancy accounting staff. Your intern will be able to see when you submit your feedback to us, but will not be able see what the feedback is. If Outreachy organizers need to discuss your feedback with your intern, we will draft a response with you before contacting your intern.</p>
 
 <h2>Metrics for Success</h2>
 
-<p>The most important metric for success is whether your intern is putting in a full-time, 40 hours a week effort. If an intern isn't putting in a full-time effort, we use the other metrics to come up with a plan to get the intern back on track. We also gather metrics about mentor engagement to ensure success for all Outreachy mentors.</p>
+<p>The most important metric for success is whether your intern is putting in the minimum internship time commitment. Please see the temporary policy below for a definition of "minimum time commitment."</p>
+
+<p>If an intern isn't putting in the minimum internship time commitment, we use the other metrics to come up with a plan to get the intern back on track. We also gather metrics about mentor engagement to ensure success for all Outreachy mentors.</p>
 
 <div class="card border-warning mb-3">
     <div class="card-header text-white bg-warning">
@@ -34,25 +39,24 @@ Initial mentor feedback
         </p>
     </div>
 </div>
+<h2>Mentor Support</h2>
 
 <form method="post" action="">
 {% csrf_token %}
 {% for field in form.visible_fields %}
-	{% if 'Should your Outreachy intern be paid' in field.label_tag %}
-		<h2>Intern Payment Authorization</h2>
+	{% if 'Has your intern been in contact' in field.label_tag %}
+		<h2>Intern Feedback</h2>
 	{% endif %}
-	{% if 'Does your intern need an extension' in field.label_tag %}
-		<h2>Internship Extension</h2>
-
-		<p>Outreachy organizers view this internship as a fellowship. Mentors should not expect a certain project to be completed by the intern, but rather expect that the intern's work will be adjusted to the level of their ability, their interests, and the project's priorities throughout the internship. Outreachy organizers prefer not to fail people in the program as long as they are working full-time on the project.</p>
-
-		<p>We will discuss your feedback and the extension with you before we contact your intern. We will come up with a plan of action to get the internship back on track, draft a response to your intern together, and then we will contact your intern.</p>
-
+	{% if 'Do you believe your Outreachy intern' in field.label_tag %}
+		<h2>Intern Payment Authorization</h2>
+		{% include 'home/snippet/covid-19-time-policy.html' %}
 	{% endif %}
 	{% if 'Do you believe the internship should be terminated' in field.label_tag %}
 		<h2>Internship Termination</h2>
 
-		<p>Outreachy organizers prefer not to terminate an internship unless the intern has been given an extension and is still not putting in a full-time, 40 hours a week effort. Outreachy organizers view this internship as a fellowship. Mentors should not expect a certain project to be completed by the intern, but rather expect that the intern's work will be adjusted to the level of their ability, their interests, and the project's priorities throughout the internship. Outreachy organizers prefer not to fail people in the program as long as they are working full-time on the project.</p>
+		<p>Outreachy organizers prefer not to terminate an internship unless the intern has been given an extension and is still not putting in the minimum internship time commitment.</p>
+
+		<p>Outreachy organizers view this internship as a fellowship. Mentors should not expect a certain project to be completed by the intern, but rather expect that the intern's work will be adjusted to the level of their ability, their interests, and the project's priorities throughout the internship. Outreachy organizers prefer not to fail people in the program as long as they are putting in the minimum internship time commitment.</p>
 
 		<p>We will discuss your request for this internship to be terminated with you before we contact your intern. We will work together to draft a response to your intern.</p>
 
@@ -68,6 +72,55 @@ Initial mentor feedback
 			</div>
 			{% if field.help_text %}
 				<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+			{% endif %}
+		</div>
+	{% elif 'Should your Outreachy intern be paid' in field.label_tag %}
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class = "card-header">
+				Should your Outreachy intern be paid the initial ${{ initialmentorfeedback.intern_selection.round.initialpayment|intcomma }} payment?
+			</div>
+			<div class = "card-body">
+				{{ field }}
+			</div>
+			{% if field.help_text %}
+				<div class="card-footer bg-white">Please see the temporary time commitment policy above. Base your answer on whether your intern has put in the minimum internship time commitment. They should have established communication with you and other mentors, and have started learning how to tackle their first tasks. If you are going to ask for an internship extension, please say no to this question.</div>
+			{% endif %}
+		</div>
+	{% elif 'Do you believe your Outreachy intern is putting in a full-time' in field.label_tag %}
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class = "card-header">
+				Do you believe your Outreachy intern is putting in the minimum internship time commitment?
+			</div>
+			<div class = "card-body">
+				{{ field }}
+			</div>
+			{% if field.help_text %}
+				<div class="card-footer bg-white">Please see the temporary time commitment policy above.</div>
+			{% endif %}
+		</div>
+	{% elif 'Does your intern need an extension' in field.label_tag %}
+		<h2>Internship Extension</h2>
+
+		<p>Extensions should only be requested if the intern has not been putting in the minimum internship time commitment. See the table above for a definition of 'minimum time commitment'. Interns are only required to work for 12 out of 13 weeks of the internship.</p>
+
+		<p>Mentors should not ask for an internship extension if their only goal is to complete the project.</p>
+
+		<p>Outreachy organizers view this internship as a fellowship. Mentors should not expect a certain project to be completed by the intern, but rather expect that the intern's work will be adjusted to the level of their ability, their interests, and the project's priorities throughout the internship. Outreachy organizers prefer not to fail people in the program as long as they are putting in the minimum time commitment on the project.</p>
+
+		<p>We will discuss your feedback and the extension with you before we contact your intern. We will come up with a plan of action to get the internship back on track, draft a response to your intern together, and then we will contact your intern.</p>
+
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class = "card-header">
+				{{ field.label_tag }}
+			</div>
+			<div class = "card-body">
+				{{ field }}
+			</div>
+			{% if field.help_text %}
+				<div class="card-footer bg-white">Sometimes interns do not put in the minimum internship time commitment. In this case, one of the options is to delay payment of their stipend and extend their internship a specific number of weeks. You will be asked to re-evaluate your intern after the extension is done.</div>
 			{% endif %}
 		</div>
 	{% else %}
