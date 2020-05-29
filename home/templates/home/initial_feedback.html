@@ -52,7 +52,7 @@ Initial Feedback for {{ current_round.official_name }}
 						<td>On average, how long does it take the mentor to respond to intern questions or requests for feedback?</td>
 					</tr>
 					{% if initial_intern_status == i.SUBMITTED %}<tr><td colspan="3"><p>Intern's report on how the support they received from their mentor:</p><p>{{ i.initialinternfeedback.mentor_support|linebreaksbr }}</p></td></tr>{% endif %}
-					{% if i.initialmentorfeedback %}<tr><td colspan="3"><p>Mentor's report on the support they are providing:</p><p>{{ i.initialmentorfeedback.mentor_report|linebreaksbr }}</p></td></tr>{% endif %}
+					{% if i.initialmentorfeedback %}<tr><td colspan="3"><p>Mentor's report on the support they are providing:</p><p>{{ i.initialmentorfeedback.mentors_report|linebreaksbr }}</p></td></tr>{% endif %}
 					<tr><td colspan="3"><b>Intern progress</b></td></tr>
 					<tr>
 						<td>{% if i.initialmentorfeedback %}{% if i.initialmentorfeedback.in_contact %}<button class="btn btn-success">In contact</button></td>{% else %}<button class="btn btn-warning">Not in contact</button>{% endif %}{% else %}{% endif %}</td>

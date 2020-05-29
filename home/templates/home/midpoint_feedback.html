@@ -43,7 +43,7 @@ Midpoint Feedback for {{ current_round.official_name }}
 						<td>How long does it take the mentor to review and give feedback on their intern's contributions?</td>
 					</tr>
 					{% if midpoint_intern_status == i.SUBMITTED %}<tr><td colspan="3"><p>Intern's report on the support they received from their mentor:</p><p>{{ i.midpointinternfeedback.mentor_support|linebreaksbr }}</p></td></tr>{% endif %}
-					{% if i.midpointmentorfeedback %}<tr><td colspan="3"><p>Mentor's report on the support they are providing:</p><p>{{ i.midpointmentorfeedback.mentor_report|linebreaksbr }}</p></td></tr>{% endif %}
+					{% if i.midpointmentorfeedback %}<tr><td colspan="3"><p>Mentor's report on the support they are providing:</p><p>{{ i.midpointmentorfeedback.mentors_report|linebreaksbr }}</p></td></tr>{% endif %}
 					<tr><td colspan="3"><b>Intern progress</b></td></tr>
 					<tr>
 						<td>{% if i.midpointmentorfeedback %}{% if i.midpointmentorfeedback.intern_help_requests_frequency == i.midpointmentorfeedback.ONCE_DAILY or i.midpointmentorfeedback.intern_help_requests_frequency == i.midpointmentorfeedback.MULTIPLE_DAILY %}<button class="btn btn-warning">Frequent requests for help</button>{% elif i.midpointmentorfeedback.intern_help_requests_frequency == i.midpointmentorfeedback.MULTIPLE_WEEKLY or i.midpointmentorfeedback.intern_help_requests_frequency == i.midpointmentorfeedback.ONCE_WEEKLY %}<button class="btn btn-success">Asks for help at least weekly</button>{% else %}<button class="btn btn-danger">Infrequently asking for help</button>{% endif %}<br>{{ i.midpointmentorfeedback.get_intern_help_requests_frequency_display }}{% endif %}</td>
