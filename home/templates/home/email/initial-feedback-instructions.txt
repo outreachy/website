@@ -1,4 +1,4 @@
-Outreachy initial feedback requested for {{ intern_selection.applicant.applicant.public_name }}
+Outreachy initial feedback requested for {{ intern_selection.applicant.applicant.public_name }} by {{ intern_selection.initial_feedback_due|date:"M d, Y" }}
 
 Greetings Outreachy interns and mentors! We are asking both interns and one of their mentors to provide feedback on the internship.
 
