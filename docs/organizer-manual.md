@@ -389,6 +389,10 @@ The email draft format for sending the contracts in the private GitLab repositor
 
 The chat schedule is here: https://www.outreachy.org/docs/internship/#chats
 
+Chats take place on the #chat stream as a new topic with the following naming scheme: `[Month and year their internship started, which is either May YYYY or Dec YYYY] - [Week number] - [Name of the topic]`. They are typically announced a week before the scheduled date, reminding interns, mentors and alums of the date and time it will happen (always in UTC) as well as a brief description of what will be discussed that day.
+
+As interns gain more confidence throughout the internship, they may start the chat themselves by talking about their own experiences with the topic of the day, but sometimes they'll need a bit of encouragement to start replying. If needed, start the chat by asking them a couple of questions, or by answering the prompt yourself — this will help them structure their own replies.
+
 When running the chats, give about 2-5 minutes between asking a question and expecting a response from anyone. Zulip doesn't show when people are typing, so give people some time to compose. Most people tend to send a couple larger paragraphs, which takes some time to type.
 
 The most important part of the chats is to engage the interns. Ask questions or get them to provide more details. Talk about similarities with their experiences to other intern experiences, or your own experiences.
