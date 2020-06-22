@@ -167,7 +167,7 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 		<p>You can promote your community's projects by linking to the current projects page:</p>
 		<p><pre>{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}#{{ community.slug }}</pre></p>
 
-		<p>Applicants cannot see the project details linked below until the contribution person opens on {{ current_round.contributions_open }}.</p>
+		<p>Applicants cannot see the project details linked below until the contribution period opens on {{ current_round.contributions_open }}.</p>
 
 		<ul>
 		{% for project in approved_projects %}
