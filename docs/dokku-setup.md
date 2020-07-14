@@ -186,6 +186,34 @@ Finally, we can destroy the older database (use whatever was the old name):
 ssh dokku@outreachy.org postgres:destroy test-database-updated-old
 ```
 
+Backing Up the Database
+---
+
+`ssh dokku@outreachy.org postgres:export www-database > outreachy-website-database-backup.sql`
+
+This will give you a raw SQL database that you can use to reinstall the website if needed.
+
+Exporting the Deployed Database
+---
+
+Sometimes you want to work with a copy of the database from the deployed website. This includes data like initial applications, projects, etc. It's great for testing changes with actual data.
+
+The following command will export the deployed website database in JSON file format:
+
+ssh dokku@outreachy.org run www ./manage.py dumpdata > outreachy-website-database-backup.json
+
+Then you'll want to import this database into your local copy of Django.
+
+Make sure to stop your local copy from running (kill the ./runserver.py command).
+
+Rename or delete your local database file (db.sqlite3).
+
+Then import the production website database with this command:
+
+./manage.py loaddata outreachy-website-database-backup.json
+
+Now you should have a file named db.sqlite3 that contains a copy of the database from the deployed website.
+
 Resetting dokku
 ---------------
 
