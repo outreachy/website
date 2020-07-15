@@ -397,6 +397,7 @@ When running the chats, give about 2-5 minutes between asking a question and exp
 
 The most important part of the chats is to engage the interns. Ask questions or get them to provide more details. Talk about similarities with their experiences to other intern experiences, or your own experiences.
 
+
 If the conversation gets off topic, it's okay! That usually means the off-topic thing is interesting to many people.
 
 Some interns are more shy than others. They'll lurk in the channel while the chat is going on. I try to engage them by asking an open-ended question. Usually the question is related to the topic at hand. So if we're talking about struggling during the internship, I might ask them what kinds of internship tasks or topics took more time during the last few weeks.
@@ -418,4 +419,20 @@ To mark all interns with successful mid-point feedback as being authorized payme
 ...     i.midpointmentorfeedback.organizer_payment_approved = True
 ...     i.midpointmentorfeedback.save()
 ... 
->>> 
+>>>
+
+# Career Chats
+
+Each round, we have three opportunities to get Outreachy interns to think about career opportunities:
+
+ - Week 10 - intern chat about career opportunities
+ - Week 11 - informal chats assignment in biweekly blog post/assignments email
+ - Week 12 - intern chat - networking / informal chats
+
+The chat about career opportunities makes interns realize how important networking is to get a job. We then prompt them to schedule 2 to 3 informal chats with someone who contributes to open source or is paid to work on open source. During week 12, we talk about tips for approaching people for an informal chat and tips for getting the most out of the chats.
+
+As part of this, we provide interns with a list of people they can contact for an informal chat. The list is made up of past/current Outreachy mentors/coordinators, alums, and employees of current Outreachy sponsors who are paid to work on open source. Interns can opt into which people they contact (or contact someone completely different).
+
+Organizers will need to send an email to sponsors, seeking employees of the sponsors who are paid to contribute to open source, who can volunteer to have an informal chat with an Outreachy intern. The email template is in the private Outreachy organizer repo under the filename email/sponsor-invite-informal-career-chat.txt
+
+Sponsor emails are generally in the Client tab of Invoice Ninja, but there may be additional contacts that Sage knows about. Ping them.
