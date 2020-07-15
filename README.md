@@ -423,6 +423,36 @@ The relationship between an InternSelection and a MentorRelationship is shown be
 
 ![An InternSelection is related to a MentorApproval through a MentorRelationship](https://github.com/outreachy/website/raw/master/docs/graphics/MentorApproval-MentorRelationship-Project-ApplicantApproval-InternSelection.png)
 
+## Test scenarios
+
+When you want to work on a new issue, it can be helpful to set up the internship round in a particular state. There's a couple of short cut functions in `home/scenarios.py` that you can use do that. They set up applicant, mentor, and coordinator accounts and data, and set the internship round dates.
+
+All user accounts created by scenarios.py have the password 'test'. Usernames are things like 'mentor2', 'coordinator1', 'applicant3', etc.
+
+The names and email addresses are randomly generated. That means the email won't match the name (e.g. "Megan Huntington <terrysmith@example.com>"). Unfortunately the library used to generate names and emails is very western-English centric.
+
+### Creating an intern selection period scenario
+
+If you want to re-create how the Outreachy website looks during the intern selection process, you can run `./manage.py shell` and enter the following code:
+
+```
+>>> from home.scenarios import *
+>>> InternSelectionScenario()
+```
+
+That will create a new community with three mentors (each with a project), and three applicants who have recorded a contribution and created a final application for the project. You can see the objects that are created by that function if you run the following commands:
+
+```
+>>> Community.objects.all()
+>>> CoordinatorApproval.objects.all()
+>>> Participation.objects.all()
+>>> Project.objects.all()
+>>> MentorApproval.objects.all()
+>>> ApplicationApproval.objects.all()
+>>> Contribution.objects.all()
+>>> FinalApplication.objects.all()
+```
+
 # Running tests manually
 
 ## Starting tests manually
@@ -486,7 +516,6 @@ You can access the form through the TemplateResponse context dictionary. Then yo
 
 ```
 >> print(response.context['form'].errors)
-```
 
 # Adding a new Django app
 
