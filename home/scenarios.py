@@ -241,6 +241,44 @@ class InternSelectionScenario(ContributionsClosedScenario):
     """
     round__start_from = 'mentor_intern_selection_deadline'
 
+    contribution1 = factory.SubFactory(
+            factories.ContributionFactory,
+            project=factory.SelfAttribute('..project'),
+            applicant=factory.SelfAttribute('..applicant1'),
+            round=factory.SelfAttribute('..round'),
+    )
+    contribution2 = factory.SubFactory(
+            factories.ContributionFactory,
+            project=factory.SelfAttribute('..project2'),
+            applicant=factory.SelfAttribute('..applicant2'),
+            round=factory.SelfAttribute('..round'),
+    )
+    contribution3 = factory.SubFactory(
+            factories.ContributionFactory,
+            project=factory.SelfAttribute('..project3'),
+            applicant=factory.SelfAttribute('..applicant3'),
+            round=factory.SelfAttribute('..round'),
+    )
+
+    finalapplication1 = factory.SubFactory(
+            factories.FinalApplicationFactory,
+            project=factory.SelfAttribute('..project'),
+            applicant=factory.SelfAttribute('..applicant1'),
+            round=factory.SelfAttribute('..round'),
+    )
+    finalapplication2 = factory.SubFactory(
+            factories.FinalApplicationFactory,
+            project=factory.SelfAttribute('..project2'),
+            applicant=factory.SelfAttribute('..applicant2'),
+            round=factory.SelfAttribute('..round'),
+    )
+    finalapplication3 = factory.SubFactory(
+            factories.FinalApplicationFactory,
+            project=factory.SelfAttribute('..project3'),
+            applicant=factory.SelfAttribute('..applicant3'),
+            round=factory.SelfAttribute('..round'),
+    )
+
     intern_selection1 = factory.SubFactory(
         factories.InternSelectionFactory,
         round=factory.SelfAttribute('..round'),
