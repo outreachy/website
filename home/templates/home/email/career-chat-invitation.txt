@@ -1,0 +1,74 @@
+[{{ current_round.week_ten_chat_text_date|date:"M j" }}] Invitation to chat with interns about careers in open source
+
+Every round, we discuss career opportunities with the current cohort of Outreachy interns. Many Outreachy interns don't know anyone who contributes to open source at their job. They may not be aware of how much employers value experience working in open source.
+
+That's where you come in! We would love it if you could share with Outreachy interns how open source has helped your career.
+
+There's two ways you can help out:
+
+ 1. Informal chats - Talk to Outreachy interns one-on-one via phone or video chat
+
+ 2. Group career chat on {{ current_round.week_ten_chat_text_date }} UTC - Participate in a group chat about open source careers
+
+Outreachy mentors, coordinators, and alums are welcome to participate in informal chats and the group career chat.
+
+Employees who work for an Outreachy sponsor (and who are paid to contribute to open source as part of their job) are welcome to participate in informal chats. Sponsors - please forward this email to any employees who might be interested in connecting with Outreachy interns.
+
+
+Informal chat requirements
+---
+
+We're looking for people who can do video chats with Outreachy interns about careers in open source. You'll do an informal chat with 1 to 3 Outreachy interns. Chats will be 30 minutes to 1 hour. Please make sure you have time to chat sometime between {{ current_round.week_ten_chat_text_date|date:"F j" }} to {{ current_round.internends|date:"F j" }}.
+
+To be eligible to chat with Outreachy interns, you must be either:
+
+ - a past Outreachy intern (alum)
+ - a past or current Outreachy mentor
+ - a past or current Outreachy coordinator, or
+ - an employee of a current Outreachy sponsor. You must be paid to contribute to open source as part of your job. Outreachy sponsors are listed on our website: https://www.outreachy.org
+
+Please note that you need to be open to chatting with interns from any Outreachy community.
+
+Informal chats help Outreachy interns build their network and connect to people outside their open source community. This is a great opportunity to spend some time getting to know an Outreachy intern, and understanding what their career goals are.
+
+You can also talk about how open source has impacted your career. Talk about different roles that people are paid to work on open source (e.g. community managers, designers, programmers). If you know of paid opportunities to work on open source, please share them.
+
+
+Scheduling informal chats
+---
+
+If you want to participate in an informal chats with Outreachy interns, please email me off-list with the following information:
+
+ 1. Name
+ 2. Email
+ 3. Which are you: a current/past Outreachy intern, current/past Outreachy mentor, current/past Outreachy coordinator, or current employee of an Outreachy sponsor?
+ 4. What open source communities do you participate in?
+ 5. What company do you work for?
+ 6. What open source roles (e.g. community manager, JavaScript programmer, Linux systems admin) you are *paid* to work on?
+ 7. What open source roles do you *volunteer* for?
+
+We'll give current Outreachy interns a list of people they can request an informal chat with. They will opt-in to which people they want to contact. Please make sure you're checking your email for invitations to chat with Outreachy interns.
+
+
+Group career chat
+---
+
+We're looking for people who can spend 1 hour talking about open source careers. This chat will take place in an online text chat. The group chat will include interns, current mentors, alums, and Outreachy organizers.
+
+To participate in the group career chat, you must be either:
+
+ - a past Outreachy intern
+ - a past or current Outreachy mentor, or
+ - a past or current Outreachy coordinator
+
+On {{ current_round.week_ten_chat_text_date }} UTC Outreachy will host a career chat. We'll be discussing all the different ways people can advance your career by participating in open source communities.
+
+The career chat will take place on the Outreachy chat server in the #chat stream. If you don't have an account on the Outreachy Zulip chat, email me off-list. The Outreachy Zulip chat server is open to past/current Outreachy interns, past/current Outreachy mentors, and past/current Outreachy coordinators.
+
+
+Questions?
+---
+
+Let me know what questions you have, either on-list or via private email to organizers@outreachy.org
+
+Outreachy Organizers

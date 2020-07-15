@@ -272,6 +272,15 @@ def feedback_email(intern_selection, request, stage, past_due, **kwargs):
         recipient_list=emails,
         **kwargs)
 
+def career_chat_invitation(current_round, request, template, **kwargs):
+    emails = ['opportunities@lists.outreachy.org', 'mentors@lists.outreachy.org']
+    send_group_template_mail(template, {
+        'current_round': current_round,
+        },
+        request=request,
+        recipient_list=emails,
+        **kwargs)
+
 def notify_survey(survey_tracker, request):
     if survey_tracker.intern_info:
         name = survey_tracker.intern_info.applicant.applicant.public_name
