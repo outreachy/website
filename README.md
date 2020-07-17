@@ -453,6 +453,23 @@ That will create a new community with three mentors (each with a project), and t
 >>> FinalApplication.objects.all()
 ```
 
+### Internship Week N test scenario
+
+You can re-create how the Outreachy website looks during a particular week of the internship. For example, if you want to see how the website looks during week 8 of the internship, you can run `./manage.py shell` and enter the following code:
+
+```
+>>> from home import scenarios
+>>> scenario = scenarios.InternshipWeekScenario(week=8)
+```
+
+This will create accounts for coordinators, mentors, and interns. All passwords for those accounts are set to 'test'. The following account usernames are created:
+ - applicant1 - first intern
+ - applicant2 - second intern
+ - applicant3 - third intern
+ - mentor1 - mentor of applicant1
+ - mentor2 - mentor of applicant2
+ - mentor3 - mentor of applicant3
+
 # Running tests manually
 
 ## Starting tests manually
