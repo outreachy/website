@@ -431,13 +431,13 @@ All user accounts created by scenarios.py have the password 'test'. Usernames ar
 
 The names and email addresses are randomly generated. That means the email won't match the name (e.g. "Megan Huntington <terrysmith@example.com>"). Unfortunately the library used to generate names and emails is very western-English centric.
 
-### Creating an intern selection period scenario
+### Intern selection period test scenario
 
 If you want to re-create how the Outreachy website looks during the intern selection process, you can run `./manage.py shell` and enter the following code:
 
 ```
->>> from home.scenarios import *
->>> InternSelectionScenario()
+>>> from home import scenarios
+>>> scenario = scenarios.InternSelectionScenario()
 ```
 
 That will create a new community with three mentors (each with a project), and three applicants who have recorded a contribution and created a final application for the project. You can see the objects that are created by that function if you run the following commands:
