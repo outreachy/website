@@ -436,3 +436,65 @@ As part of this, we provide interns with a list of people they can contact for a
 Organizers will need to send an email to sponsors, seeking employees of the sponsors who are paid to contribute to open source, who can volunteer to have an informal chat with an Outreachy intern. The email template is in the private Outreachy organizer repo under the filename email/sponsor-invite-informal-career-chat.txt
 
 Sponsor emails are generally in the Client tab of Invoice Ninja, but there may be additional contacts that Sage knows about. Ping them.
+
+## Week 10: Career opportunities
+
+Questions to get the discussion moving:
+ - For current interns, alums, and mentors: What are all the ways you can think of to move your career forward? (There is no wrong answer.)
+   - networking
+   - Networking and referrals are so important! Between 50% to 80% of jobs go unlisted. The jobs are filled by someone the team knows: https://www.collegerecruiter.com/blog/2013/03/28/80-of-job-openings-are-unadvertised/
+   - formal education (university)
+   - coding schools
+   - school career counselors
+   - online tutorials
+   - FreeCodeCamp - https://www.freecodecamp.org
+   - certifications
+   - Red Hat has free online courses at https://www.redhat.com/en/services/training-and-certification?learning_options=free_courses and at https://www.edx.org/school/red-hat
+   - work on resume and cover letter
+   - LinkedIn recommendations
+   - find out what skills are in job postings and learn those skills
+   - contribute to open source
+   - have a portfolio
+   - blogging
+   - consulting work
+   - conferences
+   - local meetups
+   - Online Slack groups often have a "jobs" channel. I hang out in the LGBTQ in Tech slack (for queer folks): https://lgbtq.technology/ I used to hang out more in the Women in Tech chat before I came out as non-binary: https://witchat.github.io/ Feel free to share a link to other online forums for marginalized groups in tech.
+   - other paid "summer of code" programs: https://github.com/tapaswenipathak/Open-Source-Programs
+   - look at which companies sponsor open source conferences, or your open source community. For example, LWN.net publishes which companies are the top Linux kernel contributors (e.g. https://lwn.net/Articles/821813/). For OpenStack the statistics are https://www.stackalytics.com/ You can use these lists of sponsors to identify companies that participate the most and they are probably hiring.
+   - some open source communities have a jobs board, e.g. https://www.python.org/jobs/
+   - There is a monthly Y Combinator thread on "Who's hiring?" and some "Seeking Freelancer" threads. These are interesting for finding new jobs or contract work. Some of it is remote work and/or open source. For example, the January 2020 links: https://news.ycombinator.com/item?id=21936439 and https://news.ycombinator.com/item?id=21936440
+ - For current interns, in emoji scale: Rate 1-10 how comfortable you feel asking your mentor for help? 1 is the least comfortable. 10 is that you're 100% comfortable and happy to ask.
+   - wait for answers
+   - It's okay to have to work your way up to asking your mentor for help. Many people start out being shy (like me!) and work their way up to feeling more comfortable asking for career advice.
+   - I've found that sometimes people have no problem asking a mentor for advice on coding, but then don't feel as comfortable saying " In the future I’d like to work at XYZ organization, do you have any advice?" and that is something important.
+
+```
+A lot of people think a job search is like this:
+See job >> apply for job >> organization reviews resumes submitted >> organization calls the best qualified >> interview
+
+When really it’s more like this:
+See job>> ask mentor if they know someone >> talk to 1-2 people who work there to get information >> they refer you to the hiring manager >> get called in for an interview
+```
+
+```
+A good piece of advice from our former career advisor:
+
+'For me, even if you're not looking for a job today finding companies/organizations you want to work for is a win. It's the easiest time to ask for an informational chat with someone. A script like: "I'm currently an intern and I see myself working at XYZ, would it be ok if I emailed with some questions? I'd love to get some advice?" can work wonders for getting you information, and it increases the amount of people in your network.
+
+Especially in the open source community, knowledge is power, and just knowing that an organization screens github before they look at resumes or if they're really focused on documentation can allow you to tailor your resume, and speak to different things in interviews...or identify companies you wouldn't want to work for.'
+```
+
+```
+A good piece of advice from an Outreachy mentor:
+
+'I recommend letting your mentor know that you will be looking for jobs so they can send you job openings ("I will be looking for jobs after my internship. Are there any job openings you think might be a good fit for me?"). Don't be afraid to ask them for advice or review your resume. Maybe they can introduce you to people.
+
+There is no harm in asking them although it might feel awkward if you're not used to it :). Many of us are afraid that this is self-promotion and we don't like to do it, but your mentor is probably happy to help you!'
+```
+
+
+# Week 14: Wrap up chat
+
+ - For Outreachy interns and alums: What have/did you learned about yourself during your Outreachy internship? Is working remotely easy or hard for you? Do you like working on many smaller tasks or one big task? Are you good at debugging, writing documentation, developing new features, etc?
+   - Thinking about what you liked and what you found hard about your internship will allow you to apply for jobs that contain more of the fun stuff and less of the difficult stuff :). It will help you find a career that is fulfilling.
