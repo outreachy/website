@@ -3443,6 +3443,9 @@ def travel_stipend(request):
         'rounds': rounds,
         })
 
+def donate(request):
+    return render(request, 'home/donate.html')
+
 def sponsor(request):
     return render(request, 'home/sponsor.html', {
         'current_round': get_current_round_for_sponsors(),
