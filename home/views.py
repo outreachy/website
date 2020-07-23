@@ -439,6 +439,26 @@ def get_current_round_for_initial_application_review():
     return current_round
 
 
+def get_current_round_for_sponsors():
+    """
+    We want to engage sponsors until the interns are announced.
+    Otherwise we'll show the generic round schedule.
+    """
+
+    now = datetime.now(timezone.utc)
+    today = get_deadline_date_for(now)
+
+    try:
+        current_round = RoundPage.objects.get(
+            internannounce__gt=today,
+        )
+        current_round.today = today
+    except RoundPage.DoesNotExist:
+        return None
+
+    return current_round
+
+
 class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, SessionWizardView):
     template_name = 'home/wizard_form.html'
     condition_dict = {
@@ -3423,6 +3443,10 @@ def travel_stipend(request):
         'rounds': rounds,
         })
 
+def sponsor(request):
+    return render(request, 'home/sponsor.html', {
+        'current_round': get_current_round_for_sponsors(),
+        })
 
 def opportunities(request):
     return render(request, 'home/opportunities.html')
