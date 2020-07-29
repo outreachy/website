@@ -99,7 +99,13 @@ If you made a mistake in the directions above, you may need to remove your pipen
 
 # Django shell
 
-Django has a 'shell' mode where you can run snippets of Python code. This is extremely useful for figuring out why view code isn't working. You can also use it to test complicated [query sets](https://docs.djangoproject.com/en/1.11/topics/db/queries/#retrieving-objects). It's also useful for doing quick tests of how templates (especially email templates) will look.
+Django has a 'shell' mode where you can run snippets of Python code.
+
+The Django shell is extremely useful for figuring out why view code isn't working. You can run snippets of your code and examine variables as it runs. You can call into functions in Django code.
+
+You can also use the Django shell to test complicated [query sets](https://docs.djangoproject.com/en/1.11/topics/db/queries/#retrieving-objects).
+
+The Django shell is also useful for doing quick tests of how templates (especially email templates) will look.
 
 You can run the shell on either your local copy of the database, or you can run it on the remote server's database. If you start the shell on your local computer, it will load your local copy of the code and your local database. If you start the shell on the remote server, it will load the server's version of the code and the server's database. Remember, if you change any of the Python code, you'll need to exit the shell (CTRL-d) and restart it to reload the code.
 
@@ -185,6 +191,21 @@ If you get an error when running the factories code, it's often hard to tell wha
 ...		start_from="contributions_close",
 ...		days_after_today=7)
 >>>
+```
+
+## Printing class variables and methods
+
+The Python shell (which the Django shell uses) will print information about a class object. This includes the class methods and fields.
+
+For example, assume you followed the instructions from one of the sections above to set up an internship round. You'll end up with a variable called `current_round`. This is an object of the RoundPage class. You can type the code below in the shell to look at the variables and fields in the RoundPage class:
+
+```
+>>> help(current_round)
+Help on RoundPage in module home.models object:
+
+class RoundPage(AugmentDeadlines, wagtail.wagtailcore.models.Page)
+ |  RoundPage(*args, **kwargs)
+ |  
 ```
 
 # Testing the local website
