@@ -19,7 +19,7 @@ An informal chat lets you get insight into what they work on, how they got their
 Goals for Mentors & Interns
 ---------------------------
 
-The goal for week 11 is for interns to brain storm with their mentors three people for them to approach for an informal chat. Outreachy organizers and other interns from your cohort don't count. You can have one (and only one) of the people you chat with be an Outreachy mentor, coordinator, or alum. The other two people need to expand your network beyond Outreachy.
+The goal for week 11 is for interns to brain storm with their mentors three people for them to approach for an informal chat. Outreachy organizers, your mentors, and other interns from your cohort don't count. The goal is to expand your network.
 
 You can chat with someone in your free software community. You could chat with someone at your mentor's company. You could chat with someone who you admire on social media. You could chat with a speaker that came into your classes. You could chat with someone who you know through learning forums who recently got a job. You could chat with someone you know in the local tech industry.
 
