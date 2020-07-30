@@ -22,6 +22,7 @@ from .models import EmploymentTimeCommitment
 from .models import FinalApplication
 from .models import FinalInternFeedback
 from .models import FinalMentorFeedback
+from .models import InformalChatContact
 from .models import InternSelection
 from .models import InitialMentorFeedback
 from .models import InitialInternFeedback
@@ -613,6 +614,27 @@ class FeedbackAdmin(reversion.admin.VersionAdmin):
             '=intern_selection__applicant__applicant__account__email',
             )
 
+class InformalChatContactAdmin(reversion.admin.VersionAdmin):
+    model = AlumInfo
+    list_display = (
+            'name',
+            'email',
+            )
+    raw_id_fields = (
+        'comrade',
+        )
+    search_fields = (
+            'name',
+            'email',
+            'comrade__public_name',
+            'comrade__legal_name',
+            '=comrade__account__email',
+            'contributions',
+            'company',
+            'paid_roles',
+            'volunteer_roles',
+            )
+
 admin.site.unregister(User)
 admin.site.register(User, ComradeAdmin)
 
@@ -625,6 +647,7 @@ admin.site.register(Comrade, OnlyComradeAdmin)
 admin.site.register(CoordinatorApproval, CoordinatorApprovalAdmin)
 admin.site.register(Contribution, ContributionAdmin)
 admin.site.register(FinalApplication, FinalApplicationAdmin)
+admin.site.register(InformalChatContact, InformalChatContactAdmin)
 admin.site.register(InternSelection, InternSelectionAdmin)
 admin.site.register(MentorApproval, MentorApprovalAdmin)
 admin.site.register(MentorRelationship, MentorRelationshipAdmin)

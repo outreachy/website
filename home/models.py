@@ -4386,6 +4386,33 @@ class FinalInternFeedback(BaseInternFeedback):
             return True
         return False
 
+class InformalChatContact(models.Model):
+    '''
+    Information about people that Outreachy interns can contact for informal chats.
+    '''
+    active = models.BooleanField(verbose_name='Are you currently available for informal chats?')
+    # Not all contacts will have an account on the website
+    comrade = models.ForeignKey(Comrade, blank=True, null=True)
+    name = models.CharField(blank=True, max_length=LONG_LEGAL_NAME, help_text="Your full name, which will be publicly displayed to Outreachy interns. This is typically your given name, followed by your family name. You may use a pseudonym or abbreviate your given or family names if you have concerns about privacy.")
+    email = models.EmailField(blank=True, verbose_name='Email address')
+    relationship_to_outreachy = models.CharField(blank=True, max_length=PARAGRAPH_LENGTH, help_text='Which are you: a current/past Outreachy intern, current/past Outreachy mentor, current/past Outreachy coordinator, or current employee of an Outreachy sponsor?')
+    foss_communities = models.CharField(blank=True, max_length=PARAGRAPH_LENGTH, verbose_name='What open source communities do you participate in?')
+    company = models.CharField(blank=True, max_length=PARAGRAPH_LENGTH, verbose_name='What company do you work for?')
+    paid_foss_roles = models.CharField(blank=True, max_length=PARAGRAPH_LENGTH, verbose_name='What open source roles (e.g. community manager, JavaScript programmer, Linux systems admin) are you paid to work on?')
+    volunteer_foss_roles = models.CharField(blank=True, max_length=PARAGRAPH_LENGTH, verbose_name='What open source roles (e.g. community manager, JavaScript programmer, Linux systems admin) do you volunteer for?')
+
+    def get_name(self):
+        if self.name:
+            return self.name
+        if self.comrade:
+            return self.comrade.public_name
+        return 'Name unknown'
+
+    def get_email(self):
+        if self.email:
+            return self.email
+        if self.comrade:
+            return self.comrade.account.email
 
 # Track each person we sent a survey to
 class AlumSurveyTracker(models.Model):

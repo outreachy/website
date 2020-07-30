@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Informal Chat Contacts
+{% endblock %}
+
+{% block content %}
+
+<h1>Informal Chat Contacts</h1>
+
+{% for contact in contacts %}
+	<div class="card border mt-3">
+		<div class="card-header bg-light">{{ contact.get_name }}</div>
+		<div class="card border">
+			<div class="card-body">
+				<div class="container">
+					<div class="row">
+						<div class="col pb-3">
+							{% if contact.comrade.photo %}
+								<img src="{{ contact.comrade.photo.url }}" class="img-thumbnail float-left mr-3" alt="Photo of {{ contact.get_name }}" height="200" width="200">
+							{% else %}
+								{% static 'outreachy-bot-200x200-avatar-1.png' as avatar1 %}
+								{% static 'outreachy-bot-200x200-avatar-2.png' as avatar2 %}
+								{% static 'outreachy-bot-200x200-avatar-3.png' as avatar3 %}
+								{% static 'outreachy-bot-200x200-avatar-4.png' as avatar4 %}
+								<img src='{% cycle avatar1 avatar2 avatar3 avatar4 as avatar %}' class="img-thumbnail float-left mr-3" height="200" width="200" alt="Default avatar for {{ contact.get_name }}">
+							{% endif %}
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<div class="card-text">
+								<b>Email:</b> "{{ contact.get_name }}" &lt;{{ contact.get_email}}&gt;
+								{% if contact.company %}
+								<BR><b>Employed by:</b> {{ contact.company }}
+								{% endif %}
+								{% if contact.relationship_to_outreachy %}
+									<BR><BR>{{ contact.relationship_to_outreachy }}
+								{% endif %}
+								{% if contact.foss_communities %}
+									<BR><BR><b>Open source communities:</b> {{ contact.foss_communities }}
+								{% endif %}
+								{% if contact.paid_foss_roles %}
+									<BR><b>Paid open source roles:</b> {{ contact.paid_foss_roles }}
+								{% endif %}
+								{% if contact.volunteer_foss_roles %}
+									<BR><b>Volunteer open source roles:</b> {{ contact.volunteer_foss_roles }}
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endfor %}
+
+{% endblock %}

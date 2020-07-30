@@ -119,6 +119,7 @@ urlpatterns = [
     url(r'^register/activate/(?P<activation_key>[-.:\w]+)/$', views.ActivationView.as_view(), name='registration_activate'),
     url(r'^register/activate/$', views.ActivationCompleteView.as_view(), name='registration_activation_complete'),
     url(r'^travel-stipend/$', views.travel_stipend, name='travel-stipend'),
+    url(r'^informal-chat-contacts/$', views.InformalChatContacts.as_view(), name='informal-chat-contacts'),
     url(r'^sponsor/donate/$', views.donate, name='donate'),
     url(r'^sponsor/$', views.sponsor, name='sponsor'),
     url(r'^opportunities/$', views.opportunities, name='opportunities'),

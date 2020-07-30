@@ -1,4 +1,5 @@
 **Privacy Statement for Outreachy**
+*Last updated July 29, 2020*
 
 Scope of This Notice
 ===
@@ -23,6 +24,7 @@ Outreachy collects personal data when:
 * you sign up to coordinate mentors for a community;
 * you submit a project in order to sign up to mentor for Outreachy;
 * you participate in surveys and evaluations;
+* you volunteer for informal career chats with interns;
 * you submit questions or comments to us or our mailing lists.
  
 Outreachy may also collect personal data from individuals (with their consent) at conventions, trade shows and expositions.
@@ -33,6 +35,7 @@ Outreachy collects information from the following types of people who access our
 * community coordinators who track the progress of mentors
 * community mentors who work directly with applicants and interns
 * Outreachy applicants or interns
+* People who volunteer for informal career chats with interns
 
 The types of personal data collected may include (but are not limited to): 
 
@@ -62,6 +65,12 @@ The types of personal data collected may include (but are not limited to):
     * (optional) your GitLab user profile URL;
     * (optional) your blog URL and RSS feed URL;
     * (optional) your Twitter user profile URL;
+* any information that Outreachy collects from people who volunteer for informal career chats with Outreachy interns:
+    * (optional) your employer;
+    * (optional) your relationship to Outreachy and Outreachy participation history;
+    * (optional) open source communities you participate in;
+    * (optional) open source roles you are paid to work on;
+    * (optional) open source roles you volunteer for;
 
 Publicly Available Personal Data
 ===
@@ -190,6 +199,28 @@ Only Outreachy organizers and designated applicant reviewers will have access to
 If you wish to remove your initial application information from the Outreachy website, please contact us via our [Personal Data Request Form](https://outreachy.org/contact/organizers/). Currently, removing the initial application information means that any recorded contributions or applications to mentored projects will be deleted, and you will not be eligible to be accepted as an Outreachy intern. We are working on features to allow more fine-grained data removal.
 
 The Software Freedom Conservancy will collect personal data from interns that is necessary to fulfill its contractual obligations and make payments to interns. This information is not sold or distributed to third parties.
+
+Sharing Volunteer Personal Data
+---
+
+If you opt-in, you may be contacted by Outreachy participants for an informal career chat. If you wish to opt-out, please contact us via our [Personal Data Request Form](https://outreachy.org/contact/organizers/).
+
+Informal career chat volunteers provide the following information:
+
+  * name;
+  * email;
+  * your relationship to Outreachy and Outreachy participation history;
+  * (optional) your employer;
+  * (optional) open source communities you participate in;
+  * (optional) open source roles you are paid to work on;
+  * (optional) open source roles you volunteer for;
+
+That information is visible to:
+
+ * interns who are in good standing
+ * alums in good standing
+ * mentors of an intern or alum in good standing, who are approved to participate in Outreachy by a community coordinator
+ * community coordinators who are approved by Outreachy organizers to participate in Outreachy
 
 Sharing Outreachy Website User Personal Data
 ---

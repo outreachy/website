@@ -63,6 +63,7 @@ from .models import create_time_commitment_calendar
 from .models import EmploymentTimeCommitment
 from .models import FinalApplication
 from .models import get_deadline_date_for
+from .models import InformalChatContact
 from .models import InternSelection
 from .models import InitialApplicationReview
 from .models import InitialMentorFeedback
@@ -3442,6 +3443,63 @@ def travel_stipend(request):
     return render(request, 'home/travel_stipend.html', {
         'rounds': rounds,
         })
+
+class InformalChatContacts(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
+    template_name = 'home/informal_chat_contacts.html'
+
+    def get_context_data(self, **kwargs):
+        # Who can view this page:
+        #  - APPROVED - Intern logged in, who is in good standing
+        #  - APPROVED - Alum logged in, who is in good standing
+        #  - APPROVED - Mentor logged in, who is a mentor of an intern in good standing
+        #  - APPROVED - Approved coordinator logged in, whose community has been approved to participate
+        #  - APPROVED - Staff
+        comrade = self.request.user.comrade
+
+        #  - APPROVED - Intern logged in, who is in good standing
+        #  - APPROVED - Alum logged in, who is in good standing
+        # This selects both current interns and alums
+        # Note: this is a filter instead of a get because we have had interns do an internship twice
+        # e.g. because they had to quit their first internship due to medical reasons.
+        intern_selections = InternSelection.objects.filter(
+                applicant__applicant=comrade,
+                organizer_approved=True,
+                in_good_standing=True,
+                )
+
+        if not intern_selections:
+            #  - APPROVED - Mentor logged in, who is a mentor of an intern in good standing
+            # Check for an approved project with a community approved to participate
+            mentor_relationships = MentorRelationship.objects.filter(
+                    mentor__mentor=comrade,
+                    mentor__approval_status=ApprovalStatus.APPROVED,
+                    intern_selection__project__approval_status=ApprovalStatus.APPROVED,
+                    intern_selection__project__project_round__approval_status=ApprovalStatus.APPROVED,
+                    intern_selection__organizer_approved=True,
+                    intern_selection__in_good_standing=True,
+                    )
+
+            #  - APPROVED - Approved coordinator logged in, whose community has been approved to participate
+            if not mentor_relationships:
+                coordinator_approvals = CoordinatorApproval.objects.filter(
+                        coordinator=comrade,
+                        approval_status=ApprovalStatus.APPROVED,
+                        community__participation__approval_status=ApprovalStatus.APPROVED,
+                        )
+                if not coordinator_approvals:
+                    #  - APPROVED - Staff
+                    if not comrade.account.is_staff:
+                        raise PermissionDenied('Permission denied: You must be logged in to see the informal chat contacts. Contacts are only available to Outreachy interns and alums who are in good standing, and their mentors and coordinators.')
+
+        # get active informal chat contacts
+        contacts = InformalChatContact.objects.filter(active=True).order_by('name')
+
+        context = super(InformalChatContacts, self).get_context_data(**kwargs)
+        context.update({
+            'contacts' : contacts,
+            })
+        return context
+
 
 def donate(request):
     return render(request, 'home/donate.html')
