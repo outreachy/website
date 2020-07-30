@@ -11,15 +11,15 @@ The theme for this week is "Making connections".
 
 As we saw in last week's career chat, networking is really important to get a job! But many people are shy. They may not feel comfortable reaching out. Other people may not know who to reach out to.
 
-A low-stakes way to network is to ask people to participate in an informational chat. An informational chat is an conversation with another person about their career or their role as a free software contributor.
+A low-stakes way to network is to ask people to participate in an informal chat. An informal chat is an conversation with another person about their career or their role as a free software contributor.
 
-An informational chat lets you get insight into what they work on, how they got their job or became a leader in free software, and who they network with. After you talk with the person, you can ask them for three other people you can talk to. This helps you expand your network!
+An informal chat lets you get insight into what they work on, how they got their job or became a leader in free software, and who they network with. After you talk with the person, you can ask them for three other people you can talk to. This helps you expand your network!
 
 
 Goals for Mentors & Interns
 ---------------------------
 
-The goal for week 11 is for interns to brain storm with their mentors three people for them to approach for an informational chat. Outreachy organizers and other interns from your cohort don't count. You can have one (and only one) of the people you chat with be an Outreachy mentor, coordinator, or alum. The other two people need to expand your network beyond Outreachy.
+The goal for week 11 is for interns to brain storm with their mentors three people for them to approach for an informal chat. Outreachy organizers and other interns from your cohort don't count. You can have one (and only one) of the people you chat with be an Outreachy mentor, coordinator, or alum. The other two people need to expand your network beyond Outreachy.
 
 You can chat with someone in your free software community. You could chat with someone at your mentor's company. You could chat with someone who you admire on social media. You could chat with a speaker that came into your classes. You could chat with someone who you know through learning forums who recently got a job. You could chat with someone you know in the local tech industry.
 
@@ -31,9 +31,9 @@ On {{ current_round.week_twelve_chat_text_date }} UTC we will host a chat for Ou
 
 {{ current_round.week_twelve_interviewing_chat_url }}
 
-We'll be discussing how to conduct an informational chat. We'll cover:
+We'll be discussing how to conduct an informal chat. We'll cover:
 
- - What an informational chat is
+ - What an informal chat is
  - Who you might want to approach
  - How to approach them
  - What questions you can ask
@@ -47,7 +47,7 @@ Goals for Mentors
 
 Week 11 goals:
 
- - Brainstorm with your intern three people they can ask to do an informational chat
+ - Brainstorm with your intern three people they can ask to do an informal chat
 
 
 Goals for Interns
@@ -55,24 +55,24 @@ Goals for Interns
 
 Week 11/12 goals:
 
- - Brainstorm with your mentor who you can ask to do an informational chat
+ - Brainstorm with your mentor who you can ask to do an informal chat
  - Participate in the intern chat
- - Contact three people to ask for an informational chat
+ - Contact three people to ask for an informal chat
  - Get your resume reviewed (see instructions below)
 
 
 Informational Interviews
 ------------------------
 
-The ideal candidate for an informational chat is someone who can expand on your own knowledge and network. Think about the blog post prompt from last week about what direction you want your career to go. Who do you admire who already has that role or job? Who do you know who might be networking with people in that field?
+The ideal candidate for an informal chat is someone who can expand on your own knowledge and network. Think about the blog post prompt from last week about what direction you want your career to go. Who do you admire who already has that role or job? Who do you know who might be networking with people in that field?
 
-The goal for week 12 is for interns to reach out to three people for an informational chat. You should have an chat scheduled with at least one person by the end of your internship. If none of the three people respond, that's fine! They may just be busy. We encourage you to continue reaching out to people. The worst that can happen is people don't reply, or they politely say no.
+The goal for week 12 is for interns to reach out to three people for an informal chat. You should have an chat scheduled with at least one person by the end of your internship. If none of the three people respond, that's fine! They may just be busy. We encourage you to continue reaching out to people. The worst that can happen is people don't reply, or they politely say no.
 
 Here's a script for reaching out to people:
 
-"Hi (name). I'm interested in your experience as (role) (with X company / in X open source project). I'm exploring different career paths, especially ones that involve open source. Would you be willing to do a 30 minute informational chat with me? I would love to learn more about your work!"
+"Hi (name). I'm interested in your experience as (role) (with X company / in X open source project). I'm exploring different career paths, especially ones that involve open source. Would you be willing to do a 30 minute informal chat with me? I would love to learn more about your work!"
 
-Example questions you can ask during an informational chat:
+Example questions you can ask during an informal chat:
 
  - What is a typical day (or week) like for you working in this role?
  - What skills, abilities, and personal attributes are essential to success in your role?
@@ -85,7 +85,7 @@ Example questions you can ask during an informational chat:
  - What are some common career paths in this field? or What are some common paths towards being a leader in free software?
  - I've read that the entry-level salary range for this field is usually in the range of _____ in ______ country? Does this fit with what you've seen? (Don't ask about the person's actual salary.) or I've read that many free software contributors are paid to work on their projects. What percentage of contributors in your community are paid to work on the project?
  - What related fields do you think I should consider looking into? or What related free software communities would you recommend I take a look at?
- - Can you suggest three other people I could contact for an informational chat?
+ - Can you suggest three other people I could contact for an informal chat?
 
 Resume Review
 -------------
