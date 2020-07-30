@@ -23,6 +23,10 @@ The goal for week 11 is for interns to brain storm with their mentors three peop
 
 You can chat with someone in your free software community. You could chat with someone at your mentor's company. You could chat with someone who you admire on social media. You could chat with a speaker that came into your classes. You could chat with someone who you know through learning forums who recently got a job. You could chat with someone you know in the local tech industry.
 
+We also have a list of people who have volunteered to chat with interns! They are past Outreachy interns, mentors, coordinators, or employees of Outreachy sponsors who are paid to work on open source. You can see the list here:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'informal-chat-contacts' %}
+
 
 Week 12 Mentor & Intern Chat
 ----------------------------
