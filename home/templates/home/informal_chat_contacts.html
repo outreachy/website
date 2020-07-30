@@ -34,20 +34,22 @@ Informal Chat Contacts
 						<div class="col">
 							<div class="card-text">
 								<b>Email:</b> "{{ contact.get_name }}" &lt;{{ contact.get_email}}&gt;
-								{% if contact.company %}
-								<BR><b>Employed by:</b> {{ contact.company }}
-								{% endif %}
 								{% if contact.relationship_to_outreachy %}
-									<BR><BR>{{ contact.relationship_to_outreachy }}
+									<BR><b>Relation to Outreachy:</b> {{ contact.relationship_to_outreachy }}
 								{% endif %}
 								{% if contact.foss_communities %}
 									<BR><BR><b>Open source communities:</b> {{ contact.foss_communities }}
-								{% endif %}
-								{% if contact.paid_foss_roles %}
-									<BR><b>Paid open source roles:</b> {{ contact.paid_foss_roles }}
+								{% else %}
+									<BR>
 								{% endif %}
 								{% if contact.volunteer_foss_roles %}
 									<BR><b>Volunteer open source roles:</b> {{ contact.volunteer_foss_roles }}
+								{% endif %}
+								{% if contact.company %}
+									<BR><BR><b>Employed by:</b> {{ contact.company }}
+								{% endif %}
+								{% if contact.paid_foss_roles %}
+									<BR><b>Paid open source roles:</b> {{ contact.paid_foss_roles }}
 								{% endif %}
 							</div>
 						</div>
