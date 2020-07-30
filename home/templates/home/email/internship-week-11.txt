@@ -91,12 +91,10 @@ Example questions you can ask during an informal chat:
  - What related fields do you think I should consider looking into? or What related free software communities would you recommend I take a look at?
  - Can you suggest three other people I could contact for an informal chat?
 
-Resume Review
--------------
+Resume
+------
 
-Instead of a blog post this week, we'd like interns to polish up their resume. We have an Outreachy helper who has offered to review resumes, so this is your chance to get expert help!
-
-Send your resume in .docx or .odt format to {{ current_round.resume_reviewer_name }} <{{ current_round.resume_reviewer_email }}>. You'll also need to send a link to a job posting that's similar to what you're looking for. The resume reviewer will turn on 'Track changes' on your resume and make some suggestions. We ask that you don't do more than two back-and-forth review sessions with the resume reviewer.
+Instead of a blog post this week, we'd like interns to polish up their resume.
 
 On your resume, we ask that you list your Outreachy internship in a specific way. Don't say you're working "for" a sponsor or a community. That misrepresents your contractor status with Outreachy's fiscal sponsor, the Software Freedom Conservancy.
 
@@ -113,11 +111,7 @@ https://medium.com/free-code-camp/writing-a-killer-software-engineering-resume-b
 
 The second article was written for people applying to software engineering jobs, but much of the advice is relevant to other jobs in the tech industry. The article also talks a lot about how to showcase your college degree, but if you don't have a college degree, you can still list your coding schools, online courses, or certifications.
 
-Don't be afraid to list a non-technical job if you learned skills that apply to the job you're looking for! Deb Nicholson, Software Freedom Conservancy's Director of Community Operations, used to book shows for bands. This taught her event management, negotiation with multiple stakeholders, how to get things done on a limited budget, marketing, and a lot of networking skills. All of those skills are highly relevant to the job Deb does now, working directly with Conservancy's member communities, organizing Copyleft Conf, and promoting Conservancy.
-
-Resumes can be daunting, but that's why we have {{ current_round.resume_reviewer_name }} to help review yours! The resume review is completely private, and it will help you before you have to give your resume to a potential employer.
-
-Please send your resume in .docx or .odt format to {{ current_round.resume_reviewer_name }} <{{ current_round.resume_reviewer_email }}>. Don't forget to include a link to a job posting that's similar to what you're looking for.
+You may also want to list volunteer roles or a non-technical job. There are many ways to learn skills that will be useful in the job you're applying for! Deb Nicholson, Software Freedom Conservancy's Director of Community Operations, used to book shows for bands. This taught her event management, negotiation with multiple stakeholders, how to get things done on a limited budget, marketing, and a lot of networking skills. All of those skills are highly relevant to the job Deb does now, working directly with Conservancy's member communities, organizing Copyleft Conf, and promoting Conservancy.
 
 If you have any questions, please contact the Outreachy organizers organizers@outreachy.org
 
