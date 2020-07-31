@@ -896,7 +896,7 @@ class Comrade(models.Model):
             max_length=4,
             choices=PRONOUN_CHOICES,
             default='they',
-            help_text="Your preferred pronoun. This will be used in emails from Outreachy organizers directly to you. The format is subject/object/possessive pronoun. Example: '__(subject)__ interned with Outreachy. The mentor liked working with __(object)__. The opportunity was __(possessive pronoun)__ to grab.",
+            help_text="Common pronouns include she/her, he/him, or they/them. Neopronouns are also welcome! Your pronouns may be (optionally) displayed to Outreachy organizers, applicants, mentors, and (optionally) displayed on the public Outreachy alums page. See the pronoun privacy options below.",
             )
 
     pronouns_to_participants = models.BooleanField(
