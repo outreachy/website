@@ -28,7 +28,7 @@ Outreachy Alums
 		{% endifchanged %}
 		<div class="card-body">
 			{% if intern.photo %}
-				<img src="{{ intern.photo.url }}" class="img-thumbnail float-left mr-3" alt="Photo of {{ intern.public_name }}" height="200" width="200" alt="Photo of {{ intern.public_name }}">
+				<img src="{{ intern.photo.url }}" class="img-thumbnail float-left mr-3" alt="Photo of {{ intern.public_name }}" height="200" width="200">
 			{% else %}
 			{% static 'outreachy-bot-200x200-avatar-1.png' as avatar1 %}
 			{% static 'outreachy-bot-200x200-avatar-2.png' as avatar2 %}
