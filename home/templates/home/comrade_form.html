@@ -50,7 +50,7 @@
 				<div class = "card-body">
 					{% if comrade.photo %}
 						<p>Current photo:</p>
-						<img src="{{ intern.photo.url }}" class="img-thumbnail float-left mr-3" alt="Photo of {{ intern.public_name }}" height="200" width="200">
+						<img src="{{ comrade.photo.url }}" class="img-thumbnail float-left mr-3" alt="Photo of {{ comrade.public_name }}" height="200" width="200">
 					{% else %}
 						<p>Default avatar:</p>
 						<img src='{% static 'outreachy-bot-200x200-avatar-1.png' %}' class="img-thumbnail float-left mr-3" height="200" width="200" alt="Default avatar for {{ intern.public_name }}">
