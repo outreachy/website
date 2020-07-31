@@ -24,7 +24,6 @@ class ComradeFactory(factory.django.DjangoModelFactory):
     account = factory.SubFactory(UserFactory)
 
     public_name = factory.Faker('name')
-    nick_name = factory.Faker('first_name')
 
     name_suffix = factory.Faker('suffix')
 
