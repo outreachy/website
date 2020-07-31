@@ -168,53 +168,25 @@ class ActivationView(hmac_views.ActivationView):
 class ActivationCompleteView(TemplateView):
     template_name = 'registration/activation_complete.html'
 
+# FIXME - we need a way for comrades to update and re-verify their email address.
 class ComradeUpdate(LoginRequiredMixin, UpdateView):
-    # FIXME - we need a way for comrades to change their passwords
-    # and update and re-verify their email address.
-
-    def get_form_class(self):
-        # We want to have different fields for different comrades, but
-        # self.fields is shared across all instances of this view, so we can't
-        # use that. There's no get_fields() method we can override, either, so
-        # the only hook we can use is overriding this method of ModelFormMixin.
-        fields = [
-            'public_name',
-            'nick_name',
-            'legal_name',
-            'pronouns',
-            'pronouns_to_participants',
-            'pronouns_public',
-        ]
-
-        comrade = self.object
-
-        # was an approved coordinator for a community that had at least one approved participation
-        coordinatored = comrade.coordinatorapproval_set.approved().filter(
-            community__participation__approval_status=ApprovalStatus.APPROVED,
-        )
-        # was an approved mentor for some approved project in an approved community
-        mentored = comrade.get_mentored_projects().approved().filter(
-            project_round__approval_status=ApprovalStatus.APPROVED,
-        )
-        # was an approved application reviewer at some point
-        reviewered = comrade.applicationreviewer_set.approved()
-
-        # people who participated in some way at some time can set a photo of themselves
-        if comrade.account.is_staff or comrade.get_intern_selection() is not None or coordinatored.exists() or mentored.exists() or reviewered.exists():
-            fields.append('photo')
-
-        fields.extend([
-            'timezone',
-            'location',
-            'nick',
-            'github_url',
-            'gitlab_url',
-            'blog_url',
-            'blog_rss_url',
-            'twitter_url',
-            'agreed_to_code_of_conduct',
-        ])
-        return modelform_factory(comrade.__class__, fields=fields)
+    fields = [
+        'public_name',
+        'legal_name',
+        'pronouns',
+        'pronouns_to_participants',
+        'pronouns_public',
+        'photo',
+        'timezone',
+        'location',
+        'github_url',
+        'gitlab_url',
+        'nick',
+        'blog_url',
+        'blog_rss_url',
+        'twitter_url',
+        'agreed_to_code_of_conduct',
+    ]
 
     def get_object(self):
         # Either grab the current comrade to update, or make a new one
