@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 <h1>Outreachy Community Member Information</h1>
@@ -8,28 +9,82 @@
 {% include "home/snippet/privacy_policy.html" %}
 
 <form enctype="multipart/form-data" method="post" action="">
-{% csrf_token %}
-    <h2>Required Information</h2>
-    {% for field in form.visible_fields %}
-    <div class="form-group">
-	{{ field.errors }}
-	{% if 'photo' in field.label_tag %}
-	<h2>Optional Information</h2>
-	{% elif 'Code of Conduct' in field.label_tag %}
-	{{ codeofconduct|safe }}
+	{% csrf_token %}
+	{{ form.media }}
+	{{ form.non_field_errors }}
+	<h2 class='pt-4'>Required Information</h2>
 	<hr>
-	<h2>Agree to the Outreachy Code of Conduct</h2>
-	{% endif %}
-	{{ field.label_tag }}
-	{{ field }}
-	{% if field.help_text %}
-	<div class="text-muted">{{ field.help_text|safe }}</div>
-	{% endif %}
-    </div>
-    {% endfor %}
-    {% for hidden in form.hidden_fields %}
-	{{ hidden }}
-    {% endfor %}
+	{% for field in form.visible_fields %}
+		{% if 'public_name' in field.label_tag %}
+			<h3 class='mt-4'>Name</h3>
+		{% elif 'photo' in field.label_tag %}
+			<h2 class='pt-5'>Optional Information</h2>
+			<hr>
+			<h3>Profile Picture</h3>
+		{% elif 'timezone' in field.label_tag %}
+			<h3>Location</h3>
+		{% elif 'github' in field.label_tag %}
+			<h3>Open source accounts</h3>
+		{% elif 'blog_url' in field.label_tag %}
+			<h3>Social media accounts</h3>
+		{% elif 'Code of Conduct' in field.label_tag %}
+			{{ codeofconduct|safe }}
+			<hr>
+			<h2>Agree to the Outreachy Code of Conduct</h2>
+		{% endif %}
+
+		<div class="form-group card">
+			{{ field.errors }}
+
+			{% if 'pronouns_to_participants' in field.label_tag or 'pronouns_public' in field.label_tag %}
+				<div class = "card-header">
+					{{ field.label_tag|safe }}
+				</div>
+				<div class = "card-body">
+					{{ field }} {{ field.help_text|safe }}
+				</div>
+			{% elif 'photo' in field.label_tag %}
+				<div class = "card-header">
+					{{ field.label_tag|safe }}
+				</div>
+				<div class = "card-body">
+					{% if comrade.photo %}
+						<p>Current photo:</p>
+						<img src="{{ intern.photo.url }}" class="img-thumbnail float-left mr-3" alt="Photo of {{ intern.public_name }}" height="200" width="200">
+					{% else %}
+						<p>Default avatar:</p>
+						<img src='{% static 'outreachy-bot-200x200-avatar-1.png' %}' class="img-thumbnail float-left mr-3" height="200" width="200" alt="Default avatar for {{ intern.public_name }}">
+					{% endif %}
+					<p>{{ field }}</p>
+				</div>
+				<div class="card-footer bg-white">
+					<p>Photo privacy policy:</p>
+					<ul>
+						<li>Applicant photos will not be displayed to organizers, mentors, or coordinators.</li>
+						<li>Selected interns and alums will have their photos displayed on the <a href='{% url 'alums' %}'>Outreachy alums page</a>.</li>
+						<li>Career chat volunteers will have their photos displayed on the chat volunteers page.</li>
+					</ul>
+				</div>
+			{% else %}
+				<div class = "card-header">
+					{{ field.label_tag|safe }}
+				</div>
+				<div class = "card-body">
+					{{ field }}
+				</div>
+				{% if field.help_text %}
+					<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+					{% comment %}<div class="text-muted">{{ field.help_text|safe }}</div>{% endcomment %}
+				{% endif %}
+			{% endif %}
+		</div>
+		{% if 'legal_name' in field.label_tag %}
+			<h2>Pronouns</h2>
+		{% endif %}
+	{% endfor %}
+	{% for hidden in form.hidden_fields %}
+		{{ hidden }}
+	{% endfor %}
 <input type="submit" class="btn btn-block btn-primary" value="Save" />
 <input type="hidden" name="next" value="{{ next }}" />
 </form>
