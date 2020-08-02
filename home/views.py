@@ -1393,9 +1393,9 @@ class InviteMentor(LoginRequiredMixin, ComradeRequiredMixin, FormView, SingleObj
 
 class MentorApprovalAction(ApprovalStatusAction):
     fields = [
-            'instructions_read',
-            'understands_intern_time_commitment',
             'understands_applicant_time_commitment',
+            'understands_intern_time_commitment',
+            'instructions_read',
             'understands_mentor_contract',
             'mentored_before',
             'mentorship_style',
