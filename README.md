@@ -452,6 +452,29 @@ All user accounts created by scenarios.py have the password 'test'. Usernames ar
 
 The names and email addresses are randomly generated. That means the email won't match the name (e.g. "Megan Huntington <terrysmith@example.com>"). Unfortunately the library used to generate names and emails is very western-English centric.
 
+### Community sign-up scenario
+
+You can re-create how the Outreachy website looks when we first announce the internship round dates. This is the time when communities and mentors start to sign up to participate, but initial applications are not yet open.
+
+Run `./manage.py shell` and then enter the following code:
+
+```
+>>> from home import scenarios
+>>> scenario = scenarios.CommunitySignupUnderwayScenario()
+```
+
+This will create an internship round (`class RoundPage`) with dates and deadlines.
+
+The scenario code will create an open source community (`class Community`). The community will be marked as being approved to participate in the current internship round (`class Participation`).
+
+The code will also create accounts for coordinators, mentors, and initial application reviewers. All passwords for those accounts are set to 'test'. The following account usernames are created:
+ - mentor1
+ - coordinator1 - coordinator for mentor1's open source community
+ - reviewer1 - initial application reviewer
+
+The scenario code will create a project that mentor1 has submitted. The code generates random text for the project name (and the community name). The project has been approved by coordinator1.
+
+
 ### Intern selection period test scenario
 
 If you want to re-create how the Outreachy website looks during the intern selection process, you can run `./manage.py shell` and enter the following code:
@@ -474,6 +497,7 @@ That will create a new community with three mentors (each with a project), and t
 >>> FinalApplication.objects.all()
 ```
 
+
 ### Internship Week N test scenario
 
 You can re-create how the Outreachy website looks during a particular week of the internship. For example, if you want to see how the website looks during week 8 of the internship, you can run `./manage.py shell` and enter the following code:
@@ -483,13 +507,15 @@ You can re-create how the Outreachy website looks during a particular week of th
 >>> scenario = scenarios.InternshipWeekScenario(week=8)
 ```
 
-This will create accounts for coordinators, mentors, and interns. All passwords for those accounts are set to 'test'. The following account usernames are created:
+The code will also create accounts for coordinators, mentors, and initial application reviewers. All passwords for those accounts are set to 'test'. The following account usernames are created:
  - applicant1 - first intern
  - applicant2 - second intern
  - applicant3 - third intern
  - mentor1 - mentor of applicant1
  - mentor2 - mentor of applicant2
  - mentor3 - mentor of applicant3
+ - coordinator1 - coordinator for community for mentors 1-3
+ - reviewer1 - initial application reviewer
 
 # Running tests manually
 
