@@ -34,6 +34,9 @@ Informal Chat Contacts
 						<div class="col">
 							<div class="card-text">
 								<b>Email:</b> "{{ contact.get_name }}" &lt;{{ contact.get_email}}&gt;
+								{% if contact.comrade.pronouns_to_participants %}
+									<BR><b>Pronouns:</b> {{ contact.comrade.get_pronouns_html|safe }}<BR>
+								{% endif %}
 								{% if contact.relationship_to_outreachy %}
 									<BR><b>Relation to Outreachy:</b> {{ contact.relationship_to_outreachy }}
 								{% endif %}
