@@ -61,10 +61,12 @@
 	{% for field in form %}
 		{% if 'Have you been a mentor for Outreachy before' in field.label_tag %}
 			<h3>Mentor Profile Details</h3>
+			<hr>
 		{% endif %}
 		{% if 'Understands applicant time commitment' in field.label_tag %}
 			<div class="form-group card">
 				<div class="card-body bg-warning">
+					{{ field.errors }}
 					{{ field }}
 					I commit to volunteer <b>5 to 10 hours a week</b> from {{ project.project_round.participating_round.contributions_open }} to {{ project.project_round.participating_round.contributions_close }}
 				</div>
@@ -73,6 +75,7 @@
 		{% elif 'Understands intern time commitment' in field.label_tag %}
 			<div class="form-group card">
 				<div class="card-body bg-warning">
+					{{ field.errors }}
 					{{ field }}
 					I commit to volunteer <b>5 hours a week</b> from {{ project.project_round.participating_round.internstarts }} to {{ project.project_round.participating_round.internends }}.
 				</div>
