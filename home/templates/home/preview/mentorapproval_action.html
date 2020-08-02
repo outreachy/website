@@ -62,11 +62,24 @@
 		{% if 'Have you been a mentor for Outreachy before' in field.label_tag %}
 			<h3>Mentor Profile Details</h3>
 		{% endif %}
-		{% if 'Instructions read' in field.label_tag or 'Understands ' in field.label_tag %}
+		{% if 'Understands applicant time commitment' in field.label_tag %}
 			<div class="form-group card">
-				<div class="card-header">
-					{{ field.label_tag }}
+				<div class="card-body bg-warning">
+					{{ field }}
+					I commit to volunteer <b>5 to 10 hours a week</b> from {{ project.project_round.participating_round.contributions_open }} to {{ project.project_round.participating_round.contributions_close }}
 				</div>
+				<div class="card-footer bg-white">Mentors must commit to helping applicants and reviewing their contributions. Mentors spend 5 to 10 hours per week during the contribution period ({{ project.project_round.participating_round.contributions_open }} to {{ project.project_round.participating_round.contributions_close }}).</div>
+			</div>
+		{% elif 'Understands intern time commitment' in field.label_tag %}
+			<div class="form-group card">
+				<div class="card-body bg-warning">
+					{{ field }}
+					I commit to volunteer <b>5 hours a week</b> from {{ project.project_round.participating_round.internstarts }} to {{ project.project_round.participating_round.internends }}.
+				</div>
+				<div class="card-footer bg-white">Mentors must commit to volunteer at least 5 hours per week during the internship period ({{ project.project_round.participating_round.internstarts }} to {{ project.project_round.participating_round.internends }}).</div>
+			</div>
+		{% elif 'Instructions read' in field.label_tag or 'Understands ' in field.label_tag %}
+			<div class="form-group card">
 				<div class="card-body">
 					{{ field }}
 					{{ field.help_text|safe }}
