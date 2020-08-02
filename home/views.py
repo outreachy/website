@@ -26,6 +26,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
 from formtools.wizard.views import SessionWizardView
 from itertools import chain, groupby
+import json
 from markdownx.utils import markdownify
 from registration.forms import RegistrationForm
 from registration.backends.hmac import views as hmac_views
@@ -1397,6 +1398,7 @@ class MentorApprovalAction(ApprovalStatusAction):
             'understands_intern_time_commitment',
             'instructions_read',
             'understands_mentor_contract',
+            'employer',
             'mentored_before',
             'mentorship_style',
             'longevity',
@@ -1420,6 +1422,98 @@ class MentorApprovalAction(ApprovalStatusAction):
             return MentorApproval.objects.get(mentor=mentor, project=project)
         except MentorApproval.DoesNotExist:
             return MentorApproval(mentor=mentor, project=project)
+
+    def get_context_data(self, **kwargs):
+        employers = set(MentorApproval.objects.exclude(employer='Prefer not to say').exclude(employer='Unemployed').exclude(employer='Self employed').values_list('employer', flat=True).distinct())
+        employers.update([
+                    "Akamai",
+                    "Amazon Web Services (AWS)",
+                    "Automattic",
+                    "Berkeley Institute For Data Science (BIDS)",
+                    "Bloomberg",
+                    "Ceph Foundation",
+                    "CISCO",
+                    "Cloud Native Computing Foundation (CNCF)",
+                    "Cloudera",
+                    "Code for Science & Society (CSS)",
+                    "Codethink",
+                    "Codeweavers",
+                    "Collabora",
+                    "Comcast",
+                    "Continuous Delivery Foundation (CDF)",
+                    "Creative Commons Corporation",
+                    "DigitalOcean",
+                    "Discourse",
+                    "Electronic Frontier Foundation (EFF)",
+                    "Endless",
+                    "F# Software Foundation",
+                    "Fondation partenariale Inria / Fondation OCaml",
+                    "Ford Foundation",
+                    "Free Software Foundation (FSF)",
+                    "GatsbyJS",
+                    "GitHub",
+                    "GitLab",
+                    "GNOME Foundation Inc",
+                    "Goldman Sachs",
+                    "Google",
+                    "Haiku, Inc.",
+                    "Hewlett Packard Enterprise",
+                    "IBM",
+                    "Igalia",
+                    "Indeed",
+                    "Intel Corporation",
+                    "Lightbend",
+                    "Linaro",
+                    "Linux Foundation",
+                    "Mapbox",
+                    "Mapzen",
+                    "Measurement Lab",
+                    "Microsoft",
+                    "Mozilla Corporation",
+                    "Mozilla Foundation",
+                    "NumFOCUS, Inc",
+                    "Open Bioinformatics Foundation (OBF)",
+                    "OpenHatch",
+                    "OpenStack Foundation",
+                    "Open Technology Institute",
+                    "Python Software Foundation",
+                    "Rackspace",
+                    "Red Hat",
+                    "Samsung",
+                    "Shopify",
+                    "Software in the Public Interest (SPI)",
+                    "Terasology Foundation",
+                    "The Open Information Security Foundation (OISF)",
+                    "The Perl Foundation (TPF)",
+                    "Tidelift",
+                    "Twitter",
+                    "United Nations Foundation",
+                    "University of Cambridge",
+                    "Wellcome Trust",
+                    "Wikimedia Foundation",
+                    "Xen Project",
+                    "Zulip",
+                    "Yocto Project",
+                    "X.org Foundation",
+
+                ])
+        employers = ([
+                    "Prefer not to say",
+                    "Unemployed",
+                    "Self employed",
+            ]) + sorted(employers)
+
+        context = super(MentorApprovalAction, self).get_context_data(**kwargs)
+        context.update({
+            # Make sure that someone can't inject code in another person's
+            # browser by adding a maliciously encoded employer.
+            # json.dumps() takes the employer list (encoded as a Python list)
+            # and encodes the list in JavaScript object notation.
+            # mark_safe means this data has already been cleaned,
+            # and the Django template code shouldn't clean it.
+            'employers': mark_safe(json.dumps(employers)),
+            })
+        return context
 
     def get_success_url(self):
         # BaseProjectEditPage doesn't allow people who aren't

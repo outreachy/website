@@ -84,9 +84,27 @@
 		{% elif 'Instructions read' in field.label_tag or 'Understands ' in field.label_tag %}
 			<div class="form-group card">
 				<div class="card-body">
+					{{ field.errors }}
 					{{ field }}
 					{{ field.help_text|safe }}
 				</div>
+			</div>
+		{% elif 'Employer' in field.label_tag %}
+			<h3>Employment info</h3>
+			<hr>
+
+			<p>Outreachy organizers collect statistics about who mentors work for. This allows us to report anonymized statistics to Outreachy sponsors about how many of their employees participate as Outreachy mentors. The statistics help Outreachy organizers secure continued sponsorship.</p>
+			<p>Some sponsors may want to offer training and other leadership opportunities to employees who are Outreachy mentors. We will ask for your consent before sharing your contact information with Outreachy sponsors.</p>
+			<p>If you do not want to share your employer with Outreachy organizers, type 'Prefer not to say'.</p>
+			<p>Your employer will not be displayed to Outreachy applicants.</p>
+			<div class="form-group card">
+				<div class="card-header">
+					{{ field.label_tag }}
+				</div>
+				<div class="card-body">
+					{{ field }}
+				</div>
+				{{ field.errors }}
 			</div>
 		{% elif 'Delete' in field.label_tag %}
 			<div class="form-group card border-warning">
@@ -117,4 +135,21 @@
 </form></p>
 
 {% endwith %}
+{% endblock %}
+
+{% block extra_css %}
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+{% endblock %}
+
+{% block extra_js %}
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script>
+		$(function() {
+			var suggested_employers = {{ employers }};
+			$("#id_employer").autocomplete({
+				source: suggested_employers
+			});
+		});
+	</script>
 {% endblock %}

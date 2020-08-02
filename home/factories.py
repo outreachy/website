@@ -318,6 +318,7 @@ class MentorApprovalFactory(factory.django.DjangoModelFactory):
 
     mentor_foss_contributions = factory.Faker('paragraph')
     mentorship_style = factory.Faker('paragraph')
+    employer = factory.Faker('name')
 
 class CoordinatorApprovalFactory(factory.django.DjangoModelFactory):
     class Meta:

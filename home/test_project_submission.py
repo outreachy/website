@@ -166,6 +166,7 @@ class ProjectSubmissionTestCase(TestCase):
         understands_mentor_contract='on',
         mentored_before='OUT'
         mentorship_style='Weekly meetings by phone or video chat.'
+        employer='Foo Bar Labs'
         longevity='2Y'
         mentor_foss_contributions="I'm a Debian maintainer on the Debian Med team."
         communication_channel_username='foobar'
@@ -177,6 +178,7 @@ class ProjectSubmissionTestCase(TestCase):
             'understands_mentor_contract': understands_mentor_contract,
             'mentored_before': mentored_before,
             'mentorship_style': mentorship_style,
+            'employer': employer,
             'longevity': longevity,
             'mentor_foss_contributions': mentor_foss_contributions,
             'communication_channel_username': communication_channel_username,
@@ -190,6 +192,7 @@ class ProjectSubmissionTestCase(TestCase):
                 project=project,
                 mentored_before=mentored_before,
                 mentorship_style=mentorship_style,
+                employer=employer,
                 longevity=longevity,
                 mentor_foss_contributions=mentor_foss_contributions,
                 communication_channel_username=communication_channel_username,

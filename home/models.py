@@ -2046,6 +2046,11 @@ class MentorApproval(ApprovalStatus):
         help_text="Do you prefer short daily standups, longer weekly reports, or informal progress reports? Are you willing to try pair programming when your intern gets stuck? Do you like talking over video chat or answering questions via email? Give the applicants a sense of what it will be like to work with you during the internship.",
     )
 
+    employer = models.CharField(
+        max_length=SENTENCE_LENGTH,
+        verbose_name="Employer",
+    )
+
     def __str__(self):
         return '{mentor} - {start:%Y %B} to {end:%Y %B} round - {community} - {title}'.format(
             mentor=self.mentor.public_name,
