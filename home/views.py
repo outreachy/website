@@ -37,6 +37,7 @@ from . import email
 from .dashboard import get_dashboard_sections
 
 from .forms import InviteForm
+from .forms import RenameProjectSkillsForm
 from .forms import RadioBooleanField
 
 from .mixins import ApprovalStatusAction
@@ -1626,6 +1627,39 @@ class CommunicationChannelsEditPage(BaseProjectEditPage):
     template_name_suffix = '_channels_form'
     form_class = inlineformset_factory(Project, CommunicationChannel, fields='__all__')
     next_view = 'project-read-only'
+
+class ProjectSkillsRename(LoginRequiredMixin, FormView):
+    template_name = 'home/rename_project_skills.html'
+    form_class = RenameProjectSkillsForm
+
+    def get_form(self, *args, **kwargs):
+        # This method is called during both GET and POST, before
+        # get_context_data or form_valid, but after the login checks have run.
+        # So it's a semi-convenient common place to set self.object.
+        user = self.request.user
+        if not user.is_staff:
+            raise PermissionDenied("Only Outreachy organizers can rename project skills across all submitted projects.")
+
+        ids = self.request.GET.get('ids').split(',')
+        self.project_skills = ProjectSkill.objects.filter(pk__in=ids).order_by('skill')
+
+        return super(ProjectSkillsRename, self).get_form(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(ProjectSkillsRename, self).get_context_data(**kwargs)
+        context.update({
+            'project_skills' : self.project_skills,
+            })
+        return context
+
+    def form_valid(self, form):
+        new_name = form.cleaned_data['new_name']
+        # iterate over self.project_skills, set new name
+        for ps in self.project_skills:
+            ps.skill = new_name
+            ps.save()
+        # Redirect back to the admin page for listing all ProjectSkill objects
+        return redirect('admin:home_projectskill_changelist')
 
 class MentorApprovalPreview(Preview):
     def get_object(self):

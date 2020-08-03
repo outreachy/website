@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}
+Bulk project skills rename
+{% endblock %}
+
+{% block content %}
+<h2>Bulk project skills rename</h1>
+
+<p>Old names:</p>
+
+<ul>
+	{% for ps in project_skills %}
+		<li>{{ ps.skill }}</li>
+	{% endfor %}
+</ul>
+
+<form method="post" action="">
+{% csrf_token %}
+{{ form.as_p }}
+<input class="btn btn-primary" type="submit" value="Rename" />
+<a href="{% url 'admin:home_projectskill_changelist' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

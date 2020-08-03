@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
+from django.shortcuts import redirect
+from django.urls import reverse
 
 import reversion.admin
 
@@ -175,6 +177,31 @@ class CommunityAdmin(admin.ModelAdmin):
             'website',
             'description',
             )
+
+
+class ProjectSkillAdmin(reversion.admin.VersionAdmin):
+    model = ProjectSkill
+    verbose_name_plural = 'Project Skills'
+    list_display = (
+            'skill',
+            )
+    list_filter = (
+            'project__project_round__participating_round',
+            'project__project_round__community',
+            )
+    search_fields = (
+            'skill',
+            'project__project_round__community__name',
+            )
+    raw_id_fields = (
+            'project',
+            )
+    actions = ['rename_project_skills']
+
+    def rename_project_skills(modeladmin, request, queryset):
+        selected_objects = queryset.values_list('pk', flat=True)
+        # Redirect to a page that renames all skills with old name to new name
+        return redirect(reverse('rename-project-skills') + '?ids={}'.format(','.join([str(pk) for pk in selected_objects])))
 
 class SkillsInline(admin.StackedInline):
     model = ProjectSkill
@@ -657,4 +684,5 @@ admin.site.register(OfficialSchool, OfficialSchoolAdmin)
 admin.site.register(Participation, ParticipationAdmin)
 admin.site.register(RoundPage, RoundPageAdmin)
 admin.site.register(Project, ProjectAdmin)
+admin.site.register(ProjectSkill, ProjectSkillAdmin)
 admin.site.register(SignedContract, SignedContractAdmin)

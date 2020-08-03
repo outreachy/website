@@ -30,3 +30,6 @@ class InviteForm(forms.Form):
 
     def get_address(self):
         return Address(self.cleaned_data['name'], addr_spec=self.cleaned_data['email_address'])
+
+class RenameProjectSkillsForm(forms.Form):
+    new_name = forms.CharField()
