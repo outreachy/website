@@ -185,6 +185,7 @@ class ProjectSkillAdmin(reversion.admin.VersionAdmin):
     list_display = (
             'skill',
             )
+    ordering = ['skill']
     list_filter = (
             'project__project_round__participating_round',
             'project__project_round__community',
