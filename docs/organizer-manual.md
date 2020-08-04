@@ -493,6 +493,90 @@ A good piece of advice from an Outreachy mentor:
 There is no harm in asking them although it might feel awkward if you're not used to it :). Many of us are afraid that this is self-promotion and we don't like to do it, but your mentor is probably happy to help you!'
 ```
 
+# Week 12: Informal chats
+
+
+An informal chat is a conversation with another person. It can be as simple as trying to answer one question.
+
+For interns, mentors, and alums: Have you ever had a talk (with a professor, or family member) where you had a goal or something you wanted to talk about?
+
+For me, my spouse and I have a weekly "check in" meeting. We talk about how our relationship is doing, what our schedule looks like for the week, and we make a grocery list.
+
+
+When I was a student, I never wanted to talk to professors outside of class. I felt ashamed if I had to ask questions during office hours. But a fellow classmate encouraged me to go to office hours. They said that part of the professor's job was to answer questions.
+
+In fact, they hung out in a computer science professor's office all the time! They talked to the professor about student projects and interesting new software. In turn, the professor shared information about research opportunities, talked about interesting software, and connected them to people in open source communities.
+
+I wish I had connected to professors in a more informal way. I also wish I had done more informal chats with my co-workers when I worked at Intel. I was so focused on doing my work that I didn't spend as much time networking. And I think it would have helped my career to network more.
+
+
+What are other people's stories about talking to a professor, family member, or friend with a particular goal in mind?
+
+
+```
+I worry because sometimes people build up these conversations of "this is your ONE CHANCE to talk to this person" when really sometimes having a small informal conversation can make a difference in getting information.
+```
+
+We've seen in other chats that many people find jobs through networking. One technique is when you see a job posting, think of everyone you know who works at that company or organization. Then ask those contacts:
+
+"What's it like working there?"
+"Do you know anyone who works on that team?"
+"I'm thinking of applying, is there anything I should know?"
+"Do you have any tips if I get called in for an interview?"
+"Is there anything I should know?"
+
+---
+
+For mentors, alums, and interns: If you had to ask someone do an informal chat, how would you feel about? Add an emoji that expresses your reaction.
+
+Okay, now I want everyone to imagine this scenario. You've landed your dream job. It was challenging to get hired, but the team you're working with is amazing.
+
+After a year, someone you know contacts you and says: "I'm thinking about applying to your company. What's it like working there? Can we chat about it?"
+
+Add an emoji that expresses your feelings about them asking to talk to you.
+
+---
+
+
+I know asking for an informal chat can seem intimidating. What are people's concerns?
+
+
+Sometimes we get anxious about talking to people. We imagine how awful it could be. But, it's helpful to ask ourselves two questions:
+
+ - What's the worst that could happen?
+ - How likely is it to happen?
+
+I think the worst thing that has happened to me is not getting an email back. And I can't assume why someone didn't email me back. They could be busy that week. I think we like to jump to the worst case scenario when someone doesn't answer back.
+
+Also, sometimes people just don't see your message. A lot of people only log in to LinkedIn every couple months. Or your message gets lost in a lot of other social media notifications.
+
+If you approach someone via email, and you don't get a reply within a week or two, don't feel shy to send one ping. As long as you're not sending a ping after one day, and you're friendly about it ("Hey, I sent you this email two weeks ago, and I'm still super interested in your answers!"), people usually don't mind.
+
+
+And if the person you approach for an informational chat is really busy, sometimes that advice is "read this blog post" or "here's the link to the applicant guide". Even if you approach someone for a conversation, and they just send you resources, that's still very useful.
+
+
+Sometimes we convince ourselves that people are going to be rude to us. But then it turns out to not be true! Other times, people are blunt or rude when saying no. It's important to recognize that is hurtful, and also that means we need to find people who are more encouraging.
+
+It can be helpful to ask your mentor to connect you to people you want to have an informal chat with. Having a mentor who is experienced and a respected community member can mean the other person is more willing to talk, or they're nicer about saying no. Also, your mentor is often better at describing your work and role in a positive way! So do ask your mentor to provide an introduction if they have a connection to the person you want to do an informal interview with.
+
+
+If you're approaching a stranger, do your research first! The goal is ask specific questions that won't take up too much time. Try to ask questions that aren't public, like what the company culture feels like as an employee.
+
+
+I've also had people say, "Can I email you a list of questions?" after I say I don't have time for a video chat. That helps, since I maybe don't have mental bandwidth to talk on the phone. If you do send questions, keep the list short, like 3-5 questions.
+
+
+If asking someone via chat (when you might feel more pressure for them to respond sooner) is too much, then maybe starting with an email. Or maybe it's you starting in IRC and saying "I'd love to ask you 1-2 specific questions that might help my career, but I want to be respectful of your time, can I email them to you so you can get back on your schedule?"
+
+
+One thing I want to bring up is that in these conversations it's ok (and sometimes useful) to say "I don't know something" so saying to someone "I’ve never heard of that. How does that work? " does not make you look bad but is a great conversation starter
+
+
+
+Make sure to send a thank you email to people you do an informal chat with! You're asking them for their time, and sending a thank you email can help them remember you later. If the person sends you a follow up email later,
+
+
 
 # Week 14: Wrap up chat
 
