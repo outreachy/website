@@ -9,7 +9,7 @@
 			<div class="row card-text">
 				<div class="col-sm card-text border">{{ skill.skill }}</div>
 				<div class="col-md card-text border">Required</div>
-				<div class="col-md card-text border"><button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="{{ skill.get_experience_level_display }}">{{ skill.get_skill_level_display }}</button></div>
+				<div class="col-md card-text border"><button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="{{ skill.get_skill_experience_level_display }}">{{ skill.get_skill_level_display }}</button></div>
 			</div>
 		{% endfor %}
 
@@ -17,7 +17,7 @@
 			<div class="row card-text">
 				<div class="col-sm card-text border">{{ skill.skill }}</div>
 				<div class="col-md card-text border">Preferred</div>
-				<div class="col-md card-text border"><button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="{{ skill.get_experience_level_display }}">{{ skill.get_skill_level_display }}</button></div>
+				<div class="col-md card-text border"><button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="{{ skill.get_skill_experience_level_display }}">{{ skill.get_skill_level_display }}</button></div>
 			</div>
 		{% endfor %}
 
@@ -25,7 +25,7 @@
 			<div class="row card-text">
 				<div class="col-sm card-text border">{{ skill.skill }}</div>
 				<div class="col-md card-text border">Nice to have</div>
-				<div class="col-md card-text border"><button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="{{ skill.get_experience_level_display }}">{{ skill.get_skill_level_display }}</button></div>
+				<div class="col-md card-text border"><button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="{{ skill.get_skill_experience_level_display }}">{{ skill.get_skill_level_display }}</button></div>
 			</div>
 		{% endfor %}
 	</div></p>

@@ -1884,11 +1884,11 @@ class ProjectSkill(models.Model):
     FAMILIAR = 'FAM'
     CHALLENGE = 'CHA'
     EXPERIENCE_CHOICES = (
-            (TEACH_YOU, 'Mentors are willing to teach this skill to applicants with no experience at all'),
-            (CONCEPTS, 'Applicants should have read about the skill'),
-            (EXPERIMENTATION, 'Applicants should have used this skill in class or personal projects'),
-            (FAMILIAR, 'Applicants should be able to expand on their skills with the help of mentors'),
-            (CHALLENGE, 'Applicants who are experienced in this skill will have the chance to expand it further'),
+            (TEACH_YOU, 'No knowledge required'),
+            (CONCEPTS, 'Concepts'),
+            (EXPERIMENTATION, 'Experimented'),
+            (FAMILIAR, 'Comfortable'),
+            (CHALLENGE, 'Challenge'),
             )
     experience_level = models.CharField(
             max_length=3,
@@ -1902,16 +1902,15 @@ class ProjectSkill(models.Model):
     OPTIONAL = 'OPT'
     STRONG = 'STR'
     REQUIRED_CHOICES = (
-            (BONUS, "It would be nice if applicants had this skill, but it will not impact intern selection"),
-            (OPTIONAL, "Mentors will prefer applicants who have this skill"),
-            (STRONG, "Mentors will only accept applicants who have this skill as an intern"),
+            (BONUS, "Optional"),
+            (OPTIONAL, "Preferred"),
+            (STRONG, "Required"),
             )
     required = models.CharField(
             max_length=3,
             choices=REQUIRED_CHOICES,
             default=BONUS,
             verbose_name="Skill impact on intern selection",
-            help_text="Is this skill a hard requirement, a preference, or an optional bonus? Choose this carefully! Many Outreachy applicants choose not to apply for an internship project unless they meet 100% of the project skill criteria.",
             )
 
     def get_skill_level_display(self):
@@ -1925,6 +1924,18 @@ class ProjectSkill(models.Model):
             return "4"
         if self.experience_level == self.CHALLENGE:
             return "5"
+
+    def get_skill_experience_level_display(self):
+        if self.experience_level == self.TEACH_YOU:
+            return "(No knowledge required) Mentors are willing to teach this skill to applicants with no experience at all"
+        if self.experience_level == self.CONCEPTS:
+            return "(Concepts) Applicants should have read about the skill"
+        if self.experience_level == self.EXPERIMENTATION:
+            return "(Experimented) Applicants should have used this skill in class or personal projects"
+        if self.experience_level == self.FAMILIAR:
+            return "(Comfortable) Applicants should be able to expand on their skills with the help of mentors"
+        if self.experience_level == self.CHALLENGE:
+            return "(Challenge) Applicants who are experienced in this skill will have the chance to expand it further"
 
     def get_requirement_short_code(self):
         if self.required == self.STRONG:

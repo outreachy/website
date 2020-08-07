@@ -21,71 +21,129 @@ You can always edit this information later.
 </p>
 <h1>Add Project Skills</h1>
 
-<p>Outreachy applicants often search for projects that fit the skills
-they have, or the skills they want to learn.  However, if mentors aren't
-specific about what skills applicants need in order to apply versus what
-skills are optional, applicants may decide they "aren't qualified" when
-they are. Applicants with imposter syndrome will often believe they need
-to be an "expert" in a particular skill in order to apply. Listing
-skills this way encourages people to apply.</p>
+<p>Many Outreachy applicants have impostor syndrome. They may under-estimate
+their skills, or think they need to be an expert to apply to your project.
+People with impostor syndrome may only apply if they have 100% of the skills
+you're looking for.</p>
 
-<p>Please do not list more than one skill in the skill description.</p>
+<p>If you don't list project skills correctly, applicants may not pick your project.</p>
 
-<p>Please do not place educational restrictions (such as needing a degree) on this project. Outreachy applicants are judged on their demonstrated skills, not on their educational background. If your project requires knowledge that would normally be learned during a degree, your project contribution tasks should test applicants for that knowledge.</p>
+<p>Outreachy requires mentors to list project skills as follows:</p>
+<ul>
+	<li>Skill name (just one skill)</li>
+	<li>How much experience does applicant need in that skill?</li>
+	<li>Is the skill required, preferred, or optional for applicants?</li>
+</ul>
 
-<p>You can fill out the optional fields below. If you need to add more
-skills than there are fields, you should save this internship project
-proposal and then click 'Edit Project information'.</p>
+<h2>Guidelines</h2>
+
+<p><b>Please do NOT list more than one skill in the skill description.</b></p>
+
+<p><b>Please do NOT use full sentences.</b> The project skills are used as
+search tags. Keep skill names to 1-3 words.</p>
+
+<p><b>Please do NOT list educational restrictions (such as needing a university
+degree).</b> Outreachy applicants are judged on their demonstrated skills, not
+on their educational background. If your project requires knowledge that would
+normally be learned during a degree, your project contribution tasks should
+test applicants for that knowledge.</p>
 
 <p><form action="" method="post">
 	{% csrf_token %}
 	{{ form.management_form }}
+	{{ form.non_field_errors }}
 	{% for f in form %}
 		{% with forloop.counter as skill_number %}
-		<h2>Project Skill #{{ skill_number }}</h2>
-		{{ f.media }}
-		{% for hidden in f.hidden_fields %}
-			{{ hidden }}
-		{% endfor %}
-		{% for field in f.visible_fields %}
-			{% if 'Funding secured' in field.label_tag %}
-				<div class="form-group card">
-					<div class="card-header">
-						Project Skill #{{ skill_number }} - {{ field.label_tag }}
-					</div>
-					<div class="card-body">
-						{{ field }}
-						{{ field.help_text|safe }}
-					</div>
-				</div>
-			{% elif 'Delete' in field.label_tag %}
-				<div class="form-group card border-warning">
-					<div class="card-header text-white bg-warning">
-						Delete Project Skill #{{ skill_number }}?
-					</div>
-					<div class="card-body">
-						{{ field }} Check this box to delete this skill information.
-						{{ field.help_text|safe }}
-					</div>
-				</div>
-			{% else %}
-				<div class="form-group card">
-					{{ field.errors }}
-					<div class="card-header">
-						Project Skill #{{ skill_number }} - {{ field.label_tag }}
-					</div>
-					<div class="card-body">
-						{{ field }}
-					</div>
-					{% if field.help_text %}
-						<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+		<div class="card my-3">
+			<div class="card-header bg-info text-white">
+				<h3>Project Skill #{{ skill_number }}</h3>
+			</div>
+			<div class="card-body">
+				{{ f.media }}
+				{% for hidden in f.hidden_fields %}
+					{{ hidden }}
+				{% endfor %}
+				{% for field in f.visible_fields %}
+					{% if 'Delete' in field.label_tag %}
+						<div class="form-group card border-warning">
+							<div class="card-header text-white bg-warning">
+								Delete Project Skill #{{ skill_number }}?
+							</div>
+							<div class="card-body">
+								{{ field }} Check this box to delete this skill information.
+								{{ field.help_text|safe }}
+							</div>
+						</div>
+					{% elif 'Skill description' in field.label_tag %}
+						<div class="form-group card">
+							{{ field.errors }}
+							<div class="card-header">
+								Skill name
+							</div>
+							<div class="card-body">
+								{{ field }}
+							</div>
+						</div>
+					{% elif 'Expected skill' in field.label_tag %}
+						<div class="form-group card">
+							{{ field.errors }}
+							<div class="card-header">
+								Experience level
+							</div>
+							<div class="card-body">
+								<p>How much experience do applicants need in this skill?</p>
+								<ul>
+									<li><b>No knowledge required:</b> Mentors are willing to teach this skill to applicants with no experience at all</li>
+									<li><b>Concepts:</b> Applicants should have read about the skill</li>
+									<li><b>Experimented:</b> Applicants should have used this skill in class or personal projects</li>
+									<li><b>Comfortable:</b> Applicants should be able to expand on their skills with the help of mentors</li>
+									<li><b>Challenge:</b> Applicants who are experienced in this skill will have the chance to expand it further</li>
+								</ul>
+								{{ field }}
+							</div>
+						</div>
+					{% elif 'Skill impact' in field.label_tag %}
+						<div class="form-group card">
+							{{ field.errors }}
+							<div class="card-header">
+								Impact of skill on intern selection
+							</div>
+							<div class="card-body">
+								<p>Is this skill optional, a preference, or a hard requirement?</p>
+								<p>Choose this carefully! Many Outreachy applicants only apply to a project if they meet 100% of the skill requirements.</p>
+								<ul>
+									<li><b>Optional:</b> It would be nice if applicants had this skill, but it will not impact intern selection</li>
+									<li><b>Preferred:</b> Mentors will prefer applicants who have this skill</li>
+									<li><b>Required:</b> Mentors will only accept applicants who have this skill as an intern</li>
+								</ul>
+								{{ field }}
+							</div>
+						</div>
+					{% else %}
+						<div class="form-group card">
+							{{ field.errors }}
+							<div class="card-header">
+								{{ field.label_tag }}
+							</div>
+							<div class="card-body">
+								{{ field }}
+							</div>
+							{% if field.help_text %}
+							<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+							{% endif %}
+						</div>
 					{% endif %}
-				</div>
-			{% endif %}
-		{% endfor %}
+				{% endfor %}
+			</div>
+		</div>
 		{% endwith %}
 	{% endfor %}
 	<input class="btn btn-primary" type="submit" value="Save project skills" />
 </form></p>
+<h2>Adding more skills</h2>
+
+<p>If you need to add more skills than there are fields, you should save this
+internship project proposal and then click 'Edit Project information'.</p>
+
 
 {% endblock %}
