@@ -74,16 +74,6 @@ test applicants for that knowledge.</p>
 								{{ field.help_text|safe }}
 							</div>
 						</div>
-					{% elif 'Skill description' in field.label_tag %}
-						<div class="form-group card">
-							{{ field.errors }}
-							<div class="card-header">
-								Skill name
-							</div>
-							<div class="card-body">
-								{{ field }}
-							</div>
-						</div>
 					{% elif 'Expected skill' in field.label_tag %}
 						<div class="form-group card">
 							{{ field.errors }}

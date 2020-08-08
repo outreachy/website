@@ -7,6 +7,7 @@ import datetime
 from email.headerregistry import Address
 import random
 import os.path
+import re
 
 from django.contrib.auth.models import User
 from django.core import validators
@@ -1873,10 +1874,77 @@ class Project(ApprovalStatus):
                     )
                 )
 
+def skill_is_valid(value):
+
+    if ',' in value or '/' in value:
+        raise ValidationError("Please list only one project skill")
+
+    multiple = [
+            'and',
+            'or',
+            'with',
+            ]
+
+    for w in multiple:
+        if re.compile(r'\b({0})\b'.format(w), flags=re.IGNORECASE).search(value):
+            raise ValidationError("Please list only one project skill")
+
+    desire = [
+            'bonus',
+            'optional',
+            'optionally',
+            'preference',
+            'preferred',
+            'required',
+            ]
+
+    for w in desire:
+        if re.compile(r'\b({0})\b'.format(w), flags=re.IGNORECASE).search(value):
+            raise ValidationError("Please list requirements using drop down menus only")
+
+    experience = [
+            'basic',
+            'basics',
+            'experience',
+            'experienced',
+            'learn',
+            'learning',
+            ]
+
+    for w in experience:
+        if re.compile(r'\b({0})\b'.format(w), flags=re.IGNORECASE).search(value):
+            raise ValidationError("Please list experience level using drop down menus only")
+
+    if '(' in value or ')' in value:
+        raise ValidationError("Please use 1-3 words to describe the project skill, and don't use sentences")
+
+    verbosity = [
+            'able',
+            'ability',
+            'applicant',
+            'candidate',
+            'etc',
+            'interest',
+            'interested',
+            'familiar',
+            'open',
+            'sense',
+            'willing',
+            'with',
+            ]
+
+    for w in verbosity:
+        if re.compile(r'\b({0})\b'.format(w), flags=re.IGNORECASE).search(value):
+            raise ValidationError("Please use 1-3 words to describe the project skill, and don't use sentences")
+
 class ProjectSkill(models.Model):
     project = models.ForeignKey(Project, verbose_name="Project")
 
-    skill = models.CharField(max_length=SENTENCE_LENGTH, verbose_name="Skill description", help_text="What is one skill an the applicant needs to have in order to contribute to this internship project, or what skill will they need to be willing to learn?")
+    skill = models.CharField(
+            max_length=SENTENCE_LENGTH,
+            verbose_name="Skill name",
+            validators=[skill_is_valid],
+            )
 
     TEACH_YOU = 'WTU'
     CONCEPTS = 'CON'
