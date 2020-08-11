@@ -1893,9 +1893,11 @@ def skill_is_valid(value):
             'bonus',
             'optional',
             'optionally',
+            'must',
             'preference',
             'preferred',
             'required',
+            'should',
             ]
 
     for w in desire:
@@ -1905,29 +1907,40 @@ def skill_is_valid(value):
     experience = [
             'basic',
             'basics',
-            'experience',
+            'comfortable',
             'experienced',
             'learn',
             'learning',
+            'concepts',
             ]
 
     for w in experience:
         if re.compile(r'\b({0})\b'.format(w), flags=re.IGNORECASE).search(value):
             raise ValidationError("Please list experience level using drop down menus only")
 
-    if '(' in value or ')' in value:
-        raise ValidationError("Please use 1-3 words to describe the project skill, and don't use sentences")
+    # Allow defining acronyms
+    #  - e.g. "Continuous Integration (CI)"
+    #
+    # Allow acronyms with no more than 1 consecutive lower case letter
+    #
+    # Prohibit asides
+    #  - e.g. "Java (especially Java8)"
+    #  - this should be two skills - Java required, Java8 preferred
+    if re.compile(r'\(.*[a-z]{2}.*\)').search(value):
+        raise ValidationError("Please use 1-3 words to describe the project skill, and don't use sentences with parenthesis")
 
     verbosity = [
             'able',
             'ability',
+            'alternative',
+            'alternatively',
             'applicant',
             'candidate',
+            'especially',
             'etc',
             'interest',
             'interested',
             'familiar',
-            'open',
             'sense',
             'willing',
             'with',
