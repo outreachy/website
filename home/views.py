@@ -87,6 +87,7 @@ from .models import ProjectSkill
 from .models import PromotionTracking
 from .models import Role
 from .models import RoundPage
+from .models import skill_is_valid
 from .models import SchoolInformation
 from .models import SchoolTimeCommitment
 from .models import TimeCommitmentSummary
@@ -1622,6 +1623,27 @@ class ProjectSkillsEditPage(BaseProjectEditPage):
     template_name_suffix = '_skills_form'
     form_class = inlineformset_factory(Project, ProjectSkill, fields='__all__')
     next_view = 'communication-channels-edit'
+
+    def get_context_data(self, **kwargs):
+        context = super(ProjectSkillsEditPage, self).get_context_data(**kwargs)
+        suggestions = list(set([ps.skill for ps in ProjectSkill.objects.all()]))
+        clean_suggestions = []
+        for s in suggestions:
+            try:
+                skill_is_valid(s)
+                clean_suggestions.append(s)
+            except ValidationError:
+                pass
+        context.update({
+            # Make sure that someone can't inject code in another person's
+            # browser by adding a maliciously encoded project skill.
+            # json.dumps() takes the skills list (encoded as a Python list)
+            # and encodes the list in JavaScript object notation.
+            # mark_safe means this data has already been cleaned,
+            # and the Django template code shouldn't clean it.
+            'suggested_skills': mark_safe(json.dumps(clean_suggestions)),
+            })
+        return context
 
 class CommunicationChannelsEditPage(BaseProjectEditPage):
     template_name_suffix = '_channels_form'
