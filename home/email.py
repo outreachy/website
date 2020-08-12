@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 organizers = Address("Outreachy Organizers", "organizers", "outreachy.org")
 applicant_help = Address("Outreachy Applicant Helpers", "applicant-help", "outreachy.org")
+mentors_mailing_list = Address("Outreachy mentors list", "mentors", "lists.outreachy.org")
 
 def send_template_mail(template_name, context, recipient_list, request=None, **kwargs):
     # Only load the template once, no matter how many messages we're sending.
@@ -58,6 +59,13 @@ def approval_status_changed(obj, request, **kwargs):
         logger.info(
             "not sending approval status change email because %s does not exist",
             template, exc_info=True)
+
+def cfp_open(current_round, request):
+    send_template_mail('home/email/cfp-open.txt', {
+        'current_round': current_round,
+        },
+        request=request,
+        recipient_list=[mentors_mailing_list])
 
 def notify_mentor(participation, notification, request):
     send_template_mail('home/email/notify-mentors.txt', {

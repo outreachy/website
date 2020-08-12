@@ -1,0 +1,56 @@
+[Due {{ current_round.lateorgs|date:"M d" }}] Call for mentors for {{ current_round.internstarts|date:"M Y" }} Outreachy internships
+
+Hi Outreachy mentors and coordinators,
+
+We've opened community applications up for the {{ current_round.official_name }}:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'community-cfp' %}
+
+Coordinators - please submit your community for participation by {{ current_round.lateorgs }}.
+
+Mentors - please submit your projects by {{ current_round.project_soft_deadline|date:"F d" }}. Ideally they would be submitted by {{ current_round.outreachy_chat|date:"F d" }}, in order to promote your projects during the Outreachy Twitter chat.
+
+Schedule
+--------
+
+{{ current_round.outreachy_chat }} UTC - #OutreachyChat on Twitter to promote projects to applicants
+{{ current_round.lateorgs }} - last day for communities to sign up
+{{ current_round.project_soft_deadline }} - last day for mentors to submit projects
+{{ current_round.contributions_open }} - contribution period opens
+{{ current_round.contributions_close }} at 4pm UTC - contribution period closes
+{{ current_round.internannounce }} - interns announced
+{{ current_round.internstarts }} to {{ current_round.internends }} - internship
+
+Mentor Resources
+---
+
+If you're a new Outreachy mentor this round, please read the mentor duty list and mentor FAQ:
+
+https://www.outreachy.org/mentor/#mentor
+https://www.outreachy.org/mentor/mentor-faq/
+
+Coordinator Resources
+---
+
+If you're a new Outreachy coordinator, please read the coordinator FAQ:
+
+https://www.outreachy.org/mentor/#coordinator
+
+Each community coordinator will need to secure funding for at least one intern ($6,500 USD). Outreachy organizers cannot allow communities to participate unless they have funding.
+
+Once you have a tentative commitment for funding from a sponsor, please sign your community up to participate:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'community-cfp' %}
+
+Outreachy provides a general fund for communities to request additional funding. Outreachy reviews the requests from all communities during the intern selection period. We accept the strongest interns, as our funding resources allow. Outreachy typically funds 1-2 interns per community, but not all communities request funding. Outreachy recommends finding more mentors than you have funding.
+
+Twitter Chat
+---
+
+Each round, we have a chat on Twitter. It's an opportunity for coordinators and mentors to connect to potential Outreachy applicants. Here is the format of the Outreachy Twitter chat:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'promote' %}#outreachychat
+
+Please contact us with any questions you have!
+
+Outreachy Organizers

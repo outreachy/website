@@ -240,6 +240,26 @@ class SendEmailView(RoundEvent, LoginRequiredMixin, ComradeRequiredMixin, BaseEm
             self.generate_messages(current_round=self.get_round(), connection=connection)
         return redirect('dashboard')
 
+class CFPOpen(SendEmailView):
+    """
+    Notify the Outreachy mentor's mailing list that community sign-up has started.
+
+    When: The round opens (pingnew)
+
+    Template: home/templates/home/email/cfp-open.txt
+    """
+    description = 'CFP Open Email'
+    slug = 'cfp-open'
+
+    @staticmethod
+    def instance(current_round):
+        return current_round.pingnew
+
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+        email.cfp_open(current_round, self.request)
+
 
 class MentorCheckDeadlinesReminder(SendEmailView):
     """
@@ -686,6 +706,7 @@ class CareerChatInvitation(SendEmailView):
 # It doesn't matter what order this list is in, but I think it's less confusing
 # if we keep it sorted by when in the round each event occurs.
 all_round_events = (
+    CFPOpen,
     MentorCheckDeadlinesReminder,
     ApplicantsDeadlinesReminder,
     ContributorsDeadlinesReminder,
