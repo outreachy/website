@@ -35,6 +35,7 @@ The end result is a exported .ods (Libre Office spreadsheet) with contact
 information. That year's contact information is commited in the GitLab notes
 repository in a folder named tapia-YEAR (e.g. tapia-2019).
 
+
 If this is the May to August round, subscribe to the announcements mailing list
 any students who signed up at the Tapia booth who were only interested in the
 May round. We don't subscribe them to the announcements mailing list until after
@@ -68,6 +69,25 @@ communities.txt. For example, communities that expressed interest in the May
 2020 round would be in 2020-05-round/communities.txt. We also sometimes document
 that in the etherpad. Find the community status for the last round and see which
 communities said they wanted to participate in this round.
+
+## Pinging continuing sponsors
+
+**Date: August 13 / Feb 28**
+
+During the last week of the internship, ping continuing sponsors. Remind them
+about the opportunities list, and ask if they can continue their sponsorship
+for the next round.
+
+Email template is in the private organizers repository, in the file
+`email/email-sponsor-end-of-round-opportunities-list-and-continuing-sponsorship.txt`
+
+You can see notes on who is a general funding sponsor, when they donate, and
+which communities they earmark funds for, in the private Invoice Ninja account.
+
+Look in the Invoice Ninja client tab for notes on the sponsors. Look in
+invoices and search for 'general' to find general fund sponsors. Search for
+'any' to find sponsors who earmark funding for any community. Other sponsors
+are typically contacted by communities.
 
 ## Pinging coordinators
 
