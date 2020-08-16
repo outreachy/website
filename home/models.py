@@ -2783,13 +2783,16 @@ class BarriersToParticipation(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
 
     # NOTE: Update home/templates/home/eligibility.html if you change the text here:
-    barriers_to_contribution = models.TextField(
-            verbose_name='What barriers or concerns have kept you from contributing to free and open source software?',
-            help_text="Please provide specific examples. Outreachy organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.")
+    country_living_in_during_internship = models.CharField(
+            verbose_name='What country will you be living in during the internship?',
+            max_length=PARAGRAPH_LENGTH,
+            )
 
-    systemic_bias = models.TextField(verbose_name='What systemic bias or discrimination have you faced while building your skills?')
+    underrepresentation = models.TextField(verbose_name='Are you part of an underrepresented group (in the technology industry of the country listed above)? How are you underrepresented?')
 
     lacking_representation = models.TextField(verbose_name='Does your learning environment have few people who share your identity or background? Please provide details.')
+
+    systemic_bias = models.TextField(verbose_name='What systemic bias or discrimination have you faced while building your skills?')
 
     employment_bias = models.TextField(verbose_name='What systemic bias or discrimination would you face if you applied for a job in the technology industry of your country?')
 
@@ -2807,7 +2810,7 @@ class BarriersToParticipation(models.Model):
                     for v in [versions[0]]
                 ),
             )
-            for attname in ('lacking_representation', 'systemic_bias', 'employment_bias', 'barriers_to_contribution')
+            for attname in ('country_living_in_during_internship', 'underrepresentation', 'lacking_representation', 'systemic_bias', 'employment_bias')
         ]
         new_answers = []
         for new_field, answers in self.get_answers():
@@ -2828,22 +2831,26 @@ class BarriersToParticipation(models.Model):
 
     def get_answers(self):
         return [
-                (
-                { 'verbose_name':
+                ({ 'verbose_name':
+                    'What country will you be living in during the internship?',
+                    }, self.country_living_in_during_internship
+                ),
+                ({ 'verbose_name':
+                    'Are you part of an underrepresented group (in the technology industry of the country listed above)? How are you underrepresented?',
+                    }, self.underrepresentation
+                ),
+                ({ 'verbose_name':
                     'Does your learning environment have few people who share your identity or background? Please provide details.',
-                    }, self.lacking_representation),
-                (
-                { 'verbose_name':
+                    }, self.lacking_representation
+                ),
+                ({ 'verbose_name':
                     'What systemic bias or discrimination have you faced while building your skills?',
-                    }, self.systemic_bias),
-                (
-                { 'verbose_name':
+                    }, self.systemic_bias
+                ),
+                ({ 'verbose_name':
                     'What systemic bias or discrimination would you face if you applied for a job in the technology industry of your country?',
-                    }, self.employment_bias),
-                (
-                { 'verbose_name':
-                    'What barriers or concerns have kept you from contributing to free and open source software?',
-                    }, self.barriers_to_contribution),
+                    }, self.employment_bias
+                ),
         ]
 
 class TimeCommitmentSummary(models.Model):

@@ -558,10 +558,11 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
             )),
             ('Barriers to Participation', modelform_factory(BarriersToParticipation,
                 fields=(
+                    'country_living_in_during_internship',
+                    'underrepresentation',
+                    'employment_bias',
                     'lacking_representation',
                     'systemic_bias',
-                    'employment_bias',
-                    'barriers_to_contribution',
                 ),
             )),
             ('Time Commitments', modelform_factory(TimeCommitmentSummary,
@@ -3304,10 +3305,11 @@ class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, re
     model = BarriersToParticipation
 
     fields = [
+            'country_living_in_during_internship',
+            'underrepresentation',
+            'employment_bias',
             'lacking_representation',
             'systemic_bias',
-            'employment_bias',
-            'barriers_to_contribution',
             ]
 
     def get_object(self):
