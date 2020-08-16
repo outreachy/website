@@ -2787,17 +2787,11 @@ class BarriersToParticipation(models.Model):
             verbose_name='What barriers or concerns have kept you from contributing to free and open source software?',
             help_text="Please provide specific examples. Outreachy organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.")
 
-    systemic_bias = models.TextField(
-            verbose_name='What systemic bias or discrimination have you faced while building your skills?',
-            help_text="<p>Outreachy projects often require applicants to know some basic skills. Those skills might include programming, user experience, documentation, illustration and graphical design, or data science. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>In these settings, have you faced systemic bias or discrimination? Have you been discouraged from accessing these resources because of your identity or background?</p><p>Please provide specific examples and (optionally) statistics.</p><p>Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
+    systemic_bias = models.TextField(verbose_name='What systemic bias or discrimination have you faced while building your skills?')
 
-    lacking_representation = models.TextField(
-            verbose_name='Does your learning environment have few people who share your identity or background? Please provide details.',
-            help_text="<p>Contributing to free and open source software takes some skill. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>Does any of your learning environments have few people who share your identity or background? How did your identity or background differ from the majority of people in this learning environment?</p><p>Examples of the types of identities or backgrounds to consider include (but are not limited to):</p><ul><li>age</li><li>body size</li><li>caste</li><li>disability</li><li>ethnicity</li><li>gender identity and expression</li><li>socio-economic status</li><li>nationality</li><li>personal appearance</li><li>race</li><li>religion</li><li>sexual identity and orientation</li></ul></p><p>Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
+    lacking_representation = models.TextField(verbose_name='Does your learning environment have few people who share your identity or background? Please provide details.')
 
-    employment_bias = models.TextField(
-            verbose_name='What systemic bias or discrimination would you face if you applied for a job in the technology industry of your country?',
-            help_text="<p>Think about when you have applied for a job in the technology industry of your country. Do you think you have faced discrimination on the basis of your background or identity? If you have not applied for a job yet, do you think you may be discriminated against on the basis of your background or identity?</p><p>Please provide specific examples and (optionally) statistics.</p><p>Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
+    employment_bias = models.TextField(verbose_name='What systemic bias or discrimination would you face if you applied for a job in the technology industry of your country?')
 
     applicant_should_update = models.BooleanField(default=False)
 
