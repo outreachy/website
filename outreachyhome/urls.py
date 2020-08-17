@@ -37,7 +37,7 @@ urlpatterns = [
     #    url(r'^pages/', include(wagtail_urls)),
 ]
 
-handler500 = project_views.ServerErrorView.as_view()
+handler500 = project_views.server_error
 
 
 if settings.DEBUG:
