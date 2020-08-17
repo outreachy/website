@@ -3853,8 +3853,6 @@ class BaseMentorFeedback(BaseFeedback):
 
     request_termination = models.BooleanField(verbose_name="Do you believe the internship should be terminated?", help_text="Sometimes after several extensions, interns still do not put in a full-time effort. If you believe that your intern would not put in a full-time effort with a further extension, you may request to terminate the internship. The Outreachy organizers will be in touch to discuss the request.")
 
-    termination_reason = RichTextField(verbose_name="Why you feel the internship should be terminated?", help_text="Please elaborate on the efforts you have put in to get your intern back on track, and the results of those efforts. Tell us about your intern's work efforts, communication frequency, and meeting attendance since their last extension. Provide links to any work that is still in progress or has been completed since their last extension. Please let us know any additional information about why the internship should be terminated.", blank=True, null=True)
-
     def get_versions(self):
         return Version.objects.get_for_object(self)
 

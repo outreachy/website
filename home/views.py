@@ -2672,7 +2672,6 @@ class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMi
                 'request_extension',
                 'extension_date',
                 'request_termination',
-                'termination_reason',
             ),
             field_classes = {
                 'in_contact': RadioBooleanField,
@@ -2782,7 +2781,6 @@ def export_feedback(feedback):
             'extension requested': feedback.request_extension,
             'extension date': str(feedback.extension_date),
             'termination requested': feedback.request_termination,
-            'termination reason': feedback.termination_reason,
             }
 
 @login_required
@@ -2827,7 +2825,6 @@ class MidpointMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionM
                 'request_extension',
                 'extension_date',
                 'request_termination',
-                'termination_reason',
             ),
             field_classes = {
                 'in_contact': RadioBooleanField,
@@ -2954,7 +2951,6 @@ class FinalMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixi
                 'request_extension',
                 'extension_date',
                 'request_termination',
-                'termination_reason',
                 'mentoring_recommended',
                 'blog_frequency',
                 'blog_prompts_caused_writing',
