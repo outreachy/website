@@ -10,9 +10,9 @@ import django.db.models.deletion
 import languages.fields
 import timezone_field.fields
 import wagtail.contrib.table_block.blocks
-import wagtail.wagtailcore.blocks
-import wagtail.wagtailcore.fields
-import wagtail.wagtailimages.blocks
+import wagtail.core.blocks
+import wagtail.core.fields
+import wagtail.images.blocks
 
 
 class Migration(migrations.Migration):
@@ -69,7 +69,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='homepage',
             name='body',
-            field=wagtail.wagtailcore.fields.StreamField((('heading', wagtail.wagtailcore.blocks.CharBlock(template='home/blocks/heading.html')), ('paragraph', wagtail.wagtailcore.blocks.RichTextBlock()), ('image', wagtail.wagtailimages.blocks.ImageChooserBlock()), ('logo', wagtail.wagtailimages.blocks.ImageChooserBlock(template='home/blocks/logo.html')), ('date', wagtail.wagtailcore.blocks.DateBlock()), ('table', wagtail.contrib.table_block.blocks.TableBlock(template='home/blocks/table.html')), ('quote', wagtail.wagtailcore.blocks.RichTextBlock(template='home/blocks/quote.html')))),
+            field=wagtail.core.fields.StreamField((('heading', wagtail.core.blocks.CharBlock(template='home/blocks/heading.html')), ('paragraph', wagtail.core.blocks.RichTextBlock()), ('image', wagtail.images.blocks.ImageChooserBlock()), ('logo', wagtail.images.blocks.ImageChooserBlock(template='home/blocks/logo.html')), ('date', wagtail.core.blocks.DateBlock()), ('table', wagtail.contrib.table_block.blocks.TableBlock(template='home/blocks/table.html')), ('quote', wagtail.core.blocks.RichTextBlock(template='home/blocks/quote.html')))),
         ),
         migrations.AlterField(
             model_name='participation',

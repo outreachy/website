@@ -28,19 +28,18 @@ from reversion.models import Version
 
 from timezone_field.fields import TimeZoneField
 
-from wagtail.wagtailcore.models import Orderable
-from wagtail.wagtailcore.models import Page
-from wagtail.wagtailcore.fields import RichTextField
-from wagtail.wagtailcore.fields import StreamField
-from wagtail.wagtailadmin.edit_handlers import FieldPanel
-from wagtail.wagtailadmin.edit_handlers import InlinePanel
-from wagtail.wagtailcore import blocks
-from wagtail.wagtailadmin.edit_handlers import StreamFieldPanel
-from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
-from wagtail.wagtailimages.blocks import ImageChooserBlock
+from wagtail.core.models import Orderable
+from wagtail.core.models import Page
+from wagtail.core.fields import RichTextField
+from wagtail.core.fields import StreamField
+from wagtail.admin.edit_handlers import FieldPanel
+from wagtail.admin.edit_handlers import InlinePanel
+from wagtail.core import blocks
+from wagtail.admin.edit_handlers import StreamFieldPanel
+from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.images.blocks import ImageChooserBlock
 from wagtail.contrib.table_block.blocks import TableBlock
-from wagtail.contrib.wagtailroutablepage.models import RoutablePageMixin, route
-from wagtail.wagtailembeds.blocks import EmbedBlock
+from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 
 from . import email
 from .feeds import WagtailFeed
@@ -3148,8 +3147,10 @@ class ContractorInformation(models.Model):
             verbose_name="Average number of hours spent on contractor business",
             help_text="During the past three months, what is the average number of hours/week you have spent on contracted work and unpaid business development or business marketing? You will be able to enter your known contract hours for the Outreachy internship period on the next page.")
 
-    continuing_contract_work = models.NullBooleanField(
-            verbose_name="Will you be doing contract work during the Outreachy internship period?")
+    continuing_contract_work = models.BooleanField(
+        verbose_name="Will you be doing contract work during the Outreachy internship period?",
+        null=True,
+    )
 
 
 class PromotionTracking(models.Model):
@@ -3574,8 +3575,9 @@ class InternSelection(AugmentDeadlines, models.Model):
         help_text="How will this intern be funded?",
     )
     # None = undecided, True = accepted, False = not accepted
-    organizer_approved = models.NullBooleanField(
+    organizer_approved = models.BooleanField(
             help_text="Is this intern and funding information confirmed to be correct by the Outreachy organizers?",
+            null=True,
             default=None)
     survey_opt_out = models.BooleanField(default=False)
     in_good_standing = models.BooleanField(default=True)
@@ -3846,8 +3848,11 @@ class BaseMentorFeedback(BaseFeedback):
     full_time_effort = models.BooleanField(verbose_name="Do you believe your Outreachy intern is putting in a full-time, 40 hours a week effort into the internship?")
 
     # FIXME - send email to mentors and interns when organizers approve their payment and send documentation off to Conservancy
-    organizer_payment_approved = models.NullBooleanField(help_text="Outreachy organizers approve or do not approve to pay this intern.",
-            default=None)
+    organizer_payment_approved = models.BooleanField(
+        help_text="Outreachy organizers approve or do not approve to pay this intern.",
+        null=True,
+        default=None,
+    )
 
     request_extension = models.BooleanField(verbose_name="Does your intern need an extension?", help_text="Sometimes interns do not put in a full-time effort. In this case, one of the options is to delay payment of their stipend and extend their internship a specific number of weeks. You will be asked to re-evaluate your intern after the extension is done.")
 

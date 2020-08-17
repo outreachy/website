@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 import django.db.models.deletion
-import wagtail.wagtailcore.fields
+import wagtail.core.fields
 
 
 class Migration(migrations.Migration):
@@ -57,7 +57,7 @@ class Migration(migrations.Migration):
                 ('organizer_payment_approved', models.NullBooleanField(default=None, help_text='Outreachy organizers approve or do not approve to pay this intern.')),
                 ('request_extension', models.BooleanField(help_text='Sometimes interns do not put in a full-time effort. In this case, one of the options is to delay payment of their stipend and extend their internship a specific number of weeks. You will be asked to re-evaluate your intern after the extension is done.', verbose_name='Does your intern need an extension?')),
                 ('request_termination', models.BooleanField(help_text='Sometimes after several extensions, interns still do not put in a full-time effort. If you believe that your intern would not put in a full-time effort with a further extension, you may request to terminate the internship. The Outreachy organizers will be in touch to discuss the request.', verbose_name='Do you believe the internship should be terminated?')),
-                ('termination_reason', wagtail.wagtailcore.fields.RichTextField(blank=True, help_text="Please elaborate on the efforts you have put in to get your intern back on track, and the results of those efforts. Tell us about your intern's work efforts, communication frequency, and meeting attendance since their last extension. Provide links to any work that is still in progress or has been completed since their last extension. Please let us know any additional information about why the internship should be terminated.", null=True, verbose_name='Why you feel the internship should be terminated?')),
+                ('termination_reason', wagtail.core.fields.RichTextField(blank=True, help_text="Please elaborate on the efforts you have put in to get your intern back on track, and the results of those efforts. Tell us about your intern's work efforts, communication frequency, and meeting attendance since their last extension. Provide links to any work that is still in progress or has been completed since their last extension. Please let us know any additional information about why the internship should be terminated.", null=True, verbose_name='Why you feel the internship should be terminated?')),
                 ('intern_help_requests_frequency', models.CharField(choices=[('0', 'Intern has not asked for help'), ('U', 'Multiple times per day'), ('D', 'Once per day'), ('M', 'Multiple times per week'), ('W', 'Once per week'), ('B', 'Every other week')], default='0', max_length=1, verbose_name='How often does <b>your intern</b> ask for your help?')),
                 ('mentor_help_response_time', models.CharField(choices=[('1H', '1 hour'), ('3H', '3 hours'), ('6H', '6 hours'), ('12H', '12 hours'), ('1D', '1 day'), ('2D', '2-3 days'), ('4D', '4-5 days'), ('6D', '6-7 days'), ('>7D', '> 7 days')], default='>7D', max_length=3, verbose_name="How long does it take for <b>you</b> to respond to your intern's request for help?")),
                 ('intern_contribution_frequency', models.CharField(choices=[('0', 'Intern has not submitted a contribution'), ('D', 'Once per day'), ('M', 'Multiple times per week'), ('W', 'Once per week'), ('B', 'Every other week')], default='0', max_length=1, verbose_name='How often does <b>your intern</b> submit a project contribution?')),

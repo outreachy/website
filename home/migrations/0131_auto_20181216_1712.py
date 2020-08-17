@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-import wagtail.wagtailcore.fields
+import wagtail.core.fields
 
 
 class Migration(migrations.Migration):
@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='initialmentorfeedback',
             name='termination_reason',
-            field=wagtail.wagtailcore.fields.RichTextField(blank=True, help_text="Please elaborate on the efforts you have put in to get your intern back on track, and the results of those efforts. Tell us about your intern's work efforts, communication frequency, and meeting attendance since their last extension. Provide links to any work that is still in progress or has been completed since their last extension. Please let us know any additional information about why the internship should be terminated.", null=True, verbose_name='Why you feel the internship should be terminated?'),
+            field=wagtail.core.fields.RichTextField(blank=True, help_text="Please elaborate on the efforts you have put in to get your intern back on track, and the results of those efforts. Tell us about your intern's work efforts, communication frequency, and meeting attendance since their last extension. Provide links to any work that is still in progress or has been completed since their last extension. Please let us know any additional information about why the internship should be terminated.", null=True, verbose_name='Why you feel the internship should be terminated?'),
         ),
         migrations.AlterField(
             model_name='initialmentorfeedback',
