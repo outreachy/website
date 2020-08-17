@@ -869,7 +869,7 @@ def make_comrade_photo_filename(instance, original_name):
 # comrade: A person who shares one's interests or activities; a friend or companion.
 # user: One who uses addictive drugs.
 class Comrade(models.Model):
-    account = models.OneToOneField(User, primary_key=True)
+    account = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
     public_name = models.CharField(max_length=LONG_LEGAL_NAME, verbose_name="Name (public)", help_text="Your full name, which will be publicly displayed on the Outreachy website. This is typically your given name, followed by your family name. You may use a pseudonym or abbreviate your given or family names if you have concerns about privacy.")
 
     legal_name = models.CharField(max_length=LONG_LEGAL_NAME, verbose_name="Legal name (private)", help_text="Your name on your government identification. This is the name that you would use to sign a legal document. This will be used only by Outreachy organizers on any private legal contracts. Other applicants, coordinators, mentors, and volunteers will not see this name.")
@@ -1287,8 +1287,8 @@ class Community(models.Model):
                 for ca in self.coordinatorapproval_set.approved()]
 
 class Notification(models.Model):
-    community = models.ForeignKey(Community)
-    comrade = models.ForeignKey(Comrade)
+    community = models.ForeignKey(Community, on_delete=models.CASCADE)
+    comrade = models.ForeignKey(Comrade, on_delete=models.CASCADE)
     # Ok, look, this is silly, and we don't actually need the date,
     # but I don't know what view to use to modify a through field on a model.
     date_of_signup = models.DateField("Date user signed up for notifications", auto_now_add=True)
@@ -1298,7 +1298,7 @@ class Notification(models.Model):
                 )
 
 class NewCommunity(Community):
-    community = models.OneToOneField(Community, primary_key=True, parent_link=True)
+    community = models.OneToOneField(Community, primary_key=True, parent_link=True, on_delete=models.CASCADE)
 
     SMOL = '3'
     TINY = '5'
@@ -1374,8 +1374,8 @@ class NewCommunity(Community):
         verbose_name_plural = 'new communities'
 
 class Participation(ApprovalStatus):
-    community = models.ForeignKey(Community)
-    participating_round = models.ForeignKey(RoundPage)
+    community = models.ForeignKey(Community, on_delete=models.CASCADE)
+    participating_round = models.ForeignKey(RoundPage, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ('community__name',)
@@ -1597,7 +1597,7 @@ class Sponsorship(models.Model):
                 community=self.participation.community)
 
 class Project(ApprovalStatus):
-    project_round = models.ForeignKey(Participation, verbose_name="Outreachy round and community")
+    project_round = models.ForeignKey(Participation, verbose_name="Outreachy round and community", on_delete=models.CASCADE)
     mentors = models.ManyToManyField(Comrade, through='MentorApproval')
 
     THREE_MONTHS = '3M'
@@ -1951,7 +1951,7 @@ def skill_is_valid(value):
             raise ValidationError("Please use 1-3 words to describe the project skill, and don't use sentences")
 
 class ProjectSkill(models.Model):
-    project = models.ForeignKey(Project, verbose_name="Project")
+    project = models.ForeignKey(Project, verbose_name="Project", on_delete=models.CASCADE)
 
     skill = models.CharField(
             max_length=SENTENCE_LENGTH,
@@ -2282,8 +2282,8 @@ def create_time_commitment_calendar(tcs, application_round):
     return calendar
 
 class ApplicationReviewer(ApprovalStatus):
-    comrade = models.ForeignKey(Comrade)
-    reviewing_round = models.ForeignKey(RoundPage)
+    comrade = models.ForeignKey(Comrade, on_delete=models.CASCADE)
+    reviewing_round = models.ForeignKey(RoundPage, on_delete=models.CASCADE)
 
 # This class stores information about whether an applicant is eligible to
 # participate in this round Automated checking will set the applicant to
@@ -2299,7 +2299,7 @@ class ApplicantApproval(ApprovalStatus):
     project_contributions = models.ManyToManyField(Project, through='Contribution')
     submission_date = models.DateField(auto_now_add=True)
     ip_address = models.GenericIPAddressField(protocol="both")
-    review_owner = models.ForeignKey(ApplicationReviewer, blank=True, null=True)
+    review_owner = models.ForeignKey(ApplicationReviewer, blank=True, null=True, on_delete=models.SET_NULL)
 
     def is_approver(self, user):
         return user.is_staff
@@ -3228,8 +3228,8 @@ class PromotionTracking(models.Model):
 # --------------------------------------------------------------------------- #
 
 class InitialApplicationReview(models.Model):
-    application = models.ForeignKey(ApplicantApproval)
-    reviewer = models.ForeignKey(ApplicationReviewer)
+    application = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
+    reviewer = models.ForeignKey(ApplicationReviewer, on_delete=models.CASCADE)
 
     STRONG = '+3'
     GOOD = '+2'
@@ -3334,8 +3334,8 @@ class Contribution(models.Model):
     announcement.
     """
 
-    applicant = models.ForeignKey(ApplicantApproval)
-    project = models.ForeignKey(Project)
+    applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.PROTECT)
 
     date_started = models.DateField(verbose_name="Date contribution was started")
     date_merged = models.DateField(verbose_name="Date contribution was accepted or merged",
@@ -3367,8 +3367,8 @@ class Contribution(models.Model):
                 )
 
 class FinalApplication(ApprovalStatus):
-    applicant = models.ForeignKey(ApplicantApproval)
-    project = models.ForeignKey(Project)
+    applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.PROTECT)
 
     experience = models.TextField(
             max_length=EIGHT_PARAGRAPH_LENGTH,
@@ -3559,8 +3559,8 @@ class SignedContract(models.Model):
     date_signed = models.DateField(verbose_name="Date contract was signed")
 
 class InternSelection(AugmentDeadlines, models.Model):
-    applicant = models.ForeignKey(ApplicantApproval)
-    project = models.ForeignKey(Project)
+    applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.PROTECT)
     intern_contract = models.OneToOneField(SignedContract, null=True, blank=True, on_delete=models.SET_NULL)
     mentors = models.ManyToManyField(MentorApproval, through='MentorRelationship')
 
@@ -3799,9 +3799,9 @@ class InternSelection(AugmentDeadlines, models.Model):
         return self.mentor_names() + ' mentoring ' + self.applicant.applicant.public_name
 
 class MentorRelationship(models.Model):
-    intern_selection = models.ForeignKey(InternSelection)
-    mentor = models.ForeignKey(MentorApproval)
-    contract = models.OneToOneField(SignedContract)
+    intern_selection = models.ForeignKey(InternSelection, on_delete=models.CASCADE)
+    mentor = models.ForeignKey(MentorApproval, on_delete=models.CASCADE)
+    contract = models.OneToOneField(SignedContract, on_delete=models.PROTECT)
 
     def intern_name(self):
         return self.intern_selection.applicant.applicant.public_name
@@ -3826,7 +3826,7 @@ class MentorRelationship(models.Model):
                 )
 
 class BaseFeedback(models.Model):
-    intern_selection = models.OneToOneField(InternSelection)
+    intern_selection = models.OneToOneField(InternSelection, on_delete=models.CASCADE)
     allow_edits = models.BooleanField()
     ip_address = models.GenericIPAddressField(protocol="both")
 
@@ -4487,7 +4487,7 @@ class InformalChatContact(models.Model):
     '''
     active = models.BooleanField(verbose_name='Are you currently available for informal chats?')
     # Not all contacts will have an account on the website
-    comrade = models.ForeignKey(Comrade, blank=True, null=True)
+    comrade = models.ForeignKey(Comrade, blank=True, null=True, on_delete=models.SET_NULL)
     name = models.CharField(blank=True, max_length=LONG_LEGAL_NAME, help_text="Your full name, which will be publicly displayed to Outreachy interns. This is typically your given name, followed by your family name. You may use a pseudonym or abbreviate your given or family names if you have concerns about privacy.")
     email = models.EmailField(blank=True, verbose_name='Email address')
     relationship_to_outreachy = models.CharField(blank=True, max_length=PARAGRAPH_LENGTH, help_text='Which are you: a current/past Outreachy intern, current/past Outreachy mentor, current/past Outreachy coordinator, or current employee of an Outreachy sponsor?')
@@ -4527,7 +4527,7 @@ class AlumSurvey(models.Model):
     # or someone who has an account and was selected as an intern through the website.
 
     survey_date = models.DateTimeField(default=datetime.date.today)
-    survey_tracker = models.ForeignKey(AlumSurveyTracker)
+    survey_tracker = models.ForeignKey(AlumSurveyTracker, on_delete=models.PROTECT)
 
     RECOMMEND1 = '1'
     RECOMMEND2 = '2'
