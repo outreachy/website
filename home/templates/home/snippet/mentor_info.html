@@ -3,10 +3,6 @@
 	<li>Name: "{{ approval.mentor.public_name }}" &lt;{{ approval.mentor.account.email }}&gt;</li>
 	{% if approval.mentor.pronouns_to_participants %}<li>Pronouns: {{ approval.mentor.get_pronouns_html|safe }}</li>{% endif %}
 	{% if approval.mentor.timezone %}<li>Timezone: {{ approval.mentor.get_timezone_display }}</li>{% endif %}
-	{% if approval.mentor.primary_language %}<li>Primary language: {{ approval.mentor.get_primary_language_display }}</li>{% endif %}
-	{% if approval.mentor.second_language %}<li>Second language: {{ approval.mentor.get_second_language_display }}</li>{% endif %}
-	{% if approval.mentor.third_language %}<li>Third language: {{ approval.mentor.get_third_language_display }}</li>{% endif %}
-	{% if approval.mentor.fourth_language %}<li>Fourth language: {{ approval.mentor.get_fourth_language_display }}</li>{% endif %}
 </ul>
 <h2>Mentor Experience</h2>
 <ol>

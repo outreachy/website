@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'modelcluster',
     'taggit',
     'timezone_field',
-    'languages',
     'reversion',
     'ckeditor',
     'markdownx',

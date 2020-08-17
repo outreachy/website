@@ -15,7 +15,6 @@ django-contact-form = "==1.4.2"
 django-debug-toolbar = "==1.9.1"
 django-extensions = "*"
 django-formtools = "==2.1"
-django-language-field = "==0.0.3"
 django-libsass = "==0.7"
 django-markdownx = "==2.0.22"
 django-registration = "==2.2"
@@ -30,6 +29,10 @@ whitenoise = "==3.3.1"
 # Not used in the code outside the test suite, but useful in the Django shell
 # on the deployed site, so it's here instead of dev-packages.
 factory_boy = "*"
+
+# No longer used anywhere but still required until we squash away the
+# migrations that reference it.
+django-language-field = "==0.0.3"
 
 [dev-packages]
 coverage = "*"

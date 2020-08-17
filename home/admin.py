@@ -54,12 +54,6 @@ from .models import WorkEligibility
 class ComradeInline(admin.StackedInline):
     model = Comrade
     can_delete = False
-    readonly_fields = (
-        'primary_language',
-        'second_language',
-        'third_language',
-        'fourth_language',
-    )
     verbose_name_plural = 'comrade'
 
 class ComradeAdmin(UserAdmin):

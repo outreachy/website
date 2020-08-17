@@ -24,8 +24,6 @@ from ckeditor.fields import RichTextField as CKEditorField
 
 from modelcluster.fields import ParentalKey
 
-from languages.fields import LanguageField
-
 from reversion.models import Version
 
 from timezone_field.fields import TimeZoneField
@@ -944,11 +942,6 @@ class Comrade(models.Model):
     twitter_url = models.URLField(blank=True,
             verbose_name="Twitter profile URL",
             help_text="(Optional) The full URL to your Twitter profile.<br>For mentors and coordinators, this will be displayed to applicants, who may try to contact you via Twitter. Applicants' Twitter URLs will be shared with their mentors and coordinators. Accepted interns' Twitter URLs will be used to create an Outreachy Twitter list for accepted interns for that round. Accepted interns' Twitter URLs will not be displayed on the Outreachy website.")
-
-    primary_language = LanguageField(blank=True, verbose_name="(Optional) Primary language", help_text="The spoken/written language you are most comfortable using. Shared with other Outreachy participants to help facilitate communication. Many Outreachy participants have English as a second language, and we want them to find others who speak their native language.")
-    second_language = LanguageField(blank=True, verbose_name="(Optional) Second language", help_text="The second language you are most fluent in.")
-    third_language = LanguageField(blank=True, verbose_name="(Optional) Third language", help_text="The next language you are most fluent in.")
-    fourth_language = LanguageField(blank=True, verbose_name="(Optional) Fourth language", help_text="The next language you are most fluent in.")
 
     agreed_to_code_of_conduct = models.CharField(
             max_length=LONG_LEGAL_NAME,
