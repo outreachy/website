@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load static %}
+{% load compress %}
 
 {% block title %}
 Outreachy Initial Application
@@ -45,6 +47,9 @@ It will not be shared with mentors, coordinators, or other applicants.
 <form action="" method="post">{% csrf_token %}
 	{{ wizard.form.media }}
 	{{ wizard.management_form }}
+	{% for field in wizard.form.hidden_fields %}
+			{{ field }}
+	{% endfor %}
 	{% for field in wizard.form.visible_fields %}
 		{% if 'living in during the internship' in field.label_tag %}
 			<div class="form-group card">
@@ -211,4 +216,20 @@ It will not be shared with mentors, coordinators, or other applicants.
 <input type="submit" class="btn btn-primary" value="Next step"/>
 </form>
 
+{% endblock %}
+
+{% block extra_css %}
+	<link rel="stylesheet" href="{% static 'css/countrySelect.css' %}">
+	<style>.country-select .flag {background-image: url({% static "img/flags.png" %});}</style>
+{% endblock %}
+
+{% block extra_js %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="{% static 'js/countrySelect.js' %}"></script>
+	<script>
+		$("#id_Barriers-to-Participation-country_living_in_during_internship").countrySelect({
+			defaultCountry: "",
+			preferredCountries: ['al', 'ar', 'au', 'br', 'cm', 'ca', 'eg', 'fr', 'de', 'gr', 'gh', 'in', 'it', 'kz', 'ke', 'mg', 'mx', 'nz', 'ng', 'pk', 'ps', 'ru', 'es', 'ug', 'gb', 'ua', 'us']
+		});
+	</script>
 {% endblock %}

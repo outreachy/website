@@ -10,6 +10,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
 from django.db import models
 from django.forms import inlineformset_factory, ModelForm, modelform_factory, modelformset_factory, ValidationError
+from django.forms import widgets
 from django.forms.models import BaseInlineFormSet, BaseModelFormSet
 from django.http import JsonResponse, HttpResponse, Http404
 from django.shortcuts import get_list_or_404
@@ -556,14 +557,18 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'genderqueer': RadioBooleanField,
                 },
             )),
-            ('Barriers to Participation', modelform_factory(BarriersToParticipation,
+            ('Barriers-to-Participation', modelform_factory(BarriersToParticipation,
                 fields=(
                     'country_living_in_during_internship',
+                    'country_living_in_during_internship_code',
                     'underrepresentation',
                     'employment_bias',
                     'lacking_representation',
                     'systemic_bias',
                 ),
+                widgets={
+                    'country_living_in_during_internship_code': widgets.HiddenInput,
+                },
             )),
             ('Time Commitments', modelform_factory(TimeCommitmentSummary,
                 fields=(
@@ -672,7 +677,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
             'Prior FOSS Experience': 'home/eligibility_wizard_foss_experience.html',
             'USA demographics': 'home/eligibility_wizard_us_demographics.html',
             'Gender Identity': 'home/eligibility_wizard_gender.html',
-            'Barriers to Participation': 'home/eligibility_wizard_essay_questions.html',
+            'Barriers-to-Participation': 'home/eligibility_wizard_essay_questions.html',
             'Time Commitments': 'home/eligibility_wizard_time_commitments.html',
             'School Info': 'home/eligibility_wizard_school_info.html',
             'School Term Info': 'home/eligibility_wizard_school_terms.html',
@@ -3305,7 +3310,6 @@ class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, re
     model = BarriersToParticipation
 
     fields = [
-            'country_living_in_during_internship',
             'underrepresentation',
             'employment_bias',
             'lacking_representation',

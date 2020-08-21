@@ -2788,6 +2788,16 @@ class BarriersToParticipation(models.Model):
             max_length=PARAGRAPH_LENGTH,
             )
 
+    # NOTE: This field must have the same name as the above field, but with '_code' at the end.
+    # This is the two-letter country code from the ISO 3166-1 alpha-2 standard.
+    # Country select js automatically fills in the country code via a hidden input field,
+    # by looking for an input tag with the same id as the field above, plus '_code' appended.
+    country_living_in_during_internship_code = models.CharField(
+            verbose_name='ISO 3166-1 alpha-2 country code',
+            max_length=2,
+            blank=True,
+            )
+
     underrepresentation = models.TextField(verbose_name='Are you part of an underrepresented group (in the technology industry of the country listed above)? How are you underrepresented?')
 
     lacking_representation = models.TextField(verbose_name='Does your learning environment have few people who share your identity or background? Please provide details.')

@@ -158,13 +158,14 @@ class EligibilityTests(SimpleTestCase):
     def barriers_to_participation(cls, **kwargs):
         defaults = {
             'country_living_in_during_internship': 'Dwendalian Empire',
+            'country_living_in_during_internship_code': '00',
             'underrepresentation': 'Yes',
             'employment_bias': 'Yes',
             'lacking_representation': 'Yes',
             'systemic_bias': 'Yes',
         }
         defaults.update(kwargs)
-        return ('Barriers to Participation', defaults)
+        return ('Barriers-to-Participation', defaults)
 
     @staticmethod
     def time_commitments(*args):
