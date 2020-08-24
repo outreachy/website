@@ -74,3 +74,24 @@ if full_revisions.difference(versions):
 c.collect(Revision.objects.filter(pk__in=revisions).order_by())
 
 # Finally, call `c.delete()` to actually delete everything.
+
+
+
+
+import reversion
+from reversion.models import Version, Revision
+from home import models
+
+# Delete revisions for all objects of particular types:
+version_query = Version.objects.none()
+for model in (models.ApplicantApproval, models.BarriersToParticipation, models.ApplicantGenderIdentity, models.ApplicantRaceEthnicityInformation, models.SchoolInformation):
+    version_query |= Version.objects.get_for_model(model)
+
+# Delete all selected versions.
+version_query.order_by().delete()
+
+# If any revisions no longer have any object versions inside them, delete those
+# too. This may also delete revisions that were already empty beforehand, but
+# those revisions didn't have any useful information in them anyway, because
+# they were empty.
+Revision.objects.exclude(pk__in=Version.objects.values('revision')).order_by().delete()
