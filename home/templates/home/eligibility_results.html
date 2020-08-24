@@ -216,27 +216,38 @@ Outreachy eligibility results
 	<p>
 	Your initial application for an Outreachy internship was received on {{ role.application.submission_date }}.
 	</p>
+
 	<p>
 	Your initial application is being reviewed by the Outreachy organizers.
 	We have already received a notification about your initial application, and there is no need for you to send an additional email.
        	We may follow up with additional questions for you via email.
 	</p>
+
 	<p><b>Do not submit a second initial application.</b></p>
+
 	<p>
 	Application results will be available on {{ role.current_round.contributions_open }} at 4pm UTC.
 	All accepted applicants will receive an email notification on that date.
 	Applicants who are not accepted will not receive an email.
-	You'll be able to check the status of your application on this page.
 	</p>
+
+	<p>
+	Please bookmark this page so that you can check the status of your initial application.
+	</p>
+
+	<h1>Preparation for the contribution phase</h1>
+
 	<p>
 	On {{ role.current_round.contributions_open }} at 4pm UTC, accepted applicants will move onto the contribution phase.
 	During the contribution phase, applicants make contributions to Outreachy projects.
 	</p>
+
 	<p>
 	We encourage you to <a href='{% url 'docs' %}'>read our documentation</a> while you're waiting for your initial application results.
 	The <a href='{% url 'docs-applicant' %}'>Applicant Guide</a> has tips for preparing for the contribution period.
 	The <a href='{% url 'docs-internship' %}'>Internship Guide</a> has information about the intern payment schedule.
 	</p>
+
 	<p>
 	You can see some of the <a href='{% url 'project-selection' %}'>potential projects</a> for this round.
 	Projects will be added until the contribution period opens on {{ role.current_round.contributions_open }} at 4pm UTC.
@@ -264,6 +275,36 @@ Outreachy eligibility results
 		<li>What is the correct information?</li>
 	</ul>
 
+	<div class="card border-info mb-3">
+		<div class="card-header text-white bg-info">
+			Information privacy policy
+		</div>
+		<div class="card-body">
+			<div class="card-text">
+				<p>
+				Initial applications gather some sensitive information:
+				</p>
+				<ul>
+					<li>Race/ethnicity of U.S. citizens and permanent residents</li>
+					<li>Gender</li>
+					<li>Country you will be living in during the internship</li>
+					<li>Essay answers</li>
+				</ul>
+
+				<p>
+				We hide the above sensitive information from this results page.
+				</p>
+				<p>
+				We will collect anonymized aggregate statistics about
+				gender, race, and country living in during the internship.
+				</p>
+				<p>
+				Once we have evaluated your initial application,
+				we will remove your sensitive data from our website.
+				</p>
+			</div>
+		</div>
+	</div>
 	{% include 'home/snippet/initial_application.html' %}
 
 {% endif %}

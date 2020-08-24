@@ -2503,9 +2503,6 @@ class ApplicantApproval(ApprovalStatus):
             ('Work Eligibility', 'workeligibility'),
             ('Tax Form information', 'paymenteligibility'),
             ('Prior Experience with Free and Open Source Software', 'priorfossexperience'),
-            ('Race and Ethnicity', 'applicantraceethnicityinformation'),
-            ('Gender Identity', 'applicantgenderidentity'),
-            ('Essay Questions', 'barrierstoparticipation'),
         )
         result = []
         for label, field in parts:
