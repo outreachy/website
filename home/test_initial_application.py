@@ -89,7 +89,7 @@ class ProjectSubmissionTestCase(TestCase):
         self.client.force_login(applicant.applicant.account)
 
         response = self.client.get(reverse('eligibility-results'))
-        self.assertContains(response, '<h1>Your Initial Application is Under Review</h1>', html=True)
+        self.assertContains(response, '<h1>Your initial application is under review</h1>', html=True)
         self.assertNotContains(response, '<h1>Initial application is not approved</h1>', html=True)
         self.assertNotContains(response, '<li>You may have already participated in Google Summer of Code or a previous Outreachy round.</li>', html=True)
         self.assertEqual(response.status_code, 200)
@@ -113,7 +113,7 @@ class ProjectSubmissionTestCase(TestCase):
         self.client.force_login(applicant.applicant.account)
 
         response = self.client.get(reverse('eligibility-results'))
-        self.assertContains(response, '<h1>Your Initial Application is Under Review</h1>', html=True)
+        self.assertContains(response, '<h1>Your initial application is under review</h1>', html=True)
         self.assertNotContains(response, '<h1>Initial application is not approved</h1>', html=True)
         self.assertNotContains(response, '<p>After reviewing your time commitments, we have determined you do not meet our minimum free time criteria.</p>', html=True)
         self.assertEqual(response.status_code, 200)
@@ -131,7 +131,7 @@ class ProjectSubmissionTestCase(TestCase):
         self.client.force_login(applicant.applicant.account)
 
         response = self.client.get(reverse('eligibility-results'))
-        self.assertContains(response, '<h1>Your Initial Application is Under Review</h1>', html=True)
+        self.assertContains(response, '<h1>Your initial application is under review</h1>', html=True)
         self.assertNotContains(response, '<h1>Initial application is not approved</h1>', html=True)
         self.assertNotContains(response, '<p>The Outreachy organizers have been reviewing your initial application, including your essay questions.</p>', html=True)
         self.assertEqual(response.status_code, 200)
@@ -148,7 +148,7 @@ class ProjectSubmissionTestCase(TestCase):
         self.client.force_login(applicant.applicant.account)
 
         response = self.client.get(reverse('eligibility-results'))
-        self.assertNotContains(response, '<h1>Your Initial Application is Under Review</h1>', html=True)
+        self.assertNotContains(response, '<h1>Your initial application is under review</h1>', html=True)
         self.assertContains(response, '<h1>Initial application is not approved</h1>', html=True)
         self.assertContains(response, '<p>The Outreachy organizers have been reviewing your initial application, including your essay questions.</p>', html=True)
         self.assertEqual(response.status_code, 200)
@@ -182,7 +182,7 @@ class ProjectSubmissionTestCase(TestCase):
         self.client.force_login(applicant.applicant.account)
 
         response = self.client.get(reverse('eligibility-results'))
-        self.assertContains(response, '<h1>Your Initial Application is Under Review</h1>', html=True)
+        self.assertContains(response, '<h1>Your initial application is under review</h1>', html=True)
         self.assertNotContains(response, '<h1>Initial application approved for Outreachy</h1>', html=True)
         self.assertEqual(response.status_code, 200)
 
@@ -199,7 +199,7 @@ class ProjectSubmissionTestCase(TestCase):
         self.client.force_login(applicant.applicant.account)
 
         response = self.client.get(reverse('eligibility-results'))
-        self.assertNotContains(response, '<h1>Your Initial Application is Under Review</h1>', html=True)
+        self.assertNotContains(response, '<h1>Your initial application is under review</h1>', html=True)
         self.assertContains(response, '<h1>Initial application approved for Outreachy</h1>', html=True)
         self.assertEqual(response.status_code, 200)
 
