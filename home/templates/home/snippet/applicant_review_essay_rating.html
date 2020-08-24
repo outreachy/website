@@ -9,12 +9,10 @@
 					{% for essay_rating in application.get_essay_ratings %}
 						<p>{% include 'home/snippet/essay_rating.html' %}</p>
 					{% endfor %}
-					<p>
 					<form method="post">
 						{% csrf_token %}
 						{% include 'home/snippet/applicant_essay_rating_form.html' %}
 					</form>
-					</p>
 				{% endif %}
 				{% if role.is_organizer %}
 					<h2>Request an Essay Revision?</h2>
@@ -22,10 +20,10 @@
 					They can revise their essay once after you click the button below.
 					Clicking the button will send an email to them asking them to revise their essay.
 					</p>
-					<p><form method="post" action="{% url 'request-essay-revision' applicant_username=application.applicant.account.username %}">
+					<form method="post" action="{% url 'request-essay-revision' applicant_username=application.applicant.account.username %}">
 						{% csrf_token %}
 						<input type='submit' class='btn btn-info' value="Request Essay Revision">
-					</form></p>
+					</form>
 				{% endif %}
 				<h2>Rate Essay</h2>
 				<div class="card border-info mb-3" id="essay-rating-accordian">
@@ -50,6 +48,8 @@
 											<div class="col">
 												{% include 'home/snippet/applicant_essay_rating_form.html' %}
 											</div>
+										</div>
+									</div>
 								</form>
 								<div class="col-9">
 									<p>Reviewers have the following essay ratings available to them:</p>
@@ -63,13 +63,11 @@
 										<li><button type="button" class="btn btn-warning">-3</button> means the essay answers contained spam or trolling.</li><br>
 									</ul>
 								</div>
-										</div>
-									</div>
 							</div>
 						</div>
 					</div>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 {% endif %}

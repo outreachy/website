@@ -8,11 +8,11 @@
 
 {% block content %}
 	{% if application.is_approved %}
-		<td><a class='btn btn-secondary' href="{% url 'approved-applicants-summary' %}"> &lt;- Back to summary of approved applications</a></td>
+		<p><a class='btn btn-secondary' href="{% url 'approved-applicants-summary' %}"> &lt;- Back to summary of approved applications</a></p>
 	{% elif application.is_pending %}
-		<td><a class='btn btn-secondary' href="{% url 'pending-applicants-summary' %}"> &lt;- Back to summary of pending applications</a></td>
+		<p><a class='btn btn-secondary' href="{% url 'pending-applicants-summary' %}"> &lt;- Back to summary of pending applications</a></p>
 	{% elif application.is_rejected %}
-		<td><a class='btn btn-secondary' href="{% url 'rejected-applicants-summary' %}"> &lt;- Back to summary of rejected applications</a></td>
+		<p><a class='btn btn-secondary' href="{% url 'rejected-applicants-summary' %}"> &lt;- Back to summary of rejected applications</a></p>
 	{% endif %}
 
 	<h1>Status</h1>
@@ -107,7 +107,7 @@
 	
 	<p>Racial or ethnic minority in the United States technology industry: {% if not application.paymenteligibility.us_national_or_permanent_resident %}Unknown; not a U.S. resident or national.{% elif application.applicantraceethnicityinformation.us_resident_demographics %}<b>Yes</b>, they're Black/African American, Hispanic/Latinx, Native American, Alaska Native, Native Hawaiian, or Pacific Islander{% else %}<b>No</b>, they're not Black/African American, Hispanic/Latinx, Native American, Alaska Native, Native Hawaiian, or Pacific Islander.{% endif %}</p>
 
-	<p>Prior experience with FOSS:
+	<p>Prior experience with FOSS:</p>
 	<ul>
 		<li>
 			{% if application.priorfossexperience.prior_contributor %}
@@ -125,7 +125,6 @@
 		</li>
 		<li>Prior experiences contributing to FOSS as a volunteer or paid contributor: <b>{{ application.priorfossexperience.get_prior_contribution_types }}</b>{% if not application.priorfossexperience.get_prior_contribution_types %}None{% endif %}</li>
 	</ul>
-	</p>
 
 	<h2>Reviewer Comments</h2>
 	<p><a class='btn btn-info' href="{% url 'update-comment' applicant_username=application.applicant.account.username %}">Update your comments</a></p>
