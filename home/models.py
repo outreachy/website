@@ -2805,37 +2805,6 @@ class BarriersToParticipation(models.Model):
 
     applicant_should_update = models.BooleanField(default=False)
 
-    def get_original_answers(self):
-        versions = Version.objects.get_for_object(self).reverse()
-        original_answers = [
-            (
-                self._meta.get_field(attname),
-                '\n\n'.join(
-                    'On {:%Y-%m-%d at %I:%M%p} you wrote:\n{}'.format(
-                        v.revision.date_created,
-                        v.field_dict[attname])
-                    for v in [versions[0]]
-                ),
-            )
-            for attname in ('country_living_in_during_internship', 'underrepresentation', 'lacking_representation', 'systemic_bias', 'employment_bias')
-        ]
-        new_answers = []
-        for new_field, answers in self.get_answers():
-            for index, a in enumerate(original_answers):
-                original_field = a[0]
-                if new_field['verbose_name'] == original_field.verbose_name:
-                    if a[1].split('you wrote:\n', 1)[1] == answers:
-                        new_answers.append(
-                                (original_field,
-                                    a[1],
-                                    ))
-                    else:
-                        new_answers.append(
-                                (original_field,
-                                    a[1] + '\n\n' + 'Updated Essay:\n\n' + answers,
-                                    ))
-        return new_answers
-
     def get_answers(self):
         return [
                 ({ 'verbose_name':

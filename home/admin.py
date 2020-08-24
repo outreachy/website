@@ -421,7 +421,7 @@ class PromotionTrackingInline(admin.StackedInline):
     extra = 1
     verbose_name_plural = 'Promotion tracking'
 
-class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
+class ApplicantApprovalAdmin(admin.ModelAdmin):
     list_display = (
             'applicant',
             'approval_status',
@@ -470,7 +470,7 @@ class OfficialSchoolAdmin(admin.ModelAdmin):
             )
     inlines = (OfficialSchoolTermInline, )
 
-class BarriersToParticipationAdmin(reversion.admin.VersionAdmin):
+class BarriersToParticipationAdmin(admin.ModelAdmin):
     model = AlumInfo
     list_display = (
             'applicant',

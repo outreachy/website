@@ -140,7 +140,7 @@
 	{% if not application.barrierstoparticipation %}
 		<p>The essay answers have been removed after initial application processing.</p>
 	{% else %}
-		{% for field, answer in application.barrierstoparticipation.get_original_answers %}
+		{% for field, answer in application.barrierstoparticipation.get_answers %}
 		<div class="card mb-3">
 			<div class="card-header">Q{{ forloop.counter }}. {{ field.verbose_name }}</div>
 			<div class="card-body">

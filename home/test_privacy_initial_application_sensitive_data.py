@@ -5,6 +5,7 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils.formats import date_format
 import reversion
+from reversion.models import Version, Revision
 import unittest
 
 from home import models
@@ -17,20 +18,19 @@ from home.email import organizers
 class InitialApplicationPrivacyTestCase(TestCase):
 
     def create_initial_application(self, current_round):
-        with reversion.create_revision():
-            applicant_approval = factories.ApplicantApprovalFactory(
-                    approval_status=models.ApprovalStatus.PENDING,
-                    application_round=current_round,
-                    )
-            models.BarriersToParticipation(
-                    applicant=applicant_approval,
-                    country_living_in_during_internship="Sensitive info - country",
-                    country_living_in_during_internship_code="42",
-                    underrepresentation="Sensitive info - underrepresented groups",
-                    lacking_representation="Sensitive info - lack of representation in education",
-                    systemic_bias="Sensitive info - educational bias",
-                    employment_bias="Sensitive info - employment bias",
-                    ).save()
+        applicant_approval = factories.ApplicantApprovalFactory(
+                approval_status=models.ApprovalStatus.PENDING,
+                application_round=current_round,
+                )
+        models.BarriersToParticipation(
+                applicant=applicant_approval,
+                country_living_in_during_internship="Sensitive info - country",
+                country_living_in_during_internship_code="42",
+                underrepresentation="Sensitive info - underrepresented groups",
+                lacking_representation="Sensitive info - lack of representation in education",
+                systemic_bias="Sensitive info - educational bias",
+                employment_bias="Sensitive info - employment bias",
+                ).save()
         return applicant_approval
 
     def create_applicant_reviewer(self, current_round, approval_status):
@@ -86,6 +86,16 @@ class InitialApplicationPrivacyTestCase(TestCase):
         self.assertNotContains(response, 'Sensitive info - educational bias')
         self.assertNotContains(response, '<div class="card-header">Q5. What systemic bias or discrimination would you face if you applied for a job in the technology industry of your country?</div>', html=True)
         self.assertNotContains(response, 'Sensitive info - employment bias')
+
+
+    def test_initial_applications_objects_not_under_revision_control(self):
+        for model in (models.ApplicantApproval, models.BarriersToParticipation, models.ApplicantGenderIdentity, models.ApplicantRaceEthnicityInformation, models.SchoolInformation):
+            with self.subTest(model=model):
+                try:
+                    version_query = Version.objects.get_for_model(model)
+                    self.assertFalse(True)
+                except reversion.errors.RegistrationError:
+                    pass
 
 
     def test_applicants_cannot_see_essays(self):

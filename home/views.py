@@ -436,7 +436,7 @@ def get_current_round_for_sponsors():
     return current_round
 
 
-class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, SessionWizardView):
+class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWizardView):
     template_name = 'home/wizard_form.html'
     condition_dict = {
             'Payment Eligibility': work_eligibility_is_approved,
@@ -3334,7 +3334,7 @@ class NotifyEssayNeedsUpdating(LoginRequiredMixin, ComradeRequiredMixin, View):
         email.applicant_essay_needs_updated(essay.applicant.applicant, request)
         return redirect(essay.applicant.get_preview_url())
 
-class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, UpdateView):
+class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     model = BarriersToParticipation
 
     fields = [
@@ -3380,7 +3380,7 @@ class NotifySchoolInformationUpdating(LoginRequiredMixin, ComradeRequiredMixin, 
         email.applicant_school_info_needs_updated(school_info.applicant.applicant, request)
         return redirect(school_info.applicant.get_preview_url())
 
-class SchoolInformationUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, UpdateView):
+class SchoolInformationUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     model = SchoolInformation
 
     fields = [
