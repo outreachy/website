@@ -13,6 +13,7 @@ from django.contrib.auth.models import User
 from django.core import validators
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.db import transaction
 from django.forms import ValidationError
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -46,6 +47,19 @@ from wagtail.wagtailembeds.blocks import EmbedBlock
 
 from . import email
 from .feeds import WagtailFeed
+
+# These constants are used across several different models
+# Please be cautious about shorting them,
+# as it may mean stored objects are no longer valid.
+# When in doubt, use a longer max character length or define a new constant.
+
+SENTENCE_LENGTH=100
+PARAGRAPH_LENGTH=800
+THREE_PARAGRAPH_LENGTH=3000
+EIGHT_PARAGRAPH_LENGTH=8000
+TIMELINE_LENGTH=30000
+LONG_LEGAL_NAME=800
+SHORT_NAME=100
 
 class HomePage(Page):
     body = StreamField([
@@ -773,6 +787,145 @@ class RoundPage(AugmentDeadlines, Page):
         context['role'] = Role(request.user, self)
         return context
 
+class StatisticTotalApplied(models.Model):
+    internship_round = models.OneToOneField(RoundPage, on_delete=models.CASCADE, primary_key=True)
+    total_applicants = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+    total_approved = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+    total_pending = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+    total_rejected = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+    total_withdrawn = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+    def clean(self):
+        if self.total_applicants != (self.total_approved + self.total_pending + self.total_rejected + self.total_withdrawn):
+            error_string = 'Total applicants != approved + pending + rejected + withdrawn'
+            raise ValidationError({'total_applicants': error_string})
+
+class StatisticApplicantCountry(models.Model):
+    internship_round = models.ForeignKey(RoundPage)
+    country_living_in_during_internship = models.CharField(
+            verbose_name='Country interns are living in during the internship',
+            max_length=PARAGRAPH_LENGTH,
+            )
+
+    country_living_in_during_internship_code = models.CharField(
+            verbose_name='ISO 3166-1 alpha-2 country code',
+            max_length=2,
+            )
+
+    total_applicants = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+class StatisticAmericanDemographics(models.Model):
+    internship_round = models.OneToOneField(RoundPage, on_delete=models.CASCADE, primary_key=True)
+
+    # total accepted applicants who are U.S. nationals or permanent residents
+    total_approved_american_applicants = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+    # total accepted applicants who are U.S. nationals or permanent residents and
+    # Black/African American, Hispanic/Latinx, Native American,
+    # Alaska Native, Native Hawaiian, or Pacific Islander
+    total_approved_american_bipoc = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+class StatisticGenderDemographics(models.Model):
+    internship_round = models.OneToOneField(RoundPage, on_delete=models.CASCADE, primary_key=True)
+
+    # Note: These could be overlapping gender identities
+    # For example, someone could be a non-binary woman, or a trans masculine agender person.
+    # In short, these totals will not add up to the total number of accepted applicants.
+
+    # total accepted applicants who answered 'yes' to "Are you transgender?"
+    total_transgender_people = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+    # total accepted applicants who answered 'yes' to "Are you genderqueer?"
+    total_genderqueer_people = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+    # total accepted applicants checked the 'man' gender box
+    total_men = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+    # Note: Trans men are men!
+    #
+    # If an applicant identifies as a man, they would have checked the 'man' gender box.
+    # However, some non-binary people may identify as trans masculine, but don't identify as men.
+    #
+    # Don't assume that trans masculine and trans feminine people are binary.
+
+    # total accepted applicants checked the 'trans masculine' gender box
+    total_trans_masculine_people = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+    # total accepted applicants checked the 'woman' gender box
+    total_women = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+    # total accepted applicants checked the 'trans feminine' gender box
+    total_trans_feminine_people = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+    # total accepted applicants checked a gender identity other
+    # than 'man', 'woman', 'trans masculine', or 'trans feminine'
+    total_non_binary_people = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+    # total accepted applicants who self identified their gender
+    # We get a lot of people who self-identify as "girl" instead of "woman"
+    # So self-identification is not an indication of whether they are non-binary
+    total_who_self_identified_gender = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+    def percentage_accepted_who_are_women(self):
+        return int(round(100 * (self.total_women / self.internship_round.statistictotalapplied)))
+
+    def percentage_accepted_who_are_men(self):
+        return int(round(100 * (self.total_men / self.internship_round.statistictotalapplied)))
+
+    def percentage_accepted_who_are_transgender(self):
+        return int(round(100 * (self.total_transgender_people / self.internship_round.statistictotalapplied)))
+
+    def percentage_accepted_who_are_non_binary(self):
+        return int(round(100 * (self.total_non_binary_people / self.internship_round.statistictotalapplied)))
+
 class CohortPage(Page):
     round_start = models.DateField("Round start date")
     round_end = models.DateField("Round end date")
@@ -835,18 +988,6 @@ class AlumInfo(Orderable):
 def mentor_id():
     # should be a multiple of three
     return urlsafe_b64encode(urandom(9))
-
-# There are several project descriptions on the last round page
-# that are far too long. This feels about right.
-SENTENCE_LENGTH=100
-# Current maximum description paragraph on round 15 page is 684.
-PARAGRAPH_LENGTH=800
-THREE_PARAGRAPH_LENGTH=3000
-EIGHT_PARAGRAPH_LENGTH=8000
-# Longest application last round was 28,949 characters
-TIMELINE_LENGTH=30000
-LONG_LEGAL_NAME=800
-SHORT_NAME=100
 
 def make_comrade_photo_filename(instance, original_name):
     # Use the underlying User object's primary key rather than any
@@ -2300,6 +2441,160 @@ class ApplicantApproval(ApprovalStatus):
     submission_date = models.DateField(auto_now_add=True)
     ip_address = models.GenericIPAddressField(protocol="both")
     review_owner = models.ForeignKey(ApplicationReviewer, blank=True, null=True)
+    collected_statistics = models.BooleanField(default=False)
+
+    def collect_statistics(self):
+        if self.collected_statistics:
+            return
+
+        with transaction.atomic():
+            # Collect statistics about approval and rejection rates
+            try:
+                stats = StatisticTotalApplied.objects.get(
+                        internship_round = self.application_round,
+                        )
+            except StatisticTotalApplied.DoesNotExist:
+                stats = StatisticTotalApplied(
+                        internship_round = self.application_round,
+                        )
+            stats.total_applicants += 1
+            if self.approval_status == ApprovalStatus.APPROVED:
+                stats.total_approved += 1
+            if self.approval_status == ApprovalStatus.PENDING:
+                stats.total_pending += 1
+            if self.approval_status == ApprovalStatus.REJECTED:
+                stats.total_rejected += 1
+            if self.approval_status == ApprovalStatus.WITHDRAWN:
+                stats.total_withdrawn += 1
+            stats.save()
+
+            if self.approval_status != ApprovalStatus.APPROVED:
+                return
+
+            # Collect statistics about country living in during the internship
+            # Skip applicants who just filled out the location in the Comrade,
+            # not the question in the essay page about where they would be
+            # living during the internship
+            try:
+                data = BarriersToParticipation.objects.get(
+                        applicant=self,
+                        )
+                if data.country_living_in_during_internship != 'Unknown' and self.approval_status == ApprovalStatus.APPROVED:
+                    try:
+                        # Country names may change. Do the ISO codes change??
+                        stats = StatisticApplicantCountry.objects.get(
+                                internship_round = self.application_round,
+                                country_living_in_during_internship_code = self.barrierstoparticipation.country_living_in_during_internship_code,
+                                )
+
+                    except StatisticApplicantCountry.DoesNotExist:
+                        stats = StatisticApplicantCountry(
+                                internship_round = self.application_round,
+                                country_living_in_during_internship = self.barrierstoparticipation.country_living_in_during_internship,
+                                country_living_in_during_internship_code = self.barrierstoparticipation.country_living_in_during_internship_code,
+                                )
+                    stats.total_applicants += 1
+                    stats.save()
+            except BarriersToParticipation.DoesNotExist:
+                pass
+
+            # Collect statistics about race and ethnicity for American applicants
+            try:
+                payment_eligibility = PaymentEligibility.objects.get(
+                        applicant=self,
+                        )
+                if payment_eligibility.us_national_or_permanent_resident and self.approval_status == ApprovalStatus.APPROVED:
+                    try:
+                        stats = StatisticAmericanDemographics.objects.get(
+                                internship_round = self.application_round,
+                                )
+                    except StatisticAmericanDemographics.DoesNotExist:
+                        stats = StatisticAmericanDemographics(
+                                internship_round = self.application_round,
+                                )
+                    stats.total_approved_american_applicants += 1
+
+                    try:
+                        race_and_ethnicity = ApplicantRaceEthnicityInformation.objects.get(
+                                applicant=self,
+                                )
+                        if race_and_ethnicity.us_resident_demographics == True:
+                            stats.total_approved_american_bipoc += 1
+                    except ApplicantRaceEthnicityInformation.DoesNotExist:
+                        pass
+                    stats.save()
+            except PaymentEligibility.DoesNotExist:
+                pass
+
+            # Collect statistics about gender identities
+            try:
+                gender_identity = ApplicantGenderIdentity.objects.get(
+                        applicant=self,
+                        )
+                try:
+                    stats = StatisticGenderDemographics.objects.get(
+                            internship_round = self.application_round,
+                            )
+                except StatisticGenderDemographics.DoesNotExist:
+                    stats = StatisticGenderDemographics(
+                            internship_round = self.application_round,
+                            )
+
+                if gender_identity.transgender:
+                    stats.total_transgender_people += 1
+                if gender_identity.genderqueer:
+                    stats.total_genderqueer_people += 1
+                if gender_identity.man:
+                    stats.total_men += 1
+                if gender_identity.trans_masculine:
+                    stats.total_trans_masculine_people += 1
+                if gender_identity.woman:
+                    stats.total_women += 1
+                if gender_identity.trans_feminine:
+                    stats.total_trans_feminine_people += 1
+
+                non_binary_genders = [f.attname for f in gender_identity._meta.get_fields() if f.get_internal_type() == 'BooleanField' and f.name != 'prefer_not_to_say' and f.name != 'man' and f.name != 'woman' and f.name != 'trans_masculine' and f.name != 'trans_feminine' and f.name != 'transgender' and f.name != 'genderqueer']
+
+                is_non_binary = False
+                for gender in non_binary_genders:
+                    if getattr(gender_identity, gender) == True:
+                        is_non_binary = True
+
+                if is_non_binary:
+                    stats.total_non_binary_people += 1
+
+                if gender_identity.self_identify:
+                    stats.total_who_self_identified_gender += 1
+
+                stats.save()
+
+            except ApplicantGenderIdentity.DoesNotExist:
+                pass
+
+            self.collected_statistics = True
+            self.save()
+            # end atomic transaction
+
+    def purge_sensitive_data(self):
+        with transaction.atomic():
+            try:
+                data = ApplicantRaceEthnicityInformation.objects.get(applicant = self)
+                data.delete()
+            except ApplicantRaceEthnicityInformation.DoesNotExist:
+                pass
+
+            try:
+                data = ApplicantGenderIdentity.objects.get(applicant = self)
+                data.delete()
+            except ApplicantGenderIdentity.DoesNotExist:
+                pass
+
+            try:
+                data = BarriersToParticipation.objects.get(applicant = self)
+                data.delete()
+            except BarriersToParticipation.DoesNotExist:
+                pass
+            # end atomic transaction
 
     def is_approver(self, user):
         return user.is_staff

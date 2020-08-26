@@ -3269,29 +3269,13 @@ class ApplicantApprovalUpdate(ApprovalStatusAction):
 
     def get_success_url(self):
         # If the ApplicantApproval was just approved or rejected
-        # delete the essay answers, gender info, and demographics info
+        # collect aggregate anonymized statistics and delete:
+        # - essay answers
+        # - gender identity data
+        # - race and ethnicity demographics
         if self.object.approval_status == ApprovalStatus.APPROVED or self.object.approval_status == ApprovalStatus.REJECTED:
-            # FIXME: Collect aggregate statistics if the essays exist (meaning it hasn't been scrubbed yet)
-
-            try:
-                barriers_to_participation = BarriersToParticipation.objects.get(applicant=self.object)
-                barriers_to_participation.delete()
-            except BarriersToParticipation.DoesNotExist:
-                pass
-
-            # FIXME: Collect anonymized aggregate statistics about gender identity of applicants
-            try:
-                gender = ApplicantGenderIdentity.objects.get(applicant=self.object)
-                gender.delete()
-            except ApplicantGenderIdentity.DoesNotExist:
-                pass
-
-            # FIXME: Collect anonymized aggregate statistics about race and ethnicity of applicants
-            try:
-                race_and_ethnicity = ApplicantRaceEthnicityInformation.objects.get(applicant=self.object)
-                race_and_ethnicity.delete()
-            except ApplicantRaceEthnicityInformation.DoesNotExist:
-                pass
+            self.object.collect_statistics()
+            self.object.purge_sensitive_data()
 
         return self.object.get_preview_url()
 
