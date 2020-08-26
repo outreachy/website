@@ -17,11 +17,12 @@ from home.email import organizers
 @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class InitialApplicationPrivacyTestCase(TestCase):
 
-    def create_initial_application(self, current_round):
-        applicant_approval = factories.ApplicantApprovalFactory(
-                approval_status=models.ApprovalStatus.PENDING,
-                application_round=current_round,
-                )
+    def create_sensitive_info(self, applicant_approval):
+        models.PaymentEligibility(
+                applicant=applicant_approval,
+                us_national_or_permanent_resident=True,
+                living_in_us=True,
+                ).save()
         models.BarriersToParticipation(
                 applicant=applicant_approval,
                 country_living_in_during_internship="Sensitive info - country",
@@ -31,6 +32,52 @@ class InitialApplicationPrivacyTestCase(TestCase):
                 systemic_bias="Sensitive info - educational bias",
                 employment_bias="Sensitive info - employment bias",
                 ).save()
+        models.ApplicantRaceEthnicityInformation(
+                applicant=applicant_approval,
+                us_resident_demographics=True,
+                ).save()
+        models.ApplicantGenderIdentity(
+                applicant=applicant_approval,
+                transgender=True,
+                genderqueer=True,
+                man=False,
+                woman=False,
+                demi_boy=False,
+                demi_girl=False,
+                trans_masculine=False,
+                trans_feminine=False,
+                non_binary=True,
+                demi_non_binary=False,
+                genderflux=False,
+                genderfluid=False,
+                demi_genderfluid=False,
+                demi_gender=False,
+                bi_gender=False,
+                tri_gender=False,
+                multigender=False,
+                pangender=False,
+                maxigender=False,
+                aporagender=False,
+                intergender=False,
+                mavrique=False,
+                gender_confusion=False,
+                gender_indifferent=False,
+                graygender=False,
+                agender=False,
+                genderless=False,
+                gender_neutral=False,
+                neutrois=False,
+                androgynous=False,
+                androgyne=False,
+                prefer_not_to_say=False,
+                ).save()
+
+    def create_initial_application(self, current_round):
+        applicant_approval = factories.ApplicantApprovalFactory(
+                approval_status=models.ApprovalStatus.PENDING,
+                application_round=current_round,
+                )
+        self.create_sensitive_info(applicant_approval)
         return applicant_approval
 
     def create_applicant_reviewer(self, current_round, approval_status):
@@ -87,6 +134,46 @@ class InitialApplicationPrivacyTestCase(TestCase):
         self.assertNotContains(response, '<div class="card-header">Q5. What systemic bias or discrimination would you face if you applied for a job in the technology industry of your country?</div>', html=True)
         self.assertNotContains(response, 'Sensitive info - employment bias')
 
+    def check_race_and_ethnicity_visible_on_application_review(self, account, applicant_approval):
+        response = self.client.get(applicant_approval.get_preview_url())
+        if applicant_approval.applicantraceethnicityinformation and applicant_approval.applicantraceethnicityinformation.us_resident_demographics:
+            self.assertContains(response, "<p>Racial or ethnic minority in the United States technology industry: <b>Yes</b>, they're Black/African American, Hispanic/Latinx, Native American, Alaska Native, Native Hawaiian, or Pacific Islander</p>", html=True)
+        if applicant_approval.applicantraceethnicityinformation and not applicant_approval.applicantraceethnicityinformation.us_resident_demographics:
+            self.assertContains(response, "<p>Racial or ethnic minority in the United States technology industry: <b>No</b>, they're not Black/African American, Hispanic/Latinx, Native American, Alaska Native, Native Hawaiian, or Pacific Islander.</p>", html=True)
+
+    def check_race_and_ethnicity_hidden_from_application_review(self, account, applicant_approval):
+        response = self.client.get(applicant_approval.get_preview_url())
+        self.assertNotContains(response, "<p>Racial or ethnic minority in the United States technology industry: <b>Yes</b>, they're Black/African American, Hispanic/Latinx, Native American, Alaska Native, Native Hawaiian, or Pacific Islander</p>", html=True)
+        self.assertContains(response, "<p>Racial or ethnic minority in the United States technology industry: [Removed]</p>", html=True)
+
+    def check_gender_identity_visible_on_application_review(self, account, applicant_approval):
+        response = self.client.get(applicant_approval.get_preview_url())
+        if applicant_approval.applicantgenderidentity:
+            self.assertContains(response, "<p>Gender identity: <b>{}</b></p>".format(applicant_approval.applicantgenderidentity.__str__()), html=True)
+
+    def check_gender_identity_hidden_from_application_review(self, account, applicant_approval):
+        response = self.client.get(applicant_approval.get_preview_url())
+        self.assertContains(response, "<p>Gender identity: [Removed]</p>", html=True)
+
+
+    def check_sensitive_data_removed_from_database(self, applicant_approval):
+        try:
+            data = models.ApplicantGenderIdentity.objects.get(applicant=applicant_approval)
+            self.assertIsNone(data)
+        except models.ApplicantGenderIdentity.DoesNotExist:
+            pass
+
+        try:
+            data = models.ApplicantRaceEthnicityInformation.objects.get(applicant=applicant_approval)
+            self.assertIsNone(data)
+        except models.ApplicantRaceEthnicityInformation.DoesNotExist:
+            pass
+
+        try:
+            data = models.BarriersToParticipation.objects.get(applicant=applicant_approval)
+            self.assertIsNone(data)
+        except models.BarriersToParticipation.DoesNotExist:
+            pass
 
     def test_initial_applications_objects_not_under_revision_control(self):
         for model in (models.ApplicantApproval, models.BarriersToParticipation, models.ApplicantGenderIdentity, models.ApplicantRaceEthnicityInformation, models.SchoolInformation):
@@ -98,7 +185,7 @@ class InitialApplicationPrivacyTestCase(TestCase):
                     pass
 
 
-    def test_applicants_cannot_see_essays(self):
+    def test_applicants_cannot_see_sensitive_data(self):
         """
         This tests that applicants cannot see their essay answers after the initial application was submitted.
         The round is in the initial application period.
@@ -109,7 +196,7 @@ class InitialApplicationPrivacyTestCase(TestCase):
 
         self.check_essay_hidden_from_eligibility_results(applicant_approval)
 
-    def test_approved_reviewers_can_see_essays(self):
+    def test_approved_reviewers_can_see_sensitive_data(self):
         """
         This tests that approved applicant reviewers can see applicant essay answers after the initial application was submitted.
         The round is in the initial application period.
@@ -122,8 +209,10 @@ class InitialApplicationPrivacyTestCase(TestCase):
         self.client.force_login(reviewer.account)
 
         self.check_essay_visible_on_application_review(account=reviewer.account, applicant_approval=applicant_approval)
+        self.check_race_and_ethnicity_visible_on_application_review(account=reviewer.account, applicant_approval=applicant_approval)
+        self.check_gender_identity_visible_on_application_review(account=reviewer.account, applicant_approval=applicant_approval)
 
-    def test_essays_removed_on_processing(self):
+    def test_sensitive_data_removed_on_processing(self):
         """
         This tests that approved applicant reviewers can see applicant essay answers after the initial application was submitted.
         The round is in the initial application period.
@@ -152,5 +241,8 @@ class InitialApplicationPrivacyTestCase(TestCase):
                 # Reload the object from the database after the invoked view modifies the database
                 applicant_approval = models.ApplicantApproval.objects.get(pk=applicant_approval.pk)
                 self.assertEqual(applicant_approval.approval_status, approval_status)
+                self.check_sensitive_data_removed_from_database(applicant_approval)
                 self.check_essay_hidden_from_application_review(account=reviewer.account, applicant_approval=applicant_approval)
+                self.check_race_and_ethnicity_hidden_from_application_review(account=reviewer.account, applicant_approval=applicant_approval)
+                self.check_gender_identity_hidden_from_application_review(account=reviewer.account, applicant_approval=applicant_approval)
                 applicant_approval.delete()
