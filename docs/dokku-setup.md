@@ -186,6 +186,27 @@ Finally, we can destroy the older database (use whatever was the old name):
 ssh dokku@outreachy.org postgres:destroy test-database-updated-old
 ```
 
+Debugging
+---
+
+You can turn on dokku log verbosity by running:
+
+```
+ssh dokku@outreachy.org trace:on
+```
+
+Turn it off by running:
+
+```
+ssh dokku@outreachy.org trace:off
+```
+
+Sometimes postgres linking fails? If you have unlinked your old database and you get this error when you link in the new one `Unable to use default or generated URL alias`, then run the following command:
+
+```
+ssh dokku@outreachy.org config:unset --no-restart test DATABASE_URL DOKKU_POSTGRES_YELLOW_URL
+```
+
 Backing Up the Database
 ---
 
