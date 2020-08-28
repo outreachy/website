@@ -6,7 +6,7 @@
 				<p><strong>{{ tcs.longest_period_free }} days out of {{ tcs.internship_total_days.days }} days free</strong> from full-time commitments during the internship.</p>
 				<ul>
 					<li>Applicant has {{ tcs.longest_period_free }} consecutive days free from full-time commitments during the internship period.</li>
-					<li>Applicants are required to have at least 49 consecutive days free from full-time commitments.</li>
+					<li>This applicant is required to have at least {{ application.required_days_free }} consecutive days free from full-time commitments.</li>
 					<li>The internship period is {{ tcs.internship_total_days.days }} days long.</li>
 					<li>Applicant is free from {{ tcs.free_period_start_date }} to {{ tcs.free_period_end_date }}.</li>
 				</ul>
@@ -14,7 +14,7 @@
 				{% if not tcs.school_time_commitments and not tcs.volunteer_time_commitments and not tcs.employment_time_commitments and not tcs.noncollege_school_time_commitments %}
 					<p>Applicant has not listed any university/college, coding school/online courses, work, or volunteer time commitments.</p>
 				{% else %}
-					<div id="time-commitments-timeline" style="height: 13em"{% if tcs.longest_period_free >= 49 %} class="enough-time"{% endif %}></div>
+					<div id="time-commitments-timeline" style="height: 13em"{% if tcs.longest_period_free >= application.required_days_free %} class="enough-time"{% endif %}></div>
 				{% endif %}
 				{% if tcs.school_time_commitments %}
 					<div class="container">

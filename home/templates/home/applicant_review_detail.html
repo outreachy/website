@@ -52,12 +52,12 @@
 		</li>
 	{% with tcs=application.get_time_commitments %}
 		<li>
-			{% if tcs.longest_period_free < 49 %}
+			{% if tcs.longest_period_free < application.required_days_free %}
 				<span class="badge badge-warning">Warning</span> Time eligibility: <b>No</b>, applicant has
 			{% else %}
 				Time eligibility: <b>Yes</b>, applicant has
 			{% endif %}
-			{{ tcs.longest_period_free }} days free / {{ tcs.internship_total_days.days }} days total. Applicants are required to have 49 days free.
+			{{ tcs.longest_period_free }} days free / {{ tcs.internship_total_days.days }} days total. This applicant is required to have {{ application.required_days_free }} days free.
 		</li>
 		{% if tcs.employment_time_commitments %}
 			<li><span class="badge badge-warning">Warning</span> Applicant has a part-time job.</li>

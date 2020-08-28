@@ -86,13 +86,17 @@ Outreachy eligibility results
 
 	<p>After reviewing your time commitments, we have determined you do not meet our minimum free time criteria.</p>
 	{% if tcs.school_time_commitments %}
-		<p>{% include 'home/snippet/student_hemisphere.html' %}</p>
+		<p>{% with current_round=applicant.application_round %}{% include 'home/snippet/student_hemisphere.html' %}{% endwith %}</p>
 	{% else %}
-		<p>All applicants must have 49 consecutive days free from
-		full-time commitments to be eligible. Applicants are also not
-		eligible if they have a technical part-time job during the
+		<p>Applicants who are not students are eligible for Outreachy
+		if they have {{ current_round.minimum_days_free_for_non_students }}
+		consecutive days free from full-time responsibility during the internship period.
+		</p>
+
+		<p>Applicants are not eligible if they have a technical part-time job during the
 		Outreachy internship, or they have already been accepted for
 		another full-time technical job.</p>
+
 	{% endif %}
 
 	<p>
@@ -118,7 +122,7 @@ Outreachy eligibility results
 			<p>Based on the information you provided, you have the
 			following consecutive days free from full-time commitments:
 			<strong>{{ tcs.free_period_start_date|date:"F d, Y" }} to {{ tcs.free_period_end_date|date:"F d, Y" }}</strong>.</p>
-			<p>Outreachy interns must have a minimum number of 49 consecutive days free from full-time commitments
+			<p>Outreachy interns must have a minimum number of {{ role.current_round.minimum_days_free_for_non_students }}  consecutive days free from full-time commitments
 			from {{ role.current_round.internstarts|date:"F d, Y" }} to {{ role.current_round.internends|date:"F d, Y" }}.
 			</p>
 			<p>You have {{ tcs.longest_period_free }} consecutive days free from full-time commitments.
@@ -127,7 +131,7 @@ Outreachy eligibility results
 			<p>Based on the information you provided, you have no
 			consecutive days free from full-time commitments during the Outreachy internship from
 			<strong>{{ role.current_round.internstarts|date:"F d, Y" }} to {{ role.current_round.internends|date:"F d, Y" }}</strong>.</p>
-			<p>Outreachy interns must have a minimum number of 49 consecutive days free from full-time commitments.
+			<p>Outreachy interns must have a minimum number of {{ role.current_round.minimum_days_free_for_non_students }} consecutive days free from full-time commitments.
 			</p>
 		{% endif %}
 	{% endif %}

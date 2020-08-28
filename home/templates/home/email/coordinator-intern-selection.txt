@@ -38,7 +38,9 @@ Outreachy organizers view this internship as a fellowship. Mentors should not ex
 
 For this approach to succeed, Outreachy mentors need to carefully review the contributions each applicant made and their interactions with the applicant. A strong applicant shows good problem-solving skills. Many applicants may not have contributed to open source before, but a strong applicant will quickly ramp up on new skills. The strongest applicants will have submitted multiple smaller contributions and worked their way up to larger contributions. We value applicants who are consistently working and in contact with mentors when they are stuck, over applicants who submitted larger contributions late in the contribution process.
 
-Applicants are eligible for Outreachy if they have 49 consecutive days free from full-time responsibility during the internship period (out of a possible 91 days). This is the absolute minimum requirement, even taking into account that the internship can be extended by up to five weeks. Applicants that are close to the minimum number of days free should be a very strong applicant who has consistently worked with mentors on multiple contributions.
+Applicants who are not students are eligible for Outreachy if they have {{ current_round.minimum_days_free_for_non_students }} consecutive days free from full-time responsibility during the internship period. Applicants who are students are eligible for Outreachy if they have {{ current_round.minimum_days_free_for_students }} consecutive days free from school and other time commitments during the internship period. The internship period is 91 days long.
+
+This is the absolute minimum requirement, even taking into account that the internship can be extended by up to five weeks. Applicants that are close to the minimum number of days free should be a very strong applicant who has consistently worked with mentors on multiple contributions.
 
 Each mentor can select their intern by following the 'Review applicants' link from their dashboard:
 

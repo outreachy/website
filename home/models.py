@@ -264,6 +264,14 @@ class RoundPage(AugmentDeadlines, Page):
     orgreminder = models.DateField("Date to remind orgs to submit their home pages")
     landingdue = models.DateField("Date community landing pages are due")
     coupon_code = models.CharField(blank=True, max_length=255, verbose_name='Coupon code for the book "Forge Your Future with Open Source"')
+    minimum_days_free_for_students = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=49,
+            )
+    minimum_days_free_for_non_students = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=49,
+            )
     initial_applications_open = models.DateField("Date initial applications open")
     outreachy_chat = models.DateTimeField("Date and time of the Outreachy Twitter chat")
     initial_applications_close = models.DateField("Date initial applications close")
@@ -2653,6 +2661,13 @@ class ApplicantApproval(ApprovalStatus):
             return False
         return True
 
+    def required_days_free(self):
+        try:
+            SchoolInformation.objects.get(applicant=self)
+            return self.application_round.minimum_days_free_for_students
+        except SchoolInformation.DoesNotExist:
+            return self.application_round.minimum_days_free_for_non_students
+
     def get_reason_for_status(self):
         if self.is_approved():
             return ''
@@ -2679,7 +2694,8 @@ class ApplicantApproval(ApprovalStatus):
 
         if self.reason_denied == 'TIME':
             tcs = self.get_time_commitments()
-            return 'Not enough days free: ' + str(tcs['longest_period_free']) + ' days free / ' + str(tcs['internship_total_days'].days) + ' days total, 49 days free required'
+
+            return 'Not enough days free: ' + str(tcs['longest_period_free']) + ' days free / ' + str(tcs['internship_total_days'].days) + ' days total, {} days free required'.format(self.required_days_free())
 
         if self.reason_denied[:5] == 'ALIGN':
             return 'Essay answers not aligned with Outreachy program goals'
@@ -2691,9 +2707,11 @@ class ApplicantApproval(ApprovalStatus):
         try:
             if self.schoolinformation and self.schoolinformation.applicant_should_update:
                 tcs = self.get_time_commitments()
-                time_string = str(tcs['longest_period_free']) + ' days free / ' + str(tcs['internship_total_days'].days) + ' days total, 49 days free required'
+
+                time_string = str(tcs['longest_period_free']) + ' days free / ' + str(tcs['internship_total_days'].days) + ' days total, {} days free required'.format(self.required_days_free())
 
                 return 'Revisions to school info requested: ' + time_string
+
         except SchoolInformation.DoesNotExist:
             pass
 
@@ -2758,18 +2776,23 @@ class ApplicantApproval(ApprovalStatus):
                 longest_period_free = group_len
                 free_period_start_day = counter
             counter = counter + group_len
+
+        internship_total_days = current_round.internends - current_round.internstarts
+
         # Catch the case where the person is never free during the internship period
         if longest_period_free == 0 and free_period_start_day == 0 and counter != 0:
             longest_period_free = None
             free_period_start_date = None
             free_period_end_date = None
+            percentage_free = 0
         else:
             free_period_start_date = current_round.internstarts + datetime.timedelta(days=free_period_start_day)
             free_period_end_date = current_round.internstarts + datetime.timedelta(days=free_period_start_day + longest_period_free - 1)
-        internship_total_days = current_round.internends - current_round.internstarts
+            percentage_free = int(100 * longest_period_free / internship_total_days.days)
 
         return {
                 'longest_period_free': longest_period_free,
+                'percentage_free': percentage_free,
                 'free_period_start_date': free_period_start_date,
                 'free_period_end_date': free_period_end_date,
                 'internship_total_days': internship_total_days,

@@ -351,11 +351,15 @@ def time_commitments_are_approved(wizard, application_round):
             for d in wizard.get_cleaned_data_for_step('School Term Info') or []
             if d ]
 
-    required_free_days = 7*7
+    if stcs:
+        required_days_free = application_round.minimum_days_free_for_students
+    else:
+        required_days_free = application_round.minimum_days_free_for_non_students
+
     calendar = create_time_commitment_calendar(chain(tcs, ctcs, etcs, stcs), application_round)
 
     for key, group in groupby(calendar, lambda hours: hours <= 20):
-        if key is True and len(list(group)) >= required_free_days:
+        if key is True and len(list(group)) >= required_days_free:
             return True
     return False
 

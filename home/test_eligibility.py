@@ -1,5 +1,5 @@
 from datetime import date, timedelta
-from django.test import SimpleTestCase
+from django.test import TestCase
 
 from .models import ApprovalStatus, RoundPage, PromotionTracking
 from .views import determine_eligibility, EligibilityUpdateView
@@ -17,7 +17,7 @@ class MockWizard(object):
     def get_cleaned_data_for_step(self, step):
         return self.data.get(step)
 
-class EligibilityTests(SimpleTestCase):
+class EligibilityTests(TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -25,6 +25,8 @@ class EligibilityTests(SimpleTestCase):
         cls.application_round = RoundPage(
             internstarts=date(2018, 3, 1),
             internends=date(2018, 6, 1),
+            minimum_days_free_for_students=42,
+            minimum_days_free_for_non_students=49,
         )
 
     all_gender_identities = (
@@ -369,14 +371,14 @@ class EligibilityTests(SimpleTestCase):
         self.assertTimeEligible(
             ApprovalStatus.PENDING,
             'ESSAY',
-            school=self.vacation(days=49),
+            school=self.vacation(days=42),
         )
 
     def test_reject_short_school_vacation(self):
         self.assertTimeEligible(
             ApprovalStatus.REJECTED,
             'TIME',
-            school=self.vacation(days=48),
+            school=self.vacation(days=41),
         )
 
     def test_reject_full_time_coding_school(self):

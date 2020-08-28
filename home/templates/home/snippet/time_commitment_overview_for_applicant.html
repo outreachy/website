@@ -3,13 +3,6 @@
 		<div class="card-header bg-secondary text-white">Time commitment information</div>
 		<div class="card-body">
 			<div class="card-text">
-				<p><strong>{{ tcs.longest_period_free }} days out of {{ tcs.internship_total_days.days }} days free</strong> from full-time commitments during the internship.</p>
-				<ul>
-					<li>Applicant has {{ tcs.longest_period_free }} consecutive days free from full-time commitments during the internship period.</li>
-					<li>Applicants are required to have at least 49 consecutive days free from full-time commitments.</li>
-					<li>The internship period is {{ tcs.internship_total_days.days }} days long.</li>
-					<li>Applicant is free from {{ tcs.free_period_start_date|date:"Y-m-d" }} to {{ tcs.free_period_end_date|date:"Y-m-d" }}.</li>
-				</ul>
 				<h3>Details</h3>
 				{% with tcs=role.application.get_time_commitments applicant=role.application.applicant %}
 					{% if not tcs.school_time_commitments and not tcs.volunteer_time_commitments and not tcs.employment_time_commitments and not tcs.noncollege_school_time_commitments %}
