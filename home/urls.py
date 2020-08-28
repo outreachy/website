@@ -129,6 +129,7 @@ urlpatterns = [
     url(r'^blog/2019-10-01/pick-a-project/$', views.blog_2019_pick_projects, name='2019-12-pick-a-project'),
     url(r'^blog/2019-10-18/open-projects/$', views.blog_2019_10_18_open_projects, name='2019-12-project-promotion'),
     url(r'^blog/2020-03-27/outreachy-response-to-covid-19/$', views.blog_2020_03_covid, name='2020-03-covid'),
+    url(r'^blog/2020-08-28/december-2020-internship-applications-open/$', views.blog_2020_08_23_initial_applications_open, name='2020-08-initial-apps-open'),
 
     url(r'^privacy-policy/$', views.privacy_policy, name='privacy-policy'),
 ]

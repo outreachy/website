@@ -2664,6 +2664,18 @@ def blog_2019_10_18_open_projects(request):
 def blog_2020_03_covid(request):
     return render(request, 'home/blog/2020-03-27-outreachy-response-to-covid-19.html')
 
+def blog_2020_08_23_initial_applications_open(request):
+    try:
+        current_round = RoundPage.objects.get(
+            internstarts__gte='2020-11-01',
+            internends__lte='2021-04-01',
+        )
+    except RoundPage.DoesNotExist:
+        current_round = None
+    return render(request, 'home/blog/2020-08-23-initial-applications-open.html', {
+        'current_round': current_round,
+        })
+
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(InitialMentorFeedback,
             fields=(

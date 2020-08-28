@@ -1,0 +1,220 @@
+{% extends "base.html" %} 
+{% load static %}
+
+{% block title %}
+Outreachy December 2020 internships
+{% endblock %}
+
+{% block content %}
+{% load humanize %}
+
+
+<h1>Outreachy December 2020 internships</h1>
+
+<p><i>Date: August 28, 2020</i></p>
+{% comment %}<p><i>Last updated: DATE</i> - See the "SECTION" section below.</p>{% endcomment %}
+
+<img src="{% static 'img/apply-now-flickr-cc-by-CC-BY-2_0-GotCredit.jpg' %}" alt="cc-by 2.0 GotCredit" class="img-fluid">
+<p><i>Photo CC BY 2.0 GotCredit</i></p>
+
+<h2>Outreachy internship applications</h2>
+<p>
+Outreachy initial applications are open for the December 2020 to March 2021 internships.
+</p>
+
+<p>
+The initial application system will open at {{ current_round.initial_applications_open }} at 4pm UTC. Initial applications are due {{ current_round.initial_applications_close }} at 4pm UTC.
+</p>
+
+<p>
+Initial applications are reviewed on a first-come-first-served basis. Submit your initial application early!
+</p>
+
+<p>
+Please see the updates below about <a href="#student-eligibility">student eligibility</a> and <a href='essay-questions'>updated essay questions</a>.
+</p>
+
+<p>Please read our <a href='{% url 'docs-applicant' %}'>applicant guide</a> before applying.</p>
+
+<p><a href="{% url 'eligibility-information' %}" class="btn btn-success">Apply for Outreachy</a></p>
+
+<hr>
+
+<h2 id='toc'>Important information</h2>
+
+<p>
+<a href='#what-is-outreachy'>What is Outreachy?</a><br>
+<a href='#important-dates'>Important dates</a><br>
+<a href='#student-eligibility'>Student eligibility policy</a></br>
+<a href='#covid-19'>COVID-19 temporary time commitment policy</a></br>
+<a href='#essay-questions'>Updated essay questions</a><br>
+<a href='#data-retention'>Sensitive data retention policy</a><br>
+</p>
+
+<hr>
+
+<h2 id='what-is-outreachy'><a href='#what-is-outreachy'>What is Outreachy?</a></h2>
+
+<p>
+Outreachy provides internships from May to August and December to March.
+</p>
+<p>
+You'll work on open source projects. Experienced mentors will guide you.
+</p>
+<p>
+Outreachy internships are paid! You receive a $6,000 USD total stipend.
+</p>
+<p>
+The internship is completely remote. You'll work from home. Your mentor will also be remote.
+</p>
+<h2>Outreachy supports diversity in tech</h2>
+
+{% include 'home/snippet/diversity_statement.html' %}
+
+<h2 id='important-dates'><a href='#important-dates'>Important dates</a></h2>
+
+{% include 'home/snippet/round_timeline.html' %}
+
+<h2 id='student-eligibility'><a href='#student-eligibility'>Student eligibility policy</a></h2>
+
+<p>
+Outreachy is open to both students and people who are not students.
+Please see our full <a href="{% url 'eligibility-information' %}#rules">eligibility guidelines</a>.
+</p>
+
+<p>
+Outreachy organizers understand that schools are impacted by COVID-19.
+Some schools may have changed their term dates.
+We expect school term dates to change in the following year as well.
+</p>
+
+<p>
+Outreachy wants to ensure students from the southern hemisphere have a fair chance at an internship.
+Therefore, we are sticking with our policy that northern hemisphere students are only eligible for the May to August rounds.
+</p>
+
+<p>
+We invite students from the southern hemisphere to apply to the Outreachy December 2020 to March 2021 round.
+If your university is near the equator, you are welcome to apply.
+</p>
+
+<p>
+We consider India to be in the northern hemisphere, regardless of where the university is located.
+Students in India should to apply to the May to August 2021 internships.
+</p>
+
+<p>
+Brazilian public university term dates have been impacted by COVID-19.
+Outreachy organizers have reviewed the revised term dates that are available.
+For this round, students must have 42 days free from school and exams during the internship period.
+This allows the majority of Brazilian public universities to be eligible for Outreachy.
+</p>
+
+<p>
+Outreachy organizers will review the revised term dates for northern hemisphere schools.
+We will implement a similar policy (if needed) for the May to August 2021 round.
+We thank northern hemisphere students for their patience and support of southern hemisphere students.
+</p>
+
+<h2 id='covid-19'><a href='#covid-19'>COVID-19 temporary time commitment policy</a></h2>
+
+<p>
+The Outreachy PLC has approved a temporary intern time commitment policy. This temporary policy applies to the December 2020 to March 2021 round:
+</p>
+
+<ul>
+	<li>
+		Interns impacted by COVID-19 are only required to work 30 hours a week
+	</li>
+	<li>
+		Interns who are not impacted are encouraged to work 40 hours a week
+	</li>
+</ul>
+
+<p>
+We're only asking impacted interns to commit to working 75% of their normal hours. If interns are able to work more normal hours, they will get more out of the internship. We encourage interns to work as best they can, while not burning themselves out.
+</p>
+
+<p>
+Mentors have been briefed to expect that some impacted interns may work less. That may mean mentors reduce the scope of their project, or expect that it will not be finished.
+</p>
+
+<p>
+Outreachy already has permanent policies in place that ensure flexibility for interns:
+</p>
+
+<ul>
+	<li>
+		Interns are required to work 12 weeks out of the 13 week internship
+	</li>
+	<li>
+		If interns temporarily cannot work full-time, internships can be extended
+	</li>
+	<li>
+		Internships can be extended for up to 5 weeks
+	</li>
+</ul>
+
+<h2 id='essay-questions'><a href='#essay-questions'>Updated essay questions</a></h2>
+
+<p>
+Outreachy organizers have put into place changes to the essay questions.
+These changes will allow us to review initial applications faster and with more accuracy.
+</p>
+
+<p>We've added the following questions:</p>
+
+<ol>
+	<li><p><b>What country will you be living in from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}?</b></p></li>
+
+	<li><p><b>Are you part of an underrepresented group (in the technology industry of the country listed above)? How are you underrepresented?</b></p></li>
+
+</ol>
+
+<p>We prefer essays with detailed examples or stories from your life. Applicants who were accepted in the past typically write 500 to 900 characters per essay question.</p>
+
+<p>Please see our <a href='{% url 'docs-applicant' %}#initial-application'>applicant guide</a> for more information on writing a good essay.</p>
+
+<h2 id='data-retention'><a href=#data-retention'>Sensitive data retention policy</a></h2>
+
+<p>
+Outreachy organizer have implemented a new data retention policy.
+This will ensure that we only keep sensitive personal data for as long as we need it.
+</p>
+
+<p>
+Initial applications gather some sensitive information:
+</p>
+<ul>
+	<li>Gender</li>
+	<li>Race/ethnicity of U.S. citizens and permanent residents</li>
+	<li>Country you will be living in during the internship</li>
+	<li>Essay answers</li>
+</ul>
+
+<p>
+We now hide the above sensitive information from the eligibility results page.
+This page is shown to applicants before the contribution period opens.
+</p>
+
+<p>
+Our new policy is to permanently remove this sensitive information
+as soon as an initial application is accepted or rejected.
+Applications that are still pending when the contribution period is open
+will have the sensitive data removed.
+We expect this means most applicants will have their sensitive data removed
+within 1-2 weeks of submitting their initial application.
+</p>
+
+<p>
+Unfortunately, that means Outreachy organizers cannot
+re-evaluate initial applications after the contribution period opens.
+</p>
+
+<p>
+We will collect anonymized aggregate statistics about applicants.
+This will include gender, race, and country living in during the internship.
+The aggregate statistics will be used in sponsor communications and Outreachy blog posts.
+</p>
+
+{% endblock %}
