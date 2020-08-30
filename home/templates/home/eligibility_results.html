@@ -86,7 +86,7 @@ Outreachy eligibility results
 
 	<p>After reviewing your time commitments, we have determined you do not meet our minimum free time criteria.</p>
 	{% if tcs.school_time_commitments %}
-		<p>{% with current_round=applicant.application_round %}{% include 'home/snippet/student_hemisphere.html' %}{% endwith %}</p>
+		<ul>{% with current_round=applicant.application_round %}{% include 'home/snippet/student_hemisphere.html' %}{% endwith %}</ul>
 	{% else %}
 		<p>Applicants who are not students are eligible for Outreachy
 		if they have {{ current_round.minimum_days_free_for_non_students }}
