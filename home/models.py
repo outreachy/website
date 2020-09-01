@@ -2602,6 +2602,10 @@ class ApplicantApproval(ApprovalStatus):
                 data.delete()
             except BarriersToParticipation.DoesNotExist:
                 pass
+
+            data = InitialApplicationReview.objects.filter(applicant = self)
+            for d in data:
+                d.delete()
             # end atomic transaction
 
     def is_approver(self, user):

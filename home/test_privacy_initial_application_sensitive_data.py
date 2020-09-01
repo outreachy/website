@@ -89,6 +89,17 @@ class InitialApplicationPrivacyTestCase(TestCase):
         )
         return reviewer
 
+    def create_essay_review(self, reviewer, applicant_approval):
+        reviewer_approval = models.ApplicationReviewer(
+            comrade=reviewer,
+            reviewing_round=applicant_approval.application_round,
+        )
+        rating = models.InitialApplicationReview(
+                application=applicant_approval,
+                reviewer=reviewer_approval,
+                essay_rating=models.InitialApplicationReview.UNCLEAR,
+                )
+
     def check_essay_hidden_from_eligibility_results(self, applicant_approval):
         self.client.force_login(applicant_approval.applicant.account)
         response = self.client.get(reverse('eligibility-results'))
@@ -175,6 +186,8 @@ class InitialApplicationPrivacyTestCase(TestCase):
         except models.BarriersToParticipation.DoesNotExist:
             pass
 
+        self.assertEquals(models.InitialApplicationReview.objects.filter(application=applicant_approval).count(), 0)
+
     def test_initial_applications_objects_not_under_revision_control(self):
         for model in (models.ApplicantApproval, models.BarriersToParticipation, models.ApplicantGenderIdentity, models.ApplicantRaceEthnicityInformation, models.SchoolInformation):
             with self.subTest(model=model):
@@ -231,6 +244,7 @@ class InitialApplicationPrivacyTestCase(TestCase):
             with self.subTest(approval_status=approval_status):
 
                 applicant_approval = self.create_initial_application(current_round)
+                self.create_essay_review(reviewer, applicant_approval)
                 if approval_status == models.ApprovalStatus.APPROVED:
                     response = self.client.post(applicant_approval.get_approve_url())
                 elif approval_status == models.ApprovalStatus.REJECTED:
