@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}
+Review essay
+{% endblock %}
+
+{% block content %}
+
+<h1>Review essay</h1>
+
+<form method="post" action="">
+{% csrf_token %}
+	{{ form.as_p }}
+<input type="submit" class="btn btn-block btn-primary" value="Save Review" />
+</form>
+
+{% endblock %}

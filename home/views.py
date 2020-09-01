@@ -3475,8 +3475,8 @@ class EssayRating(LoginRequiredMixin, ComradeRequiredMixin, View):
             review.essay_rating = review.UNCLEAR
         elif rating == "UNRATED":
             review.essay_rating = review.UNRATED
-        elif rating == "NOBIAS":
-            review.essay_rating = review.NOBIAS
+        elif rating == "NOTCOMPELLING":
+            review.essay_rating = review.NOTCOMPELLING
         elif rating == "NOTUNDERSTOOD":
             review.essay_rating = review.NOTUNDERSTOOD
         elif rating == "SPAM":
@@ -3536,6 +3536,37 @@ class ChangeRedFlag(LoginRequiredMixin, ComradeRequiredMixin, View):
         review.save()
 
         return redirect(application.get_preview_url())
+
+class ReviewEssay(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
+    template_name = 'home/review_essay.html'
+
+    form_class = modelform_factory(
+        ApplicantApproval,
+        fields = [
+            'essay_qualities',
+        ],
+        widgets = {
+            'essay_qualities': widgets.CheckboxSelectMultiple,
+        },
+    )
+
+    def get_object(self):
+        current_round = get_current_round_for_initial_application_review()
+
+        application = get_object_or_404(ApplicantApproval,
+                applicant__account__username=self.kwargs['applicant_username'],
+                application_round=current_round)
+        try:
+            reviewer = application.application_round.applicationreviewer_set.approved().get(
+                comrade__account=self.request.user,
+            )
+        except ApplicationReviewer.DoesNotExist:
+            raise PermissionDenied("You are not currently an approved application reviewer.")
+
+        return application
+
+    def get_success_url(self):
+        return self.object.get_preview_url()
 
 class ReviewCommentUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     model = InitialApplicationReview

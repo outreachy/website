@@ -6,7 +6,7 @@
 		<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='GOOD' %}">+2</button>
 		<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='MAYBE' %}">+1</button>
 		<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='UNCLEAR' %}">??</button>
-		<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='NOBIAS' %}">-1</button>
+		<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='NOTCOMPELLING' %}">-1</button>
 		<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='NOTUNDERSTOOD' %}">-2</button>
 		<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='SPAM' %}">-3</button>
 		<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='UNRATED' %}">Mark as unrated</button>

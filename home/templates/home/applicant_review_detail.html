@@ -134,6 +134,8 @@
 			</div>
 		</div>
 	{% endfor %}
+	<h2>Essay Review</h2>
+	{% include 'home/snippet/applicant_review_essay_rating.html' %}
 
 	<h2>Essay Answers</h2>
 
@@ -165,7 +167,6 @@
 			</div>
 		</div>
 		{% endfor %}
-		{% include 'home/snippet/applicant_review_essay_rating.html' %}
 	{% endif %}
 
 	{% include 'home/snippet/applicant_review_actions.html' %}

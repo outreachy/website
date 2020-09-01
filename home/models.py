@@ -2434,6 +2434,24 @@ class ApplicationReviewer(ApprovalStatus):
     comrade = models.ForeignKey(Comrade)
     reviewing_round = models.ForeignKey(RoundPage)
 
+class EssayQuality(models.Model):
+    category = models.CharField(
+            max_length=SENTENCE_LENGTH,
+            help_text='Which category list should this description be under?')
+    description = models.CharField(
+            max_length=SENTENCE_LENGTH,
+            verbose_name='Essay quality description')
+    help_text = models.CharField(
+            max_length=SENTENCE_LENGTH,
+            blank=True,
+            help_text='Help text to further clarify the short essay quality description')
+
+    def __str__(self):
+        return '[' + self.category + '] ' + self.description
+
+    class Meta:
+        ordering = ('category', 'description')
+
 # This class stores information about whether an applicant is eligible to
 # participate in this round Automated checking will set the applicant to
 # Approved or Rejected, but the Outreachy organizers can move the applicant to
@@ -2446,10 +2464,14 @@ class ApplicantApproval(ApprovalStatus):
     applicant = models.ForeignKey(Comrade, on_delete=models.CASCADE)
     application_round = models.ForeignKey(RoundPage, on_delete=models.CASCADE)
     project_contributions = models.ManyToManyField(Project, through='Contribution')
+    essay_qualities = models.ManyToManyField(EssayQuality, blank=True)
     submission_date = models.DateField(auto_now_add=True)
     ip_address = models.GenericIPAddressField(protocol="both")
     review_owner = models.ForeignKey(ApplicationReviewer, blank=True, null=True)
     collected_statistics = models.BooleanField(default=False)
+
+    def get_essay_qualities(self):
+        return [q.__str__ for q in self.essay_qualities.all()]
 
     def collect_statistics(self):
         if self.collected_statistics:
@@ -2603,9 +2625,11 @@ class ApplicantApproval(ApprovalStatus):
             except BarriersToParticipation.DoesNotExist:
                 pass
 
-            data = InitialApplicationReview.objects.filter(applicant = self)
+            data = InitialApplicationReview.objects.filter(application = self)
             for d in data:
                 d.delete()
+
+            self.essay_qualities.clear()
             # end atomic transaction
 
     def is_approver(self, user):
@@ -3535,19 +3559,19 @@ class InitialApplicationReview(models.Model):
     MAYBE = '+1'
     UNCLEAR = '??'
     UNRATED = '0'
-    NOBIAS = '-1'
+    NOTCOMPELLING = '-1'
     NOTUNDERSTOOD = '-2'
     SPAM = '-3'
     # Change essay choices in home/templates/home/snippet/applicant_review_essay_rating.html
     # if you update this text
     RATING_CHOICES = (
-        (STRONG, '+3 - Essay shows a *strongly* compelling argument for how the applicant *both* faces discrimination/bias and is from a group underrepresented in the technology industry of their country'),
-        (GOOD, '+2 - Essay shows a *strongly* compelling argument for how the applicant *either* faces discrimination/bias or they are from a group underrepresented in technology industry of their country'),
-        (MAYBE, '+1 - Essay shows a *weak* argument for how the applicant either faces discrimination/bias or they are from a group underrepresented in technology industry of their country'),
+        (STRONG, '+3 - Essay is *strongly* compelling'),
+        (GOOD, '+2 - Essay is compelling'),
+        (MAYBE, '+1 - Essay is *weakly* compelling'),
         (UNCLEAR, '?? - Essay questions were too short or unclear to make a decision'),
         (UNRATED, 'Not rated'),
-        (NOBIAS, '-1 - Essay questions did not show either discrimination/bias or underrepresentation'),
-        (NOTUNDERSTOOD, '-2 - Essay questions were not understood'),
+        (NOTCOMPELLING, '-1 - Essay is not compelling'),
+        (NOTUNDERSTOOD, '-2 - Answers are unrelated to essay questions'),
         (SPAM, '-3 - Essay answers were spam or trolling'),
     )
     essay_rating = models.CharField(

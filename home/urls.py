@@ -83,6 +83,7 @@ urlpatterns = [
     url(r'^dashboard/delete-application/(?P<applicant_username>[^/]+)/$', views.DeleteApplication.as_view(), name='delete-application'),
     url(r'^dashboard/review-applications/(?P<applicant_username>[^/]+)/$', views.ViewInitialApplication.as_view(), name='applicant-review-detail'),
     url(r'^dashboard/review-applications/update-comment/(?P<applicant_username>[^/]+)/$', views.ReviewCommentUpdate.as_view(), name='update-comment'),
+    url(r'^dashboard/review-applications/review-essay/(?P<applicant_username>[^/]+)/$', views.ReviewEssay.as_view(), name='review-essay'),
     url(r'^dashboard/review-applications/(?P<action>[^/]+)/(?P<applicant_username>[^/]+)/$', views.ApplicantApprovalUpdate.as_view(), name='initial-application-action'),
     url(r'^dashboard/review-applications/rate-essay/(?P<rating>[^/]+)/(?P<applicant_username>[^/]+)/$', views.EssayRating.as_view(), name='essay-rating'),
     url(r'^dashboard/review-applications/change-red-flag/(?P<flag>[^/]+)/(?P<flag_value>[^/]+)/(?P<applicant_username>[^/]+)/$', views.ChangeRedFlag.as_view(), name='change-red-flag'),
