@@ -192,14 +192,14 @@ We promote the cloned database to be used by the test container:
 ssh dokku@outreachy.org postgres:promote test-database-updated-2018-02-13 test
 ```
 
+Figure out what the name of the old database linked to the test app is with this command:
+```
+ssh dokku@outreachy.org postgres:list
+```
+
 Then we unlink the older database (use whatever was the old name):
 ```
 ssh dokku@outreachy.org postgres:unlink test-database-updated-old test
-```
-
-You can always figure out which databases are linked with this command:
-```
-ssh dokku@outreachy.org postgres:list
 ```
 
 Then you can `git push` to the test site, migrate, and test any updated views.
