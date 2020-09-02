@@ -89,16 +89,23 @@ class InitialApplicationPrivacyTestCase(TestCase):
         )
         return reviewer
 
-    def create_essay_review(self, reviewer, applicant_approval):
-        reviewer_approval = models.ApplicationReviewer(
+    def create_essay_quality(self):
+        return models.EssayQuality.objects.create(
+                category='Category',
+                description='essay quality description',
+                )
+
+    def create_essay_review(self, reviewer, applicant_approval, essay_quality):
+        reviewer_approval = models.ApplicationReviewer.objects.get(
             comrade=reviewer,
             reviewing_round=applicant_approval.application_round,
         )
-        rating = models.InitialApplicationReview(
+        models.InitialApplicationReview(
                 application=applicant_approval,
                 reviewer=reviewer_approval,
                 essay_rating=models.InitialApplicationReview.UNCLEAR,
-                )
+                ).save()
+        applicant_approval.essay_qualities.add(essay_quality)
 
     def check_essay_hidden_from_eligibility_results(self, applicant_approval):
         self.client.force_login(applicant_approval.applicant.account)
@@ -234,6 +241,8 @@ class InitialApplicationPrivacyTestCase(TestCase):
         current_round = factories.RoundPageFactory(start_from='initial_applications_open')
 
         reviewer = self.create_applicant_reviewer(current_round, models.ApprovalStatus.APPROVED)
+        essay_quality = self.create_essay_quality()
+
         # Only accounts with the Django staff privilege can approve initial applications
         # Organizers can both be staff and an initial application reviewer
         reviewer.account.is_staff = True
@@ -244,7 +253,8 @@ class InitialApplicationPrivacyTestCase(TestCase):
             with self.subTest(approval_status=approval_status):
 
                 applicant_approval = self.create_initial_application(current_round)
-                self.create_essay_review(reviewer, applicant_approval)
+                self.create_essay_review(reviewer, applicant_approval, essay_quality)
+
                 if approval_status == models.ApprovalStatus.APPROVED:
                     response = self.client.post(applicant_approval.get_approve_url())
                 elif approval_status == models.ApprovalStatus.REJECTED:
@@ -259,4 +269,17 @@ class InitialApplicationPrivacyTestCase(TestCase):
                 self.check_essay_hidden_from_application_review(account=reviewer.account, applicant_approval=applicant_approval)
                 self.check_race_and_ethnicity_hidden_from_application_review(account=reviewer.account, applicant_approval=applicant_approval)
                 self.check_gender_identity_hidden_from_application_review(account=reviewer.account, applicant_approval=applicant_approval)
+
+                # Make sure all linked essay qualities have been cleared.
+                # Empty lists (or empty query sets) evaluate to False.
+                self.assertFalse(applicant_approval.essay_qualities.all())
+
                 applicant_approval.delete()
+
+                # Ensure the essay quality objects remain in the database,
+                # even after the application that had a foreign key reference
+                # to the essay quality gets deleted
+                models.EssayQuality.objects.get(
+                        category=essay_quality.category,
+                        description=essay_quality.description,
+                        )
