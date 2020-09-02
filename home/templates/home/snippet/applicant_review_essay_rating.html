@@ -11,19 +11,19 @@
 				</ul>
 				<p><a class='btn btn-secondary' href="{% url 'review-essay' applicant_username=application.applicant.account.username %}">Review essay qualities</a></p>
 
+				<hr>
+				<h2>Essay ratings</h2>
 				{% if application.get_essay_ratings %}
-					<hr>
-					<h2>Essay ratings</h2>
 					<ul>
 					{% for essay_rating in application.get_essay_ratings %}
 						<li>{% include 'home/snippet/essay_rating.html' %}</li>
 					{% endfor %}
 					</ul>
-					<form method="post">
-						{% csrf_token %}
-						{% include 'home/snippet/applicant_essay_rating_form.html' %}
-					</form>
 				{% endif %}
+				<form method="post">
+					{% csrf_token %}
+					{% include 'home/snippet/applicant_essay_rating_form.html' %}
+				</form>
 				<div class="card border-info my-3" id="essay-rating-accordian">
 					<div class="card-header" id="essay-rating-header">
 						<h5 class="mb-0">
