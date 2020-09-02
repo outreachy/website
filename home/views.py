@@ -3262,6 +3262,14 @@ def applicant_review_summary(request, status):
         approval_status=status,
     ).order_by('pk')
 
+    owned_apps = []
+    for reviewer in ApplicationReviewer.objects.filter(reviewing_round=current_round, approval_status=ApprovalStatus.APPROVED).order_by('comrade__public_name'):
+        owned_apps.append((reviewer.comrade.public_name, ApplicantApproval.objects.filter(
+            application_round=current_round,
+            approval_status=status,
+            review_owner=reviewer,
+        ).order_by('pk')))
+
     if status == ApprovalStatus.PENDING:
         context_name = 'pending_applications'
     elif status == ApprovalStatus.REJECTED:
@@ -3271,6 +3279,7 @@ def applicant_review_summary(request, status):
 
     return render(request, 'home/applicant_review_summary.html', {
         context_name: applications,
+        'owned_apps': owned_apps,
     })
 
 # Passed action, applicant_username
