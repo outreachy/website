@@ -158,27 +158,30 @@ class Deadline(datetime.date):
     value that's used to determine whether the deadline has already passed.
     """
 
-    def __new__(cls, base, today):
-        # datetime.date does magic with __new__ instead of __init__, which
-        # forces us to do it too. But if you pretend like this is just a weird
-        # way of writing __init__, I hope it's clear enough.
-        self = super(Deadline, cls).__new__(cls, base.year, base.month, base.day)
-        self.today = today
-        return self
+    @classmethod
+    def at(cls, base, today):
+        """
+        This is the only valid constructor for this type, because other methods
+        won't set self._today.
+        """
+        new = cls(base.year, base.month, base.day)
+        new._today = today
+        return new
 
     def __add__(self, other):
+        # In Python 3.7, date.__add__ always returns a date. In 3.8 it returns
+        # the same type as self, e.g. Deadline, but without setting _today.
+        # Either way, extracting the year/month/day and building a new Deadline
+        # object produces the right result.
         new = super(Deadline, self).__add__(other)
-        return Deadline(new, self.today)
+        return Deadline.at(new, self._today)
 
     def __sub__(self, other):
-        new = super(Deadline, self).__sub__(other)
-
-        if type(new) is datetime.date:
-            return Deadline(new, self.today)
-
-        # If it isn't a date, it's probably a timedelta, which we don't need to
-        # do anything with.
-        return new
+        # Override to make sure that the above implementation of __add__ gets
+        # used.
+        if isinstance(other, datetime.timedelta):
+            return self + -other
+        return super(Deadline, self).__sub__(other)
 
     def deadline(self):
         """
@@ -191,7 +194,7 @@ class Deadline(datetime.date):
         """
         Returns whether this deadline is in the past.
         """
-        return self <= self.today
+        return self <= self._today
 
 
 class NoDeadline(object):
@@ -251,7 +254,7 @@ class AugmentDeadlines(object):
             # function with name="today", so we have to be very careful: that
             # call must not reach this same statement or it will recurse
             # forever.
-            return Deadline(value, self.today)
+            return Deadline.at(value, self.today)
 
         # This was not a date, so return it as-is.
         return value
