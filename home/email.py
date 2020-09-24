@@ -60,12 +60,14 @@ def approval_status_changed(obj, request, **kwargs):
             "not sending approval status change email because %s does not exist",
             template, exc_info=True)
 
-def cfp_open(current_round, request):
+def cfp_open(current_round, request, **kwargs):
     send_template_mail('home/email/cfp-open.txt', {
         'current_round': current_round,
         },
         request=request,
-        recipient_list=[mentors_mailing_list])
+        recipient_list=[mentors_mailing_list],
+        **kwargs,
+        )
 
 def notify_mentor(participation, notification, request):
     send_template_mail('home/email/notify-mentors.txt', {

@@ -258,7 +258,7 @@ class CFPOpen(SendEmailView):
     def generate_messages(self, current_round, connection):
         if not self.request.user.is_staff:
             raise PermissionDenied("You are not authorized to send reminder emails.")
-        email.cfp_open(current_round, self.request)
+        email.cfp_open(current_round, self.request, connection=connection)
 
 
 class MentorCheckDeadlinesReminder(SendEmailView):
