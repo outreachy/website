@@ -70,7 +70,7 @@ def cfp_open(current_round, request, **kwargs):
         )
 
 def coordinator_project_deadline(current_round, participation, request, **kwargs):
-    email_list = participation.get_submitter_email_list()
+    email_list = participation.community.get_coordinator_email_list()
     email_list.append(organizers)
     email_list.append(applicant_help)
     send_group_template_mail('home/email/coordinator-project-deadline.txt', {
@@ -147,7 +147,7 @@ def mentor_application_deadline_reminder(project, request, **kwargs):
         **kwargs)
 
 def coordinator_intern_selection_reminder(participation, request, **kwargs):
-    email_list = participation.get_submitter_email_list()
+    email_list = participation.community.get_coordinator_email_list()
     if email_list:
         send_group_template_mail('home/email/coordinator-intern-selection.txt', {
             'current_round': participation.participating_round,
