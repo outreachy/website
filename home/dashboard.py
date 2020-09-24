@@ -260,6 +260,29 @@ class CFPOpen(SendEmailView):
             raise PermissionDenied("You are not authorized to send reminder emails.")
         email.cfp_open(current_round, self.request, connection=connection)
 
+class CoordinatorProjectDeadline(SendEmailView):
+    """
+    Notify Outreachy coordinators that the project deadline is approaching.
+
+    When: 1 week before the project soft deadline
+
+    Template: home/templates/home/email/coordinator-project-deadline.txt
+    """
+    description = 'Project deadline reminder'
+    slug = 'coordinator-project-deadline'
+
+    @staticmethod
+    def instance(current_round):
+        return current_round.project_soft_deadline() - datetime.timedelta(days=7)
+
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+        # for i in current_round get approved and pending participations:
+        participations = current_round.participation_set.exclude(approval_status=ApprovalStatus.WITHDRAWN).exclude(approval_status=ApprovalStatus.REJECTED)
+        for p in participations:
+            email.coordinator_project_deadline(current_round, p, self.request, connection=connection)
+
 
 class MentorCheckDeadlinesReminder(SendEmailView):
     """
@@ -707,6 +730,7 @@ class CareerChatInvitation(SendEmailView):
 # if we keep it sorted by when in the round each event occurs.
 all_round_events = (
     CFPOpen,
+    CoordinatorProjectDeadline,
     MentorCheckDeadlinesReminder,
     ApplicantsDeadlinesReminder,
     ContributorsDeadlinesReminder,

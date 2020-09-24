@@ -69,6 +69,20 @@ def cfp_open(current_round, request, **kwargs):
         **kwargs,
         )
 
+def coordinator_project_deadline(current_round, participation, request, **kwargs):
+    email_list = participation.get_submitter_email_list()
+    email_list.append(organizers)
+    email_list.append(applicant_help)
+    send_group_template_mail('home/email/coordinator-project-deadline.txt', {
+        'current_round': current_round,
+        'participation': participation,
+        'community': participation.community,
+        },
+        request=request,
+        recipient_list=email_list,
+        **kwargs,
+        )
+
 def notify_mentor(participation, notification, request):
     send_template_mail('home/email/notify-mentors.txt', {
         'notification': notification,
