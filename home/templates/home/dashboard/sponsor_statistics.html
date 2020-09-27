@@ -9,4 +9,6 @@
 	<li>{{ current_round.number_approved_communities_with_projects }} communties with {{ current_round.number_approved_projects }} projects</li>
 	<li>{{ current_round.number_funded_interns }} secured internship spots</li>
 </ul>
+
+<p><a href="{% url 'internship-cohort-statistics' %}">Demographic statistics</a> for current and past internship rounds.</p>
 {% endwith %}
