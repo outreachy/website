@@ -859,6 +859,14 @@ class StatisticAmericanDemographics(models.Model):
             validators=[validators.MinValueValidator(0)],
             default=0,
             )
+    def total_approved_american_not_bipoc(self):
+        return self.total_approved_american_applicants - self.total_approved_american_bipoc
+
+    def percentage_americans_accepted_who_are_bipoc(self):
+        return int(round(100 * (self.total_approved_american_bipoc / self.total_approved_american_applicants)))
+
+    def percentage_americans_accepted_who_are_not_bipoc(self):
+        return int(round(100 * (self.total_approved_american_not_bipoc() / self.total_approved_american_applicants)))
 
 class StatisticGenderDemographics(models.Model):
     internship_round = models.OneToOneField(RoundPage, on_delete=models.CASCADE, primary_key=True)
@@ -926,16 +934,16 @@ class StatisticGenderDemographics(models.Model):
             )
 
     def percentage_accepted_who_are_women(self):
-        return int(round(100 * (self.total_women / self.internship_round.statistictotalapplied)))
+        return int(round(100 * (self.total_women / self.internship_round.statistictotalapplied.total_approved)))
 
     def percentage_accepted_who_are_men(self):
-        return int(round(100 * (self.total_men / self.internship_round.statistictotalapplied)))
+        return int(round(100 * (self.total_men / self.internship_round.statistictotalapplied.total_approved)))
 
     def percentage_accepted_who_are_transgender(self):
-        return int(round(100 * (self.total_transgender_people / self.internship_round.statistictotalapplied)))
+        return int(round(100 * (self.total_transgender_people / self.internship_round.statistictotalapplied.total_approved)))
 
     def percentage_accepted_who_are_non_binary(self):
-        return int(round(100 * (self.total_non_binary_people / self.internship_round.statistictotalapplied)))
+        return int(round(100 * (self.total_non_binary_people / self.internship_round.statistictotalapplied.total_approved)))
 
 class CohortPage(Page):
     round_start = models.DateField("Round start date")

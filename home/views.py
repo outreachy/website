@@ -3588,6 +3588,20 @@ class ReviewCommentUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     def get_success_url(self):
         return self.object.application.get_preview_url()
 
+@login_required
+def internship_cohort_statistics(request):
+    """
+    For Outreachy staff, show statistics about applicants and interns.
+    """
+
+    if not request.user.is_staff:
+        raise PermissionDenied("You are not authorized to view internship cohort statistics.")
+
+    rounds = RoundPage.objects.all().order_by('-internstarts')
+    return render(request, 'home/internship_cohort_statistics.html', {
+        'rounds': rounds,
+        })
+
 def docs_toc(request):
     return render(request, 'home/docs/toc.html')
 
