@@ -93,7 +93,7 @@ PATH="$PWD/node_modules/.bin:$PATH" ./manage.py test
 
 You'll need to set up a new internship round, following the instructions in the next section.
 
-# Removing a virtual env
+# Removing a virtualenv
 
 If you made a mistake in the directions above, you may need to remove your pipenv virtual environment. You can do that by running `pipenv --rm` in the website directory. If needed, you can delete the website directory and start over at the git clone command.
 
@@ -127,7 +127,7 @@ Python 3.6.6 (default, Jun 27 2018, 14:44:17)
 [GCC 8.1.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 (InteractiveConsole)
->>> 
+>>>
 ```
 
 First, import all the models in `home/models.py`:
@@ -146,7 +146,7 @@ The advantage of using the factories methods is that it automatically computes r
 
 ### Initial applications open
 
-The Outreachy application period has two distinct periods: the initial application period and the contribution period. During the initial application period, applicants submit an eligibility form and essays (an initial application). All people who have an approved initial application will be notified by email. Then the contribution period will start. Approved applicants will contact mentors and work on project tasks (contributions).
+The Outreachy application period has two distinct periods: The initial application period and the contribution period. During the initial application period, applicants submit an eligibility form and essays (an initial application). All people who have an approved initial application will be notified by email. Then the contribution period will start. Approved applicants will contact mentors and work on project tasks (contributions).
 
 Let's assume you want an internship round where we're in the middle of the initial application period. We can set the initial applications deadline (`initial_applications_close`) to be one week (seven days) after today:
 
