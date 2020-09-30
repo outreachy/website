@@ -76,6 +76,7 @@ npm install
 If this is your first time creating a local version of the website for testing, you'll need to set up the local website database from scratch. The following command will create a new database with the models in the Outreachy website. The database will initially have no website pages, but will eventually store your local test pages.
 
 ```
+./manage.py makemigrations
 ./manage.py migrate
 ```
 
