@@ -1,5 +1,5 @@
 [run]
-source = .
+source =
 omit =
     */migrations/*
     node_modules/*
