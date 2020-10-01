@@ -1,7 +1,7 @@
 # What is Outreachy?
 
 Outreachy is a three-month paid internship program for people traditionally underrepresented in tech.
-This repository is for the Django code that comprises the [Outreachy website](https://www.outreachy.org).
+This repository is for the Django code that comprises of the [Outreachy website](https://www.outreachy.org).
 
 # Current state of Outreachy tech
 
@@ -761,4 +761,4 @@ CiviCRM proved too clunky to use, and ultimately their data model didn't necessa
 
 There are other proprietary tools for tracking sponsorship information, but since Outreachy is a project under the Software Freedom Conservancy and the Outreachy organizers believe in the power of free and open source, we have decided not to use proprietary software wherever possible.
 
-Django fit our needs for flexibility, data model definition, and future use cases. However, the Django admin interface is pretty clunky and intimidating. We wanted to have a very easy way for all our organizers to quickly edit content. The Wagtail CMS plugin provides a nice user interface and template system, while still allowing programmers to fully use Django to implement models. It also provides internal revision tracking for page content, which means we can easily roll back content changes from the wagtail admin web interface if necessary.
+Django fit our needs for flexibility, data model definition, and future use cases. However, the Django admin interface is pretty clunky and intimidating. We wanted to have a very easy way for all our organizers to quickly edit content. The Wagtail CMS plugin provides a nice user interface and template system, while still allowing programmers to fully use Django to implement models. It also provides internal revision tracking for page content, which means we can easily roll back content changes from the wagtail admin web interface if at all it is necessary.
