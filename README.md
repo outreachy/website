@@ -3,7 +3,7 @@
 Outreachy is a three-month paid internship program for people traditionally underrepresented in tech.
 This repository is for the Django code that comprises the [Outreachy website](https://www.outreachy.org).
 
-# Current state of Outreachy tech
+# Current state of Outreachy tech:
 
 The Outreachy web presence is in a couple of different places:
  * [Outreachy website](https://www.outreachy.org)
@@ -18,7 +18,7 @@ Older/deprecated websites include:
  - irc.gnome.org #outreachy - GNOME IRC channel - where applicants get help
  - [Outreachy Planeteria](http://www.planeteria.info/outreach) - blog aggregation for Outreachy interns
 
-# Future Long-term Goals
+# Future Long-term Goals:
 
  - Replace planetaria with one hosted on our domain (that allows for filtering which blogs are displayed?)
  - Track longitudinal information of alumni, so we can share success stories and improve our program
@@ -29,11 +29,11 @@ Older/deprecated websites include:
 
 The Outreachy website is built with [Python](https://www.python.org/) and a web framework called [Django](https://www.djangoproject.com/). Additionally, the Outreachy website uses a content management system called [Wagtail](https://wagtail.io/), which builds on top of Django. On the Outreachy webserver, we run [Dokku](http://dokku.viewdocs.io/dokku/), which helps us deploy new code, manage our Let's Encrypt SSL certificates, and backup the Outreachy website database. Only Outreachy organizers have ssh access to push new code to the server.
 
-# Optional helpful background reading
+# Optional helpful background reading:
 
 [Django topic guides](https://docs.djangoproject.com/en/1.11/topics/), particularly the [models](https://docs.djangoproject.com/en/1.11/topics/db/models/) guide.
 
-# Setting up your development environment
+# Setting up your development environment:
 
 You can run Django locally to test changes to the code, test creating new pages, test adding new users, etc. The local tests you run will not impact the main Outreachy website, only your local version of the website. You should test changes locally before submitting a pull request.
 
@@ -93,11 +93,11 @@ PATH="$PWD/node_modules/.bin:$PATH" ./manage.py test
 
 You'll need to set up a new internship round, following the instructions in the next section.
 
-# Removing a virtual env
+# Removing a virtual env:
 
 If you made a mistake in the directions above, you may need to remove your pipenv virtual environment. You can do that by running `pipenv --rm` in the website directory. If needed, you can delete the website directory and start over at the git clone command.
 
-# Django shell
+# Django shell:
 
 Django has a 'shell' mode where you can run snippets of Python code.
 
@@ -109,7 +109,7 @@ The Django shell is also useful for doing quick tests of how templates (especial
 
 You can run the shell on either your local copy of the database, or you can run it on the remote server's database. If you start the shell on your local computer, it will load your local copy of the code and your local database. If you start the shell on the remote server, it will load the server's version of the code and the server's database. Remember, if you change any of the Python code, you'll need to exit the shell (CTRL-d) and restart it to reload the code.
 
-## Setting up a new internship round
+## Setting up a new internship round:
 
 When you've first cloned and [set up the Outreachy website development environment](#setting-up-your-development-environment), you'll need to create a new internship round. The website expects to have at least one past round, and some pages won't work without a round. You may also need to set up a new round in your local database so you can test how the website looks during some particular phase. (See the section below for more explanation of the phases of the Outreachy round.)
 
@@ -144,7 +144,7 @@ We'll also need to import all the methods in `home/factories.py`:
 
 The advantage of using the factories methods is that it automatically computes reasonable dates for all round deadlines, based on what the Outreachy internship round schedule normally is. You just have to give it one date and it will calculate the rest.
 
-### Initial applications open
+### Initial applications open:
 
 The Outreachy application period has two distinct periods: the initial application period and the contribution period. During the initial application period, applicants submit an eligibility form and essays (an initial application). All people who have an approved initial application will be notified by email. Then the contribution period will start. Approved applicants will contact mentors and work on project tasks (contributions).
 
@@ -169,7 +169,7 @@ If you get an error when running the factories code, it's often hard to tell wha
 ...		days_after_today=7)
 >>>
 ```
-### Contributions open
+### Contributions open:
 
 Let's assume you want an internship round where we're in the middle of the contribution period. We can set the deadline for when the final applications for projects are due (`appslate`) to be one week from today:
 
@@ -193,7 +193,7 @@ If you get an error when running the factories code, it's often hard to tell wha
 >>>
 ```
 
-## Printing class variables and methods
+## Printing class variables and methods:
 
 The Python shell (which the Django shell uses) will print information about a class object. This includes the class methods and fields.
 
@@ -208,7 +208,7 @@ class RoundPage(AugmentDeadlines, wagtail.wagtailcore.models.Page)
  |  
 ```
 
-# Testing the local website
+# Testing the local website:
 
 Once you've run the above setup commands, you should be all set to start testing your local website. First, run the command to start the Django webserver and serve up the local website.
 
@@ -222,7 +222,7 @@ To go to the Django administrative interface, go to `http://localhost:8000/djang
 
 It's unlikely you'll need to access the Wagtail admin interface, where the local CMS content is managed. If you do need to access the Wagtail admin interface, go to `http://localhost:8000/admin/`. Use the same account you created with the `./manage.py createsuperuser` command.
 
-# Tour of the code base
+# Tour of the code base:
 
 When you first clone this project, you'll see a couple top level directories:
  * `bin`
@@ -247,13 +247,13 @@ In the Outreachy repository, the directory `outreachy-home` is the project. We h
 * `search` which was set up during the wagtail installation to allow searching for pages and media
 * `contacts` which is a Django app for our contact page
 
-## External Django Packages
+## External Django Packages:
 
 The Outreachy website also uses some Django apps that are listed in the `INSTALLED_APPS` variable in `outreachyhome/settings/base.py`. The Python module code for those Django apps aren't found in top-level directories in the repository. That's because the Python module code was installed into your virtualenv directory when you ran `pipenv install`. That command looked at the Python package requirements listed in `Pipfile` and installed each of the packages.
 
 If you want to look at the source code of the installed external Django applications, you can use `pipenv open MODULE` to examine the source code files associated with that module. For example, say you notice the `home/models.py` file has an import line `from django.contrib.auth.models import User`. You can use pipenv open to look at the models.py file that contains the User class by running the command `pipenv open django.contrib.auth`. That will open all the files in the auth module in your editor, and you can then open models.py and search for `class User`.
 
-## Outreachy terminology
+## Outreachy terminology:
 
 Please use the gender-neutral ["they/them" pronouns](http://pronoun.is/they) and gender-neutral language to refer to all Outreachy participants.
 
@@ -266,7 +266,7 @@ Please use the gender-neutral ["they/them" pronouns](http://pronoun.is/they) and
  * **Applicant:** During the application process, Outreachy applicants make contributions to projects and apply to be an Outreachy intern.
  * **Intern:** An accepted applicant works with a mentor for three months during the internship period.
 
-## Outreachy Internship Phases
+## Outreachy Internship Phases:
 
 The Outreachy website changes depending on what phase of the internship round Outreachy is in. The phases of the internship round are:
 
@@ -280,7 +280,7 @@ The Outreachy website changes depending on what phase of the internship round Ou
 
 Some of these phases overlap. For example, the project submission period ends part-way through the applicant contribution period. Since Outreachy internships run twice a year, that means one internship round may overlap with another. For example, the end of the intership period often overlaps with the community sign up and mentor project submission phase.
 
-## Internship Rounds and Communities
+## Internship Rounds and Communities:
 
 The Outreachy internship round is represented by `class RoundPage` in `home/models.py`. It contains dates that define the phases of the internship rounds, the round name, the round number, links to future intern chats over video and text.
 
@@ -292,7 +292,7 @@ The relationships described above can be represented by this diagram:
 
 ![A Participation is related to a Community and a RoundPage. A Project is related to a Participation.](https://github.com/outreachy/website/raw/master/docs/graphics/RoundPage-Community-Participation-Project.png)
 
-## ApprovalStatus class
+## ApprovalStatus class:
 
 You'll notice in the diagram above that both `class Participation` and `class Project` have `class ApprovalStatus` as a base class. The ApprovalStatus class is a way to keep track of who submitted an object, who has permissions to approve an object, and what the status of the approval is. An ApprovalStatus object can be in the pending, approved, rejected, or withdrawn state.
 
@@ -302,7 +302,7 @@ Once a community signs up to participate (and even before it's approved), Outrea
 
 Most classes with an ApprovalStatus will have emails sent to the submitter when they are approved, but some don't. Review the view code in `home/views.py` to see what emails are sent when the status changes.
 
-## CoordinatorApproval class
+## CoordinatorApproval class:
 
 The community coordinator role is represented by the CoordinatorApproval class. It has a foreign key to a Community, because we expect the coordinator to remain the same from round to round. New coordinators are on-boarded as people change roles, but most coordinators stick around for at least 2-4 internship rounds.
 
