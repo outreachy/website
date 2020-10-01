@@ -616,6 +616,29 @@ an absolute waiver of all civil liability in connection with the
 Program, unless a warranty or assumption of liability accompanies a
 copy of the Program in return for a fee.
 
+### 18.The copyright disclaimer
+If you are an individual, and you have an employer or study in a school, it's wise to ask your employer or school to sign a copyright disclaimer for your program, so it cannot later claim that the copyright belongs to it and that you had no right to release the program at all. This really has nothing to do with the GNU GPL—it applies no matter which free software license you use to release the program.
+
+Here is a sample copyright disclaimer; just alter the names, title, and program description as appropriate:
+
+Yoyodyne, Inc., hereby disclaims all copyright interest in the program “Woodpecker” (which deconstructs trees) written by James Hacker.
+
+signature of Moe Ghoul 1 April 1989
+Moe Ghoul, President of Vice
+
+If you are a university student, we recommend you request the disclaimer at an early stage in writing the program to reduce resistance. If you are not a research assistant or teaching assistant, it could be that the university has no claim to copyright on your work, but ask a lawyer to make sure of that.
+
+If you work, the best time to negotiate permission to release free software is when negotiating your employment agreement.
+
+The copyright notice
+The copyright notice should include the year in which you finished preparing the release (so if you finished it in 1998 but didn't post it until 1999, use 1998). You should add the proper year for each past release; for example, “Copyright 1998, 1999 Terry Jones” if some releases were finished in 1998 and some were finished in 1999. If several people helped write the code, use all their names.
+
+For software with several releases over multiple years, it's okay to use a range (“2008-2010”) instead of listing individual years (“2008, 2009, 2010”) if and only if every year in the range, inclusive, really is a “copyrightable” year that would be listed individually; and you make an explicit statement in your documentation about this usage.
+
+Always use the English word “Copyright”; by international convention, this is used worldwide, even for material in other languages. The copyright symbol “©” can be included if you wish (and your character set supports it), but it's not necessary. There is no legal significance to using the three-character sequence “(C)”, but it does no harm.
+
+If you have copied code from other programs covered by the same license, copy their copyright notices too. Put all the copyright notices for a file together, right near the top of the file.
+
 END OF TERMS AND CONDITIONS
 
 ### How to Apply These Terms to Your New Programs
