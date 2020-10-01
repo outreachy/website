@@ -2042,10 +2042,18 @@ class ActiveInternshipContactsView(UserPassesTestMixin, TemplateView):
         today = get_deadline_date_for(now)
 
         # For all interns with active internships, who are approved by Outreachy organizers,
+        # or past interns in good standing where Outreachy organizers have not processed their final internship stipend.
         interns = InternSelection.objects.filter(
-                organizer_approved=True,
-                project__project_round__participating_round__internannounce__lte=today,
-                intern_ends__gte=today).order_by('applicant__applicant__public_name').order_by('project__project_round__community__name')
+                models.Q(
+                    organizer_approved=True,
+                    project__project_round__participating_round__internannounce__lte=today,
+                    intern_ends__gte=today,
+                ) | models.Q(
+                    organizer_approved=True,
+                    project__project_round__participating_round__internannounce__lte=today,
+                    in_good_standing=True,
+                    finalmentorfeedback__organizer_payment_approved=None,
+                )).order_by('project__project_round__community__name').order_by('-project__project_round__participating_round__internstarts')
 
         mentors_and_coordinators = Comrade.objects.filter(
                 models.Q(
