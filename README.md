@@ -1,24 +1,26 @@
+## Introduction of Outreachy:-
+
 # What is Outreachy?
 
 Outreachy is a three-month paid internship program for people traditionally underrepresented in tech.
 This repository is for the Django code that comprises the [Outreachy website](https://www.outreachy.org).
 
-# Current state of Outreachy tech
+# Current state of Outreachy tech.
 
-The Outreachy web presence is in a couple of different places:
+# The Outreachy web presence is in a couple of different places:
  * [Outreachy website](https://www.outreachy.org)
  * [GitHub website code repository](https://github.com/outreachy/website/)
  * [GitHub repository for creative works and miscellaneous scripts](https://github.com/outreachy/creative-works-and-scripts/)
  * [Repository CI Status](https://travis-ci.org/outreachy/website.svg?branch=master)
 
-Older/deprecated websites include:
+# Older/deprecated websites include:
  - [GNOME Outreachy homepage](https://www.gnome.org/outreachy/) - shell homepage, where the outreachy.org domain currently redirects to
  - [GNOME wiki Outreachy pages](http://wiki.gnome.org/Outreachy) - moinmoin based wiki with information about how to apply and sponsor
  - [Outreachy application system](http://outreachy.gnome.org) - PHP-based application system currently hosted on OpenShift
  - irc.gnome.org #outreachy - GNOME IRC channel - where applicants get help
  - [Outreachy Planeteria](http://www.planeteria.info/outreach) - blog aggregation for Outreachy interns
 
-# Future Long-term Goals
+# These are Future Long-term Goals:-
 
  - Replace planetaria with one hosted on our domain (that allows for filtering which blogs are displayed?)
  - Track longitudinal information of alumni, so we can share success stories and improve our program
@@ -26,14 +28,14 @@ Older/deprecated websites include:
  - Create a better way of displaying the list of potential Outreachy projects - e.g. allow searching, tagging for programming language or design or documentation or user experience
 
 # How does the Outreachy website tech work together?
-
+ 
 The Outreachy website is built with [Python](https://www.python.org/) and a web framework called [Django](https://www.djangoproject.com/). Additionally, the Outreachy website uses a content management system called [Wagtail](https://wagtail.io/), which builds on top of Django. On the Outreachy webserver, we run [Dokku](http://dokku.viewdocs.io/dokku/), which helps us deploy new code, manage our Let's Encrypt SSL certificates, and backup the Outreachy website database. Only Outreachy organizers have ssh access to push new code to the server.
 
-# Optional helpful background reading
+# Optional helpful background reading(You must read it.)
 
 [Django topic guides](https://docs.djangoproject.com/en/1.11/topics/), particularly the [models](https://docs.djangoproject.com/en/1.11/topics/db/models/) guide.
 
-# Setting up your development environment
+# Setting up your development environment:-
 
 You can run Django locally to test changes to the code, test creating new pages, test adding new users, etc. The local tests you run will not impact the main Outreachy website, only your local version of the website. You should test changes locally before submitting a pull request.
 
