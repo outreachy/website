@@ -4067,6 +4067,7 @@ class InternSelection(AugmentDeadlines, models.Model):
     SUBMITTED = 'SUB'
     MISSING = 'MIS'
     PAY = 'PAY'
+    PAID = 'PAID'
     EXTEND = 'EXT'
     TERMINATE = 'TER'
     def get_mentor_initial_feedback_status(self):
@@ -4075,6 +4076,8 @@ class InternSelection(AugmentDeadlines, models.Model):
                 return self.TERMINATE
             if self.initialmentorfeedback.request_extension:
                 return self.EXTEND
+            if self.initialmentorfeedback.organizer_payment_approved:
+                return self.PAID
             if self.initialmentorfeedback.payment_approved:
                 return self.PAY
             # Validation should ensure this never happens?
@@ -4095,6 +4098,8 @@ class InternSelection(AugmentDeadlines, models.Model):
                 return self.TERMINATE
             if self.midpointmentorfeedback.request_extension:
                 return self.EXTEND
+            if self.midpointmentorfeedback.organizer_payment_approved:
+                return self.PAID
             if self.midpointmentorfeedback.payment_approved:
                 return self.PAY
             # Validation should ensure this never happens?
@@ -4115,6 +4120,8 @@ class InternSelection(AugmentDeadlines, models.Model):
                 return self.TERMINATE
             if self.finalmentorfeedback.request_extension:
                 return self.EXTEND
+            if self.finalmentorfeedback.organizer_payment_approved:
+                return self.PAID
             if self.finalmentorfeedback.payment_approved:
                 return self.PAY
             # Validation should ensure this never happens?
