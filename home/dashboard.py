@@ -812,7 +812,7 @@ def staff_intern_progress(request, today):
     try:
         current_round = RoundPage.objects.get(
             initialfeedback__lte=today + datetime.timedelta(days=7),
-            finalfeedback__gt=today - datetime.timedelta(days=30),
+            finalfeedback__gt=today - datetime.timedelta(days=45),
         )
         current_round.today = today
     except RoundPage.DoesNotExist:
