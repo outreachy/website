@@ -1,3 +1,4 @@
+#amazing dashboard project
 """
 To add a new dashboard section, there are three steps:
 
@@ -37,7 +38,7 @@ from django.views.generic import TemplateView
 import datetime
 import re
 
-from . import email
+from .import email
 from .mixins import ComradeRequiredMixin
 from .models import ApplicantApproval
 from .models import ApprovalStatus
