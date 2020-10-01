@@ -93,7 +93,7 @@ PATH="$PWD/node_modules/.bin:$PATH" ./manage.py test
 
 You'll need to set up a new internship round, following the instructions in the next section.
 
-# Removing a virtual env
+# Removing the virtual environment
 
 If you made a mistake in the directions above, you may need to remove your pipenv virtual environment. You can do that by running `pipenv --rm` in the website directory. If needed, you can delete the website directory and start over at the git clone command.
 
