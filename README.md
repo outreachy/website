@@ -3,7 +3,7 @@
 Outreachy is a three-month paid internship program for people traditionally underrepresented in tech.
 This repository is for the Django code that comprises the [Outreachy website](https://www.outreachy.org).
 
-# Current state of Outreachy tech
+# Current state of Outreachy Tech
 
 The Outreachy web presence is in a couple of different places:
  * [Outreachy website](https://www.outreachy.org)
@@ -25,7 +25,7 @@ Older/deprecated websites include:
  - Track sponsorship information
  - Create a better way of displaying the list of potential Outreachy projects - e.g. allow searching, tagging for programming language or design or documentation or user experience
 
-# How does the Outreachy website tech work together?
+# How does the Outreachy website techies work together?
 
 The Outreachy website is built with [Python](https://www.python.org/) and a web framework called [Django](https://www.djangoproject.com/). Additionally, the Outreachy website uses a content management system called [Wagtail](https://wagtail.io/), which builds on top of Django. On the Outreachy webserver, we run [Dokku](http://dokku.viewdocs.io/dokku/), which helps us deploy new code, manage our Let's Encrypt SSL certificates, and backup the Outreachy website database. Only Outreachy organizers have ssh access to push new code to the server.
 
