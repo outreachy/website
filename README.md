@@ -1,3 +1,5 @@
+# website README.md
+
 # What is Outreachy?
 
 Outreachy is a three-month paid internship program for people traditionally underrepresented in tech.
@@ -27,9 +29,9 @@ Older/deprecated websites include:
 
 # How does the Outreachy website tech work together?
 
-The Outreachy website is built with [Python](https://www.python.org/) and a web framework called [Django](https://www.djangoproject.com/). Additionally, the Outreachy website uses a content management system called [Wagtail](https://wagtail.io/), which builds on top of Django. On the Outreachy webserver, we run [Dokku](http://dokku.viewdocs.io/dokku/), which helps us deploy new code, manage our Let's Encrypt SSL certificates, and backup the Outreachy website database. Only Outreachy organizers have ssh access to push new code to the server.
+The Outreachy website is built with [](https://www..org/) and a web framework called [Django](https://www.djangoproject.com/). Additionally, the Outreachy website uses a content management system called [Wagtail](https://wagtail.io/), which builds on top of Django. On the Outreachy webserver, we run [Dokku](http://dokku.viewdocs.io/dokku/), which helps us deploy new code, manage our Let's Encrypt SSL certificates, and backup the Outreachy website database. Only Outreachy organizers have ssh access to push new code to the server.
 
-# Optional helpful background reading
+# Optional helpful background 
 
 [Django topic guides](https://docs.djangoproject.com/en/1.11/topics/), particularly the [models](https://docs.djangoproject.com/en/1.11/topics/db/models/) guide.
 
@@ -44,15 +46,15 @@ git clone https://github.com/outreachy/website.git
 cd website
 ```
 
-In order to develop with Python, you'll need the Python 3 development headers, so install them (for example, `apt-get install python3-dev` on Ubuntu). You'll also need to install node.js.
+In  to develop with , you'll need the  3 development headers, so install them (for example, `apt-get install python3-dev` on Ubuntu). You'll also need to install node.js.
 
-Next, you'll need to create a new virtualenv. A "virtualenv" is a separate virtual environment for working on different Python projects. It's good practice to create a virtual environment for each Python project you're working on, in case they have conflicting dependencies, and so that you make sure to record all the dependencies for each project.
+Next, you'll need to create a new virtualenv. A "virtualenv" is a separate virtual environment for working on different  projects. It's good practice to create a virtual environment for each  project you're working on, in case they have conflicting dependencies, and so that you make sure to record all the dependencies for each project.
 
-These instructions will help you create a new virtualenv that will have all the python packages installed that you need to work on the Outreachy website. We use [pipenv](https://pipenv.readthedocs.io/en/latest/) for this purpose.
+These instructions will help you create a new virtualenv that will have all the  packages installed that you need to work on the Outreachy website. We use [pipenv](https://pipenv.readthedocs.io/en/latest/) for this purpose.
 
 If you're using Linux, you may be able to install pipenv through your Linux package manager. On Debian or Ubuntu, you can run `sudo aptitude install pipenv`. Otherwise, you can follow the instructions for [install pipenv](https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv).
 
-The following command will automatically create a virtual environment and install the Python dependencies specified in the `Pipfile`. If you need help understanding pipenv, run `pipenv --help`
+The following command will automatically create a virtual environment and install the  dependencies specified in the `Pipfile`. If you need help understanding pipenv, run `pipenv --help`
 Make sure that you are in the `website` directory first, and have *not* run `pipenv shell` yet, then:
 
 ```
@@ -67,13 +69,13 @@ Now, you activate the virtual environment by typing the following command in the
 pipenv shell
 ```
 
-In addition to the Python packages that were installed for you when you created the virtualenv, you also need to install some Node.js packages; these will be placed in a `node_modules` directory inside your project folder. Make sure you have `npm` installed, then run:
+In addition to the  packages that were installed for you when you created the virtualenv, you also need to install some Node.js packages; these will be placed in a `node_modules` directory inside your project folder. Make sure you have `npm` installed, then run:
 
 ```
 npm install
 ```
 
-If this is your first time creating a local version of the website for testing, you'll need to set up the local website database from scratch. The following command will create a new database with the models in the Outreachy website. The database will initially have no website pages, but will eventually store your local test pages.
+If this is your first time creating a local version of the website for testing, you'll need to set up the local website database from scratch. The following command will create a new database with the models in the Outreachy website. The database will initially have no website pages, but will eventually  your local test pages.
 
 ```
 ./manage.py migrate
@@ -99,7 +101,7 @@ If you made a mistake in the directions above, you may need to remove your pipen
 
 # Django shell
 
-Django has a 'shell' mode where you can run snippets of Python code.
+Django has a 'shell' mode where you can run snippets of  code.
 
 The Django shell is extremely useful for figuring out why view code isn't working. You can run snippets of your code and examine variables as it runs. You can call into functions in Django code.
 
@@ -107,7 +109,7 @@ You can also use the Django shell to test complicated [query sets](https://docs.
 
 The Django shell is also useful for doing quick tests of how templates (especially email templates) will look.
 
-You can run the shell on either your local copy of the database, or you can run it on the remote server's database. If you start the shell on your local computer, it will load your local copy of the code and your local database. If you start the shell on the remote server, it will load the server's version of the code and the server's database. Remember, if you change any of the Python code, you'll need to exit the shell (CTRL-d) and restart it to reload the code.
+You can run the shell on either your local copy of the database, or you can run it on the remote server's database. If you start the shell on your local computer, it will load your local copy of the code and your local database. If you start the shell on the remote server, it will load the server's version of the code and the server's database. Remember, if you change any of the  code, you'll need to exit the shell (CTRL-d) and restart it to reload the code.
 
 ## Setting up a new internship round
 
@@ -119,11 +121,11 @@ In either case, the best way to do that is to use the shell to call into `home/f
 ./manage.py shell
 ```
 
-You'll get a Python prompt that looks fairly similar to the standard Python shell, except that all the Django code you've written is available. It will look like this:
+You'll get a  prompt that looks fairly similar to the standard  shell, except that all the Django code you've written is available. It will look like this:
 
 ```
 $ ./manage.py shell
-Python 3.6.6 (default, Jun 27 2018, 14:44:17) 
+ 3.6.6 (default, Jun 27 2018, 14:44:17) 
 [GCC 8.1.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 (InteractiveConsole)
@@ -195,7 +197,7 @@ If you get an error when running the factories code, it's often hard to tell wha
 
 ## Printing class variables and methods
 
-The Python shell (which the Django shell uses) will print information about a class object. This includes the class methods and fields.
+The  shell (which the Django shell uses) will print information about a class object. This includes the class methods and fields.
 
 For example, assume you followed the instructions from one of the sections above to set up an internship round. You'll end up with a variable called `current_round`. This is an object of the RoundPage class. You can type the code below in the shell to look at the variables and fields in the RoundPage class:
 
@@ -240,7 +242,7 @@ The top-level directory `docs` is where our maintenance and design documents go.
 
 The `outreachyhome` directory contains the base HTML page templates for all pages on the website. It also includes all the Django project settings for both development and production environments. This directory isn't changed very often.
 
-Django breaks up functionality into a project (a Django web application) and apps (smaller a set of Python code that implements a specific feature). There is only one project deployed on a site at a time, but there could be many apps deployed. You can read more about what an application is in [the Django documentation](https://docs.djangoproject.com/en/2.0/ref/applications/).  
+Django breaks up functionality into a project (a Django web application) and apps (smaller a set of  code that implements a specific feature). There is only one project deployed on a site at a time, but there could be many apps deployed. You can read more about what an application is in [the Django documentation](https://docs.djangoproject.com/en/2.0/ref/applications/).  
 
 In the Outreachy repository, the directory `outreachy-home` is the project. We have several apps:
 * `home` which contains models used on most the Outreachy pages
@@ -249,9 +251,9 @@ In the Outreachy repository, the directory `outreachy-home` is the project. We h
 
 ## External Django Packages
 
-The Outreachy website also uses some Django apps that are listed in the `INSTALLED_APPS` variable in `outreachyhome/settings/base.py`. The Python module code for those Django apps aren't found in top-level directories in the repository. That's because the Python module code was installed into your virtualenv directory when you ran `pipenv install`. That command looked at the Python package requirements listed in `Pipfile` and installed each of the packages.
+The Outreachy website also uses some Django apps that are listed in the `INSTALLED_APPS` variable in `outreachyhome/settings/base.py`. The  module code for those Django apps aren't found in top-level directories in the repository. That's because the  module code was installed into your virtualenv directory when you ran `pipenv install`. That command looked at the  package requirements listed in `Pipfile` and installed each of the packages.
 
-If you want to look at the source code of the installed external Django applications, you can use `pipenv open MODULE` to examine the source code files associated with that module. For example, say you notice the `home/models.py` file has an import line `from django.contrib.auth.models import User`. You can use pipenv open to look at the models.py file that contains the User class by running the command `pipenv open django.contrib.auth`. That will open all the files in the auth module in your editor, and you can then open models.py and search for `class User`.
+If you want to look at the source code of the installed external Django applications, you can use `pipenv open MODULE` to examine the source code files associated with that module. For example, say you notice the `home/models.py` file has an import line `from django.contrib.auth.models import User`. You can use pipenv open to look at the models.py file that contains the User class by running the command `pipenv open django.contrib.auth`. That will open all the files in the auth module in your , and you can then open models.py and search for `class User`.
 
 ## Outreachy terminology
 
@@ -450,7 +452,7 @@ When you want to work on a new issue, it can be helpful to set up the internship
 
 All user accounts created by scenarios.py have the password 'test'. Usernames are things like 'mentor2', 'coordinator1', 'applicant3', etc.
 
-The names and email addresses are randomly generated. That means the email won't match the name (e.g. "Megan Huntington <terrysmith@example.com>"). Unfortunately the library used to generate names and emails is very western-English centric.
+The names and email addresses are randomly generated. That means the email won't match the name (e.g. "Megan Huntington <terrysmith@example.com>"). Unfortunately the  used to generate names and emails is very western- centric.
 
 ### Community sign-up scenario
 
@@ -616,11 +618,11 @@ PATH="$PWD/node_modules/.bin:$PATH" ./manage.py test home.<file name>.<class nam
 
 ## Running test code in the shell
 
-Sometimes when writing a new test, you want to test your code in the shell first. The test suite will do some set up automatically to create a local test Client that uses your local code and a new test database. You can replicate that by running the following commands:
+Sometimes when  a new test, you want to test your code in the shell first. The test suite will do some set up automatically to create a local test Client that uses your local code and a new test database. You can replicate that by running the following commands:
 
 ```
 PATH="$PWD/node_modules/.bin:$PATH" ./manage.py shell
-Python 3.6.8 (default, Jan  3 2019, 03:42:36) 
+ 3.6.8 (default, Jan  3 2019, 03:42:36) 
 [GCC 8.2.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 (InteractiveConsole)
@@ -681,10 +683,10 @@ ssh -t dokku@outreachy.org logs test
 
 # Sentry error logging
 
-Outreachy uses Sentry to log error messages received on both the Outreachy website and the test website. Unfortunately, that means if you ever use dokku to start the Python shell on the remote website, any typos you have end up getting reported to Sentry. To suppress those error messages, you can unset the `SENTRY_DSN` environment variable:
+Outreachy uses Sentry to log error messages received on both the Outreachy website and the test website. Unfortunately, that means if you ever use dokku to start the  shell on the remote website, any typos you have end up getting reported to Sentry. To suppress those error messages, you can unset the `SENTRY_DSN` environment variable:
 
 ```
-ssh -t dokku@www.outreachy.org run www env --unset=SENTRY_DSN python manage.py shell
+ssh -t dokku@www.outreachy.org run www env --unset=SENTRY_DSN  manage.py shell
 ```
 
 # Migrations
@@ -695,11 +697,11 @@ In most cases, there are only two commands you need to run to create and apply a
 
 ```./manage.py makemigrations```
 
-This will examine the code changes you've made, and automatically generate a Python file that describes how the underlying database schema should change. Make sure to commit this file along with your model code changes. Then the second command you'll run is:
+This will examine the code changes you've made, and automatically generate a  file that describes how the underlying database schema should change. Make sure to commit this file along with your model code changes. Then the second command you'll run is:
 
 ```./manage.py migrate```
 
-This will apply the database schema change to your local test environment. If the Outreachy organizers push a change that includes a migration to the production or testing sites, they will need to update the server's database schema by running `ssh dokku@outreachy.org run www python manage.py migrate` or `ssh dokku@outreachy.org run test python manage.py migrate`.
+This will apply the database schema change to your local test environment. If the Outreachy organizers push a change that includes a migration to the production or testing sites, they will need to update the server's database schema by running `ssh dokku@outreachy.org run www  manage.py migrate` or `ssh dokku@outreachy.org run test  manage.py migrate`.
 
 The next two sections describe some of the trickier aspects of migrations that we've run into.
 
@@ -721,23 +723,23 @@ Sometimes a field doesn't work out exactly the way you wanted it to, and you wan
 
 3. Create an empty migration: `./manage.py makemigrations home --empty`
 
-4. Edit the new empty migration file. You'll need to define a new function that takes `apps` and `schema_editor`, like it's documented in the `0005_populate_uuid_values.py` file in the [Django "Writing a migration" documentation.](https://docs.djangoproject.com/en/1.11/howto/writing-migrations/). You can access the objects for that Model, and set the new field based on values in the old field. Make sure to add your function to the operations list. Note that you might have to copy some class members that represent the choice short code in the database into the migration, because all migrations only have access model class members that are Django fields (like CharField or BooleanField). For an example, see the `home/migrations/0068_auto_20180828_1832.py` file in this repo.
+4. Edit the new empty migration file. You'll need to define a new function that takes `apps` and `schema_editor`, like it's documented in the `0005_populate_uuid_values.py` file in the [Django " a migration" documentation.](https://docs.djangoproject.com/en/1.11/howto/-migrations/). You can access the objects for that Model, and set the new field based on values in the old field. Make sure to add your function to the operations list. Note that you might have to copy some class members that represent the choice short code in the database into the migration, because all migrations only have access model class members that are Django fields (like CharField or BooleanField). For an example, see the `home/migrations/0068_auto_20180828_1832.py` file in this repo.
 
 5. Remove the `null=True` argument from your model, and delete the old field. You might need to remove the field from admin.py and the views. Then run `./manage.py makemigrations && ./manage.py migrate`. That will generate a third migration to make sure the field must be non-null, but the second migration will set the field on all objects. When Django prompts you about changing a nullable field to a non-nullable field, choose 'Ignore for now'.
 
-6. The third migration will fail if someone has added a new model object between the second migration and the third migration. In this case, you should roll back to the first migration (where you first added the field). You can pass the migration number to go back to: `./manage.py migrate home PREFIX` This should be a unique prefix (like the first four numbers of the migration). Then you can try to run the migration again: `./manage.py migrate`. Repeat as necessary.
+6. The third migration will fail if someone has added a new model object between the second migration and the third migration. In this case, you should  back to the first migration (where you first added the field). You can pass the migration number to go back to: `./manage.py migrate home PREFIX` This should be a unique prefix (like the first four numbers of the migration). Then you can try to run the migration again: `./manage.py migrate`. Repeat as necessary.
 
 # Updating Packages
 
-The Outreachy website is built using several different Python packages. The Django web framework is one such Python package. Python projects have different ways of automatically installing packages, but for this project, we use [pipenv](https://pipenv.readthedocs.io/en/latest/).
+The Outreachy website is built using several different  packages. The Django web framework is one such  package.  projects have different ways of automatically installing packages, but for this project, we use [pipenv](https://pipenv.readthedocs.io/en/latest/).
 
-Python packages the website needs to install on are listed in the top-level file `Pipfile`. Pip uses this file to figure out what packages and what versions of packages to install. If you edit `Pipfile`, you'll see some of the other Python packages we use. For example, [django-ckeditor](https://github.com/django-ckeditor/django-ckeditor) is the Django package of [CKEditor](https://ckeditor.com/). It provides the rich-text WSIWIG editor for form fields used by Outreachy mentors.
+ packages the website needs to install on are listed in the top-level file `Pipfile`. Pip uses this file to figure out what packages and what versions of packages to install. If you edit `Pipfile`, you'll see some of the other  packages we use. For example, [django-ckeditor](https://github.com/django-ckeditor/django-ckeditor) is the Django package of [CKEditor](https://ckeditor.com/). It provides the rich-text WSIWIG  for form fields used by Outreachy mentors.
 
-The other file to be aware of is `Pipfile.lock`. Pipfile lists the important Python packages the website depends on. However, those packages also have dependencies on other Python packages. Pipfile.lock lists the versions of all the packages to install. It also lists the sha1 hash for the source code of each Python package. The sha1 hash ensures that if you try to reinstall packages, you'll always get the exact version you installed previously.
+The other file to be aware of is `Pipfile.lock`. Pipfile lists the important  packages the website depends on. However, those packages also have dependencies on other  packages. Pipfile.lock lists the versions of all the packages to install. It also lists the sha1 hash for the source code of each  package. The sha1 hash ensures that if you try to reinstall packages, you'll always get the exact version you installed previously.
 
 The pipenv documentation has [examples of how to upgrade packages](https://pipenv.readthedocs.io/en/latest/basics/#example-pipenv-upgrade-workflow). You'll need to run `pipenv shell` before any of these commands.
 
-Upgrade all Python packages with this command:
+Upgrade all  packages with this command:
 ```
 pipenv update
 ```
@@ -754,11 +756,11 @@ These commands will update `Pipfile` and `Pipfile.lock`. You'll need to commit b
 We evaluated a couple different choices:
  - CiviCRM
  - Wordpress
- - Red Hen
+ - Red 
  - Django
 
 CiviCRM proved too clunky to use, and ultimately their data model didn't necessarily fit our data models. Wordpress might have been fine with a template plugin and would have good user experience, but with everything we wanted to do, we felt we would ultimately outgrow Wordpress.
 
 There are other proprietary tools for tracking sponsorship information, but since Outreachy is a project under the Software Freedom Conservancy and the Outreachy organizers believe in the power of free and open source, we have decided not to use proprietary software wherever possible.
 
-Django fit our needs for flexibility, data model definition, and future use cases. However, the Django admin interface is pretty clunky and intimidating. We wanted to have a very easy way for all our organizers to quickly edit content. The Wagtail CMS plugin provides a nice user interface and template system, while still allowing programmers to fully use Django to implement models. It also provides internal revision tracking for page content, which means we can easily roll back content changes from the wagtail admin web interface if necessary.
+Django fit our needs for flexibility, data model definition, and future use cases. However, the Django admin interface is pretty clunky and intimidating. We wanted to have a very easy way for all our organizers to quickly edit content. The Wagtail CMS plugin provides a nice user interface and template system, while still allowing programmers to fully use Django to implement models. It also provides internal revision tracking for page content, which means we can easily  back content changes from the wagtail admin web interface if necessary.
