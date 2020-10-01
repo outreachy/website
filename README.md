@@ -18,7 +18,7 @@ Older/deprecated websites include:
  - irc.gnome.org #outreachy - GNOME IRC channel - where applicants get help
  - [Outreachy Planeteria](http://www.planeteria.info/outreach) - blog aggregation for Outreachy interns
 
-# Future Long-term Goals
+# Future Long-term Goals---amazing goals
 
  - Replace planetaria with one hosted on our domain (that allows for filtering which blogs are displayed?)
  - Track longitudinal information of alumni, so we can share success stories and improve our program
