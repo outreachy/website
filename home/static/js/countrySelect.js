@@ -1,4 +1,4 @@
-// wrap in UMD - see https://github.com/umdjs/umd/blob/master/jqueryPlugin.js
+// wrap in UMD = (see https://github.com/umdjs/umd/blob/master/jqueryPlugin.js)
 (function(factory) {
 	if (typeof define === "function" && define.amd) {
 		define([ "jquery" ], function($) {
