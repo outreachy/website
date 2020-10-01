@@ -1,3 +1,8 @@
+<p align="center">
+  <img width="80" alt="The outreachy Logo" src="https://avatars0.githubusercontent.com/u/50297779?s=88&v=4">
+</p>
+</br>
+
 # What is Outreachy?
 
 Outreachy is a three-month paid internship program for people traditionally underrepresented in tech.
