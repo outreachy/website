@@ -3,7 +3,7 @@
 Outreachy is a three-month paid internship program for people traditionally underrepresented in tech.
 This repository is for the Django code that comprises the [Outreachy website](https://www.outreachy.org).
 
-# Current state of Outreachy tech
+# Latest Current state of Outreachy tech
 
 The Outreachy web presence is in a couple of different places:
  * [Outreachy website](https://www.outreachy.org)
@@ -11,14 +11,14 @@ The Outreachy web presence is in a couple of different places:
  * [GitHub repository for creative works and miscellaneous scripts](https://github.com/outreachy/creative-works-and-scripts/)
  * [Repository CI Status](https://travis-ci.org/outreachy/website.svg?branch=master)
 
-Older/deprecated websites include:
+Older/Deprecated websites include:
  - [GNOME Outreachy homepage](https://www.gnome.org/outreachy/) - shell homepage, where the outreachy.org domain currently redirects to
  - [GNOME wiki Outreachy pages](http://wiki.gnome.org/Outreachy) - moinmoin based wiki with information about how to apply and sponsor
  - [Outreachy application system](http://outreachy.gnome.org) - PHP-based application system currently hosted on OpenShift
  - irc.gnome.org #outreachy - GNOME IRC channel - where applicants get help
  - [Outreachy Planeteria](http://www.planeteria.info/outreach) - blog aggregation for Outreachy interns
 
-# Future Long-term Goals
+# Future Long-term our Goals
 
  - Replace planetaria with one hosted on our domain (that allows for filtering which blogs are displayed?)
  - Track longitudinal information of alumni, so we can share success stories and improve our program
