@@ -3,6 +3,13 @@
 Outreachy is a three-month paid internship program for people traditionally underrepresented in tech.
 This repository is for the Django code that comprises the [Outreachy website](https://www.outreachy.org).
 
+*Past Outreachy interns are:
+
+92% women
+4% transgender, genderqueer, or non-binary people
+64% people of color
+12% people from a historically disadvantaged caste or tribe
+
 # Current state of Outreachy tech
 
 The Outreachy web presence is in a couple of different places:
