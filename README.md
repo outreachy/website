@@ -1,6 +1,6 @@
 # What is Outreachy?
 
-Outreachy is a three-month paid internship program for people traditionally underrepresented in tech.
+Outreachy is a three-month paid internship program for people traditionally underrepresented in technology.
 This repository is for the Django code that comprises the [Outreachy website](https://www.outreachy.org).
 
 # Current state of Outreachy tech
@@ -324,7 +324,7 @@ In the example code below, we'll create a new CoordinatorApproval object. The fa
 >>> really_awesome_community = coord1.community
 ```
 
-If you want to create a second coordinator under the same community, you can run this command:
+#If you want to create a second coordinator under the same community, you can run this command:
 
 ```
 >>> coord2 = CoordinatorApprovalFactory(
