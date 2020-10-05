@@ -198,7 +198,7 @@
 {% block extra_js %}
 <script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
 <script src="{% static "timeline-chart.js" %}"></script>
-{% with tcs=application.get_time_commitments current_round=application.application_round %}
+{% with tcs=application.get_relevant_time_commitments current_round=application.application_round %}
 <script>
 	new TimelineChart(document.getElementById("time-commitments-timeline"), [{
 		label: "Internship period",

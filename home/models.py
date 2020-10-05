@@ -2775,15 +2775,9 @@ class ApplicantApproval(ApprovalStatus):
                 'hours': hours,
                 }
 
-    def get_time_commitments(self):
+    def get_time_commitments(self, **kwargs):
         current_round = self.application_round
-
-        nearby_date = datetime.timedelta(days=30*3)
-        relevant = models.Q(
-            applicant=self,
-            start_date__lte=current_round.internends + nearby_date,
-            end_date__gte=current_round.internstarts - nearby_date,
-        )
+        relevant = models.Q(applicant=self, **kwargs)
 
         noncollege_school_time_commitments = NonCollegeSchoolTimeCommitment.objects.filter(relevant)
         school_time_commitments = SchoolTimeCommitment.objects.filter(relevant).order_by('start_date')
@@ -2840,6 +2834,19 @@ class ApplicantApproval(ApprovalStatus):
                 'volunteer_time_commitments': volunteer_time_commitments,
                 'employment_time_commitments': employment_time_commitments,
                 }
+
+    def get_relevant_time_commitments(self):
+        """
+        Same as get_time_commitments but limited to 90 days before or after the
+        internship period.
+        """
+
+        current_round = self.application_round
+        nearby_date = datetime.timedelta(days=30 * 3)
+        return self.get_time_commitments(
+            start_date__lte=current_round.internends + nearby_date,
+            end_date__gte=current_round.internstarts - nearby_date,
+        )
 
     def overlapping_school_terms(self):
         school_time_commitments = SchoolTimeCommitment.objects.filter(applicant=self)
