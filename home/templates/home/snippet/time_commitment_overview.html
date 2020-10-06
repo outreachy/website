@@ -101,6 +101,15 @@
 					{% endfor %}
 					</ul>
 				{% endif %}
+				{% if tcs.contractor_time_commitment %}
+					<p>Contractor time commitments:</p>
+					<ul>
+						<li>Typically {{ tcs.contractor_time_commitment.typical_hours }} hours per week.</li>
+						{% if not tcs.contractor_time_commitment.continuing_contract_work %}
+						<li>Applicant has indicated they will quit doing contract work if they are accepted as an Outreachy intern.</li>
+						{% endif %}
+					</ul>
+				{% endif %}
 				{% if tcs.volunteer_time_commitments %}
 					<p>Volunteer time commitments:</p>
 					<ul>

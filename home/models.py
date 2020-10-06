@@ -2691,6 +2691,12 @@ class ApplicantApproval(ApprovalStatus):
         volunteer_time_commitments = VolunteerTimeCommitment.objects.filter(relevant)
         employment_time_commitments = EmploymentTimeCommitment.objects.filter(relevant)
 
+        try:
+            # XXX: there's at most one of these, but that isn't enforced in the model
+            contractor_time_commitment = self.contractorinformation_set.get()
+        except ContractorInformation.DoesNotExist:
+            contractor_time_commitment = None
+
         tcs = [ self.time_commitment_from_model(d, d.hours_per_week)
                 for d in volunteer_time_commitments or []
                 if d ]
@@ -2740,6 +2746,7 @@ class ApplicantApproval(ApprovalStatus):
                 'noncollege_school_time_commitments': noncollege_school_time_commitments,
                 'volunteer_time_commitments': volunteer_time_commitments,
                 'employment_time_commitments': employment_time_commitments,
+                'contractor_time_commitment': contractor_time_commitment,
                 }
 
     def get_relevant_time_commitments(self):
