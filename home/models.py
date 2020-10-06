@@ -1591,52 +1591,6 @@ class Participation(ApprovalStatus):
     def is_submitter(self, user):
         return self.community.is_coordinator(user)
 
-    def approved_to_see_project_overview(self, user):
-        """
-        This function controls whether the project overview (title & skills)
-        are displayed on /apply/project-selection/
-
-        The rules are:
-         - Staff (Outreachy organizers) should see all projects all the time
-
-         - Anyone should be able to see it if the initial application period is open.
-           This builds up excitement in applicants and gets them to complete an
-           initial application.
-
-         - If the initial application period isn't open, the people who should
-           see project overviews are approved coordinators for communities
-           approved to participate in this round, approved coordinators for
-           communities that have pending participation for this round, and
-           approved mentors with approved projects.
-
-        """
-        # - staff
-        if user.is_staff:
-            return True
-
-        # Is the initial application period open?
-        # Note in the template, links are still hidden if the
-        # initial application is pending or rejected
-        if self.participating_round.initial_applications_open.has_passed():
-            return True
-
-        # Remaining conditions all require this person to be logged in
-        if not user.is_authenticated:
-            return False
-
-        role = Role(user, self.participating_round)
-
-        # - an approved coordinator for any approved community
-        if role.is_coordinator:
-            return True
-
-        # - an approved mentor with an approved project for any approved community
-        if role.is_mentor:
-            return True
-
-        # - an approved coordinator for this pending community
-        return self.community.is_coordinator(user)
-
     # Note that is is more than just the submitter!
     # We want to notify mentors as well as coordinators
     def get_submitter_email_list(self):

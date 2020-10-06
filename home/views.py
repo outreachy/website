@@ -837,11 +837,30 @@ def current_round_page(request):
 
     role = Role(request.user, current_round)
     if current_round is not None:
-        approved_participations = current_round.participation_set.approved().order_by('community__name')
+        all_participations = current_round.participation_set.approved().order_by('community__name')
+        apps_open = current_round.initial_applications_open.has_passed()
+
+        if apps_open or role.is_volunteer:
+            # Anyone should be able to see all projects if the initial
+            # application period is open. This builds up excitement in
+            # applicants and gets them to complete an initial application. Note
+            # in the template, links are still hidden if the initial
+            # application is pending or rejected.
+            approved_participations = all_participations
+
+        elif request.user.is_authenticated:
+            # Approved coordinators should be able to see their communities
+            # even if the community isn't approved yet.
+            approved_participations = all_participations.filter(
+                community__coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+                community__coordinatorapproval__coordinator__account=request.user,
+            )
+
+        else:
+            # Otherwise, no communities should be visible.
+            approved_participations = all_participations.none()
 
         for p in approved_participations:
-            if not p.approved_to_see_project_overview(request.user):
-                continue
             projects = p.project_set.approved().filter(new_contributors_welcome=False)
             if projects:
                 closed_approved_projects.append((p, projects))
