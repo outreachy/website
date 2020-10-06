@@ -1612,27 +1612,15 @@ class Participation(ApprovalStatus):
            approved to participate in this round, approved coordinators for
            communities that have pending participation for this round, and
            approved mentors with approved projects.
-
         """
-        # - staff
-        if user.is_staff:
-            return True
 
-        # Remaining conditions all require this person to be logged in
+        # all conditions require this person to be logged in
         if not user.is_authenticated:
             return False
 
         role = Role(user, self.participating_round)
 
-        if role.is_approved_applicant:
-            return True
-
-        # - an approved coordinator for any approved community
-        if role.is_coordinator:
-            return True
-
-        # - an approved mentor with an approved project for any approved community
-        if role.is_mentor:
+        if role.is_approved_applicant or role.is_volunteer:
             return True
 
         # - an approved coordinator for this pending community
