@@ -62,7 +62,6 @@ from .models import Comrade
 from .models import ContractorInformation
 from .models import Contribution
 from .models import CoordinatorApproval
-from .models import create_time_commitment_calendar
 from .models import EmploymentTimeCommitment
 from .models import FinalApplication
 from .models import get_deadline_date_for
@@ -327,48 +326,14 @@ def show_time_commitment_info(wizard):
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
     return cleaned_data.get('volunteer_time_commitments', True)
 
-def time_commitment(cleaned_data, hours):
-    return {
-            'start_date': cleaned_data['start_date'],
-            'end_date': cleaned_data['end_date'],
-            'hours': hours,
-            }
-
-def time_commitments_are_approved(wizard, application_round):
-    tcs = [ time_commitment(d, d['hours_per_week'])
-            for d in wizard.get_cleaned_data_for_step('Volunteer Time Commitment Info') or []
-            if d ]
-
-    ctcs = [ time_commitment(d, 0 if d['quit_on_acceptance'] else d['hours_per_week'])
-            for d in wizard.get_cleaned_data_for_step('Coding School or Online Courses Time Commitment Info') or []
-            if d ]
-
-    etcs = [ time_commitment(d, 0 if d['quit_on_acceptance'] else d['hours_per_week'])
-            for d in wizard.get_cleaned_data_for_step('Employment Info') or []
-            if d ]
-
-    stcs = [ time_commitment(d, 40)
-            for d in wizard.get_cleaned_data_for_step('School Term Info') or []
-            if d ]
-
-    if stcs:
-        required_days_free = application_round.minimum_days_free_for_students
-    else:
-        required_days_free = application_round.minimum_days_free_for_non_students
-
-    calendar = create_time_commitment_calendar(chain(tcs, ctcs, etcs, stcs), application_round)
-
-    for key, group in groupby(calendar, lambda hours: hours <= 20):
-        if key is True and len(list(group)) >= required_days_free:
-            return True
-    return False
-
-def determine_eligibility(wizard, application_round):
+def determine_eligibility(wizard, applicant):
     if not (work_eligibility_is_approved(wizard)):
         return (ApprovalStatus.REJECTED, 'GENERAL')
     if not (prior_foss_experience_is_approved(wizard)):
         return (ApprovalStatus.REJECTED, 'GENERAL')
-    if not time_commitments_are_approved(wizard, application_round):
+
+    days_free = applicant.get_time_commitments()["longest_period_free"]
+    if days_free is None or days_free < applicant.required_days_free():
         return (ApprovalStatus.REJECTED, 'TIME')
 
     general_data = wizard.get_cleaned_data_for_step('Work Eligibility')
@@ -727,20 +692,14 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWiz
 
     def done(self, form_list, **kwargs):
 
-        self.object = ApplicantApproval(
-            applicant=self.request.user.comrade,
-            application_round=self.current_round,
-        )
-        self.object.ip_address = self.request.META.get('REMOTE_ADDR')
-
-        # It's okay that the other objects aren't saved,
-        # because determine_eligibility get the cleaned data from the form wizard,
-        # not the database objects.
-        self.object.approval_status, self.object.reason_denied = determine_eligibility(self, self.object.application_round)
         # Make sure to commit the object to the database before saving
         # any of the related objects, so they can set their foreign keys
         # to point to this ApplicantApproval object.
-        self.object.save()
+        self.object = ApplicantApproval.objects.create(
+            applicant=self.request.user.comrade,
+            application_round=self.current_round,
+            ip_address=self.request.META.get('REMOTE_ADDR'),
+        )
 
         for form in form_list:
             results = form.save(commit=False)
@@ -749,7 +708,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWiz
             # (WorkEligibility and TimeCommitmentSummary)
             # or a list because it's a modelformsets
             # (VolunteerTimeCommitment, EmploymentTimeCommitment, etc)
-            # The next line is magic to check if it's a list
+            # Make it into a list if it isn't one already.
             if not isinstance(results, list):
                 results = [ results ]
 
@@ -759,6 +718,13 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWiz
             for r in results:
                 r.applicant = self.object
                 r.save()
+
+        # Now that all the related objects are saved, we can determine
+        # elegibility from them, which avoids duplicating some code that's
+        # already on the models. The cost is reading back some of the objects
+        # we just wrote and then re-saving an object, but that isn't a big hit.
+        self.object.approval_status, self.object.reason_denied = determine_eligibility(self, self.object)
+        self.object.save()
 
         return redirect(self.request.GET.get('next', reverse('eligibility-results')))
 
