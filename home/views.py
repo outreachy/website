@@ -1079,8 +1079,6 @@ def community_landing_view(request, round_slug, community_slug):
     if request.user.is_authenticated:
         approved_coordinator_list = participation_info.community.coordinatorapproval_set.approved()
 
-    approved_to_see_all_project_details = participation_info.approved_to_see_all_project_details(request.user)
-
     mentors_pending_projects = Project.objects.none()
     approved_coordinator = False
     if request.user.is_authenticated:
@@ -1096,6 +1094,8 @@ def community_landing_view(request, round_slug, community_slug):
             pass
 
         approved_coordinator = participation_info.community.is_coordinator(request.user)
+
+    approved_to_see_all_project_details = approved_coordinator or role.is_approved_applicant or role.is_volunteer
 
     return render(request, 'home/community_landing.html',
             {

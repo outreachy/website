@@ -1591,41 +1591,6 @@ class Participation(ApprovalStatus):
     def is_submitter(self, user):
         return self.community.is_coordinator(user)
 
-    # This function should only be used before the contribution period is open.
-    # There are a few people who should be approved to see
-    # all the details of all projects for a community
-    # before the contribution period opens:
-    def approved_to_see_all_project_details(self, user):
-        """
-        This function controls whether the project details
-        on the community landing page are visible
-        on /<round_slug>/communities/<community_slug>/
-
-        The rules are:
-         - Staff (Outreachy organizers) should see all projects all the time
-
-         - Anyone with an approved initial application should be able to see
-           it if the contribution period is open.
-
-         - If the contribution period isn't open, the people who should
-           see project overviews are approved coordinators for communities
-           approved to participate in this round, approved coordinators for
-           communities that have pending participation for this round, and
-           approved mentors with approved projects.
-        """
-
-        # all conditions require this person to be logged in
-        if not user.is_authenticated:
-            return False
-
-        role = Role(user, self.participating_round)
-
-        if role.is_approved_applicant or role.is_volunteer:
-            return True
-
-        # - an approved coordinator for this pending community
-        return self.community.is_coordinator(user)
-
     def approved_to_see_project_overview(self, user):
         """
         This function controls whether the project overview (title & skills)
