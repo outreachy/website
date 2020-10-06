@@ -284,7 +284,7 @@ class EligibilityTests(TestCase):
         answers["INITIAL_FORMS"] = "0"
         return answers
 
-    def assertTimeEligible(self, expected_status, expected_reason, school=None, coding_school=None, contractor=False, employment=None, time=None):
+    def assertTimeEligible(self, expected_status, expected_reason, school=None, coding_school=None, employed=False, contractor=False, employment=None, time=None):
         kinds = []
         data = [
             self.approved_work_eligibility(),
@@ -304,15 +304,16 @@ class EligibilityTests(TestCase):
                 "degree_name": "Geology",
             }))
             data.append(('School Term Info', self.make_formset(school)))
-        if employment:
-            kinds.append('employed')
-            data.append(('Employment Info', self.make_formset(employment)))
         if coding_school:
             kinds.append('enrolled_as_noncollege_student')
             data.append(('Coding School or Online Courses Time Commitment Info', self.make_formset(coding_school)))
+        if employed or (contractor and contractor["continuing_contract_work"]):
+            data.append(('Employment Info', self.make_formset(employment)))
+        if employed:
+            kinds.append('employed')
         if contractor:
             kinds.append('contractor')
-            data.append(('Contractor Info', self.make_formset([{'continuing_contract_work': True}])))
+            data.append(('Contractor Info', self.make_formset([contractor])))
         if time:
             kinds.append('volunteer_time_commitments')
             data.append(('Volunteer Time Commitment Info', self.make_formset(time)))
@@ -339,6 +340,7 @@ class EligibilityTests(TestCase):
         self.assertTimeEligible(
             ApprovalStatus.PENDING,
             'ESSAY',
+            employed=True,
             employment=[{
                 'start_date': self.application_round.internstarts,
                 'end_date': self.application_round.internends,
@@ -353,6 +355,53 @@ class EligibilityTests(TestCase):
         self.assertTimeEligible(
             ApprovalStatus.REJECTED,
             'TIME',
+            employed=True,
+            employment=[{
+                'start_date': self.application_round.internstarts,
+                'end_date': self.application_round.internends,
+                'hours_per_week': 21,
+                'job_title': 'Overworked Fancy Pants',
+                'job_description': 'I wear the pants',
+                'quit_on_acceptance': False,
+            }],
+        )
+
+    def test_approve_contractor_commitment(self):
+        self.assertTimeEligible(
+            ApprovalStatus.PENDING,
+            'ESSAY',
+            contractor={
+                'continuing_contract_work': True,
+                'typical_hours': 20,
+            },
+            employment=[{
+                'start_date': self.application_round.internstarts,
+                'end_date': self.application_round.internends,
+                'hours_per_week': 20,
+                'job_title': 'Overworked Fancy Pants',
+                'job_description': 'I wear the pants',
+                'quit_on_acceptance': False,
+            }],
+        )
+
+    def test_approve_contractor_commitment_if_quit(self):
+        self.assertTimeEligible(
+            ApprovalStatus.PENDING,
+            'ESSAY',
+            contractor={
+                'continuing_contract_work': False,
+                'typical_hours': 40,
+            },
+        )
+
+    def test_reject_contractor_commitment(self):
+        self.assertTimeEligible(
+            ApprovalStatus.REJECTED,
+            'TIME',
+            contractor={
+                'continuing_contract_work': True,
+                'typical_hours': 21,
+            },
             employment=[{
                 'start_date': self.application_round.internstarts,
                 'end_date': self.application_round.internends,
