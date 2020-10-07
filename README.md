@@ -1,6 +1,6 @@
 # What is Outreachy?
 
-Outreachy is a three-month paid internship program for people traditionally underrepresented in technology.
+Outreachy is a three-month paid internship program for peoples traditionally underrepresented in technology.
 This repository is for the Django code that comprises the [Outreachy website](https://www.outreachy.org).
 
 # Current state of Outreachy tech
