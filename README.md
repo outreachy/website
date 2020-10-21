@@ -649,6 +649,7 @@ You can access the form through the TemplateResponse context dictionary. Then yo
 
 ```
 >> print(response.context['form'].errors)
+```
 
 # Adding a new Django app
 
