@@ -760,6 +760,34 @@ To sync your installed pipenv packages with any changes made in the Outreachy Gi
 pipenv sync
 ```
 
+# Debugging errors
+
+# Debugging package installs
+
+You can check to see which packages are installed with the following command:
+
+```
+pipenv graph
+```
+
+You can view the source code of any installed package with the following command:
+
+```
+pipenv open <pkg>
+```
+
+# Debugging migration errors
+
+Sometimes you'll get an error when you migrate or run code that says 'it appears to be a stale .pyc file'. How you fix this is by removing the cache of code that has been pre-compiled to CPython's byte code format.
+
+Run this command:
+
+```
+rm home/migrations/*.pyc
+```
+
+You may have to remove other pycache folders that contain stale pre-compiled code.
+
 # Why Django?
 
 We evaluated a couple different choices:
