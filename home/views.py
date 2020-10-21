@@ -10,6 +10,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
 from django.db import models
 from django.forms import inlineformset_factory, ModelForm, modelform_factory, modelformset_factory, ValidationError
+from django.forms import widgets
 from django.forms.models import BaseInlineFormSet, BaseModelFormSet
 from django.http import JsonResponse, HttpResponse, Http404
 from django.shortcuts import get_list_or_404
@@ -61,7 +62,6 @@ from .models import Comrade
 from .models import ContractorInformation
 from .models import Contribution
 from .models import CoordinatorApproval
-from .models import create_time_commitment_calendar
 from .models import EmploymentTimeCommitment
 from .models import FinalApplication
 from .models import get_deadline_date_for
@@ -326,44 +326,14 @@ def show_time_commitment_info(wizard):
     cleaned_data = wizard.get_cleaned_data_for_step('Time Commitments') or {}
     return cleaned_data.get('volunteer_time_commitments', True)
 
-def time_commitment(cleaned_data, hours):
-    return {
-            'start_date': cleaned_data['start_date'],
-            'end_date': cleaned_data['end_date'],
-            'hours': hours,
-            }
-
-def time_commitments_are_approved(wizard, application_round):
-    tcs = [ time_commitment(d, d['hours_per_week'])
-            for d in wizard.get_cleaned_data_for_step('Volunteer Time Commitment Info') or []
-            if d ]
-
-    ctcs = [ time_commitment(d, 0 if d['quit_on_acceptance'] else d['hours_per_week'])
-            for d in wizard.get_cleaned_data_for_step('Coding School or Online Courses Time Commitment Info') or []
-            if d ]
-
-    etcs = [ time_commitment(d, 0 if d['quit_on_acceptance'] else d['hours_per_week'])
-            for d in wizard.get_cleaned_data_for_step('Employment Info') or []
-            if d ]
-
-    stcs = [ time_commitment(d, 40)
-            for d in wizard.get_cleaned_data_for_step('School Term Info') or []
-            if d ]
-
-    required_free_days = 7*7
-    calendar = create_time_commitment_calendar(chain(tcs, ctcs, etcs, stcs), application_round)
-
-    for key, group in groupby(calendar, lambda hours: hours <= 20):
-        if key is True and len(list(group)) >= required_free_days:
-            return True
-    return False
-
-def determine_eligibility(wizard, application_round):
+def determine_eligibility(wizard, applicant):
     if not (work_eligibility_is_approved(wizard)):
         return (ApprovalStatus.REJECTED, 'GENERAL')
     if not (prior_foss_experience_is_approved(wizard)):
         return (ApprovalStatus.REJECTED, 'GENERAL')
-    if not time_commitments_are_approved(wizard, application_round):
+
+    days_free = applicant.get_time_commitments()["longest_period_free"]
+    if days_free is None or days_free < applicant.required_days_free():
         return (ApprovalStatus.REJECTED, 'TIME')
 
     general_data = wizard.get_cleaned_data_for_step('Work Eligibility')
@@ -435,7 +405,7 @@ def get_current_round_for_sponsors():
     return current_round
 
 
-class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, SessionWizardView):
+class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWizardView):
     template_name = 'home/wizard_form.html'
     condition_dict = {
             'Payment Eligibility': work_eligibility_is_approved,
@@ -556,13 +526,18 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     'genderqueer': RadioBooleanField,
                 },
             )),
-            ('Barriers to Participation', modelform_factory(BarriersToParticipation,
+            ('Barriers-to-Participation', modelform_factory(BarriersToParticipation,
                 fields=(
+                    'country_living_in_during_internship',
+                    'country_living_in_during_internship_code',
+                    'underrepresentation',
+                    'employment_bias',
                     'lacking_representation',
                     'systemic_bias',
-                    'employment_bias',
-                    'barriers_to_contribution',
                 ),
+                widgets={
+                    'country_living_in_during_internship_code': widgets.HiddenInput,
+                },
             )),
             ('Time Commitments', modelform_factory(TimeCommitmentSummary,
                 fields=(
@@ -671,7 +646,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
             'Prior FOSS Experience': 'home/eligibility_wizard_foss_experience.html',
             'USA demographics': 'home/eligibility_wizard_us_demographics.html',
             'Gender Identity': 'home/eligibility_wizard_gender.html',
-            'Barriers to Participation': 'home/eligibility_wizard_essay_questions.html',
+            'Barriers-to-Participation': 'home/eligibility_wizard_essay_questions.html',
             'Time Commitments': 'home/eligibility_wizard_time_commitments.html',
             'School Info': 'home/eligibility_wizard_school_info.html',
             'School Term Info': 'home/eligibility_wizard_school_terms.html',
@@ -717,20 +692,14 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
 
     def done(self, form_list, **kwargs):
 
-        self.object = ApplicantApproval(
-            applicant=self.request.user.comrade,
-            application_round=self.current_round,
-        )
-        self.object.ip_address = self.request.META.get('REMOTE_ADDR')
-
-        # It's okay that the other objects aren't saved,
-        # because determine_eligibility get the cleaned data from the form wizard,
-        # not the database objects.
-        self.object.approval_status, self.object.reason_denied = determine_eligibility(self, self.object.application_round)
         # Make sure to commit the object to the database before saving
         # any of the related objects, so they can set their foreign keys
         # to point to this ApplicantApproval object.
-        self.object.save()
+        self.object = ApplicantApproval.objects.create(
+            applicant=self.request.user.comrade,
+            application_round=self.current_round,
+            ip_address=self.request.META.get('REMOTE_ADDR'),
+        )
 
         for form in form_list:
             results = form.save(commit=False)
@@ -739,7 +708,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
             # (WorkEligibility and TimeCommitmentSummary)
             # or a list because it's a modelformsets
             # (VolunteerTimeCommitment, EmploymentTimeCommitment, etc)
-            # The next line is magic to check if it's a list
+            # Make it into a list if it isn't one already.
             if not isinstance(results, list):
                 results = [ results ]
 
@@ -749,6 +718,13 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, reversion.
             for r in results:
                 r.applicant = self.object
                 r.save()
+
+        # Now that all the related objects are saved, we can determine
+        # elegibility from them, which avoids duplicating some code that's
+        # already on the models. The cost is reading back some of the objects
+        # we just wrote and then re-saving an object, but that isn't a big hit.
+        self.object.approval_status, self.object.reason_denied = determine_eligibility(self, self.object)
+        self.object.save()
 
         return redirect(self.request.GET.get('next', reverse('eligibility-results')))
 
@@ -861,11 +837,30 @@ def current_round_page(request):
 
     role = Role(request.user, current_round)
     if current_round is not None:
-        approved_participations = current_round.participation_set.approved().order_by('community__name')
+        all_participations = current_round.participation_set.approved().order_by('community__name')
+        apps_open = current_round.initial_applications_open.has_passed()
+
+        if apps_open or role.is_volunteer:
+            # Anyone should be able to see all projects if the initial
+            # application period is open. This builds up excitement in
+            # applicants and gets them to complete an initial application. Note
+            # in the template, links are still hidden if the initial
+            # application is pending or rejected.
+            approved_participations = all_participations
+
+        elif request.user.is_authenticated:
+            # Approved coordinators should be able to see their communities
+            # even if the community isn't approved yet.
+            approved_participations = all_participations.filter(
+                community__coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+                community__coordinatorapproval__coordinator__account=request.user,
+            )
+
+        else:
+            # Otherwise, no communities should be visible.
+            approved_participations = all_participations.none()
 
         for p in approved_participations:
-            if not p.approved_to_see_project_overview(request.user):
-                continue
             projects = p.project_set.approved().filter(new_contributors_welcome=False)
             if projects:
                 closed_approved_projects.append((p, projects))
@@ -1103,8 +1098,6 @@ def community_landing_view(request, round_slug, community_slug):
     if request.user.is_authenticated:
         approved_coordinator_list = participation_info.community.coordinatorapproval_set.approved()
 
-    approved_to_see_all_project_details = participation_info.approved_to_see_all_project_details(request.user)
-
     mentors_pending_projects = Project.objects.none()
     approved_coordinator = False
     if request.user.is_authenticated:
@@ -1120,6 +1113,8 @@ def community_landing_view(request, round_slug, community_slug):
             pass
 
         approved_coordinator = participation_info.community.is_coordinator(request.user)
+
+    approved_to_see_all_project_details = approved_coordinator or role.is_approved_applicant or role.is_volunteer
 
     return render(request, 'home/community_landing.html',
             {
@@ -2034,10 +2029,18 @@ class ActiveInternshipContactsView(UserPassesTestMixin, TemplateView):
         today = get_deadline_date_for(now)
 
         # For all interns with active internships, who are approved by Outreachy organizers,
+        # or past interns in good standing where Outreachy organizers have not processed their final internship stipend.
         interns = InternSelection.objects.filter(
-                organizer_approved=True,
-                project__project_round__participating_round__internannounce__lte=today,
-                intern_ends__gte=today).order_by('applicant__applicant__public_name').order_by('project__project_round__community__name')
+                models.Q(
+                    organizer_approved=True,
+                    project__project_round__participating_round__internannounce__lte=today,
+                    intern_ends__gte=today,
+                ) | models.Q(
+                    organizer_approved=True,
+                    project__project_round__participating_round__internannounce__lte=today,
+                    in_good_standing=True,
+                    finalmentorfeedback__organizer_payment_approved=None,
+                )).order_by('project__project_round__community__name').order_by('-project__project_round__participating_round__internstarts')
 
         mentors_and_coordinators = Comrade.objects.filter(
                 models.Q(
@@ -2656,6 +2659,18 @@ def blog_2019_10_18_open_projects(request):
 def blog_2020_03_covid(request):
     return render(request, 'home/blog/2020-03-27-outreachy-response-to-covid-19.html')
 
+def blog_2020_08_23_initial_applications_open(request):
+    try:
+        current_round = RoundPage.objects.get(
+            internstarts__gte='2020-11-01',
+            internends__lte='2021-04-01',
+        )
+    except RoundPage.DoesNotExist:
+        current_round = None
+    return render(request, 'home/blog/2020-08-23-initial-applications-open.html', {
+        'current_round': current_round,
+        })
+
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(InitialMentorFeedback,
             fields=(
@@ -3238,6 +3253,14 @@ def applicant_review_summary(request, status):
         approval_status=status,
     ).order_by('pk')
 
+    owned_apps = []
+    for reviewer in ApplicationReviewer.objects.filter(reviewing_round=current_round, approval_status=ApprovalStatus.APPROVED).order_by('comrade__public_name'):
+        owned_apps.append((reviewer.comrade.public_name, ApplicantApproval.objects.filter(
+            application_round=current_round,
+            approval_status=status,
+            review_owner=reviewer,
+        ).order_by('pk')))
+
     if status == ApprovalStatus.PENDING:
         context_name = 'pending_applications'
     elif status == ApprovalStatus.REJECTED:
@@ -3247,6 +3270,7 @@ def applicant_review_summary(request, status):
 
     return render(request, 'home/applicant_review_summary.html', {
         context_name: applications,
+        'owned_apps': owned_apps,
     })
 
 # Passed action, applicant_username
@@ -3258,6 +3282,18 @@ class ApplicantApprovalUpdate(ApprovalStatusAction):
         return get_object_or_404(ApplicantApproval,
                 applicant__account__username=self.kwargs['applicant_username'],
                 application_round=current_round)
+
+    def get_success_url(self):
+        # If the ApplicantApproval was just approved or rejected
+        # collect aggregate anonymized statistics and delete:
+        # - essay answers
+        # - gender identity data
+        # - race and ethnicity demographics
+        if self.object.approval_status == ApprovalStatus.APPROVED or self.object.approval_status == ApprovalStatus.REJECTED:
+            self.object.collect_statistics()
+            self.object.purge_sensitive_data()
+
+        return self.object.get_preview_url()
 
 class DeleteApplication(LoginRequiredMixin, ComradeRequiredMixin, View):
     def post(self, request, *args, **kwargs):
@@ -3298,14 +3334,14 @@ class NotifyEssayNeedsUpdating(LoginRequiredMixin, ComradeRequiredMixin, View):
         email.applicant_essay_needs_updated(essay.applicant.applicant, request)
         return redirect(essay.applicant.get_preview_url())
 
-class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, UpdateView):
+class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     model = BarriersToParticipation
 
     fields = [
+            'underrepresentation',
+            'employment_bias',
             'lacking_representation',
             'systemic_bias',
-            'employment_bias',
-            'barriers_to_contribution',
             ]
 
     def get_object(self):
@@ -3344,7 +3380,7 @@ class NotifySchoolInformationUpdating(LoginRequiredMixin, ComradeRequiredMixin, 
         email.applicant_school_info_needs_updated(school_info.applicant.applicant, request)
         return redirect(school_info.applicant.get_preview_url())
 
-class SchoolInformationUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, UpdateView):
+class SchoolInformationUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     model = SchoolInformation
 
     fields = [
@@ -3439,8 +3475,8 @@ class EssayRating(LoginRequiredMixin, ComradeRequiredMixin, View):
             review.essay_rating = review.UNCLEAR
         elif rating == "UNRATED":
             review.essay_rating = review.UNRATED
-        elif rating == "NOBIAS":
-            review.essay_rating = review.NOBIAS
+        elif rating == "NOTCOMPELLING":
+            review.essay_rating = review.NOTCOMPELLING
         elif rating == "NOTUNDERSTOOD":
             review.essay_rating = review.NOTUNDERSTOOD
         elif rating == "SPAM":
@@ -3501,6 +3537,37 @@ class ChangeRedFlag(LoginRequiredMixin, ComradeRequiredMixin, View):
 
         return redirect(application.get_preview_url())
 
+class ReviewEssay(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
+    template_name = 'home/review_essay.html'
+
+    form_class = modelform_factory(
+        ApplicantApproval,
+        fields = [
+            'essay_qualities',
+        ],
+        widgets = {
+            'essay_qualities': widgets.CheckboxSelectMultiple,
+        },
+    )
+
+    def get_object(self):
+        current_round = get_current_round_for_initial_application_review()
+
+        application = get_object_or_404(ApplicantApproval,
+                applicant__account__username=self.kwargs['applicant_username'],
+                application_round=current_round)
+        try:
+            reviewer = application.application_round.applicationreviewer_set.approved().get(
+                comrade__account=self.request.user,
+            )
+        except ApplicationReviewer.DoesNotExist:
+            raise PermissionDenied("You are not currently an approved application reviewer.")
+
+        return application
+
+    def get_success_url(self):
+        return self.object.get_preview_url()
+
 class ReviewCommentUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     model = InitialApplicationReview
     fields = ['comments',]
@@ -3511,6 +3578,20 @@ class ReviewCommentUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return self.object.application.get_preview_url()
+
+@login_required
+def internship_cohort_statistics(request):
+    """
+    For Outreachy staff, show statistics about applicants and interns.
+    """
+
+    if not request.user.is_staff:
+        raise PermissionDenied("You are not authorized to view internship cohort statistics.")
+
+    rounds = RoundPage.objects.all().order_by('-internstarts')
+    return render(request, 'home/internship_cohort_statistics.html', {
+        'rounds': rounds,
+        })
 
 def docs_toc(request):
     return render(request, 'home/docs/toc.html')

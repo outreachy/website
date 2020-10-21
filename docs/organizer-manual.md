@@ -35,6 +35,7 @@ The end result is a exported .ods (Libre Office spreadsheet) with contact
 information. That year's contact information is commited in the GitLab notes
 repository in a folder named tapia-YEAR (e.g. tapia-2019).
 
+
 If this is the May to August round, subscribe to the announcements mailing list
 any students who signed up at the Tapia booth who were only interested in the
 May round. We don't subscribe them to the announcements mailing list until after
@@ -68,6 +69,25 @@ communities.txt. For example, communities that expressed interest in the May
 2020 round would be in 2020-05-round/communities.txt. We also sometimes document
 that in the etherpad. Find the community status for the last round and see which
 communities said they wanted to participate in this round.
+
+## Pinging continuing sponsors
+
+**Date: August 13 / Feb 28**
+
+During the last week of the internship, ping continuing sponsors. Remind them
+about the opportunities list, and ask if they can continue their sponsorship
+for the next round.
+
+Email template is in the private organizers repository, in the file
+`email/email-sponsor-end-of-round-opportunities-list-and-continuing-sponsorship.txt`
+
+You can see notes on who is a general funding sponsor, when they donate, and
+which communities they earmark funds for, in the private Invoice Ninja account.
+
+Look in the Invoice Ninja client tab for notes on the sponsors. Look in
+invoices and search for 'general' to find general fund sponsors. Search for
+'any' to find sponsors who earmark funding for any community. Other sponsors
+are typically contacted by communities.
 
 ## Pinging coordinators
 
@@ -173,6 +193,7 @@ experience.
 
 **Date: August 20 / Jan 20**
 
+
 Update the mentor agreement (docs/mentor-agreement.md) and intern agreement
 (docs/intern-agreement.md) to have the correct round dates. Change the 'last
 updated' date.
@@ -204,6 +225,114 @@ contacts/promotion.txt.
 
 Pay and submit job advertisements for the websites listed in
 contacts/promotion.txt.
+
+# Contribution period opens
+
+**Date: Oct 7 / Mar 1**
+
+On the day of the announcement, organizers will need to:
+
+ * Reject any applicants that did not provide additional information, such as
+   employment time commitments, school term information, or legal work
+   eligibility
+
+ * Reject any applicants that did not provide an updated essay
+
+ * Collect statistics and purge sensitive information from all automatically
+   rejected applications
+
+## Purging sensitive information
+
+```
+$ ssh -t dokku@162.242.218.160 run www env --unset=SENTRY_DSN python manage.py shell
+>>> from home import models
+>>> current_round = models.RoundPage.objects.get(internstarts='2020-12-01')
+>>> models.ApplicantApproval.objects.filter(application_round=current_round, barrierstoparticipation__isnull=False).count()
+>>> for a in models.ApplicantApproval.objects.filter(application_round=current_round, approval_status=models.ApprovalStatus.REJECTED):
+...     a.collect_statistics()
+...     a.purge_sensitive_data()
+...     a.save()
+... 
+>>> models.ApplicantApproval.objects.filter(application_round=current_round, approval_status=models.ApprovalStatus.REJECTED, barrierstoparticipation__isnull=False).count()
+0
+>>> models.ApplicantApproval.objects.filter(application_round=current_round, barrierstoparticipation__isnull=False).count()
+```
+
+## Subscribe mentors
+
+Make sure to subscribe any last-minute approved mentors to the mentor's mailing
+list. Subscribe the [trusted contacts
+list](https://www.outreachy.org/dashboard/trusted-volunteers/) as indicated in
+the previous instructions.
+
+## Notify mentors
+
+Send an email to the mentor's mailing list to notify mentors the contribution
+period is opening. They should start to see applicants contact their communities
+shortly.
+
+Use the template in the private GitLab repo
+`outreachy/email/email-open-contribution-period-mentors.txt`
+
+## Notify approved applicants
+
+You'll need to send emails to applicants through the Django shell. The website
+will stall if you attempt to send 600+ emails through the normal web interface.
+
+Run the following Django shell commands:
+
+```
+$ ssh -t dokku@outreachy.org run www env --unset=SENTRY_DSN python manage.py notify_applicants approved
+```
+
+If you want to check that emails are being sent, you can ssh into the Outreachy
+mail server and follow the output of the mail log:
+
+```
+$ ssh root@mail.outreachy.org
+# tail -f /var/log/mail.log
+```
+
+## Notify announcement mailing list
+
+Use the template in the private GitLab repo
+`email/email-open-contribution-period-announcement-mailing-list.txt`
+
+## Twitter announcement
+
+Tweet the following in a thread:
+
+Tweet 1:
+```
+Initial application results for the December 2020 Outreachy cohort are announced!
+
+Your Outreachy website dashboard will show your results:
+
+https://outreachy.org/dashboard
+```
+
+Tweet 2:
+```
+We received RECEIVED applications and accepted ACCEPTED applicants.
+
+If you didn't get selected, the Outreachy website will list a reason why. Due to the large number of applications, we cannot provide individual feedback on why an application was not accepted.
+```
+
+Tweet 3:
+```
+Good luck to all approved Outreachy applicants! If you have trouble picking a project, contact applicant helpers via email: https://outreachy.org/contact/applicant-help/
+
+You can also tweet at us or send us a DM, but responses may be delayed.
+```
+
+## Update homepage
+
+Since the homepage is in the Wagtail CMS and not in the Django repository, it
+needs to be manually updated. Add the following to the news section:
+
+[Initial applications](/apply/) are closed for the December 2020 to March 2021 internship cohort. If you applied, [check your dashboard for results](/dashboard/).
+
+Contributions and final applications are due on October 31 at 4pm UTC. Interns will be [announced](/alums/) on November 23 at 4pm UTC.
 
 # Intern selection period
 

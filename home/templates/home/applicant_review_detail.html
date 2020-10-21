@@ -8,11 +8,11 @@
 
 {% block content %}
 	{% if application.is_approved %}
-		<td><a class='btn btn-secondary' href="{% url 'approved-applicants-summary' %}"> &lt;- Back to summary of approved applications</a></td>
+		<p><a class='btn btn-secondary' href="{% url 'approved-applicants-summary' %}"> &lt;- Back to summary of approved applications</a></p>
 	{% elif application.is_pending %}
-		<td><a class='btn btn-secondary' href="{% url 'pending-applicants-summary' %}"> &lt;- Back to summary of pending applications</a></td>
+		<p><a class='btn btn-secondary' href="{% url 'pending-applicants-summary' %}"> &lt;- Back to summary of pending applications</a></p>
 	{% elif application.is_rejected %}
-		<td><a class='btn btn-secondary' href="{% url 'rejected-applicants-summary' %}"> &lt;- Back to summary of rejected applications</a></td>
+		<p><a class='btn btn-secondary' href="{% url 'rejected-applicants-summary' %}"> &lt;- Back to summary of rejected applications</a></p>
 	{% endif %}
 
 	<h1>Status</h1>
@@ -52,12 +52,12 @@
 		</li>
 	{% with tcs=application.get_time_commitments %}
 		<li>
-			{% if tcs.longest_period_free < 49 %}
+			{% if tcs.longest_period_free < application.required_days_free %}
 				<span class="badge badge-warning">Warning</span> Time eligibility: <b>No</b>, applicant has
 			{% else %}
 				Time eligibility: <b>Yes</b>, applicant has
 			{% endif %}
-			{{ tcs.longest_period_free }} days free / {{ tcs.internship_total_days.days }} days total. Applicants are required to have 49 days free.
+			{{ tcs.longest_period_free }} days free / {{ tcs.internship_total_days.days }} days total. This applicant is required to have {{ application.required_days_free }} days free.
 		</li>
 		{% if tcs.employment_time_commitments %}
 			<li><span class="badge badge-warning">Warning</span> Applicant has a part-time job.</li>
@@ -100,14 +100,12 @@
 
 	<h2>Additional Information</h2>
 	<p>Pronouns: <b>{{ application.applicant.get_pronouns_display }}</b>
-	<p>Gender identity: {% if application.applicantgenderidentity %}<b>{{ application.applicantgenderidentity }}</b>{% else %} Applicant was not asked this question.{% endif %}</p>
-
-	<p>Location: <b>{% with location=application.applicant.get_city_country %}{% if location.0 %}{{ location.0}}, {% endif %}{% if location.1 %}{{ location.1 }}{% endif %}
-	{% if not location.0 and not location.1 %}Unknown{% endif %}{% endwith %}</b></p>
+	<p>Gender identity: {% if application.applicantgenderidentity %}<b>{{ application.applicantgenderidentity }}</b>{% else %} [Removed]{% endif %}</p>
+	<p>Location during internship: {% if not application.barrierstoparticipation %}[Removed]{% else %}<b>{{ application.barrierstoparticipation.country_living_in_during_internship }}</b>{% endif %}</p>
 	
-	<p>Racial or ethnic minority in the United States technology industry: {% if not application.paymenteligibility.us_national_or_permanent_resident %}Unknown; not a U.S. resident or national.{% elif application.applicantraceethnicityinformation.us_resident_demographics %}<b>Yes</b>, they're Black/African American, Hispanic/Latinx, Native American, Alaska Native, Native Hawaiian, or Pacific Islander{% else %}<b>No</b>, they're not Black/African American, Hispanic/Latinx, Native American, Alaska Native, Native Hawaiian, or Pacific Islander.{% endif %}</p>
+	<p>Racial or ethnic minority in the United States technology industry: {% if not application.paymenteligibility.us_national_or_permanent_resident %}Unknown; not a U.S. resident or national.{% elif not application.applicantraceethnicityinformation %}[Removed]{% elif application.applicantraceethnicityinformation.us_resident_demographics %}<b>Yes</b>, they're Black/African American, Hispanic/Latinx, Native American, Alaska Native, Native Hawaiian, or Pacific Islander{% else %}<b>No</b>, they're not Black/African American, Hispanic/Latinx, Native American, Alaska Native, Native Hawaiian, or Pacific Islander.{% endif %}</p>
 
-	<p>Prior experience with FOSS:
+	<p>Prior experience with FOSS:</p>
 	<ul>
 		<li>
 			{% if application.priorfossexperience.prior_contributor %}
@@ -125,7 +123,6 @@
 		</li>
 		<li>Prior experiences contributing to FOSS as a volunteer or paid contributor: <b>{{ application.priorfossexperience.get_prior_contribution_types }}</b>{% if not application.priorfossexperience.get_prior_contribution_types %}None{% endif %}</li>
 	</ul>
-	</p>
 
 	<h2>Reviewer Comments</h2>
 	<p><a class='btn btn-info' href="{% url 'update-comment' applicant_username=application.applicant.account.username %}">Update your comments</a></p>
@@ -137,35 +134,40 @@
 			</div>
 		</div>
 	{% endfor %}
+	<h2>Essay Review</h2>
+	{% include 'home/snippet/applicant_review_essay_rating.html' %}
 
 	<h2>Essay Answers</h2>
 
-	{% for field, answer in application.barrierstoparticipation.get_original_answers %}
-	<div class="card mb-3">
-		<div class="card-header">Q{{ forloop.counter }}. {{ field.verbose_name }}</div>
-		<div class="card-body">
-			<p class="card-text"><b>A{{ forloop.counter }}. {{ answer|linebreaksbr }}</b>
-			</p>
-		</div>
-		<div class="card-footer bg-white">
-			<div class="card border-info mb-3" id="essay-accordian-{{ forloop.counter }}">
-				<div class="card-header" id="essay-tips-header">
-					<h5 class="mb-0">
-						<button class="btn btn-link" data-toggle="collapse" data-target="#essay-tips-accordion-{{ forloop.counter }}" aria-expanded="false" aria-controls="essay-tips-accordion" href="#essay-tips-accordion">- Help text</button>
-					</h5>
-				</div>
-				<div id="essay-tips-accordion-{{ forloop.counter }}" class="collapse hide" aria-labelledby="essay-tips-header" data-parent="#essay-accordian-{{ forloop.counter }}">
-					<div class="card-body">
-						<div class="card-text">
-							<p>Help text:</p> {{ field.help_text|safe }}
+	{% if not application.barrierstoparticipation %}
+		<p>The essay answers have been removed after initial application processing.</p>
+	{% else %}
+		{% for field, answer in application.barrierstoparticipation.get_answers %}
+		<div class="card mb-3">
+			<div class="card-header">Q{{ forloop.counter }}. {{ field.verbose_name }}</div>
+			<div class="card-body">
+				<p class="card-text">A{{ forloop.counter }}. {{ answer|linebreaksbr }}
+				</p>
+			</div>
+			<div class="card-footer bg-white">
+				<div class="card border-info mb-3" id="essay-accordian-{{ forloop.counter }}">
+					<div class="card-header" id="essay-tips-header">
+						<h5 class="mb-0">
+							<button class="btn btn-link" data-toggle="collapse" data-target="#essay-tips-accordion-{{ forloop.counter }}" aria-expanded="false" aria-controls="essay-tips-accordion" href="#essay-tips-accordion">- Help text</button>
+						</h5>
+					</div>
+					<div id="essay-tips-accordion-{{ forloop.counter }}" class="collapse hide" aria-labelledby="essay-tips-header" data-parent="#essay-accordian-{{ forloop.counter }}">
+						<div class="card-body">
+							<div class="card-text">
+								<p>Help text:</p> {{ field.help_text|safe }}
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	{% endfor %}
-	{% include 'home/snippet/applicant_review_essay_rating.html' %}
+		{% endfor %}
+	{% endif %}
 
 	{% include 'home/snippet/applicant_review_actions.html' %}
 {% endblock %}
@@ -196,7 +198,7 @@
 {% block extra_js %}
 <script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
 <script src="{% static "timeline-chart.js" %}"></script>
-{% with tcs=application.get_time_commitments current_round=application.application_round %}
+{% with tcs=application.get_relevant_time_commitments current_round=application.application_round %}
 <script>
 	new TimelineChart(document.getElementById("time-commitments-timeline"), [{
 		label: "Internship period",

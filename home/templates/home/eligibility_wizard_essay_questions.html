@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load static %}
+{% load compress %}
 
 {% block title %}
 Outreachy Initial Application
@@ -43,17 +45,170 @@ It will not be shared with mentors, coordinators, or other applicants.
 <hr>
 
 <form action="" method="post">{% csrf_token %}
-{{ wizard.form.media }}
-{{ wizard.management_form }}
-{% if wizard.form.forms %}
-    {{ wizard.form.management_form }}
-    {% for form in wizard.form.forms %}
-        {% include "bootstrap_form.html" with form=form only %}
-	<hr>
-    {% endfor %}
-{% else %}
-        {% include "bootstrap_card_form.html" with form=wizard.form only %}
-{% endif %}
+	{{ wizard.form.media }}
+	{{ wizard.management_form }}
+	{% for field in wizard.form.hidden_fields %}
+			{{ field }}
+	{% endfor %}
+	{% for field in wizard.form.visible_fields %}
+		{% if 'living in during the internship' in field.label_tag %}
+			<div class="form-group card">
+				{{ field.errors }}
+				<div class="card-header">
+					What country will you be living in from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}?
+				</div>
+				<div class="card-body">
+					{{ field }}
+				</div>
+				<div class="card-footer bg-white">
+					<p>
+					If you will be living in multiple countries, list the country you will spend the most time in.
+					</p>
+				</div>
+			</div>
+		{% elif 'part of an underrepresented' in field.label_tag %}
+			<div class="form-group card">
+				{{ field.errors }}
+				<div class="card-header">
+					{{ field.label_tag }}
+				</div>
+				<div class="card-body">
+					{{ field }}
+				</div>
+				<div class="card-footer bg-white">
+					<p>
+					Think about the technology industry in the country listed above.
+					</p>
+					<p>
+					Are there few people who share your identity or background in that technology industry?
+					</p>
+					<p>
+					Please tell us which underrepresented groups you are a part of.
+					You may want to consider your:
+					</p>
+
+					<ul>
+						<li>age</li>
+						<li>body size</li>
+						<li>caste</li>
+						<li>disabilities</li>
+						<li>ethnicity</li>
+						<li>gender identity and expression</li>
+						<li>socio-economic status</li>
+						<li>nationality</li>
+						<li>personal appearance</li>
+						<li>race</li>
+						<li>religion</li>
+						<li>sexual identity and orientation</li>
+					</ul>
+				</div>
+			</div>
+		{% elif 'applied for a job' in field.label_tag %}
+			<div class="form-group card">
+				{{ field.errors }}
+				<div class="card-header">
+					{{ field.label_tag }}
+				</div>
+				<div class="card-body">
+					{{ field }}
+				</div>
+				<div class="card-footer bg-white">
+					<p>
+					Think about applying for a job in the technology industry of the country listed above. Would you face employment discrimination on the basis of your identity or background?
+					</p>
+
+					<p>
+					Please provide specific examples and (optionally) statistics. If you experienced discrimination while applying for a job, please provide details.
+					</p>
+
+					<p>
+					Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.
+					</p>
+				</div>
+			</div>
+		{% elif 'systemic bias' in field.label_tag %}
+			<div class="form-group card">
+				{{ field.errors }}
+				<div class="card-header">
+					{{ field.label_tag }}
+				</div>
+				<div class="card-body">
+					{{ field }}
+				</div>
+				<div class="card-footer bg-white">
+					<p>
+					Outreachy projects often require applicants to know some basic skills. Those skills might include programming, user experience, documentation, illustration and graphical design, or data science. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.
+					</p>
+
+					<p>
+					In these settings, have you faced systemic bias or discrimination? Have you been discouraged from accessing these resources because of your identity or background?
+					</p>
+
+					<p>
+					Please provide specific examples and (optionally) statistics.
+					</p>
+
+					<p>
+					Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.
+					</p>
+				</div>
+			</div>
+		{% elif 'learning environment' in field.label_tag %}
+			<div class="form-group card">
+				{{ field.errors }}
+				<div class="card-header">
+					{{ field.label_tag }}
+				</div>
+				<div class="card-body">
+					{{ field }}
+				</div>
+				<div class="card-footer bg-white">
+				    <p>
+				    Contributing to free and open source software takes some skill. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.
+				    </p>
+
+				    <p>
+				    Does any of your learning environments have few people who share your identity or background? How did your identity or background differ from the majority of people in this learning environment?
+				    </p>
+
+				    <p>
+				    Examples of the types of identities or backgrounds to consider include (but are not limited to):
+				    </p>
+
+				    <ul>
+					    <li>age</li>
+					    <li>body size</li>
+					    <li>caste</li>
+					    <li>disability</li>
+					    <li>ethnicity</li>
+					    <li>gender identity and expression</li>
+					    <li>socio-economic status</li>
+					    <li>nationality</li>
+					    <li>personal appearance</li>
+					    <li>race</li>
+					    <li>religion</li>
+					    <li>sexual identity and orientation</li>
+				    </ul>
+
+				    <p>
+				    Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>
+			</div>
+			</div>
+		{% else %}
+			<div class="form-group card">
+				{{ field.errors }}
+				<div class="card-header">
+					{{ field.label_tag }}
+				</div>
+				<div class="card-body">
+					{{ field }}
+				</div>
+				{% if field.help_text %}
+					<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+				{% endif %}
+			</div>
+		{% endif %}
+	{% endfor %}
 {% if wizard.steps.prev %}
 <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}">First step</button>
 <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.prev }}">Previous step</button>
@@ -61,4 +216,20 @@ It will not be shared with mentors, coordinators, or other applicants.
 <input type="submit" class="btn btn-primary" value="Next step"/>
 </form>
 
+{% endblock %}
+
+{% block extra_css %}
+	<link rel="stylesheet" href="{% static 'css/countrySelect.css' %}">
+	<style>.country-select .flag {background-image: url({% static "img/flags.png" %});}</style>
+{% endblock %}
+
+{% block extra_js %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="{% static 'js/countrySelect.js' %}"></script>
+	<script>
+		$("#id_Barriers-to-Participation-country_living_in_during_internship").countrySelect({
+			defaultCountry: "",
+			preferredCountries: ['al', 'ar', 'au', 'br', 'cm', 'ca', 'eg', 'fr', 'de', 'gr', 'gh', 'in', 'it', 'kz', 'ke', 'mg', 'mx', 'nz', 'ng', 'pk', 'ps', 'ru', 'es', 'ug', 'gb', 'ua', 'us']
+		});
+	</script>
 {% endblock %}

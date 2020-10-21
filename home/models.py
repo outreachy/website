@@ -13,6 +13,7 @@ from django.contrib.auth.models import User
 from django.core import validators
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.db import transaction
 from django.forms import ValidationError
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -43,6 +44,19 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 
 from . import email
 from .feeds import WagtailFeed
+
+# These constants are used across several different models
+# Please be cautious about shorting them,
+# as it may mean stored objects are no longer valid.
+# When in doubt, use a longer max character length or define a new constant.
+
+SENTENCE_LENGTH=100
+PARAGRAPH_LENGTH=800
+THREE_PARAGRAPH_LENGTH=3000
+EIGHT_PARAGRAPH_LENGTH=8000
+TIMELINE_LENGTH=30000
+LONG_LEGAL_NAME=800
+SHORT_NAME=100
 
 class HomePage(Page):
     body = StreamField([
@@ -141,27 +155,30 @@ class Deadline(datetime.date):
     value that's used to determine whether the deadline has already passed.
     """
 
-    def __new__(cls, base, today):
-        # datetime.date does magic with __new__ instead of __init__, which
-        # forces us to do it too. But if you pretend like this is just a weird
-        # way of writing __init__, I hope it's clear enough.
-        self = super(Deadline, cls).__new__(cls, base.year, base.month, base.day)
-        self.today = today
-        return self
+    @classmethod
+    def at(cls, base, today):
+        """
+        This is the only valid constructor for this type, because other methods
+        won't set self._today.
+        """
+        new = cls(base.year, base.month, base.day)
+        new._today = today
+        return new
 
     def __add__(self, other):
+        # In Python 3.7, date.__add__ always returns a date. In 3.8 it returns
+        # the same type as self, e.g. Deadline, but without setting _today.
+        # Either way, extracting the year/month/day and building a new Deadline
+        # object produces the right result.
         new = super(Deadline, self).__add__(other)
-        return Deadline(new, self.today)
+        return Deadline.at(new, self._today)
 
     def __sub__(self, other):
-        new = super(Deadline, self).__sub__(other)
-
-        if type(new) is datetime.date:
-            return Deadline(new, self.today)
-
-        # If it isn't a date, it's probably a timedelta, which we don't need to
-        # do anything with.
-        return new
+        # Override to make sure that the above implementation of __add__ gets
+        # used.
+        if isinstance(other, datetime.timedelta):
+            return self + -other
+        return super(Deadline, self).__sub__(other)
 
     def deadline(self):
         """
@@ -174,7 +191,7 @@ class Deadline(datetime.date):
         """
         Returns whether this deadline is in the past.
         """
-        return self <= self.today
+        return self <= self._today
 
 
 class NoDeadline(object):
@@ -234,7 +251,7 @@ class AugmentDeadlines(object):
             # function with name="today", so we have to be very careful: that
             # call must not reach this same statement or it will recurse
             # forever.
-            return Deadline(value, self.today)
+            return Deadline.at(value, self.today)
 
         # This was not a date, so return it as-is.
         return value
@@ -247,6 +264,14 @@ class RoundPage(AugmentDeadlines, Page):
     orgreminder = models.DateField("Date to remind orgs to submit their home pages")
     landingdue = models.DateField("Date community landing pages are due")
     coupon_code = models.CharField(blank=True, max_length=255, verbose_name='Coupon code for the book "Forge Your Future with Open Source"')
+    minimum_days_free_for_students = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=49,
+            )
+    minimum_days_free_for_non_students = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=49,
+            )
     initial_applications_open = models.DateField("Date initial applications open")
     outreachy_chat = models.DateTimeField("Date and time of the Outreachy Twitter chat")
     initial_applications_close = models.DateField("Date initial applications close")
@@ -770,6 +795,153 @@ class RoundPage(AugmentDeadlines, Page):
         context['role'] = Role(request.user, self)
         return context
 
+class StatisticTotalApplied(models.Model):
+    internship_round = models.OneToOneField(RoundPage, on_delete=models.CASCADE, primary_key=True)
+    total_applicants = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+    total_approved = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+    total_pending = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+    total_rejected = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+    total_withdrawn = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+    def clean(self):
+        if self.total_applicants != (self.total_approved + self.total_pending + self.total_rejected + self.total_withdrawn):
+            error_string = 'Total applicants != approved + pending + rejected + withdrawn'
+            raise ValidationError({'total_applicants': error_string})
+
+class StatisticApplicantCountry(models.Model):
+    internship_round = models.ForeignKey(RoundPage, on_delete=models.CASCADE)
+    country_living_in_during_internship = models.CharField(
+            verbose_name='Country interns are living in during the internship',
+            max_length=PARAGRAPH_LENGTH,
+            )
+
+    country_living_in_during_internship_code = models.CharField(
+            verbose_name='ISO 3166-1 alpha-2 country code',
+            max_length=2,
+            )
+
+    total_applicants = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+class StatisticAmericanDemographics(models.Model):
+    internship_round = models.OneToOneField(RoundPage, on_delete=models.CASCADE, primary_key=True)
+
+    # total accepted applicants who are U.S. nationals or permanent residents
+    total_approved_american_applicants = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+    # total accepted applicants who are U.S. nationals or permanent residents and
+    # Black/African American, Hispanic/Latinx, Native American,
+    # Alaska Native, Native Hawaiian, or Pacific Islander
+    total_approved_american_bipoc = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+    def total_approved_american_not_bipoc(self):
+        return self.total_approved_american_applicants - self.total_approved_american_bipoc
+
+    def percentage_americans_accepted_who_are_bipoc(self):
+        return int(round(100 * (self.total_approved_american_bipoc / self.total_approved_american_applicants)))
+
+    def percentage_americans_accepted_who_are_not_bipoc(self):
+        return int(round(100 * (self.total_approved_american_not_bipoc() / self.total_approved_american_applicants)))
+
+class StatisticGenderDemographics(models.Model):
+    internship_round = models.OneToOneField(RoundPage, on_delete=models.CASCADE, primary_key=True)
+
+    # Note: These could be overlapping gender identities
+    # For example, someone could be a non-binary woman, or a trans masculine agender person.
+    # In short, these totals will not add up to the total number of accepted applicants.
+
+    # total accepted applicants who answered 'yes' to "Are you transgender?"
+    total_transgender_people = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+    # total accepted applicants who answered 'yes' to "Are you genderqueer?"
+    total_genderqueer_people = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+    # total accepted applicants checked the 'man' gender box
+    total_men = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+    # Note: Trans men are men!
+    #
+    # If an applicant identifies as a man, they would have checked the 'man' gender box.
+    # However, some non-binary people may identify as trans masculine, but don't identify as men.
+    #
+    # Don't assume that trans masculine and trans feminine people are binary.
+
+    # total accepted applicants checked the 'trans masculine' gender box
+    total_trans_masculine_people = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+    # total accepted applicants checked the 'woman' gender box
+    total_women = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+    # total accepted applicants checked the 'trans feminine' gender box
+    total_trans_feminine_people = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+    # total accepted applicants checked a gender identity other
+    # than 'man', 'woman', 'trans masculine', or 'trans feminine'
+    total_non_binary_people = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+    # total accepted applicants who self identified their gender
+    # We get a lot of people who self-identify as "girl" instead of "woman"
+    # So self-identification is not an indication of whether they are non-binary
+    total_who_self_identified_gender = models.IntegerField(
+            validators=[validators.MinValueValidator(0)],
+            default=0,
+            )
+
+    def percentage_accepted_who_are_women(self):
+        return int(round(100 * (self.total_women / self.internship_round.statistictotalapplied.total_approved)))
+
+    def percentage_accepted_who_are_men(self):
+        return int(round(100 * (self.total_men / self.internship_round.statistictotalapplied.total_approved)))
+
+    def percentage_accepted_who_are_transgender(self):
+        return int(round(100 * (self.total_transgender_people / self.internship_round.statistictotalapplied.total_approved)))
+
+    def percentage_accepted_who_are_non_binary(self):
+        return int(round(100 * (self.total_non_binary_people / self.internship_round.statistictotalapplied.total_approved)))
+
 class CohortPage(Page):
     round_start = models.DateField("Round start date")
     round_end = models.DateField("Round end date")
@@ -832,18 +1004,6 @@ class AlumInfo(Orderable):
 def mentor_id():
     # should be a multiple of three
     return urlsafe_b64encode(urandom(9))
-
-# There are several project descriptions on the last round page
-# that are far too long. This feels about right.
-SENTENCE_LENGTH=100
-# Current maximum description paragraph on round 15 page is 684.
-PARAGRAPH_LENGTH=800
-THREE_PARAGRAPH_LENGTH=3000
-EIGHT_PARAGRAPH_LENGTH=8000
-# Longest application last round was 28,949 characters
-TIMELINE_LENGTH=30000
-LONG_LEGAL_NAME=800
-SHORT_NAME=100
 
 def make_comrade_photo_filename(instance, original_name):
     # Use the underlying User object's primary key rather than any
@@ -1421,99 +1581,6 @@ class Participation(ApprovalStatus):
         return [email.organizers]
 
     def is_submitter(self, user):
-        return self.community.is_coordinator(user)
-
-    # This function should only be used before the contribution period is open.
-    # There are a few people who should be approved to see
-    # all the details of all projects for a community
-    # before the contribution period opens:
-    def approved_to_see_all_project_details(self, user):
-        """
-        This function controls whether the project details
-        on the community landing page are visible
-        on /<round_slug>/communities/<community_slug>/
-
-        The rules are:
-         - Staff (Outreachy organizers) should see all projects all the time
-
-         - Anyone with an approved initial application should be able to see
-           it if the contribution period is open.
-
-         - If the contribution period isn't open, the people who should
-           see project overviews are approved coordinators for communities
-           approved to participate in this round, approved coordinators for
-           communities that have pending participation for this round, and
-           approved mentors with approved projects.
-
-        """
-        # - staff
-        if user.is_staff:
-            return True
-
-        # Remaining conditions all require this person to be logged in
-        if not user.is_authenticated:
-            return False
-
-        role = Role(user, self.participating_round)
-
-        if role.is_approved_applicant:
-            return True
-
-        # - an approved coordinator for any approved community
-        if role.is_coordinator:
-            return True
-
-        # - an approved mentor with an approved project for any approved community
-        if role.is_mentor:
-            return True
-
-        # - an approved coordinator for this pending community
-        return self.community.is_coordinator(user)
-
-    def approved_to_see_project_overview(self, user):
-        """
-        This function controls whether the project overview (title & skills)
-        are displayed on /apply/project-selection/
-
-        The rules are:
-         - Staff (Outreachy organizers) should see all projects all the time
-
-         - Anyone should be able to see it if the initial application period is open.
-           This builds up excitement in applicants and gets them to complete an
-           initial application.
-
-         - If the initial application period isn't open, the people who should
-           see project overviews are approved coordinators for communities
-           approved to participate in this round, approved coordinators for
-           communities that have pending participation for this round, and
-           approved mentors with approved projects.
-
-        """
-        # - staff
-        if user.is_staff:
-            return True
-
-        # Is the initial application period open?
-        # Note in the template, links are still hidden if the
-        # initial application is pending or rejected
-        if self.participating_round.initial_applications_open.has_passed():
-            return True
-
-        # Remaining conditions all require this person to be logged in
-        if not user.is_authenticated:
-            return False
-
-        role = Role(user, self.participating_round)
-
-        # - an approved coordinator for any approved community
-        if role.is_coordinator:
-            return True
-
-        # - an approved mentor with an approved project for any approved community
-        if role.is_mentor:
-            return True
-
-        # - an approved coordinator for this pending community
         return self.community.is_coordinator(user)
 
     # Note that is is more than just the submitter!
@@ -2277,6 +2344,24 @@ class ApplicationReviewer(ApprovalStatus):
     comrade = models.ForeignKey(Comrade, on_delete=models.CASCADE)
     reviewing_round = models.ForeignKey(RoundPage, on_delete=models.CASCADE)
 
+class EssayQuality(models.Model):
+    category = models.CharField(
+            max_length=SENTENCE_LENGTH,
+            help_text='Which category list should this description be under?')
+    description = models.CharField(
+            max_length=SENTENCE_LENGTH,
+            verbose_name='Essay quality description')
+    help_text = models.CharField(
+            max_length=SENTENCE_LENGTH,
+            blank=True,
+            help_text='Help text to further clarify the short essay quality description')
+
+    def __str__(self):
+        return '[' + self.category + '] ' + self.description
+
+    class Meta:
+        ordering = ('category', 'description')
+
 # This class stores information about whether an applicant is eligible to
 # participate in this round Automated checking will set the applicant to
 # Approved or Rejected, but the Outreachy organizers can move the applicant to
@@ -2289,9 +2374,173 @@ class ApplicantApproval(ApprovalStatus):
     applicant = models.ForeignKey(Comrade, on_delete=models.CASCADE)
     application_round = models.ForeignKey(RoundPage, on_delete=models.CASCADE)
     project_contributions = models.ManyToManyField(Project, through='Contribution')
+    essay_qualities = models.ManyToManyField(EssayQuality, blank=True)
     submission_date = models.DateField(auto_now_add=True)
     ip_address = models.GenericIPAddressField(protocol="both")
     review_owner = models.ForeignKey(ApplicationReviewer, blank=True, null=True, on_delete=models.SET_NULL)
+    collected_statistics = models.BooleanField(default=False)
+
+    def get_essay_qualities(self):
+        return [q.__str__ for q in self.essay_qualities.all()]
+
+    def collect_statistics(self):
+        if self.collected_statistics:
+            return
+
+        with transaction.atomic():
+            # Collect statistics about approval and rejection rates
+            try:
+                stats = StatisticTotalApplied.objects.get(
+                        internship_round = self.application_round,
+                        )
+            except StatisticTotalApplied.DoesNotExist:
+                stats = StatisticTotalApplied(
+                        internship_round = self.application_round,
+                        )
+            stats.total_applicants += 1
+            if self.approval_status == ApprovalStatus.APPROVED:
+                stats.total_approved += 1
+            if self.approval_status == ApprovalStatus.PENDING:
+                stats.total_pending += 1
+            if self.approval_status == ApprovalStatus.REJECTED:
+                stats.total_rejected += 1
+            if self.approval_status == ApprovalStatus.WITHDRAWN:
+                stats.total_withdrawn += 1
+            stats.save()
+
+            if self.approval_status != ApprovalStatus.APPROVED:
+                return
+
+            # Collect statistics about country living in during the internship
+            # Skip applicants who just filled out the location in the Comrade,
+            # not the question in the essay page about where they would be
+            # living during the internship
+            try:
+                data = BarriersToParticipation.objects.get(
+                        applicant=self,
+                        )
+                if data.country_living_in_during_internship != 'Unknown' and self.approval_status == ApprovalStatus.APPROVED:
+                    try:
+                        # Country names may change. Do the ISO codes change??
+                        stats = StatisticApplicantCountry.objects.get(
+                                internship_round = self.application_round,
+                                country_living_in_during_internship_code = self.barrierstoparticipation.country_living_in_during_internship_code,
+                                )
+
+                    except StatisticApplicantCountry.DoesNotExist:
+                        stats = StatisticApplicantCountry(
+                                internship_round = self.application_round,
+                                country_living_in_during_internship = self.barrierstoparticipation.country_living_in_during_internship,
+                                country_living_in_during_internship_code = self.barrierstoparticipation.country_living_in_during_internship_code,
+                                )
+                    stats.total_applicants += 1
+                    stats.save()
+            except BarriersToParticipation.DoesNotExist:
+                pass
+
+            # Collect statistics about race and ethnicity for American applicants
+            try:
+                payment_eligibility = PaymentEligibility.objects.get(
+                        applicant=self,
+                        )
+                if payment_eligibility.us_national_or_permanent_resident and self.approval_status == ApprovalStatus.APPROVED:
+                    try:
+                        stats = StatisticAmericanDemographics.objects.get(
+                                internship_round = self.application_round,
+                                )
+                    except StatisticAmericanDemographics.DoesNotExist:
+                        stats = StatisticAmericanDemographics(
+                                internship_round = self.application_round,
+                                )
+                    stats.total_approved_american_applicants += 1
+
+                    try:
+                        race_and_ethnicity = ApplicantRaceEthnicityInformation.objects.get(
+                                applicant=self,
+                                )
+                        if race_and_ethnicity.us_resident_demographics == True:
+                            stats.total_approved_american_bipoc += 1
+                    except ApplicantRaceEthnicityInformation.DoesNotExist:
+                        pass
+                    stats.save()
+            except PaymentEligibility.DoesNotExist:
+                pass
+
+            # Collect statistics about gender identities
+            try:
+                gender_identity = ApplicantGenderIdentity.objects.get(
+                        applicant=self,
+                        )
+                try:
+                    stats = StatisticGenderDemographics.objects.get(
+                            internship_round = self.application_round,
+                            )
+                except StatisticGenderDemographics.DoesNotExist:
+                    stats = StatisticGenderDemographics(
+                            internship_round = self.application_round,
+                            )
+
+                if gender_identity.transgender:
+                    stats.total_transgender_people += 1
+                if gender_identity.genderqueer:
+                    stats.total_genderqueer_people += 1
+                if gender_identity.man:
+                    stats.total_men += 1
+                if gender_identity.trans_masculine:
+                    stats.total_trans_masculine_people += 1
+                if gender_identity.woman:
+                    stats.total_women += 1
+                if gender_identity.trans_feminine:
+                    stats.total_trans_feminine_people += 1
+
+                non_binary_genders = [f.attname for f in gender_identity._meta.get_fields() if f.get_internal_type() == 'BooleanField' and f.name != 'prefer_not_to_say' and f.name != 'man' and f.name != 'woman' and f.name != 'trans_masculine' and f.name != 'trans_feminine' and f.name != 'transgender' and f.name != 'genderqueer']
+
+                is_non_binary = False
+                for gender in non_binary_genders:
+                    if getattr(gender_identity, gender) == True:
+                        is_non_binary = True
+
+                if is_non_binary:
+                    stats.total_non_binary_people += 1
+
+                if gender_identity.self_identify:
+                    stats.total_who_self_identified_gender += 1
+
+                stats.save()
+
+            except ApplicantGenderIdentity.DoesNotExist:
+                pass
+
+            self.collected_statistics = True
+            self.save()
+            # end atomic transaction
+
+    def purge_sensitive_data(self):
+        with transaction.atomic():
+            try:
+                data = ApplicantRaceEthnicityInformation.objects.get(applicant = self)
+                data.delete()
+            except ApplicantRaceEthnicityInformation.DoesNotExist:
+                pass
+
+            try:
+                data = ApplicantGenderIdentity.objects.get(applicant = self)
+                data.delete()
+            except ApplicantGenderIdentity.DoesNotExist:
+                pass
+
+            try:
+                data = BarriersToParticipation.objects.get(applicant = self)
+                data.delete()
+            except BarriersToParticipation.DoesNotExist:
+                pass
+
+            data = InitialApplicationReview.objects.filter(application = self)
+            for d in data:
+                d.delete()
+
+            self.essay_qualities.clear()
+            # end atomic transaction
 
     def is_approver(self, user):
         return user.is_staff
@@ -2350,6 +2599,13 @@ class ApplicantApproval(ApprovalStatus):
             return False
         return True
 
+    def required_days_free(self):
+        try:
+            SchoolInformation.objects.get(applicant=self)
+            return self.application_round.minimum_days_free_for_students
+        except SchoolInformation.DoesNotExist:
+            return self.application_round.minimum_days_free_for_non_students
+
     def get_reason_for_status(self):
         if self.is_approved():
             return ''
@@ -2376,7 +2632,8 @@ class ApplicantApproval(ApprovalStatus):
 
         if self.reason_denied == 'TIME':
             tcs = self.get_time_commitments()
-            return 'Not enough days free: ' + str(tcs['longest_period_free']) + ' days free / ' + str(tcs['internship_total_days'].days) + ' days total, 49 days free required'
+
+            return 'Not enough days free: ' + str(tcs['longest_period_free']) + ' days free / ' + str(tcs['internship_total_days'].days) + ' days total, {} days free required'.format(self.required_days_free())
 
         if self.reason_denied[:5] == 'ALIGN':
             return 'Essay answers not aligned with Outreachy program goals'
@@ -2388,9 +2645,11 @@ class ApplicantApproval(ApprovalStatus):
         try:
             if self.schoolinformation and self.schoolinformation.applicant_should_update:
                 tcs = self.get_time_commitments()
-                time_string = str(tcs['longest_period_free']) + ' days free / ' + str(tcs['internship_total_days'].days) + ' days total, 49 days free required'
+
+                time_string = str(tcs['longest_period_free']) + ' days free / ' + str(tcs['internship_total_days'].days) + ' days total, {} days free required'.format(self.required_days_free())
 
                 return 'Revisions to school info requested: ' + time_string
+
         except SchoolInformation.DoesNotExist:
             pass
 
@@ -2415,20 +2674,20 @@ class ApplicantApproval(ApprovalStatus):
                 'hours': hours,
                 }
 
-    def get_time_commitments(self):
+    def get_time_commitments(self, **kwargs):
         current_round = self.application_round
-
-        nearby_date = datetime.timedelta(days=30*3)
-        relevant = models.Q(
-            applicant=self,
-            start_date__lte=current_round.internends + nearby_date,
-            end_date__gte=current_round.internstarts - nearby_date,
-        )
+        relevant = models.Q(applicant=self, **kwargs)
 
         noncollege_school_time_commitments = NonCollegeSchoolTimeCommitment.objects.filter(relevant)
         school_time_commitments = SchoolTimeCommitment.objects.filter(relevant).order_by('start_date')
         volunteer_time_commitments = VolunteerTimeCommitment.objects.filter(relevant)
         employment_time_commitments = EmploymentTimeCommitment.objects.filter(relevant)
+
+        try:
+            # XXX: there's at most one of these, but that isn't enforced in the model
+            contractor_time_commitment = self.contractorinformation_set.get()
+        except ContractorInformation.DoesNotExist:
+            contractor_time_commitment = None
 
         tcs = [ self.time_commitment_from_model(d, d.hours_per_week)
                 for d in volunteer_time_commitments or []
@@ -2455,18 +2714,23 @@ class ApplicantApproval(ApprovalStatus):
                 longest_period_free = group_len
                 free_period_start_day = counter
             counter = counter + group_len
+
+        internship_total_days = current_round.internends - current_round.internstarts
+
         # Catch the case where the person is never free during the internship period
         if longest_period_free == 0 and free_period_start_day == 0 and counter != 0:
             longest_period_free = None
             free_period_start_date = None
             free_period_end_date = None
+            percentage_free = 0
         else:
             free_period_start_date = current_round.internstarts + datetime.timedelta(days=free_period_start_day)
             free_period_end_date = current_round.internstarts + datetime.timedelta(days=free_period_start_day + longest_period_free - 1)
-        internship_total_days = current_round.internends - current_round.internstarts
+            percentage_free = int(100 * longest_period_free / internship_total_days.days)
 
         return {
                 'longest_period_free': longest_period_free,
+                'percentage_free': percentage_free,
                 'free_period_start_date': free_period_start_date,
                 'free_period_end_date': free_period_end_date,
                 'internship_total_days': internship_total_days,
@@ -2474,7 +2738,21 @@ class ApplicantApproval(ApprovalStatus):
                 'noncollege_school_time_commitments': noncollege_school_time_commitments,
                 'volunteer_time_commitments': volunteer_time_commitments,
                 'employment_time_commitments': employment_time_commitments,
+                'contractor_time_commitment': contractor_time_commitment,
                 }
+
+    def get_relevant_time_commitments(self):
+        """
+        Same as get_time_commitments but limited to 90 days before or after the
+        internship period.
+        """
+
+        current_round = self.application_round
+        nearby_date = datetime.timedelta(days=30 * 3)
+        return self.get_time_commitments(
+            start_date__lte=current_round.internends + nearby_date,
+            end_date__gte=current_round.internstarts - nearby_date,
+        )
 
     def overlapping_school_terms(self):
         school_time_commitments = SchoolTimeCommitment.objects.filter(applicant=self)
@@ -2495,9 +2773,6 @@ class ApplicantApproval(ApprovalStatus):
             ('Work Eligibility', 'workeligibility'),
             ('Tax Form information', 'paymenteligibility'),
             ('Prior Experience with Free and Open Source Software', 'priorfossexperience'),
-            ('Race and Ethnicity', 'applicantraceethnicityinformation'),
-            ('Gender Identity', 'applicantgenderidentity'),
-            ('Essay Questions', 'barrierstoparticipation'),
         )
         result = []
         for label, field in parts:
@@ -2775,73 +3050,53 @@ class BarriersToParticipation(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
 
     # NOTE: Update home/templates/home/eligibility.html if you change the text here:
-    barriers_to_contribution = models.TextField(
-            verbose_name='What barriers or concerns have kept you from contributing to free and open source software?',
-            help_text="Please provide specific examples. Outreachy organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.")
+    country_living_in_during_internship = models.CharField(
+            verbose_name='What country will you be living in during the internship?',
+            max_length=PARAGRAPH_LENGTH,
+            )
 
-    systemic_bias = models.TextField(
-            verbose_name='What systemic bias or discrimination have you faced while building your skills?',
-            help_text="<p>Outreachy projects often require applicants to know some basic skills. Those skills might include programming, user experience, documentation, illustration and graphical design, or data science. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>In these settings, have you faced systemic bias or discrimination? Have you been discouraged from accessing these resources because of your identity or background?</p><p>Please provide specific examples and (optionally) statistics.</p><p>Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
+    # NOTE: This field must have the same name as the above field, but with '_code' at the end.
+    # This is the two-letter country code from the ISO 3166-1 alpha-2 standard.
+    # Country select js automatically fills in the country code via a hidden input field,
+    # by looking for an input tag with the same id as the field above, plus '_code' appended.
+    country_living_in_during_internship_code = models.CharField(
+            verbose_name='ISO 3166-1 alpha-2 country code',
+            max_length=2,
+            blank=True,
+            )
 
-    lacking_representation = models.TextField(
-            verbose_name='Does your learning environment have few people who share your identity or background? Please provide details.',
-            help_text="<p>Contributing to free and open source software takes some skill. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker.</p><p>Does any of your learning environments have few people who share your identity or background? How did your identity or background differ from the majority of people in this learning environment?</p><p>Examples of the types of identities or backgrounds to consider include (but are not limited to):</p><ul><li>age</li><li>body size</li><li>caste</li><li>disability</li><li>ethnicity</li><li>gender identity and expression</li><li>socio-economic status</li><li>nationality</li><li>personal appearance</li><li>race</li><li>religion</li><li>sexual identity and orientation</li></ul></p><p>Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
+    underrepresentation = models.TextField(verbose_name='Are you part of an underrepresented group (in the technology industry of the country listed above)? How are you underrepresented?')
 
-    employment_bias = models.TextField(
-            verbose_name='What systemic bias or discrimination would you face if you applied for a job in the technology industry of your country?',
-            help_text="<p>Think about when you have applied for a job in the technology industry of your country. Do you think you have faced discrimination on the basis of your background or identity? If you have not applied for a job yet, do you think you may be discriminated against on the basis of your background or identity?</p><p>Please provide specific examples and (optionally) statistics.</p><p>Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>")
+    lacking_representation = models.TextField(verbose_name='Does your learning environment have few people who share your identity or background? Please provide details.')
+
+    systemic_bias = models.TextField(verbose_name='What systemic bias or discrimination have you faced while building your skills?')
+
+    employment_bias = models.TextField(verbose_name='What systemic bias or discrimination would you face if you applied for a job in the technology industry of your country?')
 
     applicant_should_update = models.BooleanField(default=False)
 
-    def get_original_answers(self):
-        versions = Version.objects.get_for_object(self).reverse()
-        original_answers = [
-            (
-                self._meta.get_field(attname),
-                '\n\n'.join(
-                    'On {:%Y-%m-%d at %I:%M%p} you wrote:\n{}'.format(
-                        v.revision.date_created,
-                        v.field_dict[attname])
-                    for v in [versions[0]]
-                ),
-            )
-            for attname in ('lacking_representation', 'systemic_bias', 'employment_bias', 'barriers_to_contribution')
-        ]
-        new_answers = []
-        for new_field, answers in self.get_answers():
-            for index, a in enumerate(original_answers):
-                original_field = a[0]
-                if new_field['verbose_name'] == original_field.verbose_name:
-                    if a[1].split('you wrote:\n', 1)[1] == answers:
-                        new_answers.append(
-                                (original_field,
-                                    a[1],
-                                    ))
-                    else:
-                        new_answers.append(
-                                (original_field,
-                                    a[1] + '\n\n' + 'Updated Essay:\n\n' + answers,
-                                    ))
-        return new_answers
-
     def get_answers(self):
         return [
-                (
-                { 'verbose_name':
+                ({ 'verbose_name':
+                    'What country will you be living in during the internship?',
+                    }, self.country_living_in_during_internship
+                ),
+                ({ 'verbose_name':
+                    'Are you part of an underrepresented group (in the technology industry of the country listed above)? How are you underrepresented?',
+                    }, self.underrepresentation
+                ),
+                ({ 'verbose_name':
                     'Does your learning environment have few people who share your identity or background? Please provide details.',
-                    }, self.lacking_representation),
-                (
-                { 'verbose_name':
+                    }, self.lacking_representation
+                ),
+                ({ 'verbose_name':
                     'What systemic bias or discrimination have you faced while building your skills?',
-                    }, self.systemic_bias),
-                (
-                { 'verbose_name':
+                    }, self.systemic_bias
+                ),
+                ({ 'verbose_name':
                     'What systemic bias or discrimination would you face if you applied for a job in the technology industry of your country?',
-                    }, self.employment_bias),
-                (
-                { 'verbose_name':
-                    'What barriers or concerns have kept you from contributing to free and open source software?',
-                    }, self.barriers_to_contribution),
+                    }, self.employment_bias
+                ),
         ]
 
 class TimeCommitmentSummary(models.Model):
@@ -3230,19 +3485,19 @@ class InitialApplicationReview(models.Model):
     MAYBE = '+1'
     UNCLEAR = '??'
     UNRATED = '0'
-    NOBIAS = '-1'
+    NOTCOMPELLING = '-1'
     NOTUNDERSTOOD = '-2'
     SPAM = '-3'
     # Change essay choices in home/templates/home/snippet/applicant_review_essay_rating.html
     # if you update this text
     RATING_CHOICES = (
-        (STRONG, '+3 - Essay shows a *strongly* compelling argument for how the applicant *both* faces discrimination/bias and is from a group underrepresented in the technology industry of their country'),
-        (GOOD, '+2 - Essay shows a *strongly* compelling argument for how the applicant *either* faces discrimination/bias or they are from a group underrepresented in technology industry of their country'),
-        (MAYBE, '+1 - Essay shows a *weak* argument for how the applicant either faces discrimination/bias or they are from a group underrepresented in technology industry of their country'),
+        (STRONG, '+3 - Essay is *strongly* compelling'),
+        (GOOD, '+2 - Essay is compelling'),
+        (MAYBE, '+1 - Essay is *weakly* compelling'),
         (UNCLEAR, '?? - Essay questions were too short or unclear to make a decision'),
         (UNRATED, 'Not rated'),
-        (NOBIAS, '-1 - Essay questions did not show either discrimination/bias or underrepresentation'),
-        (NOTUNDERSTOOD, '-2 - Essay questions were not understood'),
+        (NOTCOMPELLING, '-1 - Essay is not compelling'),
+        (NOTUNDERSTOOD, '-2 - Answers are unrelated to essay questions'),
         (SPAM, '-3 - Essay answers were spam or trolling'),
     )
     essay_rating = models.CharField(
@@ -3728,6 +3983,7 @@ class InternSelection(AugmentDeadlines, models.Model):
     SUBMITTED = 'SUB'
     MISSING = 'MIS'
     PAY = 'PAY'
+    PAID = 'PAID'
     EXTEND = 'EXT'
     TERMINATE = 'TER'
     def get_mentor_initial_feedback_status(self):
@@ -3736,6 +3992,8 @@ class InternSelection(AugmentDeadlines, models.Model):
                 return self.TERMINATE
             if self.initialmentorfeedback.request_extension:
                 return self.EXTEND
+            if self.initialmentorfeedback.organizer_payment_approved:
+                return self.PAID
             if self.initialmentorfeedback.payment_approved:
                 return self.PAY
             # Validation should ensure this never happens?
@@ -3756,6 +4014,8 @@ class InternSelection(AugmentDeadlines, models.Model):
                 return self.TERMINATE
             if self.midpointmentorfeedback.request_extension:
                 return self.EXTEND
+            if self.midpointmentorfeedback.organizer_payment_approved:
+                return self.PAID
             if self.midpointmentorfeedback.payment_approved:
                 return self.PAY
             # Validation should ensure this never happens?
@@ -3776,6 +4036,8 @@ class InternSelection(AugmentDeadlines, models.Model):
                 return self.TERMINATE
             if self.finalmentorfeedback.request_extension:
                 return self.EXTEND
+            if self.finalmentorfeedback.organizer_payment_approved:
+                return self.PAID
             if self.finalmentorfeedback.payment_approved:
                 return self.PAY
             # Validation should ensure this never happens?

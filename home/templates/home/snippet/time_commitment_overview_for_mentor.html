@@ -3,12 +3,12 @@
 		<div class="card-header bg-secondary text-white">Time commitment information</div>
 		<div class="card-body">
 			<div class="card-text">
-				<p><strong>{{ tcs.longest_period_free }} days out of {{ tcs.internship_total_days.days }} days free</strong> from full-time commitments during the internship.</p>
+				<p><strong>Applicant has {{ tcs.percentage_free }}% of their time free</strong> from full-time commitments during the internship period.</p>
 				<ul>
-					<li>Applicant has {{ tcs.longest_period_free }} consecutive days free from full-time commitments during the internship period.</li>
-					<li>Applicants are required to have at least 49 consecutive days free from full-time commitments.</li>
-					<li>The internship period is {{ tcs.internship_total_days.days }} days long.</li>
-					<li>Applicant is free from {{ tcs.free_period_start_date|date:"Y-m-d" }} to {{ tcs.free_period_end_date|date:"Y-m-d" }}.</li>
+					<li>If you want to pick an applicant as an intern who has less than 60% free time, make sure they are a very strong applicant.</li>
+					<li>Unless the Outreachy organizers are notified, all internships will use the standard start date ({{ application.application_round.internstarts }}) and end date ({{ application.application_round.internends }}).</li>
+					<li>You can discuss different start or end dates with your intern after the interns are announced on {{ application.application_round.internannounce }}</li>
+					<li>Internships can be extended for up to five weeks, but Outreachy organizers must approve the extension.</li>
 				</ul>
 			</div>
 		</div>

@@ -83,6 +83,7 @@ urlpatterns = [
     url(r'^dashboard/delete-application/(?P<applicant_username>[^/]+)/$', views.DeleteApplication.as_view(), name='delete-application'),
     url(r'^dashboard/review-applications/(?P<applicant_username>[^/]+)/$', views.ViewInitialApplication.as_view(), name='applicant-review-detail'),
     url(r'^dashboard/review-applications/update-comment/(?P<applicant_username>[^/]+)/$', views.ReviewCommentUpdate.as_view(), name='update-comment'),
+    url(r'^dashboard/review-applications/review-essay/(?P<applicant_username>[^/]+)/$', views.ReviewEssay.as_view(), name='review-essay'),
     url(r'^dashboard/review-applications/(?P<action>[^/]+)/(?P<applicant_username>[^/]+)/$', views.ApplicantApprovalUpdate.as_view(), name='initial-application-action'),
     url(r'^dashboard/review-applications/rate-essay/(?P<rating>[^/]+)/(?P<applicant_username>[^/]+)/$', views.EssayRating.as_view(), name='essay-rating'),
     url(r'^dashboard/review-applications/change-red-flag/(?P<flag>[^/]+)/(?P<flag_value>[^/]+)/(?P<applicant_username>[^/]+)/$', views.ChangeRedFlag.as_view(), name='change-red-flag'),
@@ -120,6 +121,7 @@ urlpatterns = [
     url(r'^register/activate/$', views.ActivationCompleteView.as_view(), name='registration_activation_complete'),
     url(r'^rename-project-skills/$', views.ProjectSkillsRename.as_view(), name='rename-project-skills'),
     url(r'^travel-stipend/$', views.travel_stipend, name='travel-stipend'),
+    url(r'^internship-cohort-statistics/$', views.internship_cohort_statistics, name='internship-cohort-statistics'),
     url(r'^informal-chat-contacts/$', views.InformalChatContacts.as_view(), name='informal-chat-contacts'),
     url(r'^sponsor/donate/$', views.donate, name='donate'),
     url(r'^sponsor/$', views.sponsor, name='sponsor'),
@@ -129,6 +131,7 @@ urlpatterns = [
     url(r'^blog/2019-10-01/pick-a-project/$', views.blog_2019_pick_projects, name='2019-12-pick-a-project'),
     url(r'^blog/2019-10-18/open-projects/$', views.blog_2019_10_18_open_projects, name='2019-12-project-promotion'),
     url(r'^blog/2020-03-27/outreachy-response-to-covid-19/$', views.blog_2020_03_covid, name='2020-03-covid'),
+    url(r'^blog/2020-08-28/december-2020-internship-applications-open/$', views.blog_2020_08_23_initial_applications_open, name='2020-08-initial-apps-open'),
 
     url(r'^privacy-policy/$', views.privacy_policy, name='privacy-policy'),
 ]

@@ -23,6 +23,7 @@ Active Internships Email Contacts
 <h1>Internship Contact List</h1>
 
 {% for intern in interns %}
+{% ifchanged %}<h2>{{ intern.project.project_round.participating_round.official_name }}</h2>{% endifchanged %}
 <hr>
 <p>Community: {{ intern.project.project_round.community }}<br>
 Project: "{{ intern.project.short_title }}"<br>

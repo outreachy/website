@@ -1,7 +1,5 @@
 {% extends "base.html" %}
-
-{% load wagtailcore_tags %}
-{% load wagtailimages_tags %}
+{% load static %}
 
 {% block body_class %}template-homepage{% endblock %}
 
@@ -14,13 +12,13 @@
 
 {% include 'home/snippet/diversity_statement.html' %}
 
-<h2>Outreachy Eligibility Rules</h2>
+<h2 id='rules'>Outreachy Eligibility Rules</h2>
 
 {% include 'home/snippet/eligibility_rules.html' %}
 
 <h2>Additional Information to Provide</h2>
 
-<p>The initial application also includes four essay questions. Please <a href='{% url 'docs-applicant' %}#essay-questions'>read our essay tips carefully.</p>
+<p>The initial application also includes four essay questions. Please <a href='{% url 'docs-applicant' %}#essay-questions'>read our essay tips carefully.</a></p>
 
 <h2>Intern Agreements and Forms</h2>
 

@@ -56,6 +56,15 @@
 						<img src='{% static 'outreachy-bot-200x200-avatar-1.png' %}' class="img-thumbnail float-left mr-3" height="200" width="200" alt="Default avatar for {{ intern.public_name }}">
 					{% endif %}
 					<p>{{ field }}</p>
+					<div class="card border-warning my-3">
+						<div class="card-header text-white bg-warning">Profile picture file size limit</div>
+						<div class="card-body">
+							<p class="card-text">
+							Please make sure your profile photo is less than 1 MB in size.
+							Otherwise you will get an nginx error page that says "413 Request entity too large" when you submit your changes.
+							</p>
+						</div>
+					</div>
 				</div>
 				<div class="card-footer bg-white">
 					<p>Photo privacy policy:</p>

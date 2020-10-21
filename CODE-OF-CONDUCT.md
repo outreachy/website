@@ -1,10 +1,30 @@
 # Outreachy Community Code of Conduct
   
-_last edited - November 25, 2019_
+_last edited - August 16, 2020_
 
 ## Our Pledge
 
-In the interest of fostering an open and welcoming environment, we as Outreachy applicants, interns, alumni, mentors, coordinators, organizers, and other contributors (collectively known as Outreachy community members) pledge to make participation in Outreachy and the Outreachy community a harassment-free experience for everyone, regardless of age, body size, caste, disability, ethnicity, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual identity and orientation.
+In the interest of fostering an open and welcoming environment, we as Outreachy applicants, interns, alumni, mentors, coordinators, organizers, and other contributors (collectively known as Outreachy community members) pledge to make participation in Outreachy and the Outreachy community a harassment-free experience for everyone.
+
+## Diversity is encouraged
+
+Outreachy aims to provide a safer environment for all participants, regardless of:
+
+* age
+* body size
+* caste
+* disability
+* ethnicity
+* gender identity and expression
+* level of experience
+* education
+* socio-economic status
+* nationality
+* personal appearance
+* race
+* religion (or lack thereof)
+* sexual identity and orientation
+* tribe
 
 ## Our Standards
 
@@ -19,11 +39,16 @@ include:
 
 Examples of unacceptable behavior by Outreachy community members include:
 
-* The use of sexualized language or imagery and unwelcome sexual attention or advances
-* Trolling, insulting/derogatory comments, and personal or political attacks
+* Insulting/derogatory comments
+* Trolling
+* Statements or jokes that exclude based on the demographic groups in the "Diversity is encouraged" section
+* Deliberate intimidation, stalking, or following
 * Public or private harassment
-* Publishing others' private information, such as a physical or electronic address, without explicit permission
-* Other conduct which could reasonably be considered inappropriate in a professional setting
+* Publishing others’ private information, such as a physical or electronic address, without explicit permission
+* Sexual language and imagery
+* Sexual attention or advances towards people under 18 years of age
+* Unwelcome sexual attention or behavior that contributes to a sexualized environment
+* Violence directed against another person, including violent threats and violent language
 * Providing false information on the Outreachy mentor or intern agreement, the internship application, W-9 or W8-BEN forms, third-party payment authorization, or payment authorization request
 
 Outreachy prioritizes marginalized people's safety over privileged people's comfort. The Outreachy organizers will not act on complaints regarding:

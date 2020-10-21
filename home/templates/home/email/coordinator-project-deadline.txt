@@ -1,0 +1,49 @@
+{{ current_round.project_soft_deadline|date:"M j" }}: Deadline to submit Outreachy projects for {{ community.name }}
+
+Hi Outreachy coordinators,
+
+{{ current_round.project_soft_deadline|date:"F j" }} at 4pm UTC is the deadline for {{ community.name }} mentors to submit their Outreachy projects.
+
+We encourage communities to list more projects than they have funding for. Outreachy organizers may be able to sponsor additional {{ community.name }} interns from the Outreachy general fund. Please see the details below.
+
+Deadlines
+---
+
+Mentors must submit their projects by {{ current_round.project_soft_deadline|date:"M j" }} at 4pm UTC.
+
+Coordinators must approve projects before {{ current_round.contributions_open }} at 4pm UTC.
+
+Project submission status
+---
+
+Your community has funding for {{ participation.interns_funded }} intern{{ participation.interns_funded|pluralize }}.
+
+You have {{ participation.project_set.approved.count }} approved project{{ participation.project_set.approved.count|pluralize }}.
+
+There {{ participation.project_set.pending.count|pluralize:"is,are" }} {{ participation.project_set.pending.count }} pending project{{ participation.project_set.pending.count|pluralize }}. Pending projects will not be seen by applicants until they are approved.
+
+Mentors can submit projects and coordinators can approve projects here:
+
+{{ request.scheme }}://{{ request.get_host }}{{ community.get_preview_url }}
+
+Outreachy general fund
+---
+
+We encourage communities to list more projects than they have funding for. Outreachy may be able to cover this funding gap by sponsoring additional {{ community.name }} interns from the Outreachy general fund.
+
+After mentors select their intern on the Outreachy website, coordinators will assign funding sources to interns. Coordinators will mark some interns as 'Funded by the community sponsors'. Coordinators will mark interns that they wish to be sponsored from the Outreachy general fund as 'Funded by the Outreachy general fund'.
+
+Coordinators must mark intern funding sources by {{ current_round.coordinator_funding_deadline|date:"M j" }}.
+
+Outreachy organizers will review all Outreachy general funding requests on {{ current_round.internapproval }}. We will prioritize funding for applicants who make high-quality contributions, have a well-defined project timeline in their final application, and have more free time during the internship period.
+
+The number of interns we can sponsor from the Outreachy general fund is limited by our current budget. In the past, we have been able to sponsor around 1-3 interns per community. Our budget will vary each internship round.
+
+Questions?
+---
+
+Thank you for participating as an Outreachy mentor or coordinator! If you have any questions, please reply-all to this email to contact us for help.
+
+Outreachy Organizers
+
+{% include 'home/email/footer-coordinator.txt' %}

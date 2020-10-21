@@ -1,8 +1,14 @@
 <p>Outreachy is open to applicants around the world. You will need to meet the following requirements:</p>
 <ul>
 	<li>You are or will be 18 years of age or older by {{ current_round.internstarts }}</li>
-	<li>You have not previously participated in an Outreachy, Outreach Program for Women, or Google Summer of Code internship. People who participated as an intern for Google Summer of Code are not eligible for Outreachy. All Google Summer of Code participants are ineligible for Outreachy, including people who did not successfully finish their GSoC internship.</li>
 	<li>You are available for a full-time, 40 hours a week internship from {{ current_round.internstarts }} to {{ current_round.internends }}.</li>
-	<li>Outreachy is open to both students and people who are not students. {% include 'home/snippet/student_hemisphere.html' %} If you are completing your last term for your degree, you may be eligible, and we encourage you to submit an initial application.</li>
+	<li>You were not an intern with Outreachy, the Outreach Program for Women, or Google Summer of Code. People who were a Google Summer of Code intern are not eligible for Outreachy. All Google Summer of Code interns are ineligible for Outreachy, including people who did not successfully finish their GSoC internship. If you apply to Outreachy and you are not accepted as an intern, you may apply again.</li>
 	<li>Applicants who have part-time or contracting jobs are welcome to apply. People who are willing to quit their full-time job are welcome to apply. If you cannot quit your full-time job, you are not eligible for Outreachy. People who are taking a leave of absence from a full-time job are not eligible for Outreachy.</li>
+	<li>Outreachy is open to both university students and people who are not university students. University students must have {{ current_round.minimum_days_free_for_students }} consecutive days free from school and exams during the internship period. Students must apply to the correct internship round (see rules below).</li>
+</ul>
+
+<p>Outreachy internships run twice a year, May to August and December to March. We have some rules around which internship round you can apply to:</p>
+<ul>
+	<li>If you are not a university student, you may apply to either internship round.</li>
+	{% include 'home/snippet/student_hemisphere.html' %}
 </ul>

@@ -149,6 +149,29 @@ You'll need to periodically update the dokku let's encypt plug in, following the
 dokku plugin:update letsencrypt
 ```
 
+File upload size limits
+-----------------------
+
+To avoid denial of service attacks, it's important that the server reject attempts to upload files that are excessively large. In Dokku, the first line of defense against this attack is the nginx [`client_max_body_size`](https://nginx.org/en/docs/http/ngx_http_core_module.html#client_max_body_size) setting, which defaults to 1MB. But we allow people to upload their own profile photos and they often try to use pictures which exceed this limit, then get an inscrutable "413 Request Entity Too Large" error message.
+
+There are two ways to address the UX issues this causes: either increase the size limit, or improve the error message. You can do both at the same time if you want.
+
+Both ways require additional nginx configuration. Dokku documentation first covers how to replace their default nginx configuration wholesale, but I don't recommend that if you can avoid it, so instead, create a config snippet in `/home/dokku/$APP/nginx.conf.d/` as documented under ["Customizing via configuration files included by the default templates"](http://dokku.viewdocs.io/dokku/configuration/nginx/#customizing-via-configuration-files-included-by-the-default-tem).
+
+To change the limit, add a line like this to the new config file:
+
+```
+client_max_body_size 5m;
+```
+
+To change the error page, add an [`error_page`](https://nginx.org/en/docs/http/ngx_http_core_module.html#error_page) setting like this:
+
+```
+error_page 413 /request-too-large
+```
+
+The `/request-too-large` path can be any path you want that's configured in Django. Then when nginx would serve up its own 413 response, it instead pretends like the visitor requested `https://www.outreachy.org/request-too-large` and returns whatever response Django generates for that URL. So you can reuse existing Django templates to make sure the error page matches the style of the rest of the site.
+
 Updating the test database
 --------------------------
 
@@ -169,14 +192,14 @@ We promote the cloned database to be used by the test container:
 ssh dokku@outreachy.org postgres:promote test-database-updated-2018-02-13 test
 ```
 
+Figure out what the name of the old database linked to the test app is with this command:
+```
+ssh dokku@outreachy.org postgres:list
+```
+
 Then we unlink the older database (use whatever was the old name):
 ```
 ssh dokku@outreachy.org postgres:unlink test-database-updated-old test
-```
-
-You can always figure out which databases are linked with this command:
-```
-ssh dokku@outreachy.org postgres:list
 ```
 
 Then you can `git push` to the test site, migrate, and test any updated views.
@@ -184,6 +207,27 @@ Then you can `git push` to the test site, migrate, and test any updated views.
 Finally, we can destroy the older database (use whatever was the old name):
 ```
 ssh dokku@outreachy.org postgres:destroy test-database-updated-old
+```
+
+Debugging
+---
+
+You can turn on dokku log verbosity by running:
+
+```
+ssh dokku@outreachy.org trace:on
+```
+
+Turn it off by running:
+
+```
+ssh dokku@outreachy.org trace:off
+```
+
+Sometimes postgres linking fails? If you have unlinked your old database and you get this error when you link in the new one `Unable to use default or generated URL alias`, then run the following command:
+
+```
+ssh dokku@outreachy.org config:unset --no-restart test DATABASE_URL DOKKU_POSTGRES_YELLOW_URL
 ```
 
 Backing Up the Database

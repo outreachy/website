@@ -60,12 +60,28 @@ def approval_status_changed(obj, request, **kwargs):
             "not sending approval status change email because %s does not exist",
             template, exc_info=True)
 
-def cfp_open(current_round, request):
+def cfp_open(current_round, request, **kwargs):
     send_template_mail('home/email/cfp-open.txt', {
         'current_round': current_round,
         },
         request=request,
-        recipient_list=[mentors_mailing_list])
+        recipient_list=[mentors_mailing_list],
+        **kwargs,
+        )
+
+def coordinator_project_deadline(current_round, participation, request, **kwargs):
+    email_list = participation.community.get_coordinator_email_list()
+    email_list.append(organizers)
+    email_list.append(applicant_help)
+    send_group_template_mail('home/email/coordinator-project-deadline.txt', {
+        'current_round': current_round,
+        'participation': participation,
+        'community': participation.community,
+        },
+        request=request,
+        recipient_list=email_list,
+        **kwargs,
+        )
 
 def notify_mentor(participation, notification, request):
     send_template_mail('home/email/notify-mentors.txt', {
@@ -131,7 +147,7 @@ def mentor_application_deadline_reminder(project, request, **kwargs):
         **kwargs)
 
 def coordinator_intern_selection_reminder(participation, request, **kwargs):
-    email_list = participation.get_submitter_email_list()
+    email_list = participation.community.get_coordinator_email_list()
     if email_list:
         send_group_template_mail('home/email/coordinator-intern-selection.txt', {
             'current_round': participation.participating_round,

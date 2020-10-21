@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}
+Internship Cohort Statistics
+{% endblock %}
+
+{% block content %}
+
+<h1>Internship Cohort Statistics</h1>
+
+<h2 id='toc'>Table of Contents</h2>
+
+<p>
+<a href='#gender'>Gender</a><br>
+<a href='#american-ethnicity-and-race'>American ethnicity and race</a></br>
+</p>
+
+<hr>
+
+<h2 id='gender'>Gender</h2>
+
+<p>Statistics about the gender identities of applicants who were approved to participate in the contribution period.</p>
+
+<table class="table table-striped table-bordered">
+	<thread class="thread-dark">
+	<tr>
+		<th scope="col" class="col-4">Cohort</th>
+		<th scope="col" class="col-2">% women</th>
+		<th scope="col" class="col-2">% men</th>
+		<th scope="col" class="col-2">% non-binary people</th>
+		<th scope="col" class="col-2">% transgender people</th>
+	</tr>
+	</thread>
+	{% for r in rounds %}
+		<tr>
+			<td>{{ r.internstarts|date:"M Y" }}<br>({{ r.statistictotalapplied.total_approved }})</td>
+			{% if not r.statisticgenderdemographics %}
+				<td>Unknown</td>
+				<td>Unknown</td>
+				<td>Unknown</td>
+				<td>Unknown</td>
+			{% else %}
+				<td>{{ r.statisticgenderdemographics.percentage_accepted_who_are_women }}%<br>({{ r.statisticgenderdemographics.total_women }})</td>
+				<td>{{ r.statisticgenderdemographics.percentage_accepted_who_are_men }}%<br>({{ r.statisticgenderdemographics.total_men }})</td>
+				<td>{{ r.statisticgenderdemographics.percentage_accepted_who_are_non_binary }}%<br>({{ r.statisticgenderdemographics.total_non_binary_people }})</td>
+				<td>{{ r.statisticgenderdemographics.percentage_accepted_who_are_transgender }}%<br>({{ r.statisticgenderdemographics.total_transgender_people }})</td>
+			{% endif %}
+		</tr>
+	{% endfor %}
+</table>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h2 id='american-ethnicity-and-race'>American ethnicity and race</h2>
+
+<p>Statistics about the ethnicity and race of America applicants who were approved to participate in the contribution period.</p>
+
+<table class="table table-striped table-bordered">
+	<thread class="thread-dark">
+	<tr>
+		<th scope="col" class="col-4">Cohort</th>
+		<th scope="col" class="col-4">% black, latinx, or indigenous</th>
+		<th scope="col" class="col-4">% white or asian</th>
+	</tr>
+	</thread>
+	{% for r in rounds %}
+		<tr>
+			<td>{{ r.internstarts|date:"M Y" }}{% if r.statisticamericandemographics %}<br>({{ r.statisticamericandemographics.total_approved_american_applicants }}){% endif %}</td>
+			{% if not r.statisticamericandemographics %}
+				<td>Unknown</td>
+				<td>Unknown</td>
+			{% else %}
+				<td>{{ r.statisticamericandemographics.percentage_americans_accepted_who_are_bipoc }}%<br>({{ r.statisticamericandemographics.total_approved_american_bipoc }})</td>
+				<td>{{ r.statisticamericandemographics.percentage_americans_accepted_who_are_not_bipoc }}%<br>({{ r.statisticamericandemographics.total_approved_american_not_bipoc }})</td>
+			{% endif %}
+		</tr>
+	{% endfor %}
+</table>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+{% endblock %}

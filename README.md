@@ -517,6 +517,75 @@ The code will also create accounts for coordinators, mentors, and initial applic
  - coordinator1 - coordinator for community for mentors 1-3
  - reviewer1 - initial application reviewer
 
+# Invalid HTML and testing
+
+When you're testing a view, you may want to test that certain HTML elements are present.
+You can do this by passing `html=True` to `AssertContains` or `AssertNotContains`.
+
+However, that function will throw an error if the HTML is invalid.
+This could be something as small as forgetting a div or paragraph tag.
+Finding the mistake can be difficult, especially if the Django template
+[includes other template files](https://docs.djangoproject.com/en/1.11/ref/templates/builtins/#include).
+
+Additionally, the templates rendered in the test may not be the same as
+manually re-creating the test case in your local copy.
+
+So, here is a way to find out what HTML is invalid, in which template file:
+
+1. In the test function, write out the HTML contents to a file:
+
+```
+        with open("/tmp/response.html", "wb") as f:
+            f.write(response.content)
+```
+
+2. Use xmllint to find HTML errors in the file:
+
+```
+xmllint --format --html /tmp/response.html > /dev/null
+```
+
+3. Identify which templates are included in the template under test.
+
+For example, say we're testing the file `home/templates/home/applicant_review_detail.html`.
+We want to know what templates that file includes, and what templates those files include, etc., until we know the full tree of includes.
+
+There is a custom management command that finds all the other templates
+that are included in Django template file.
+You have to pass in the template name as you would do with an `include` tag.
+That means you have to strip off the `home/templates/` prefix.
+
+So we run the following command to see all included templates in a file:
+
+```
+./manage.py template_includes home/applicant_review_detail.html
+```
+
+That will give you the following list:
+
+```
+home/applicant_review_detail.html
+  home/snippet/application_review_headers.html
+  home/snippet/application_review_rows.html
+    home/snippet/essay_rating.html
+    home/snippet/red_flags_display.html
+  home/snippet/applicant_review_actions.html
+    home/snippet/applicant_essay_rating_form.html
+  home/snippet/time_commitment_overview.html
+  home/snippet/applicant_review_time_commitments.html
+  home/snippet/applicant_location.html
+  home/snippet/applicant_review_essay_rating.html
+```
+
+4. Then you'll want to run each snippet through xmllint to find HTML validation errors.
+This will print the actual lines in the file that needs to be corrected.
+
+```
+xmllint --format --html home/templates/home/snippet/file.html > /dev/null
+```
+
+You may need to correct several HTML validation errors.
+
 # Running tests manually
 
 ## Starting tests manually

@@ -258,7 +258,30 @@ class CFPOpen(SendEmailView):
     def generate_messages(self, current_round, connection):
         if not self.request.user.is_staff:
             raise PermissionDenied("You are not authorized to send reminder emails.")
-        email.cfp_open(current_round, self.request)
+        email.cfp_open(current_round, self.request, connection=connection)
+
+class CoordinatorProjectDeadline(SendEmailView):
+    """
+    Notify Outreachy coordinators that the project deadline is approaching.
+
+    When: 1 week before the project soft deadline
+
+    Template: home/templates/home/email/coordinator-project-deadline.txt
+    """
+    description = 'Project deadline reminder'
+    slug = 'coordinator-project-deadline'
+
+    @staticmethod
+    def instance(current_round):
+        return current_round.project_soft_deadline() - datetime.timedelta(days=7)
+
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+        # for i in current_round get approved and pending participations:
+        participations = current_round.participation_set.exclude(approval_status=ApprovalStatus.WITHDRAWN).exclude(approval_status=ApprovalStatus.REJECTED)
+        for p in participations:
+            email.coordinator_project_deadline(current_round, p, self.request, connection=connection)
 
 
 class MentorCheckDeadlinesReminder(SendEmailView):
@@ -707,6 +730,7 @@ class CareerChatInvitation(SendEmailView):
 # if we keep it sorted by when in the round each event occurs.
 all_round_events = (
     CFPOpen,
+    CoordinatorProjectDeadline,
     MentorCheckDeadlinesReminder,
     ApplicantsDeadlinesReminder,
     ContributorsDeadlinesReminder,
@@ -788,7 +812,7 @@ def staff_intern_progress(request, today):
     try:
         current_round = RoundPage.objects.get(
             initialfeedback__lte=today + datetime.timedelta(days=7),
-            finalfeedback__gt=today - datetime.timedelta(days=30),
+            finalfeedback__gt=today - datetime.timedelta(days=45),
         )
         current_round.today = today
     except RoundPage.DoesNotExist:

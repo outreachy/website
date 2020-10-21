@@ -21,6 +21,7 @@ from .models import Comrade
 from .models import Contribution
 from .models import CoordinatorApproval
 from .models import EmploymentTimeCommitment
+from .models import EssayQuality
 from .models import FinalApplication
 from .models import FinalInternFeedback
 from .models import FinalMentorFeedback
@@ -314,6 +315,19 @@ class ApplicationReviewerAdmin(reversion.admin.VersionAdmin):
             'reviewing_round',
             )
 
+class EssayQualityAdmin(admin.ModelAdmin):
+    list_display = (
+            'category',
+            'description',
+            )
+    list_filter = (
+            'category',
+            )
+    search_fields = (
+            'description',
+            )
+    verbose_name_plural = 'Essay Qualities'
+
 class WorkEligibilityInline(admin.StackedInline):
     model = WorkEligibility
     can_delete = False
@@ -415,7 +429,7 @@ class PromotionTrackingInline(admin.StackedInline):
     extra = 1
     verbose_name_plural = 'Promotion tracking'
 
-class ApplicantApprovalAdmin(reversion.admin.VersionAdmin):
+class ApplicantApprovalAdmin(admin.ModelAdmin):
     list_display = (
             'applicant',
             'approval_status',
@@ -464,7 +478,7 @@ class OfficialSchoolAdmin(admin.ModelAdmin):
             )
     inlines = (OfficialSchoolTermInline, )
 
-class BarriersToParticipationAdmin(reversion.admin.VersionAdmin):
+class BarriersToParticipationAdmin(admin.ModelAdmin):
     model = AlumInfo
     list_display = (
             'applicant',
@@ -668,6 +682,7 @@ admin.site.register(Community, CommunityAdmin)
 admin.site.register(Comrade, OnlyComradeAdmin)
 admin.site.register(CoordinatorApproval, CoordinatorApprovalAdmin)
 admin.site.register(Contribution, ContributionAdmin)
+admin.site.register(EssayQuality, EssayQualityAdmin)
 admin.site.register(FinalApplication, FinalApplicationAdmin)
 admin.site.register(InformalChatContact, InformalChatContactAdmin)
 admin.site.register(InternSelection, InternSelectionAdmin)

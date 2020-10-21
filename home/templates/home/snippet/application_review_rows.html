@@ -12,6 +12,9 @@
 		{% for essay_rating in app.get_essay_ratings %}
 			<p>{% include 'home/snippet/essay_rating.html' %}</p>
 		{% endfor %}
+		<button type="button" class="btn btn-secondary">
+		Quality: {{ app.essay_qualities.count }}
+		</button>
 		<p>{% if app.review_owner %}Owned by: {{ app.review_owner.comrade.public_name }}{% endif %}</p>
 	</td>
 	<td>
