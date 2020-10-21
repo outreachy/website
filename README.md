@@ -749,6 +749,16 @@ pipenv update <pkg>
 
 These commands will update `Pipfile` and `Pipfile.lock`. You'll need to commit both files.
 
+## Syncing updated packages
+
+When someone else makes a commit that updates the packages listed in the pipfile, when you pull those changes, you'll need to update your installed packages. Otherwise you may (or may not!) get an error whenever you try to run a manage.py command. The error might only be triggered if you view a particular page that runs Python code that depends on those installed packages.
+
+To sync your installed pipenv packages with any changes made in the Outreachy GitHub repository, run the following command:
+
+```
+pipenv sync
+```
+
 # Why Django?
 
 We evaluated a couple different choices:
