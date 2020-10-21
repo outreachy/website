@@ -119,6 +119,12 @@ Apply all the Django migrations we've set up:
 $ ssh dokku@$DOMAIN run $APP python manage.py migrate
 ```
 
+After the first deploy, the Node and Python packages are cached, but sometimes this cache goes bad. In that case you can purge the cache before deploying again:
+
+```
+$ ssh dokku@$DOMAIN repo:purge-cache $APP
+```
+
 Create Django Superuser
 =======================
 
