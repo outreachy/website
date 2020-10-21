@@ -334,6 +334,20 @@ needs to be manually updated. Add the following to the news section:
 
 Contributions and final applications are due on October 31 at 4pm UTC. Interns will be [announced](/alums/) on November 23 at 4pm UTC.
 
+## Common situations during the contribution period
+
+Q1. Mentor: An applicant emailed me that they are facing [illness / family issues / internet or electrical outages / natural disasters / other extenuating circumstances]. They haven't been able to contribute as much as they would like. Can the contribution period be extended?
+
+A1. We do occasionally have interns who experience [circumstance] during the contribution period.
+
+Unfortunately, Outreachy can't officially extend the contribution period. The final application deadline will remain the same.
+
+However, you as a mentor can unofficial consider any contributions the applicant makes after the contribution deadline.
+
+The applicant would still need to record one contribution (it could even be a dummy contribution) and create a final application. Once those two things are done, the applicant can still record additional contributions in the Outreachy website that they make after the contribution period is over.
+
+You would still need to select an intern before the intern selection deadline. If your applicant is not applying to Google Summer of Code, you can wait to select an intern as late as the day before the deadline for Outreachy organizers to approve intern selections.
+
 # Intern selection period
 
 After final applications are closed, the following steps need to be taken:
