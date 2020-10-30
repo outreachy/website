@@ -6,54 +6,101 @@ Complete your Outreachy internship final application
 The deadline for Outreachy final applications is {{ current_round.contributions_close }} at 4pm UTC{% if comrade.timezone %} / {{ contribution_deadline }} {{ comrade.timezone }}{% endif %}.
 
 You are receiving this email because your initial application for the {{ current_round.official_name }} was approved. This email outlines the final steps you need to take to finish applying for an Outreachy internship.
-{% if current_round.internstarts|date:'Y-m-d' == '2020-05-19' %}
-New Outreachy Policies
-----------------------
 
-In order to help applicants who are impacted by COVID-19, Outreachy put in place new policies for this round. Please read our blog post:
 
-https://www.outreachy.org/blog/2020-03-27/outreachy-response-to-covid-19/
-
-The summary of the policies is:
-
-1. May to August 2020 interns who are impacted by COVID-19 will only be required to work 30 hours a week. Interns who are not impacted are encouraged to work 40 hours a week.
-
-2. Students who have an approved initial application will typically be considered eligible for an Outreachy internship, even if their school terms have shifted.
-
-3. All applicants should update their final applications with any changed time commitments.
-
-4. People who miss the final application deadline due to an internet disruption related to COVID-19 should contact the Outreachy organizers.
-
-5. If you are an applicant who is impacted by the global pandemic, please reach out to your mentor and community coordinator.
-
-6. All travel using the Outreachy travel stipend is prohibited until further notice.
-
-7. The internship stipend payment amounts have increased, but the payment schedule remains the same.
-
-{% endif %}
 Final Steps for Applying
 -------------------------
 
 In order to be eligible to be selected as an Outreachy intern, you must:
 
-1. Record at least one in-progress contribution you've made to an Outreachy internship project. The contribution must be recorded through the Outreachy website.
+1. Verify your time commitments are correct in your initial application.
 
-2. Create a final application for that project. The final application must be submitted through the Outreachy website.
+2. Record at least one in-progress contribution you've made to an Outreachy internship project. The contribution must be recorded through the Outreachy website.
+
+3. Create a final application for that project. The final application must be submitted through the Outreachy website.
 
 You must create a final application for each project. If you don't create a final application for a project, you aren't eligible to be selected as an intern for that project.
+
+
+Verify Your Time Commitments
+----------------------------
+
+Your approval to participate in Outreachy is based on the time commitments you listed in your initial application. You can check your listed time commitments by following these steps:
+
+1. Log into the Outreachy website:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'login' %}
+
+2. Check the time commitments listed on your initial application:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'eligibility-results' %}
+
+If your time commitments are incorrect or have changed since you filled out an initial application, please contact us immediately:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'contact-applicant-help' %}
+
+Please check to see if your initial application is missing information your current or future job, a new job offer, your school time commitments, your online classes, or your coding school information. Please check that the hours of your time commitments are correct. Get in touch with us immediately to correct any missing or incorrect time commitments.
+
+If you are selected as an intern, you will be required to sign a legal internship agreement which asserts that the details in your initial application are correct. It's very important that your time commitments stated in the initial application are correct.
+
+The final application will have a field for you to note any time commitment changes. If your final application shows incorrect time commitments, please note any time commitment changes in your final application.
+
 
 Recording Contributions
 -----------------------
 
-To record a contribution to a project, please follow the project link from this page and click 'Record contributions' button:
+You will need to record your contributions for each project you're applying for.
+
+Please record your contributions even if the contribution is not merged or accepted yet.
+
+You can record your contributions following these steps:
+
+1. Log into the Outreachy website:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'login' %}
+
+2. Find your project listed on the project selection page:
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
+
+3. Click the project's title to be taken to the project details page.
+
+4. Click the 'record your contributions and create a final application' link.
+
+5. Repeat steps 2-4 to record your contributions for each project you are applying for.
 
 Once you have recorded a contribution to a project, a link to record more contributions or create a final application for that project will be available on your dashboard:
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}
 
 After the final application deadline, you are encouraged (but not required) to continue working on contributions with your project mentor. You will be able to record those contributions (or edit other recorded contributions) up to the date the Outreachy interns for this round are announced on {{ current_round.internannounce }}.
+
+
+Final Applications
+------------------
+
+You will need to create a final application for each project you're applying for. Only applicants that complete a final application for that project will be eligible to be selected as an intern for that project.
+
+You can create a final application by following these steps:
+
+1. Log into the Outreachy website:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'login' %}
+
+2. Find your project listed on the project selection page:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
+
+3. Click the project's title to be taken to the project details page.
+
+4. Follow the 'create a final application' link.
+
+5. Repeat steps 2-4 to create a final application for each project you are applying for.
+
+You can edit your final application(s) until {{ current_round.contributions_close }} at 4pm UTC. Once you create a final application, a link to edit it will appear on your dashboard:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}
+
 
 {% if role.projects_contributed_to %}Your Project Contributions
 --------------------------
@@ -83,16 +130,10 @@ Final applications are due by {{ current_round.contributions_close }} at 4pm UTC
 
 The final application will ask you to fill out a timeline for the internship project. If you have trouble with this, or a mentor isn't responsive to your questions about the timeline, do the best you can. You should submit a final application by the final application deadline, even if you feel the timeline isn't complete or perfect.
 {% endif %}
-Time Commitment Changes
------------------------
 
-If your time commitments have changed since you filled out an initial application, you will need to provide us with updated information. Each final application has a field where you can list your updated time commitments. Make sure each final application has your updated time commitments. You can see the time commitments listed on your initial application here:
+Good luck filling out your final application! You got this!
 
-{{ request.scheme }}://{{ request.get_host }}{% url 'eligibility-results' %}
-
-If your initial application is missing your current or future job, your school time commitments, your online classes, or your coding school information, then you need to add that information to your final applications. If the dates or hours of your time commitments are incorrect, please add that information to your final applications.
-
-If you are selected as an intern, you will be required to sign a legal internship agreement which asserts that the details in your initial and final applications are correct. It's very important that your time commitments are correct.
+If you have any questions, please contact Outreachy applicant helpers at <applicant-help@outreachy.org>.
 
 Outreachy Organizers
 {% include 'home/email/footer-applicant.txt' %}
