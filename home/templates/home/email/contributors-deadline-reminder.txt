@@ -101,6 +101,7 @@ You can edit your final application(s) until {{ current_round.contributions_clos
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}
 
+The final application will ask you to fill out a timeline for the internship project. If you have trouble with this, or a mentor isn't responsive to your questions about the timeline, do the best you can. You should submit a final application by the final application deadline, even if you feel the timeline isn't complete or perfect.
 
 {% if role.projects_contributed_to %}Your Project Contributions
 --------------------------
@@ -108,15 +109,7 @@ You can edit your final application(s) until {{ current_round.contributions_clos
 {% for project in role.projects_contributed_to %}{{ project.project_round.community.name }} project "{{ project.short_title }}"
  - {% if project in applied_projects %}Your final application will be reviewed: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% else %}You have NOT submitted a final application for this project. Create one here: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% endif %}{% if not forloop.last %}
 
-{% endif %}{% endfor %}
-
-Your Final Applications
------------------------
-
-Final applications are due by {{ current_round.contributions_close }} at 4pm UTC{% if comrade.timezone %} / {{ contribution_deadline }} {{ comrade.timezone }}{% endif %}. We encourage you to create your final applications early. You will be able to edit your final application until the deadline.
-
-The final application will ask you to fill out a timeline for the internship project. Detailed instructions are included in the pages linked above. If you have trouble with this, or a mentor isn't responsive to your questions about the timeline, do the best you can. You should submit a final application by the final application deadline, even if you feel the timeline isn't complete or perfect.
-{% else %}Your Project Contributions
+{% endif %}{% endfor %}{% else %}Your Project Contributions
 --------------------------
 
 You have not recorded making a contribution to any project.
@@ -126,10 +119,7 @@ Your Final Applications
 
 You have not created any final applications.
 
-Final applications are due by {{ current_round.contributions_close }} at 4pm UTC{% if comrade.timezone %} / {{ contribution_deadline }} {{ comrade.timezone }}{% endif %}. We encourage you to create your final applications early. You will be able to edit your final application until the deadline.
-
-The final application will ask you to fill out a timeline for the internship project. If you have trouble with this, or a mentor isn't responsive to your questions about the timeline, do the best you can. You should submit a final application by the final application deadline, even if you feel the timeline isn't complete or perfect.
-{% endif %}
+Final applications are due by {{ current_round.contributions_close }} at 4pm UTC{% if comrade.timezone %} / {{ contribution_deadline }} {{ comrade.timezone }}{% endif %}. We encourage you to create your final applications early. You will be able to edit your final application until the deadline.{% endif %}
 
 Good luck filling out your final application! You got this!
 
