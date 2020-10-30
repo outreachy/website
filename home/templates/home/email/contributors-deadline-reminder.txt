@@ -73,7 +73,7 @@ Once you have recorded a contribution to a project, a link to record more contri
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}
 
-After the final application deadline, you are encouraged (but not required) to continue working on contributions with your project mentor. You will be able to record those contributions (or edit other recorded contributions) up to the date the Outreachy interns for this round are announced on {{ current_round.internannounce }}.
+After the final application deadline, you are encouraged (but not required) to continue working on contributions with your project mentor. You will be able to record or edit contributions until {{ current_round.internannounce }} at 4pm UTC.
 
 
 Final Applications
@@ -106,7 +106,7 @@ You can edit your final application(s) until {{ current_round.contributions_clos
 --------------------------
 
 {% for project in role.projects_contributed_to %}{{ project.project_round.community.name }} project "{{ project.short_title }}"
-{% if project in applied_projects %}Your final application will be reviewed: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% else %}You have NOT submitted a final application for this project. Create one here: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% endif %}{% if not forloop.last %}
+ - {% if project in applied_projects %}Your final application will be reviewed: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% else %}You have NOT submitted a final application for this project. Create one here: {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}{% endif %}{% if not forloop.last %}
 
 {% endif %}{% endfor %}
 
