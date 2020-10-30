@@ -1,5 +1,21 @@
-<p>Remind applicants who have recorded a contribution to create a final application:
+<p>Remind applicants who have recorded a contribution to create a final application.
+You cannot send this email through the website. You will need to run the following commands:
+</p>
+
+<pre>{% filter force_escape %}
+$ ssh -t dokku@www.outreachy.org run www env --unset=SENTRY_DSN python manage.py shell
+Python 3.6.3 (default, Nov 14 2017, 17:29:48) 
+[GCC 5.4.0 20160609] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from django.test import Client
+>>> from django.contrib.auth.models import User
+>>> c = Client(HTTP_HOST='www.outreachy.org') # set this to the domain you expect to be on
+>>> c.force_login(User.objects.filter(is_staff=True, comrade__isnull=False)[0])
+>>> c.post('/ROUNDSLUG/email/contributor-deadline-reminder/', secure=True)
+{% endfilter %}</pre>
+
 <ul>
 	<li>Send the email on {{ due }} at 4pm UTC.</li>
 </ul>
-</p>
+<p>You can preview how the emails will look by following the link below.</p>
