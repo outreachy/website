@@ -1650,6 +1650,9 @@ class Sponsorship(models.Model):
             this sponsorship.
             """)
 
+    def number_interns(self):
+        return self.amount / 6500
+
     def __str__(self):
         return "{name} sponsorship for {community}".format(
                 name=self.name,

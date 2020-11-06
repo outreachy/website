@@ -10,5 +10,7 @@
 	<li>{{ current_round.number_funded_interns }} secured internship spots</li>
 </ul>
 
+<p><a href="{% url 'sponsor-info' round_slug=current_round.slug %}">Sponsor information</a> provided by coordinators.</p>
+
 <p><a href="{% url 'internship-cohort-statistics' %}">Demographic statistics</a> for current and past internship rounds.</p>
 {% endwith %}
