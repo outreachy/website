@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}
+Review interns for {{ current_round.official_name }}
+{% endblock %}
+
+{% block content %}
+<h2>Intern Summary</h2>
+
+<table class="table table-striped table-bordered">
+	<th scope="col">Community</th>
+	<th scope="col">Intern</th>
+	{% for intern in intern_selections %}
+		<tr>
+			<td>{{ intern.project.project_round.community.name }}</td>
+			<td><a href="#intern-{{ intern.applicant.applicant.account.pk }}">{{ intern.applicant.applicant.public_name }}</a></td>
+		</tr>
+	{% endfor %}
+</table>
+
+<h2>Intern Information</h2>
+{% for i in intern_selections %}
+{% with intern=i.applicant.applicant %}
+	<div class="card border mt-3" id="intern-{{ intern.account.pk }}">
+	<div class="card-body">
+		{% if intern.photo %}
+			<img src="{{ intern.photo.url }}" class="img-thumbnail float-left mr-3" alt="Photo of {{ intern.public_name }}" height="200" width="200">
+		{% else %}
+		{% static 'outreachy-bot-200x200-avatar-1.png' as avatar1 %}
+		{% static 'outreachy-bot-200x200-avatar-2.png' as avatar2 %}
+		{% static 'outreachy-bot-200x200-avatar-3.png' as avatar3 %}
+		{% static 'outreachy-bot-200x200-avatar-4.png' as avatar4 %}
+		<img src='{% cycle avatar1 avatar2 avatar3 avatar4 as avatar %}' class="img-thumbnail float-left mr-3" height="200" width="200" alt="Default avatar for {{ intern.public_name }}">
+		{% endif %}
+		<div class="card-text">
+			<h4 class="mt-0">
+				{{ intern.public_name }}{% if not i.in_good_standing %} - [HIDDEN] - Not in good standing{% endif %}
+			</h4>
+			<BR>{{ i.project.project_round.participating_round.internstarts|date:"F Y" }} Outreachy intern
+			<BR>Community: {{ i.project.project_round.community.name }}
+			<BR>Coordinator(s): {% for email in i.project.project_round.community.get_coordinator_email_list %}{{ email }}, {% endfor %}
+			<BR>Project: {{ i.project.short_title }}
+			<BR>Mentor(s): {% for email in i.mentor_emails %}{{ email }}, {% endfor %}<br>
+			<BR>Public name: {{ intern.public_name }}
+			<BR>Legal name: {{ intern.legal_name }}
+			<BR>Email: {{ intern.account.email }}
+			<BR>Pronouns: {{ intern.get_pronouns_html|safe }}<BR>
+			{% if intern.location %}
+				<BR>Location: {{ intern.location }}<BR>
+				Guessed city and country: {% with loc=intern.get_city_country %}{{ loc.0 }}, {{ loc.1 }}{% endwith %}<BR>
+			{% else %}
+				<BR>Location: <span class="badge badge-pill badge-warning">unknown</span><BR>
+			{% endif %}
+			{% if intern.timezone %}
+				Timezone: {{ intern.timezone }}<BR><BR>
+			{% else %}
+				Timezone: <span class="badge badge-pill badge-warning">unknown</span><BR><BR>
+			{% endif %}
+			<div class="container">
+				{% if intern.blog_url %}
+					<a href="{{ intern.blog_url }}"><img src="{% static 'link-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="Blog"></a>
+				{% else %}
+					<img src="{% static 'link-grayed-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="no URL provided">
+				{% endif %}
+				{% if intern.twitter_url %}
+					<a href="{{ intern.twitter_url }}"><img src="{% static 'Twitter/Twitter_Social_Icon_Circle_Color-32px.png' %}" class="mx-1" alt="Twitter"></a>
+				{% else %}
+					<img src="{% static 'link-grayed-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="no URL provided">
+				{% endif %}
+				{% if intern.github_url %}
+					<a href="{{ intern.github_url }}"><img src="{% static 'GitHub/PNG/GitHub-Mark-32px.png' %}" class="mx-1" alt="GitHub"></a>
+				{% else %}
+					<img src="{% static 'link-grayed-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="no URL provided">
+				{% endif %}
+				{% if intern.gitlab_url %}
+					<a href="{{ intern.gitlab_url }}"><img src="{% static 'GitLab/gitlab-logo-square-32px.png' %}" class="mx-1" alt="GitLab"></a>
+				{% else %}
+					<img src="{% static 'link-grayed-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="no URL provided">
+				{% endif %}
+			</div>
+			{% if intern.nick %}
+				<BR>IRC/Chat/Forum username: {{ intern.nick }}<BR>
+			{% else %}
+				<BR>IRC/Chat/Forum username: <span class="badge badge-pill badge-warning">unknown</span><BR>
+			{% endif %}
+			{% if intern.twitter_url %}
+				Twitter: {{ intern.twitter_url }}<BR>
+			{% else %}
+				Twitter: <span class="badge badge-pill badge-warning">unknown</span><BR>
+			{% endif %}
+			{% if intern.github_url %}
+				GitHub: {{ intern.github_url }}<BR>
+			{% else %}
+				GitHub: <span class="badge badge-pill badge-warning">unknown</span><BR>
+			{% endif %}
+			{% if intern.gitlab_url %}
+				GitLab: {{ intern.gitlab_url }}<BR>
+			{% else %}
+				GitLab: <span class="badge badge-pill badge-warning">unknown</span><BR>
+			{% endif %}
+			{% if intern.blog_url %}
+				Blog: {{ intern.blog_url }}<BR>
+			{% else %}
+				Blog: <span class="badge badge-pill badge-warning">unknown</span><BR>
+			{% endif %}
+			<BR>Outreachy website username: {{ intern.username }}<BR>
+			Last login: {{ intern.account.last_login }}<BR>
+			Date joined: {{ intern.account.date_joined }}<BR>
+		</div>
+	</div>
+	</div>
+{% endwith %}
+{% endfor %}
+{% endblock %}

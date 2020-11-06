@@ -13,4 +13,6 @@
 <p><a href="{% url 'sponsor-info' round_slug=current_round.slug %}">Sponsor information</a> provided by coordinators.</p>
 
 <p><a href="{% url 'internship-cohort-statistics' %}">Demographic statistics</a> for current and past internship rounds.</p>
+
+<p><a href="{% url 'review-interns' round_slug=current_round.slug %}">Intern information</a></p>
 {% endwith %}

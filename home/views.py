@@ -3118,6 +3118,38 @@ def sponsor_info(request, round_slug):
             },
             )
 
+@login_required
+@staff_member_required
+def review_interns(request, round_slug):
+    """
+    Show information about applicants that are selected by mentors as interns.
+    """
+    current_round = get_object_or_404(RoundPage, slug=round_slug)
+    intern_selections = InternSelection.objects.filter(applicant__application_round=current_round).order_by('project__project_round__community__name')
+
+    return render(request, 'home/review_interns.html',
+            {
+            'current_round' : current_round,
+            'intern_selections' : intern_selections,
+            },
+            )
+class ReviewInterns(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
+    template_name = 'home/review_interns.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ReviewInterns, self).get_context_data(**kwargs)
+        current_round = get_object_or_404(
+            RoundPage,
+            slug=self.kwargs['round_slug'],
+        )
+        context['current_round'] = current_round
+        context['role'] = Role(self.request.user, current_round)
+        if not self.request.user.is_staff and not current_round.is_reviewer(self.request.user):
+            raise PermissionDenied("You are not authorized to review applications.")
+
+        context['intern_selections'] = InternSelection.objects.filter(applicant__application_round=current_round).order_by('project__project_round__community__name')
+        return context
+
 def alums_page(request):
     # Get all the older AlumInfo models (before we had round pages)
     pages = CohortPage.objects.all()
