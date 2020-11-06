@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}
+Sponsor info for {{ current_round.official_name }}
+{% endblock %}
+
+{% block content %}
+{% if request.user.is_staff %}
+	<h2>Sponsor Summary</h2>
+
+	<table class="table table-striped table-bordered">
+		<th scope="col">Sponsor</th>
+		<th scope="col">Amount</th>
+		<th scope="col">Community</th>
+		{% for s in sponsors_alpha %}
+		{% if s.funding_secured %}<tr>{% else %}<tr class="table-warning">{% endif %}
+				<td>{{ s.name }}</td>
+				<td>{{ s.amount }}</td>
+				<td>{{ s.participation.community }}</td>
+			</tr>
+		{% endfor %}
+	</table>
+
+	<h2>Community Sponsors</h2>
+	{% for community, sponsor_set in community_sponsors %}
+	<hr><h3>{{ community }}</h3>
+		<p>
+		{% with approved_coordinator_list=community.coordinatorapproval_set.approved %}
+			{% if approved_coordinator_list %}
+				<p>Coordinator{{ approved_coordinator_list|length|pluralize:":,s:" }}
+				{% for approval in approved_coordinator_list %}
+					{{ approval.coordinator.public_name }} &lt;{{ approval.coordinator.account.email }}&gt;{% if not forloop.last %}, {% else %}{% endif %}
+				{% endfor %}
+			{% endif %}
+		{% endwith %}
+		</p>
+		
+		<ul>
+			{% for s in sponsor_set %}
+				<li>
+					{% if not s.funding_secured %}<span class="badge badge-pill badge-warning">Unconfirmed</span> {% endif %}
+					{{ s.name }}: ${{ s.amount|intcomma }}
+					"Charitable donation for sponsorship of {{ s.number_interns|floatformat }}
+					intern{{ s.number_interns|pluralize:",(s)"}} for {{ s.participation.community }}
+					in the {{ s.participation.participating_round.internstarts|date:"F Y" }} internship round"
+				</li>
+			{% endfor %}
+		</ul>
+
+
+	{% endfor %}
+{% endif %}
+{% endblock %}

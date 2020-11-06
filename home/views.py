@@ -3099,6 +3099,27 @@ def final_feedback_summary(request, round_slug):
             },
             )
 
+@login_required
+@staff_member_required
+def sponsor_info(request, round_slug):
+    """
+    Show sponsor names and amounts for each community.
+    Display whether the sponsorship is confirmed or unconfirmed.
+    Display community coordinator contact information needed
+    to gather invoice information.
+    """
+    current_round = get_object_or_404(RoundPage, slug=round_slug)
+    community_sponsors = [(p.community, p.sponsorship_set.all()) for p in Participation.objects.filter(participating_round=current_round, approval_status=ApprovalStatus.APPROVED).order_by('community__name')]
+    sponsors_alpha = Sponsorship.objects.filter(participation__participating_round=current_round, participation__approval_status=ApprovalStatus.APPROVED).order_by('participation__community__name').order_by('name')
+
+    return render(request, 'home/sponsor_info.html',
+            {
+            'current_round' : current_round,
+            'community_sponsors' : community_sponsors,
+            'sponsors_alpha' : sponsors_alpha,
+            },
+            )
+
 def alums_page(request):
     # Get all the older AlumInfo models (before we had round pages)
     pages = CohortPage.objects.all()

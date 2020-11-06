@@ -62,6 +62,7 @@ round_patterns = [
     url(r'^midpoint-feedback-summary/$', views.midpoint_feedback_summary, name='midpoint-feedback-summary'),
     url(r'^final-feedback-export/$', views.final_mentor_feedback_export_view, name='final-feedback-export'),
     url(r'^final-feedback-summary/$', views.final_feedback_summary, name='final-feedback-summary'),
+    url(r'^sponsor-info/$', views.sponsor_info, name='sponsor-info'),
 ] + [
     url(r'^email/{}/$'.format(event.slug), event.as_view(), name=event.url_name())
     for event in dashboard.all_round_events
