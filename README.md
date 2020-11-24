@@ -222,6 +222,19 @@ To go to the Django administrative interface, go to `http://localhost:8000/djang
 
 It's unlikely you'll need to access the Wagtail admin interface, where the local CMS content is managed. If you do need to access the Wagtail admin interface, go to `http://localhost:8000/admin/`. Use the same account you created with the `./manage.py createsuperuser` command.
 
+# Concepts and Resources
+
+In order to work on the Outreachy website, you will need to learn about some database concepts. Unfortunately, the Django documentation assumes you already have some basic knowledge of database concepts. We wish it was more friendly to people who are new to databases. This section is an attempt to document additional resources you may want to read on database concepts. If you are still having trouble understanding Django documentation, please ask for help.
+
+The Django documentation will talk about the "relationship" between two Django class objects.
+ - [What is a database relationship?](https://database.guide/what-is-a-relationship/)
+
+You will sometimes see fields of the type `ForeignKey`. Django has documentation on [foreign key fields](https://docs.djangoproject.com/en/1.11/ref/models/fields/#module-django.db.models.fields.related), but it assumes you know what a foreign key in a database is. If you are new to databases, we recommend reading about what a foreign key is:
+
+ - [What is a primary key?](https://www.techopedia.com/definition/5547/primary-key)
+ - [What is a foreign key?](https://www.techopedia.com/definition/7272/foreign-key)
+ - [How do primary keys and foreign keys relate to each other?](https://database.guide/what-is-a-foreign-key/)
+
 # Tour of the code base
 
 When you first clone this project, you'll see a couple top level directories:
