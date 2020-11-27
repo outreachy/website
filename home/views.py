@@ -736,36 +736,13 @@ class EligibilityResults(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
         now = datetime.now(timezone.utc)
         today = get_deadline_date_for(now)
 
-        # We want to let people know why they can't make contributions.
-        # However, we don't want to confuse people who apply multiple times.
-        # If the application period isn't open yet, we don't want to confuse them
-        # by showing their old initial application from the previous round.
-        #
-        # At the same time, interns may need access to the initial application
-        # after the contribution period closes.
-        #
-        # There are two times when interns may want to double check the
-        # time commitments they listed on their initial application.
-        #
-        # People who are accepted as interns are told to double check
-        # that the time commitments they listed are correct.
-        # Interns are told to double check their time commitments
-        # in their acceptance email, which is sent on internannounce.
-        #
-        # The intern agreement also mentions that the intern is certifying
-        # that the time commitments on their initial application is correct.
-        # They might want to double check their time commitments before they sign it.
-        # Some interns forget to sign the intern agreement until the last minute.
-        #
-        # Therefore, interns need access to their initial application results
-        # until the very last day they can sign the intern agreement.
-        # That would be the first day they start their internship.
-        #
-        # Therefore, keep this view open until the interns start.
+        # We want to let people know why they can't make contributions, right
+        # up until all contributions are closed; but we don't want to confuse
+        # people who come back in a future round by showing them old results.
         try:
             current_round = RoundPage.objects.get(
                 initial_applications_open__lte=today,
-                internstarts__gt=today,
+                contributions_close__gt=today,
             )
             current_round.today = today
         except RoundPage.DoesNotExist:
