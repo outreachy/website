@@ -34,7 +34,7 @@ delete_pks = [(model, pks) for model, pks in fast_delete_pks + slow_delete_pks i
 for model, pks in delete_pks:
     if model == InternSelection:
         raise AssertionError("tried to delete a selected intern")
-    if model.__module__ in ('wagtail.wagtailusers.models', 'django.contrib.admin.models'):
+    if model.__module__ in ('wagtail.users.models', 'django.contrib.admin.models'):
         raise AssertionError("don't delete staff-generated data")
 
 # At this point, we could present a summary for the user of what's about

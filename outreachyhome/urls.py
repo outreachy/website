@@ -4,17 +4,17 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 
-from wagtail.wagtailadmin import urls as wagtailadmin_urls
+from wagtail.admin import urls as wagtailadmin_urls
 from home import urls as home_urls
-from wagtail.wagtailcore import urls as wagtail_urls
-from wagtail.wagtaildocs import urls as wagtaildocs_urls
+from wagtail.core import urls as wagtail_urls
+from wagtail.documents import urls as wagtaildocs_urls
 from contacts import urls as contacts_urls
 
 from . import views as project_views
 from search import views as search_views
 
 urlpatterns = [
-    url(r'^django-admin/', include(admin.site.urls)),
+    url(r'^django-admin/', admin.site.urls),
 
     url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^documents/', include(wagtaildocs_urls)),
@@ -37,7 +37,7 @@ urlpatterns = [
     #    url(r'^pages/', include(wagtail_urls)),
 ]
 
-handler500 = project_views.ServerErrorView.as_view()
+handler500 = project_views.server_error
 
 
 if settings.DEBUG:

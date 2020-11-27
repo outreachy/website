@@ -4,31 +4,37 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-dj-database-url = "==0.4.2"
-dj-static = "==0.0.6"
-django = "~=1.11"
-django-appconf = "==1.0.2"
-django-betterforms = "==1.1.4"
-django-ckeditor = "==5.4.0"
-django-compressor = "==2.2"
-django-compressor-postcss = "==0.8.2"
-django-contact-form = "==1.4.2"
-django-debug-toolbar = "==1.9.1"
+dj-database-url = "*"
+dj-static = "*"
+django = "*"
+django-ckeditor = "*"
+django-compressor = "*"
+django-compressor-postcss = "*"
+django-contact-form = "*"
+django-debug-toolbar = "*"
 django-extensions = "*"
-django-formtools = "==2.1"
-django-js-asset = "==0.1.1"
-django-language-field = "==0.0.3"
-django-libsass = "==0.7"
-django-markdownx = "==2.0.22"
-django-registration = "==2.2"
-django-reversion = "==2.0.12"
-django-timezone-field = "==2.0"
+django-formtools = "*"
+django-libsass = "*"
+django-markdownx = "*"
+django-registration = "*"
+django-reversion = "*"
+django-timezone-field = "*"
+gunicorn = "*"
+"psycopg2" = "*"
+raven = "*"
+wagtail = "*"
+whitenoise = "*"
+
+# django-betterforms is unmaintained but this fork works
+django-betterforms = {git = "https://github.com/jpic/django-betterforms.git"}
+
+# Not used in the code outside the test suite, but useful in the Django shell
+# on the deployed site, so it's here instead of dev-packages.
 factory_boy = "*"
-gunicorn = "==19.7.1"
-"psycopg2" = "==2.7.3.2"
-raven = "==6.5.0"
-wagtail = "==1.13.1"
-whitenoise = "==3.3.1"
+
+# No longer used anywhere but still required until we squash away the
+# migrations that reference it.
+django-language-field = "*"
 
 [dev-packages]
 coverage = "*"

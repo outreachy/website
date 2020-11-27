@@ -198,7 +198,6 @@ class InternSelectionTestCase(TestCase):
             'request_extension': False,
             'extension_date': None,
             'request_termination': False,
-            'termination_reason': '',
         }
         defaults.update(kwargs)
         return defaults
@@ -402,7 +401,6 @@ class InternSelectionTestCase(TestCase):
             'request_extension': False,
             'extension_date': None,
             'request_termination': False,
-            'termination_reason': '',
         }
         defaults.update(kwargs)
         return defaults
@@ -564,7 +562,6 @@ class InternSelectionTestCase(TestCase):
             'request_extension': False,
             'extension_date': None,
             'request_termination': False,
-            'termination_reason': '',
             'mentoring_recommended': models.FinalMentorFeedback.NO_OPINION,
             'blog_frequency': models.FinalMentorFeedback.NO_OPINION,
             'blog_prompts_caused_writing': models.FinalMentorFeedback.NO_OPINION,

@@ -119,6 +119,12 @@ Apply all the Django migrations we've set up:
 $ ssh dokku@$DOMAIN run $APP python manage.py migrate
 ```
 
+After the first deploy, the Node and Python packages are cached, but sometimes this cache goes bad. In that case you can purge the cache before deploying again:
+
+```
+$ ssh dokku@$DOMAIN repo:purge-cache $APP
+```
+
 Create Django Superuser
 =======================
 
@@ -278,9 +284,9 @@ Sending mass emails manually
 
 ```
 $ ssh -t dokku@www.outreachy.org run www env --unset=SENTRY_DSN python manage.py shell
->>> from home.models import *
+>>> from home import models
 >>> from django.core.mail import send_mail
->>> current_round = RoundPage.objects.latest('internstarts')
+>>> current_round = models.RoundPage.objects.latest('internstarts')
 >>> interns = current_round.get_approved_intern_selections()
 >>> request = { 'scheme': 'https', 'get_host': 'www.outreachy.org' }
 >>> subject = '[Outreachy] Important information'
@@ -298,7 +304,7 @@ $ ssh -t dokku@www.outreachy.org run www env --unset=SENTRY_DSN python manage.py
 ...     emails = [ i.applicant.applicant.email_address() ]
 ...     for m in i.mentors.all():
 ...             emails.append(m.mentor.email_address())
-...     send_mail(message=body.strip(), subject=subject.strip(), recipient_list=emails, from_email=Address("Outreachy Organizers", "organizers", "outreachy.org"))
+...     send_mail(message=body.strip(), subject=subject.strip(), recipient_list=emails, from_email=models.Address("Outreachy Organizers", "organizers", "outreachy.org"))
 ... 
 ```
 

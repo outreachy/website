@@ -5,6 +5,7 @@ import unittest
 
 from . import models
 from .factories import MentorApprovalFactory
+from .factories import ParticipationFactory
 from .factories import ProjectFactory
 
 
@@ -70,34 +71,33 @@ class RoundPageTestCase(TestCase):
         # Subtest: Can a new community sign up? Can the coordinator see community A who was approved above
         # Create a new Comrade
 
-    # XXX: FIXME - this test case looks fine when I recreate it in my local database
-    # and log in as a mentor with a pending project.
-    # However, the test case fails, showing both pending and approved project.
-    # It also shows "Project details are hidden.The details may be hidden because\nyou haven\'t completed an initial application."
-    # I suspect something is wrong with setting up the projects or mentors,
-    # but I don't know what.
-    @unittest.expectedFailure
     def test_mentor_sees_hidden_projects(self):
         # Before the Outreachy application period opens,
         # We allow mentors with an approved project in an approved community
         # to see all other approved projects (even if it's not in their community).
+        participation = ParticipationFactory(
+            approval_status=models.ApprovalStatus.APPROVED,
+            participating_round__start_from='initial_applications_open',
+            participating_round__days_after_today=10,
+        )
+
         # Mentors with pending projects should only see their own project.
         pending_project_title = "AAAAAAAAHHHHHHH! This project is pending!!"
         pending_mentor_approval = MentorApprovalFactory(
-                approval_status=models.ApprovalStatus.APPROVED,
-                project__approval_status=models.ApprovalStatus.PENDING,
-                project__project_round__approval_status=models.ApprovalStatus.APPROVED,
-                project__short_title=pending_project_title,
-                project__project_round__participating_round__start_from='initial_applications_open',
-                project__project_round__participating_round__days_after_today=-10)
+            approval_status=models.ApprovalStatus.APPROVED,
+            project__approval_status=models.ApprovalStatus.PENDING,
+            project__short_title=pending_project_title,
+            project__project_round=participation,
+        )
 
         # Make a different mentor with an approved project under the same community
         approved_project_title = "AAAAAAAAHHHHHHH! This project is approved!!"
         approved_mentor_approval = MentorApprovalFactory(
-                approval_status=models.ApprovalStatus.APPROVED,
-                project__approval_status=models.ApprovalStatus.APPROVED,
-                project__project_round=pending_mentor_approval.project.project_round,
-                project__short_title=approved_project_title)
+            approval_status=models.ApprovalStatus.APPROVED,
+            project__approval_status=models.ApprovalStatus.APPROVED,
+            project__short_title=approved_project_title,
+            project__project_round=participation,
+        )
 
         # Login as the pending mentor
         self.client.force_login(pending_mentor_approval.mentor.account)
@@ -107,11 +107,10 @@ class RoundPageTestCase(TestCase):
         self.assertContains(response, '<h2>Your Pending Outreachy Internship Projects</h2>', status_code=200)
         self.assertContains(response, pending_project_title, status_code=200)
         # Make sure that the contents does not include the other mentor's approved project title
-        #print(response.content)
         self.assertNotContains(response, approved_project_title, status_code=200)
 
         # Login as the approved mentor
-        self.client.force_login(pending_mentor_approval.mentor.account)
+        self.client.force_login(approved_mentor_approval.mentor.account)
 
         response = self.client.get(reverse('project-selection'))
         # Make sure that the contents does include the mentor's approved project title

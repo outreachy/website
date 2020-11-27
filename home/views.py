@@ -29,8 +29,8 @@ from formtools.wizard.views import SessionWizardView
 from itertools import chain, groupby
 import json
 from markdownx.utils import markdownify
-from registration.forms import RegistrationForm
-from registration.backends.hmac import views as hmac_views
+from django_registration.forms import RegistrationForm
+from django_registration.backends.activation import views as activation_views
 import reversion
 
 from . import email
@@ -105,7 +105,7 @@ class RegisterUserForm(RegistrationForm):
             self.add_error('email', mark_safe('This email address is already associated with an account. If you have forgotten your password, you can <a href="{}">reset it</a>.'.format(reverse('password_reset'))))
         super(RegisterUserForm, self).clean()
 
-class RegisterUser(hmac_views.RegistrationView):
+class RegisterUser(activation_views.RegistrationView):
     form_class = RegisterUserForm
 
     # The RegistrationView that django-registration provides
@@ -145,7 +145,7 @@ class RegisterUser(hmac_views.RegistrationView):
 class PendingRegisterUser(TemplateView):
     template_name = 'registration/registration_complete.html'
 
-class ActivationView(hmac_views.ActivationView):
+class ActivationView(activation_views.ActivationView):
     def get_user(self, data):
         # In the above RegistrationView, we dumped extra data into the
         # activation key, but the superclass implementation of get_user
@@ -1891,12 +1891,14 @@ class ProjectApplicants(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
         # Note that accessing URL parameters like project_slug off kwargs only
         # works because this is a TemplateView. For the various kinds of
         # DetailViews, you have to use self.kwargs instead.
-        project = get_object_or_404(Project,
-                slug=kwargs['project_slug'],
-                approval_status=ApprovalStatus.APPROVED,
-                project_round__community__slug=kwargs['community_slug'],
-                project_round__participating_round__slug=kwargs['round_slug'],
-                project_round__approval_status=ApprovalStatus.APPROVED)
+        project = get_object_or_404(
+            Project,
+            slug=self.kwargs['project_slug'],
+            approval_status=ApprovalStatus.APPROVED,
+            project_round__community__slug=self.kwargs['community_slug'],
+            project_round__participating_round__slug=self.kwargs['round_slug'],
+            project_round__approval_status=ApprovalStatus.APPROVED,
+        )
 
         current_round = project.round()
 
@@ -2710,7 +2712,6 @@ class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMi
                 'request_extension',
                 'extension_date',
                 'request_termination',
-                'termination_reason',
             ),
             field_classes = {
                 'in_contact': RadioBooleanField,
@@ -2820,7 +2821,6 @@ def export_feedback(feedback):
             'extension requested': feedback.request_extension,
             'extension date': str(feedback.extension_date),
             'termination requested': feedback.request_termination,
-            'termination reason': feedback.termination_reason,
             }
 
 @login_required
@@ -2865,7 +2865,6 @@ class MidpointMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionM
                 'request_extension',
                 'extension_date',
                 'request_termination',
-                'termination_reason',
             ),
             field_classes = {
                 'in_contact': RadioBooleanField,
@@ -2992,7 +2991,6 @@ class FinalMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixi
                 'request_extension',
                 'extension_date',
                 'request_termination',
-                'termination_reason',
                 'mentoring_recommended',
                 'blog_frequency',
                 'blog_prompts_caused_writing',

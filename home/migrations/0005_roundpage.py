@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 import django.db.models.deletion
-import wagtail.wagtailcore.fields
+import wagtail.core.fields
 
 
 class Migration(migrations.Migration):
@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('applicationsopendate', models.DateField(verbose_name='Date applications open')),
                 ('internshipstartdate', models.DateField(verbose_name='Date internships start')),
                 ('internshipenddate', models.DateField(verbose_name='Date internships end')),
-                ('sponsordetails', wagtail.wagtailcore.fields.RichTextField(blank=True)),
+                ('sponsordetails', wagtail.core.fields.RichTextField(blank=True)),
             ],
             options={
                 'abstract': False,

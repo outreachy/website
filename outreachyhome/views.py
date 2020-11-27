@@ -1,9 +1,6 @@
-from django.views.generic import TemplateView
+from django.shortcuts import render
 
-class ServerErrorView(TemplateView):
-    template_name = '500.html'
-    template_engine = 'errorsafe' # from settings.TEMPLATES
 
-    def render_to_response(self, context, **response_kwargs):
-        response_kwargs['status'] = 500
-        return super(ServerErrorView, self).render_to_response(context, **response_kwargs)
+def server_error(request):
+    # use the "errorsafe" engine from settings.TEMPLATES
+    return render(request, "500.html", status=500, using="errorsafe")

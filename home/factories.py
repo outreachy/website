@@ -2,7 +2,7 @@ import datetime
 from django.utils.text import slugify
 import factory
 import itertools
-from wagtail.wagtailcore.models import Page
+from wagtail.core.models import Page
 from . import models
 
 class UserFactory(factory.django.DjangoModelFactory):

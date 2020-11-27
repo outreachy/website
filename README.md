@@ -662,6 +662,7 @@ You can access the form through the TemplateResponse context dictionary. Then yo
 
 ```
 >> print(response.context['form'].errors)
+```
 
 # Adding a new Django app
 
@@ -761,6 +762,44 @@ pipenv update <pkg>
 ```
 
 These commands will update `Pipfile` and `Pipfile.lock`. You'll need to commit both files.
+
+## Syncing updated packages
+
+When someone else makes a commit that updates the packages listed in the pipfile, when you pull those changes, you'll need to update your installed packages. Otherwise you may (or may not!) get an error whenever you try to run a manage.py command. The error might only be triggered if you view a particular page that runs Python code that depends on those installed packages.
+
+To sync your installed pipenv packages with any changes made in the Outreachy GitHub repository, run the following command:
+
+```
+pipenv sync
+```
+
+# Debugging errors
+
+# Debugging package installs
+
+You can check to see which packages are installed with the following command:
+
+```
+pipenv graph
+```
+
+You can view the source code of any installed package with the following command:
+
+```
+pipenv open <pkg>
+```
+
+# Debugging migration errors
+
+Sometimes you'll get an error when you migrate or run code that says 'it appears to be a stale .pyc file'. How you fix this is by removing the cache of code that has been pre-compiled to CPython's byte code format.
+
+Run this command:
+
+```
+rm home/migrations/*.pyc
+```
+
+You may have to remove other pycache folders that contain stale pre-compiled code.
 
 # Why Django?
 

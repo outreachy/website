@@ -33,7 +33,7 @@ Initial Feedback for {{ current_round.official_name }}
 					</td>
 					<td>Feedback status</td>
 				</tr>
-				{% if initial_mentor_status == i.TERMINATE %}<tr><td colspan="3">Mentor's stated reasons for termination:<br><p>{{ i.initialmentorfeedback.termination_reason }}</p></td></tr>{% endif %}
+				{% if initial_mentor_status == i.TERMINATE %}<tr><td colspan="3">Mentor wishes to terminate internship</td></tr>{% endif %}
 				{% if initial_mentor_status != i.MISSING or initial_intern_status != i.MISSING %}
 					<tr><td colspan="3"><b>Mentor support</b></td></tr>
 					<tr>

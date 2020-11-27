@@ -1,14 +1,10 @@
 <h4>{{ approval.mentor.public_name }}</h4>
-{% if approval.mentor.pronouns_to_participants or approval.mentor.timezone or approval.mentor.location or approval.mentor.primary_language or approval.mentor.second_language or approval.mentor.third_language or approval.mentor.fourth_language %}
+{% if approval.mentor.pronouns_to_participants or approval.mentor.timezone or approval.mentor.location %}
 <p>Personal info:</p>
 <ul>
 	{% if approval.mentor.pronouns_to_participants %}<li>Pronouns: {{ approval.mentor.get_pronouns_html|safe }}</li>{% endif %}
 	{% if approval.mentor.timezone %}<li>Timezone: {{ approval.mentor.get_timezone_display }}</li>{% endif %}
 	{% if approval.mentor.location %}<li>Location: {{ approval.mentor.location }}</li>{% endif %}
-	{% if approval.mentor.primary_language %}<li>Primary language: {{ approval.mentor.get_primary_language_display }}</li>{% endif %}
-	{% if approval.mentor.second_language %}<li>Second language: {{ approval.mentor.get_second_language_display }}</li>{% endif %}
-	{% if approval.mentor.third_language %}<li>Third language: {{ approval.mentor.get_third_language_display }}</li>{% endif %}
-	{% if approval.mentor.fourth_language %}<li>Fourth language: {{ approval.mentor.get_fourth_language_display }}</li>{% endif %}
 </ul>
 {% endif %}
 <p>Contact info:</p>
