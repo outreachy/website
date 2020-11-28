@@ -120,11 +120,10 @@ class RegisterUser(activation_views.RegistrationView):
         # The superclass implementation of get_activation_key will
         # serialize arbitrary data in JSON format, so we can save more
         # data than just the username, which is good! Unfortunately it
-        # expects to get that data from the field named after whatever
-        # string is in USERNAME_FIELD, which only works for actual
-        # Django user models. So first we construct a fake user model
-        # for it to take apart, containing only the data we want.
-        self.USERNAME_FIELD = 'activation_data'
+        # expects to get that data by calling a get_username method,
+        # which only works for actual Django user models. So first we
+        # construct a fake user model for it to take apart, containing
+        # only the data we want.
         self.activation_data = {'u': user.username}
 
         # Now, if we have someplace the user is supposed to go after
@@ -135,6 +134,12 @@ class RegisterUser(activation_views.RegistrationView):
 
         return super(RegisterUser, self).get_activation_key(self)
 
+    def get_username(self):
+        return self.activation_data
+
+    def get_email_field_name(self):
+        return "email"
+
     def get_email_context(self, activation_key):
         return {
             'activation_key': activation_key,
@@ -143,7 +148,7 @@ class RegisterUser(activation_views.RegistrationView):
         }
 
 class PendingRegisterUser(TemplateView):
-    template_name = 'registration/registration_complete.html'
+    template_name = 'django_registration/registration_complete.html'
 
 class ActivationView(activation_views.ActivationView):
     def get_user(self, data):
@@ -166,10 +171,10 @@ class ActivationView(activation_views.ActivationView):
         else:
             query = ''
         query = '?' + urlencode({'next': reverse('account') + query})
-        return reverse('registration_activation_complete') + query
+        return reverse('django_registration_activation_complete') + query
 
 class ActivationCompleteView(TemplateView):
-    template_name = 'registration/activation_complete.html'
+    template_name = 'django_registration/activation_complete.html'
 
 # FIXME - we need a way for comrades to update and re-verify their email address.
 class ComradeUpdate(LoginRequiredMixin, UpdateView):

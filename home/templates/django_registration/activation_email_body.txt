@@ -2,7 +2,7 @@
 
 Next, please verify your email address using the following link, then log in using your username ("{{ user.username }}") and the password that you set.
 
-{{ request.scheme }}://{{ request.get_host }}{% url 'registration_activate' activation_key=activation_key %}
+{{ request.scheme }}://{{ request.get_host }}{% url 'django_registration_activate' activation_key=activation_key %}
 
 This link will remain valid for {{ expiration_days }} days. If you have not verified your email address by then, you will have to create another account.
 
