@@ -1,4 +1,4 @@
-[Due {{ intern_selection.midpoint_feedback_due|date:"M d, Y" }}] Outreachy mid-point feedback requested for {{ intern_selection.applicant.applicant.public_name }}
+[Due {{ intern_selection.midpoint_feedback_due|date:"M j" }}] Outreachy mid-point feedback requested for {{ intern_selection.applicant.applicant.public_name }}
 
 Greetings Outreachy interns and mentors! We are asking both interns and one of their mentors to provide feedback on the internship.
 

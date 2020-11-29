@@ -1,4 +1,4 @@
-[Due {{ intern_selection.final_feedback_due|date:"M d, Y" }}] Outreachy final feedback requested for {{ intern_selection.applicant.applicant.public_name }}
+[Due {{ intern_selection.final_feedback_due|date:"M j" }}] Outreachy final feedback requested for {{ intern_selection.applicant.applicant.public_name }}
 
 Greetings Outreachy interns and mentors! The Outreachy internship is almost over. We are asking both interns and one of their mentors to provide final feedback on the internship. We would especially like feedback from interns on some of the new things we tried this round.
 
