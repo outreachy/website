@@ -4291,7 +4291,7 @@ class InitialMentorFeedback(BaseMentorFeedback):
         (BaseMentorFeedback.TERMINATE_NO_PAY, 'Terminate the internship contract, and do NOT pay the initial intern stipend'),
         (BaseMentorFeedback.DONT_KNOW, "I don't know what action to recommend, please advise"),
     )
-    actions_requested = models.CharField(max_length=9, choices=ACTION_CHOICES, default=BaseMentorFeedback.DONT_KNOW, verbose_name="What actions are you requesting Outreachy organizers to take, based on your feedback?")
+    actions_requested = models.CharField(max_length=9, choices=ACTION_CHOICES, default=BaseMentorFeedback.PAY_AND_CONTINUE, verbose_name="What actions are you requesting Outreachy organizers to take, based on your feedback?")
 
     def can_edit(self):
         if not self.allow_edits:
@@ -4500,7 +4500,7 @@ class MidpointMentorFeedback(BaseMentorFeedback):
         (BaseMentorFeedback.TERMINATE_NO_PAY, 'Terminate the internship contract, and do NOT pay the midpoint intern stipend'),
         (BaseMentorFeedback.DONT_KNOW, "I don't know what action to recommend, please advise"),
     )
-    actions_requested = models.CharField(max_length=9, choices=ACTION_CHOICES, default=BaseMentorFeedback.DONT_KNOW, verbose_name="What actions are you requesting Outreachy organizers to take, based on your feedback?")
+    actions_requested = models.CharField(max_length=9, choices=ACTION_CHOICES, default=BaseMentorFeedback.PAY_AND_CONTINUE, verbose_name="What actions are you requesting Outreachy organizers to take, based on your feedback?")
 
     def can_edit(self):
         if not self.allow_edits:
@@ -4659,7 +4659,7 @@ class FinalMentorFeedback(BaseMentorFeedback):
         (BaseMentorFeedback.TERMINATE_NO_PAY, 'Terminate the internship contract, and do not pay the final intern stipend'),
         (BaseMentorFeedback.DONT_KNOW, "I don't know what action to recommend, please advise"),
     )
-    actions_requested = models.CharField(max_length=9, choices=ACTION_CHOICES, default=BaseMentorFeedback.DONT_KNOW, verbose_name="What actions are you requesting Outreachy organizers to take, based on your feedback?")
+    actions_requested = models.CharField(max_length=9, choices=ACTION_CHOICES, default=BaseMentorFeedback.PAY_AND_CONTINUE, verbose_name="What actions are you requesting Outreachy organizers to take, based on your feedback?")
 
     # Survey for Outreachy organizers
 
