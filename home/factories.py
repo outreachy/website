@@ -543,6 +543,8 @@ class InitialMentorFeedbackFactory(factory.django.DjangoModelFactory):
 
     full_time_effort = True
 
+    actions_requested = models.BaseMentorFeedback.PAY_AND_CONTINUE
+
     payment_approved = True
 
     request_extension = False
@@ -574,6 +576,8 @@ class MidpointMentorFeedbackFactory(factory.django.DjangoModelFactory):
 
     full_time_effort = True
 
+    actions_requested = models.BaseMentorFeedback.PAY_AND_CONTINUE
+
     payment_approved = True
 
     request_extension = False
@@ -604,6 +608,8 @@ class FinalMentorFeedbackFactory(factory.django.DjangoModelFactory):
     progress_report = factory.Faker('paragraph')
 
     full_time_effort = True
+
+    actions_requested = models.BaseMentorFeedback.PAY_AND_CONTINUE
 
     payment_approved = True
 

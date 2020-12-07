@@ -191,13 +191,10 @@ class InternSelectionTestCase(TestCase):
             'last_contact': internselection.initial_feedback_opens,
             'intern_response_time': models.InitialMentorFeedback.HOURS_12,
             'mentor_response_time': models.InitialMentorFeedback.HOURS_12,
-            'payment_approved': True,
-            'full_time_effort': True,
             'progress_report': 'Everything is fine.',
             'mentors_report': 'I am very supportive',
-            'request_extension': False,
-            'extension_date': None,
-            'request_termination': False,
+            'full_time_effort': True,
+            'actions_requested': models.BaseMentorFeedback.PAY_AND_CONTINUE,
         }
         defaults.update(kwargs)
         return defaults
@@ -221,28 +218,131 @@ class InternSelectionTestCase(TestCase):
             if value is not None
         })
 
-    def test_mentor_can_give_initial_feedback(self):
+    def test_mentor_can_give_successful_initial_feedback(self):
         current_round = RoundPageFactory(start_from='initialfeedback')
-        for request_extension in (False, True):
-            with self.subTest(request_extension=request_extension):
+        internselection = InternSelectionFactory(
+            active=True,
+            round=current_round,
+        )
+
+        answers = self._mentor_feedback_form(internselection,
+            actions_requested=models.BaseMentorFeedback.PAY_AND_CONTINUE,
+        )
+        response = self._submit_mentor_feedback_form(internselection, 'initial', answers)
+        self.assertEqual(response.status_code, 302)
+
+        # will raise DoesNotExist if the view didn't create this
+        feedback = internselection.initialmentorfeedback
+
+        # Add in the fields automatically set by the action the mentor requested
+        answers['payment_approved'] = True
+        answers['request_extension'] = False
+        answers['extension_date'] = None
+        answers['request_termination'] = False
+        for key, expected in answers.items():
+            self.assertEqual(getattr(feedback, key), expected)
+
+        # only allow submitting once
+        self.assertFalse(feedback.allow_edits)
+
+        self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+
+    def test_mentor_can_give_terminate_initial_feedback(self):
+        current_round = RoundPageFactory(start_from='initialfeedback')
+        for action in (models.BaseMentorFeedback.TERMINATE_PAY, models.BaseMentorFeedback.TERMINATE_NO_PAY):
+            with self.subTest(action=action):
                 internselection = InternSelectionFactory(
                     active=True,
                     round=current_round,
                 )
 
-                extension_date = None
-                if request_extension:
-                    extension_date = internselection.round().initialfeedback + datetime.timedelta(weeks=5)
-
                 answers = self._mentor_feedback_form(internselection,
-                    request_extension=request_extension,
-                    extension_date=extension_date,
+                    actions_requested=action,
                 )
                 response = self._submit_mentor_feedback_form(internselection, 'initial', answers)
                 self.assertEqual(response.status_code, 302)
 
                 # will raise DoesNotExist if the view didn't create this
                 feedback = internselection.initialmentorfeedback
+
+                # Add in the fields automatically set by the action the mentor requested
+                if action == models.BaseMentorFeedback.TERMINATE_PAY:
+                    answers['payment_approved'] = True
+                else:
+                    answers['payment_approved'] = False
+                answers['request_extension'] = False
+                answers['extension_date'] = None
+                answers['request_termination'] = True
+                for key, expected in answers.items():
+                    self.assertEqual(getattr(feedback, key), expected)
+
+                # only allow submitting once
+                self.assertFalse(feedback.allow_edits)
+
+                self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+
+    def test_mentor_can_give_uncertain_initial_feedback(self):
+        current_round = RoundPageFactory(start_from='initialfeedback')
+        internselection = InternSelectionFactory(
+            active=True,
+            round=current_round,
+        )
+
+        answers = self._mentor_feedback_form(internselection,
+            actions_requested=models.BaseMentorFeedback.DONT_KNOW,
+        )
+        response = self._submit_mentor_feedback_form(internselection, 'initial', answers)
+        self.assertEqual(response.status_code, 302)
+
+        # will raise DoesNotExist if the view didn't create this
+        feedback = internselection.initialmentorfeedback
+
+        # Add in the fields automatically set by the action the mentor requested
+        answers['payment_approved'] = False
+        answers['request_extension'] = False
+        answers['extension_date'] = None
+        answers['request_termination'] = False
+        for key, expected in answers.items():
+            self.assertEqual(getattr(feedback, key), expected)
+
+        # only allow submitting once
+        self.assertFalse(feedback.allow_edits)
+
+        self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+
+
+    def test_mentor_can_give_extension_initial_feedback(self):
+        current_round = RoundPageFactory(start_from='initialfeedback')
+        for action in (models.BaseMentorFeedback.EXT_1_WEEK, models.BaseMentorFeedback.EXT_2_WEEK, models.BaseMentorFeedback.EXT_3_WEEK, models.BaseMentorFeedback.EXT_4_WEEK, models.BaseMentorFeedback.EXT_5_WEEK):
+            with self.subTest(action=action):
+                internselection = InternSelectionFactory(
+                    active=True,
+                    round=current_round,
+                )
+
+                answers = self._mentor_feedback_form(internselection,
+                    actions_requested=action,
+                )
+                response = self._submit_mentor_feedback_form(internselection, 'initial', answers)
+                self.assertEqual(response.status_code, 302)
+
+                # will raise DoesNotExist if the view didn't create this
+                feedback = internselection.initialmentorfeedback
+
+                answers['payment_approved'] = False
+                answers['request_extension'] = True
+                answers['request_termination'] = False
+                if action == models.BaseMentorFeedback.EXT_1_WEEK:
+                    extension = 1
+                elif action == models.BaseMentorFeedback.EXT_2_WEEK:
+                    extension = 2
+                elif action == models.BaseMentorFeedback.EXT_3_WEEK:
+                    extension = 3
+                elif action == models.BaseMentorFeedback.EXT_4_WEEK:
+                    extension = 4
+                elif action == models.BaseMentorFeedback.EXT_5_WEEK:
+                    extension = 5
+                answers['extension_date'] = current_round.initialfeedback + datetime.timedelta(weeks=extension)
 
                 for key, expected in answers.items():
                     self.assertEqual(getattr(feedback, key), expected)
@@ -293,42 +393,6 @@ class InternSelectionTestCase(TestCase):
         # we didn't create a version for the factory-generated object, so the
         # only version should be the one that the view records
         self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
-
-    def test_invalid_mentor_extension_request(self):
-        round = RoundPageFactory(start_from='initialfeedback')
-
-        range_error = "Extension date must be between {} and {}".format(
-            round.initialfeedback,
-            round.initialfeedback + datetime.timedelta(weeks=5),
-        )
-        extension_deltas = (
-            (None, "If you're requesting an extension, this field is required."),
-            (datetime.timedelta(days=-1), range_error),
-            (datetime.timedelta(weeks=5, days=1), range_error),
-        )
-        for extension_delta, expected_error in extension_deltas:
-            with self.subTest(extension_delta=extension_delta):
-                internselection = InternSelectionFactory(
-                    active=True,
-                    round=round,
-                )
-
-                extension_date = None
-                if extension_delta:
-                    extension_date = round.initialfeedback + extension_delta
-
-                answers = self._mentor_feedback_form(internselection,
-                    request_extension=True,
-                    extension_date=extension_date,
-                )
-                response = self._submit_mentor_feedback_form(internselection, 'initial', answers)
-                self.assertEqual(response.status_code, 200)
-
-                # view should not have created a feedback object
-                with self.assertRaises(models.InitialMentorFeedback.DoesNotExist):
-                    internselection.initialmentorfeedback
-
-                self.assertFormError(response, "form", "extension_date", expected_error)
 
     @staticmethod
     def _intern_feedback_form(internselection, **kwargs):
@@ -394,39 +458,136 @@ class InternSelectionTestCase(TestCase):
             'mentor_review_response_time': models.MidpointMentorFeedback.HOURS_3,
             'intern_contribution_revision_time': models.MidpointMentorFeedback.DAYS_2,
             'last_contact': internselection.midpoint_feedback_opens,
-            'payment_approved': True,
             'full_time_effort': True,
             'progress_report': 'Everything is fine.',
             'mentors_report': 'I am very supportive',
-            'request_extension': False,
-            'extension_date': None,
-            'request_termination': False,
+            'actions_requested': models.BaseMentorFeedback.PAY_AND_CONTINUE,
         }
         defaults.update(kwargs)
         return defaults
 
-    def test_mentor_can_give_midpoint_feedback(self):
+    def test_mentor_can_give_successful_midpoint_feedback(self):
         current_round = RoundPageFactory(start_from='midfeedback')
-        for request_extension in (False, True):
-            with self.subTest(request_extension=request_extension):
+        internselection = InternSelectionFactory(
+                active=True,
+                round=current_round,
+                )
+
+        answers = self._midpoint_mentor_feedback_form(internselection)
+        response = self._submit_mentor_feedback_form(internselection, 'midpoint', answers)
+        self.assertEqual(response.status_code, 302)
+
+        # will raise DoesNotExist if the view didn't create this
+        feedback = internselection.midpointmentorfeedback
+
+        # Add in the fields automatically set by the action the mentor requested
+        answers['payment_approved'] = True
+        answers['request_extension'] = False
+        answers['extension_date'] = None
+        answers['request_termination'] = False
+        for key, expected in answers.items():
+            self.assertEqual(getattr(feedback, key), expected)
+
+        # only allow submitting once
+        self.assertFalse(feedback.allow_edits)
+
+        self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+
+    def test_mentor_can_give_terminate_midpoint_feedback(self):
+        current_round = RoundPageFactory(start_from='midfeedback')
+        for action in (models.BaseMentorFeedback.TERMINATE_PAY, models.BaseMentorFeedback.TERMINATE_NO_PAY):
+            with self.subTest(action=action):
                 internselection = InternSelectionFactory(
                     active=True,
                     round=current_round,
                 )
 
-                extension_date = None
-                if request_extension:
-                    extension_date = internselection.round().midfeedback + datetime.timedelta(weeks=5)
-
                 answers = self._midpoint_mentor_feedback_form(internselection,
-                    request_extension=request_extension,
-                    extension_date=extension_date,
+                    actions_requested=action,
                 )
                 response = self._submit_mentor_feedback_form(internselection, 'midpoint', answers)
                 self.assertEqual(response.status_code, 302)
 
                 # will raise DoesNotExist if the view didn't create this
                 feedback = internselection.midpointmentorfeedback
+
+                # Add in the fields automatically set by the action the mentor requested
+                if action == models.BaseMentorFeedback.TERMINATE_PAY:
+                    answers['payment_approved'] = True
+                else:
+                    answers['payment_approved'] = False
+                answers['request_extension'] = False
+                answers['extension_date'] = None
+                answers['request_termination'] = True
+                for key, expected in answers.items():
+                    self.assertEqual(getattr(feedback, key), expected)
+
+                # only allow submitting once
+                self.assertFalse(feedback.allow_edits)
+
+                self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+
+    def test_mentor_can_give_uncertain_midpoint_feedback(self):
+        current_round = RoundPageFactory(start_from='midfeedback')
+        internselection = InternSelectionFactory(
+            active=True,
+            round=current_round,
+        )
+
+        answers = self._midpoint_mentor_feedback_form(internselection,
+            actions_requested=models.BaseMentorFeedback.DONT_KNOW,
+        )
+        response = self._submit_mentor_feedback_form(internselection, 'midpoint', answers)
+        self.assertEqual(response.status_code, 302)
+
+        # will raise DoesNotExist if the view didn't create this
+        feedback = internselection.midpointmentorfeedback
+
+        # Add in the fields automatically set by the action the mentor requested
+        answers['payment_approved'] = False
+        answers['request_extension'] = False
+        answers['extension_date'] = None
+        answers['request_termination'] = False
+        for key, expected in answers.items():
+            self.assertEqual(getattr(feedback, key), expected)
+
+        # only allow submitting once
+        self.assertFalse(feedback.allow_edits)
+
+        self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+
+    def test_mentor_can_give_extension_midpoint_feedback(self):
+        current_round = RoundPageFactory(start_from='midfeedback')
+        for action in (models.BaseMentorFeedback.EXT_1_WEEK, models.BaseMentorFeedback.EXT_2_WEEK, models.BaseMentorFeedback.EXT_3_WEEK, models.BaseMentorFeedback.EXT_4_WEEK, models.BaseMentorFeedback.EXT_5_WEEK):
+            with self.subTest(action=action):
+                internselection = InternSelectionFactory(
+                    active=True,
+                    round=current_round,
+                )
+
+                answers = self._midpoint_mentor_feedback_form(internselection,
+                    actions_requested=action,
+                )
+                response = self._submit_mentor_feedback_form(internselection, 'midpoint', answers)
+                self.assertEqual(response.status_code, 302)
+
+                # will raise DoesNotExist if the view didn't create this
+                feedback = internselection.midpointmentorfeedback
+
+                answers['payment_approved'] = False
+                answers['request_extension'] = True
+                answers['request_termination'] = False
+                if action == models.BaseMentorFeedback.EXT_1_WEEK:
+                    extension = 1
+                elif action == models.BaseMentorFeedback.EXT_2_WEEK:
+                    extension = 2
+                elif action == models.BaseMentorFeedback.EXT_3_WEEK:
+                    extension = 3
+                elif action == models.BaseMentorFeedback.EXT_4_WEEK:
+                    extension = 4
+                elif action == models.BaseMentorFeedback.EXT_5_WEEK:
+                    extension = 5
+                answers['extension_date'] = current_round.midfeedback + datetime.timedelta(weeks=extension)
 
                 for key, expected in answers.items():
                     self.assertEqual(getattr(feedback, key), expected)
@@ -435,6 +596,7 @@ class InternSelectionTestCase(TestCase):
                 self.assertFalse(feedback.allow_edits)
 
                 self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+
 
     def test_invalid_duplicate_midpoint_mentor_feedback(self):
         # The dates of the round don't matter because the views check the dates in the InternSelection
@@ -463,7 +625,7 @@ class InternSelectionTestCase(TestCase):
             'intern_contribution_frequency': models.MidpointInternFeedback.ONCE_WEEKLY,
             'mentor_review_response_time': models.MidpointInternFeedback.HOURS_3,
             'intern_contribution_revision_time': models.MidpointInternFeedback.DAYS_2,
-            'last_contact': internselection.initial_feedback_opens,
+            'last_contact': internselection.midpoint_feedback_opens,
             'mentor_support': 'My mentor is awesome.',
             'hours_worked': models.InitialInternFeedback.HOURS_40,
             'time_comments': '',
@@ -555,13 +717,10 @@ class InternSelectionTestCase(TestCase):
             'mentor_review_response_time': models.FinalMentorFeedback.HOURS_3,
             'intern_contribution_revision_time': models.FinalMentorFeedback.DAYS_2,
             'last_contact': internselection.final_feedback_opens,
-            'payment_approved': True,
+            'actions_requested': models.BaseMentorFeedback.PAY_AND_CONTINUE,
             'full_time_effort': True,
             'progress_report': 'Everything is fine.',
             'mentors_report': 'I am very supportive',
-            'request_extension': False,
-            'extension_date': None,
-            'request_termination': False,
             'mentoring_recommended': models.FinalMentorFeedback.NO_OPINION,
             'blog_frequency': models.FinalMentorFeedback.NO_OPINION,
             'blog_prompts_caused_writing': models.FinalMentorFeedback.NO_OPINION,
@@ -575,28 +734,123 @@ class InternSelectionTestCase(TestCase):
         defaults.update(kwargs)
         return defaults
 
-    def test_mentor_can_give_final_feedback(self):
+    def test_mentor_can_give_successful_final_feedback(self):
         current_round = RoundPageFactory(start_from='finalfeedback')
-        for request_extension in (False, True):
-            with self.subTest(request_extension=request_extension):
+        internselection = InternSelectionFactory(
+                active=True,
+                round=current_round,
+                )
+
+        answers = self._final_mentor_feedback_form(internselection)
+        response = self._submit_mentor_feedback_form(internselection, 'final', answers)
+        self.assertEqual(response.status_code, 302)
+
+        # will raise DoesNotExist if the view didn't create this
+        feedback = internselection.finalmentorfeedback
+
+        # Add in the fields automatically set by the action the mentor requested
+        answers['payment_approved'] = True
+        answers['request_extension'] = False
+        answers['extension_date'] = None
+        answers['request_termination'] = False
+        for key, expected in answers.items():
+            self.assertEqual(getattr(feedback, key), expected)
+
+        # only allow submitting once
+        self.assertFalse(feedback.allow_edits)
+
+        self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+
+    def test_mentor_can_give_terminate_final_feedback(self):
+        current_round = RoundPageFactory(start_from='finalfeedback')
+        internselection = InternSelectionFactory(
+            active=True,
+            round=current_round,
+        )
+
+        answers = self._final_mentor_feedback_form(internselection,
+            actions_requested=models.BaseMentorFeedback.TERMINATE_NO_PAY,
+        )
+        response = self._submit_mentor_feedback_form(internselection, 'final', answers)
+        self.assertEqual(response.status_code, 302)
+
+        # will raise DoesNotExist if the view didn't create this
+        feedback = internselection.finalmentorfeedback
+
+        # Add in the fields automatically set by the action the mentor requested
+        answers['payment_approved'] = False
+        answers['request_extension'] = False
+        answers['extension_date'] = None
+        answers['request_termination'] = True
+        for key, expected in answers.items():
+            self.assertEqual(getattr(feedback, key), expected)
+
+        # only allow submitting once
+        self.assertFalse(feedback.allow_edits)
+
+        self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+
+    def test_mentor_can_give_uncertain_final_feedback(self):
+        current_round = RoundPageFactory(start_from='finalfeedback')
+        internselection = InternSelectionFactory(
+            active=True,
+            round=current_round,
+        )
+
+        answers = self._final_mentor_feedback_form(internselection,
+            actions_requested=models.BaseMentorFeedback.DONT_KNOW,
+        )
+        response = self._submit_mentor_feedback_form(internselection, 'final', answers)
+        self.assertEqual(response.status_code, 302)
+
+        # will raise DoesNotExist if the view didn't create this
+        feedback = internselection.finalmentorfeedback
+
+        # Add in the fields automatically set by the action the mentor requested
+        answers['payment_approved'] = False
+        answers['request_extension'] = False
+        answers['extension_date'] = None
+        answers['request_termination'] = False
+        for key, expected in answers.items():
+            self.assertEqual(getattr(feedback, key), expected)
+
+        # only allow submitting once
+        self.assertFalse(feedback.allow_edits)
+
+        self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+
+    def test_mentor_can_give_extension_final_feedback(self):
+        current_round = RoundPageFactory(start_from='finalfeedback')
+        for action in (models.BaseMentorFeedback.EXT_1_WEEK, models.BaseMentorFeedback.EXT_2_WEEK, models.BaseMentorFeedback.EXT_3_WEEK, models.BaseMentorFeedback.EXT_4_WEEK, models.BaseMentorFeedback.EXT_5_WEEK):
+            with self.subTest(action=action):
                 internselection = InternSelectionFactory(
                     active=True,
                     round=current_round,
                 )
 
-                extension_date = None
-                if request_extension:
-                    extension_date = internselection.round().midfeedback + datetime.timedelta(weeks=5)
-
                 answers = self._final_mentor_feedback_form(internselection,
-                    request_extension=request_extension,
-                    extension_date=extension_date,
+                    actions_requested=action,
                 )
                 response = self._submit_mentor_feedback_form(internselection, 'final', answers)
                 self.assertEqual(response.status_code, 302)
 
                 # will raise DoesNotExist if the view didn't create this
                 feedback = internselection.finalmentorfeedback
+
+                answers['payment_approved'] = False
+                answers['request_extension'] = True
+                answers['request_termination'] = False
+                if action == models.BaseMentorFeedback.EXT_1_WEEK:
+                    extension = 1
+                elif action == models.BaseMentorFeedback.EXT_2_WEEK:
+                    extension = 2
+                elif action == models.BaseMentorFeedback.EXT_3_WEEK:
+                    extension = 3
+                elif action == models.BaseMentorFeedback.EXT_4_WEEK:
+                    extension = 4
+                elif action == models.BaseMentorFeedback.EXT_5_WEEK:
+                    extension = 5
+                answers['extension_date'] = current_round.finalfeedback + datetime.timedelta(weeks=extension)
 
                 for key, expected in answers.items():
                     self.assertEqual(getattr(feedback, key), expected)

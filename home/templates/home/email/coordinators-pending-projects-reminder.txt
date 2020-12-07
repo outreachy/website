@@ -1,0 +1,22 @@
+[Due by {{ current_round.contributions_open|date:"M d" }}] Approve pending {{ community.name }} Outreachy project
+
+Hi {{ community.name }} coordinators,
+
+There {{ project_list|pluralize:"is a project that is""are projects that are" }} pending your approval to participate in this round:
+
+{% for p in project_list %}
+"{{ project.title }}"
+{% endfor %}
+
+The contribution period opens tomorrow, {{ current_round.contributions_open|date:"F d" }}, at 4pm UTC. Please approve or reject the project before that time. You can review pending projects here:
+
+https://www.outreachy.org/communities/cfp/apache/
+[URL to see all unapproved projects]
+
+Until the project is approved, it will not show up to applicants on the Outreachy project list:
+
+https://www.outreachy.org/apply/project-selection/#apache
+
+If you have any questions, or you're unsure whether this project should participate, please reach out to us.
+
+Sage Sharp, Outreachy Organizer

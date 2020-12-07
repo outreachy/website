@@ -34,8 +34,8 @@ Mentors will be asked:
  * Please provide a paragraph describing your intern's progress on establishing communication with you, connecting to your FOSS community, and ramping up on their first tasks. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.
  * Do you believe your Outreachy intern is putting in a full-time, 40 hours a week effort into the internship?
  * Should your Outreachy intern be paid the initial ${{ current_round.initialpayment }} payment?
- * Questions about whether the intern needs an extension, and when the next date for internship feedback should be after the extension is done.
- * Questions about whether the internship may need to be terminated.
+ * Questions about whether the intern needs an internship extension.
+ * Questions about whether the internship contract may need to be terminated.
  * (The questions about internship extensions and terminations aren't needed for most internships, but our form asks them of all mentors.)
 
 Interns will be asked:

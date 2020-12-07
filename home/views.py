@@ -2690,10 +2690,7 @@ class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMi
                 'intern_response_time',
                 'progress_report',
                 'full_time_effort',
-                'payment_approved',
-                'request_extension',
-                'extension_date',
-                'request_termination',
+                'actions_requested',
             ),
             field_classes = {
                 'in_contact': RadioBooleanField,
@@ -2702,9 +2699,6 @@ class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMi
                 'provided_onboarding': RadioBooleanField,
                 'share_mentor_feedback_with_community_coordinator': RadioBooleanField,
                 'full_time_effort': RadioBooleanField,
-                'payment_approved': RadioBooleanField,
-                'request_extension': RadioBooleanField,
-                'request_termination': RadioBooleanField,
             },
         )
 
@@ -2843,17 +2837,11 @@ class MidpointMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionM
                 'intern_contribution_revision_time',
                 'progress_report',
                 'full_time_effort',
-                'payment_approved',
-                'request_extension',
-                'extension_date',
-                'request_termination',
+                'actions_requested',
             ),
             field_classes = {
                 'in_contact': RadioBooleanField,
                 'full_time_effort': RadioBooleanField,
-                'payment_approved': RadioBooleanField,
-                'request_extension': RadioBooleanField,
-                'request_termination': RadioBooleanField,
             },
         )
 
@@ -2969,10 +2957,7 @@ class FinalMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixi
                 'intern_contribution_revision_time',
                 'progress_report',
                 'full_time_effort',
-                'payment_approved',
-                'request_extension',
-                'extension_date',
-                'request_termination',
+                'actions_requested',
                 'mentoring_recommended',
                 'blog_frequency',
                 'blog_prompts_caused_writing',
@@ -2986,9 +2971,6 @@ class FinalMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixi
             field_classes = {
                 'in_contact': RadioBooleanField,
                 'full_time_effort': RadioBooleanField,
-                'payment_approved': RadioBooleanField,
-                'request_extension': RadioBooleanField,
-                'request_termination': RadioBooleanField,
             },
         )
 

@@ -1,0 +1,90 @@
+<table class="table table-bordered">
+	<tr class="table-secondary">
+		{% if not intern_selection.intern_has_custom_dates %}
+			<th>Standard internship dates for {{ intern_selection.applicant.applicant.public_name }}</th>
+		{% else %}
+			<th><span class="badge badge-info">Custom internship dates</span></th>
+		{% endif %}
+		<th>Standard date</th>
+		<th>Custom date</th>
+	</tr>
+	{% if intern_selection.intern_starts == intern_selection.round.internstarts %}
+		<tr>
+			<td>Internship start date</td>
+			<td>{{ intern_selection.intern_starts }}</td>
+			<td> - </td>
+		</tr>
+	{% else %}
+		<tr class="table-info">
+			<td>Internship start date</td>
+			<td>{{ intern_selection.round.internstarts }}</td>
+			<td>{{ intern_selection.intern_starts }}</td>
+		</tr>
+	{% endif %}
+	{% if intern_selection.initial_feedback_due == intern_selection.round.initialfeedback %}
+		<tr>
+			<td>Initial feedback due</td>
+			<td>{{ intern_selection.initial_feedback_due }}</td>
+			<td> - </td>
+		</tr>
+	{% else %}
+		<tr class="table-info">
+			<td>Initial feedback due</td>
+			<td>{{ intern_selection.round.initialfeedback }}</td>
+			<td>{{ intern_selection.initial_feedback_due }}</td>
+		</tr>
+	{% endif %}
+	{% if intern_selection.midpoint_feedback_due == intern_selection.round.midfeedback %}
+		<tr>
+			<td>Midpoint feedback due</td>
+			<td>{{ intern_selection.midpoint_feedback_due }}</td>
+			<td> - </td>
+		</tr>
+	{% else %}
+		<tr class="table-info">
+			<td>Midpoint feedback due</td>
+			<td>{{ intern_selection.round.midfeedback }}</td>
+			<td>{{ intern_selection.midpoint_feedback_due }}</td>
+		</tr>
+	{% endif %}
+	{% if intern_selection.intern_ends == intern_selection.round.internends %}
+		<tr>
+			<td>Internship end date</td>
+			<td>{{ intern_selection.intern_ends }}</td>
+			<td> - </td>
+		</tr>
+	{% else %}
+		<tr class="table-info">
+			<td>Internship end date</td>
+			<td>{{ intern_selection.round.internends }}</td>
+			<td>{{ intern_selection.intern_ends }}</td>
+		</tr>
+	{% endif %}
+	{% if intern_selection.final_feedback_due == intern_selection.round.finalfeedback %}
+		<tr>
+			<td>Final feedback due</td>
+			<td>{{ intern_selection.final_feedback_due }}</td>
+			<td> - </td>
+		</tr>
+	{% else %}
+		<tr class="table-info">
+			<td>Final feedback due</td>
+			<td>{{ intern_selection.round.finalfeedback }}</td>
+			<td>{{ intern_selection.final_feedback_due }}</td>
+		</tr>
+	{% endif %}
+	{% if not intern_selection.intern_has_custom_dates %}
+		<tr>
+			<td>No custom dates or internship extensions</td>
+			<td></td>
+			<td></td>
+		</tr>
+	{% else %}
+		<tr>
+			<td>Total internship extension:</td>
+			<td>{{ intern_selection.get_internship_extension_amount_in_weeks }} week(s)</td>
+			<td></td>
+		</tr>
+	{% endif %}
+</table>
+

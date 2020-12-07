@@ -8,6 +8,7 @@ from email.headerregistry import Address
 import random
 import os.path
 import re
+import math
 
 from django.contrib.auth.models import User
 from django.core import validators
@@ -3877,6 +3878,9 @@ class InternSelection(AugmentDeadlines, models.Model):
             return True
         return False
 
+    def get_internship_extension_amount_in_weeks(self):
+        return math.ceil((self.intern_ends - self.project.round().internends).days / 7)
+
     def is_initial_feedback_on_intern_open(self):
         if not self.initial_feedback_opens.has_passed():
             return False
@@ -4119,9 +4123,54 @@ class BaseMentorFeedback(BaseFeedback):
         default=None,
     )
 
+    # Deprecated - this data is set in clean() to be used for intern payment authorization JSON export
     request_extension = models.BooleanField(verbose_name="Does your intern need an extension?", help_text="Sometimes interns do not put in a full-time effort. In this case, one of the options is to delay payment of their stipend and extend their internship a specific number of weeks. You will be asked to re-evaluate your intern after the extension is done.")
 
+    # Deprecated - this data is set in clean() to be used for intern payment authorization JSON export
     request_termination = models.BooleanField(verbose_name="Do you believe the internship should be terminated?", help_text="Sometimes after several extensions, interns still do not put in a full-time effort. If you believe that your intern would not put in a full-time effort with a further extension, you may request to terminate the internship. The Outreachy organizers will be in touch to discuss the request.")
+
+    PAY_AND_CONTINUE = 'PAYCONT'
+    EXT_1_WEEK = '1WEEK'
+    EXT_2_WEEK = '2WEEK'
+    EXT_3_WEEK = '3WEEK'
+    EXT_4_WEEK = '4WEEK'
+    EXT_5_WEEK = '5WEEK'
+    TERMINATE_PAY = 'TERMPAY'
+    TERMINATE_NO_PAY = 'TERMNOPAY'
+    DONT_KNOW = 'DONTKNOW'
+
+    def set_payment_for_json_export(self):
+        # Set whether an internship stipend has been requested to be paid
+        if self.actions_requested == BaseMentorFeedback.PAY_AND_CONTINUE or self.actions_requested == BaseMentorFeedback.TERMINATE_PAY:
+            self.payment_approved = True
+        else:
+            self.payment_approved = False
+
+    def set_termination_request_for_json_export(self):
+        # Set whether the mentor requested an internship contract be terminated
+        if self.actions_requested == BaseMentorFeedback.TERMINATE_PAY or self.actions_requested == BaseMentorFeedback.TERMINATE_NO_PAY:
+            self.request_termination = True
+        else:
+            self.request_termination = False
+
+    def set_and_return_extension_for_json_export(self):
+        # Set whether an internship extension has been requested
+        # Return how many more weeks a mentor is requesting for an internship extension
+        if self.actions_requested == BaseMentorFeedback.PAY_AND_CONTINUE or self.actions_requested == BaseMentorFeedback.TERMINATE_PAY or self.actions_requested == BaseMentorFeedback.TERMINATE_NO_PAY or self.actions_requested == BaseMentorFeedback.DONT_KNOW:
+            self.request_extension = False
+            return 0
+
+        self.request_extension = True
+        if self.actions_requested == BaseMentorFeedback.EXT_1_WEEK:
+            return 1
+        elif self.actions_requested == BaseMentorFeedback.EXT_2_WEEK:
+            return 2
+        elif self.actions_requested == BaseMentorFeedback.EXT_3_WEEK:
+            return 3
+        elif self.actions_requested == BaseMentorFeedback.EXT_4_WEEK:
+            return 4
+        elif self.actions_requested == BaseMentorFeedback.EXT_5_WEEK:
+            return 5
 
     def get_versions(self):
         return Version.objects.get_for_object(self)
@@ -4225,9 +4274,24 @@ class InitialMentorFeedback(BaseMentorFeedback):
 
     progress_report = models.TextField(verbose_name="Please provide a paragraph describing your intern's progress on establishing communication with you, connecting to your FOSS community, and ramping up on their first tasks. This will only be shown to Outreachy organizers, your community coordinators, and the Software Freedom Conservancy accounting staff.")
 
+    # Deprecated - this data is set in clean() to be used for intern payment authorization JSON export
     payment_approved = models.BooleanField(verbose_name="Should your Outreachy intern be paid the initial $1,000 payment?", help_text="Please base your answer on whether your intern has put in a full-time, 40 hours a week effort. They should have established communication with you and other mentors, and have started learning how to tackle their first tasks. If you are going to ask for an internship extension, please say no to this question.")
 
+    # Deprecated - this data is set in clean() to be used for intern payment authorization JSON export
     extension_date = models.DateField(help_text="If you want to extend the internship, please pick a date when you will be asked to update your intern's initial feedback and authorize payment. Internships can be extended for up to five weeks. We don't recommend extending an internship for more than 1 week at initial feedback. Please leave this field blank if you are not asking for an extension.", blank=True, null=True)
+
+    ACTION_CHOICES = (
+        (BaseMentorFeedback.PAY_AND_CONTINUE, 'Pay the initial intern stipend'),
+        (BaseMentorFeedback.EXT_1_WEEK, 'Delay payment - extend the internship 1 week total'),
+        (BaseMentorFeedback.EXT_2_WEEK, 'Delay payment - extend the internship 2 weeks total'),
+        (BaseMentorFeedback.EXT_3_WEEK, 'Delay payment - extend the internship 3 weeks total'),
+        (BaseMentorFeedback.EXT_4_WEEK, 'Delay payment - extend the internship 4 weeks total'),
+        (BaseMentorFeedback.EXT_5_WEEK, 'Delay payment - extend the internship 5 weeks total'),
+        (BaseMentorFeedback.TERMINATE_PAY, 'Terminate the internship contract, and pay the initial intern stipend'),
+        (BaseMentorFeedback.TERMINATE_NO_PAY, 'Terminate the internship contract, and do NOT pay the initial intern stipend'),
+        (BaseMentorFeedback.DONT_KNOW, "I don't know what action to recommend, please advise"),
+    )
+    actions_requested = models.CharField(max_length=9, choices=ACTION_CHOICES, default=BaseMentorFeedback.DONT_KNOW, verbose_name="What actions are you requesting Outreachy organizers to take, based on your feedback?")
 
     def can_edit(self):
         if not self.allow_edits:
@@ -4239,15 +4303,19 @@ class InitialMentorFeedback(BaseMentorFeedback):
         return False
 
     def clean(self):
-        if self.request_extension:
-            if self.extension_date is None:
-                raise ValidationError({'extension_date': "If you're requesting an extension, this field is required."})
-            else:
-                # should not be more than five weeks from the initial feedback deadline in the RoundPage
-                base = self.intern_selection.round().initialfeedback
-                limit = base + datetime.timedelta(weeks=5)
-                if not (base <= self.extension_date <= limit):
-                    raise ValidationError({'extension_date': "Extension date must be between {} and {}".format(base, limit)})
+        # Note - we'd like to be able to check that mentors didn't ask
+        # didn't ask to decrease the internship extension.
+        # E.g. The intern had a 2 week total extension,
+        # and the mentor chose the option for a 1 week total extension.
+        # However, if we do that, Outreachy organizers
+        # cannot change the internship dates through the Django admin interface.
+
+        # Set historic fields used for JSON export of internship payment authorization
+        self.set_payment_for_json_export()
+        self.set_termination_request_for_json_export()
+        requested_extension = self.set_and_return_extension_for_json_export()
+        if requested_extension > 0:
+            self.extension_date = self.intern_selection.round().initialfeedback + datetime.timedelta(weeks=requested_extension)
 
 class BaseInternFeedback(BaseFeedback):
     last_contact = models.DateField(verbose_name="What was the last date you were in contact with your mentor?")
@@ -4415,9 +4483,24 @@ class MidpointMentorFeedback(BaseMentorFeedback):
 
     progress_report = models.TextField(verbose_name="Please provide a paragraph describing your intern's progress on their project. This will only be shown to Outreachy organizers, your community coordinator, and the Software Freedom Conservancy accounting staff.")
 
+    # Deprecated - this data is set in clean() to be used for intern payment authorization JSON export
     payment_approved = models.BooleanField(verbose_name="Should your Outreachy intern be paid the mid-point $2,000 payment?", help_text="Please base your answer on whether your intern has put in a full-time, 40 hours a week effort. They should have made project contributions, promptly responded to feedback on those contributions, and resubmitted their revised contributions. If they were stuck, they should have reached out to you or the community for help. If you are going to ask for an internship extension, please say no to this question.")
 
+    # Deprecated - this data is set in clean() to be used for intern payment authorization JSON export
     extension_date = models.DateField(help_text="If you want to extend the internship, please pick a date when you will be asked to update your intern's mid-point feedback and authorize payment. Internships can be extended for up to five weeks. We don't recommend extending an internship for more than 3 weeks at mid-point feedback. Please leave this field blank if you are not asking for an extension.", blank=True, null=True)
+
+    ACTION_CHOICES = (
+        (BaseMentorFeedback.PAY_AND_CONTINUE, 'Pay the midpoint intern stipend'),
+        (BaseMentorFeedback.EXT_1_WEEK, 'Delay payment - extend the internship 1 week total'),
+        (BaseMentorFeedback.EXT_2_WEEK, 'Delay payment - extend the internship 2 weeks total'),
+        (BaseMentorFeedback.EXT_3_WEEK, 'Delay payment - extend the internship 3 weeks total'),
+        (BaseMentorFeedback.EXT_4_WEEK, 'Delay payment - extend the internship 4 weeks total'),
+        (BaseMentorFeedback.EXT_5_WEEK, 'Delay payment - extend the internship 5 weeks total'),
+        (BaseMentorFeedback.TERMINATE_PAY, 'Terminate the internship contract, and pay the midpoint intern stipend'),
+        (BaseMentorFeedback.TERMINATE_NO_PAY, 'Terminate the internship contract, and do NOT pay the midpoint intern stipend'),
+        (BaseMentorFeedback.DONT_KNOW, "I don't know what action to recommend, please advise"),
+    )
+    actions_requested = models.CharField(max_length=9, choices=ACTION_CHOICES, default=BaseMentorFeedback.DONT_KNOW, verbose_name="What actions are you requesting Outreachy organizers to take, based on your feedback?")
 
     def can_edit(self):
         if not self.allow_edits:
@@ -4428,15 +4511,12 @@ class MidpointMentorFeedback(BaseMentorFeedback):
         return False
 
     def clean(self):
-        if self.request_extension:
-            if self.extension_date is None:
-                raise ValidationError({'extension_date': "If you're requesting an extension, this field is required."})
-            else:
-                # should not be more than five weeks from the initial feedback deadline in the RoundPage
-                base = self.intern_selection.round().midfeedback
-                limit = base + datetime.timedelta(weeks=5)
-                if not (base <= self.extension_date <= limit):
-                    raise ValidationError({'extension_date': "Extension date must be between {} and {}".format(base, limit)})
+        # See comments in class InitialMentorFeedback's clean method. Same applies here.
+        self.set_payment_for_json_export()
+        self.set_termination_request_for_json_export()
+        requested_extension = self.set_and_return_extension_for_json_export()
+        if requested_extension > 0:
+            self.extension_date = self.intern_selection.round().midfeedback + datetime.timedelta(weeks=requested_extension)
 
 class MidpointInternFeedback(BaseInternFeedback):
     # XXX - Make sure to change the questions in
@@ -4558,11 +4638,28 @@ class FinalMentorFeedback(BaseMentorFeedback):
 
     intern_contribution_revision_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, default=LONGER, verbose_name="How long does it take for <b>your intern</b> to incorporate feedback and resubmit a contribution?")
 
+    # Deprecated - this data is set in clean() to be used for intern payment authorization JSON export
     progress_report = models.TextField(verbose_name="Please provide a paragraph describing your intern's progress on their project. This will only be shown to Outreachy organizers, your community coordinator, and the Software Freedom Conservancy accounting staff.")
 
+    # Deprecated - this data is set in clean() to be used for intern payment authorization JSON export
     payment_approved = models.BooleanField(verbose_name="Should your Outreachy intern be paid the final $2,500 payment?", help_text="Please base your answer on whether your intern has put in a full-time, 40 hours a week effort. They should have made project contributions, promptly responded to feedback on those contributions, and resubmitted their revised contributions. If they were stuck, they should have reached out to you or the community for help. If you are going to ask for an internship extension, please say no to this question.")
 
     extension_date = models.DateField(help_text="If you want to extend the internship, please pick a date when you will be asked to update your intern's final feedback and authorize payment. Internships can be extended for up to five weeks. Please leave this field blank if you are not asking for an extension.", blank=True, null=True)
+
+    # Note that TERMINATE_PAY does not make sense for the final feedback.
+    # If we pay the intern, their internship is done, and they're in good standing.
+    # We can't both terminate the internship contract abnormally and pay them.
+    ACTION_CHOICES = (
+        (BaseMentorFeedback.PAY_AND_CONTINUE, 'Pay final intern stipend'),
+        (BaseMentorFeedback.EXT_1_WEEK, 'Delay payment - extend the internship 1 week total'),
+        (BaseMentorFeedback.EXT_2_WEEK, 'Delay payment - extend the internship 2 weeks total'),
+        (BaseMentorFeedback.EXT_3_WEEK, 'Delay payment - extend the internship 3 weeks total'),
+        (BaseMentorFeedback.EXT_4_WEEK, 'Delay payment - extend the internship 4 weeks total'),
+        (BaseMentorFeedback.EXT_5_WEEK, 'Delay payment - extend the internship 5 weeks total'),
+        (BaseMentorFeedback.TERMINATE_NO_PAY, 'Terminate the internship contract, and do not pay the final intern stipend'),
+        (BaseMentorFeedback.DONT_KNOW, "I don't know what action to recommend, please advise"),
+    )
+    actions_requested = models.CharField(max_length=9, choices=ACTION_CHOICES, default=BaseMentorFeedback.DONT_KNOW, verbose_name="What actions are you requesting Outreachy organizers to take, based on your feedback?")
 
     # Survey for Outreachy organizers
 
@@ -4614,15 +4711,12 @@ class FinalMentorFeedback(BaseMentorFeedback):
         return False
 
     def clean(self):
-        if self.request_extension:
-            if self.extension_date is None:
-                raise ValidationError({'extension_date': "If you're requesting an extension, this field is required."})
-            else:
-                # should not be more than five weeks from the internship end date in the RoundPage
-                base = self.intern_selection.round().internends
-                limit = base + datetime.timedelta(weeks=5)
-                if not (base <= self.extension_date <= limit):
-                    raise ValidationError({'extension_date': "Extension date must be between {} and {}".format(base, limit)})
+        # See comments in class InitialMentorFeedback's clean method. Same applies here.
+        self.set_payment_for_json_export()
+        self.set_termination_request_for_json_export()
+        requested_extension = self.set_and_return_extension_for_json_export()
+        if requested_extension > 0:
+            self.extension_date = self.intern_selection.round().finalfeedback + datetime.timedelta(weeks=requested_extension)
 
 class FinalInternFeedback(BaseInternFeedback):
     # XXX - Make sure to change the questions in
