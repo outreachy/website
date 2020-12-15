@@ -4,10 +4,6 @@ Welcome to the third week of your Outreachy internship! We hope you're starting 
 
 We have some goals and assignments for both mentors and interns. Please read the sections below.
 
-For most interns, initial feedback is due on {{ current_round.initialfeedback }}. When your initial feedback is open, you'll see a button on your dashboard:
-
-{{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}#feedback
-
 Week 3 Theme
 ------------
 
