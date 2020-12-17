@@ -3995,16 +3995,16 @@ class InternSelection(AugmentDeadlines, models.Model):
     TERMINATE = 'TER'
     def get_mentor_initial_feedback_status(self):
         try:
-            if self.initialmentorfeedback.request_termination:
-                return self.TERMINATE
-            if self.initialmentorfeedback.request_extension:
-                return self.EXTEND
             if self.initialmentorfeedback.organizer_payment_approved:
                 return self.PAID
-            if self.initialmentorfeedback.payment_approved:
+
+            actions_requested = self.initialmentorfeedback.actions_requested
+            if actions_requested == BaseMentorFeedback.TERMINATE_PAY or actions_requested == BaseMentorFeedback.TERMINATE_NO_PAY:
+                return self.TERMINATE
+            elif actions_requested == BaseMentorFeedback.PAY_AND_CONTINUE:
                 return self.PAY
-            # Validation should ensure this never happens?
-            return self.SUBMITTED
+            else:
+                return self.EXTEND
         except InitialMentorFeedback.DoesNotExist:
             return self.MISSING
 
@@ -4017,16 +4017,16 @@ class InternSelection(AugmentDeadlines, models.Model):
 
     def get_mentor_midpoint_feedback_status(self):
         try:
-            if self.midpointmentorfeedback.request_termination:
-                return self.TERMINATE
-            if self.midpointmentorfeedback.request_extension:
-                return self.EXTEND
             if self.midpointmentorfeedback.organizer_payment_approved:
                 return self.PAID
-            if self.midpointmentorfeedback.payment_approved:
+
+            actions_requested = self.midpointmentorfeedback.actions_requested
+            if actions_requested == BaseMentorFeedback.TERMINATE_PAY or actions_requested == BaseMentorFeedback.TERMINATE_NO_PAY:
+                return self.TERMINATE
+            elif actions_requested == BaseMentorFeedback.PAY_AND_CONTINUE:
                 return self.PAY
-            # Validation should ensure this never happens?
-            return self.SUBMITTED
+            else:
+                return self.EXTEND
         except InitialMentorFeedback.DoesNotExist:
             return self.MISSING
 
@@ -4039,16 +4039,16 @@ class InternSelection(AugmentDeadlines, models.Model):
 
     def get_mentor_final_feedback_status(self):
         try:
-            if self.finalmentorfeedback.request_termination:
-                return self.TERMINATE
-            if self.finalmentorfeedback.request_extension:
-                return self.EXTEND
             if self.finalmentorfeedback.organizer_payment_approved:
                 return self.PAID
-            if self.finalmentorfeedback.payment_approved:
+
+            actions_requested = self.finalmentorfeedback.actions_requested
+            if actions_requested == BaseMentorFeedback.TERMINATE_PAY or actions_requested == BaseMentorFeedback.TERMINATE_NO_PAY:
+                return self.TERMINATE
+            elif actions_requested == BaseMentorFeedback.PAY_AND_CONTINUE:
                 return self.PAY
-            # Validation should ensure this never happens?
-            return self.SUBMITTED
+            else:
+                return self.EXTEND
         except InitialMentorFeedback.DoesNotExist:
             return self.MISSING
 

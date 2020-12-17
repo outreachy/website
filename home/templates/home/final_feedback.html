@@ -10,27 +10,47 @@ Final Feedback for current_round.official_name
 	{% with interns=current_round.get_approved_intern_selections %}
 		{% for i in interns %}
 			<h2>{{ i.community_name }} - {{ i.intern_name }}</h2>
+			<hr>
 
-			<table class="table table-striped table-bordered">
-				{% with final_mentor_status=i.get_mentor_final_feedback_status final_intern_status=i.get_intern_final_feedback_status %}
-				<thread class="thread-dark">
-				<tr>
-					<th scope="col" class="col-md-1">Feedback from mentor:</th>
-					<th scope="col" class="col-md-1">Feedback from intern:</th>
-					<th scope="col" class="col-md-3">Description</th>
-				</tr>
-				</thread>
-				<tr>
-					<td>
-						{% include 'home/snippet/mentor-feedback-status.html' with intern=i mentor_status=final_mentor_status extension_date=i.finalmentorfeedback.extension_date %}
-					</td>
-					<td>
-						{% include 'home/snippet/intern-feedback-status.html' with intern=i intern_status=final_intern_status %}
-					</td>
-					<td>Feedback status</td>
-				</tr>
-				{% if final_mentor_status == i.TERMINATE %}<tr><td colspan="3">Mentor wishes to terminate internship</td></tr>{% endif %}
-				{% if final_mentor_status != i.MISSING or final_intern_status != i.MISSING %}
+			{% with final_mentor_status=i.get_mentor_final_feedback_status final_intern_status=i.get_intern_final_feedback_status %}
+				{% if final_mentor_status == i.PAY or final_mentor_status == i.PAID %}
+					<div class="container my-4 border border-success rounded">
+				{% elif not final_mentor_status %}
+					<div class="container my-4 border border-secondary rounded">
+				{% elif final_mentor_status == i.TERMINATE or final_mentor_status == i.TERMINATE %}
+					<div class="container my-4 border border-danger rounded">
+				{% else %}
+					<div class="container my-4 border border-warning rounded">
+				{% endif %}
+					<div class="row align-items-center mt-3">
+						<div class="col">
+							<p>Action to take:</p>
+						</div>
+						<div class="col-2">
+							<p>{% include 'home/snippet/mentor-feedback-status.html' with intern=i mentor_status=final_mentor_status extension_date=i.finalmentorfeedback.extension_date %}</p>
+						</div>
+						<div class="col-8">
+							<p>{{ i.finalmentorfeedback.get_actions_requested_display }}</p>
+						</div>
+					</div>
+				</div>
+				<table class="table table-striped table-bordered">
+					<thread class="thread-dark">
+					<tr>
+						<th scope="col" class="col-md-1">Feedback from mentor:</th>
+						<th scope="col" class="col-md-1">Feedback from intern:</th>
+						<th scope="col" class="col-md-3">Description</th>
+					</tr>
+					</thread>
+					<tr>
+						<td>
+							{% include 'home/snippet/mentor-feedback-status.html' with intern=i mentor_status=final_mentor_status extension_date=i.finalmentorfeedback.extension_date %}
+						</td>
+						<td>
+							{% include 'home/snippet/intern-feedback-status.html' with intern=i intern_status=final_intern_status %}
+						</td>
+						<td>Feedback status</td>
+					</tr>
 					<tr><td colspan="3"><b>Mentor support</b></td></tr>
 					<tr>
 						<td>{% if i.finalmentorfeedback %}{% if i.finalmentorfeedback.mentor_help_response_time == i.finalmentorfeedback.HOURS_1 or i.finalmentorfeedback.mentor_help_response_time == i.finalmentorfeedback.HOURS_3 or i.finalmentorfeedback.mentor_help_response_time == i.finalmentorfeedback.HOURS_6 %}<button class="btn btn-success">Prompt response</button>{% elif i.finalmentorfeedback.mentor_help_response_time == i.finalmentorfeedback.HOURS_12 or i.finalmentorfeedback.mentor_help_response_time == i.finalmentorfeedback.DAYS_1 %}<button class="btn btn-warning">Delayed response</button>{% else %}<button class="btn btn-danger">Very delayed response</button>{% endif %}<br>{{ i.finalmentorfeedback.get_mentor_help_response_time_display }}{% endif %}</td>
@@ -78,7 +98,6 @@ Final Feedback for current_round.official_name
 					</tr>
 					{% if i.finalmentorfeedback %}<tr><td colspan="3"><p>Mentor's report on the intern's progress:</p><p>{{ i.finalmentorfeedback.progress_report }}</p></td></tr>{% endif %}
 					{% if i.finalinternfeedback %}<tr><td colspan="3"><p>Intern's report on their own progress:</p><p>{{ i.finalinternfeedback.progress_report }}</p></td></tr>{% endif %}
-				{% endif %}
 				{% endwith %}
 			</table>
 		{% endfor %}

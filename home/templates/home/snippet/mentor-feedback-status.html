@@ -5,7 +5,7 @@
 {% elif mentor_status == intern.PAY %}
 <button class="btn btn-success">pay</button>
 {% elif mentor_status == intern.EXTEND %}
-<button class="btn btn-warning">extend</button> to {{ extension_date|date:"M d, Y" }}
+<button class="btn btn-warning">extend</button>
 {% elif mentor_status == intern.TERMINATE %}
 <button class="btn btn-danger">terminate</button>
 {% elif mentor_status == intern.SUBMITTED %}

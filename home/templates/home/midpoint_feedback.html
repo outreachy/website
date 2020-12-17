@@ -11,27 +11,44 @@ Midpoint Feedback for {{ current_round.official_name }}
 		{% for i in interns %}
 			<h2>{{ i.community_name }} - {{ i.intern_name }}</h2>
 
-			<table class="table table-striped table-bordered">
-				{% with midpoint_mentor_status=i.get_mentor_midpoint_feedback_status midpoint_intern_status=i.get_intern_midpoint_feedback_status %}
-				<thread class="thread-dark">
-				<tr>
-					<th scope="col" class="col-md-1">Feedback from mentor:</th>
-					<th scope="col" class="col-md-1">Feedback from intern:</th>
-					<th scope="col" class="col-md-3">Description</th>
-				</tr>
-				</thread>
-				<tr>
-					<td>
-						{% include 'home/snippet/mentor-feedback-status.html' with intern=i mentor_status=midpoint_mentor_status extension_date=i.midpointmentorfeedback.extension_date %}
-					</td>
-					<td>
-						{% include 'home/snippet/intern-feedback-status.html' with intern=i intern_status=midpoint_intern_status %}
-					</td>
-					<td>Feedback status</td>
-				</tr>
-				{% if midpoint_mentor_status == i.TERMINATE %}<tr><td colspan="3">Mentor wishes to terminate internship</td></tr>{% endif %}
-				{% if midpoint_mentor_status != i.MISSING or midpoint_intern_status != i.MISSING %}
-					<tr><td colspan="3"><b>Mentor support</b></td></tr>
+			{% with midpoint_mentor_status=i.get_mentor_midpoint_feedback_status midpoint_intern_status=i.get_intern_midpoint_feedback_status %}
+				{% if midpoint_mentor_status == i.PAY or midpoint_mentor_status == i.PAID %}
+					<div class="container my-4 border border-success rounded">
+				{% elif not midpoint_mentor_status %}
+					<div class="container my-4 border border-secondary rounded">
+				{% elif midpoint_mentor_status == i.TERMINATE or midpoint_mentor_status == i.TERMINATE %}
+					<div class="container my-4 border border-danger rounded">
+				{% else %}
+					<div class="container my-4 border border-warning rounded">
+				{% endif %}
+					<div class="row align-items-center mt-3">
+						<div class="col">
+							<p>Action to take:</p>
+						</div>
+						<div class="col-2">
+							<p>{% include 'home/snippet/mentor-feedback-status.html' with intern=i mentor_status=midpoint_mentor_status extension_date=i.midpoint_date %}</p>
+						</div>
+						<div class="col-8">
+							<p>{{ i.midpointmentorfeedback.get_actions_requested_display }}</p>
+						</div>
+					</div>
+				</div>
+				<table class="table table-striped table-bordered">
+					<tr>
+						<td colspan="3"><b>Mentor support</b></td>
+					</tr>
+					<thread class="thread-dark">
+					<tr>
+						<th scope="col" class="col-md-1">Feedback from mentor:</th>
+						<th scope="col" class="col-md-1">Feedback from intern:</th>
+						<th scope="col" class="col-md-3"></th>
+					</tr>
+					</thread>
+					<tr>
+						<td>Mentors - {{ i.community_name }}</td>
+						<td>Intern - {{ i.intern_name }}</td>
+						<td></td>
+					</tr>
 					<tr>
 						<td>{% if i.midpointmentorfeedback %}{% if i.midpointmentorfeedback.mentor_help_response_time == i.midpointmentorfeedback.HOURS_1 or i.midpointmentorfeedback.mentor_help_response_time == i.midpointmentorfeedback.HOURS_3 or i.midpointmentorfeedback.mentor_help_response_time == i.midpointmentorfeedback.HOURS_6 %}<button class="btn btn-success">Prompt response</button>{% elif i.midpointmentorfeedback.mentor_help_response_time == i.midpointmentorfeedback.HOURS_12 or i.midpointmentorfeedback.mentor_help_response_time == i.midpointmentorfeedback.DAYS_1 %}<button class="btn btn-warning">Delayed response</button>{% else %}<button class="btn btn-danger">Very delayed response</button>{% endif %}<br>{{ i.midpointmentorfeedback.get_mentor_help_response_time_display }}{% endif %}</td>
 						<td>{% if i.midpointinternfeedback %}{% if i.midpointinternfeedback.mentor_help_response_time == i.midpointinternfeedback.HOURS_1 or i.midpointinternfeedback.mentor_help_response_time == i.midpointinternfeedback.HOURS_3 or i.midpointinternfeedback.mentor_help_response_time == i.midpointinternfeedback.HOURS_6 %}<button class="btn btn-success">Prompt response</button>{% elif i.midpointinternfeedback.mentor_help_response_time == i.midpointinternfeedback.HOURS_12 or i.midpointinternfeedback.mentor_help_response_time == i.midpointinternfeedback.DAYS_1 %}<button class="btn btn-warning">Delayed response</button>{% else %}<button class="btn btn-danger">Very delayed response</button>{% endif %}<br>{{ i.midpointinternfeedback.get_mentor_help_response_time_display }}{% endif %}</td>
@@ -78,7 +95,6 @@ Midpoint Feedback for {{ current_round.official_name }}
 					</tr>
 					{% if i.midpointmentorfeedback %}<tr><td colspan="3"><p>Mentor's report on the intern's progress:</p><p>{{ i.midpointmentorfeedback.progress_report }}</p></td></tr>{% endif %}
 					{% if i.midpointinternfeedback %}<tr><td colspan="3"><p>Intern's report on their own progress:</p><p>{{ i.midpointinternfeedback.progress_report }}</p></td></tr>{% endif %}
-				{% endif %}
 				{% endwith %}
 			</table>
 		{% endfor %}
