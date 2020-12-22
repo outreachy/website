@@ -41,10 +41,11 @@ To set up your local development environment, first clone the repository to your
 
 ```
 git clone https://github.com/outreachy/website.git
-cd website
 ```
 
-In order to develop with Python, you'll need the Python 3 development headers, so install them (for example, `apt-get install python3-dev` on Ubuntu). You'll also need to install node.js.
+In order to develop with Python, you'll need the Python 3 development headers, so install them. For example, on Debian or Ubuntu Linux, you can use `apt-get install python3-dev` to install the Python 3 development headers.
+
+You'll also need to install node.js. If you're running Linux, it's recommended you install it using your package manager. If you're using Windows or Mac, follow the [installation instructions](https://nodejs.org/en/download/) on the node.js website.
 
 Next, you'll need to create a new virtualenv. A "virtualenv" is a separate virtual environment for working on different Python projects. It's good practice to create a virtual environment for each Python project you're working on, in case they have conflicting dependencies, and so that you make sure to record all the dependencies for each project.
 
@@ -52,14 +53,16 @@ These instructions will help you create a new virtualenv that will have all the 
 
 If you're using Linux, you may be able to install pipenv through your Linux package manager. On Debian or Ubuntu, you can run `sudo aptitude install pipenv`. Otherwise, you can follow the instructions for [install pipenv](https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv).
 
-The following command will automatically create a virtual environment and install the Python dependencies specified in the `Pipfile`. If you need help understanding pipenv, run `pipenv --help`
-Make sure that you are in the `website` directory first, and have *not* run `pipenv shell` yet, then:
+The following command will automatically create a virtual environment and install the Python dependencies specified in the `Pipfile`. If you need help understanding pipenv, run `pipenv --help`.
+
+Make sure that you have *not* run `pipenv shell` yet, then run these two commands:
 
 ```
+cd website
 pipenv install
 ```
 
-[Note: Pipenv automatically records changes in the project's dependencies in the `Pipfile` when you add/remove packages. You can add a package with the command `pipenv install <package>`. You can remove a package with the command `pipenv uninstall <package>`.]
+If you accidentally ran `pipenv shell` before those two commands, you should exit the shell using CTRL+d. Then run the two commands.
 
 Now, you activate the virtual environment by typing the following command in the directory of the project:
 
@@ -91,11 +94,21 @@ and run the tests.
 PATH="$PWD/node_modules/.bin:$PATH" ./manage.py test
 ```
 
-You'll need to set up a new internship round, following the instructions in the next section.
+You'll need to set up a new internship round, following the instructions in the [Django shell section](#django-shell).
 
-# Removing a virtual env
+# Misc virtual env topics
+
+## Removing a virtual env
 
 If you made a mistake in the directions above, you may need to remove your pipenv virtual environment. You can do that by running `pipenv --rm` in the website directory. If needed, you can delete the website directory and start over at the git clone command.
+
+## Updating package dependencies
+
+Sometimes you may want to add a new Django extension that uses additional Python packages. That means you'll need to record the new Python packages used. Pipenv automatically records changes in the project's dependencies in the `Pipfile` when you add/remove packages.
+
+You can add a package with the command `pipenv install <package>`
+
+You can remove a package with the command `pipenv uninstall <package>`
 
 # Django shell
 
@@ -107,7 +120,9 @@ You can also use the Django shell to test complicated [query sets](https://docs.
 
 The Django shell is also useful for doing quick tests of how templates (especially email templates) will look.
 
-You can run the shell on either your local copy of the database, or you can run it on the remote server's database. If you start the shell on your local computer, it will load your local copy of the code and your local database. If you start the shell on the remote server, it will load the server's version of the code and the server's database. Remember, if you change any of the Python code, you'll need to exit the shell (CTRL-d) and restart it to reload the code.
+You can run the shell on either your local copy of the database, or you can run it on the remote server's database. If you start the shell on your local computer, it will load your local copy of the code and your local database. If you start the shell on the remote server, it will load the server's version of the code and the server's database.
+
+The Django shell takes a snapshot of the Python code base when you start the shell. If you change any of the website Python code, you'll need to exit the shell (CTRL-d) and restart it to reload the code. You don't need to restart the shell if you're making changes to the HTML templates or CSS.
 
 ## Setting up a new internship round
 
