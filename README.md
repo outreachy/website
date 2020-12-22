@@ -94,7 +94,7 @@ and run the tests.
 PATH="$PWD/node_modules/.bin:$PATH" ./manage.py test
 ```
 
-You'll need to set up a new internship round, following the instructions in the [Django shell section](#django-shell).
+You'll need to set up a new internship round, following the instructions in the [Django shell section](#django-shell) and the [internship round section](#setting-up-a-new-internship-round).
 
 # Misc virtual env topics
 
@@ -128,11 +128,29 @@ The Django shell is also useful for testing code that accesses the underlying we
 
 You can run the shell on either your local copy of the database, or you can run it on the remote server's database. If you start the shell on your local computer, it will load your local copy of the code and your local database. If you start the shell on the remote server, it will load the server's version of the code and the server's database.
 
-## Setting up a new internship round
+# Setting up a new internship round
 
-When you've first cloned and [set up the Outreachy website development environment](#setting-up-your-development-environment), you'll need to create a new internship round. The website expects to have at least one past round, and some pages won't work without a round. You may also need to set up a new round in your local database so you can test how the website looks during some particular phase. (See the section below for more explanation of the phases of the Outreachy round.)
+This section assumes you've cloned and [set up the Outreachy website development environment](#setting-up-your-development-environment).
 
-In either case, the best way to do that is to use the shell to call into `home/factories.py` to create a new internship round. First, start the Django shell:
+## Django models vs database objects
+
+The website Django code defines some object classes. These Python classes are abstractions of how Outreachy works. Think of classes as a template for defining a set of values.
+
+For example, there is a Python class that represents all the data and dates that are associated with an Outreachy internship. The class includes dates for the application period, the contribution period, and the internship period. We call all the data associated with those dates an "internship round". The class that represents that set of dates is called "RoundPage" (for confusing historic reasons). You can find that class definition (and other classes) in `home/models.py`.
+
+Each class in models.py defines an object in the underlying database. There is one "RoundPage" Python class that defines many internship round objects in the website database.
+
+For example, we may have a series of dates associated with the May 2020 internship round. The internship might start on May 19, 2020 and end on August 18, 2020. The Python class RoundPage has a DateField internstarts that represents the internship start date. The RoundPage class also has a DateField internends that represents the internship end date.
+
+The Django code uses these Python object classes to define the underlying database. When we create a database object for the May 2020 internship round, the Django code defines that the RoundPage object needs to have internship start and end dates. There may be other internship round objects in the database, such as objects for the May 2019 internship round, and the December 2019 internship round.
+
+## Creating a new internship round in the database
+
+When you first set up your development environment, your local website database will be empty. There will be no internship rounds in the database.
+
+The website expects to have at least one past internship round. Some pages won't work without an internship round.
+
+You'll need to create a new internship round database object. You can do that by using the Django shell.
 
 ```
 ./manage.py shell
@@ -188,7 +206,7 @@ If you get an error when running the factories code, it's often hard to tell wha
 ...		days_after_today=7)
 >>>
 ```
-### Contributions open
+## Contributions open
 
 Let's assume you want an internship round where we're in the middle of the contribution period. We can set the deadline for when the final applications for projects are due (`appslate`) to be one week from today:
 
@@ -212,9 +230,9 @@ If you get an error when running the factories code, it's often hard to tell wha
 >>>
 ```
 
-## Printing class variables and methods
+# Django shell help
 
-The Python shell (which the Django shell uses) will print information about a class object. This includes the class methods and fields.
+The Django shell will print information about a class object. This includes the class methods and fields. This is a standard part of the Python shell, which Django shell builds on top of.
 
 For example, assume you followed the instructions from one of the sections above to set up an internship round. You'll end up with a variable called `current_round`. This is an object of the RoundPage class. You can type the code below in the shell to look at the variables and fields in the RoundPage class:
 
@@ -225,6 +243,25 @@ Help on RoundPage in module home.models object:
 class RoundPage(AugmentDeadlines, wagtail.wagtailcore.models.Page)
  |  RoundPage(*args, **kwargs)
  |  
+```
+
+You don't need have to have an object of the class type in order to ask for help. You can query the help for any model class. For example:
+
+```
+>>> from home import models
+>>> help(models.RoundPage)
+Help on RoundPage in module home.models object:
+
+class RoundPage(AugmentDeadlines, wagtail.wagtailcore.models.Page)
+ |  RoundPage(*args, **kwargs)
+ |  
+```
+
+You can also use the help function to ask for help on Python built-ins. For example, you can ask for help about the date class in the Python datetime library:
+
+```
+>>> from datetime import date
+>>> help(date)
 ```
 
 # Testing the local website
