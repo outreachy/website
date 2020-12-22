@@ -112,17 +112,21 @@ You can remove a package with the command `pipenv uninstall <package>`
 
 # Django shell
 
-Django has a 'shell' mode where you can run snippets of Python code.
+Django has a 'shell' mode where you can run snippets of Python code. You can exit the shell with CTRL+d at any time.
 
-The Django shell is extremely useful for figuring out why view code isn't working. You can run snippets of your code and examine variables as it runs. You can call into functions in Django code.
+The Django shell takes a snapshot of the Python code base when you start the shell. If you change any of the website Python code, you'll need to exit the shell (CTRL+d) and restart it to reload the code.
 
-You can also use the Django shell to test complicated [query sets](https://docs.djangoproject.com/en/3.1/topics/db/queries/#retrieving-objects).
+You don't need to restart the shell if you're only making changes to HTML templates or CSS.
 
-The Django shell is also useful for doing quick tests of how templates (especially email templates) will look.
+## Django shell usage cases
+
+The Django shell is extremely useful for debugging the Python website code. You can run snippets of new code and examine variables as it runs. You can call into functions in the Outreachy website Python code.
+
+The Django shell is also useful for testing code that accesses the underlying website database. You may be testing new Python code that query the database for objects that match your search. Sometimes it's hard to get the search parameters exactly right. You can use the Django shell to test complicated [query sets](https://docs.djangoproject.com/en/3.1/topics/db/queries/#retrieving-objects).
+
+## Local vs remote Django shell
 
 You can run the shell on either your local copy of the database, or you can run it on the remote server's database. If you start the shell on your local computer, it will load your local copy of the code and your local database. If you start the shell on the remote server, it will load the server's version of the code and the server's database.
-
-The Django shell takes a snapshot of the Python code base when you start the shell. If you change any of the website Python code, you'll need to exit the shell (CTRL-d) and restart it to reload the code. You don't need to restart the shell if you're making changes to the HTML templates or CSS.
 
 ## Setting up a new internship round
 
@@ -236,6 +240,12 @@ To make sure you've set up an internship round successfully, go to the internshi
 To go to the Django administrative interface, go to `http://localhost:8000/django-admin/`. You can log in into with the account you created with `./manage.py createsuperuser`. If you're new to Django, you may want to find the RoundPage you created and edit some of the dates. You can find it by clicking the 'Round pages' link under the HOME section. You'll see the changed dates reflected in the internship project selection page if you refresh it.
 
 It's unlikely you'll need to access the Wagtail admin interface, where the local CMS content is managed. If you do need to access the Wagtail admin interface, go to `http://localhost:8000/admin/`. Use the same account you created with the `./manage.py createsuperuser` command.
+
+## Reloading the Django server
+
+The runserver command takes a snapshot of the Python code base when you start it. If you change any of the website Python code, you'll need to exit the server (CTRL+c) and restart it to reload the code.
+
+You don't need to restart the shell if you're only making changes to HTML templates or CSS.
 
 # Concepts and Resources
 
