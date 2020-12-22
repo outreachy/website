@@ -15,7 +15,7 @@ Older/deprecated websites include:
  - [GNOME Outreachy homepage](https://www.gnome.org/outreachy/) - shell homepage, where the outreachy.org domain currently redirects to
  - [GNOME wiki Outreachy pages](http://wiki.gnome.org/Outreachy) - moinmoin based wiki with information about how to apply and sponsor
  - [Outreachy application system](http://outreachy.gnome.org) - PHP-based application system currently hosted on OpenShift
- - irc.gnome.org #outreachy - GNOME IRC channel - where applicants get help
+ - irc.gnome.org #outreachy - Outreachy IRC channel - where applicants used to get help
  - [Outreachy Planeteria](http://www.planeteria.info/outreach) - blog aggregation for Outreachy interns
 
 # Future Long-term Goals
@@ -31,7 +31,7 @@ The Outreachy website is built with [Python](https://www.python.org/) and a web 
 
 # Optional helpful background reading
 
-[Django topic guides](https://docs.djangoproject.com/en/1.11/topics/), particularly the [models](https://docs.djangoproject.com/en/1.11/topics/db/models/) guide.
+[Django topic guides](https://docs.djangoproject.com/en/3.1/topics/), particularly the [models](https://docs.djangoproject.com/en/3.1/topics/db/models/) guide.
 
 # Setting up your development environment
 
@@ -103,7 +103,7 @@ Django has a 'shell' mode where you can run snippets of Python code.
 
 The Django shell is extremely useful for figuring out why view code isn't working. You can run snippets of your code and examine variables as it runs. You can call into functions in Django code.
 
-You can also use the Django shell to test complicated [query sets](https://docs.djangoproject.com/en/1.11/topics/db/queries/#retrieving-objects).
+You can also use the Django shell to test complicated [query sets](https://docs.djangoproject.com/en/3.1/topics/db/queries/#retrieving-objects).
 
 The Django shell is also useful for doing quick tests of how templates (especially email templates) will look.
 
@@ -229,7 +229,7 @@ In order to work on the Outreachy website, you will need to learn about some dat
 The Django documentation will talk about the "relationship" between two Django class objects.
  - [What is a database relationship?](https://database.guide/what-is-a-relationship/)
 
-You will sometimes see fields of the type `ForeignKey`. Django has documentation on [foreign key fields](https://docs.djangoproject.com/en/1.11/ref/models/fields/#module-django.db.models.fields.related), but it assumes you know what a foreign key in a database is. If you are new to databases, we recommend reading about what a foreign key is:
+You will sometimes see fields of the type `ForeignKey`. Django has documentation on [foreign key fields](https://docs.djangoproject.com/en/3.1/ref/models/fields/#module-django.db.models.fields.related), but it assumes you know what a foreign key in a database is. If you are new to databases, we recommend reading about what a foreign key is:
 
  - [What is a primary key?](https://www.techopedia.com/definition/5547/primary-key)
  - [What is a foreign key?](https://www.techopedia.com/definition/7272/foreign-key)
@@ -323,7 +323,7 @@ The community coordinator role is represented by the CoordinatorApproval class. 
 
 When testing the website on your local machine, it's useful to create a coordinator account that you can log into. This allows you to see how the website looks at various points in the round to a coordinator. You can create a new CoordinatorApproval object using the `home/factories.py` function `CoordinatorApprovalFactory()`.
 
-The factory will fill in random names, phrases, and choices for any required fields in the CoordinatorApproval, Comrade, User, and Community objects. If you want to override any of those fields, you can pass that field value as an assignment in the same format you would for a [Django filter queryset](https://docs.djangoproject.com/en/1.11/topics/db/queries/#retrieving-specific-objects-with-filters).
+The factory will fill in random names, phrases, and choices for any required fields in the CoordinatorApproval, Comrade, User, and Community objects. If you want to override any of those fields, you can pass that field value as an assignment in the same format you would for a [Django filter queryset](https://docs.djangoproject.com/en/3.1/topics/db/queries/#retrieving-specific-objects-with-filters).
 
 In the example code below, we'll create a new CoordinatorApproval object. The factories code automatically sets all passwords for User accounts to `test`. We'll set the CoordinatorApproval approval status to approved (by default, all ApprovalStatus objects are created with the withdrawn approval status). The example sets the community name to "Really Awesome Community", but you can use the name of your favorite FOSS community instead.
 
@@ -375,7 +375,7 @@ The mentor(s) for that project are represented by the `class MentorApproval` in 
 
 When testing the website on your local machine, it's useful to create a mentor account that you can log into. This allows you to see how the website looks at various points in the round to a mentor. You can create a new MentorApproval object using the `home/factories.py` function `MentorApprovalFactory()`.
 
-The factory will fill in random names, phrases, and choices for any required fields in the Comrade, User, and Project objects. If you want to override any of those fields, you can pass that field value as an assignment in the same format you would for a [Django filter queryset](https://docs.djangoproject.com/en/1.11/topics/db/queries/#retrieving-specific-objects-with-filters).
+The factory will fill in random names, phrases, and choices for any required fields in the Comrade, User, and Project objects. If you want to override any of those fields, you can pass that field value as an assignment in the same format you would for a [Django filter queryset](https://docs.djangoproject.com/en/3.1/topics/db/queries/#retrieving-specific-objects-with-filters).
 
 In the example Django shell code below, we'll create a MentorApproval object. The factories code automatically sets the password for the mentor to `test`. We'll set the MentorApproval approval status and the Project approval status to approved. (By default, all ApprovalStatus objects are created with the withdrawn approval status.) The code assumes you have a pre-created Participation object referenced by the variable `participation`. The code will associate the Project with that community's participation in the internship round, rather than allowing the factories code to create new Community and RoundPage objects with random values.
 
@@ -538,7 +538,7 @@ You can do this by passing `html=True` to `AssertContains` or `AssertNotContains
 However, that function will throw an error if the HTML is invalid.
 This could be something as small as forgetting a div or paragraph tag.
 Finding the mistake can be difficult, especially if the Django template
-[includes other template files](https://docs.djangoproject.com/en/1.11/ref/templates/builtins/#include).
+[includes other template files](https://docs.djangoproject.com/en/3.1/ref/templates/builtins/#include).
 
 Additionally, the templates rendered in the test may not be the same as
 manually re-creating the test case in your local copy.
@@ -657,8 +657,8 @@ Sometimes the page contains a form and the form has validation errors.
 That usually shows up as a '200' (OK) response code, rather than a '302' (Redirect) response code.
 
 You can access those form validation errors from the shell or within a test.
-The trick is that the response is not just an [HttpsResponse](https://docs.djangoproject.com/en/1.11/ref/request-response/#httpresponse-objects) class object, it's a [TemplateResponse](https://docs.djangoproject.com/en/1.11/ref/template-response/) class object.
-You can access the form through the TemplateResponse context dictionary. Then you can print any [form validation errors](https://docs.djangoproject.com/en/1.11/ref/forms/validation/):
+The trick is that the response is not just an [HttpsResponse](https://docs.djangoproject.com/en/3.1/ref/request-response/#httpresponse-objects) class object, it's a [TemplateResponse](https://docs.djangoproject.com/en/3.1/ref/template-response/) class object.
+You can access the form through the TemplateResponse context dictionary. Then you can print any [form validation errors](https://docs.djangoproject.com/en/3.1/ref/forms/validation/):
 
 ```
 >> print(response.context['form'].errors)
@@ -703,7 +703,7 @@ ssh -t dokku@www.outreachy.org run www env --unset=SENTRY_DSN python manage.py s
 
 # Migrations
 
-When you change some aspect of a field in a model, that can create a change to the underlying database information. For example, if you change a field name from "foo" to "bar", the Django object database has to change such that you can quenry for objects using the new name. You can read more about migrations and how to create and apply them in the Django migrations documentation. We suggest starting with the [simple migrations introduction in the Django tutorial](https://docs.djangoproject.com/en/1.11/intro/tutorial02/#activating-models), and then looking at the [more detailed migrations documentation](https://docs.djangoproject.com/en/1.11/topics/migrations/) if needed.
+When you change some aspect of a field in a model, that can create a change to the underlying database information. For example, if you change a field name from "foo" to "bar", the Django object database has to change such that you can quenry for objects using the new name. You can read more about migrations and how to create and apply them in the Django migrations documentation. We suggest starting with the [simple migrations introduction in the Django tutorial](https://docs.djangoproject.com/en/3.1/intro/tutorial02/#activating-models), and then looking at the [more detailed migrations documentation](https://docs.djangoproject.com/en/3.1/topics/migrations/) if needed.
 
 In most cases, there are only two commands you need to run to create and apply a migration. The first is:
 
@@ -735,7 +735,7 @@ Sometimes a field doesn't work out exactly the way you wanted it to, and you wan
 
 3. Create an empty migration: `./manage.py makemigrations home --empty`
 
-4. Edit the new empty migration file. You'll need to define a new function that takes `apps` and `schema_editor`, like it's documented in the `0005_populate_uuid_values.py` file in the [Django "Writing a migration" documentation.](https://docs.djangoproject.com/en/1.11/howto/writing-migrations/). You can access the objects for that Model, and set the new field based on values in the old field. Make sure to add your function to the operations list. Note that you might have to copy some class members that represent the choice short code in the database into the migration, because all migrations only have access model class members that are Django fields (like CharField or BooleanField). For an example, see the `home/migrations/0068_auto_20180828_1832.py` file in this repo.
+4. Edit the new empty migration file. You'll need to define a new function that takes `apps` and `schema_editor`, like it's documented in the `0005_populate_uuid_values.py` file in the [Django "Writing a migration" documentation.](https://docs.djangoproject.com/en/3.1/howto/writing-migrations/). You can access the objects for that Model, and set the new field based on values in the old field. Make sure to add your function to the operations list. Note that you might have to copy some class members that represent the choice short code in the database into the migration, because all migrations only have access model class members that are Django fields (like CharField or BooleanField). For an example, see the `home/migrations/0068_auto_20180828_1832.py` file in this repo.
 
 5. Remove the `null=True` argument from your model, and delete the old field. You might need to remove the field from admin.py and the views. Then run `./manage.py makemigrations && ./manage.py migrate`. That will generate a third migration to make sure the field must be non-null, but the second migration will set the field on all objects. When Django prompts you about changing a nullable field to a non-nullable field, choose 'Ignore for now'.
 
