@@ -19,11 +19,17 @@ class Scenario(object):
 
 
 class NewRoundScenario(factory.Factory):
+    # NOTE - update README.md if you change the documentation for this class
     """
-    Create samples of the objects which matter when an Outreachy organizer is
-    preparing for a new internship round. This includes communities and
-    coordinators from past rounds, but does not include any participation
-    objects for the new round yet.
+    The `NewRoundScenario` scenario represents the time when the Outreachy organizers first set dates for the new internship round. No communities have signed up to participate yet.
+
+    This scenario creates the following accounts:
+     - Community coordinator account (username 'coordinator1'). The coordinator is approved as a coordinator for this community.
+     - An initial application reviewer (username 'reviewer1'). The reviewer is approved to see initial applications.
+
+    This scenario will also create the following database objects:
+     - Internship round (`class RoundPage`) with dates and deadlines. The internship round will be created such that the date the community CFP opens (`RoundPage.pingnew`) is set to today.
+     - Open source community (`class Community`). The community name will be randomly generated.
     """
 
     class Meta:
@@ -53,9 +59,20 @@ class NewRoundScenario(factory.Factory):
 
 
 class CommunitySignupUnderwayScenario(NewRoundScenario):
+    # NOTE - update README.md if you change the documentation for this class
     """
-    Create samples of the objects in the middle of the period
-    where communities are signing up, but before initial applications opens.
+    The `CommunitySignupUnderwayScenario` scenario represents the time when community coordinators are signing communities up to participate in Outreachy. One mentor has submitted their project.
+
+    This scenario creates the following accounts:
+     - Community coordinator account (username 'coordinator1'). The coordinator is approved as a coordinator for this community.
+     - An initial application reviewer (username 'reviewer1'). The reviewer is approved to see initial applications.
+     - Mentor (username 'mentor1')
+
+    This scenario will also create the following database objects:
+     - The community will be marked as being approved to participate in the current internship round (`class Participation`).
+     - Information about which organization is sponsoring that community's interns this internship round (`class Sponsorship`).
+     - One project has been submitted (`class Project`) by mentor1 for this community. The project has been approved by the coordinator. The project title will be randomly generated.
+
     """
 
     round__start_from = 'pingold'
@@ -88,8 +105,28 @@ class CommunitySignupUnderwayScenario(NewRoundScenario):
     )
 
 class InitialApplicationsUnderwayScenario(CommunitySignupUnderwayScenario):
+    # NOTE - update README.md if you change the documentation for this class
     """
-    Create samples of the objects in the middle of the initial application period.
+    The Outreachy application period has two distinct periods: the initial application period and the contribution period. During the initial application period, applicants submit an eligibility form and essays (an initial application).
+
+    The `InitialApplicationsUnderwayScenario` scenario represents the time during which applicants submit their initial applications.
+
+    This scenario creates the following accounts:
+     - Community coordinator account (username 'coordinator1'). The coordinator is approved as a coordinator for this community.
+     - An initial application reviewer (username 'reviewer1'). The reviewer is approved to see initial applications.
+     - Mentor (username 'mentor1')
+     - Eight applicant accounts (usernames 'applicant1' to 'applicant8')
+
+    This scenario will also create the following database objects:
+     - The community will be marked as being approved to participate in the current internship round (`class Participation`).
+     - Information about which organization is sponsoring that community's interns this internship round (`class Sponsorship`).
+     - One project has been submitted (`class Project`) by mentor1 for this community. The project has been approved by the coordinator. The project title will be randomly generated.
+     - Initial application (`class ApplicantApproval`) for applicant1, applicant2, applicant3, and applicant8 have been approved
+     - Initial application (`class ApplicantApproval`) for applicant4 is pending review by initial application reviewers
+     - Initial application (`class ApplicantApproval`) for applicant5 has been rejected because they have too many full-time commitments during the internship period
+     - Initial application (`class ApplicantApproval`) for applicant6 has been rejected for not aligning with Outreachy program goals
+     - Initial application (`class ApplicantApproval`) for applicant7 has been rejected for not meeting Outreachy's eligibility rules
+
     """
     round__start_from = 'initial_applications_open'
 
@@ -146,8 +183,29 @@ class InitialApplicationsUnderwayScenario(CommunitySignupUnderwayScenario):
     )
 
 class ContributionsUnderwayScenario(InitialApplicationsUnderwayScenario):
+    # NOTE - update README.md if you change the documentation for this class
     """
-    Create samples of the objects in the middle of the contribution period.
+    The Outreachy application period has two distinct periods: the initial application period and the contribution period. Applicants with an approved initial application will move onto the contribution period. Approved applicants will pick a project (or two), contact mentors, work on project tasks (contributions), and record those contributions in the Outreachy website.
+
+    The `ContributionsUnderwayScenario` scenario represents the time during which applicants communicate with mentors and work on project contributions.
+
+    This scenario creates the following accounts:
+     - Community coordinator account (username 'coordinator1'). The coordinator is approved as a coordinator for this community.
+     - An initial application reviewer (username 'reviewer1'). The reviewer is approved to see initial applications.
+     - Mentors (usernames 'mentor1' to 'mentor3')
+     - Eight applicant accounts (usernames 'applicant1' to 'applicant8')
+
+    This scenario will also create the following database objects:
+     - The community will be marked as being approved to participate in the current internship round (`class Participation`).
+     - Information about which organization is sponsoring that community's interns this internship round (`class Sponsorship`).
+     - Three projects has been submitted (`class Project`) by mentors mentor1, mentor2, and mentor3 for this community. The projects have been approved by the coordinator. The project titles will be randomly generated.
+     - Initial application (`class ApplicantApproval`) for applicant1, applicant2, applicant3, and applicant8 have been approved
+     - Initial application (`class ApplicantApproval`) for applicant4 is pending review by initial application reviewers
+     - Initial application (`class ApplicantApproval`) for applicant5 has been rejected because they have too many full-time commitments during the internship period
+     - Initial application (`class ApplicantApproval`) for applicant6 has been rejected for not aligning with Outreachy program goals
+     - Initial application (`class ApplicantApproval`) for applicant7 has been rejected for not meeting Outreachy's eligibility rules
+     - A contribution (`class Contribution`) has been recorded by applicants applicant1 and applicant2
+     - A final application (`class Contribution`) has been started by applicant1
     """
     round__start_from = 'contributions_open'
     sponsorship__amount = 13000
@@ -197,6 +255,7 @@ class ContributionsUnderwayScenario(InitialApplicationsUnderwayScenario):
     )
 
 class ContributionsClosedScenario(ContributionsUnderwayScenario):
+    # NOTE - update README.md if you change the documentation for this class
     """
     Create samples of the objects which matter before mentors start to
     select the interns they want to work with.
@@ -234,10 +293,33 @@ class ContributionsClosedScenario(ContributionsUnderwayScenario):
     )
 
 class InternSelectionScenario(ContributionsClosedScenario):
+    # NOTE - update README.md if you change the documentation for this class
     """
-    Create samples of the objects which matter once mentors have
-    selected the interns they want to work with, and coordinators
-    need to set funding sources for the selected interns.
+    Once the contribution period ends, it is time for Outreachy mentors to select their interns. Coordinators will assign a funding source to each intern. Outreachy organizers will coordinate with mentors if there is an intern selection conflict between two projects. Outreachy organizers will review all interns and approve or reject them.
+
+    The `InternSelectionScenario` scenario represents the time just after the contribution period closes.
+
+    This scenario creates the following accounts:
+     - Community coordinator account (username 'coordinator1'). The coordinator is approved as a coordinator for this community.
+     - An initial application reviewer (username 'reviewer1'). The reviewer is approved to see initial applications.
+     - Mentors (usernames 'mentor1' to 'mentor3')
+     - Eight applicant accounts (usernames 'applicant1' to 'applicant8')
+
+    This scenario will also create the following database objects:
+     - The community will be marked as being approved to participate in the current internship round (`class Participation`).
+     - Information about which organization is sponsoring that community's interns this internship round (`class Sponsorship`).
+     - Three projects has been submitted (`class Project`) by mentors mentor1, mentor2, and mentor3 for this community. The projects have been approved by the coordinator. The project titles will be randomly generated.
+     - Initial application (`class ApplicantApproval`) for applicant1, applicant2, applicant3, and applicant8 have been approved
+     - Initial application (`class ApplicantApproval`) for applicant4 is pending review by initial application reviewers
+     - Initial application (`class ApplicantApproval`) for applicant5 has been rejected because they have too many full-time commitments during the internship period
+     - Initial application (`class ApplicantApproval`) for applicant6 has been rejected for not aligning with Outreachy program goals
+     - Initial application (`class ApplicantApproval`) for applicant7 has been rejected for not meeting Outreachy's eligibility rules
+     - A contribution (`class Contribution`) has been recorded by applicants applicant1, applicant2, applicant3, and applicant8
+     - A final application (`class Contribution`) has been submitted by applicants applicant1, applicant2, applicant3, and applicant8
+     - Interns have been selected (`class InternSelection`):
+       - applicant1 has been selected as an intern to work with mentor1 (`class MentorRelationship`). The coordinator has not assigned a funding source for this internship. This internship is not yet approved by the Outreachy organizers.
+       - applicant2 has been selected as an intern to work with mentor2 (`class MentorRelationship`). The coordinator has said this internship will be funded by the community sponsors. This internship has been approved by the Outreachy organizers.
+       - applicant3 has been selected as an intern to work with mentor3 (`class MentorRelationship`). The coordinator has requested that this internship be funded by the Outreachy general fund. This internship is not yet approved by the Outreachy organizers.
     """
     round__start_from = 'mentor_intern_selection_deadline'
 
@@ -324,9 +406,38 @@ class InternSelectionScenario(ContributionsClosedScenario):
     )
 
 class InternshipWeekScenario(InternSelectionScenario):
+    # NOTE - update README.md if you change the documentation for this class
     """
-    Create the scenario where it's the start of the given week during the
-    internship.
+    Each week during the internship, the Outreachy organizers have different tasks, emails to send, and intern chats to run.
+
+    The `InternshipWeekScenario` scenario will show you the website dashboard as it looks to the Outreachy organizers during each week of the internship.
+
+    Relevant dates are:
+
+    This scenario creates the following accounts:
+     - Community coordinator account (username 'coordinator1'). The coordinator is approved as a coordinator for this community.
+     - An initial application reviewer (username 'reviewer1'). The reviewer is approved to see initial applications.
+     - Mentors (usernames 'mentor1' to 'mentor3')
+     - Eight applicant accounts (usernames 'applicant1' to 'applicant8')
+
+    This scenario will also create the following database objects:
+     - The community will be marked as being approved to participate in the current internship round (`class Participation`).
+     - Information about which organization is sponsoring that community's interns this internship round (`class Sponsorship`).
+     - Three projects has been submitted (`class Project`) by mentors mentor1, mentor2, and mentor3 for this community. The projects have been approved by the coordinator. The project titles will be randomly generated.
+     - Initial application (`class ApplicantApproval`) for applicant1, applicant2, applicant3, and applicant8 have been approved
+     - Initial application (`class ApplicantApproval`) for applicant4 is pending review by initial application reviewers
+     - Initial application (`class ApplicantApproval`) for applicant5 has been rejected because they have too many full-time commitments during the internship period
+     - Initial application (`class ApplicantApproval`) for applicant6 has been rejected for not aligning with Outreachy program goals
+     - Initial application (`class ApplicantApproval`) for applicant7 has been rejected for not meeting Outreachy's eligibility rules
+     - A contribution (`class Contribution`) has been recorded by applicants applicant1, applicant2, applicant3, and applicant8
+     - A final application (`class Contribution`) has been submitted by applicants applicant1, applicant2, applicant3, and applicant8
+     - Interns have been selected (`class InternSelection`):
+       - applicant1 has been selected as an intern to work with mentor1 (`class MentorRelationship`). The coordinator has said this internship will be funded by the community sponsors. This internship has been approved by the Outreachy organizers.
+       - applicant2 has been selected as an intern to work with mentor2 (`class MentorRelationship`). The coordinator has said this internship will be funded by the community sponsors. This internship has been approved by the Outreachy organizers.
+       - applicant3 has been selected as an intern to work with mentor3 (`class MentorRelationship`). The coordinator requested the internship be funded by the Outreachy general fund. However, the funding was denied, and the internship was not approved.
+
+    Which internship week you want depends on what part of the code you're working on. For example, if you wanted to see the changes you've made to the intern welcome email template, you would want to set the week to the first week.
+
     """
 
     class Params:

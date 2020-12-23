@@ -229,13 +229,77 @@ Similarly, community names and project names are randomly generated words or phr
 
 The following sections tell you how to use the Django shell to generate a scenario of the given type.
 
-### Scenario 1: Initial applications open
+### Scenario 1: New internship round dates
 
-The Outreachy application period has two distinct periods: the initial application period and the contribution period. During the initial application period, applicants submit an eligibility form and essays (an initial application). All people who have an approved initial application will be notified by email.
+The `NewRoundScenario` scenario represents the time when the Outreachy organizers first set dates for the new internship round. No communities have signed up to participate yet.
 
-Let's assume you want to see how the website looks when we're in the middle of the initial application period. We can use the scenarios.py code to do that:
+This scenario creates the following accounts:
+ - Community coordinator account (username 'coordinator1'). The coordinator is approved as a coordinator for this community.
+ - An initial application reviewer (username 'reviewer1'). The reviewer is approved to see initial applications.
 
-We can set the initial applications deadline (`initial_applications_close`) to be one week (seven days) after today:
+This scenario will also create the following database objects:
+ - Internship round (`class RoundPage`) with dates and deadlines. The internship round will be created such that the date the community CFP opens (`RoundPage.pingnew`) is set to today.
+ - Open source community (`class Community`). The community name will be randomly generated.
+
+To create this scenario in your local website database, start the Django shell. Then use the code in `home/scenarios.py` to generate the database objects:
+
+```
+>>> from home import scenarios
+>>> scenario = scenarios.NewRoundScenario()
+```
+
+See the [picking a scenario](#picking-a-scenario) to understand what local website accounts are automatically created by this code.
+
+Should any errors occur when running this code, follow the debugging techniques discussed in the [debugging scenarios code section](#debugging-scenarios-code).
+
+### Scenario 2: Community Sign-up
+
+The `CommunitySignupUnderwayScenario` scenario represents the time when community coordinators are signing communities up to participate in Outreachy. One mentor has submitted their project.
+
+This scenario creates the following accounts:
+ - Community coordinator account (username 'coordinator1'). The coordinator is approved as a coordinator for this community.
+ - An initial application reviewer (username 'reviewer1'). The reviewer is approved to see initial applications.
+ - Mentor (username 'mentor1')
+
+This scenario will also create the following database objects:
+ - The community will be marked as being approved to participate in the current internship round (`class Participation`).
+ - Information about which organization is sponsoring that community's interns this internship round (`class Sponsorship`).
+ - One project has been submitted (`class Project`) by mentor1 for this community. The project has been approved by the coordinator. The project title will be randomly generated.
+
+To create this scenario in your local website database, start the Django shell. Then use the code in `home/scenarios.py` to generate the database objects:
+
+```
+>>> from home import scenarios
+>>> scenario = scenarios.CommunitySignupUnderwayScenario()
+```
+
+See the [picking a scenario](#picking-a-scenario) to understand what local website accounts are automatically created by this code.
+
+Should any errors occur when running this code, follow the debugging techniques discussed in the [debugging scenarios code section](#debugging-scenarios-code).
+
+### Scenario 3: Initial applications open
+
+The Outreachy application period has two distinct periods: the initial application period and the contribution period. During the initial application period, applicants submit an eligibility form and essays (an initial application).
+
+The `InitialApplicationsUnderwayScenario` scenario represents the time during which applicants submit their initial applications.
+
+This scenario creates the following accounts:
+ - Community coordinator account (username 'coordinator1'). The coordinator is approved as a coordinator for this community.
+ - An initial application reviewer (username 'reviewer1'). The reviewer is approved to see initial applications.
+ - Mentor (username 'mentor1')
+ - Eight applicant accounts (usernames 'applicant1' to 'applicant8')
+
+This scenario will also create the following database objects:
+ - The community will be marked as being approved to participate in the current internship round (`class Participation`).
+ - Information about which organization is sponsoring that community's interns this internship round (`class Sponsorship`).
+ - One project has been submitted (`class Project`) by mentor1 for this community. The project has been approved by the coordinator. The project title will be randomly generated.
+ - Initial application (`class ApplicantApproval`) for applicant1, applicant2, applicant3, and applicant8 have been approved
+ - Initial application (`class ApplicantApproval`) for applicant4 is pending review by initial application reviewers
+ - Initial application (`class ApplicantApproval`) for applicant5 has been rejected because they have too many full-time commitments during the internship period
+ - Initial application (`class ApplicantApproval`) for applicant6 has been rejected for not aligning with Outreachy program goals
+ - Initial application (`class ApplicantApproval`) for applicant7 has been rejected for not meeting Outreachy's eligibility rules
+
+To create this scenario in your local website database, start the Django shell. Then use the code in `home/scenarios.py` to generate the database objects:
 
 ```
 >>> from home import scenarios
@@ -246,15 +310,150 @@ See the [picking a scenario](#picking-a-scenario) to understand what local websi
 
 Should any errors occur when running this code, follow the debugging techniques discussed in the [debugging scenarios code section](#debugging-scenarios-code).
 
-### Scenario 2: Contributions open
+### Scenario 4: Contributions open
 
-After applicants have their initial application approved, the contribution period will start. Approved applicants will pick a project to work, contact mentors, work on project tasks (contributions), and record those contributions in the website.
+The Outreachy application period has two distinct periods: the initial application period and the contribution period. Applicants with an approved initial application will move onto the contribution period. Approved applicants will pick a project (or two), contact mentors, work on project tasks (contributions), and record those contributions in the Outreachy website.
 
-Let's assume you want an internship round where we're in the middle of the contribution period. You can run the following code:
+The `ContributionsUnderwayScenario` scenario represents the time during which applicants communicate with mentors and work on project contributions.
 
+This scenario creates the following accounts:
+ - Community coordinator account (username 'coordinator1'). The coordinator is approved as a coordinator for this community.
+ - An initial application reviewer (username 'reviewer1'). The reviewer is approved to see initial applications.
+ - Mentors (usernames 'mentor1' to 'mentor3')
+ - Eight applicant accounts (usernames 'applicant1' to 'applicant8')
+
+This scenario will also create the following database objects:
+ - The community will be marked as being approved to participate in the current internship round (`class Participation`).
+ - Information about which organization is sponsoring that community's interns this internship round (`class Sponsorship`).
+ - Three projects has been submitted (`class Project`) by mentors mentor1, mentor2, and mentor3 for this community. The projects have been approved by the coordinator. The project titles will be randomly generated.
+ - Initial application (`class ApplicantApproval`) for applicant1, applicant2, applicant3, and applicant8 have been approved
+ - Initial application (`class ApplicantApproval`) for applicant4 is pending review by initial application reviewers
+ - Initial application (`class ApplicantApproval`) for applicant5 has been rejected because they have too many full-time commitments during the internship period
+ - Initial application (`class ApplicantApproval`) for applicant6 has been rejected for not aligning with Outreachy program goals
+ - Initial application (`class ApplicantApproval`) for applicant7 has been rejected for not meeting Outreachy's eligibility rules
+ - A contribution (`class Contribution`) has been recorded by applicants applicant1 and applicant2
+ - A final application (`class Contribution`) has been started by applicant1
+
+To create this scenario in your local website database, start the Django shell. Then use the code in `home/scenarios.py` to generate the database objects:
 ```
 >>> from home import scenarios
 >>> scenario = scenarios.ContributionsUnderwayScenario()
+```
+
+See the [test case scenario accounts section](#test-case-scenario-accounts) to understand what local website accounts are automatically created by this code.
+
+Should any errors occur when running this code, follow the debugging techniques discussed in the [debugging scenarios code section](#debugging-scenarios-code).
+
+### Scenario 5: Contributions close
+
+The Outreachy application period has two distinct periods: the initial application period and the contribution period. Applicants with an approved initial application will move onto the contribution period. Approved applicants will pick a project (or two), contact mentors, work on project tasks (contributions), and record those contributions in the Outreachy website.
+
+At the end of the contribution period, applicants fill out a final application. Most applicants who record a contribution will create a final application. The final application is due when the contribution period ends. Only applicants that have recorded a contribution and submitted a final application will be eligible to be selected as an intern.
+
+The `ContributionsClosedScenario` scenario represents the time just after the contribution period closes.
+
+This scenario creates the following accounts:
+ - Community coordinator account (username 'coordinator1'). The coordinator is approved as a coordinator for this community.
+ - An initial application reviewer (username 'reviewer1'). The reviewer is approved to see initial applications.
+ - Mentors (usernames 'mentor1' to 'mentor3')
+ - Eight applicant accounts (usernames 'applicant1' to 'applicant8')
+
+This scenario will also create the following database objects:
+ - The community will be marked as being approved to participate in the current internship round (`class Participation`).
+ - Information about which organization is sponsoring that community's interns this internship round (`class Sponsorship`).
+ - Three projects has been submitted (`class Project`) by mentors mentor1, mentor2, and mentor3 for this community. The projects have been approved by the coordinator. The project titles will be randomly generated.
+ - Initial application (`class ApplicantApproval`) for applicant1, applicant2, applicant3, and applicant8 have been approved
+ - Initial application (`class ApplicantApproval`) for applicant4 is pending review by initial application reviewers
+ - Initial application (`class ApplicantApproval`) for applicant5 has been rejected because they have too many full-time commitments during the internship period
+ - Initial application (`class ApplicantApproval`) for applicant6 has been rejected for not aligning with Outreachy program goals
+ - Initial application (`class ApplicantApproval`) for applicant7 has been rejected for not meeting Outreachy's eligibility rules
+ - A contribution (`class Contribution`) has been recorded by applicants applicant1, applicant2, applicant3, and applicant8
+ - A final application (`class Contribution`) has been submitted by applicants applicant1, applicant2, applicant3, and applicant8
+
+To create this scenario in your local website database, start the Django shell. Then use the code in `home/scenarios.py` to generate the database objects:
+```
+>>> from home import scenarios
+>>> scenario = scenarios.ContributionsClosedScenario()
+```
+
+See the [test case scenario accounts section](#test-case-scenario-accounts) to understand what local website accounts are automatically created by this code.
+
+Should any errors occur when running this code, follow the debugging techniques discussed in the [debugging scenarios code section](#debugging-scenarios-code).
+
+### Scenario 6: Intern selection
+
+Once the contribution period ends, it is time for Outreachy mentors to select their interns. Coordinators will assign a funding source to each intern. Outreachy organizers will coordinate with mentors if there is an intern selection conflict between two projects. Outreachy organizers will review all interns and approve or reject them.
+
+The `InternSelectionScenario` scenario represents the time just after the contribution period closes.
+
+This scenario creates the following accounts:
+ - Community coordinator account (username 'coordinator1'). The coordinator is approved as a coordinator for this community.
+ - An initial application reviewer (username 'reviewer1'). The reviewer is approved to see initial applications.
+ - Mentors (usernames 'mentor1' to 'mentor3')
+ - Eight applicant accounts (usernames 'applicant1' to 'applicant8')
+
+This scenario will also create the following database objects:
+ - The community will be marked as being approved to participate in the current internship round (`class Participation`).
+ - Information about which organization is sponsoring that community's interns this internship round (`class Sponsorship`).
+ - Three projects has been submitted (`class Project`) by mentors mentor1, mentor2, and mentor3 for this community. The projects have been approved by the coordinator. The project titles will be randomly generated.
+ - Initial application (`class ApplicantApproval`) for applicant1, applicant2, applicant3, and applicant8 have been approved
+ - Initial application (`class ApplicantApproval`) for applicant4 is pending review by initial application reviewers
+ - Initial application (`class ApplicantApproval`) for applicant5 has been rejected because they have too many full-time commitments during the internship period
+ - Initial application (`class ApplicantApproval`) for applicant6 has been rejected for not aligning with Outreachy program goals
+ - Initial application (`class ApplicantApproval`) for applicant7 has been rejected for not meeting Outreachy's eligibility rules
+ - A contribution (`class Contribution`) has been recorded by applicants applicant1, applicant2, applicant3, and applicant8
+ - A final application (`class Contribution`) has been submitted by applicants applicant1, applicant2, applicant3, and applicant8
+ - Interns have been selected (`class InternSelection`):
+   - applicant1 has been selected as an intern to work with mentor1 (`class MentorRelationship`). The coordinator has not assigned a funding source for this internship. This internship is not yet approved by the Outreachy organizers.
+   - applicant2 has been selected as an intern to work with mentor2 (`class MentorRelationship`). The coordinator has said this internship will be funded by the community sponsors. This internship has been approved by the Outreachy organizers.
+   - applicant3 has been selected as an intern to work with mentor3 (`class MentorRelationship`). The coordinator has requested that this internship be funded by the Outreachy general fund. This internship is not yet approved by the Outreachy organizers.
+
+To create this scenario in your local website database, start the Django shell. Then use the code in `home/scenarios.py` to generate the database objects:
+```
+>>> from home import scenarios
+>>> scenario = scenarios.ContributionsClosedScenario()
+```
+
+See the [test case scenario accounts section](#test-case-scenario-accounts) to understand what local website accounts are automatically created by this code.
+
+Should any errors occur when running this code, follow the debugging techniques discussed in the [debugging scenarios code section](#debugging-scenarios-code).
+
+### Scenario 7: Internship week N
+
+Each week during the internship, the Outreachy organizers have different tasks, emails to send, and intern chats to run.
+
+The `InternshipWeekScenario` scenario will show you the website dashboard as it looks to the Outreachy organizers during each week of the internship.
+
+Relevant dates are:
+
+This scenario creates the following accounts:
+ - Community coordinator account (username 'coordinator1'). The coordinator is approved as a coordinator for this community.
+ - An initial application reviewer (username 'reviewer1'). The reviewer is approved to see initial applications.
+ - Mentors (usernames 'mentor1' to 'mentor3')
+ - Eight applicant accounts (usernames 'applicant1' to 'applicant8')
+
+This scenario will also create the following database objects:
+ - The community will be marked as being approved to participate in the current internship round (`class Participation`).
+ - Information about which organization is sponsoring that community's interns this internship round (`class Sponsorship`).
+ - Three projects has been submitted (`class Project`) by mentors mentor1, mentor2, and mentor3 for this community. The projects have been approved by the coordinator. The project titles will be randomly generated.
+ - Initial application (`class ApplicantApproval`) for applicant1, applicant2, applicant3, and applicant8 have been approved
+ - Initial application (`class ApplicantApproval`) for applicant4 is pending review by initial application reviewers
+ - Initial application (`class ApplicantApproval`) for applicant5 has been rejected because they have too many full-time commitments during the internship period
+ - Initial application (`class ApplicantApproval`) for applicant6 has been rejected for not aligning with Outreachy program goals
+ - Initial application (`class ApplicantApproval`) for applicant7 has been rejected for not meeting Outreachy's eligibility rules
+ - A contribution (`class Contribution`) has been recorded by applicants applicant1, applicant2, applicant3, and applicant8
+ - A final application (`class Contribution`) has been submitted by applicants applicant1, applicant2, applicant3, and applicant8
+ - Interns have been selected (`class InternSelection`):
+   - applicant1 has been selected as an intern to work with mentor1 (`class MentorRelationship`). The coordinator has said this internship will be funded by the community sponsors. This internship has been approved by the Outreachy organizers.
+   - applicant2 has been selected as an intern to work with mentor2 (`class MentorRelationship`). The coordinator has said this internship will be funded by the community sponsors. This internship has been approved by the Outreachy organizers.
+   - applicant3 has been selected as an intern to work with mentor3 (`class MentorRelationship`). The coordinator requested the internship be funded by the Outreachy general fund. However, the funding was denied, and the internship was not approved.
+
+Which internship week you want depends on what part of the code you're working on. For example, if you wanted to see the changes you've made to the intern welcome email template, you would want to set the week to the first week.
+
+To create this scenario in your local website database, start the Django shell. Then use the code in `home/scenarios.py` to generate the database objects:
+```
+>>> from home import scenarios
+>>> scenario = scenarios.InternshipWeekScenario(week=1)
 ```
 
 See the [test case scenario accounts section](#test-case-scenario-accounts) to understand what local website accounts are automatically created by this code.
@@ -573,79 +772,6 @@ If a co-mentor for the same Project signs up to participate as a mentor for this
 The relationship between an InternSelection and a MentorRelationship is shown below:
 
 ![An InternSelection is related to a MentorApproval through a MentorRelationship](https://github.com/outreachy/website/raw/master/docs/graphics/MentorApproval-MentorRelationship-Project-ApplicantApproval-InternSelection.png)
-
-## Test scenarios
-
-When you want to work on a new issue, it can be helpful to set up the internship round in a particular state. There's a couple of short cut functions in `home/scenarios.py` that you can use do that. They set up applicant, mentor, and coordinator accounts and data, and set the internship round dates.
-
-All user accounts created by scenarios.py have the password 'test'. Usernames are things like 'mentor2', 'coordinator1', 'applicant3', etc.
-
-The names and email addresses are randomly generated. That means the email won't match the name (e.g. "Megan Huntington <terrysmith@example.com>"). Unfortunately the library used to generate names and emails is very western-English centric.
-
-### Community sign-up scenario
-
-You can re-create how the Outreachy website looks when we first announce the internship round dates. This is the time when communities and mentors start to sign up to participate, but initial applications are not yet open.
-
-Run `./manage.py shell` and then enter the following code:
-
-```
->>> from home import scenarios
->>> scenario = scenarios.CommunitySignupUnderwayScenario()
-```
-
-This will create an internship round (`class RoundPage`) with dates and deadlines.
-
-The scenario code will create an open source community (`class Community`). The community will be marked as being approved to participate in the current internship round (`class Participation`).
-
-The code will also create accounts for coordinators, mentors, and initial application reviewers. All passwords for those accounts are set to 'test'. The following account usernames are created:
- - mentor1
- - coordinator1 - coordinator for mentor1's open source community
- - reviewer1 - initial application reviewer
-
-The scenario code will create a project that mentor1 has submitted. The code generates random text for the project name (and the community name). The project has been approved by coordinator1.
-
-
-### Intern selection period test scenario
-
-If you want to re-create how the Outreachy website looks during the intern selection process, you can run `./manage.py shell` and enter the following code:
-
-```
->>> from home import scenarios
->>> scenario = scenarios.InternSelectionScenario()
-```
-
-That will create a new community with three mentors (each with a project), and three applicants who have recorded a contribution and created a final application for the project. You can see the objects that are created by that function if you run the following commands:
-
-```
->>> Community.objects.all()
->>> CoordinatorApproval.objects.all()
->>> Participation.objects.all()
->>> Project.objects.all()
->>> MentorApproval.objects.all()
->>> ApplicationApproval.objects.all()
->>> Contribution.objects.all()
->>> FinalApplication.objects.all()
-```
-
-
-### Internship Week N test scenario
-
-You can re-create how the Outreachy website looks during a particular week of the internship. For example, if you want to see how the website looks during week 8 of the internship, you can run `./manage.py shell` and enter the following code:
-
-```
->>> from home import scenarios
->>> scenario = scenarios.InternshipWeekScenario(week=8)
-```
-
-The code will also create accounts for coordinators, mentors, and initial application reviewers. All passwords for those accounts are set to 'test'. The following account usernames are created:
- - applicant1 - first intern
- - applicant2 - second intern
- - applicant3 - third intern
- - mentor1 - mentor of applicant1
- - mentor2 - mentor of applicant2
- - mentor3 - mentor of applicant3
- - coordinator1 - coordinator for community for mentors 1-3
- - reviewer1 - initial application reviewer
 
 # Invalid HTML and testing
 
