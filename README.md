@@ -178,71 +178,99 @@ Type "help", "copyright", "credits" or "license" for more information.
 First, import all the models in `home/models.py`:
 
 ```
->>> from home.models import *
+>>> from home import models
 ```
 
-We'll also need to import all the methods in `home/factories.py`:
+We'll also need to import all the methods in `home/scenarios.py`:
 
 ```
->>> from home.factories import *
+>>> from home import scenarios
 ```
 
-The advantage of using the factories methods is that it automatically computes reasonable dates for all round deadlines, based on what the Outreachy internship round schedule normally is. You just have to give it one date and it will calculate the rest.
+The scenarios code creates database objects that represent the state of the website at particular times during the application, contribution, and internship periods. It automatically calculates the dates for internship round deadlines. It will also set up other database objects, such as mentors, coordinators, and project descriptions. The scenarios code is heavily used in the Outreachy tests (`home/tests_*.py`).
 
-### Initial applications open
+### Picking a scenario
 
-The Outreachy application period has two distinct periods: the initial application period and the contribution period. During the initial application period, applicants submit an eligibility form and essays (an initial application). All people who have an approved initial application will be notified by email. Then the contribution period will start. Approved applicants will contact mentors and work on project tasks (contributions).
+Next, you'll want to pick *one* of the following scenarios to set up. Which scenario you pick depends on what task you're working on.
 
-Let's assume you want an internship round where we're in the middle of the initial application period. We can set the initial applications deadline (`initial_applications_close`) to be one week (seven days) after today:
+For example, if you were working on a task to add a new field to the initial application, you would want to run the "Initial applications open" scenario code. If you were trying to fix a bug in the contribution recording form, you would want to run the "Contributions open" scenario code.
+
+Each scenario function in `home/scenarios.py` represents a different phase of the Outreachy internship round cycle:
+
+ * NewRoundScenario - Community CFP is first opened to ask for communities to sign up to participate as mentoring organizations
+ * CommunitySignupUnderwayScenario - Mentors submit project descriptions
+ * InitialApplicationsUnderwayScenario - Initial applications are open for applicants to fill out
+ * ContributionsUnderwayScenario - Applicants with an approved initial application start to contribute to projects, project list is finalized
+ * ContributionsClosedScenario - The final application deadline has passed
+ * InternSelectionScenario - Mentors select their interns
+ * InternshipWeekScenario - Internship phase, at various weeks in the 13 week internship
+
+Each scenario will create a series of accounts in your local website database.
+
+All accounts created will have a default password of 'test'.
+
+Account usernames will be automatically generated based on the type of account. For example, all applicants will have a username starting with 'applicant'. A number will be appended to the end of the username, e.g. applicant1, applicant2, applicant3, etc.
+
+Here is a table of accounts you can log into, for each scenario:
+
+| Scenario                            | coordinator1      | reviewer1 | mentor1 | applicant1 (to 8) | mentor2 (& 3) |
+|-------------------------------------|-------------------|-----------|---------|-------------------|---------------|
+| NewRoundScenario                    | x                 | x         |         |                   |               |
+| CommunitySignupUnderwayScenario     | x                 | x         | x       |                   |               |
+| InitialApplicationsUnderwayScenario | x                 | x         | x       | x                 |               |
+| ContributionsUnderwayScenario       | x                 | x         | x       | x                 | x             |
+| ContributionsClosedScenario         | x                 | x         | x       | x                 | x             |
+| InternSelectionScenario             | x                 | x         | x       | x                 | x             |
+| InternshipWeekScenario              | x                 | x         | x       | x                 | x             |
+
+While the account username is standardized, the public name, legal name, and email address of the accounts are randomized. We use a library to generate random names. Unfortunately, the names it picks are typically white western-English names. Also, the randomly generated public name will often not match the email address at all. For example, Lydia Walsh may end up with an email address starting with marymclean. Finally, each account will have a set of pronouns chosen randomly.
+
+Similarly, community names and project names are randomly generated words or phrases.
+
+The following sections tell you how to use the Django shell to generate a scenario of the given type.
+
+### Scenario 1: Initial applications open
+
+The Outreachy application period has two distinct periods: the initial application period and the contribution period. During the initial application period, applicants submit an eligibility form and essays (an initial application). All people who have an approved initial application will be notified by email.
+
+Let's assume you want to see how the website looks when we're in the middle of the initial application period. We can use the scenarios.py code to do that:
+
+We can set the initial applications deadline (`initial_applications_close`) to be one week (seven days) after today:
 
 ```
->>> import datetime
->>> current_round = RoundPageFactory(
-	start_from="initial_applications_close",
-	days_after_today=7)
+>>> from home import scenarios
+>>> scenario = scenarios.InitialApplicationsUnderwayScenario()
 ```
 
-
-
-```
->>> from django.db import transaction
->>> with factory.debug(), transaction.atomic():
-...     current_round = RoundPageFactory(
-...		start_from="initial_applications_close",
-...		days_after_today=7)
->>>
-```
-## Contributions open
-
-Let's assume you want an internship round where we're in the middle of the contribution period. We can set the deadline for when the final applications for projects are due (`appslate`) to be one week from today:
-
-```
->>> import datetime
->>> current_round = RoundPageFactory(
-	start_from="contributions_close",
-	days_after_today=7)
-```
-
+See the [picking a scenario](#picking-a-scenario) to understand what local website accounts are automatically created by this code.
 
 Should any errors occur when running this code, follow the debugging techniques discussed in the [debugging scenarios code section](#debugging-scenarios-code).
 
+### Scenario 2: Contributions open
+
+After applicants have their initial application approved, the contribution period will start. Approved applicants will pick a project to work, contact mentors, work on project tasks (contributions), and record those contributions in the website.
+
+Let's assume you want an internship round where we're in the middle of the contribution period. You can run the following code:
+
 ```
->>> from django.db import transaction
->>> with factory.debug(), transaction.atomic():
-...     current_round = RoundPageFactory(
-...		start_from="contributions_close",
-...		days_after_today=7)
->>>
+>>> from home import scenarios
+>>> scenario = scenarios.ContributionsUnderwayScenario()
 ```
 
+See the [test case scenario accounts section](#test-case-scenario-accounts) to understand what local website accounts are automatically created by this code.
+
 Should any errors occur when running this code, follow the debugging techniques discussed in the [debugging scenarios code section](#debugging-scenarios-code).
+
+# Debugging Tips
+
+## Django shell help
 
 The Django shell will print information about a class object. This includes the class methods and fields. This is a standard part of the Python shell, which Django shell builds on top of.
 
-For example, assume you followed the instructions from one of the sections above to set up an internship round. You'll end up with a variable called `current_round`. This is an object of the RoundPage class. You can type the code below in the shell to look at the variables and fields in the RoundPage class:
+For example, assume you followed the instructions from one of the sections above to set up an internship round. You'll end up with a variable called `scenario`. That variable has a field called "round". `scenario.round` is an object of the RoundPage class. You can type the code below in the shell to look at the variables and fields in the RoundPage class:
 
 ```
->>> help(current_round)
+>>> help(scenario.round)
 Help on RoundPage in module home.models object:
 
 class RoundPage(AugmentDeadlines, wagtail.wagtailcore.models.Page)
@@ -280,6 +308,7 @@ Luckily, you can debug why the code is failing. You can do that by adding a with
 ```
 >>> from django.db import transaction
 >>> import factory
+>>> from home import scenarios
 >>> with factory.debug(), transaction.atomic():
 ...     scenario = scenarios.InitialApplicationsUnderwayScenario()
 >>>
@@ -440,11 +469,11 @@ If you visit `http://localhost:8000/communities/cfp/really-awesome-community/`, 
 
 Each community can sign up to participate in an Outreachy internship round. That sign up is represented by `class Participation`. As part of signing up to participate in Outreachy, each community must provide sponsorship for at least one intern ($6,500 USD). When a community signs up, we require the coordinator to fill out information about their sponsor names and sponsorship amounts. The sponsor information is stored in `class Sponsorship`, which has a foreign key to the Participation object.
 
-You can use the Django shell to create a new participation. The example below assumes you already have a pre-created community that is being referenced by the variable name `really_awesome_community`, and a pre-created RoundPage `current_round`. The code also sets the approval status to say the community has been approved to participate in this round. The example sets that the community will be receiving sponsorship for two interns. We'll save a reference to that Participation object in the variable participation.
+You can use the Django shell to create a new participation. The example below assumes you already have a pre-created community that is being referenced by the variable name `really_awesome_community`, and a pre-created RoundPage stored in the variable `scenario.round`. The code also sets the approval status to say the community has been approved to participate in this round. The example sets that the community will be receiving sponsorship for two interns. We'll save a reference to that Participation object in the variable participation.
 
 ```
 >>> sponsorship = SponsorshipFactory(
-	participation__participating_round=current_round,
+	participation__participating_round=scenario.round,
 	participation__community=really_awesome_community,
 	participation__approval_status=ApprovalStatus.APPROVED,
 	amount=13000)
@@ -501,11 +530,11 @@ If the applicant applies to another round, they have to create a new initial app
 
 ### Creating ApplicantApproval Test Objects
 
-It can be useful to log into your local test website and see how the pages look from an applicant's perspective. The following Django shell example creates a new ApplicantApproval. It assumes you already have a pre-created RoundPage referenced by the variable `current_round`. It sets the initial application's approval status to approved. The code sets the applicant's account username. The factories code automatically sets the password to `test`.
+It can be useful to log into your local test website and see how the pages look from an applicant's perspective. The following Django shell example creates a new ApplicantApproval. It assumes you already have a pre-created RoundPage referenced by the variable `scenario.round`. It sets the initial application's approval status to approved. The code sets the applicant's account username. The factories code automatically sets the password to `test`.
 
 ```
 >>> applicant1 = ApplicantApprovalFactory(
-	application_round=current_round,
+	application_round=scenario.round,
 	approval_status=ApprovalStatus.APPROVED,
 	applicant__account__username="applicant1")
 ```
