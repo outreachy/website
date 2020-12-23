@@ -144,6 +144,14 @@ For example, we may have a series of dates associated with the May 2020 internsh
 
 The Django code uses these Python object classes to define the underlying database. When we create a database object for the May 2020 internship round, the Django code defines that the RoundPage object needs to have internship start and end dates. There may be other internship round objects in the database, such as objects for the May 2019 internship round, and the December 2019 internship round.
 
+## Saving Django objects to the database
+
+When you create a new object in the Django shell, you normally need to call the `save()` method to write the object to the local database. However, the following README sections use code in home/scenarios.py, and that code automatically calls the `save()` method for you. This can be confusing for newcomers to Django database concepts.
+
+## Deleting database objects
+
+Should you need to delete an object from the database, you can call the `delete()` method. Don't call `save()` after you call the `delete()` method, because that will write the object back to the database.
+
 ## Creating a new internship round in the database
 
 When you first set up your development environment, your local website database will be empty. There will be no internship rounds in the database.
@@ -194,9 +202,7 @@ Let's assume you want an internship round where we're in the middle of the initi
 	days_after_today=7)
 ```
 
-Note: Normally in the Django shell, you need to call the `save()` method to write the RoundPage object in the local database. The factories code automatically calls the `save()` method for you. Should you need to delete an object from the database, you can call the `delete()` method. Don't call `save()` afterwards, because that will write the object back to the database.
 
-If you get an error when running the factories code, it's often hard to tell what exactly is wrong. Most often, the issue is that a variable is missing that needs to be passed to the factories method. That usually means the factories code needs to create that object from scratch, which will cause it to create a new RoundPage. That will show up as an error `django.core.exceptions.ValidationError: {'slug': ['This slug is already in use']}`. If the factories method you were calling was making multiple objects, you'll need to debug which call failed. You can do that by adding a with section to invoke the factories debugger, and an atomic transaction block to ensure that no objects that were created before the factory method failed are saved to the database:
 
 ```
 >>> from django.db import transaction
@@ -217,9 +223,8 @@ Let's assume you want an internship round where we're in the middle of the contr
 	days_after_today=7)
 ```
 
-Note: Normally in the Django shell, you need to call the `save()` method to write the RoundPage object in the local database. The factories code automatically calls the `save()` method for you. Should you need to delete an object from the database, you can call the `delete()` method. Don't call `save()` afterwards, because that will write the object back to the database.
 
-If you get an error when running the factories code, it's often hard to tell what exactly is wrong. Most often, the issue is that a variable is missing that needs to be passed to the factories method. That usually means the factories code needs to create that object from scratch, which will cause it to create a new RoundPage. That will show up as an error `django.core.exceptions.ValidationError: {'slug': ['This slug is already in use']}`. If the factories method you were calling was making multiple objects, you'll need to debug which call failed. You can do that by adding a with section to invoke the factories debugger, and an atomic transaction block to ensure that no objects that were created before the factory method failed are saved to the database:
+Should any errors occur when running this code, follow the debugging techniques discussed in the [debugging scenarios code section](#debugging-scenarios-code).
 
 ```
 >>> from django.db import transaction
@@ -230,7 +235,7 @@ If you get an error when running the factories code, it's often hard to tell wha
 >>>
 ```
 
-# Django shell help
+Should any errors occur when running this code, follow the debugging techniques discussed in the [debugging scenarios code section](#debugging-scenarios-code).
 
 The Django shell will print information about a class object. This includes the class methods and fields. This is a standard part of the Python shell, which Django shell builds on top of.
 
@@ -263,6 +268,27 @@ You can also use the help function to ask for help on Python built-ins. For exam
 >>> from datetime import date
 >>> help(date)
 ```
+
+## Debugging scenarios code
+
+If you get an error when running the scenarios code, it's often hard to tell what exactly is wrong.
+
+Most often, the issue is that you're creating an internship round twice. The RoundPage code uses the internship dates to create a unique "slug" for the RoundPage object. This "slug" is used in website URLs to reference that internship round. If you attempt to create an internship round twice, the slug will not be unique. The code will throw the error `django.core.exceptions.ValidationError: {'slug': ['This slug is already in use']}`.
+
+Luckily, you can debug why the code is failing. You can do that by adding a with section to invoke the factories debugger, and an atomic transaction block. The atomic transaction block will ensure that no objects that were created before the factory method failed are saved to the database.
+
+```
+>>> from django.db import transaction
+>>> import factory
+>>> with factory.debug(), transaction.atomic():
+...     scenario = scenarios.InitialApplicationsUnderwayScenario()
+>>>
+```
+
+(If you are running a different scenario code snippet than the one above, replace the indented line with the code that you were running that failed.)
+
+The debugging output will be quite verbose, but you'll be able to see exactly which object creation call failed.
+
 
 # Testing the local website
 
