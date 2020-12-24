@@ -14,6 +14,21 @@ We expressly invite women (both cis and trans), trans men, and genderqueer peopl
 
 Anyone who faces under-representation, systemic bias, or discrimination in the technology industry of their country is invited to apply.
 
+# Outreachy-specific terms
+
+Please use the gender-neutral ["they/them" pronouns](http://pronoun.is/they) and gender-neutral language to refer to all Outreachy participants.
+
+The Outreachy community uses the following terms:
+
+ * **FOSS:** Free and Open Source Software.
+ * **Project:** A series of intern tasks to improve FOSS.
+ * **Community:** A community is a set of related projects. For instance, if Django participated as an Outreachy community, the community might mentor projects to improve Django core functionality, Django extensions, or Django documentation.
+ * **Mentor:** A mentor defines a project. They work with applicants to help them complete contributions to the project during the application process. A mentor selects an applicant to be the intern for their project. The mentor works remotely with the selected intern during the internship. An intern can have one or more mentors. Most Outreachy mentors only mentor one intern.
+ * **Coordinator:** Each internship project must be associated with a FOSS community participating in Outreachy. That community provides funding for interns, either directly from community funds, or by finding a company or foundation to sponsor interns. Each community has one or more coordinators, who review submitted projects, approve mentors, set internship funding sources, and generally provide a communication link between the mentors and Outreachy organizers. Some smaller communities have only one coordinator, who is also the only mentor.
+ * **Outreachy organizers:** There is a small set of organizers who oversee the entire Outreachy program. They communicate with coordinators about funding, onboard new communities, review intern feedback, authorize intern payments, answer questions, and promote the program to potential applicants.
+ * **Applicant:** During the application process, Outreachy applicants make contributions to projects and apply to be an Outreachy intern.
+ * **Intern:** An accepted applicant works with a mentor for three months during the internship period.
+
 # Current state of Outreachy tech
 
 The Outreachy web presence is in a couple of different places:
@@ -674,19 +689,6 @@ In the Outreachy repository, the directory `outreachy-home` is the project. We h
 The Outreachy website also uses some Django apps that are listed in the `INSTALLED_APPS` variable in `outreachyhome/settings/base.py`. The Python module code for those Django apps aren't found in top-level directories in the repository. That's because the Python module code was installed into your virtualenv directory when you ran `pipenv install`. That command looked at the Python package requirements listed in `Pipfile` and installed each of the packages.
 
 If you want to look at the source code of the installed external Django applications, you can use `pipenv open MODULE` to examine the source code files associated with that module. For example, say you notice the `home/models.py` file has an import line `from django.contrib.auth.models import User`. You can use pipenv open to look at the models.py file that contains the User class by running the command `pipenv open django.contrib.auth`. That will open all the files in the auth module in your editor, and you can then open models.py and search for `class User`.
-
-## Outreachy terminology
-
-Please use the gender-neutral ["they/them" pronouns](http://pronoun.is/they) and gender-neutral language to refer to all Outreachy participants.
-
- * **FOSS:** Free and Open Source Software.
- * **Project:** A series of intern tasks to improve FOSS.
- * **Community:** A community is a set of related projects. For instance, if Django participated as an Outreachy community, the community might mentor projects to improve Django core functionality, Django extensions, or Django documentation.
- * **Mentor:** A mentor defines a project. They work with applicants to help them complete contributions to the project during the application process. A mentor selects an applicant to be the intern for their project. The mentor works remotely with the selected intern during the internship. An intern can have one or more mentors. Most Outreachy mentors only mentor one intern.
- * **Coordinator:** Each internship project must be associated with a FOSS community participating in Outreachy. That community provides funding for interns, either directly from community funds, or by finding a company or foundation to sponsor interns. Each community has one or more coordinators, who review submitted projects, approve mentors, set internship funding sources, and generally provide a communication link between the mentors and Outreachy organizers. Some smaller communities have only one coordinator, who is also the only mentor.
- * **Outreachy organizers:** There is a small set of organizers who oversee the entire Outreachy program. They communicate with coordinators about funding, onboard new communities, review inern feedback, authorize intern payments, answer questions, and promote the program to potential applicants.
- * **Applicant:** During the application process, Outreachy applicants make contributions to projects and apply to be an Outreachy intern.
- * **Intern:** An accepted applicant works with a mentor for three months during the internship period.
 
 ## Outreachy Internship Phases
 
