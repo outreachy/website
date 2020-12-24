@@ -292,6 +292,8 @@ See the [Scenario accounts section](#scenario-accounts) to understand what local
 
 Should any errors occur when running this code, follow the debugging techniques discussed in the [debugging scenarios code section](#debugging-scenarios-code).
 
+If you pick the wrong scenario, or you want to start over with a new scenario, follow the instructions in the [create a different scenario section](#create-a-different-scenario).
+
 ### Scenario 2: Community Sign-up
 
 The `CommunitySignupUnderwayScenario` scenario represents the time when community coordinators are signing communities up to participate in Outreachy. One mentor has submitted their project.
@@ -316,6 +318,8 @@ To create this scenario in your local website database, start the Django shell. 
 See the [Scenario accounts section](#scenario-accounts) to understand what local website accounts are automatically created by this code.
 
 Should any errors occur when running this code, follow the debugging techniques discussed in the [debugging scenarios code section](#debugging-scenarios-code).
+
+If you pick the wrong scenario, or you want to start over with a new scenario, follow the instructions in the [create a different scenario section](#create-a-different-scenario).
 
 ### Scenario 3: Initial applications open
 
@@ -350,6 +354,8 @@ See the [Scenario accounts section](#scenario-accounts) to understand what local
 
 Should any errors occur when running this code, follow the debugging techniques discussed in the [debugging scenarios code section](#debugging-scenarios-code).
 
+If you pick the wrong scenario, or you want to start over with a new scenario, follow the instructions in the [create a different scenario section](#create-a-different-scenario).
+
 ### Scenario 4: Contributions open
 
 The Outreachy application period has two distinct periods: the initial application period and the contribution period. Applicants with an approved initial application will move onto the contribution period. Approved applicants will pick a project (or two), contact mentors, work on project tasks (contributions), and record those contributions in the Outreachy website.
@@ -383,6 +389,8 @@ To create this scenario in your local website database, start the Django shell. 
 See the [test case scenario accounts section](#test-case-scenario-accounts) to understand what local website accounts are automatically created by this code.
 
 Should any errors occur when running this code, follow the debugging techniques discussed in the [debugging scenarios code section](#debugging-scenarios-code).
+
+If you pick the wrong scenario, or you want to start over with a new scenario, follow the instructions in the [create a different scenario section](#create-a-different-scenario).
 
 ### Scenario 5: Contributions close
 
@@ -419,6 +427,8 @@ To create this scenario in your local website database, start the Django shell. 
 See the [test case scenario accounts section](#test-case-scenario-accounts) to understand what local website accounts are automatically created by this code.
 
 Should any errors occur when running this code, follow the debugging techniques discussed in the [debugging scenarios code section](#debugging-scenarios-code).
+
+If you pick the wrong scenario, or you want to start over with a new scenario, follow the instructions in the [create a different scenario section](#create-a-different-scenario).
 
 ### Scenario 6: Intern selection
 
@@ -457,6 +467,8 @@ To create this scenario in your local website database, start the Django shell. 
 See the [test case scenario accounts section](#test-case-scenario-accounts) to understand what local website accounts are automatically created by this code.
 
 Should any errors occur when running this code, follow the debugging techniques discussed in the [debugging scenarios code section](#debugging-scenarios-code).
+
+If you pick the wrong scenario, or you want to start over with a new scenario, follow the instructions in the [create a different scenario section](#create-a-different-scenario).
 
 ### Scenario 7: Internship week N
 
@@ -515,6 +527,33 @@ To create this scenario in your local website database, start the Django shell. 
 See the [test case scenario accounts section](#test-case-scenario-accounts) to understand what local website accounts are automatically created by this code.
 
 Should any errors occur when running this code, follow the debugging techniques discussed in the [debugging scenarios code section](#debugging-scenarios-code).
+
+If you pick the wrong scenario, or you want to start over with a new scenario, follow the instructions in the [create a different scenario section](#create-a-different-scenario).
+
+## Create a different scenario
+
+So, you picked a scenario and it turns out it wasn't the one you wanted. Or you ran some additional Django shell code, and now your website database is in a state you don't want.
+
+Don't worry! You can start over with a fresh local database.
+
+WARNING: the instructions in this section will delete your local database. You may want to save a copy of the database file with this command:
+
+```
+cp db.sqlite3 db.sqlite3.`date '+%Y-%m-%d-%H-%M'`
+```
+
+Now, we remove the local database:
+```
+rm db.sqlite3
+```
+
+To re-create the database, run the following commands:
+```
+./manage.py migrate
+./manage.py createsuperuser
+```
+
+Last, [pick a new scenario](#picking-a-scenario) and run the code to create it.
 
 # Debugging Tips
 
