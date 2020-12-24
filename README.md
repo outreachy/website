@@ -197,13 +197,13 @@ For example, if you were working on a task to add a new field to the initial app
 
 Each scenario function in `home/scenarios.py` represents a different phase of the Outreachy internship round cycle:
 
- * NewRoundScenario - Community CFP is first opened to ask for communities to sign up to participate as mentoring organizations
- * CommunitySignupUnderwayScenario - Mentors submit project descriptions
- * InitialApplicationsUnderwayScenario - Initial applications are open for applicants to fill out
- * ContributionsUnderwayScenario - Applicants with an approved initial application start to contribute to projects, project list is finalized
- * ContributionsClosedScenario - The final application deadline has passed
- * InternSelectionScenario - Mentors select their interns
- * InternshipWeekScenario - Internship phase, at various weeks in the 13 week internship
+ * [NewRoundScenario](#scenario-1-new-internship-round-dates) - Community CFP is first opened to ask for communities to sign up to participate as mentoring organizations
+ * [CommunitySignupUnderwayScenario](#scenario-2-community-sign-up) - Mentors submit project descriptions
+ * [InitialApplicationsUnderwayScenario](#scenario-3-initial-applications-open) - Initial applications are open for applicants to fill out
+ * [ContributionsUnderwayScenario](#scenario-4-contributions-open) - Applicants with an approved initial application start to contribute to projects, project list is finalized
+ * [ContributionsClosedScenario](#scenario-5-contributions-close) - The final application deadline has passed
+ * [InternSelectionScenario](#scenario-6-intern-selection) - Mentors select their interns
+ * [InternshipWeekScenario](#scenario-7-internship-week-n) - Internship phase, at various weeks in the 13 week internship
 
 Each scenario will create a series of accounts in your local website database.
 
