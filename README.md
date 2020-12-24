@@ -193,7 +193,7 @@ The scenarios code creates database objects that represent the state of the webs
 
 Next, you'll want to pick *one* of the following scenarios to set up. Which scenario you pick depends on what task you're working on.
 
-For example, if you were working on a task to add a new field to the initial application, you would want to run the "Initial applications open" scenario code. If you were trying to fix a bug in the contribution recording form, you would want to run the "Contributions open" scenario code.
+For example, if you were working on a task to add a new field to the initial application, you would want to run the "Scenario 3: Initial applications open" scenario code. If you were trying to fix a bug in the contribution recording form, you would want to run the "Scenario 4: Contributions open" scenario code.
 
 Each scenario function in `home/scenarios.py` represents a different phase of the Outreachy internship round cycle:
 
