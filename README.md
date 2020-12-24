@@ -669,13 +669,35 @@ When you first clone this project, you'll see a couple top level directories:
  * `outreachyhome`
  * `search`
 
-If you've followed the steps above to set up your development environment, Django may have generated some directories and put files in them. Don't modify or commit files from those directories. You can use `git status --ignored` to show you which directories are not supposed to be under revision control. Top-level directories you shouldn't commit to are ones like `media`, `node_modules`, and `static`. These directories are in the .gitignore file, so your changes to those files won't be listed if you run `git status`.
+## Directory Structure
+
+### Commonly used directories
+
+If you are working on Python code, HTML templates, or adding static images, you'll spend most of your time in the `home` directory.
+
+Key files and directories:
+ * `home/models.py` - Python code that defines our custom Django database models
+ * `home/views.py` - Python code that runs whenever you view a webpage or interact with a form
+ * `home/urls.py` - parsing rules for translating URLs into which Python view code to call
+ * `home/templates/home/` - HTML written with both the Django Templating Language and the Bootstrap template framework
+ * `home/templates/home/snippets` - small chunks of HTML that are included (embedded) in multiple templates
+ * `home/templates/home/docs` - HTML source for the [Applicant Guide](https://www.outreachy.org/docs/applicant/) and the [Internship Guide](https://www.outreachy.org/docs/internship/)
+
+### Less commonly used directories
+
+The top-level directory `docs` is where our maintenance and design documents go. There is a work-in-progress guide for Outreachy organizer tasks. The `docs` directory also includes the intern and mentor agreements, and our privacy policy.
 
 The `bin` directory almost never changes. It includes a script that's run by dokku before the website is deployed to outreachy.org.
 
-The top-level directory `docs` is where our maintenance and design documents go. It also includes the intern and mentor agreements, and our privacy policy.
-
 The `outreachyhome` directory contains the base HTML page templates for all pages on the website. It also includes all the Django project settings for both development and production environments. This directory isn't changed very often.
+
+### Directories not under revision control
+
+If you've followed the steps above to set up your development environment, Django may have generated some directories and put files in them. Don't modify or commit files from those directories. You can use `git status --ignored` to show you which directories are not supposed to be under revision control. Top-level directories you shouldn't commit to are ones like `media`, `node_modules`, and `static`. These directories are in the .gitignore file, so your changes to those files won't be listed if you run `git status`.
+
+# Django apps
+
+## Outreachy Django apps
 
 Django breaks up functionality into a project (a Django web application) and apps (smaller a set of Python code that implements a specific feature). There is only one project deployed on a site at a time, but there could be many apps deployed. You can read more about what an application is in [the Django documentation](https://docs.djangoproject.com/en/2.0/ref/applications/).  
 
