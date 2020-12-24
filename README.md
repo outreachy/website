@@ -205,6 +205,8 @@ Each scenario function in `home/scenarios.py` represents a different phase of th
  * [InternSelectionScenario](#scenario-6-intern-selection) - Mentors select their interns
  * [InternshipWeekScenario](#scenario-7-internship-week-n) - Internship phase, at various weeks in the 13 week internship
 
+Once you've picked one scenario and run the code to update your local database, the next step is to [test the local website](#testing-the-local-website).
+
 ### Scenario accounts
 
 Each scenario will create a series of accounts in your local website database.
