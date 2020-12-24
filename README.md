@@ -695,6 +695,69 @@ The `outreachyhome` directory contains the base HTML page templates for all page
 
 If you've followed the steps above to set up your development environment, Django may have generated some directories and put files in them. Don't modify or commit files from those directories. You can use `git status --ignored` to show you which directories are not supposed to be under revision control. Top-level directories you shouldn't commit to are ones like `media`, `node_modules`, and `static`. These directories are in the .gitignore file, so your changes to those files won't be listed if you run `git status`.
 
+## Working with HTML
+
+Sometimes you'll want to edit the text on a web page. You know what the URL the text is found at, but you don't know which source file(s) it corresponds to.
+
+There are a couple different ways to find the right html file to edit:
+
+ * [Method 1: Django Debug Toolbar](#method-1-django-debug-toolbar)
+ * [Method 2: Searching with git grep](#method-2-searching-with-git-grep)
+
+### Method 1: Django Debug Toolbar
+
+The Django Debug toolbar is the "DJDT" tab in the upper right corner of the page. It's only visible if you're running the website in debug mode, i.e. when you're using your local copy of the website.
+
+For example, let's start the local webserver and navigate in a browser window to `http://localhost:8000/promote/`. Click the Django Debug Toolbar in the upper right corner of the page.
+
+In this example, we want to know which HTML templates are used to create the promotion page. Click the "Templates" section of the toolbar.
+
+A new page will pop up over the promotion page. It will show information about all the different HTML template pages that we used to create this page. The paths will be relative to the `home/templates/` directory. So the template path `home/promote.html` has an absolute path of `home/templates/home/promote.html`.
+
+### Method 2: Searching with git grep
+
+Find a less common phrase in the webpage. We recommend using part of a phrase, not a full sentence or paragraph. That's because the paragraph may be split across multiple lines, and the tools below stop looking for a match at the end of the line.
+
+The best tool for searching is `git grep`. `git grep` only searches the files that are under revision control. It doesn't search generated files, or files you haven't committed yet. You can learn more about `git grep` by looking at its manual page:
+
+`man git grep`
+or
+`git grep --help`
+
+There are some pitfalls in this manual page. The `git grep` manual assumes you already some basic familiarity with the `grep` tool. So there are undocumented flags that you can pass to `grep` that `git grep` will also accept. However, `git grep` doesn't accept all the same flags that `grep` does. It's frustrating.
+
+To understand what options you may be able to use with `git grep`, you may also need to read the `grep` manual page:
+
+`man grep`
+or
+`grep --help`
+
+**Simple examples:**
+
+Search for the phrase "Outreachy Eligibility Rules":
+
+`git grep "Outreachy Eligibility Rules"`
+
+Show 10 lines before and 10 lines after the search phrase:
+
+`git grep -B10 -A10 "Outreachy Eligibility Rules"`
+
+**Complex examples:**
+
+Search in the `home/templates/home` directory only:
+
+`git grep "Outreachy Eligibility Rules" -- "home/templates/home"`
+
+This command is a bit complex because it uses `grep` syntax to include the "pathspec" to search in. The pathspec strings must come after the "--" operator.
+
+As of git 1.9.0, `git grep` allows you to exclude files and directories from showing up in your search matches. You can either use the ":(exclude)" or ":!" prefix to the exclude string.
+
+To search for a number (like 49), excluding binary picture files, Python package lists, Django migration files, CSS, and JavaScript embedded into a specific HTML file:
+
+```
+git grep 49 -- ":(exclude)home/templates/home/stats_round_fifteen.html" ":(exclude)Pipfile.lock" ":(exclude)*.svg" ":(exclude)*.png" ":(exclude)*.ai" ":(exclude)*.eps" ":(exclude)*.jpg" ":(exclude)*.css" ":(exclude)home/migrations/*"
+```
+
 # Django apps
 
 ## Outreachy Django apps
