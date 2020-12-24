@@ -690,6 +690,14 @@ The Outreachy website also uses some Django apps that are listed in the `INSTALL
 
 If you want to look at the source code of the installed external Django applications, you can use `pipenv open MODULE` to examine the source code files associated with that module. For example, say you notice the `home/models.py` file has an import line `from django.contrib.auth.models import User`. You can use pipenv open to look at the models.py file that contains the User class by running the command `pipenv open django.contrib.auth`. That will open all the files in the auth module in your editor, and you can then open models.py and search for `class User`.
 
+# Outreachy website models
+
+Django defines "models" which are templates to store data in the database. Most of the Outreachy website models can be found in `home/models.py`.
+
+The models in this code reflect the organization of Outreachy. That means in order to work on the code, you may need to understand how our internship program works: the application and internship cycle, volunteer roles, and a little bit about how our internships are funded.
+
+It can seem daunting to look at many models! Please ask for help when you're stuck or confused about the models. It's likely confusing because our organization has grown organically over the last 10 years, and our code base reflects that.
+
 ## Outreachy Internship Phases
 
 The Outreachy website changes depending on what phase of the internship round Outreachy is in. The phases of the internship round are:
@@ -867,6 +875,8 @@ If a co-mentor for the same Project signs up to participate as a mentor for this
 The relationship between an InternSelection and a MentorRelationship is shown below:
 
 ![An InternSelection is related to a MentorApproval through a MentorRelationship](https://github.com/outreachy/website/raw/master/docs/graphics/MentorApproval-MentorRelationship-Project-ApplicantApproval-InternSelection.png)
+
+
 
 # Invalid HTML and testing
 
