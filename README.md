@@ -205,6 +205,8 @@ Each scenario function in `home/scenarios.py` represents a different phase of th
  * [InternSelectionScenario](#scenario-6-intern-selection) - Mentors select their interns
  * [InternshipWeekScenario](#scenario-7-internship-week-n) - Internship phase, at various weeks in the 13 week internship
 
+### Scenario accounts
+
 Each scenario will create a series of accounts in your local website database.
 
 All accounts created will have a default password of 'test'.
@@ -248,7 +250,7 @@ To create this scenario in your local website database, start the Django shell. 
 >>> scenario = scenarios.NewRoundScenario()
 ```
 
-See the [picking a scenario](#picking-a-scenario) to understand what local website accounts are automatically created by this code.
+See the [Scenario accounts section](#scenario-accounts) to understand what local website accounts are automatically created by this code.
 
 Should any errors occur when running this code, follow the debugging techniques discussed in the [debugging scenarios code section](#debugging-scenarios-code).
 
@@ -273,7 +275,7 @@ To create this scenario in your local website database, start the Django shell. 
 >>> scenario = scenarios.CommunitySignupUnderwayScenario()
 ```
 
-See the [picking a scenario](#picking-a-scenario) to understand what local website accounts are automatically created by this code.
+See the [Scenario accounts section](#scenario-accounts) to understand what local website accounts are automatically created by this code.
 
 Should any errors occur when running this code, follow the debugging techniques discussed in the [debugging scenarios code section](#debugging-scenarios-code).
 
@@ -306,7 +308,7 @@ To create this scenario in your local website database, start the Django shell. 
 >>> scenario = scenarios.InitialApplicationsUnderwayScenario()
 ```
 
-See the [picking a scenario](#picking-a-scenario) to understand what local website accounts are automatically created by this code.
+See the [Scenario accounts section](#scenario-accounts) to understand what local website accounts are automatically created by this code.
 
 Should any errors occur when running this code, follow the debugging techniques discussed in the [debugging scenarios code section](#debugging-scenarios-code).
 
