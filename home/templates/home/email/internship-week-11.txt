@@ -111,8 +111,6 @@ https://medium.com/free-code-camp/writing-a-killer-software-engineering-resume-b
 
 The second article was written for people applying to software engineering jobs, but much of the advice is relevant to other jobs in the tech industry. The article also talks a lot about how to showcase your college degree, but if you don't have a college degree, you can still list your coding schools, online courses, or certifications.
 
-You may also want to list volunteer roles or a non-technical job. There are many ways to learn skills that will be useful in the job you're applying for! Deb Nicholson, Software Freedom Conservancy's Director of Community Operations, used to book shows for bands. This taught her event management, negotiation with multiple stakeholders, how to get things done on a limited budget, marketing, and a lot of networking skills. All of those skills are highly relevant to the job Deb does now, working directly with Conservancy's member communities, organizing Copyleft Conf, and promoting Conservancy.
-
 If you have any questions, please contact the Outreachy organizers organizers@outreachy.org
 
 Outreachy Organizers
