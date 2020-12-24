@@ -675,13 +675,18 @@ When you first clone this project, you'll see a couple top level directories:
 
 If you are working on Python code, HTML templates, or adding static images, you'll spend most of your time in the `home` directory.
 
-Key files and directories:
+Key Python files and directories:
  * `home/models.py` - Python code that defines our custom Django database models
  * `home/views.py` - Python code that runs whenever you view a webpage or interact with a form
  * `home/urls.py` - parsing rules for translating URLs into which Python view code to call
- * `home/templates/home/` - HTML written with both the Django Templating Language and the Bootstrap template framework
+
+Key HTML files and directories:
+ * `home/templates/home/` - Most all of the important HTML templates are here
  * `home/templates/home/snippets` - small chunks of HTML that are included (embedded) in multiple templates
- * `home/templates/home/docs` - HTML source for the [Applicant Guide](https://www.outreachy.org/docs/applicant/) and the [Internship Guide](https://www.outreachy.org/docs/internship/)
+ * `home/templates/home/docs` - source files for the [Applicant Guide](https://www.outreachy.org/docs/applicant/) and the [Internship Guide](https://www.outreachy.org/docs/internship/)
+ * `home/templates/home/email` - emails the website sends
+ * `home/templates/home/blog` - blog post HTML (some posts are in the Wagtail CMS and are not in this git repository)
+ * `home/templates/home/dashboard` - each Outreachy website account has a "dashboard" where important information, notices, and deadlines can be found
 
 ### Less commonly used directories
 
