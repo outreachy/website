@@ -1,7 +1,18 @@
+This repository is for the code that comprises the [Outreachy website](https://www.outreachy.org).
+
 # What is Outreachy?
 
-Outreachy is a three-month paid internship program for people traditionally underrepresented in tech.
-This repository is for the Django code that comprises the [Outreachy website](https://www.outreachy.org).
+Outreachy provides remote internships. Outreachy supports diversity in open source and free software!
+
+Outreachy internships are 3 months long. Interns are paid an internship stipend of $5,500 USD. Interns have a $500 USD travel stipend to attend conferences or events.
+
+Interns work with experienced mentors from open source communities. Outreachy internship projects may include programming, user experience, documentation, illustration, graphical design,  data science, project marketing, user advocacy, or community event planning.
+
+Outreachy internships are open to applicants around the world. Interns work remotely. Interns are not required to move.
+
+We expressly invite women (both cis and trans), trans men, and genderqueer people to apply. We also expressly invite applications from residents and nationals of the United States of any gender who are Black/African American, Hispanic/Latinx, Native American/American Indian, Alaska Native, Native Hawaiian, or Pacific Islander.
+
+Anyone who faces under-representation, systemic bias, or discrimination in the technology industry of their country is invited to apply.
 
 # Current state of Outreachy tech
 
