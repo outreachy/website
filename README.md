@@ -427,6 +427,22 @@ Each week during the internship, the Outreachy organizers have different tasks, 
 The `InternshipWeekScenario` scenario will show you the website dashboard as it looks to the Outreachy organizers during each week of the internship.
 
 Relevant dates are:
+ - Week 1: internship starts
+ - Week 2: internship chat, initial feedback due
+ - Week 3: send blog post prompt email
+ - Week 4: internship chat
+ - Week 5: send blog post prompt email
+ - Week 6: internship chat, midpoint feedback due
+ - Week 7: send blog post prompt email
+ - Week 8: internship chat
+ - Week 9: send blog post prompt email
+ - Week 10: internship chat
+ - Week 11: send blog post prompt email
+ - Week 12: internship chat
+ - Week 13: send blog post prompt email
+ - Week 14: internship chat (on last day), final feedback due
+
+(These dates may vary from round-to-round.)
 
 This scenario creates the following accounts:
  - Community coordinator account (username 'coordinator1'). The coordinator is approved as a coordinator for this community.
