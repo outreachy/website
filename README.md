@@ -25,13 +25,49 @@ Older/deprecated websites include:
  - Track sponsorship information
  - Create a better way of displaying the list of potential Outreachy projects - e.g. allow searching, tagging for programming language or design or documentation or user experience
 
-# How does the Outreachy website tech work together?
+# Technology used in Outreachy website
 
-The Outreachy website is built with [Python](https://www.python.org/) and a web framework called [Django](https://www.djangoproject.com/). Additionally, the Outreachy website uses a content management system called [Wagtail](https://wagtail.io/), which builds on top of Django. On the Outreachy webserver, we run [Dokku](http://dokku.viewdocs.io/dokku/), which helps us deploy new code, manage our Let's Encrypt SSL certificates, and backup the Outreachy website database. Only Outreachy organizers have ssh access to push new code to the server.
+## Commonly used technology
 
-# Optional helpful background reading
+The Outreachy website is built with [Python](https://www.python.org/) and a web framework called [Django](https://www.djangoproject.com/). If you are creating new dynamic web content, you'll become familiar with Django over time.
 
-[Django topic guides](https://docs.djangoproject.com/en/3.1/topics/), particularly the [models](https://docs.djangoproject.com/en/3.1/topics/db/models/) guide.
+Django allows us to build HTML using the [Django Templating Language](https://docs.djangoproject.com/en/3.1/topics/templates/). If you are editing static content, you will get familiar with the HTML templating language over time.
+
+The Outreachy website uses the [Bootstrap](https://getbootstrap.com/docs/4.3/) framework for CSS and UI elements. If you are working with CSS, JavaScript, or HTML layout, you'll get familiar with Bootstrap over time.
+
+## Less commonly used technology
+
+There are a few pages that use [jQuery](https://learn.jquery.com/). You should not need to learn jQuery unless you're working on that code.
+
+The Outreachy website uses a content management system called [Wagtail](https://wagtail.io/), which builds on top of Django. Wagtail is being depreciated from the Outreachy website, so you should not need to know much about it. What you do need to know is that Wagtail allows people to add static webpages and images to the Outreachy website.
+
+Pages created and images uploaded to Wagtail do not become a part of this repository. Instead, the pages and images are stored on the website's remote database. So if you come across content that is not the git repository, it is probably stored in Wagtail on the Outreachy website server.
+
+On the Outreachy webserver, we run [Dokku](http://dokku.viewdocs.io/dokku/). Dokku helps us deploy new code, manage our Let's Encrypt SSL certificates, and backup the Outreachy website database. Only Outreachy organizers have ssh access to push new code to the server. There should be no need for you to learn Dokku.
+
+# Concepts and Resources
+
+If you are going to be modifying the website's Python code, you may need to learn about some new topics. It's best to keep these resources on hand and reference them as needed, rather than reading them all the way through before starting on a task.
+
+When modifying the Django Python code, the following resources can be helpful:
+
+ * [Django documentation overview](https://docs.djangoproject.com/en/3.1/)
+ * [Django tutorial](https://docs.djangoproject.com/en/3.1/intro/tutorial01/)
+ * [Django topic guides](https://docs.djangoproject.com/en/3.1/topics/)
+ * [Django models guide](https://docs.djangoproject.com/en/3.1/topics/db/models/)
+
+## Database concepts
+
+Unfortunately, the Django documentation assumes you already have some basic knowledge of database concepts. We wish it was more friendly to people who are new to databases. This section is an attempt to document additional resources you may want to read on database concepts. If you are still having trouble understanding Django documentation, please ask for help.
+
+The Django documentation will talk about the "relationship" between two Django class objects.
+ - [What is a database relationship?](https://database.guide/what-is-a-relationship/)
+
+You will sometimes see fields of the type `ForeignKey`. Django has documentation on [foreign key fields](https://docs.djangoproject.com/en/3.1/ref/models/fields/#module-django.db.models.fields.related), but it assumes you know what a foreign key in a database is. If you are new to databases, we recommend reading about what a foreign key is:
+
+ - [What is a primary key?](https://www.techopedia.com/definition/5547/primary-key)
+ - [What is a foreign key?](https://www.techopedia.com/definition/7272/foreign-key)
+ - [How do primary keys and foreign keys relate to each other?](https://database.guide/what-is-a-foreign-key/)
 
 # Setting up your development environment
 
@@ -557,19 +593,6 @@ It's unlikely you'll need to access the Wagtail admin interface, where the local
 The runserver command takes a snapshot of the Python code base when you start it. If you change any of the website Python code, you'll need to exit the server (CTRL+c) and restart it to reload the code.
 
 You don't need to restart the shell if you're only making changes to HTML templates or CSS.
-
-# Concepts and Resources
-
-In order to work on the Outreachy website, you will need to learn about some database concepts. Unfortunately, the Django documentation assumes you already have some basic knowledge of database concepts. We wish it was more friendly to people who are new to databases. This section is an attempt to document additional resources you may want to read on database concepts. If you are still having trouble understanding Django documentation, please ask for help.
-
-The Django documentation will talk about the "relationship" between two Django class objects.
- - [What is a database relationship?](https://database.guide/what-is-a-relationship/)
-
-You will sometimes see fields of the type `ForeignKey`. Django has documentation on [foreign key fields](https://docs.djangoproject.com/en/3.1/ref/models/fields/#module-django.db.models.fields.related), but it assumes you know what a foreign key in a database is. If you are new to databases, we recommend reading about what a foreign key is:
-
- - [What is a primary key?](https://www.techopedia.com/definition/5547/primary-key)
- - [What is a foreign key?](https://www.techopedia.com/definition/7272/foreign-key)
- - [How do primary keys and foreign keys relate to each other?](https://database.guide/what-is-a-foreign-key/)
 
 # Tour of the code base
 
