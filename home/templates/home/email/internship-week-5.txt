@@ -13,7 +13,7 @@ The goal of midpoint feedback is to ensure that interns are working full-time on
 Week 5 Theme
 ------------
 
-The theme for this week is "Think About Your Audience". In this case, an "audience" means the people who are reading your blog posts. They may not have all the skills or knowledge that you do. You might share some skills, but they may not be familar with your community. They could be free software contributors or they could be newcomers.
+The theme for this week is "Think About Your Audience". In this case, an "audience" means the people who are reading your blog posts. They may not have all the skills or knowledge that you do. You might share some skills, but they may not be familiar with your community. They could be free software contributors or they could be newcomers.
 
 When your mentor wrote their project description for the Outreachy website, they had to consider the audience that would read it. They had to take into account that not all Outreachy applicants would have heard of their community or project. They may have needed to explain terms and concepts that applicants would be unfamiliar with. However, since mentors have been contributing to the project for some time, they may not remember which terms or concepts were unfamiliar to a newcomer.
 
@@ -28,11 +28,9 @@ See the detailed section below for more prompts.
 Week 6 Mentor & Intern Chat
 ---------------------------
 
-On {{ current_round.week_six_chat_text_date }} UTC we will host a chat for both Outreachy interns and mentors. We encourage you to briefly share share why you're passionate about your project or community. Try to explain why your project is interesting in a way that someone who has never heard of your community could understand.
+On {{ current_round.week_six_chat_text_date }} UTC we will host a chat for both Outreachy interns and mentors. We will be discussing conferences and events. Conferences are a big part of free software and open source culture. But it's likely interns haven't been to a free software conference, event, or meetup. Some mentors and coordinators may have been to many conferences. We'll talk about why conferences are important, and mentors and coordinators will share their tips for getting the most out of conferences.
 
 {{ current_round.week_six_audience_chat_url }}
-
-Other interns and mentors are encouraged to ask questions. Don't worry about being grilled on your project! This chat is about being curious about other free and open source software communities. Answering questions about your project is a way to share your interests and encourage others to share theirs.
 
 Goals for Mentors
 -----------------
