@@ -638,6 +638,20 @@ Luckily, you can debug why the code is failing. You can do that by adding a with
 
 The debugging output will be quite verbose, but you'll be able to see exactly which object creation call failed.
 
+You can also look at all the objects in your database at once to see what a scenario created. From the shell you can quickly get all their short string representations for an overview:
+
+```
+>>> from django.apps import apps
+>>> for model in apps.get_app_config('home').get_models():
+...   print(model, model.objects.all())
+```
+
+Or, you can use Django's built-in `dumpdata` management command to get a JSON-formatted view of all fields in all the objects:
+
+```
+./manage.py dumpdata --indent 2 home
+```
+
 
 # Testing the local website
 
