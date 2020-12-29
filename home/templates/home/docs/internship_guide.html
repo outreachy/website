@@ -17,7 +17,11 @@ Internship Guide | Outreachy Documentation
 	<li><a href='#mentor-expectations'>Mentor Expectations</a></li>
 	<li><a href='#career-development'>Career Development</a></li>
 	<li><a href='#payments'>Payments</a></li>
-	<li><a href='#blog'>Blogging</a></li>
+	<li><a href='#blog'>Blogging</a>
+		<ul>
+			<li><a href="#blog-week-1">Blog Week 1: Introduce yourself</a></li>
+		</ul>
+	</li>
 	<li><a href='#blogging-faq'>Blogging FAQ</a></li>
 	<li><a href='#chats'>Chats with interns, mentors, and alums</a>
 </ol>
@@ -125,7 +129,7 @@ Internship Guide | Outreachy Documentation
 {% if applicant_round %}
 	{% with current_round=applicant_round %}
 		<table class="table">
-			<tr><th width="175">{{ current_round.internship_week_1_email_date }}</th><td>Blog prompt: "Introduce yourself"</td></tr>
+			<tr><th width="175">{{ current_round.internship_week_1_email_date }}</th><td>Blog prompt: <a href="#blog-week-1">"Introduce yourself"<a/></td></tr>
 			<tr><th>{{ current_round.internship_week_3_email_date }}</th><td>Blog prompt: "Everybody struggles"</td></tr>
 			<tr><th>{{ current_round.internship_week_5_email_date }}</th><td>Blog prompt: "Think about your audience"</td></tr>
 			<tr><th>{{ current_round.internship_week_7_email_date }}</th><td>Mid-point project progress blog post</td></tr>
@@ -139,7 +143,7 @@ Internship Guide | Outreachy Documentation
 {% if intern_round %}
 	{% with current_round=intern_round %}
 		<table class="table">
-			<tr><th width="175">{{ current_round.internship_week_1_email_date }}</th><td>Blog prompt: "Introduce yourself"</td></tr>
+			<tr><th width="175">{{ current_round.internship_week_1_email_date }}</th><td>Blog prompt: <a href="#blog-week-1">"Introduce yourself"</a></td></tr>
 			<tr><th>{{ current_round.internship_week_3_email_date }}</th><td>Blog prompt: "Everybody struggles"</td></tr>
 			<tr><th>{{ current_round.internship_week_5_email_date }}</th><td>Blog prompt: "Think about your audience"</td></tr>
 			<tr><th>{{ current_round.internship_week_7_email_date }}</th><td>Mid-point project progress blog post</td></tr>
@@ -149,6 +153,43 @@ Internship Guide | Outreachy Documentation
 		</table>
 	{% endwith %}
 {% endif %}
+
+<h3 id="blog-week-1"><a href="#blog-week-1">Blog Week 1: Introduce yourself</a></h3>
+<!-- Please keep the blog prompt in sync with the email text in home/templates/home/email/internship-week-1.txt -->
+
+<p><b>Blog prompt</b></p>
+<p>In your first internship blog post, you should:</p>
+
+<ol>
+	<li>Introduce yourself.</li>
+	<li>Pick 1-3 <a href="https://jamesclear.com/core-values">core values</a>, and talk about why they are important to you.</li>
+	<li>Tell people what motivated you to apply to Outreachy.</li>
+</ol>
+
+<p>See the <a href="#blog-length">blog faq</a> for suggested blog post length.</p>
+
+<p><b>Core values</b></p>
+
+<p>Core values are important personality traits. Core values motivate you when you make decisions. Here's a <a href="https://jamesclear.com/core-values">list of some core values</a>.</p>
+
+<p>For example, if the Outreachy organizer Sage Sharp were to talk about their core values, they would say:</p>
+
+<div class="card p-2 m-4">
+	<div class="card-body">
+		<p class="card-text">"My core values are curiosity, growth, and compassion.</p>
+
+		<p class="card-text">I value curiosity. I always want to know how something works. I'm also curious about why things are built a particular way.</p>
+
+		<p class="card-text">Once I understand the how and why, I want to optimize and improve it. That's why I value growth. I want to be a better person. I want to help the world be a better place.</p>
+
+		<p class="card-text">I also value compassion. I want to support and understand people. I'm always curious about other people's lived experiences."</p>
+
+	</div>
+</div>
+
+<p>Your values may be very different from Sage's. Maybe you're ambitious, you want to be a leader, and you want to influence others. Or maybe you value security, loyalty, and stability. That's great! You should write about the core values that resonate with you.</p>
+
+<p>Pick 1 to 3 <a href="https://jamesclear.com/core-values">core values</a>. Talk about why they are important to you.</p>
 
 <p><a href='#toc'><u>↑ table of contents</u></a></p>
 <hr>
