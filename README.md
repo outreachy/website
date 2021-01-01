@@ -702,6 +702,9 @@ Key HTML files and directories:
  * `home/templates/home/blog` - blog post HTML (some posts are in the Wagtail CMS and are not in this git repository)
  * `home/templates/home/dashboard` - each Outreachy website account has a "dashboard" where important information, notices, and deadlines can be found
 
+Key CSS files and directories:
+ * `outreachyhome/templates/sass/` - CSS that overrides the default Bootstrap theme
+
 ### Less commonly used directories
 
 The top-level directory `docs` is where our maintenance and design documents go. There is a work-in-progress guide for Outreachy organizer tasks. The `docs` directory also includes the intern and mentor agreements, and our privacy policy.
