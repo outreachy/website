@@ -1,73 +1,78 @@
-# Support of Non-native English Speakers
+{% extends "base.html" %}
+{% load static %}
 
-Outreachy participants should not critique grammar or spelling. It is okay to
-ask for clarification if the person's question is unclear.
+{% block title %}
+Applicant Guide | Outreachy Documentation
+{% endblock %}
 
-When having a meeting with a non-native English speaker, allow more time
-between asking a question and expecting an answer. Non-native English speakers
-will need more time to translate the question.
+{% block content %}
+<p><a href='{% url 'docs' %}'>← back to Outreachy documentation</a></p>
+<h1>Outreachy Community Participation Guide</h1>
 
-When having a verbal meeting, people might ask, "What did you say?"
+<h2 id='toc'>Table of Contents</h2>
 
-In this case, first repeat the phrase exactly. Non-native speakers may have
-mishear a particular word. Or they may not know what the word means. They need
-to hear the phrase exactly to understand that word.
+<ol>
+	<li><a href='#what-is-outreachy'>What is Outreachy?</a></li>
+	<li><a href='#tips'>Tips for working with applicants and interns</a>
+		<ul>
+			<li><a href='#non-native-english'>Support of Non-native English Speakers</a></li>
+			<li><a href='#self-motivated-learners'>Self-motivation to learn</a></li>
+		</ul>
+	</li>
+</ol>
 
-Repeat the exact phrase more slowly. Try to articulate each word.
+<hr>
 
-If they ask again, try to rephrase. Use less complex words or define the
-complex words. Use simpler and shorter sentences.
+<h2 id='intro'><a href='#intro'>What is Outreachy?</a></h2>
 
-# Self-motivation to Learn
+<p>Outreachy is a paid, remote internship program. Outreachy's goal is to support people from groups underrepresented in tech. We help newcomers to free software and open source make their first contributions.</p>
 
-As mentors evaluate Outreachy applicants, they often ask themselves, "Will this
-applicant be self-motivated to learn if I select them as an intern?"
+<p>This Community Guide is written for Outreachy community <b>coordinators</b> and <b>mentors</b>. Outreachy interns work with mentors for three months. Outreachy community coordinators help find funding for interns, find mentors, help applicants, and ensure that the internship runs smoothly.</p>
 
-This section will help mentors clarify which applicants fit that criteria.
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
 
-Outreachy organizers acknowledge that some applicants may not have enough
-skills (both technical and communication skills) to be a good fit for a
-particular project.
+<h2 id='tips'><a href='#tips'>Tips for working with applicants and interns</a></h2>
 
-It's crucial that mentors define a set of tasks for applicants to complete
-during the contribution period. These contribution tasks are essential for
-determining applicant skill levels.
+<h3 id='non-native-english'><a href='#non-native-english'>Support of Non-native English Speakers</a></h3>
 
-It's important that mentors use a real-time community chat to talk to
-applicants. This allows mentors to determine if applicants have good
-communication skills.
+<p>Outreachy participants should not critique grammar or spelling. It is okay to ask for clarification if the person's question is unclear.</p>
 
-# Mentor Time Commitment To Applicants
+<p>When having a meeting with a non-native English speaker, allow more time between asking a question and expecting an answer. Non-native English speakers will need more time to translate the question.</p>
 
-Mentors typically volunteer 5 to 10 hours per week during the contribution
-period. Since mentors have multiple applicants to their projects, that time
-will be split across applicants.
+<p>When having a verbal meeting, people might ask, "What did you say?"</p>
 
-Mentors need to be available to applicants and interns via email. Email allows
-applicants, especially non-native English speakers, time to formulate their
-questions.
+<p>In this case, first repeat the phrase exactly. Non-native speakers may have mishear a particular word. Or they may not know what the word means. They need to hear the phrase exactly to understand that word.</p>
 
-# Mentor Time Commitment To Interns
+<p>Repeat the exact phrase more slowly. Try to articulate each word.</p>
 
-Mentors are required to spend a minimum of 5 hours per week mentoring their
-intern during the internship period.
+<p>If they ask again, try to rephrase. Use less complex words or define the complex words. Use simpler and shorter sentences.</p>
 
-# Assistance vs. Independence
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
 
-Mentors need to strike a balance between providing too little help and too much
-help.
+<h3 id='self-motivated-learners'><a href='#self-motivated-learners'>Self-motivation to learn</a></h3>
 
-For example, say an applicant/intern says, "I ran into this error message, and
-I don't know what it means." A mentor could tell an applicant/intern the exact
-set of steps to fix the error message. That may be appropriate during the
-contribution phase or early part of the internship.
+<p>As mentors evaluate Outreachy applicants, they often ask themselves, "Will this applicant be self-motivated to learn if I select them as an intern?"</p>
 
-Another technique is to give the applicant/intern hints towards the issue
-solution. In the case of an error message, a mentor might say, "That error
-message is related to X. Here's some documentation you might want to read about
-X." Then the mentor waits for the applicant/intern to process the
-documentation. It's recommended that the mentor check in to see if the
-applicant/intern has any questions or is still stuck after 1-2 days.
+<p>This section will help mentors clarify which applicants fit that criteria.</p>
+
+<p>Outreachy organizers acknowledge that some applicants may not have enough skills (both technical and communication skills) to be a good fit for a particular project.</p>
+
+<p>It's crucial that mentors define a set of tasks for applicants to complete during the contribution period. These contribution tasks are essential for determining applicant skill levels.</p>
+
+<p>It's important that mentors use a real-time community chat to talk to applicants. This allows mentors to determine if applicants have good communication skills.</p>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h3 id='fostering-independence'><a href='#fostering-independence'>Fostering independence in applicants and interns</a></h3>
+
+<p>Mentors need to strike a balance between providing too little help and too much help.</p>
+
+<p>For example, say an applicant/intern says, "I ran into this error message, and I don't know what it means." A mentor could tell an applicant/intern the exact set of steps to fix the error message. That may be appropriate during the contribution phase or early part of the internship.</p>
+
+<p>Another technique is to give the applicant/intern hints towards the issue solution. In the case of an error message, a mentor might say, "That error message is related to X. Here's some documentation you might want to read about X." Then the mentor waits for the applicant/intern to process the documentation. It's recommended that the mentor check in to see if the applicant/intern has any questions or is still stuck after a couple hours.</p>
 
 We encourage applicants/interns to tell their mentor when they don't need to be
 walked through a solution.
@@ -170,3 +175,5 @@ Project documentation is often out of date. Mentors should read or at least
 skim a section before pointing an applicant/intern to it. Don't assume the
 documentation is correct just because their is a documentation section on the
 topic.
+
+{% endblock content %}
