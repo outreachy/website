@@ -549,20 +549,24 @@ Near the end of the chat, I say, "I want to make sure we can hear from some of t
 
 Chats typically take 1 hour.
 
-# Intern feedback
+# Week 6: Conferences
 
-To mark all interns with successful mid-point feedback as being authorized payment:
+Topics:
+ - icebreaker:
+Let's get this chat started! Today we're going to talk about open source and free software events.
 
-```
->>> from home import models
->>> current_round = models.RoundPage.objects.get(internstarts='2019-12-03')
->>> interns = models.InternSelection.objects.filter(applicant__application_round=current_round, midpointmentorfeedback__payment_approved=True, midpointmentorfeedback__extension_date__isnull=True)
->>> len(interns) # make sure this matches the number of interns you say you're paying in the email
->>> for i in interns:
-...     i.midpointmentorfeedback.organizer_payment_approved = True
-...     i.midpointmentorfeedback.save()
-... 
->>>
+There are a lot of different types of open source events. We'll spend the first part of this chat talking about different types of events you could go to.
+
+I also want to talk about how to find events that are more inclusive or ones you're likely to have a good experience at.
+
+:question: What types of open source events can people think of? How would you describe that event to someone who had never attended that type of event before? :question: 
+
+ - talk about what each types of open source events
+ - how to find inclusive events
+ - what to expect when you go to an event
+ - getting the most out of an event (e.g. hallway track and networking)
+ - bonus topic: how do conference CFPs work?
+
 
 # Career Chats
 
@@ -636,7 +640,7 @@ A good piece of advice from an Outreachy mentor:
 There is no harm in asking them although it might feel awkward if you're not used to it :). Many of us are afraid that this is self-promotion and we don't like to do it, but your mentor is probably happy to help you!'
 ```
 
-# Week 12: Informal chats
+## Week 12: Informal chats
 
 
 An informal chat is a conversation with another person. It can be as simple as trying to answer one question.
@@ -721,7 +725,24 @@ Make sure to send a thank you email to people you do an informal chat with! You'
 
 
 
-# Week 14: Wrap up chat
+## Week 14: Wrap up chat
 
  - For Outreachy interns and alums: What have/did you learned about yourself during your Outreachy internship? Is working remotely easy or hard for you? Do you like working on many smaller tasks or one big task? Are you good at debugging, writing documentation, developing new features, etc?
    - Thinking about what you liked and what you found hard about your internship will allow you to apply for jobs that contain more of the fun stuff and less of the difficult stuff :). It will help you find a career that is fulfilling.
+
+# Intern feedback
+
+To mark all interns with successful mid-point feedback as being authorized payment:
+
+```
+>>> from home import models
+>>> current_round = models.RoundPage.objects.get(internstarts='2019-12-03')
+>>> interns = models.InternSelection.objects.filter(applicant__application_round=current_round, midpointmentorfeedback__payment_approved=True, midpointmentorfeedback__extension_date__isnull=True)
+>>> len(interns) # make sure this matches the number of interns you say you're paying in the email
+>>> for i in interns:
+...     i.midpointmentorfeedback.organizer_payment_approved = True
+...     i.midpointmentorfeedback.save()
+... 
+>>>
+```
+
