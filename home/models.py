@@ -1384,7 +1384,10 @@ class ApprovalStatus(models.Model):
 
 class Community(models.Model):
     name = models.CharField(
-            max_length=50, verbose_name="Community name")
+            max_length=50,
+            verbose_name="Community name",
+            help_text="The community name you provide will be used to generate unique identifier. The identifier will be used in Outreachy website URLs to reference your community. To ensure old links remain valid, modifying the community name later will not change the community's unique identifier.")
+
     slug = models.SlugField(
             max_length=50,
             unique=True,
@@ -1402,7 +1405,7 @@ class Community(models.Model):
 
     website = models.URLField(
             blank=True,
-            verbose_name="(Optional) Please provide the URL for your FOSS community's website")
+            verbose_name="(Optional) Community website URL")
 
     tutorial = CKEditorField(
             blank=True,
@@ -1504,24 +1507,58 @@ class NewCommunity(Community):
             help_text='I assert that all Outreachy internship projects under my community will be released under either an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> that is also identified by the FSF as a <a href="https://www.gnu.org/licenses/license-list.html">free software license</a>, OR a <a href="https://creativecommons.org/share-your-work/public-domain/freeworks/">Creative Commons license approved for free cultural works</a>')
     unapproved_license_description = CKEditorField(
             blank=True,
-            help_text="(Optional) If your FOSS community uses a license that is not an OSI-approved and FSF-approved license OR a Creative Commons license, please provide a description and links to the non-free licenses.")
+            verbose_name="(Optional) Non-free software license details. If your FOSS community uses a license that is not an OSI-approved and FSF-approved license OR a Creative Commons license, please provide a description and links to the non-free licenses.")
 
     no_proprietary_software = models.BooleanField(help_text='I assert all Outreachy internship projects under my community will forward the interests of free and open source software, not proprietary software.')
     proprietary_software_description = CKEditorField(
             blank=True,
-            help_text="(Optional) If any internship project under your community furthers the interests of proprietary software, please explain.")
+            verbose_name="(Optional) Proprietary software details. If any internship project under your community will further the interests of proprietary software, please explain.")
 
     approved_advertising = models.BooleanField(
             default=False,
             help_text='I assert that my community resources do not advertise the services of only one company. Community resources are where users and developers seek help for your FOSS project. Community resources can include the community website, mailing lists, forums, documentation, or community introduction emails. It is fine to advertise the services of multiple companies or to identify sponsor companies generally.')
     unapproved_advertising_description = CKEditorField(
             blank=True,
-            help_text="(Optional) If your community resources advertise the services of only one community, please explain.")
+            verbose_name="(Optional) Company advertisements on community resources. If your community resources advertise the services of only one company or organization, please explain.")
 
-    governance = models.URLField(blank=True, verbose_name="(Optional) Please provide the URL for a description of your community's governance model")
-    code_of_conduct = models.URLField(blank=True, verbose_name="(Optional) Please provide the URL for to your community's Code of Conduct")
-    cla = models.URLField(blank=True, verbose_name="(Optional) Please provide the URL for your community's Contributor License Agreement (CLA)")
-    dco = models.URLField(blank=True, verbose_name="(Optional) Please provide the URL for your community's Developer Certificate of Origin (DCO) agreement")
+    governance = models.URLField(blank=True, verbose_name="(Optional) Community governance model URL")
+    participating_orgs_in_goverance = models.CharField(
+            blank=True,
+            max_length=THREE_PARAGRAPH_LENGTH,
+            verbose_name="(Optional) What different organizations and companies participate in the governance of this FOSS community?",
+            help_text="If there are many organizations, list the top five organizations.")
+
+    code_of_conduct = models.URLField(blank=True, verbose_name="(Optional) Community's Code of Conduct URL")
+    coc_committee = models.CharField(
+            blank=True,
+            max_length=THREE_PARAGRAPH_LENGTH,
+            verbose_name="(Optional) What are the names of all Code of Conduct committee members?",
+            help_text="If you do not have a formal Code of Conduct committee, please note this.")
+    cla = models.URLField(blank=True, verbose_name="(Optional) Contributor License Agreement (CLA) URL")
+    dco = models.URLField(blank=True, verbose_name="(Optional) Developer Certificate of Origin (DCO) agreement URL")
+
+    mentorship_programs = models.TextField(
+            default="None",
+            max_length=THREE_PARAGRAPH_LENGTH,
+            verbose_name="What other mentorship programs has your community participated in?",
+            help_text="Note when your community participated in each program and how many interns the community worked with. Examples of mentoring programs include Rails Girls Summer of Code, Google Summer of Code, Google Code In, Google Season of Docs, Linux Foundation Community Bridge, and GitHub Major League Hacking internships.")
+
+    reason_for_participation = models.CharField(
+            blank=True,
+            max_length=THREE_PARAGRAPH_LENGTH,
+            verbose_name="(Optional) Why does your community want to work with Outreachy?")
+
+    demographics = models.TextField(
+            blank=True,
+            max_length=THREE_PARAGRAPH_LENGTH,
+            verbose_name="(Optional) What is the demographics of your community?",
+            help_text="Most communities come to Outreachy to improve the diversity of their community. Please be honest about the demographic make up of your community")
+
+    inclusive_practices = models.TextField(
+            blank=True,
+            max_length=THREE_PARAGRAPH_LENGTH,
+            verbose_name="(Optional) How is your community working to become more inclusive?",
+            help_text="Many communities come to Outreachy hoping to learn more inclusive practices. Please be honest about what steps your community has taken to become more inclusive. Please be clear on what steps you have completed vs. what you are planning to do.")
 
     class Meta:
         verbose_name_plural = 'new communities'
@@ -1615,6 +1652,13 @@ class Participation(ApprovalStatus):
         except Comrade.DoesNotExist:
             return False
 
+#class GeneralSponsorship(models.Model):
+#    participation = models.ForeignKey(Participation, on_delete=models.CASCADE)
+#    request_general_funding = models.BooleanField(
+#            verbose_name="Are you requesting that 100% of your interns be funded from the Outreachy general fund?")
+#    general_funding_ask = models.PositiveIntegerField(
+#            verbose_name="How many interns are you requesting be funded from the Outreachy general fund?")
+#
 class Sponsorship(models.Model):
     participation = models.ForeignKey(Participation, on_delete=models.CASCADE)
 

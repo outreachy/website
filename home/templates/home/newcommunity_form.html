@@ -28,14 +28,37 @@ Mentors who sign up will be can be subscribed to the mentors mailing list, which
 Mentors will be granted read access to applications for their project and will be notified of new applicants.
 </p>
 
-<h2>Required Community Information</h2>
+<h2>Community Information</h2>
+<hr>
 <form action="" method="post">
 	{% csrf_token %}
 	{{ form.media }}
 	{{ form.non_field_errors }}
 	{% for field in form.visible_fields %}
-		{% if 'Longer description' in field.label_tag %}
-			<h2>Optional Community Information</h2>
+		{% if 'other mentorship programs' in field.label_tag %}
+			<h2>Mentor Experience Assessment</h2>
+			<hr>
+		{% elif 'Approved license' in field.label_tag %}
+			<h2>License Assessment</h2>
+			<hr>
+		{% elif "Contributor License Agreement" in field.label_tag %}
+			<h3>Optional License Info</h3>
+			<hr>
+		{% elif 'What different organizations and companies participate in this FOSS community' in field.label_tag %}
+			<h2>Commercial Ties Assessment</h2>
+			<hr>
+		{% elif '(Optional) Company advertisements on community resources' in field.label_tag %}
+			<h3>Optional Commercial Ties Info</h3>
+			<hr>
+		{% elif '(Optional) Community governance model' in field.label_tag %}
+			<h3>Community Governance</h3>
+			<hr>
+		{% elif 'Code of Conduct URL' in field.label_tag %}
+			<h3>Code of Conduct</h3>
+			<hr>
+		{% elif 'demographics' in field.label_tag %}
+			<h3>Community Diversity and Inclusion</h3>
+			<hr>
 		{% endif %}
 		<div class="form-group card">
 			{{ field.errors }}

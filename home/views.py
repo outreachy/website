@@ -1141,16 +1141,24 @@ def community_landing_view(request, round_slug, community_slug):
 class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
     model = NewCommunity
     fields = ['name',
+            'website',
+            'reason_for_participation',
+            'mentorship_programs',
             'approved_license',
             'no_proprietary_software',
-            'approved_advertising',
-            'community_size', 'longevity', 'participating_orgs',
-            'description',
-            'long_description', 'tutorial', 'website',
-            'governance', 'code_of_conduct', 'cla', 'dco',
+            'cla',
+            'dco',
             'unapproved_license_description',
             'proprietary_software_description',
+            'participating_orgs',
+            'approved_advertising',
             'unapproved_advertising_description',
+            'governance',
+            'participating_orgs_in_goverance',
+            'code_of_conduct',
+            'coc_committee',
+            'demographics',
+            'inclusive_practices',
             ]
 
     def get_form(self):
