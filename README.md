@@ -693,6 +693,7 @@ Key Python files and directories:
  * `home/models.py` - Python code that defines our custom Django database models
  * `home/views.py` - Python code that runs whenever you view a webpage or interact with a form
  * `home/urls.py` - parsing rules for translating URLs into which Python view code to call
+ * `home/feeds.py` - when you add a blog post under home/templates/home/blog/ you'll need to manually add it to the RSS feed (which will automatically add it to the [blog index](https://www.outreachy.org/blog/)
 
 Key HTML files and directories:
  * `home/templates/home/` - Most all of the important HTML templates are here

@@ -62,6 +62,18 @@ class WagtailFeed(Feed):
 
         pacific = timezone('US/Pacific')
 
+        # Append blog pages created with Django here.
+        # Append the newest blog post last.
+        #
+        # These blog posts will automatically show up in the RSS feed,
+        # and show up on the blog index page
+        # https://www.outreachy.org/blog/
+        # Unfortunately, that page created in the Wagtail Outreachy website database.
+        # That means that it will show up as a 404 if you access localhost:8000/blog/
+        # You'll have to push this code to the test website to check it.
+        #
+        # TODO: FIXME: Move all blog posts from Wagtail into Django templates,
+        # and stop using a Wagtail page.
         items.append(PseudoPage(
             title='Schedule changes for Outreachy',
             full_url=reverse('blog-schedule-changes'),
