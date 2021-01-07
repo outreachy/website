@@ -781,6 +781,20 @@ To search for a number (like 49), excluding binary picture files, Python package
 git grep 49 -- ":(exclude)home/templates/home/stats_round_fifteen.html" ":(exclude)Pipfile.lock" ":(exclude)*.svg" ":(exclude)*.png" ":(exclude)*.ai" ":(exclude)*.eps" ":(exclude)*.jpg" ":(exclude)*.css" ":(exclude)home/migrations/*"
 ```
 
+### Method 3: Following the Django trail
+
+FIXME - Add instructions:
+ - look in home/urls.py
+ - find the view function in home/views.py
+ - see which template it uses
+   - sometimes it doesn't show a template - but one with a similar name is automatically used
+ - use the templates includes to see what other templates are included in this one
+
+## Template includes
+
+Move the text from the section "3. Identify which templates are included in the template under test." here.
+Link to this section in that section.
+
 # Django apps
 
 ## Outreachy Django apps
