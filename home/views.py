@@ -3661,6 +3661,24 @@ def docs_applicant(request):
         'previous_round': previous_round,
         })
 
+def docs_community(request):
+    current_round = RoundPage.objects.latest('internannounce')
+    now = datetime.now(timezone.utc)
+    today = get_deadline_date_for(now)
+    five_weeks_from_now = today + timedelta(weeks=5)
+    try:
+        previous_round = RoundPage.objects.filter(
+            internends__lte=five_weeks_from_now,
+        ).latest('internstarts')
+        previous_round.today = today
+    except RoundPage.DoesNotExist:
+        previous_round = None
+
+    return render(request, 'home/docs/community_guide.html', {
+        'current_round': current_round,
+        'previous_round': previous_round,
+        })
+
 def docs_internship(request):
     now = datetime.now(timezone.utc)
     today = get_deadline_date_for(now)
@@ -3761,6 +3779,8 @@ def sponsor(request):
 def opportunities(request):
     return render(request, 'home/opportunities.html')
 
+def community_participation_rules(request):
+    return render(request, 'home/community_participation_rules.html')
 
 @login_required
 def dashboard(request):

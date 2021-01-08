@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}
+Community participation rules
+{% endblock %}
+
+{% block content %}
+<h1>Community participation rules</h1>
+
+<h2>Requirements to participate</h2>
+
+<h3>1. Intern funding</h3>
+
+<p>All participating communities must provide funding for at least one intern ($6,500 USD). The only exception to this rule is communities who are approved for Outreachy general funding.</p>
+
+{% comment %}Point coordinators to resources for finding and pitching to sponsors, once the community guide exists.{% endcomment %}
+
+<p>Humanitarian open source communities can apply to the Outreachy general fund. For approved humanitarian open source communities, Outreachy will fully fund at least 1 intern. We especially encourage applications involving climate change, infectious diseases, and mental health, as these are the greatest challenges humanity faces today.</p>
+
+<h3>2. Community coordinator</h3>
+
+<p>Each community must have a coordinator, who is an interface between Outreachy organizers and mentors. <a href="https://www.outreachy.org/mentor/#coordinator">Read about community coordinator duties</a>.</p>
+
+<h3>3. Mentors</h3>
+
+<p>Each community needs to have at least one mentor. The mentor must be willing to volunteer at least 5 hours a week during the internship period, and 5-10 hours per week during the application period. <a href="https://www.outreachy.org/mentor/#mentor">Read about mentor duties</a></p>
+
+<h3>4. Projects</h3>
+
+<p>Each mentor defines a project for their intern to work on. Outreachy does not allow applicants to define their own project. <a href="https://www.outreachy.org/mentor/mentor-faq/#define-a-project">Read about what makes a good Outreachy project.</a></p>
+
+<p>Projects must be <a href="">licensed as open source</a>. Projects must further free software, and <a href="">not be tied to proprietary software.</a></p>
+
+<h3>5. Collaborative open source community</h3>
+
+<h1>Community participation rules</h1>
+
+<p><b>Please carefully read our community participation guidelines</b></p>
+<p><a class='btn btn-success' href="{% url 'community-add' %}">Submit a New Community</a></p>
+{% endblock content %}
