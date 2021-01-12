@@ -48,9 +48,11 @@ On {{ current_round.week_eight_chat_text_date }} UTC we will host a chat for bot
 
 {{ current_round.week_eight_timeline_chat_url }}
 
+The internship is now half way done! Now is a good time to review your proposed project timeline with your mentor. Make changes to those plans, based on the progress you've made so far. That may mean you change your expectations around what you can accomplish.
+
 We encourage interns to share one project goal that they thought would be easy and why it took more time to complete.
 
-Mentors are encouraged to share what project goal they thought would take less time, but turned out to be more complex.
+Mentors are encouraged to share a project or task of their own that took more time than expected to complete, and what they did to modify their expectations.
 
 Share why you think you underestimated the complexity of the goal. Share what you've learned about how to better estimate the complexity of this kind of goal. Often times there was nothing you could have done to better estimate the time a task would have taken, and that's okay too!
 
