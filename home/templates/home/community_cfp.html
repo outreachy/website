@@ -43,11 +43,9 @@ Call for Outreachy community coordinators and mentors
 
 <p>Outreachy's goal is to support <a href="/apply/eligibility/">diversity in open source.</a> Outreachy provides paid, remote internships.</p>
 
-<p>Outreachy invites free and open source software communities to participate. We are seeking experienced open source contributors to act as Outreachy mentors.</p>
+<p>Outreachy invites free and open source software communities to participate.</p>
 
-<h2>Community Participation Guide</h2>
-
-<p>Want to learn more? <a href="{% url 'docs-community' %}">Read our Community Participation Guide</a>.
+<p><a class='btn btn-info' href="{% url 'docs-community' %}">Read Community Guide</a></p>
 
 {% if current_round %}
 	<h2>Timeline for {{ current_round.internstarts|date:"F Y" }} cohort</h2>
@@ -58,9 +56,9 @@ Call for Outreachy community coordinators and mentors
 		{% if current_round.project_soft_deadline.has_passed %}
 			{% include "home/snippet/cfp_closed_warning.html" %}
 		{% else %}
-			<p>Mentors should <a href="/mentor/#mentor">review the mentor duties and expectations</a> before they submit a project.</p>
+			<p>Outreachy is seeking experienced open source contributors to act as mentors for Outreachy interns. Mentors should review the mentor guide before they submit a project.</p>
 
-			<p>If you would like to mentor Outreachy interns, pick a community from the list of participating communities below.</p>
+			<p><a class='btn btn-info' href="/mentor/#mentor">Read Mentor Guide</a></p>
 		{% endif %}
 	{% endif %}
 {% else %}
@@ -69,7 +67,10 @@ Call for Outreachy community coordinators and mentors
 {% endif %}
 
 {% if approved_communities %}
-	<p><b>Approved communities:</b> These communities have been approved to participate in the {{ current_round.internstarts|date:"F Y" }} cohort.</p>
+	<h3>Mentoring Communities</h3>
+
+	<p>The following open source communities are participating in the {{ current_round.internstarts|date:"F Y" }} internship round. Follow the link to sign up to mentor for that community:</p>
+
 	<ul>
 	{% for c in approved_communities %}
 		<li><a href="{{ c.get_preview_url }}">{{ c.name }}</a></li>
@@ -118,13 +119,14 @@ Call for Outreachy community coordinators and mentors
 {% if current_round and current_round.pingnew.has_passed and not current_round.lateorgs.has_passed %}
 	<h2>New communities</h2>
 
-	<p>Please <a href="{% url 'docs-community' %}#participation-rules">read the community participation rules</a>.</p>
+	<p>Please read the community participation guide before submitting a new community application.</p>
+	<p><a class='btn btn-info' href="{% url 'docs-community' %}">Read Community Guide</a></p>
 
 	<p>New communities can submit an application to participate in Outreachy.</p>
 
-	<p>Check to see if your community is listed in the <a href="#past-communities">past communities list</a>. If it is, don't submit a new community application. Instead, follow the community link and sign up to coordinate for the community.</p>
+	<p>Check to see if your community is listed in the <a href="#past-communities">past communities list</a>. If it is, don't submit a new community application. Instead, follow the community link and sign up to coordinate for the community. Otherwise, submit a new application for your community to participate in Outreachy.</p>
 
-	<p><a class='btn btn-success' href="{% url 'community-participation-rules' %}">New community application</a></p>
+	<p><a class='btn btn-success' href="{% url 'community-participation-rules' %}">Submit community application</a></p>
 {% endif %}
 
 <h2>Questions?</h2>
