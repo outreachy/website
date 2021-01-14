@@ -309,32 +309,12 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 			    </div>
 			</div>
 			{% endif %}
-			{% if community.newcommunity.longevity == community.newcommunity.THREE_MONTHS or community.newcommunity.longevity == community.newcommunity.SIX_MONTHS %}
-			<div class="card border-warning mb-3">
-			    <div class="card-header text-white bg-warning">Warning!</div>
-			    <div class="card-body">
-				<h5 class="card-title">This FOSS community has been accepting contributions for less than six months.</h5>
-				<p class="card-text">The coordinator indicated the FOSS community has been accepting public contributions for {{ community.newcommunity.get_longevity_display|lower }}. Outreachy communities should be well-established communities.</p>
-			    </div>
-			</div>
-			{% endif %}
-			{% if community.newcommunity.community_size == community.newcommunity.SMOL or community.newcommunity.community_size == community.newcommunity.TINY %}
-			<div class="card border-warning mb-3">
-			    <div class="card-header text-white bg-warning">Warning!</div>
-			    <div class="card-body">
-				<h5 class="card-title">This community has six or fewer regular contributors.</h5>
-				<p class="card-text">The coordinator indicated this community has {{ community.newcommunity.get_community_size_display|lower }} who are regular contributors. Outreachy communities should be well-established communities.</p>
-			    </div>
-			</div>
-			{% endif %}
 		{% endif %}
 		<p>Round participation information</p>
 		<ul>
 			<li>Number of interns funded: {{ participation_info.interns_funded }}</li>
 			<li>Funding details: {{ participation_info.intern_funding_details }}</li>
 			{% if community.newcommunity %}
-				<li>Community size: {{ community.newcommunity.get_community_size_display }}</li>
-				<li>Accepting public contributions for: {{ community.newcommunity.get_longevity_display }}</li>
 				<li>Organizations and companies participating: {{ community.newcommunity.participating_orgs }}</li>
 				<li>{% if community.newcommunity.approved_license %}Community licenses are approved.{% else %}WARNING: Community licenses are not approved. {{ community.newcommunity.unapproved_license_description }}{% endif %}</li>
 				<li>{% if community.newcommunity.no_proprietary_software %}Projects support free software only.{% else %}WARNING: Projects may support proprietary software. {{ community.newcommunity.proprietary_software_description }}{% endif %}</li>

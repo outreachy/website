@@ -1472,6 +1472,7 @@ class NewCommunity(Community):
         (LARGER, '50-100 people'),
         (GINORMOUS, 'More than 100 people'),
     )
+    # deprecated
     community_size = models.CharField(
         max_length=3,
         choices=COMMUNITY_SIZE_CHOICES,
@@ -1491,6 +1492,7 @@ class NewCommunity(Community):
         (TWO_YEARS, '1-2 years'),
         (OLD_YEARS, 'More than 2 years'),
     )
+    # deprecated
     longevity = models.CharField(
         max_length=2,
         choices=LONGEVITY_CHOICES,

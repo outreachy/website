@@ -29,10 +29,6 @@ This is a new Outreachy community, so please review the following information ca
 {{ community.newcommunity.proprietary_software_description|striptags }}{% else %}Coordinators provided no info about their community advertising.{% endif %}
 {% else %}Community uses approved licenses.{% endif %}
 
-Community size: {{ community.newcommunity.get_community_size_display }}
-
-Community has been open source for: {{ community.newcommunity.get_longevity_display }}
-
 Organizations that participate in this community:
 {{ community.newcommunity.participating_orgs }}{% endif %}
 
