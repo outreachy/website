@@ -1,5 +1,5 @@
 **Privacy Statement for Outreachy**
-*Last updated August 19, 2020*
+*Last updated January 14, 2021*
 
 Scope of This Notice
 ===
@@ -326,6 +326,6 @@ Changes to this Privacy Statement
 
 Outreachy reserves the right to change this policy from time to time. If we do make changes, the revised Privacy Statement will be posted on this site. A notice will be posted on our homepage for 30 days whenever this privacy statement is changed in a material way. 
 
-This Privacy Statement was last amended on May 25, 2018. 
+This Privacy Statement was last amended on January 14, 2021. 
 
  This Privacy Policy is licensed under  the Attribution-ShareAlike 4.0 International (CC BY-SA 4.0). It is a derivative work of [Red Hat's Privacy Policy for the Fedora Project](https://fedoraproject.org/wiki/Legal:PrivacyPolicy), used under Attribution-Share Alike 3.0 Unported.
