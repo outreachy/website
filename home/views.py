@@ -1141,7 +1141,6 @@ def community_landing_view(request, round_slug, community_slug):
 class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
     model = NewCommunity
     fields = ['name',
-            'website',
             'reason_for_participation',
             'mentorship_programs',
             'approved_license',
