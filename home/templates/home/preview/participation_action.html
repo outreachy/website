@@ -2,44 +2,29 @@
 {% load approval_status %}
 
 {% block title %}
-{{ view.kwargs.action|title }} Community Participation for {{ participation.community }}
+Intern Funding
 {% endblock %}
 
 {% block content %}
-<h1>
-	{{ view.kwargs.action|title }} Community Participation for {{ participation.community }}</a>
-</h1>
+
+<div class="card border-warning mb-3">
+	<div class="card-header text-white bg-warning">Outreachy internship funding is required.</div>
+	<div class="card-body">
+		{% include 'home/snippet/funding_short_description.html' %}
+	</div>
+</div>
+
+<h1>Intern Funding</h1>
+
+<p>Please <a href="">read the community guide</a> for more information about intern funding.</p>
+
+<p>If you are applying for the Outreachy general fund, please list the sponsor as "Outreachy general fund".</p>
+
+<p>Sponsorship for one intern is $6,500 USD. Please list the dollar amount in the form below, not the number of interns.</p>
 
 {% include "home/snippet/privacy_policy.html" %}
 
 {% if view.kwargs.action == 'submit' %}
-	<div class="card border-info mb-3">
-		<div class="card-header text-white bg-info">Outreachy internship funding is required.</div>
-		<div class="card-body">
-			<p class="card-title">Each FOSS community that participates in Outreachy must <strong>provide funding for at least one intern ($6,500).</strong></p>
-
-			<p>The $6,500 intern sponsorship covers: the three-month internship stipend ($5,500),
-			a travel stipend for the intern to speak or network at conferences or events ($500),
-			and an accounting fee ($500) for the Outreachy parent non-profit, Software Freedom Conservancy, to handle intern payment and sponsor invoicing.
-			</p>
-		</div>
-	</div>
-	<h2>Intern Funding</h2>
-	<p>Funding for {{ participation.community.name }} interns may come from a number of different sources. It's ok if you don't know all the information about your sponsors, or you are waiting to recieve final confirmation of your budget. You can always come back and edit this form later.</p>
-
-	<h3>Community funds</h3>
-	<p>FOSS communities often fund Outreachy interns directly from their own community funds, or by using funds from the foundation or non-profit who is their fiscal sponsor.</p>
-	{% comment %}Show past community funders for this community{% endcomment %}
-
-	<h3>Corporate Sponsors</h3>
-	<p>Many FOSS communities find funding from corporate sponsors who use their FOSS project. If your community has participated in Outreachy in the past, Outreachy organizers may have been able to find your community additional corporate sponsors and arrange funding for you. FOSS coordinators should notify Outreachy organizers if they are able to secure additional funding from corporate sponsors.</p>
-
-	<h3>Credits</h3>
-	<p>If this community has participated in past Outreachy rounds,
-	the community may have a credit from past sponsors, or from
-	partially completed internships.</p>
-
-	<h2>Funding Sources for {{ participation.community.name }} interns</h2>
 
 	{% if readonly_sponsorships %}
 	<p>The Outreachy organizers have indicated that you have the
@@ -59,14 +44,6 @@
 	{% endfor %}
 	</ul>
 	{% endif %}
-
-	<p>Given the various options above, and taking into account any
-	credits or additional corporate sponsors listed above, please
-	give us information about your additional sponsors.</p>
-
-	<p>You must fill out the information for at least one sponsor.
-	The form below has space for multiple sponsors,
-	but you can always edit sponsorship information or add more sponsors later.</p>
 {% else %}
 <ul>
 	<li>Number of interns funded: {{ participation.interns_funded }}</li>
@@ -126,17 +103,6 @@
 </form></p>
 {% else %}{# action is something other than submit #}
 {% include "home/snippet/action_form.html" %}
-{% endif %}
-
-{% if view.kwargs.action == 'submit' %}
-	<h2>Funding for Additional Outreachy Interns</h2>
-
-	<p>Once communities have secured funding for at least one intern, the Outreachy program may be able to provide funding for additional interns from our general fund. During the intern selection process, Outreachy organizers review the funding requests across all participating communities, and fund the most promising applicants. The evaluation criteria we use for general funding is:</p>
-	<ol>
-		<li><p>Is the applicant eligible? Outreachy organizers will double check their initial application.</p></li>
-		<li><p>Does the applicant have additional time constraints? If they barely meet the time criteria, they may not be a good candidate.</p></li>
-		<li><p>Has the candidate made multiple contributions? Are those contributions more than just a documentation fix or whitespace change? Candidates that show skills specific to the project and are consistently contributing are more likely to be accepted for general funding.</p></li>
-	</ol>
 {% endif %}
 
 {% endblock %}
