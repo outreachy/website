@@ -35,8 +35,10 @@ class ProjectSubmissionTestCase(TestCase):
     def check_community_signup_marked_open(self):
         response = self.client.get(reverse('community-cfp'))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, '<h2>Submit a New FOSS community for Organizer Review</h2>', html=True)
-        self.assertContains(response, '<a class="btn btn-success" href="{}">Submit a New Community</a>'.format(reverse('community-add')), html=True)
+        self.assertContains(response, '<h2>New communities</h2>', html=True)
+        self.assertContains(response, '<a class="btn btn-success" href="{}">Submit community application</a>'.format(reverse('community-participation-rules')), html=True)
+        response = self.client.get(reverse('community-participation-rules'))
+        self.assertContains(response, '<a class="btn btn-success" href="{}">Submit community application</a>'.format(reverse('community-add')), html=True)
 
     def coordinator_signs_up_community_to_participate(self, community_does_participate_path, sponsor_name='Software in the Public Interest - Debian', sponsor_amount=13000):
         return self.client.post(community_does_participate_path, {
@@ -70,13 +72,12 @@ class ProjectSubmissionTestCase(TestCase):
         self.client.force_login(coordinator.account)
         response = self.client.post(new_community_signup_path, {
             'name': 'Debian',
+            'reason_for_participation': 'We want more diversity in our community.',
+            'mentorship_programs': 'We have participated in Google Summer of Code since 2013.',
             'approved_license': 'on',
             'no_proprietary_software': 'on',
-            'approved_advertising': 'on',
-            'community_size': '999',
-            'longevity': 'OL',
             'participating_orgs': 'Debian is comprised of volunteers from around the world. Some corporations pay maintainers to participate.',
-            'description': 'Debian is a free operating system (OS) for your computer. An operating system is the set of basic programs and utilities that make your computer run.',
+            'approved_advertising': 'on',
             },
             follow=True,
         )
