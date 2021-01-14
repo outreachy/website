@@ -51,8 +51,10 @@ Community Guide | Outreachy Documentation
 				<li><a href="#internship-period">Internship period</a></li>
 		</ul>
 	</li>
-	<li><a href="#contribution-evaluation">Evaluating contributions</a></li>
+	<li><a href="#community-sign-up-process">Community sign up process</a></li>
+	<li><a href="#mentor-sign-up-process">Mentor sign up process</a></li>
 	<li><a href="#estimated-number-of-interns">Estimated number of interns</a></li>
+	<li><a href="#Internship">Internship</a></li>
 	<li><a href="#faq">FAQ</a>
 		<ul>
 			<li><a href='#stipend-details'>Internship stipend details</a></li>
@@ -316,367 +318,44 @@ Community Guide | Outreachy Documentation
 <p><b>Intern selection period:</b></p>
 <ul>
 	<li>{{ current_round.contributions_close }} to {{ current_round.internannounce }}</li>
-	<li>Mentors tell Outreachy organizers which interns they want to select</li>
-	<li>Applicants may be asked to verify their time commitment details</li>
+	<li>Mentors select their chosen intern(s) through the Outreachy website</li>
+	<li>Coordinators review the intern selections</li>
+	<li>Outreachy organizers review Outreachy general funding requests</li>
+	<li>Outreachy organizers approve the intern selections</li>
+	<li>Applicants may (but are not required to) continue working on project tasks</li>
 	<li>Intern selections are not shared with applicants until <a href='{% url 'alums' %}'>interns are announced</a> on {{ current_round.internannounce }}</li>
 </ul>
 
 <p><a href='#toc'><u>↑ table of contents</u></a></p>
 <hr>
-<h2 id='initial-application'><a href="#initial-application">Initial Application</a></h2>
 
-<p>The initial application includes several sections. Some sections determine whether you meet our <a href='#eligibility'>eligibility criteria</a>. We also ask you to provide some additional information and essays.</p>
+<h2 id='community-sign-up-process'><a href="#community-sign-up-process">5. Community sign up process</a></h2>
 
-<p>You cannot save your initial application. You have to fill it out all at once. Make sure you're ready and have a stable internet connection. Don't submit your initial application at the last minute!</p>
+<p>The first step for Free and Open Source Software (FOSS) communities who want to participate Outreachy is to <a href="{% url 'community-cfp' %}">fill out a community participation application.</a> Outreachy organizers and the Outreachy Project Leadership Committee will review your community participation application.</p>
 
-<p>You should have specific information on hand before you fill out the initial application:</p>
-<ul>
-	<li>If you are a university student: The academic calendar, both for this year and next year. If year's calendar is unavailable, use last year's calendar</li>
-	<li>If you are taking online courses: The calendar for the online course</li>
-	<li>If you are participating in a coding school: The calendar for your cohort's schedule</li>
-	<li>If you are (or will be) employed: The number of hours required by your employment contract and dates of employment</li>
-	<li>If you are a self-employed contractor: The average number of invoiced hours over the past six months</li>
-</ul>
+<p>Community coordinators will receive an email once their community is approved to participate in this internship round.</p>
 
-<h2 id='essay-questions'>Essay questions</h2>
-
-<p>The initial application includes four essay questions:</p>
-
-<ol>
-	<li><p><b>What country will you be living in from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}?</b> If you will be living in multiple countries, list the country you will spend the most time in.</p></li>
-
-	<li><p><b>Are you part of an underrepresented group (in the technology industry of the country listed above)? How are you underrepresented?</b></p>
-					<p>
-					Think about the technology industry in the country listed above.
-					</p>
-					<p>
-					Are there few people who share your identity or background in that technology industry?
-					</p>
-					<p>
-					Please tell us which underrepresented groups you are a part of.
-					You may want to consider your:
-					</p>
-
-					<p><ul>
-						<li>age</li>
-						<li>body size</li>
-						<li>caste</li>
-						<li>disabilities</li>
-						<li>ethnicity</li>
-						<li>gender identity and expression</li>
-						<li>socio-economic status</li>
-						<li>nationality</li>
-						<li>personal appearance</li>
-						<li>race</li>
-						<li>religion</li>
-						<li>sexual identity and orientation</li>
-					</ul></p>
-	</li>
-
-	<li><p><b>What systemic bias or discrimination would you face if you applied for a job in the technology industry of your country?</b> Think about when you have applied for a job in the technology industry of your country. Do you think you have faced discrimination on the basis of your background or identity? If you have not applied for a job yet, do you think you may be discriminated against on the basis of your background or identity? Please provide specific examples and (optionally) statistics. Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p></li>
-
-	<li><p><b>Does your learning environment have few people who share your identity or background? Please provide details.</b> Contributing to free and open source software takes some skill. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker. Does any of your learning environments have few people who share your identity or background? How did your identity or background differ from the majority of people in this learning environment? Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p></li>
-
-	<li><p><b>What systemic bias or discrimination have you faced while building your skills?</b> Outreachy projects often require applicants to know some basic skills. Those skills might include programming, user experience, documentation, illustration and graphical design, or data science. You may have already learned some basic skills through university or college classes, specialized schools, online classes, online resources, or with a mentor, friend, family member or co-worker. In these settings, have you faced systemic bias or discrimination? Have you been discouraged from accessing these resources because of your identity or background? Please provide specific examples and (optionally) statistics. Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p></li>
-
-</ol>
-
-<h3 id='essay-tips'>Essay tips</h3>
-
-{% include 'home/docs/essay-tips-snippet.html' %}
+<p>Once the community coordinator has applied to participate, they can send their community's CFP page link to mentors.</p>
 
 <p><a href='#toc'><u>↑ table of contents</u></a></p>
 <hr>
-<h2 id='application-prep'><a href="#application-prep">Preparing for the contribution period</a></h2>
 
-<p>You can read about what it's like to apply to Outreachy:
-<ul>
-	<li><a href="/blog/outreachy-interns-talk-about-application-process/">December 2018 Outreachy interns talk about the application process</a></li>
-	<li><a href="/alums/">Read past Outreachy intern's blogs</a></li>
-	<li><a href="https://medium.freecodecamp.org/get-the-most-out-of-your-outreachy-application-process-937d4a8ab4bf">Get the most out of your Outreachy intern application process</a></li>
-	<li><a href="https://medium.freecodecamp.org/outreachy-what-how-why-4fb60d10a228">How I got into the Outreachy open source internship program</a></li>
-	<li><a href="https://medium.com/@ihsavru/outreachy-the-end-87114b46def4">Application tips from an Outreachy intern who just completed their internship</a></li>
-	<li><a href="http://exploreshaifali.github.io/2015/06/08/getting-into-summer-of-code-programs/">Getting into Summer of Code Programs</a></li>
-	<li><a href="http://www.litacho.com/opw_the_end.html">The end of my internship</a> - note that Outreachy used to be called OPW</li>
-	<li><a href="https://web.archive.org/web/20130410022646/http://anteaya.info/blog/2013/03/29/suggestions-for-gnome-opw-applicants">Suggestions for Outreachy Applicants</a></li>
-</ul>
-</p>
-
-<p>Outreachy recommends the following resources for learning about contributing to free and open source software projects:
-<ul>
-	<li><a href="https://opensource.com/resources/what-open-source">"What is open source?"</a> an article by opensource.com</li>
-	<li><a href="https://pragprog.com/book/vbopens/forge-your-future-with-open-source">"Forge Your Future With Open Source"</a> an introductory book for open source newcomers</li>
-	<li><a href="https://lab.github.com/">GitHub Lab</a> a free resource for learning git</li>
-	<li><a href="https://www.freecodecamp.org/">FreeCodeCamp</a> a free resource for learning programming skills</li>
-	<li><a href="https://up-for-grabs.net">Up for Grabs</a> (unaffiliated with Outreachy) - find projects to volunteer your time with</li>
-</ul>
-</p>
-
-{% if previous_round %}
-	<p>You may want to brush up on your skills for contributing to free and open source software communities. Each project will use a different set of skills, and some mentors may be willing to teach you skills. Projects and the skills they use change each round. The most common skills used in projects last round were:
-	<ul>
-		{% for common_skill in previous_round.get_common_skills %}
-		{% if common_skill.1 > 2 %}<li>{{ common_skill.0 }} - {{ common_skill.1 }} project{{ common_skill.1|pluralize }}</li>{% endif %}
-		{% endfor %}
-	</ul>
-	</p>
-{% endif %}
-
-<p><a href='#toc'><u>↑ table of contents</u></a></p>
-<hr>
-<h2 id='find-mentor'><a href="#find-mentor">Finding a Mentor and an Internship Project</a></h2>
-<p><img src="{% static 'bot-find-a-mentor.png' %}" class="img-fluid"></p>
+<h2 id='mentor-sign-up-process'><a href="#mentor-sign-up-process">6. Mentor sign up process</a></h2>
 
 <p>
-Once your initial application is approved, the contribution period will open.
-The next step in the Outreachy application process is to look through the list of
-participating communities and internship projects. Pick one
-or two projects that look interesting to you.
+Mentors must submit their project descriptions through the Outreachy website. Co-mentors can sign up once the project has been submitted. Coordinators will approve the projects and any co-mentors.
 </p>
 
 <p>
-We don't recommend applying to more than two projects.
-</p>
-
-<p>
-Many people want to increase their chances of getting accepted.
-They see some communities that are accepting many interns,
-and some communities that are accepting one or two interns.
-Their instinct is to apply to the communities that are accepting more interns.
-However, when all the applicants think that way, it means
-projects that are only accepting one intern don't get a lot of
-applicants. It might be better to apply to a community who is accepting a small number of interns.
-</p>
-
-<p>
-Projects will list the skills they want applicants to have.
-Project skills are listed with two different indicators:
-how much experience you need in a skill, and whether
-you are required to have that skill in order to apply.
-Please
-<a href="{% url 'project-selection' %}#project-skills-key">see the project skills key</a>
-on the project list for more information.
-</p>
-
-<p>
-Many people get overwhelmed with the list of projects and don't
-know how to choose a project! Our advice is to pick a community
-that has a mission that you're passionate about.
-</p>
-
-<p>
-Once you've narrowed down your list of projects,
-you can decide whether the project is right for you by:
-</p>
-<ul>
-	<li>Introducing yourself to the project's mentor via email</li>
-	<li>Joining the project's chat, forums, or mailing list and introducing yourself</li>
-	<li>Using or installing the project</li>
-	<li>Reading the project's documentation</li>
-	<li>Looking at the open issues or feature requests for the project</li>
-	<li><a href="/alums/">Reading Outreachy alums' blogs</a> who worked with that community</li>
-</ul>
-
-<p><b>You'll need to contact the project mentor.</b> All applicants need to be the first one to reach out to mentors. Mentors will not be assigned to you.</p>
-
-<p>
-The mentors listed on the project will be the mentors who you are working with during the internship period.
-Mentors will evaluate applicants on their communication skills and the quality of the contributions they make during the contribution period. They'll pick the strongest applicant as their intern. Therefore, it's important that you reach out to mentors early during the contribution period.</p>
-
-<p>Applicants ask all sorts of questions of their mentors! Mentors are friendly and patient, and it's okay to ask questions multiple times, or multiple times a day! Read the project description, and ask your mentor questions about anything that's unclear. Ask you mentor if you get stuck setting up your contribution environment. Look for a list of project tasks under the 'Project Contribution Information' and ask questions if you have trouble getting started on your contributions. If you're stuck for more than a couple of hours at any time, reach out to your mentor for help.
+Mentors should sign up on the Outreachy website, since that grants them special permissions.
+Mentors who sign up will be can be subscribed to the mentors mailing list, which the Outreachy organizers use to send important announcements.
+Mentors will be granted read access to applications for their project and will be notified of new applicants.
 </p>
 
 <p><a href='#toc'><u>↑ table of contents</u></a></p>
 <hr>
-<h2 id='make-contributions'><a href="#make-contributions">Making Contributions</a></h2>
-<p><img src="https://www.outreachy.org/media/images/bot-contribution.original.png" class="img-fluid"></p>
 
-<p><b>What is a Contribution?</b></p>
-
-<p>
-To 'contribute' means 'To give to a common cause, often along with other people'.
-In free software and open source, we talk about 'contributing' to a project or community.
-That means people working together to improve an open source project.
-People who regularly work on open source are often called 'open source contributors'.
-</p>
-
-<p>
-Outreachy applicants will become open source contributors during the contribution period!
-When you work on an Outreachy project task, you're making a 'contribution' to that project.
-A contribution can be something small, like a bug fix or a documentation improvement.
-</p>
-
-<p><b>Applicants are required to make a contribution.</b></p>
-
-<p>
-Outreachy applicants are required to make at least one contribution to an Outreachy project.
-Only applicants who make a contribution will be eligible to be selected as an intern.
-Applicants are required to record their contributions in the Outreachy website.
-You can't submit a final application until you record a contribution.
-</p>
-
-<p>
-Start your contributions early!
-Many applicants under-estimate the time it will take to complete a contribution.
-Most applicants take 5 to 10 days to complete their first contribution.
-</p>
-
-<p>
-Some project mentors find that they have many promising applicants.
-They may choose to close their project to new applicants.
-If you wait too long to start, your project may be closed to new applicants.
-</p>
-
-<p>
-Don't try to make a big, last minute contribution.
-Keep in contact with your mentors throughout the whole contribution period.
-Ask questions and send contributions at a steady pace.
-</p>
-
-<p>
-Start with a smaller contribution.
-Then try a more complex contribution.
-The end goal is to show you have the skills to be a successful intern.
-</p>
-
-<p><b>How do I find a contribution to work on?</b></p>
-
-<p>
-Project mentors have a list of tasks for applicants to work on.
-You can find the task list in the project details page, which is linked from the <a href="{% url 'project-selection' %}">project selection page</a>.
-The project description should include a section called 'Project Contribution Information'.
-That should have information about how to find a contribution to work on.
-</p>
-
-<p>
-Some projects, like the Linux Kernel, want people to contribute in a specific way.
-They may have a tutorial for setting up your environment and creating your first contribution.
-The project description or community description should mention a tutorial.
-</p>
-
-<p>
-Some mentors have each applicant work on different tasks.
-Other mentors have each applicant complete the same task.
-</p>
-
-<p>
-Some project issue trackers have a tagging system.
-Mentors may tag tasks that are good for newcomers to the project.
-Some common tag names are "first patch" or "newcomers welcome" or "newcomer friendly".
-</p>
-
-<p>
-When in doubt, ask the project mentor!
-It's good to ask for suggestions when looking for a suitable contribution.
-Make sure to describe what your skills are and what you want to learn more about.
-</p>
-
-<p id='record-contributions'><b>Recording your contributions</b></p>
-
-<p>
-Applicants are required to record their contributions in the Outreachy website.
-Only applicants who have recorded a contribution will be allowed to submit a final application.
-</p>
-
-<p>
-You can record a contribution as soon as you start working on it.
-You can go back and edit your recorded contribution at any time.
-</p>
-
-<p>
-You can find a link to record a contribution on the project details page.
-Go to the <a href="{% url 'project-selection' %}">Outreachy project list</a>,
-and click the link for your project.
-On the page with project details, you should see a link to
-'record your contributions and create a final application'.
-</p>
-
-<p><b>Getting help on a contribution</b></p>
-
-<p>
-Working on contributions can be confusing at times!
-It is expected and perfectly normal to have questions.
-Mentors are here to help.
-</p>
-
-<p>
-If you get stuck for more than a couple hours, ask the project mentors or community for help.
-If you ask for help privately and don't get an answer, try asking on the public community channels as well.
-If you ask for help publicly and don't get an answer, try emailing the mentor.
-</p>
-
-<p>
-Contributions to open source communities are submitted and reviewed in the public.
-That can feel intimidating at first, but remember that mentors are here to help you!
-</p>
-
-<p><b>Contribution review and revisions</b></p>
-
-<p>
-After you submit a contribution, your mentor or another community member will review it.
-They will often have feedback and changes you'll need to make.
-This is not a criticism of your work or skills.
-You should view it as a chance to learn something new and improve your skills.
-</p>
-
-<p>
-Please be sure to follow up on the reviewer's feedback.
-You may need to submit your contribution several times.
-Keep working on it with your mentor until it is ready to be included in the project.
-It's best to allocate time over several weeks for this process.
-Try to start you contributions as soon as possible.
-</p>
-
-<p><b>How Much Should I Contribute?</b></p>
-
-<p>
-Applicants are only required to make one contribution.
-However, we find that the strongest applicants make multiple contributions.
-Start with a small contribution and work your way up to more complex contributions.
-The strongest applicants are consistent about working on the project.
-They communicate regularly with their mentor to discuss what they're working on.
-</p>
-
-<p>
-Applicants are encouraged, but not required, to contribute after the contribution period ends.
-</p>
-
-<p><a href='#toc'><u>↑ table of contents</u></a></p>
-<hr>
-<h2 id='contribution-evaluation'><a href="#contribution-evaluation">How are contributions evaluated?</a></h2>
-
-<p>
-Each Outreachy mentor will evaluate contributions in a different way.
-It depends on what skills the applicant needs to be successful for their project.
-A programming project might want applicants to add code.
-A design project might want applicants to create graphics or art.
-</p>
-
-<p>
-This applicant guide will generalize for all projects.
-When in doubt, ask your mentor how they evaluate contributions.
-Ask your mentor how they decide which applicant to accept as an intern.
-Any guidance your mentor provides should be followed, even if it differs from the Outreachy applicant guide.
-</p>
-
-<p>
-Here are some example questions that mentors may use to evaluate your contributions:
-</p>
-
-<ul>
-	<li>Do your contributions show you have the required skills for the project?</li>
-	<li>Have your contributions shown you can complete complex work?</li>
-	<li>Have you worked on contributions that your mentor asked you to work on? Have you worked on contributions that are on the community's task list for Outreachy interns?</li>
-	<li>Have you tried using new tools or techniques? Your mentor may have some suggestions for tools, or you may find new open source tools on your own.</li>
-	<li>Have you communicated with your mentor via the public community chat?</li>
-	<li>Do you communicate in a clear, welcoming, and professional manner?</li>
-	<li>Have you asked for help when stuck in a timely manner?</li>
-	<li>Do you share your knowledge and help other applicants when they get stuck? Open source is about collaborating with other community members, and that includes other applicants and interns.</li>
-</ul>
-
-<p><a href='#toc'><u>↑ table of contents</u></a></p>
-<hr>
-<h2 id='estimated-number-of-interns'><a href="#estimated-number-of-interns">Estimated number of interns</a></h2>
+<h2 id='estimated-number-of-interns'><a href="#estimated-number-of-interns">7. Estimated number of interns</a></h2>
 
 <p>
 On the <a href="{% url 'project-selection' %}">project list</a>, each community has an estimate of the number of interns it expects to accept.
@@ -725,70 +404,17 @@ Or mentors could find they simply over-estimated the amount of free time they ha
 Some times project mentors <a href="#contribution-evaluation">evaluated the contributions</a> and decided not to accept any applicants.
 </p>
 
-<p>
-Some times community coordinators make decisions about which applicants to accept.
-They may prioritize a stronger applicant for one project over a weaker applicant for a different project.
-</p>
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
 
-<p>
-Please show mentors respect who decide not to accept an intern.
-Mentors may not have time to provide individual feedback to all applicants who were not accepted, although some do.
-You are welcome to ask a mentor for feedback to improve your contributions next time.
-Please make sure you are asking for feedback in a constructive manner, and not trying to appeal the decision.
-</p>
+<h2 id='internship'><a href='#internship'>8. Internship</a></h2>
 
-<p>
-Please don't ask Outreachy organizers why you were not accepted as an intern.
-They do not work directly with applicants, and often do not know why mentors did not accept an intern.
-</p>
+<p>Mentors and coordinators are encouraged to read the <a href='{% url 'docs-internship' %}'>Internship Guide</a>. The Internship Guide includes mentor duties and expectations during the internship. Mentors should familiarize themselves with the internship chat and blogging schedules.</p>
 
 <p><a href='#toc'><u>↑ table of contents</u></a></p>
 <hr>
-<h2 id='final-application'><a href='#final-application'>Final application</a></h2>
 
-<p>Applicants are required to create a final application for each Outreachy project they apply to.
-Only applicants that <a href='#record-contributions'>record a contribution</a> to a project will be able to create a final application for that project.
-</p>
-
-<p>
-We encourage applicants to submit their final application at least a day before the deadline ({{ current_round.contributions_close }} at 4pm UTC).
-You can edit your final application until the deadline.
-</p>
-
-<p>You will need to submit your final application through the Outreachy website. 
-Go to the <a href="{% url 'project-selection' %}">Outreachy project list</a>,
-and click the link for your project.
-On the page with project details, you should see a link to
-'record your contributions and create a final application'.
-</p>
-
-<p>The final application asks four questions:</p>
-
-<ul>
-	<li><b>Past experience with this community.</b> Please describe your experience before this Outreachy application period with this free software community. You can describe your prior experiences as both a user and a contributor.</li>
-	<li><b>Past experience with other communities.</b> Please describe your experience before this Outreachy application period with any other free software communities. You can describe your prior experiences as both a user and a contributor.</li>
-	<li><b>Relevant Projects</b> Please describe any relevant projects (either personal, work, or school projects) that helped you gain skills you will use in this project. Talk about what knowledge you gained from working on them. Include links where possible.</li>
-	<li><b>(Optional) Please describe which Google Summer of Code communities and projects you are applying for, and provide mentor contact information.</b> If you are a student at an accredited university or college, we highly encourage you to also apply to <a href="https://summerofcode.withgoogle.com/">Google Summer of Code</a> during the May to August internship round. Many Outreachy communities participate in both programs, and applying to Google Summer of Code increases your chances of being accepted as an intern. Please note that <a href="https://developers.google.com/open-source/gsoc/help/student-stipends">Google Summer of Code has stipend amounts that vary per country</a>. Please keep the list of communities and projects you are applying to under Google Summer of Code up-to-date, since we often try to coordinate with Google Summer of Code mentors during the intern selection period. If this application is for the December to March internship period, or you are not applying to Google Summer of Code, please leave this question blank.</li>
-	<li><b>Outreachy internship project timeline.</b> Please work with your mentor to provide a timeline of the work you plan to accomplish on the project and what tasks you will finish at each step. Make sure take into account any time commitments you have during the Outreachy internship round. If you are still working on your contributions and need more time, you can leave this blank and edit your application later.</li>
-</ul>
-
-<p><a href='#toc'><u>↑ table of contents</u></a></p>
-<hr>
-<h2 id='intern-announcement'><a href='#intern-announcement'>Intern announcement</a></h2>
-
-<p>Intern selections are not shared with applicants until <a href='{% url 'alums' %}'>interns are announced</a> on {{ current_round.internannounce }} at 4pm UTC.</p>
-
-<p>If you want more details about the internship, please read our <a href='{% url 'docs-internship' %}'>Internship guide</a>.
-
-<p><a href='#toc'><u>↑ table of contents</u></a></p>
-<hr>
-<h2 id='internship'><a href='#internship'>Internship</a></h2>
-
-<p>Applicants are encouraged to read the <a href='{% url 'docs-internship' %}'>Internship Guide</a>. The Internship Guide talks about what we expect from interns. It also talks about what interns can expect of mentors and what to expect in terms of career development opportunities.</p>
-
-<p><a href='#toc'><u>↑ table of contents</u></a></p>
-<hr>
-<h2 id='faq'><a href='#faq'>FAQ</a></h2>
+<h2 id='faq'><a href='#faq'>9. FAQ</a></h2>
 
 <h2 id='stipend-details'><a href='#stipend-details'>Internship stipend details</a></h2>
 
