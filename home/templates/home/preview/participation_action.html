@@ -99,7 +99,9 @@ Intern Funding
 		{% endfor %}
 		{% endwith %}
 	{% endfor %}
-	<input type="submit" class="btn btn-{% if view.kwargs.action == 'withdraw' %}warning{% elif view.kwargs.action == 'reject' %}danger{% else %}success{% endif %}" value="{{ view.kwargs.action|title }}" />
+	<div class="my-5">
+		<input type="submit" class="btn btn-{% if view.kwargs.action == 'withdraw' %}warning{% elif view.kwargs.action == 'reject' %}danger{% else %}success{% endif %}" value="{{ view.kwargs.action|title }}" />
+	</div>
 </form></p>
 {% else %}{# action is something other than submit #}
 {% include "home/snippet/action_form.html" %}
