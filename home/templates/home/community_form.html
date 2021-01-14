@@ -2,12 +2,29 @@
 
 {% block content %}
 
-<h1>Community Information</h1>
+<h1>Public Community Information</h1>
+
+<p>This information is shown to Outreachy applicants on the community project page.</p>
+
 <form action="" method="post">
-    {% csrf_token %}
-    {{ form.media }}
-    {{ form.as_p }}
-    <input class="btn btn-success" type="submit" value="Save community info" />
+	{% csrf_token %}
+	{{ form.media }}
+	{{ form.non_field_errors }}
+	{% for field in form.visible_fields %}
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class="card-header">
+				{{ field.label_tag }}
+			</div>
+			<div class="card-body">
+				{{ field }}
+			</div>
+			{% if field.help_text %}
+			<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+			{% endif %}
+		</div>
+	{% endfor %}
+	<input class="btn btn-success" type="submit" value="Save community info" />
 </form>
 
 {% endblock %}
