@@ -256,34 +256,48 @@ Community Guide | Outreachy Documentation
 <p><a href='#toc'><u>↑ table of contents</u></a></p>
 <hr>
 
-<h2 id='outreachy-schedule'><a href='#outreachy-schedule'>4. Outreachy yearly schedule</a></h2>
+<h2 id='outreachy-schedule'><a href='#outreachy-schedule'>4. Outreachy schedule</a></h2>
 
-<p>Outreachy internships run twice a year. Here is our general schedule for each year:</p>
+<p>Outreachy internships run twice a year.</p>
+
+<h3 id='general-timeline'><a href='#general-timeline'>4.1 General timeline</a></h3>
+
+<p>Here is our general schedule for each year:</p>
 
 {% include 'home/snippet/generic_timeline.html' %}
+
+<h3 id='current-timeline'><a href='#current-timeline'>4.2 Current internship round schedule</a></h3>
 
 <p><b>{{ current_round.official_name }} round schedule</b></p>
 
 {% include 'home/snippet/mentor-timeline.html' %}
 
-<hr>
+<h3 id='timeline-details'><a href='#timeline-details'>4.3 Timeline details</a></h3>
 
-<p><a href='#toc'><u>↑ table of contents</u></a></p>
-<hr>
-<h2 id='application-period'><a href='#application-period'>Application period overview</a></h2>
+<p>The internship round begins when the Outreachy organizers open the call for participation communities. The community CFP period somewhat overlaps with the initial application period.<p>
 
-<p>There are three parts to the Outreachy application process:</p>
+<p><b>Community CFP period:</b></p>
+
+<ul>
+	<li>{{ current_round.pingnew }} to {{ current_round.project_soft_deadline }}</li>
+	<li>Community coordinators find sponsors to <a href="#funding-requirements">fund interns</a></li>
+	<li>Communities sign up to participate</li>
+	<li>Outreachy organizers review new communities who want to participate</li>
+	<li>Community coordinators reach out to potential mentors</li>
+	<li>Mentors submit projects for interns to work on</li>
+	<li>Coordinators review projects and approve or reject them</li>
+	<li>Mentors create a list of tasks for applicants to work on during the contribution period</li>
+	<li>Mentors participate in the <a href="{% url 'promote' %}#outreachychat">Outreachy Twitter Chat</a></li>
+</ul>
 
 <p><b>Initial application period:</b></p>
 <ul>
 	<li>{{ current_round.initial_applications_open }} to {{ current_round.initial_applications_close }}</li>
 	<li>During this period, applicants fill out an initial application form</li>
 	<li>Outreachy organizers review initial applications and their essays</li>
-	<li>If your application is rejected due to not meeting our eligibility rules, you will be notified immediately</li>
-	<li>If your application is rejected due to not meeting our time commitment rules, you will be notified immediately</li>
-	<li>All accepted applicants will receive an email when the contribution period starts on {{ current_round.contributions_open }}</li>
-	<li>Everyone will be able to view their initial application status on <a href='{% url 'eligibility-results' %}'>eligibility results page</a> on {{ current_round.contributions_open }}at 4pm UTC</li>
 	<li>Initial applications are due on {{ current_round.initial_applications_close }}</li>
+	<li>All accepted applicants will receive an email when the contribution period starts on {{ current_round.contributions_open }}</li>
+	<li>Everyone will be able to view their initial application status on <a href='{% url 'eligibility-results' %}'>eligibility results page</a> on {{ current_round.contributions_open }} at 4pm UTC</li>
 </ul>
 
 <p><b>Contribution period:</b></p>
@@ -291,6 +305,9 @@ Community Guide | Outreachy Documentation
 	<li>{{ current_round.contributions_open }} to {{ current_round.contributions_close }}</li>
 	<li>Applicants with an approved initial application will move onto the contribution period</li>
 	<li>During this period, applicants <a href='#find-mentor'>contact mentors</a> and <a href='#make-contributions'>make contributions</a></li>
+	<li>Mentors communicate with applicants and tell them about community norms</li>
+	<li>Mentors help applicants set up their contribution environment</li>
+	<li>Mentors review applicant contributions and suggest changes</li>
 	<li>Applicants are required to <a href='#record-contributions'>record a contribution</a></li>
 	<li>Applicants are required to fill out a final application</li>
 	<li>Contributions and final applications are due on {{ current_round.contributions_close }}</li>
