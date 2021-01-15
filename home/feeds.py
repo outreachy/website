@@ -112,7 +112,7 @@ class WagtailFeed(Feed):
         ))
         items.append(PseudoPage(
             title='Call for May 2021 mentoring communities',
-            full_url=reverse('2020-01-community-cfp-open'),
+            full_url=reverse('2021-01-community-cfp-open'),
             owner=author,
             first_published_at=pacific.localize(datetime.datetime(2021, 1, 15, 11, 00, 0)),
             last_published_at=pacific.localize(datetime.datetime(2021, 1, 15, 11, 00, 0)),
