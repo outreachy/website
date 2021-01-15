@@ -16,11 +16,12 @@
   </li>
 
   <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" id="navbarVolunteers" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Volunteers
+    <a class="nav-link dropdown-toggle" href="#" id="navbarCommunities" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Communities
     </a>
 
-    <div class="dropdown-menu" aria-labelledby="navbarVolunteers">
+    <div class="dropdown-menu" aria-labelledby="navbarCommunities">
+      <a class="dropdown-item" href="{% url 'docs-community' %}">Community Guide</a>
       <a class="dropdown-item" href="/mentor/">Volunteering FAQ</a>
       <a class="dropdown-item" href="{% url 'dashboard' %}">My Mentored Projects</a>
       <a class="dropdown-item" href="{% url 'community-cfp' %}">Add A Community</a>
