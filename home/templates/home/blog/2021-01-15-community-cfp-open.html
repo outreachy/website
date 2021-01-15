@@ -1,0 +1,122 @@
+{% extends "base.html" %} 
+{% load static %}
+
+{% block title %}
+Call for May 2021 mentoring communities
+{% endblock %}
+
+{% block content %}
+{% load humanize %}
+
+
+<h1>Call for May 2021 mentoring communities</h1>
+
+<p><i>Date: January 15, 2021</i></p>
+{% comment %}<p><i>Last updated: DATE</i> - See the "SECTION" section below.</p>{% endcomment %}
+
+<img src="{% static 'img/73-cc-by-2_0-WOCinTech-Chat.jpg' %}" alt="Two black women sit on a couch, with laptops on their lap. One woman is pointing to the other woman's laptop screen. The other woman is smiling. Photo is cc-by 2.0 WOCinTech Chat" class="img-fluid">
+<p><i>Photo CC BY 2.0 WOCinTech Chat</i></p>
+
+<h2>Outreachy seeks mentoring communities</h2>
+
+<p>
+Outreachy is seeking open source communities to participate in the May to August 2021 internship round.
+</p>
+
+{% include 'home/snippet/funding_short_description.html' %}
+
+<p><b>Important dates:</b></p>
+
+<ul>
+	<li>{{ current_round.outreachy_chat }} - <a href="{% url 'promote' %}#outreachychat">Outreachy Twitter Chat</a> with potential applicants</li>
+	<li>{{ current_round.lateorgs }} at 4pm UTC - deadline for <a href="{% url 'community-cfp' %}">communities to apply to participate</a></li>
+	<li>{{ current_round.project_soft_deadline }} at 4pm UTC - deadline for <a href="{% url 'community-cfp' %}">mentors to submit projects</a></li>
+</ul>
+
+<p>Please see the <a href="#important-dates">full mentor schedule</a> below.</p>
+
+<p><a class='btn btn-success' href="{% url 'community-cfp' %}">Submit Community Application</a></p>
+
+<hr>
+<h2 id='toc'>What communities need to know</h2>
+
+<p>
+<a href='#what-is-outreachy'>What is Outreachy?</a><br>
+<a href='#humanitarian-funding'>Humanitarian community funding</a><br>
+<a href='#important-dates'>May 2021 internship dates</a><br>
+</p>
+
+<hr>
+<h2 id='what-is-outreachy'><a href="#what-is-outreachy">What is Outreachy?</a></h2>
+
+<p>Outreachy is an internship program. Outreachy internships are:</p>
+
+<p class="ml-4 mb-0">💵 <b>Paid</b> - $6,000 USD total internship stipend</p>
+
+<p class="ml-4 my-0">🌍 <b>Remote</b> - both interns and mentors work remotely</p>
+
+<p class="ml-4 mt-0">🕰 <b>3 months</b> - internships run {{ current_round.internstarts|date:"F d" }} to {{ current_round.internends|date:"F d" }}</p>
+
+<p>Outreachy's goal is to increase <b>diversity in open source</b>. Past Outreachy interns are:</p>
+
+<p class="ml-4 mb-0">♀️ 92% women</li>
+<p class="ml-4 my-0">🏳️‍🌈 4% transgender, genderqueer, or non-binary people</p>
+<p class="ml-4 my-0">🧕🏾 64% people of color</p>
+<p class="ml-4 mt-0">🧑🏿 12% people from a historically disadvantaged caste or tribe</p>
+
+<p><i>Statistics are based on responses to the 2019 longitudinal study of Outreachy alums.</i></p>
+
+<p><a class='btn btn-info' href="{% url 'docs-community' %}">Read Community Guide</a></p>
+
+<hr>
+<h2 id='humanitarian-funding'><a href='#humanitarian-funding'>Humanitarian community funding</a></h2>
+
+<p>Outreachy is seeking humanitarian open source communities to participate in the May 2021 internship round.</p>
+
+<p>We especially invite humanitarian communities to apply who are tackling:</p>
+<ul>
+	<li>climate change</li>
+	<li>infectious diseases</li>
+	<li>mental health issues</li>
+</ul>
+<p>These are some of the greatest challenges humanity faces today.</p>
+
+<p>Please <a href='{% url 'contact-organizers' %}'>contact Outreachy organizers</a> with your questions!</p>
+
+<h3>Funding details</h3>
+
+<p>Outreachy is pleased to announce that the <a href="{% url 'docs-community' %}#outreachy-general-fund">Outreachy general fund</a> will be funding humanitarian open source communities.</p>
+
+<p>Outreachy will provide funding for at least one intern ($6,500 USD) for each community.
+Some communities may receive <a href="{% url 'docs-community' %}#partial-general-funding">additional funding</a> if they have multiple strong applicants.</p>
+
+<h3>Mentors and projects</h3>
+
+<p>
+We encourage communities to list 1-3 intern projects.
+</p>
+
+<p>Outreachy encourages co-mentoring projects! We encourage communities to find two or more mentors. Communities should also consider finding volunteers to help applicants with project tasks during the contribution period</p>
+
+<p>
+<b>Mentor time commitment:</b>
+</p>
+<ul>
+	<li>{{ current_round.contributions_open|date:"F j" }} to {{ current_round.contributions_close|date:"F j" }}: Mentors spend <b>5 to 10 hours per week</b> during the applicant contribution period.</li>
+	<li>{{ current_round.internstarts|date:"F j" }} to {{ current_round.internends|date:"F j" }}: Mentors spend <b>5 hours per week</b> during the internship period.</li>
+</ul>
+
+<p>Mentors will need to provide an internship project description. Outreachy does not allow applicants to submit project ideas.</p>
+
+<p>Mentors will need to provide a list of tasks for applicants to work on during the contribution period.</p>
+
+<hr>
+<h2 id='important-dates'><a href='#important-dates'>May 2021 internship dates</a></h2>
+
+{% include 'home/snippet/mentor-timeline.html' %}
+
+<h2>Apply to participate</h2>
+
+<p class="mt-4"><a class='btn btn-success' href="{% url 'community-cfp' %}">Submit Community Application</a></p>
+
+{% endblock %}
