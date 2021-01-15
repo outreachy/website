@@ -1220,6 +1220,35 @@ class CommunityUpdate(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return self.object.get_preview_url()
 
+class GeneralFundingApplication(LoginRequiredMixin, UpdateView):
+    model = Community
+    slug_url_kwarg = 'community_slug'
+    form_class = modelform_factory(
+            Community,
+            fields=(
+                'humanitarian_community',
+                'general_funding_application',
+                'additional_sponsors',
+                ),
+            field_classes={
+                'humanitarian_community': RadioBooleanField,
+                }
+    )
+    template_name = 'home/general_funding_application.html'
+
+    def get_object(self):
+        community = super(GeneralFundingApplication, self).get_object()
+        if not community.is_coordinator(self.request.user):
+            raise PermissionDenied("You are not an approved coordinator for this community.")
+        return community
+
+    def get_success_url(self):
+        if self.kwargs['new'] == 'True':
+            return reverse('community-update', kwargs = {
+                'community_slug': self.object.slug,
+                })
+        return self.object.get_preview_url()
+
 class SponsorshipInlineFormSet(BaseInlineFormSet):
     def get_queryset(self):
         qs = super(SponsorshipInlineFormSet, self).get_queryset()
@@ -1261,10 +1290,12 @@ class ParticipationAction(ApprovalStatusAction):
             )
 
         try:
+            self.new = False
             return Participation.objects.get(
                     community=community,
                     participating_round=participating_round)
         except Participation.DoesNotExist:
+            self.new = True
             return Participation(
                     community=community,
                     participating_round=participating_round)
@@ -1298,6 +1329,12 @@ class ParticipationAction(ApprovalStatusAction):
             for notification in self.object.community.notification_set.all():
                 email.notify_mentor(self.object, notification, self.request)
                 notification.delete()
+
+    def get_success_url(self):
+        return reverse('community-general-funding', kwargs = {
+            'community_slug': self.object.community.slug,
+            'new': self.new,
+            })
 
 # This view is for mentors and coordinators to review project information and approve it
 def project_read_only_view(request, round_slug, community_slug, project_slug):

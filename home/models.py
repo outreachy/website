@@ -1412,6 +1412,21 @@ class Community(models.Model):
             verbose_name="(Optional) Description of your first time contribution tutorial",
             help_text="If your applicants need to complete a tutorial before working on contributions with mentors, please provide a description and the URL for the tutorial. For example, the Linux kernel asks applicants to complete a tutorial for compiling and installing a custom kernel, and sending in a simple whitespace change patch. Once applicants complete this tutorial, they can start to work with mentors on more complex contributions.")
 
+    humanitarian_community = models.BooleanField(
+            default=False,
+            verbose_name='Is your community a humanitarian open source community?')
+
+    general_funding_application = CKEditorField(
+            blank=True,
+            verbose_name="What humanitarian issues is your community addressing?",
+            )
+
+    additional_sponsors = models.TextField(
+            blank=True,
+            max_length=THREE_PARAGRAPH_LENGTH,
+            verbose_name="What other companies or organizations could Outreachy ask for additional sponsorship?",
+            help_text="Outreachy needs to carefully allocate our funds. We want to try to find your community additional sponsors, so that we can fund more interns each round. Please let us know if there are organizations we could contact on your behalf for additional sponsorship.")
+
     rounds = models.ManyToManyField(RoundPage, through='Participation')
 
     class Meta:
@@ -1545,7 +1560,7 @@ class NewCommunity(Community):
             verbose_name="What other mentorship programs has your community participated in?",
             help_text="Note when your community participated in each program and how many interns the community worked with. Examples of mentoring programs include Rails Girls Summer of Code, Google Summer of Code, Google Code In, Google Season of Docs, Linux Foundation Community Bridge, and GitHub Major League Hacking internships.")
 
-    reason_for_participation = models.CharField(
+    reason_for_participation = models.TextField(
             blank=True,
             max_length=THREE_PARAGRAPH_LENGTH,
             verbose_name="(Optional) Why does your community want to work with Outreachy?")

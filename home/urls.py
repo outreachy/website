@@ -12,6 +12,7 @@ from django.conf.urls import include, url
 # These views all take a community_slug.
 community_cfp_patterns = [
     url(r'^edit/$', views.CommunityUpdate.as_view(), name='community-update'),
+    url(r'^general-funding-application/(?P<new>[^/]+)/$', views.GeneralFundingApplication.as_view(), name='community-general-funding'),
     url(r'^notify/$', views.CommunityNotificationUpdate.as_view(), name='notify-me'),
     url(r'^coordinator/preview/(?P<username>[^/]+)/$', views.CoordinatorApprovalPreview.as_view(), name='coordinatorapproval-preview'),
     url(r'^coordinator/(?P<action>[^/]+)/(?:(?P<username>[^/]+)/)?$', views.CoordinatorApprovalAction.as_view(), name='coordinatorapproval-action'),
