@@ -1,0 +1,455 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Community Guide | Outreachy Documentation
+{% endblock %}
+
+{% block content %}
+<p><a href='{% url 'docs' %}'>← back to Outreachy documentation</a></p>
+<h1>Outreachy Community Participation Guide</h1>
+
+<h2 id='toc'>Table of Contents</h2>
+
+<ol>
+	<li><a href='#what-is-outreachy'>What is Outreachy?</a>
+		<ul>
+			<li><a href='#terms'>Terms used</a></li>
+			<li><a href='#roles'>Outreachy roles</a></li>
+			<li><a href='#intern-skill-levels'>Outreachy intern skill levels</a></li>
+			<li><a href='#intern-demographics'>Outreachy intern demographics</a></li>
+			<li><a href='#applicant-eligibility'>Applicant eligibility</a></li>
+			<li><a href='#program-differences'>How is Outreachy different from other internship programs?</a></li>
+		</ul>
+	</li>
+	<li><a href='#participation-rules'>Community participation rules</a>
+		<ul>
+			<li><a href='#funding-requirements'>2.1 Funding requirements</a></li>
+			<li><a href='#licensing-requirements'>2.2 Licensing requirements</a></li>
+			<li><a href='#commercial-ties'>2.3 Commercial ties</a></li>
+			<li><a href='#community-guidelines'>2.4 Community guidelines</a></li>
+			<li><a href='#public-work-requirements'>2.5 Public work requirements</a></li>
+		</ul>
+	</li>
+	<li><a href='#intern-funding'>Intern Funding</a>
+		<ul>
+			<li><a href='#intern-funding'>Finding sponsors</a></li>
+			<li><a href='#community-credits'>Community internship stipend credits</a></li>
+			<li><a href="#outreachy-general-fund">Outreachy general fund</a>
+				<ul>
+					<li><a href='#funding-during-cfp'>Outreachy general fund: All intern funding</a></li>
+					<li><a href='#partial-general-funding'>Outreachy general fund: Additional intern funding</a></li>
+					<li><a href='#general-funding-stats'>How much does the Outreachy general fund sponsor?</a></li>
+					<li><a href='#general-funding-decision-making'>How do you decide who gets Outreachy general funding?</a></li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li><a href='#project-guidelines'>Internship project guidelines</a></li>
+	<li><a href='#outreachy-schedule'>Outreachy schedule</a>
+		<ul>
+			<li><a href='#cfp-period'>Communities and projects sign up period</a></li>
+			<li><a href="#initial-application-period">Initial application period</a></li>
+			<li><a href="#contribution-period">Contribution period</a></li>
+			<li><a href='#final-application'>Final application</a></li>
+			<li><a href="#intern-selection-period">Intern selection period</a></li>
+			<li><a href='#intern-announcement'>Intern announcement</a><br>
+				<li><a href="#internship-period">Internship period</a></li>
+		</ul>
+	</li>
+	<li><a href="#community-sign-up-process">Community sign up process</a></li>
+	<li><a href="#mentor-sign-up-process">Mentor sign up process</a></li>
+	<li><a href="#estimated-number-of-interns">Estimated number of interns</a></li>
+	<li><a href="#Internship">Internship</a></li>
+	<li><a href="#faq">FAQ</a>
+		<ul>
+			<li><a href='#stipend-details'>Internship stipend details</a></li>
+		</ul>
+	</li>
+</ol>
+
+<hr>
+
+<h2 id='what-is-outreachy'><a href='#what-is-outreachy'>1. What is Outreachy?</a></h2>
+
+<p>Outreachy is a paid, remote internship program. Outreachy's goal is to support people from groups underrepresented in tech. We help newcomers to free software and open source make their first contributions.</p>
+
+<p>Outreachy provides internships to work open source. People apply from all around the world. Interns work remotely, and are not required to move. Interns are paid a stipend of $5,500 USD for the three month internship. Interns have a $500 USD travel stipend to attend conferences or events.</p>
+
+<p>Interns work with experienced mentors from open source communities. Outreachy internship projects may include programming, user experience, documentation, illustration, graphical design, or data science. Interns often find employment after their internship with Outreachy sponsors or in jobs that use the skills they learned during their internship.</p>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h3 id='terms'><a href='#terms'>1.1. Terms used</a></h3>
+
+{% include "home/snippet/foss-terms.html" %}
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h3 id='roles'><a href='#roles'>1.2. Outreachy roles</a></h3>
+
+<p>There are several different Outreachy roles:</p>
+{% include "home/snippet/roles.html" %}
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h3 id='intern-skill-levels'><a href='#intern-skill-levels'>1.3. Outreachy intern skill levels</a></h3>
+
+<p>Outreachy interns come from a wide range of backgrounds. Interns could be university students, code school graduates, people switching careers, or people coming back to tech after starting a family or other long absence.</p>
+
+<p>Outreachy interns can be people of any gender. If you do not know what a participant's pronouns are, please use <a href="{% url 'docs' %}#pronouns">gender-neutral language</a> and they/them pronouns.</p>
+
+<p>Outreachy applicants have a wide variety of skill levels. Most Outreachy applicants already have some general skills to make contributions, such as some experience with programming, technical writing, graphic design, etc. Outreachy mentors often have to help applicants and interns learn or improve skills specific to their project.<p>
+
+<p>Many Outreachy applicants have not contributed to open source. Some applicants may have made small contributions, but not worked on a larger project. Other applicants may participate in open source events or groups but don't know how to make a contribution. Some applicants may be using open source. Others may have their first experience with using open source through Outreachy.</p>
+
+<h3 id='intern-demographics'><a href='#intern-demographics'>1.4. Outreachy intern demographics</a></h3>
+
+{% include 'home/snippet/diversity_statement.html' %}
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h3 id='applicant-eligibility'><a href='#applicant-eligibility'>1.5. Applicant Eligibility</a></h3>
+
+<p>Outreachy applicants submit an initial application. Outreachy organizers use the initial application to determine whether the applicant is eligible for an Outreachy internship. Outreachy organizers also review the application essays to see if they align with our goal of supporting diversity in open source.</p>
+
+<p>Mentors often want to know if an applicant they are interacting with is eligible to participate. Due to privacy concerns, we do not list the contact information of all applicants with accepted initial applications. However, only applicants with an accepted initial application can record a contribution through the Outreachy website. If you see an applicant has recorded a contribution to your project, their initial application has been accepted, and they should be eligible for Outreachy.</p>
+
+<p>Rarely, we find applicants are not eligible for Outreachy after they have been selected for as an intern. This typically happens because they excluded information like school terms from their initial application, or because they accepted a full-time job after they filled out their initial application. In this case, we will contact mentors privately to ask them to pick another intern.</p>
+
+<p><b>Eligibility Rules.</b> These eligibility rules apply to the {{ current_round.official_name }} round. Dates may change for future rounds.</p>
+
+{% include 'home/snippet/eligibility_rules.html' %}
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h3 id='program-differences'><a href='#program-differences'>1.6. How is Outreachy different from other internship programs?</a></h3>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h2 id='participation-rules'><a href='#participation-rules'>2. Community participation rules</a></h2>
+
+<p>New communities must meet these rules to be eligible to participate in Outreachy. The Outreachy organizers and the Outreachy Project Leadership Committee (PLC) will review the community's application to ensure they meet our participation rules.</p>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h3 id='funding-requirements'><a href='#funding-requirements'>2.1 Funding requirements</a></h3>
+
+{% include 'home/snippet/funding_short_description.html' %}
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h3 id='licensing-requirements'><a href='#licensing-requirements'>2.2 Licensing requirements</a></h3>
+
+{% include "home/snippet/license-requirements.html" %}
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h3 id='commercial-ties'><a href='#commercial-ties'>2.3 Commercial ties</a></h3>
+
+<p>Free and open source communities that participate in Outreachy must forward free and open source software in public interest.</p>
+
+<p>While we encourage companies to provide internship opportunities to people from underrepresented groups, the program cannot be used for internal company internships.</p>
+
+<p>Participating free software communities can't be too tightly tied to any one company. Experienced community contributors should be employed by multiple organizations or be volunteers. The community resources should not advertise services of only just one company related to the software the community produces. Community governance should include multiple companies or volunteers.</p>
+
+<p>There should be no difference in functionality between the free and paid versions of the open source project. Outreachy does not allow open source projects which use a non-FSF approved license to restrict the rights of users of the free version of the project.</p>
+
+<p>We do allow communities that provide paid hosting services. However, pricing pages should put the free community-hosted version at the same prominence as commercial hosting prices.</p>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h3 id='community-guidelines'><a href='#community-guidelines'>2.4 Community guidelines</a></h3>
+
+<p>All free software communities that participate in Outreachy need to be well-established. Core team members (either paid or volunteer) should be regularly contributing to the community.</p>
+
+<p>Outreachy interns benefit from working with a variety of community members who can help review their work and answer questions.</p>
+
+<p>We encourage communities with more than 5 core contributors to participate. However, this is not a strict requirement.</p>
+
+<p>Non-profit 501(c)(3) charities and 501(c)(6) trade organizations of any size offering free software projects are welcome to participate as a mentoring community.</p>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h3 id='public-work-requirements'><a href='#public-work-requirements'>2.5 Public work requirements</a></h3>
+
+<p>All work done by Outreachy interns should be public. While interns may communicate with their mentors privately, mentors should encourage interns to communicate on public community channels as much as possible.</p>
+
+<p>Community communication channels (chats or forums) should be public. It is fine for community chat channels to be invite-only in order to discourage spammers.</p>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h2 id='intern-funding'><a href='#intern-funding'>3. Intern Funding</a></h2>
+
+{% include 'home/snippet/funding_short_description.html' %}
+
+<p>Funding for interns may come from a number of different sources. Communities are welcome to apply to participate if their sponsorship is not confirmed yet. Sponsorship information can be updated at any time until the intern selection deadline.</p>
+
+<h3 id='intern-funding'><a href='#intern-funding'>3.1 Finding sponsors</a></h3>
+
+<p>FOSS communities often fund Outreachy interns directly from their own community funds, or by using funds from the foundation or non-profit who is their fiscal sponsor.</p>
+
+<p>Many FOSS communities find funding from corporate sponsors who use their FOSS project.</p>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h3 id='community-credits'><a href='#community-credits'>3.2 Community internship stipend credits</a></h3>
+
+<p>Some Outreachy communities may have a full or partial internship stipend credit. A credit usually occurs when a community has arranged for a company to sponsor them, the company has paid the sponsorship invoice, but the community ends up accepting less interns than the amount the company sponsored. In rare cases, a community may have a partial internship credit when an internship is terminated, and either the midpoint or final internship stipend was not paid.</p>
+
+<p>Community internship credits are valid for two years from the time the credit was recorded. It can be used towards interns sponsorship in future Outreachy internship rounds. If a community does not use the credit within two years, the credit revert to the Outreachy general fund.</p>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h3 id='outreachy-general-fund'><a href='#outreachy-general-fund'>3.3 Outreachy General fund</a></h3>
+
+<p>Communities can apply to the Outreachy general fund to sponsor interns. There are two ways to apply for Outreachy general funding:</p>
+
+<ol>
+	<li>Fully funding all interns from the Outreachy general fund</li>
+	<li>Funding some interns from the Outreachy general fund</li>
+</ol>
+
+<p><b>Humanitarian communities</b> are eligible for interns to be fully funded by the Outreachy general fund.</p>
+
+<p><b>Non-humanitarian communities</b> must secure their own funding for at least one intern ($6,500 USD). After that external funding is secured, they can apply for additional interns to be funded by the Outreachy general fund.</p>
+
+<h3 id='all-general-funding'><a href='#funding-during-cfp'>3.3.1 Outreachy general fund: All intern funding</a></h3>
+
+<p>Humanitarian open source communities are invited to apply to the Outreachy general fund when first signing up to participate in Outreachy. If your community is approved, Outreachy will fully fund at least one intern. Outreachy is especially interested in funding humanitarian communities involving climate change, infectious diseases, and mental health.</p>
+
+<p>Non-humanitarian open source communities are not eligible for this option.</p>
+
+<h3 id='partial-general-funding'><a href='#partial-general-funding'>3.3.2 Outreachy general fund: Additional intern funding</a></h3>
+
+<p>Communities can apply to receive additional funding for interns from the Outreachy general fund. Both humanitarian and non-humanitarian can apply for additional funding from the Outreachy general fund. However, non-humanitarian open source communities must first have secured their own funding for at least one intern.</p>
+
+<p>During the intern selection process, communities can request additional interns be sponsored by the Outreachy general fund. Outreachy will review general funding requests across all communities, and determine which ones we have budget to sponsor.</p>
+
+<p>Communities can request that an intern be funded by the Outreachy general fund through the Outreachy website. When a mentor selects an intern, the coordinator can set the funding source to the Outreachy general fund.</p>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h3 id='general-funding-stats'><a href='#general-funding-stats'>3.3.3 How much does the Outreachy general fund sponsor?</a></h3>
+
+<p>The sponsorship for each Outreachy intern is $6,500 USD. The Outreachy general fund typically sponsors 5 to 10 interns per cohort. The Outreachy general fund usually sponsors 1 intern per community, but it has occasionally sponsored up to 3 interns per community.</p>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h3 id='general-funding-decision-making'><a href='#general-funding-decision-making'>3.3.4 How do you decide who gets Outreachy general funding?</a></h3>
+
+<p>The Outreachy organizers review Outreachy general funding requests after the intern selection deadline. We review Outreachy general funding requests across all communities. Then we apply our criteria to determine which communities get funding.</p>
+
+<p><b>Intern free time</b> We first look at the amount of time each intern has free. We review the time commitments the intern put in their initial application. We review the intern's final application to ensure they do not have new time commitments.</p>
+
+<p>If an intern has close to the minimum required free time during the internship period, we look at the quality of their contributions. If an intern has not a lot of free time and has made lower quality contributions, they are not a good fit to be accepted. If an intern has not a lot of free time, but has higher quality and complex contributions, they can be accepted as an intern.</p>
+
+<p><b>Contribution quality</b> Second, we look at the quality of the contributions made by the intern.</p>
+
+<p>If the intern has made simple contributions, it's unclear whether they have the skills to be successful during the internship. We may ask the mentor how they have evaluated the intern's skills.</p>
+
+<p>Interns who are rated 1 ("Struggling - applicant did not understand instructions or feedback") or 2 ("Inexperienced - smaller contributions that vary in quality") are not good candidates for Outreachy general funding.</p>
+
+<p>If the mentor has rated the intern as a 3 or lower ("Good - some smaller contributions of good quality"), we may have a discussion with the mentor about their evaluation of the intern's skills.</p>
+
+<p>Interns who are rated 4 ("Strong - at least one large, high-quality contribution") or 5 ("Amazing - multiple large, high-quality contributions") will be prioritized for Outreachy general funding.</p>
+
+<p><b>Alternative sponsors</b> Outreachy needs to carefully allocate its funding. If a community already has a sponsor that is a for-profit company or a 501c6 (non-profit trade organization), we may reach out to that sponsor to see if they can fund additional interns.</p>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h2 id='project-guidelines'><a href='#project-guidelines'>4. Internship project guidelines</a></h2>
+
+<p>What makes a good Outreachy internship project? (Credit to QEMU coordinator Stefan Hajnoczi's <a href="https://www.youtube.com/watch?v=xNVCX7YMUL8">talk at KVM Forum</a> for these tips.) A project that is suitable for interns to work on is:</p>
+<ul>
+	<li><b>Well-defined</b> - The project has a well defined scope.</li>
+	<li><b>Self-contained</b> - Has few dependencies on uncompleted work. Does not require interacting with multiple open source communities who are not on-board with interacting with an Outreachy intern.</li>
+	<li><b>Uncontroversial</b> - The community should agree that this project idea is acceptable (and ideally useful!) to be included in the community project.</li>
+	<li><b>Incremental</b> - The project should produce several deliverables during the internship period, rather than having only one large deliverable. This allows the project goals to be modified if the intern completes task faster or slower than expected. If the project does have one large deliverable, it's recommended that the intern complete a design document. This allows the intern to hand off unfinished work to the next intern, or the community.</li>
+</ul>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h2 id='outreachy-schedule'><a href='#outreachy-schedule'>5. Outreachy schedule</a></h2>
+
+<p>Outreachy internships run twice a year.</p>
+
+<h3 id='general-timeline'><a href='#general-timeline'>5.1 General timeline</a></h3>
+
+<p>Here is our general schedule for each year:</p>
+
+{% include 'home/snippet/generic_timeline.html' %}
+
+<h3 id='current-timeline'><a href='#current-timeline'>5.2 Current internship round schedule</a></h3>
+
+<p><b>{{ current_round.official_name }} round schedule</b></p>
+
+{% include 'home/snippet/mentor-timeline.html' %}
+
+<h3 id='timeline-details'><a href='#timeline-details'>5.3 Timeline details</a></h3>
+
+<p>The internship round begins when the Outreachy organizers open the call for participation communities. The community CFP period somewhat overlaps with the initial application period.<p>
+
+<p><b>Community CFP period:</b></p>
+
+<ul>
+	<li>{{ current_round.pingnew }} to {{ current_round.project_soft_deadline }}</li>
+	<li>Community coordinators find sponsors to <a href="#funding-requirements">fund interns</a></li>
+	<li>Communities sign up to participate</li>
+	<li>Outreachy organizers review new communities who want to participate</li>
+	<li>Community coordinators reach out to potential mentors</li>
+	<li>Mentors submit projects for interns to work on</li>
+	<li>Coordinators review projects and approve or reject them</li>
+	<li>Mentors create a list of tasks for applicants to work on during the contribution period</li>
+	<li>Mentors participate in the <a href="{% url 'promote' %}#outreachychat">Outreachy Twitter Chat</a></li>
+</ul>
+
+<p><b>Initial application period:</b></p>
+<ul>
+	<li>{{ current_round.initial_applications_open }} to {{ current_round.initial_applications_close }}</li>
+	<li>During this period, applicants fill out an initial application form</li>
+	<li>Outreachy organizers review initial applications and their essays</li>
+	<li>Initial applications are due on {{ current_round.initial_applications_close }}</li>
+	<li>All accepted applicants will receive an email when the contribution period starts on {{ current_round.contributions_open }}</li>
+	<li>Everyone will be able to view their initial application status on <a href='{% url 'eligibility-results' %}'>eligibility results page</a> on {{ current_round.contributions_open }} at 4pm UTC</li>
+</ul>
+
+<p><b>Contribution period:</b></p>
+<ul>
+	<li>{{ current_round.contributions_open }} to {{ current_round.contributions_close }}</li>
+	<li>Applicants with an approved initial application will move onto the contribution period</li>
+	<li>During this period, applicants <a href='#find-mentor'>contact mentors</a> and <a href='#make-contributions'>make contributions</a></li>
+	<li>Mentors communicate with applicants and tell them about community norms</li>
+	<li>Mentors help applicants set up their contribution environment</li>
+	<li>Mentors review applicant contributions and suggest changes</li>
+	<li>Applicants are required to <a href='#record-contributions'>record a contribution</a></li>
+	<li>Applicants are required to fill out a final application</li>
+	<li>Contributions and final applications are due on {{ current_round.contributions_close }}</li>
+</ul>
+
+<p><b>Intern selection period:</b></p>
+<ul>
+	<li>{{ current_round.contributions_close }} to {{ current_round.internannounce }}</li>
+	<li>Mentors select their chosen intern(s) through the Outreachy website</li>
+	<li>Coordinators review the intern selections</li>
+	<li>Outreachy organizers review Outreachy general funding requests</li>
+	<li>Outreachy organizers approve the intern selections</li>
+	<li>Applicants may (but are not required to) continue working on project tasks</li>
+	<li>Intern selections are not shared with applicants until <a href='{% url 'alums' %}'>interns are announced</a> on {{ current_round.internannounce }}</li>
+</ul>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h2 id='community-sign-up-process'><a href="#community-sign-up-process">6. Community sign up process</a></h2>
+
+<p>The first step for Free and Open Source Software (FOSS) communities who want to participate Outreachy is to <a href="{% url 'community-cfp' %}">fill out a community participation application.</a> Outreachy organizers and the Outreachy Project Leadership Committee will review your community participation application.</p>
+
+<p>Community coordinators will receive an email once their community is approved to participate in this internship round.</p>
+
+<p>Once the community coordinator has applied to participate, they can send their community's CFP page link to mentors.</p>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h2 id='mentor-sign-up-process'><a href="#mentor-sign-up-process">7. Mentor sign up process</a></h2>
+
+<p>
+Mentors must submit their project descriptions through the Outreachy website. Co-mentors can sign up once the project has been submitted. Coordinators will approve the projects and any co-mentors.
+</p>
+
+<p>
+Mentors should sign up on the Outreachy website, since that grants them special permissions.
+Mentors who sign up will be can be subscribed to the mentors mailing list, which the Outreachy organizers use to send important announcements.
+Mentors will be granted read access to applications for their project and will be notified of new applicants.
+</p>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h2 id='estimated-number-of-interns'><a href="#estimated-number-of-interns">8. Estimated number of interns</a></h2>
+
+<p>
+On the <a href="{% url 'project-selection' %}">project list</a>, each community has an estimate of the number of interns it expects to accept.
+The estimated number of interns is the total number of interns that will be accepted for the whole community.
+It is not the number of interns per project.
+</p>
+
+<p>
+The estimated number of interns is based on the amount of sponsorship for the community and the number of mentors a community has.
+</p>
+
+<p>
+The number of interns per community is an estimate, not a hard-and-fast rule.
+It may increase or decrease during the intern selection period.
+The reasons for changing are community-specific.
+</p>
+
+<p><b>Communities accepting more interns</b></p>
+
+<p>
+Some communities will accept more interns than they estimated.
+This typically means the community has found more funding to pay intern stipends,
+and has enough mentors to support additional interns.
+</p>
+
+<p>
+Some times communities find additional sponsors, or they ask current sponsors for more money.
+Other times communities request funding from the Outreachy general fund.
+</p>
+
+<p><b>Communities accepting less interns</b></p>
+
+<p>
+Some communities may accept less interns than they expected.
+Some communities may accept no interns at all.
+</p>
+
+<p>
+Some times communities accept less interns because of a change in mentor free time.
+Mentors may decide they do not have enough free time during the internship.
+This could be because of personal reasons, like burn out, a medical condition, or a death in the family.
+Or mentors could find they simply over-estimated the amount of free time they have.
+</p>
+
+<p>
+Some times project mentors <a href="#contribution-evaluation">evaluated the contributions</a> and decided not to accept any applicants.
+</p>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h2 id='internship'><a href='#internship'>9. Internship</a></h2>
+
+<p>Mentors and coordinators are encouraged to read the <a href='{% url 'docs-internship' %}'>Internship Guide</a>. The Internship Guide includes mentor duties and expectations during the internship. Mentors should familiarize themselves with the internship chat and blogging schedules.</p>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h2 id='faq'><a href='#faq'>10. FAQ</a></h2>
+
+<h2 id='stipend-details'><a href='#stipend-details'>Internship stipend details</a></h2>
+
+<p>The $6,500 USD intern sponsorship covers the $5,500 internship stipend, the $500 intern conference travel stipend, and a $500 accounting fee. The accounting fee covers Outreachy's fiscal non-profit parent organization, Software Freedom Conservancy, handle sponsor invoicing, intern payments, W-9 collection, visa request letters, employment verification letters, student internship credit letters, and tax questions.</p>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+{% endblock %}

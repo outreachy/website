@@ -27,7 +27,7 @@ This is a new Outreachy community, so please review the following information ca
         Coordinators provided no info about the proprietary software they use or build upon.
     {% endif %}
 {% else %}
-    Community uses approved licenses.
+    Community projects will not further proprietary software.
 {% endif %}
 
 {% if not new_community.approved_advertising %}
@@ -39,12 +39,8 @@ This is a new Outreachy community, so please review the following information ca
         Coordinators provided no info about their community advertising.
     {% endif %}
 {% else %}
-    Community uses approved licenses.
+    Community resources do not advertise only one company.
 {% endif %}
-
-Community size: {{ new_community.get_community_size_display }}
-
-Community has been open source for: {{ new_community.get_longevity_display }}
 
 Organizations that participate in this community:
 {{ new_community.participating_orgs }}

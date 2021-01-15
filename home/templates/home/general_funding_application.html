@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}
+Outreachy general funding application
+{% endblock %}
+
+{% block content %}
+
+<form action="" method="post">
+	<h1>Outreachy general fund application</h1>
+
+	<p>If your community is not applying for Outreachy general funding, please skip this step. Otherwise, please fill out the application below.</p>
+
+	<div class="mb-5">
+		<input class="btn btn-secondary" type="submit" value="Skip" />
+	</div>
+	<hr>
+
+	<h1>Outreachy general fund rules</h1>
+	{% include 'home/snippet/funding_short_description.html' %}
+
+	<h1>Outreachy general funding application</h1>
+
+
+	{% csrf_token %}
+	{{ form.media }}
+	{{ form.non_field_errors }}
+	{% for field in form.visible_fields %}
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class="card-header">
+				{{ field.label_tag }}
+			</div>
+			<div class="card-body">
+				{{ field }}
+			</div>
+			{% if field.help_text %}
+			<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+			{% endif %}
+		</div>
+	{% endfor %}
+	<input class="btn btn-success" type="submit" value="Submit" />
+</form>
+
+{% endblock %}

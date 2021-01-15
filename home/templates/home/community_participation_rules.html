@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}
+Community participation rules
+{% endblock %}
+
+{% block content %}
+<h1>Community participation rules</h1>
+
+<h2>Requirements to participate</h2>
+
+<h3>1. Intern funding</h3>
+
+{% include 'home/snippet/funding_short_description.html' %}
+
+<h3>2. Not tied to one company</h3>
+
+<p>Participating communities cannot be tied to only one for-profit company. Please <a href="{% url 'docs-community' %}#commercial-ties">read our commercial ties rules</a>.</p>
+
+<h3>3. Community coordinator</h3>
+
+<p>Each community must have a coordinator. A community coordinator is an interface between Outreachy organizers and mentors. Sometimes a community coordinators is also a mentor. <a href="https://www.outreachy.org/mentor/#coordinator">Read about community coordinator duties</a>.</p>
+
+<h3>4. Mentors</h3>
+
+<p>Each community needs to have at least one mentor. A mentor works directly with Outreachy applicants and their intern. Having more than one person mentor an intern ("co-mentoring") is encouraged.</p>
+
+<p>Mentors must be willing to volunteer at least 5 hours a week during the internship period, and 5-10 hours per week during the application period. <a href="https://www.outreachy.org/mentor/#mentor">Read about mentor duties</a></p>
+
+<h3>5. Defined intern projects</h3>
+
+<p>Each mentor defines a project for their intern to work on. Outreachy does not allow applicants to define their own project. <a href="https://www.outreachy.org/mentor/mentor-faq/#define-a-project">Read about what makes a good Outreachy project.</a></p>
+
+<p>Projects must be <a href="{% url 'docs-community' %}#licensing-requirements">licensed as open source</a>. Projects must further free software, and <a href="{% url 'docs-community' %}#commercial-ties">not be tied to proprietary software.</a></p>
+
+<p><a class='btn btn-success' href="{% url 'community-add' %}">Submit community application</a></p>
+{% endblock content %}

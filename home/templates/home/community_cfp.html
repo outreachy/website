@@ -12,67 +12,53 @@ Call for Outreachy community coordinators and mentors
 {% endif %}
 
 <h1>Call for Outreachy Community Participation</h1>
-<p>Twice a year, Free and Open Source Software (FOSS) communities work with Outreachy organizers to offer remote internships. Outreachy's goal is to support <a href="/apply/eligibility/">people from groups underrepresented in the technology industry.</a> Interns work remotely with mentors from Free and Open Source Software (FOSS) communities on projects ranging from programming, user experience, documentation, illustration and graphical design, to data science.
 
-<p>Outreachy interns come from a wide range of backgrounds. Outreachy is open to applicants from underrepresented groups over 18 who fit our <a href="/apply/eligibility/">intern eligibility rules</a>. Interns could be university students, code school graduates, people switching careers, or people coming back to tech after starting a family or other long absence. Most Outreachy interns already have some exposure to using FOSS and technical knowledge, but many of them have not contributed to FOSS communities before. During our six-week application period, potential interns make contributions to the participating FOSS communities, which allows mentors to accurately evaluate their skills.</p>
+<div class="card border-info mb-3">
+	<div class="card-header text-white bg-info">Community CFP status</div>
+	<div class="card-body">
+		{% if current_round.project_soft_deadline.has_passed %}
+			<p class="card-text">
+			🛑 The Outreachy CFP is closed to new community participation applications.</p>
+			<p class="card-text">
+			🛑 The Outreachy CFP is closed for mentors to submit new projects.</p>
 
-{% if current_round.lateorgs.has_passed %}
-	<p>The current Outreachy internship round is now closed to new participating communities.</p>
-{% endif %}
-{% if current_round.project_soft_deadline.has_passed %}
-	<p>The current Outreachy internship round is now closed to new intern project listings.</p>
-{% endif %}
-{% if current_round.lateorgs.has_passed or current_round.project_soft_deadline.has_passed %}
-	<p>Coordinators and mentors who missed the deadline are welcome to sign up for the
-	<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">Outreachy announcement list</a>
-	to receive a notification for next round.</p>
-{% endif %}
+			<p class="card-text">Please sign up for the
+			<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">Outreachy announcement list</a>
+			to receive a notification for next round.</p>
+		{% elif current_round.lateorgs.has_passed %}
+			<p class="card-text">🛑 The Outreachy CFP is closed for new community participation applications.</p>
+			<p class="card-text">👋🏽 Mentors are welcome to submit internship projects to participating communities. The <b>Project submission deadline: {{ current_round.project_soft_deadline }} at 4pm UTC</b>.</p>
 
-<p>If you have any questions about Outreachy, you can <a href="{% url 'contact-us' %}">contact Outreachy organizers or the mentors mailing list</a>.
+			<p class="card-text">Please sign up for the
+			<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">Outreachy announcement list</a>
+			to receive a notification for next round.</p>
+		{% else %}
+			<p class="card-text">👋🏿 New communities are welcome to fill out a participation application. <b>Community application deadline: {{ current_round.lateorgs }} at 4pm UTC</b>.</p>
+			<p class="card-text">👋🏽 Mentors are welcome to submit internship projects to participating communities. <b>Project submission deadline: {{ current_round.project_soft_deadline }} at 4pm UTC</b>.</p>
+		{% endif %}
+	</div>
+</div>
 
-<h2>Terms used</h2>
-{% include "home/snippet/foss-terms.html" %}
+<h2>What is Outreachy?</h2>
 
-<h2>Outreachy roles</h2>
-<p>There are several different Outreachy roles:</p>
-{% include "home/snippet/roles.html" %}
+<p>Outreachy's goal is to support <a href="/apply/eligibility/">diversity in open source.</a> Outreachy provides paid, remote internships.</p>
 
-<h2 id="community-requirements">Community Participation Rules</h2>
-{% if not current_round.project_soft_deadline.has_passed %}
-<p>Outreachy welcomes participation from FOSS communities and people seeking to help out as Outreachy coordinators and mentors.</p>
-{% endif %}
+<p>Outreachy invites free and open source software communities to participate.</p>
 
-<p><u>Funding Requirements</u></p>
-<p>FOSS communities need to have secured funding for at least one intern ($6,500). That covers the $5,500 internship stipend, the $500 intern travel stipend, and a $500 accounting fee. The accounting fee covers Outreachy's fiscal non-profit parent organization, Software Freedom Conservancy, handle sponsor invoicing, intern payments, W-9 collection, visa request letters, employment verification letters, student internship credit letters, and tax questions.</p>
-
-<p><u>Licensing Requirements</u></p>
-{% include "home/snippet/license-requirements.html" %}
-
-<p><u>Community Requirements</u></p>
-
-<p>Free and open source communities that participate in Outreachy must forward free and open source software in public interest.</p>
-
-<p>While we encourage companies to provide internship opportunities to people from underrepresented groups, the program cannot be used for internal company internships. Participating free software communities can't be too tightly tied to any one company. Experienced community contributors should be employed by multiple organizations or be volunteers. The community resources should not advertise services of only just one company related to the software the community produces.</p>
-
-<p>Non-profit 501(c)(3) charities and 501(c)(6) trade organizations of any size offering free software projects are welcome to participate as a mentoring community.</p>
-
-<p>All free software communities that participate in Outreachy need to be well-established, with core team members (either paid or volunteer) who regularly contribute to the community. Outreachy interns benefit from working with a variety of community members who can help review their work and answer questions.</p>
-
-<p>All work done by Outreachy interns should be public and done out in the open on public channels connected with the community.</p>
-
-<p id="mentor">Outreachy intern projects will need to meet <a href="/mentor/mentor-faq/#define-a-project">additional Outreachy intern project requirements</a>.</p>
+<p><a class='btn btn-info' href="{% url 'docs-community' %}">Read Community Guide</a></p>
 
 {% if current_round %}
-	<h2>Timeline for {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} internship round</h2>
+	<h2>Timeline for {{ current_round.internstarts|date:"F Y" }} cohort</h2>
 	{% include "home/snippet/mentor-timeline.html" %}
 
 	{% if approved_communities or pending_communities %}
-		<h2>Mentor for a Participating FOSS Community</h2>
+		<h2>Mentor for Outreachy</h2>
 		{% if current_round.project_soft_deadline.has_passed %}
 			{% include "home/snippet/cfp_closed_warning.html" %}
 		{% else %}
-			<p>Outreachy internships run twice a year. You can look at community and project listing <a href="{% url 'past-rounds' %}">from all past Outreachy rounds</a> to understand what types of internships Outreachy typically offers.</p>
-			<p>If you would like to mentor with Outreachy, review the list of participating communities below who are looking for help. Make sure to <a href="/mentor/#mentor">review the duties and expections</a> for mentors before you sign up to help a community.</p>
+			<p>Outreachy is seeking experienced open source contributors to act as mentors for Outreachy interns. Mentors should review the mentor guide before they submit a project.</p>
+
+			<p><a class='btn btn-info' href="/mentor/#mentor">Read Mentor Guide</a></p>
 		{% endif %}
 	{% endif %}
 {% else %}
@@ -81,7 +67,10 @@ Call for Outreachy community coordinators and mentors
 {% endif %}
 
 {% if approved_communities %}
-	<p>The community coordinator has indicated these communities will participate in this Outreachy internship round, and the communities have been approved by the Outreachy organizers to participate.</p>
+	<h3>Mentoring Communities</h3>
+
+	<p>The following open source communities are participating in the {{ current_round.internstarts|date:"F Y" }} internship round. Follow the link to sign up to mentor for that community:</p>
+
 	<ul>
 	{% for c in approved_communities %}
 		<li><a href="{{ c.get_preview_url }}">{{ c.name }}</a></li>
@@ -91,10 +80,10 @@ Call for Outreachy community coordinators and mentors
 
 {% if pending_communities %}
 	{% if current_round.project_soft_deadline.has_passed %}
-		<p>The community coordinator had indicated interest in participating in this Outreachy internship round,
-		however, the project listing deadline passed before they could list any mentored projects.</p>
+		<p><b>Not participating</b> These communities applied to participating in this Outreachy internship round,
+		however, they have not been approved.</p>
 	{% else %}
-		<p>The community coordinator has indicated these communities will participate in this Outreachy internship round, but Outreachy organizer approval is still pending. Mentors are encouraged to sign up while the community is under review.<a href="/mentor/#mentor">review the duties and expections</a> for mentors before you sign up to help a community.</p>
+		<p><b>Pending communities:</b> These communities applied to participate in the {{ current_round.internstarts|date:"F Y" }} cohort. Mentors are encouraged to submit projects while the community is under review.</p>
 	{% endif %}
 	<ul>
 	{% for c in pending_communities %}
@@ -115,10 +104,11 @@ Call for Outreachy community coordinators and mentors
 	</ul>
 {% endif %}
 
-<h2>Past Participating FOSS Communities</h2>
-<p>In order for a community to participate in an Outreachy internship round, the community must have at least one coordinator. If you would like to volunteer to be a coordinator, you should <a href="/mentor/#coordinator">understand the coordinator duties</a>.</p>
+<h2 id="past-communities">Past Communities</h2>
 
-<p>Mentors may visit the community page and sign up to receive an email notification when a coordinator signs the community up for this Outreachy round.</p>
+<p>These communities have participated in past rounds, or submitted an application to participate. Coordinators can sign the community up to participate again.</p>
+
+<p>Mentors can receive an email when a community signs up to participate. To get an email notification, visit the community pages linked below.</p>
 
 <ul>
 {% for c in not_participating_communities %}
@@ -127,10 +117,23 @@ Call for Outreachy community coordinators and mentors
 </ul>
 
 {% if current_round and current_round.pingnew.has_passed and not current_round.lateorgs.has_passed %}
-	<h2>Submit a New FOSS community for Organizer Review</h2>
-	<p>First, double check that the community isn't listed in the above participating communities or past communities list. If the community is listed as a past Outreachy community, you can sign up to coordinate for that community. Coordinators will need to review the <a href="/mentor/#coordinator">coordinator duties</a> and community requirements in the sections above. Then submit a new community for review.
-	</p>
-	<p><a class='btn btn-success' href="{% url 'community-add' %}">Submit a New Community</a></p>
+	<h2>New communities</h2>
+
+	<p>Please read the community participation guide before submitting a new community application.</p>
+	<p><a class='btn btn-info' href="{% url 'docs-community' %}">Read Community Guide</a></p>
+
+	<p>New communities can submit an application to participate in Outreachy.</p>
+
+	<p>Check to see if your community is listed in the <a href="#past-communities">past communities list</a>. If it is, don't submit a new community application. Instead, follow the community link and sign up to coordinate for the community. Otherwise, submit a new application for your community to participate in Outreachy.</p>
+
+	<p><a class='btn btn-success' href="{% url 'community-participation-rules' %}">Submit community application</a></p>
 {% endif %}
+
+<h2>Questions?</h2>
+
+<p>First, see if your question is answered in the <a href="{% url 'docs' %}">community participation guide</a>.</p>
+
+<p>Then let us know what questions you have! You can <a href="{% url 'contact-us' %}">contact Outreachy organizers</a> with your questions.</p>
+
 
 {% endblock %}

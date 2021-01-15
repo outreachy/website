@@ -1141,16 +1141,23 @@ def community_landing_view(request, round_slug, community_slug):
 class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
     model = NewCommunity
     fields = ['name',
+            'reason_for_participation',
+            'mentorship_programs',
             'approved_license',
             'no_proprietary_software',
-            'approved_advertising',
-            'community_size', 'longevity', 'participating_orgs',
-            'description',
-            'long_description', 'tutorial', 'website',
-            'governance', 'code_of_conduct', 'cla', 'dco',
+            'cla',
+            'dco',
             'unapproved_license_description',
             'proprietary_software_description',
+            'participating_orgs',
+            'approved_advertising',
             'unapproved_advertising_description',
+            'governance',
+            'participating_orgs_in_goverance',
+            'code_of_conduct',
+            'coc_committee',
+            'demographics',
+            'inclusive_practices',
             ]
 
     def get_form(self):
@@ -1197,7 +1204,12 @@ class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
 class CommunityUpdate(LoginRequiredMixin, UpdateView):
     model = Community
     slug_url_kwarg = 'community_slug'
-    fields = ['name', 'description', 'long_description', 'website', 'tutorial']
+    fields = [
+            'name',
+            'website',
+            'description',
+            'long_description',
+            'tutorial']
 
     def get_object(self):
         community = super(CommunityUpdate, self).get_object()
@@ -1206,6 +1218,35 @@ class CommunityUpdate(LoginRequiredMixin, UpdateView):
         return community
 
     def get_success_url(self):
+        return self.object.get_preview_url()
+
+class GeneralFundingApplication(LoginRequiredMixin, UpdateView):
+    model = Community
+    slug_url_kwarg = 'community_slug'
+    form_class = modelform_factory(
+            Community,
+            fields=(
+                'humanitarian_community',
+                'general_funding_application',
+                'additional_sponsors',
+                ),
+            field_classes={
+                'humanitarian_community': RadioBooleanField,
+                }
+    )
+    template_name = 'home/general_funding_application.html'
+
+    def get_object(self):
+        community = super(GeneralFundingApplication, self).get_object()
+        if not community.is_coordinator(self.request.user):
+            raise PermissionDenied("You are not an approved coordinator for this community.")
+        return community
+
+    def get_success_url(self):
+        if self.kwargs['new'] == 'True':
+            return reverse('community-update', kwargs = {
+                'community_slug': self.object.slug,
+                })
         return self.object.get_preview_url()
 
 class SponsorshipInlineFormSet(BaseInlineFormSet):
@@ -1249,10 +1290,12 @@ class ParticipationAction(ApprovalStatusAction):
             )
 
         try:
+            self.new = False
             return Participation.objects.get(
                     community=community,
                     participating_round=participating_round)
         except Participation.DoesNotExist:
+            self.new = True
             return Participation(
                     community=community,
                     participating_round=participating_round)
@@ -1286,6 +1329,12 @@ class ParticipationAction(ApprovalStatusAction):
             for notification in self.object.community.notification_set.all():
                 email.notify_mentor(self.object, notification, self.request)
                 notification.delete()
+
+    def get_success_url(self):
+        return reverse('community-general-funding', kwargs = {
+            'community_slug': self.object.community.slug,
+            'new': self.new,
+            })
 
 # This view is for mentors and coordinators to review project information and approve it
 def project_read_only_view(request, round_slug, community_slug, project_slug):
@@ -3653,6 +3702,24 @@ def docs_applicant(request):
         'previous_round': previous_round,
         })
 
+def docs_community(request):
+    current_round = RoundPage.objects.latest('internannounce')
+    now = datetime.now(timezone.utc)
+    today = get_deadline_date_for(now)
+    five_weeks_from_now = today + timedelta(weeks=5)
+    try:
+        previous_round = RoundPage.objects.filter(
+            internends__lte=five_weeks_from_now,
+        ).latest('internstarts')
+        previous_round.today = today
+    except RoundPage.DoesNotExist:
+        previous_round = None
+
+    return render(request, 'home/docs/community_guide.html', {
+        'current_round': current_round,
+        'previous_round': previous_round,
+        })
+
 def docs_internship(request):
     now = datetime.now(timezone.utc)
     today = get_deadline_date_for(now)
@@ -3753,6 +3820,8 @@ def sponsor(request):
 def opportunities(request):
     return render(request, 'home/opportunities.html')
 
+def community_participation_rules(request):
+    return render(request, 'home/community_participation_rules.html')
 
 @login_required
 def dashboard(request):

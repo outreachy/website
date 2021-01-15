@@ -12,6 +12,7 @@ from django.conf.urls import include, url
 # These views all take a community_slug.
 community_cfp_patterns = [
     url(r'^edit/$', views.CommunityUpdate.as_view(), name='community-update'),
+    url(r'^general-funding-application/(?P<new>[^/]+)/$', views.GeneralFundingApplication.as_view(), name='community-general-funding'),
     url(r'^notify/$', views.CommunityNotificationUpdate.as_view(), name='notify-me'),
     url(r'^coordinator/preview/(?P<username>[^/]+)/$', views.CoordinatorApprovalPreview.as_view(), name='coordinatorapproval-preview'),
     url(r'^coordinator/(?P<action>[^/]+)/(?:(?P<username>[^/]+)/)?$', views.CoordinatorApprovalAction.as_view(), name='coordinatorapproval-action'),
@@ -71,6 +72,7 @@ round_patterns = [
 
 urlpatterns = [
     url(r'^communities/cfp/add/$', views.CommunityCreate.as_view(), name='community-add'),
+    url(r'^communities/cfp/participation-rules/$', views.community_participation_rules, name='community-participation-rules'),
     url(r'^communities/cfp/(?P<community_slug>[^/]+)/', include(community_cfp_patterns)),
     url(r'^communities/cfp/$', views.community_cfp_view, name='community-cfp'),
     url(r'^(?P<round_slug>[^/]+)/', include(round_patterns)),
@@ -102,6 +104,7 @@ urlpatterns = [
     url(r'^docs/$', views.docs_toc, name='docs'),
     url(r'^docs/applicant/$', views.docs_applicant, name='docs-applicant'),
     url(r'^docs/internship/$', views.docs_internship, name='docs-internship'),
+    url(r'^docs/community/$', views.docs_community, name='docs-community'),
     url(r'^eligibility/$', views.EligibilityUpdateView.as_view(), name='eligibility'),
     url(r'^eligibility/essay-revision/(?P<applicant_username>[^/]+)/$', views.BarriersToParticipationUpdate.as_view(), name='essay-revision'),
     url(r'^eligibility/school-revision/(?P<applicant_username>[^/]+)/$', views.SchoolInformationUpdate.as_view(), name='school-revision'),

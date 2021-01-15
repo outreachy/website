@@ -1,9 +1,12 @@
 <table class=table>
 	<tr><td width="175"><b>{{ current_round.pingnew }} at 4pm UTC</b></td><td>Community sign up opens</td></tr>
+	<tr><td width="175"><b>{{ current_round.initial_applications_open }} at 4pm UTC</b></td><td>Initial applications open</td></tr>
 	<tr><td><b>{{ current_round.outreachy_chat }} UTC</b></td><td><a href='{% url 'promote' %}#outreachychat'>#OutreachyChat on Twitter</a></td></tr>
 	<tr><td><b>{{ current_round.lateorgs }} at 4pm UTC</b></td><td>Deadline for community sign up</td></tr>
+	<tr><td><b>{{ current_round.initial_applications_close }} at 4pm UTC</b></td><td>Initial application deadline</td></tr>
 	<tr><td><b>{{ current_round.project_soft_deadline }} at 4pm UTC</b></td><td>Mentor project submission deadline</td></tr>
 	<tr><td><b>{{ current_round.contributions_open }}</b></td><td>Contribution period begins</td></tr>
+	<tr><td><b>{{ current_round.contributions_close }}</b></td><td>Contribution period ends</td></tr>
 	<tr><td><b>{{ current_round.contributions_close }} at 4pm UTC</b></td><td>Final application deadline</td></tr>
 	<tr><td><b>{{ current_round.mentor_intern_selection_deadline }}</b></td><td>Intern selection deadline</td></tr>
 	<tr><td><b>{{ current_round.internapproval }}</b></td><td>Outreachy organizers finalize intern selections</td></tr>
