@@ -42,5 +42,33 @@ This is a new Outreachy community, so please review the following information ca
     Community resources do not advertise only one company.
 {% endif %}
 
+Details
+---
+
+Reason for participating:
+{{ new_community.reason_for_participation }}
+
+Past mentorship program participation:
+{{ new_community.mentorship_programs }}
+
 Organizations that participate in this community:
 {{ new_community.participating_orgs }}
+
+Governance info:
+{{ new_community.governance }}
+{{ new_community.participating_orgs_in_goverance }}
+
+CLA: {{ new_community.cla }}
+DCO: {{ new_community.dco }}
+
+Code of Conduct info:
+{{ new_community.code_of_conduct }}
+{{ new_community.coc_committee }}
+
+Demographics:
+{{ new_community.demographics }}
+
+Inclusive practices:
+{{ new_community.inclusive_practices }}
+
+This mail is an automated email sent from the Outreachy Django website

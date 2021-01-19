@@ -11,26 +11,9 @@ Number of interns funded: {{ participation.interns_funded }}
 Funding details:
 {{ participation.intern_funding_details }}
 
-{% if community.newcommunity %}
-This is a new Outreachy community, so please review the following information carefully:
-
-{% if not community.newcommunity.approved_license %}WARNING! This community may be using non-free licenses. Please follow up with the community coordinators.
-{% if community.newcommunity.unapproved_license_description %}Coordinators provided this info about non-approved licenses:
-{{ community.newcommunity.unapproved_license_description|striptags }}{% else %}Coordinators provided no info about the non-approved licenses.{% endif %}
-{% else %}Community uses approved licenses.{% endif %}
-
-{% if not community.newcommunity.no_proprietary_software %}WARNING! This community may be using or building upon proprietary software. Please follow up with the community coordinators.
-{% if community.newcommunity.proprietary_software_description %}Coordinators provided this info about the proprietary software they use or build upon:
-{{ community.newcommunity.proprietary_software_description|striptags }}{% else %}Coordinators provided no info about the proprietary software they use or build upon.{% endif %}
-{% else %}Community uses approved licenses.{% endif %}
-
-{% if not community.newcommunity.approved_advertising %}{% include 'home/snippet/unapproved_advertising.html' %}
-{% if community.newcommunity.unapproved_advertising_description %}Coordinators provided this info about the community advertising:
-{{ community.newcommunity.proprietary_software_description|striptags }}{% else %}Coordinators provided no info about their community advertising.{% endif %}
-{% else %}Community uses approved licenses.{% endif %}
-
-Organizations that participate in this community:
-{{ community.newcommunity.participating_orgs }}{% endif %}
+{% if community.humanitarian_community %}This is a Humanitarian open source community.{% else %}Not a humanitarian community{% endif %}{% if community.general_funding_application %}
+Humanitarian issues the community addresses: {{ community.general_funding_application }}{% endif %}{% if community.additional_sponsors %}
+Community sponsors Outreachy might want to ask for internship funding: {{ community.additional_sponsors }}{% endif %}
 
 Approve This Community
 ----------------------

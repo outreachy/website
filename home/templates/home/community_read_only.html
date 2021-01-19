@@ -309,22 +309,36 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 			    </div>
 			</div>
 			{% endif %}
+			<div class="card border-info mb-3">
+			    <div class="card-header text-white bg-info">New community information</div>
+			    <div class="card-body">
+				    <p><b>Reason for participating:</b> {{ community.newcommunity.reason_for_participation }}</p>
+
+				    <p>{% if community.newcommunity.mentorship_programs %}<b>Past mentorship program participation:</b> {{ community.newcommunity.mentorship_programs }}{% else %}Information about which mentor programs the community participated in was not provided.{% endif %}</p>
+
+				    <p><b>Organizations that participate in this community:</b> {{ community.newcommunity.participating_orgs }}</p>
+
+				    <p><b>{% if community.newcommunity.governance %}<a href="{{ community.newcommunity.governance }}">Governance policy</a>{% else %}Governance policy{% endif %}</b>. Organizations that participate in governance: {{ community.newcommunity.participating_orgs_in_goverance }}</p>
+
+				    <p>{% if community.newcommunity.cla %}<b><a href="{{ community.newcommunity.cla }}">CLA</a></b>{% else %}CLA not provided{% endif %}</p>
+				    <p>{% if community.newcommunity.dco %}<b><a href="{{ community.newcommunity.dco }}">DCO</a></b>{% else %}DCO not provided{% endif %}</p>
+
+				    <p>{% if community.newcommunity.code_of_conduct %}<b><a href="{{ community.newcommunity.code_of_conduct }}">Code of Conduct</a></b>{% else %}Code of Conduct not provided{% endif %}.{% if community.newcommunity.coc_committee %} Code of Conduct committee members: {{ community.newcommunity.coc_committee }}{% else %} No Code of Conduct committee members list provided.{% endif %}</p>
+
+				    <p>{% if community.newcommunity.demographics %}<b>Community demographics:</b> {{ community.newcommunity.demographics }}{% else %}No community demographics provided.{% endif %}</p>
+
+				    <p>{% if community.newcommunity.demographics %}<b>Inclusive community practices:</b> {{ community.newcommunity.inclusive_practices }}{% else %}No inclusive community practices provided.{% endif %}</p>
+			    </div>
+			</div>
 		{% endif %}
 		<p>Round participation information</p>
 		<ul>
+			<li><a href="{{ participation_info.get_absolute_url }}">Community landing page</a></li>
 			<li>Number of interns funded: {{ participation_info.interns_funded }}</li>
 			<li>Funding details: {{ participation_info.intern_funding_details }}</li>
-			{% if community.newcommunity %}
-				<li>Organizations and companies participating: {{ community.newcommunity.participating_orgs }}</li>
-				<li>{% if community.newcommunity.approved_license %}Community licenses are approved.{% else %}WARNING: Community licenses are not approved. {{ community.newcommunity.unapproved_license_description }}{% endif %}</li>
-				<li>{% if community.newcommunity.no_proprietary_software %}Projects support free software only.{% else %}WARNING: Projects may support proprietary software. {{ community.newcommunity.proprietary_software_description }}{% endif %}</li>
-				<li>{% if community.newcommunity.approved_advertising %}Community does not advertise services of only one company.{% else %}WARNING: Community advertises services of only one company. {{ community.newcommunity.proprietary_software_description }}{% endif %}</li>
-				{% if community.newcommunity.governance %}<li>Governance: {{ community.newcommunity.governance }}</li>{% endif %}
-				{% if community.newcommunity.code_of_conduct %}<li>Code of Conduct: {{ community.newcommunity.code_of_conduct }}</li>{% endif %}
-				{% if community.newcommunity.cla %}<li>Code Licensing Agreement: {{ community.newcommunity.cla }}</li>{% endif %}
-				{% if community.newcommunity.dco %}<li>Developer Certificate of Origin: {{ community.newcommunity.dco }}</li>{% endif %}
-			{% endif %}
-			<li><a href="{{ participation_info.get_absolute_url }}">Community landing page</a></li>
+			{% if community.humanitarian_community %}<li><b>Humanitarian open source community.</b></li>{% endif %}
+			{% if community.general_funding_application %}<li>Humanitarian issues the community addresses: {{ community.general_funding_application }}</li>{% endif %}
+			{% if community.additional_sponsors %}<li>Community sponsors Outreachy might want to ask for internship funding: {{ community.additional_sponsors }}</li>{% endif %}
 		</ul>
 		<div class="container">
 			<div class="row">
