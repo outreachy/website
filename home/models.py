@@ -1669,13 +1669,6 @@ class Participation(ApprovalStatus):
         except Comrade.DoesNotExist:
             return False
 
-#class GeneralSponsorship(models.Model):
-#    participation = models.ForeignKey(Participation, on_delete=models.CASCADE)
-#    request_general_funding = models.BooleanField(
-#            verbose_name="Are you requesting that 100% of your interns be funded from the Outreachy general fund?")
-#    general_funding_ask = models.PositiveIntegerField(
-#            verbose_name="How many interns are you requesting be funded from the Outreachy general fund?")
-#
 class Sponsorship(models.Model):
     participation = models.ForeignKey(Participation, on_delete=models.CASCADE)
 
