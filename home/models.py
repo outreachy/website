@@ -1416,7 +1416,7 @@ class Community(models.Model):
             default=False,
             verbose_name='Is your community a humanitarian open source community?')
 
-    general_funding_application = models.CharField(
+    general_funding_application = models.TextField(
             blank=True,
             max_length=THREE_PARAGRAPH_LENGTH,
             verbose_name="What humanitarian issues is your community addressing?",
