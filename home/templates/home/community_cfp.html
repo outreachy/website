@@ -25,6 +25,8 @@ Call for Outreachy community coordinators and mentors
 			<p class="card-text">Please sign up for the
 			<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">Outreachy announcement list</a>
 			to receive a notification for next round.</p>
+			<p class="card-text">
+			🚨 <b>Outreachy applicants</b> - This page is not the page you're looking for! Please go to the <a href="{% url 'project-selection' %}">list of communities for applicants</a>.</p>
 		{% elif current_round.lateorgs.has_passed %}
 			<p class="card-text">🛑 The Outreachy CFP is closed for new community participation applications.</p>
 			<p class="card-text">👋🏽 Mentors are welcome to submit internship projects to participating communities. The <b>Project submission deadline: {{ current_round.project_soft_deadline }} at 4pm UTC</b>.</p>
@@ -32,9 +34,13 @@ Call for Outreachy community coordinators and mentors
 			<p class="card-text">Please sign up for the
 			<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">Outreachy announcement list</a>
 			to receive a notification for next round.</p>
+			<p class="card-text">
+			🚨 <b>Outreachy applicants</b> - This page is not the page you're looking for! This page is only for mentors and coordinators. Please go to the <a href="{% url 'project-selection' %}">list of communities for applicants</a>.</p>
 		{% else %}
 			<p class="card-text">👋🏿 New communities are welcome to fill out a participation application. <b>Community application deadline: {{ current_round.lateorgs }} at 4pm UTC</b>.</p>
 			<p class="card-text">👋🏽 Mentors are welcome to submit internship projects to participating communities. <b>Project submission deadline: {{ current_round.project_soft_deadline }} at 4pm UTC</b>.</p>
+			<p class="card-text">
+			🚨 <b>Outreachy applicants</b> - This page is not the page you're looking for! Please go to the <a href="{% url 'project-selection' %}">list of communities for applicants</a>.</p>
 		{% endif %}
 	</div>
 </div>
