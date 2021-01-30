@@ -275,6 +275,7 @@ class RoundPage(AugmentDeadlines, Page):
             )
     initial_applications_open = models.DateField("Date initial applications open")
     outreachy_chat = models.DateTimeField("Date and time of the Outreachy Twitter chat")
+    outreachy_chat_timezone_url = models.URLField(blank=True, verbose_name="URL to display timezone conversions for the Outreachy Twitter chat time")
     initial_applications_close = models.DateField("Date initial applications close")
     pick_a_project_blog_url = models.URLField(blank=True, verbose_name="URL of the blog on how to pick a project")
     contributions_open = models.DateField("Date contributions open")

@@ -88,7 +88,7 @@ Promote Outreachy internships
 <p>Each round, Outreachy has a Twitter chat to introduce the program. We encourage questions from people interested in applying to Outreachy. We also pose questions for mentors and past Outreachy interns to answer. Applicants are encouraged to ask mentors and past interns questions during and after the chat.</p>
 
 {% if current_round %}
-	<p>The next #OutreachyChat will happen on {{ current_round.outreachy_chat }} UTC.</p>
+	<p>The next #OutreachyChat will happen on {{ current_round.outreachy_chat }} UTC. Please double check <a href="{{ current_round.outreachy_chat_timezone_url }}">what time that is in your timezone</a>.</p>
 {% else %}
 	<p>The next #OutreachyChat is not scheduled yet. It's typically run two weeks after the initial application period opens, on a Monday at 4pm UTC / 8am PDT / 11pm EDT / 5pm CET / 9:30pm IST.</p>
 {% endif %}
