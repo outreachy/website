@@ -105,15 +105,17 @@ To set up your local development environment, first clone the repository to your
 git clone https://github.com/outreachy/website.git
 ```
 
-In order to develop with Python, you'll need the Python 3 development headers, so install them. For example, on Debian or Ubuntu Linux, you can use `apt-get install python3-dev` to install the Python 3 development headers.
+In order to develop with Python, you'll need the Python 3 development headers, so install them. For example, on Debian or Ubuntu Linux, you can use `apt-get install python3-dev` to install the Python 3 development headers. On other Linux distributions, it may be called `python3-devel` or installed by default with `python` packages.
 
 You'll also need to install node.js. If you're running Linux, it's recommended you install it using your package manager. If you're using Windows or Mac, follow the [installation instructions](https://nodejs.org/en/download/) on the node.js website.
+
+Lastly, you need to check whether you have `libpq-dev` (also called `libpq-devel` or `postgresql-libs`) installed using your package manager. That package is necessary to build `psycopg2`, a PostgreSQL database adapter for Python, from source. If you're using Arch Linux, make sure you also have `base-devel` installed.
 
 Next, you'll need to create a new virtualenv. A "virtualenv" is a separate virtual environment for working on different Python projects. It's good practice to create a virtual environment for each Python project you're working on, in case they have conflicting dependencies, and so that you make sure to record all the dependencies for each project.
 
 These instructions will help you create a new virtualenv that will have all the python packages installed that you need to work on the Outreachy website. We use [pipenv](https://pipenv.readthedocs.io/en/latest/) for this purpose.
 
-If you're using Linux, you may be able to install pipenv through your Linux package manager. On Debian or Ubuntu, you can run `sudo aptitude install pipenv`. Otherwise, you can follow the instructions for [install pipenv](https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv).
+If you're using Linux, you may be able to install pipenv through your Linux package manager. On Debian or Ubuntu, you can run `sudo aptitude install pipenv`. Others distributions, like Arch Linux, may call it `python-pipenv`. Check [Pipenv's documentation on installing pipenv](https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv) for more information.
 
 The following command will automatically create a virtual environment and install the Python dependencies specified in the `Pipfile`. If you need help understanding pipenv, run `pipenv --help`.
 
