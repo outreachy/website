@@ -587,7 +587,7 @@ Sponsor emails are generally in the Client tab of Invoice Ninja, but there may b
 ## Week 10: Career opportunities
 
 Questions to get the discussion moving:
- - For current interns, alums, and mentors: What are all the ways you can think of to move your career forward? (There is no wrong answer.)
+ - :question: For current interns, past interns, and mentors: What are all the ways you can think of to move your career forward? (There is no wrong answer.) :question:
    - networking
    - Networking and referrals are so important! Between 50% to 80% of jobs go unlisted. The jobs are filled by someone the team knows: https://www.collegerecruiter.com/blog/2013/03/28/80-of-job-openings-are-unadvertised/
    - formal education (university)
@@ -607,11 +607,19 @@ Questions to get the discussion moving:
    - conferences
    - local meetups
    - Online Slack groups often have a "jobs" channel. I hang out in the LGBTQ in Tech slack (for queer folks): https://lgbtq.technology/ I used to hang out more in the Women in Tech chat before I came out as non-binary: https://witchat.github.io/ Feel free to share a link to other online forums for marginalized groups in tech.
+   - https://www.diversifytech.co/
+   - https://www.womenwhocode.com/jobs
+   - https://www.blacksintechnology.net/jobs-board/
+   - https://www.pocitjobs.com/
+   - https://talent.nativesintech.org/
    - other paid "summer of code" programs: https://github.com/tapaswenipathak/Open-Source-Programs
    - look at which companies sponsor open source conferences, or your open source community. For example, LWN.net publishes which companies are the top Linux kernel contributors (e.g. https://lwn.net/Articles/821813/). For OpenStack the statistics are https://www.stackalytics.com/ You can use these lists of sponsors to identify companies that participate the most and they are probably hiring.
    - some open source communities have a jobs board, e.g. https://www.python.org/jobs/
    - There is a monthly Y Combinator thread on "Who's hiring?" and some "Seeking Freelancer" threads. These are interesting for finding new jobs or contract work. Some of it is remote work and/or open source. For example, the January 2020 links: https://news.ycombinator.com/item?id=21936439 and https://news.ycombinator.com/item?id=21936440
- - For current interns, in emoji scale: Rate 1-10 how comfortable you feel asking your mentor for help? 1 is the least comfortable. 10 is that you're 100% comfortable and happy to ask.
+   - There is https://www.fossjobs.net/ - a site dedicated to jobs where people contribute to open source
+   - There is a public forum for the Open Source Diversity community. There is also an "Opportunity Board" where people can share job openings and opportunities. But you need to make an account to see them, they are not public by default. https://discourse.opensourcediversity.org/
+
+ - :question: For current interns, in emoji scale: Rate 1-10 how comfortable you feel asking your mentor for help? 1 is the least comfortable. 10 is that you're 100% comfortable and happy to ask. :question:  :one: :two: :three: :four: :five: :six: :seven: :eight: :nine: :ten: 
    - wait for answers
    - It's okay to have to work your way up to asking your mentor for help. Many people start out being shy (like me!) and work their way up to feeling more comfortable asking for career advice.
    - I've found that sometimes people have no problem asking a mentor for advice on coding, but then don't feel as comfortable saying " In the future I’d like to work at XYZ organization, do you have any advice?" and that is something important.
