@@ -47,23 +47,9 @@ Week 3 goals:
 Week 3 Blog
 -----------
 
-For this week's blog post, we'd like you to write a blog post about a time in the last three weeks you were stuck. The audience for this blog post is an Outreachy applicant or intern who stuck, and is hesitant to reach out to get help.
+The second blog topic is "Everybody struggles". Please read the blog prompt instructions:
 
-When you model that you (a successful accepted Outreachy intern) get stuck, that helps the next round of Outreachy applicants and interns see that it's okay to get stuck. Everybody struggles!
-
-Here's some prompts that could get you started writing this blog post:
-
- - What were you stuck on?
- - Why was it confusing or hard?
- - What did you try that didn't work?
- - Where did you search for help?
- - What resources did you find?
- - Were any of those resources out of date or confusing?
- - Were you hesitant to reach out for help, and if so, why were you hesitant?
- - What happened when you reached out for help?
- - What would you tell someone who is worried about asking for help?
-
-Think about your core values you talked about in your first blog post. Did any of your core values help you overcome your struggles?
+{{ request.scheme }}://{{ request.get_host }}{% url 'docs-internship' %}#blog-week-3
 
 Again, if you have any questions, please contact us!
 

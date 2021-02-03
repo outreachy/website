@@ -66,26 +66,9 @@ Week 9 goals:
 Week 9 Blog
 -----------
 
-For this week's blog post, we'd like to write about what your career goals are. If you aren't looking for a job or internship, you can talk about what volunteer opportunities you'd like to participate in. If you're looking for a opportunity in the future, make sure to include when you'll be available.
+The fifth blog topic is "Career opportunities". Please read the blog prompt instructions:
 
-Here's some prompts that could get you started writing this blog post:
-
- - Are you looking for a job, internship, a grant, a volunteer position, or some type of other opportunity?
- - What types of work would you like to contribute to?
- - What tools or skills do you have that would help you with that work?
- - What tools or skills would you like to learn?
- - What interpersonal skills make you a collaborative team member?
- - What languages do you speak, and at what school grade level?
-
-You might also want to talk about how your identity or background will allow you to provide a unique perspective on a team. Companies often want a diverse set of perspectives in their teams. A team with people who have all the same background makes products that don't fit everyone's needs. Please only share what you're comfortable with being public on the internet!
-
-If you're looking for a job opportunity, here's some additional things you might want to mention:
-
- - When are you available to start work? (This should be after your Outreachy internship ends, including if you have an extension.)
- - Are you able to move, and if so, which countries/regions are you willing to move to?
- - Are you looking for a remote job? (Hint, saying you already have three months experience as a remote intern will help you find another remote position!)
- - Are you looking for a full-time or part-time paid position?
- - Are you open to being a self-employed contractor?
+{{ request.scheme }}://{{ request.get_host }}{% url 'docs-internship' %}#blog-week-9
 
 If you have any questions, please contact the Outreachy organizers organizers@outreachy.org
 

@@ -80,18 +80,9 @@ Week 7 goals:
 Week 7 Blog
 -----------
 
-For this week's blog post, we'd like to write a progress report of what you've accomplished in the first half of the internship. The blog post should also detail what your modified goals for the second half of the internship is.
+The fourth blog topic is a mid-point project progress report. Please read the blog prompt instructions:
 
-Here's some prompts that could get you started writing this blog post:
-
- - What was your original internship project timeline?
- - What goals have you met?
- - What have you accomplished in the first half of your internship?
- - What project goals took longer than expected?
- - Why did those project goals take longer than expected?
- - What would you do differently if you were starting the project over?
- - Which original goals needed to be modified?
- - What is your new plan for the second half of the internship?
+{{ request.scheme }}://{{ request.get_host }}{% url 'docs-internship' %}#blog-week-7
 
 If you have any questions, please contact the Outreachy organizers organizers@outreachy.org
 

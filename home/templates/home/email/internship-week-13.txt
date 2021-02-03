@@ -54,21 +54,9 @@ Week 13 goals:
 Week 13 Blog
 ------------
 
-For this week's blog post, we'd like you to write about how the Outreachy internship has been for you.
+The last blog topic is a final project progress report. Please read the blog prompt instructions:
 
-Here's some prompts that could get you started writing this blog post:
-
- - What was one fear you had about the internship that turned out to not come true?
- - What was one amazing thing that happened during the internship?
- - How did your Outreachy internship help you grow your skills?
- - How did your Outreachy mentor help you along the way?
- - How did Outreachy help you feel more confident in making open source and free software contributions?
- - What communication skills have you learned during the internship?
- - What technical skills have you learned during the internship?
- - What parts of your project did you complete?
- - What are the next steps for you (or someone else) to complete the project?
-
-Think about your core values you talked about in your first blog post. Did any of your core values help you during your internship?
+{{ request.scheme }}://{{ request.get_host }}{% url 'docs-internship' %}#blog-week-13
 
 We're so proud of all of you! If you have any questions or feedback for us, please contact the Outreachy organizers organizers@outreachy.org
 

@@ -61,17 +61,9 @@ Week 5 goals:
 Week 5 Blog
 -----------
 
-For this week's blog post, we'd like you to explain your project to a newcomer in your community. The audience for this blog post is an Outreachy applicant who is thinking about applying to your community. They have similar basic skills as you, but they've never heard of your community before and have never worked on this type of project before.
+The third blog topic is "Think about your audience". Please read the blog prompt instructions:
 
-Here's some prompts that could get you started writing this blog post:
-
- - What kind of people participate in your community?
- - What problem is your community trying to solve?
- - How does your project fit into the larger community?
- - Why would people want to use your project?
- - What makes you most excited to work on your project?
- - What new terms or concepts have you learned in the past month?
- - What was confusing to you about the project?
+{{ request.scheme }}://{{ request.get_host }}{% url 'docs-internship' %}#blog-week-5
 
 Again, if you have any questions, please contact us!
 
