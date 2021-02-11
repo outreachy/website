@@ -142,6 +142,11 @@ Applicant Guide | Outreachy Documentation
 <h2 id='application-period'><a href='#application-period'>Application period overview</a></h2>
 
 <p>There are three parts to the Outreachy application process:</p>
+<ol>
+	<li>Initial application period</li>
+	<li>Contribution period</li>
+	<li>Intern selection period</li>
+</ol>
 
 <p><b>Initial application period:</b></p>
 <ul>
@@ -149,9 +154,13 @@ Applicant Guide | Outreachy Documentation
 	<li>During this period, applicants fill out an initial application form</li>
 	<li>Outreachy organizers review initial applications and their essays</li>
 	<li>Initial applications are due on {{ current_round.initial_applications_close }}</li>
-	<li>All accepted applicants will receive an email when the contribution period starts on {{ current_round.contributions_open }}</li>
-	<li>Everyone will be able to view their initial application status on <a href='{% url 'eligibility-results' %}'>eligibility results page</a> on {{ current_round.contributions_open }}at 4pm UTC</li>
 </ul>
+
+<div class="container mr-5">
+	<p>Application results will be available on {{ current_round.contributions_open }} at 4pm UTC. Accepted applicants will be notified via email. Applicants who are not accepted will not receive an email. You can check your initial application status on the <a href='{% url 'eligibility-results' %}'>eligibility results page</a>.</p>
+
+	<p>Projects will be added to the project list until {{ current_round.contributions_open }}. Outreachy typically has over 60 projects to choose from. Applicants will not be able to see the full details of the projects until the contribution period opens.</p>
+</div>
 
 <p><b>Contribution period:</b></p>
 <ul>
