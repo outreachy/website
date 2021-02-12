@@ -3174,7 +3174,9 @@ class TimeCommitmentSummary(models.Model):
             help_text='Will you be an employee (for any number of hours) during the Outreachy internship period?')
 
     contractor = models.BooleanField(
-            help_text='Will you be a contractor during the Outreachy internship period?')
+            verbose_name='Will you be a contractor during the Outreachy internship period?',
+            help_text="A contractor is someone who is self-employed. Contractors have clients. They are not employees of their clients. Instead, they are paid for completing a project. After the project ends, the contractor is no longer working for the client. When in doubt, say 'No' to this question.",
+            )
 
     volunteer_time_commitments = models.BooleanField(
             help_text='Will you have any volunteer positions (such as volunteering with a non-profit or community center, participating in a community band, or volunteering to organize an event) that require more than 10 hours a week during the Outreachy internship period? Do not count your Outreachy internship time as a volunteer position.')
