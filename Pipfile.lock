@@ -74,11 +74,11 @@
         },
         "django": {
             "hashes": [
-                "sha256:2d78425ba74c7a1a74b196058b261b9733a8570782f4e2828974777ccca7edf7",
-                "sha256:efa2ab96b33b20c2182db93147a0c3cd7769d418926f9e9f140a60dca7c64ca9"
+                "sha256:169e2e7b4839a7910b393eec127fd7cbae62e80fa55f89c6510426abf673fe5f",
+                "sha256:c6c0462b8b361f8691171af1fb87eceb4442da28477e12200c40420176206ba7"
             ],
             "index": "pypi",
-            "version": "==3.1.5"
+            "version": "==3.1.6"
         },
         "django-appconf": {
             "hashes": [
@@ -131,11 +131,11 @@
         },
         "django-extensions": {
             "hashes": [
-                "sha256:7cd002495ff0a0e5eb6cdd6be759600905b4e4079232ea27618fc46bdd853651",
-                "sha256:c7f88625a53f631745d4f2bef9ec4dcb999ed59476393bdbbe99db8596778846"
+                "sha256:674ad4c3b1587a884881824f40212d51829e662e52f85b012cd83d83fe1271d9",
+                "sha256:9507f8761ee760748938fd8af766d0608fb2738cf368adfa1b2451f61c15ae35"
             ],
             "index": "pypi",
-            "version": "==3.1.0"
+            "version": "==3.1.1"
         },
         "django-filter": {
             "hashes": [
@@ -257,10 +257,10 @@
         },
         "faker": {
             "hashes": [
-                "sha256:0783729c61501d52efea2967aff6e6fcb8370f0f6b5a558f2a81233642ae529a",
-                "sha256:6b2995ffff6c2b02bc5daad96f8c24c021e5bd491d9d53d31bcbd66f348181d4"
+                "sha256:abc3344a996e1af3b585dd9cc2da02331767edf11eb9e345ae8c2821d95be91c",
+                "sha256:d19772d7b41cb5684f0c56a0d0855a24f58ab0c18f285db09eb87a5421aaac92"
             ],
-            "version": "==5.8.0"
+            "version": "==6.2.0"
         },
         "gunicorn": {
             "hashes": [
@@ -396,10 +396,10 @@
         },
         "pytz": {
             "hashes": [
-                "sha256:16962c5fb8db4a8f63a26646d8886e9d769b6c511543557bc84e9569fb9a9cb4",
-                "sha256:180befebb1927b16f6b57101720075a984c019ac16b1b7575673bea42c6c3da5"
+                "sha256:83a4a90894bf38e243cf052c8b58f381bfe9a7a483f6a9cab140bc7f702ac4da",
+                "sha256:eb10ce3e7736052ed3623d49975ce333bcd712c7bb19a58b9e2089d4057d0798"
             ],
-            "version": "==2020.5"
+            "version": "==2021.1"
         },
         "raven": {
             "hashes": [
@@ -449,10 +449,10 @@
         },
         "soupsieve": {
             "hashes": [
-                "sha256:4bb21a6ee4707bf43b61230e80740e71bfe56e55d1f1f50924b087bb2975c851",
-                "sha256:6dc52924dc0bc710a5d16794e6b3480b2c7c08b07729505feab2b2c16661ff6e"
+                "sha256:407fa1e8eb3458d1b5614df51d9651a1180ea5fedf07feb46e45d7e25e6d6cdd",
+                "sha256:d3a5ea5b350423f47d07639f74475afedad48cf41c0ad7a82ca13a3928af34f6"
             ],
-            "version": "==2.1"
+            "version": "==2.2"
         },
         "sqlparse": {
             "hashes": [
@@ -481,13 +481,6 @@
             ],
             "version": "==1.3"
         },
-        "unidecode": {
-            "hashes": [
-                "sha256:4c9d15d2f73eb0d2649a151c566901f80a030da1ccb0a2043352e1dbf647586b",
-                "sha256:a039f89014245e0cad8858976293e23501accc9ff5a7bdbc739a14a2b7b85cdc"
-            ],
-            "version": "==1.1.2"
-        },
         "urllib3": {
             "hashes": [
                 "sha256:1b465e494e3e0d8939b50680403e3aedaa2bc434b7d5af64dfd3c958d7f5ae80",
@@ -497,11 +490,11 @@
         },
         "wagtail": {
             "hashes": [
-                "sha256:2d153a61fc7cdff2ef71392301661b6a35a09e66758490ac346410b548e3368a",
-                "sha256:825c143b8acdadc4b85c7880dbd1cfaa35397c42bdbf7965baaf6b2fdd78f913"
+                "sha256:9b1150c06daf34a7d2a5693b3899f7b4d533eaa4336523e3de137e1408f73078",
+                "sha256:ba9996c5feb1900343cbf7fdeab98e2ce1f90d2dc738649a0cdfaaa38a8ab528"
             ],
             "index": "pypi",
-            "version": "==2.11.3"
+            "version": "==2.12.1"
         },
         "webencodings": {
             "hashes": [
