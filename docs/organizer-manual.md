@@ -70,6 +70,28 @@ communities.txt. For example, communities that expressed interest in the May
 that in the etherpad. Find the community status for the last round and see which
 communities said they wanted to participate in this round.
 
+## New community on-boarding sessions
+
+Topics to discuss:
+
+ - Only have friendly and welcoming mentors
+
+ - 5 hours per week mentor time commitment, 5-10 hours per week during the contribution period
+
+ - Differences between Outreachy and other internship programs
+   - not just students, anyone over 18 - get coding school graduates, self-taught through online classes, moms trying to get back into tech after a break in their career
+   - mentors define the project interns work on
+   - contribution period - mentors need to prep a list of tasks
+   - internship is more like a fellowship
+   - internship extensions up to 5 weeks
+   - important that the project tasks during the contribution period test the applicants' skills they will use during the internship - test run to see if the internship will be successful
+
+ - Contribution period is intense:
+   - expect around 10 applicants
+   - prep about 2-3 simple tasks per applicant, 1-2 medium complexity tasks
+   - encourage applicants to move from simple tasks to complex tasks
+   - see community guide for more tips to avoid mentor burn out during the contribution period
+
 ## Pinging continuing sponsors
 
 **Date: August 13 / Feb 28**
