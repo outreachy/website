@@ -74,9 +74,9 @@ communities said they wanted to participate in this round.
 
 Topics to discuss:
 
- - Only have friendly and welcoming mentors
-
- - 5 hours per week mentor time commitment, 5-10 hours per week during the contribution period
+ - Community coordinators are the bridge of trust between Outreachy organizers and the mentors
+   - Only have friendly and welcoming mentors
+   - Make sure mentors can commit to 5 hours per week during internship, 5-10 hours per week during the contribution period
 
  - Differences between Outreachy and other internship programs
    - not just students, anyone over 18 - get coding school graduates, self-taught through online classes, moms trying to get back into tech after a break in their career
