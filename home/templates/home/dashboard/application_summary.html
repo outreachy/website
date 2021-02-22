@@ -1,9 +1,9 @@
-{% with pending_applications_count=section.pending_applications_count pending_revisions_count=section.pending_revisions_count rejected_applications_count=section.rejected_applications_count approved_applications_count=section.approved_applications_count %}
+{% with pending_applications_count=section.pending_applications_count pending_revisions_count=section.pending_revisions_count rejected_applications_count=section.rejected_applications_count approved_applications_count=section.approved_applications_count pending_unreviewed_count=section.pending_unreviewed_count %}
 
 <h1>Application Status</h1>
 <ul>
 	{% if pending_applications_count %}
-		<li><a href="{% url 'pending-applicants-summary' %}">{{ pending_applications_count }} pending applications to review</a>. {{ pending_revisions_count }} applications need revisions.</li>
+		<li><a href="{% url 'pending-applicants-summary' %}">{{ pending_applications_count }} pending applications to review</a>. {{ pending_unreviewed_count }} are unreviewed. {{ pending_revisions_count }} applications need revisions.</li>
 	{% endif %}
 	{% if rejected_applications_count %}
 		<li><a href="{% url 'rejected-applicants-summary' %}">{{ rejected_applications_count }} rejected applications</a></li>
