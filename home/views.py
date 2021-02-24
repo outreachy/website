@@ -3349,7 +3349,7 @@ class Survey2018Notification(LoginRequiredMixin, ComradeRequiredMixin, TemplateV
         return redirect('dashboard')
 
 @login_required
-def applicant_review_summary(request, status):
+def applicant_review_summary(request, status, owner_username=None):
     """
     For applicant reviewers and staff, show the status of applications that
     have the specified approval status.
@@ -3360,6 +3360,12 @@ def applicant_review_summary(request, status):
 
     if not request.user.is_staff and not current_round.is_reviewer(request.user):
         raise PermissionDenied("You are not authorized to review applications.")
+
+    if owner_username:
+        try:
+            comrade = Comrade.objects.get(account__username=owner_username)
+        except Comrade.DoesNotExist:
+            raise PermissionDenied("No such applicant reviewer")
 
     applications = ApplicantApproval.objects.filter(
         application_round=current_round,
@@ -3376,25 +3382,21 @@ def applicant_review_summary(request, status):
         # small number of owners shared across many applicants:
         'review_owner__comrade',
     )
-
-    owned_apps = []
-    for reviewer in ApplicationReviewer.objects.filter(reviewing_round=current_round, approval_status=ApprovalStatus.APPROVED).order_by('comrade__public_name'):
-        owned_apps.append((reviewer.comrade.public_name, ApplicantApproval.objects.filter(
-            application_round=current_round,
-            approval_status=status,
-            review_owner=reviewer,
-        ).order_by('pk')))
+    if owner_username:
+        applications = applications.filter(review_owner__comrade__account__username=owner_username)
 
     if status == ApprovalStatus.PENDING:
-        context_name = 'pending_applications'
+        heading = 'Pending Applications'
     elif status == ApprovalStatus.REJECTED:
-        context_name = 'rejected_applications'
+        heading = 'Rejected Applications'
     elif status == ApprovalStatus.APPROVED:
-        context_name = 'approved_applications'
+        heading = 'Approved Applications'
+    if owner_username:
+        heading = heading + ' - owned by {}'.format(comrade.public_name)
 
     return render(request, 'home/applicant_review_summary.html', {
-        context_name: applications,
-        'owned_apps': owned_apps,
+        "applications": applications,
+        "heading": heading,
     })
 
 # Passed action, applicant_username

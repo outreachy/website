@@ -5,57 +5,15 @@ Applicant Review Summary
 {% endblock %}
 
 {% block content %}
-	{% if pending_applications %}
-		<h1>Pending Applications</h1>
+	<h1>{{ heading }}</h1>
+	{% if applications %}
 		<table class="table table-striped table-bordered">
 			{% include 'home/snippet/application_review_headers.html' %}
-			{% for app in pending_applications %}
-				{% if not app.barrierstoparticipation.applicant_should_update and not app.schoolinformation.applicant_should_update and not app.review_owner %}
-					{% include 'home/snippet/application_review_rows.html' %}
-				{% endif %}
-			{% endfor %}
-		</table>
-		{% if owned_apps %}
-			{% for owner_name, app_list in owned_apps %}
-			{% if app_list %}
-				<h1>Applications owned by {{ owner_name }}</h1>
-					<table class="table table-striped table-bordered">
-						{% include 'home/snippet/application_review_headers.html' %}
-						{% for app in app_list %}
-							{% include 'home/snippet/application_review_rows.html' %}
-						{% endfor %}
-					</table>
-			{% endif %}
-			{% endfor %}
-		{% endif %}
-		<h1>Pending Applications that need essay revisions</h1>
-		<table class="table table-striped table-bordered">
-			{% include 'home/snippet/application_review_headers.html' %}
-			{% for app in pending_applications %}
-				{% if app.barrierstoparticipation.applicant_should_update or app.schoolinformation.applicant_should_update %}
-					{% include 'home/snippet/application_review_rows.html' %}
-				{% endif %}
-			{% endfor %}
-		</table>
-	{% endif %}
-
-	{% if rejected_applications %}
-		<h1>Rejected Applications</h1>
-		<table class="table table-striped table-bordered">
-			{% include 'home/snippet/application_review_headers.html' %}
-			{% for app in rejected_applications %}
+			{% for app in applications %}
 				{% include 'home/snippet/application_review_rows.html' %}
 			{% endfor %}
 		</table>
-	{% endif %}
-
-	{% if approved_applications %}
-		<h1>Approved Applications</h1>
-		<table class="table table-striped table-bordered">
-			{% include 'home/snippet/application_review_headers.html' %}
-			{% for app in approved_applications %}
-				{% include 'home/snippet/application_review_rows.html' %}
-			{% endfor %}
-		</table>
+	{% else %}
+		<p>No applications found.</p>
 	{% endif %}
 {% endblock %}
