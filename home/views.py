@@ -3364,7 +3364,25 @@ def applicant_review_summary(request, status):
     applications = ApplicantApproval.objects.filter(
         application_round=current_round,
         approval_status=status,
-    ).order_by('pk')
+    ).order_by('pk').select_related(
+        'applicant__account',
+        # one-to-one reverse references:
+        'workeligibility',
+        'priorfossexperience',
+        'timecommitmentsummary',
+    ).prefetch_related(
+        # many-to-many relations:
+        'essay_qualities',
+        # small number of owners shared across many applicants:
+        'review_owner__comrade',
+        # one-to-many reverse relations:
+        'volunteertimecommitment',
+        'employmenttimecommitment',
+        'noncollegeschooltimecommitment',
+        'schooltimecommitment',
+        'contractorinformation',
+        'initialapplicationreview__reviewer',
+    )
 
     owned_apps = []
     for reviewer in ApplicationReviewer.objects.filter(reviewing_round=current_round, approval_status=ApprovalStatus.APPROVED).order_by('comrade__public_name'):
