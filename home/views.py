@@ -7,6 +7,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core import mail
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator
 from django.core.signing import TimestampSigner, SignatureExpired, BadSignature
 from django.db import models
 from django.forms import inlineformset_factory, ModelForm, modelform_factory, modelformset_factory, ValidationError
@@ -3385,6 +3386,10 @@ def applicant_review_summary(request, status, owner_username=None):
     if owner_username:
         applications = applications.filter(review_owner__comrade__account__username=owner_username)
 
+    paginator = Paginator(applications, 25)
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.page(page_number)
+
     if status == ApprovalStatus.PENDING:
         heading = 'Pending Applications'
     elif status == ApprovalStatus.REJECTED:
@@ -3395,7 +3400,7 @@ def applicant_review_summary(request, status, owner_username=None):
         heading = heading + ' - owned by {}'.format(comrade.public_name)
 
     return render(request, 'home/applicant_review_summary.html', {
-        "applications": applications,
+        "applications": page_obj,
         "heading": heading,
     })
 
