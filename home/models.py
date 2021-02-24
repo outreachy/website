@@ -2691,9 +2691,7 @@ class ApplicantApproval(ApprovalStatus):
             return 'Self-identified their gender'
 
         if self.reason_denied == 'TIME':
-            tcs = self.get_time_commitments()
-
-            return 'Not enough days free: ' + str(tcs['longest_period_free']) + ' days free / ' + str(tcs['internship_total_days'].days) + ' days total, {} days free required'.format(self.required_days_free())
+            return 'Not enough days free'
 
         if self.reason_denied[:5] == 'ALIGN':
             return 'Essay answers not aligned with Outreachy program goals'
@@ -2704,12 +2702,7 @@ class ApplicantApproval(ApprovalStatus):
         # Not everyone filled out the school information model
         try:
             if self.schoolinformation and self.schoolinformation.applicant_should_update:
-                tcs = self.get_time_commitments()
-
-                time_string = str(tcs['longest_period_free']) + ' days free / ' + str(tcs['internship_total_days'].days) + ' days total, {} days free required'.format(self.required_days_free())
-
-                return 'Revisions to school info requested: ' + time_string
-
+                return 'Revisions to school info requested'
         except SchoolInformation.DoesNotExist:
             pass
 
