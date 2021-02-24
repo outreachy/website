@@ -5,6 +5,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 from wagtail.admin import urls as wagtailadmin_urls
+import debug_toolbar
 from home import urls as home_urls
 from wagtail.core import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
@@ -14,6 +15,7 @@ from . import views as project_views
 from search import views as search_views
 
 urlpatterns = [
+    url(r'^__debug__/', include(debug_toolbar.urls)),
     url(r'^django-admin/', admin.site.urls),
 
     url(r'^admin/', include(wagtailadmin_urls)),
@@ -49,8 +51,3 @@ if settings.DEBUG:
     # Serve static and media files from development server
     urlpatterns += staticfiles_urlpatterns()
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-    import debug_toolbar
-    urlpatterns = [
-            url(r'^__debug__/', include(debug_toolbar.urls)),
-            ] + urlpatterns

@@ -96,6 +96,10 @@ INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK": "outreachyhome.debug.show_debug_toolbar",
+}
+
 ROOT_URLCONF = 'outreachyhome.urls'
 
 # https://docs.djangoproject.com/en/1.11/ref/forms/renderers/#templatessetting
