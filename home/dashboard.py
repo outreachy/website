@@ -146,15 +146,7 @@ def application_summary(request, today):
 
     current_applicants = current_round.applicantapproval_set
 
-    pending_revisions_count = current_applicants.pending().filter(
-        models.Q(
-            barrierstoparticipation__applicant_should_update=True
-        ) | models.Q(
-            schoolinformation__applicant_should_update=True
-        )
-    ).distinct().count()
-
-    pending_applications_count = current_applicants.pending().count() - pending_revisions_count
+    pending_applications_count = current_applicants.pending().count()
     pending_unreviewed_count = current_applicants.pending().filter(initialapplicationreview__isnull=True).count()
 
     rejected_applications_count = current_applicants.rejected().count()
@@ -162,7 +154,6 @@ def application_summary(request, today):
 
     return {
         'pending_applications_count': pending_applications_count,
-        'pending_revisions_count': pending_revisions_count,
         'pending_unreviewed_count': pending_unreviewed_count,
         'rejected_applications_count': rejected_applications_count,
         'approved_applications_count': approved_applications_count,
