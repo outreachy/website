@@ -236,6 +236,40 @@ Sometimes postgres linking fails? If you have unlinked your old database and you
 ssh dokku@outreachy.org config:unset --no-restart test DATABASE_URL DOKKU_POSTGRES_YELLOW_URL
 ```
 
+Debugging Slow Database Queries
+---
+
+If the site is being slow and you don't know why, a good first guess is that some database query is the culprit, but which one is it? If `DEBUG=True` then the Django Debug Toolbar is very helpful, but often performance problems only show up on the live site, where debugging must be turned off for security reasons.
+
+So instead you can tell Postgres to log queries that take longer than a certain amount of time.
+
+```
+ssh -t dokku@outreachy.org postgres:connect www-database
+```
+
+```
+ALTER SYSTEM SET log_min_duration_statement = 1000;
+SELECT pg_reload_conf();
+```
+
+These log messages are supposed to be accessible like so:
+
+```
+ssh dokku@outreachy.org postgres:logs www-database -t
+```
+
+However that didn't work for reasons I don't understand, so I had to run this as root on the host server instead:
+
+```
+docker logs --tail 50 dokku.postgres.www-database
+```
+
+When you're done, don't forget to turn the logging back off:
+
+```
+ALTER SYSTEM RESET log_min_duration_statement;
+```
+
 Backing Up the Database
 ---
 
