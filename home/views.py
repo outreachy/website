@@ -3375,13 +3375,6 @@ def applicant_review_summary(request, status):
         'essay_qualities',
         # small number of owners shared across many applicants:
         'review_owner__comrade',
-        # one-to-many reverse relations:
-        'volunteertimecommitment',
-        'employmenttimecommitment',
-        'noncollegeschooltimecommitment',
-        'schooltimecommitment',
-        'contractorinformation',
-        'initialapplicationreview__reviewer',
     )
 
     owned_apps = []
