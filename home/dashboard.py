@@ -40,6 +40,7 @@ import re
 from . import email
 from .mixins import ComradeRequiredMixin
 from .models import ApplicantApproval
+from .models import ApplicationReviewer
 from .models import ApprovalStatus
 from .models import Community
 from .models import Comrade
@@ -147,16 +148,21 @@ def application_summary(request, today):
     current_applicants = current_round.applicantapproval_set
 
     pending_applications_count = current_applicants.pending().count()
-    pending_unreviewed_count = current_applicants.pending().filter(initialapplicationreview__isnull=True).count()
+    pending_unreviewed_unowned_count = current_applicants.pending().filter(initialapplicationreview__isnull=True, review_owner=None).count()
+    pending_reviewed_unowned_count = current_applicants.pending().filter(initialapplicationreview__isnull=False, review_owner=None).count()
 
     rejected_applications_count = current_applicants.rejected().count()
     approved_applications_count = current_applicants.approved().count()
 
+    reviewers = ApplicationReviewer.objects.filter(reviewing_round=current_round).approved().order_by('comrade__public_name')
+
     return {
         'pending_applications_count': pending_applications_count,
-        'pending_unreviewed_count': pending_unreviewed_count,
+        'pending_unreviewed_unowned_count': pending_unreviewed_unowned_count,
+        'pending_reviewed_unowned_count': pending_reviewed_unowned_count,
         'rejected_applications_count': rejected_applications_count,
         'approved_applications_count': approved_applications_count,
+        'reviewers': reviewers,
     }
 
 

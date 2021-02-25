@@ -3350,7 +3350,7 @@ class Survey2018Notification(LoginRequiredMixin, ComradeRequiredMixin, TemplateV
         return redirect('dashboard')
 
 @login_required
-def applicant_review_summary(request, status, owner_username=None):
+def applicant_review_summary(request, status, owner_username=None, review_status=None):
     """
     For applicant reviewers and staff, show the status of applications that
     have the specified approval status.
@@ -3362,7 +3362,7 @@ def applicant_review_summary(request, status, owner_username=None):
     if not request.user.is_staff and not current_round.is_reviewer(request.user):
         raise PermissionDenied("You are not authorized to review applications.")
 
-    if owner_username:
+    if owner_username and owner_username != 'all':
         try:
             comrade = Comrade.objects.get(account__username=owner_username)
         except Comrade.DoesNotExist:
@@ -3383,8 +3383,19 @@ def applicant_review_summary(request, status, owner_username=None):
         # small number of owners shared across many applicants:
         'review_owner__comrade',
     )
-    if owner_username:
+    # XXX: This will break if anyone has a username of all - not sure how to handle this
+    if owner_username and owner_username != 'all':
         applications = applications.filter(review_owner__comrade__account__username=owner_username)
+    elif not owner_username:
+        # look for unowned applications
+        applications = applications.filter(review_owner=None)
+    # else don't filter on application ownership
+
+    if review_status == 'unreviewed':
+        applications = applications.filter(initialapplicationreview__isnull=True)
+    elif review_status == 'reviewed':
+        applications = applications.filter(initialapplicationreview__isnull=False)
+    # else don't filter on review status
 
     paginator = Paginator(applications, 25)
     page_number = request.GET.get("page", 1)
@@ -3396,7 +3407,7 @@ def applicant_review_summary(request, status, owner_username=None):
         heading = 'Rejected Applications'
     elif status == ApprovalStatus.APPROVED:
         heading = 'Approved Applications'
-    if owner_username:
+    if owner_username and owner_username != 'all':
         heading = heading + ' - owned by {}'.format(comrade.public_name)
 
     return render(request, 'home/applicant_review_summary.html', {

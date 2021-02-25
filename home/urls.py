@@ -81,7 +81,10 @@ urlpatterns = [
     url(r'^generic-mentor-contract-export/$', views.generic_mentor_contract_export_view, name='generic-mentor-contract-export'),
     url(r'^alums/$', views.alums_page, name='alums'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
-    url(r'^dashboard/pending-applications/$', views.applicant_review_summary, name='pending-applicants-summary', kwargs={'status': ApprovalStatus.PENDING}),
+    # all pending applications
+    url(r'^dashboard/pending-applications/$', views.applicant_review_summary, name='pending-applicants-summary', kwargs={'status': ApprovalStatus.PENDING, 'owner_username': 'all'}),
+    url(r'^dashboard/unreviewed-unowned-pending-applications/$', views.applicant_review_summary, name='unreviewed-unowned-pending-applicants-summary', kwargs={'review_status': 'unreviewed', 'status': ApprovalStatus.PENDING}),
+    url(r'^dashboard/reviewed-unowned-pending-applications/$', views.applicant_review_summary, name='reviewed-unowned-pending-applicants-summary', kwargs={'review_status': 'reviewed', 'status': ApprovalStatus.PENDING}),
     url(r'^dashboard/pending-applications/(?P<owner_username>[^/]+)/$', views.applicant_review_summary, name='owned-pending-applicants-summary', kwargs={'status': ApprovalStatus.PENDING}),
     url(r'^dashboard/rejected-applications/$', views.applicant_review_summary, name='rejected-applicants-summary', kwargs={'status': ApprovalStatus.REJECTED}),
     url(r'^dashboard/approved-applications/$', views.applicant_review_summary, name='approved-applicants-summary', kwargs={'status': ApprovalStatus.APPROVED}),

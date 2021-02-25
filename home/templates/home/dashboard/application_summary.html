@@ -3,7 +3,15 @@
 <h1>Application Status</h1>
 <ul>
 	{% if pending_applications_count %}
-		<li><a href="{% url 'pending-applicants-summary' %}">{{ pending_applications_count }} pending applications</a>. {{ pending_unreviewed_count }} are unreviewed.</li>
+	<li>{{ pending_applications_count }} - <a href="{% url 'pending-applicants-summary' %}">all pending applications</a>
+			<ul>
+				<li>{{ section.pending_unreviewed_unowned_count }} - <a href="{% url 'unreviewed-unowned-pending-applicants-summary' %}">Unreviewed, no owner</a></li>
+				<li>{{ section.pending_reviewed_unowned_count }} - <a href="{% url 'reviewed-unowned-pending-applicants-summary' %}">Reviewed, no owner</a></li>
+				{% for reviewer in section.reviewers %}
+					<li><a href="{% url 'owned-pending-applicants-summary' owner_username=reviewer.comrade.account.username %}">Owned by {{ reviewer.comrade.public_name }}</a></li>
+				{% endfor %}
+			</ul>
+		</li>
 	{% endif %}
 	{% if rejected_applications_count %}
 		<li><a href="{% url 'rejected-applicants-summary' %}">{{ rejected_applications_count }} rejected applications</a></li>
