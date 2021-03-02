@@ -8,7 +8,7 @@
 				<li>{{ section.pending_unreviewed_unowned_count }} - <a href="{% url 'unreviewed-unowned-pending-applicants-summary' %}">Unreviewed, no owner</a></li>
 				<li>{{ section.pending_reviewed_unowned_count }} - <a href="{% url 'reviewed-unowned-pending-applicants-summary' %}">Reviewed, no owner</a></li>
 				{% for reviewer in section.reviewers %}
-					<li><a href="{% url 'owned-pending-applicants-summary' owner_username=reviewer.comrade.account.username %}">Owned by {{ reviewer.comrade.public_name }}</a></li>
+					<li>{{ reviewer.number_pending_applications_owned }} - <a href="{% url 'owned-pending-applicants-summary' owner_username=reviewer.comrade.account.username %}">Owned by {{ reviewer.comrade.public_name }}</a></li>
 				{% endfor %}
 			</ul>
 		</li>

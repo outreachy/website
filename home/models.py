@@ -2404,6 +2404,13 @@ class ApplicationReviewer(ApprovalStatus):
     comrade = models.ForeignKey(Comrade, on_delete=models.CASCADE)
     reviewing_round = models.ForeignKey(RoundPage, on_delete=models.CASCADE)
 
+    def number_pending_applications_owned(self):
+        return ApplicantApproval.objects.filter(
+                application_round=self.reviewing_round,
+                approval_status=ApprovalStatus.PENDING,
+                review_owner=self,
+                ).count()
+
 class EssayQuality(models.Model):
     category = models.CharField(
             max_length=SENTENCE_LENGTH,
