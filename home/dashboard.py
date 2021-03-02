@@ -154,7 +154,7 @@ def application_summary(request, today):
     rejected_applications_count = current_applicants.rejected().count()
     approved_applications_count = current_applicants.approved().count()
 
-    reviewers = ApplicationReviewer.objects.filter(reviewing_round=current_round).approved().order_by('comrade__public_name')
+    reviewers = ApplicationReviewer.objects.filter(reviewing_round=current_round).approved().order_by('comrade__public_name').annotate(number_pending_applications_owned=models.Count('applicantapproval', filter=models.Q(applicantapproval__approval_status=ApprovalStatus.PENDING)))
 
     return {
         'pending_applications_count': pending_applications_count,
