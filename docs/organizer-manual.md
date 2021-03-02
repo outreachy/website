@@ -757,8 +757,21 @@ Make sure to send a thank you email to people you do an informal chat with! You'
 
 ## Week 14: Wrap up chat
 
- - For Outreachy interns and alums: What have/did you learned about yourself during your Outreachy internship? Is working remotely easy or hard for you? Do you like working on many smaller tasks or one big task? Are you good at debugging, writing documentation, developing new features, etc?
+I can't believe it's the last day of the December 2020 internships! How are people feeling today? If you don't want to comment, you can add an emoji to express your feelings.
+
+Was there anything your mentor did or some way they encouraged you that really helped you gain confidence?
+
+What have you learned about yourself during your Outreachy internship? For example, is working remotely easy or hard for you? Do you like working on many smaller tasks or one big task? Did your internship help you decide what area you want to find a job in? Etc.
+
    - Thinking about what you liked and what you found hard about your internship will allow you to apply for jobs that contain more of the fun stuff and less of the difficult stuff :). It will help you find a career that is fulfilling.
+
+When you applied for Outreachy, you had a lot of hopes and dreams for this internship. What did you expect to come out of this internship? Have you achieved that goal? If not, how can Outreachy mentors or organizers help you achieve that goal?
+
+Outreachy tries to support interns and help them grow. What aspect of the internship program was the most helpful to you?
+
+How can Outreachy improve?
+
+What are your plans after the internship?
 
 # Intern feedback
 
