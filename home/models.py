@@ -2469,6 +2469,8 @@ class ApplicantApproval(ApprovalStatus):
             stats.save()
 
             if self.approval_status != ApprovalStatus.APPROVED:
+                self.collected_statistics = True
+                self.save()
                 return
 
             # Collect statistics about country living in during the internship
