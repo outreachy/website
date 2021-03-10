@@ -257,6 +257,9 @@ class InitialApplicationPrivacyTestCase(TestCase):
 
                 if approval_status == models.ApprovalStatus.APPROVED:
                     response = self.client.post(applicant_approval.get_approve_url())
+                    # Manually collect statistics and purge essay
+                    applicant_approval.collect_statistics()
+                    applicant_approval.purge_sensitive_data()
                 elif approval_status == models.ApprovalStatus.REJECTED:
                     response = self.client.post(applicant_approval.get_reject_url())
 

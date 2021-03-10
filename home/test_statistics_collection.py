@@ -128,8 +128,11 @@ class StatisticsCollectionTestCase(TestCase):
                 except models.StatisticGenderDemographics.DoesNotExist:
                     counted_non_binary_people = 0
 
-                # Approve the initial application, which should collect statistics
+                # Approve the initial application, which does not collect statistics
                 response = self.client.post(applicant_approval.get_approve_url())
+                # Manually collect statistics and purge essay
+                applicant_approval.collect_statistics()
+                applicant_approval.purge_sensitive_data()
 
                 # Reload the objects from the database after the invoked view modifies the database
                 applicant_approval = models.ApplicantApproval.objects.get(pk=applicant_approval.pk)
@@ -164,8 +167,11 @@ class StatisticsCollectionTestCase(TestCase):
         gender_identity.demiboy = True
         gender_identity.save()
 
-        # Approve the initial application, which should collect statistics
+        # Approve the initial application, which does not collect statistics
         response = self.client.post(applicant_approval.get_approve_url())
+        # Manually collect statistics and purge essay
+        applicant_approval.collect_statistics()
+        applicant_approval.purge_sensitive_data()
 
         # Reload the objects from the database after the invoked view modifies the database
         applicant_approval = models.ApplicantApproval.objects.get(pk=applicant_approval.pk)
@@ -196,8 +202,11 @@ class StatisticsCollectionTestCase(TestCase):
         gender_identity.woman = True
         gender_identity.save()
 
-        # Approve the initial application, which should collect statistics
+        # Approve the initial application, which does not collect statistics
         response = self.client.post(applicant_approval.get_approve_url())
+        # Manually collect statistics and purge essay
+        applicant_approval.collect_statistics()
+        applicant_approval.purge_sensitive_data()
 
         # Reload the objects from the database after the invoked view modifies the database
         applicant_approval = models.ApplicantApproval.objects.get(pk=applicant_approval.pk)
@@ -230,8 +239,11 @@ class StatisticsCollectionTestCase(TestCase):
         gender_identity.agender = True
         gender_identity.save()
 
-        # Approve the initial application, which should collect statistics
+        # Approve the initial application, which does not collect statistics
         response = self.client.post(applicant_approval.get_approve_url())
+        # Manually collect statistics and purge essay
+        applicant_approval.collect_statistics()
+        applicant_approval.purge_sensitive_data()
 
         # Reload the objects from the database after the invoked view modifies the database
         applicant_approval = models.ApplicantApproval.objects.get(pk=applicant_approval.pk)
@@ -263,8 +275,11 @@ class StatisticsCollectionTestCase(TestCase):
         gender_identity.mavrique = True
         gender_identity.save()
 
-        # Approve the initial application, which should collect statistics
+        # Approve the initial application, which does not collect statistics
         response = self.client.post(applicant_approval.get_approve_url())
+        # Manually collect statistics and purge essay
+        applicant_approval.collect_statistics()
+        applicant_approval.purge_sensitive_data()
 
         # Reload the objects from the database after the invoked view modifies the database
         applicant_approval = models.ApplicantApproval.objects.get(pk=applicant_approval.pk)
@@ -296,8 +311,11 @@ class StatisticsCollectionTestCase(TestCase):
         gender_identity.trans_feminine = True
         gender_identity.save()
 
-        # Approve the initial application, which should collect statistics
+        # Approve the initial application, which does not collect statistics
         response = self.client.post(applicant_approval.get_approve_url())
+        # Manually collect statistics and purge essay
+        applicant_approval.collect_statistics()
+        applicant_approval.purge_sensitive_data()
         # Reject the initial application, which should NOT collect statistics
         response = self.client.post(applicant_approval.get_reject_url())
         # Note: this actually sometimes happens,
@@ -350,8 +368,11 @@ class StatisticsCollectionTestCase(TestCase):
                 applicant=applicant_approval,
                 ).delete()
 
-        # Approve the initial application, which should collect statistics
+        # Approve the initial application, which does not collect statistics
         response = self.client.post(applicant_approval.get_approve_url())
+        # Manually collect statistics and purge essay
+        applicant_approval.collect_statistics()
+        applicant_approval.purge_sensitive_data()
 
         try:
             stats = models.StatisticAmericanDemographics.objects.get(
@@ -374,8 +395,11 @@ class StatisticsCollectionTestCase(TestCase):
         race_and_ethnicity.us_resident_demographics = False
         race_and_ethnicity.save()
 
-        # Approve the initial application, which should collect statistics
+        # Approve the initial application, which does not collect statistics
         response = self.client.post(applicant_approval.get_approve_url())
+        # Manually collect statistics and purge essay
+        applicant_approval.collect_statistics()
+        applicant_approval.purge_sensitive_data()
 
         try:
             stats = models.StatisticAmericanDemographics.objects.get(
@@ -400,8 +424,11 @@ class StatisticsCollectionTestCase(TestCase):
         race_and_ethnicity.us_resident_demographics = True
         race_and_ethnicity.save()
 
-        # Approve the initial application, which should collect statistics
+        # Approve the initial application, which does not collect statistics
         response = self.client.post(applicant_approval.get_approve_url())
+        # Manually collect statistics and purge essay
+        applicant_approval.collect_statistics()
+        applicant_approval.purge_sensitive_data()
 
         try:
             stats = models.StatisticAmericanDemographics.objects.get(
@@ -427,8 +454,11 @@ class StatisticsCollectionTestCase(TestCase):
         essays.country_living_in_during_internship_code = 'IN'
         essays.save()
 
-        # Approve the initial application, which should collect statistics
+        # Approve the initial application, which does not collect statistics
         response = self.client.post(applicant_approval.get_approve_url())
+        # Manually collect statistics and purge essay
+        applicant_approval.collect_statistics()
+        applicant_approval.purge_sensitive_data()
 
         try:
             models.StatisticApplicantCountry.objects.get(
@@ -456,8 +486,11 @@ class StatisticsCollectionTestCase(TestCase):
             essays.country_living_in_during_internship_code = 'IN'
             essays.save()
 
-            # Approve the initial application, which should collect statistics
+            # Approve the initial application, which does not collect statistics
             response = self.client.post(applicant_approval.get_approve_url())
+            # Manually collect statistics and purge essay
+            applicant_approval.collect_statistics()
+            applicant_approval.purge_sensitive_data()
 
         try:
             models.StatisticApplicantCountry.objects.get(
