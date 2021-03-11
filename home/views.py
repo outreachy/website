@@ -1270,6 +1270,10 @@ class ParticipationAction(ApprovalStatusAction):
     def get_object(self):
         community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
 
+        # Workflow changes depending on whether we create a new Participation
+        # or just update an existing one.
+        self.new = False
+
         # FIXME: probably should raise PermissionDenied, not Http404, outside of deadlines
 
         # For most purposes, this form is available right up to intern announcement...
@@ -1291,7 +1295,6 @@ class ParticipationAction(ApprovalStatusAction):
             )
 
         try:
-            self.new = False
             return Participation.objects.get(
                     community=community,
                     participating_round=participating_round)
