@@ -3396,6 +3396,8 @@ def applicant_review_summary(request, status, owner_username=None, review_status
 
     if review_status == 'unreviewed':
         applications = applications.filter(initialapplicationreview__isnull=True)
+    elif review_status == 'unreviewed-non-student':
+        applications = applications.filter(initialapplicationreview__isnull=True).filter(schoolinformation__isnull=True)
     elif review_status == 'reviewed':
         applications = applications.filter(initialapplicationreview__isnull=False)
     # else don't filter on review status

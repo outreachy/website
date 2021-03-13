@@ -149,6 +149,7 @@ def application_summary(request, today):
 
     pending_applications_count = current_applicants.pending().count()
     pending_unreviewed_unowned_count = current_applicants.pending().filter(initialapplicationreview__isnull=True, review_owner=None).count()
+    pending_unreviewed_unowned_non_student_count = current_applicants.pending().filter(initialapplicationreview__isnull=True, review_owner=None, schoolinformation__isnull=True).count()
     pending_reviewed_unowned_count = current_applicants.pending().filter(initialapplicationreview__isnull=False, review_owner=None).count()
 
     rejected_applications_count = current_applicants.rejected().count()
@@ -159,6 +160,7 @@ def application_summary(request, today):
     return {
         'pending_applications_count': pending_applications_count,
         'pending_unreviewed_unowned_count': pending_unreviewed_unowned_count,
+        'pending_unreviewed_unowned_non_student_count': pending_unreviewed_unowned_non_student_count,
         'pending_reviewed_unowned_count': pending_reviewed_unowned_count,
         'rejected_applications_count': rejected_applications_count,
         'approved_applications_count': approved_applications_count,

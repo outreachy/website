@@ -84,6 +84,7 @@ urlpatterns = [
     # all pending applications
     url(r'^dashboard/pending-applications/$', views.applicant_review_summary, name='pending-applicants-summary', kwargs={'status': ApprovalStatus.PENDING, 'owner_username': 'all'}),
     url(r'^dashboard/unreviewed-unowned-pending-applications/$', views.applicant_review_summary, name='unreviewed-unowned-pending-applicants-summary', kwargs={'review_status': 'unreviewed', 'status': ApprovalStatus.PENDING}),
+    url(r'^dashboard/unreviewed-unowned-non-student-pending-applications/$', views.applicant_review_summary, name='unreviewed-unowned-non-student-pending-applicants-summary', kwargs={'review_status': 'unreviewed-non-student', 'status': ApprovalStatus.PENDING}),
     url(r'^dashboard/reviewed-unowned-pending-applications/$', views.applicant_review_summary, name='reviewed-unowned-pending-applicants-summary', kwargs={'review_status': 'reviewed', 'status': ApprovalStatus.PENDING}),
     url(r'^dashboard/pending-applications/(?P<owner_username>[^/]+)/$', views.applicant_review_summary, name='owned-pending-applicants-summary', kwargs={'status': ApprovalStatus.PENDING}),
     url(r'^dashboard/rejected-applications/$', views.applicant_review_summary, name='rejected-applicants-summary', kwargs={'status': ApprovalStatus.REJECTED, 'owner_username': 'all'}),

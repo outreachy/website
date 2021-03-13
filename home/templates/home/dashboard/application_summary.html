@@ -5,6 +5,7 @@
 	{% if pending_applications_count %}
 	<li>{{ pending_applications_count }} - <a href="{% url 'pending-applicants-summary' %}">all pending applications</a>
 			<ul>
+				<li>{{ section.pending_unreviewed_unowned_non_student_count }} - <a href="{% url 'unreviewed-unowned-non-student-pending-applicants-summary' %}">Non-student, unreviewed, no owner</a></li>
 				<li>{{ section.pending_unreviewed_unowned_count }} - <a href="{% url 'unreviewed-unowned-pending-applicants-summary' %}">Unreviewed, no owner</a></li>
 				<li>{{ section.pending_reviewed_unowned_count }} - <a href="{% url 'reviewed-unowned-pending-applicants-summary' %}">Reviewed, no owner</a></li>
 				{% for reviewer in section.reviewers %}
