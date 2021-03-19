@@ -28,21 +28,36 @@ Full project details will be available once the contribution period starts.
 Preparing for the contribution period
 ---
 
-There's some things you can do to better prepare yourself for the Outreachy contribution period. First, make sure you've read through the Outreachy Applicant Guide:
+There's several things you can do to better prepare yourself for the Outreachy contribution period.
+
+If you only have time to read one thing, we recommend reading this blog post about making the most out of the contribution period:
+
+https://www.freecodecamp.org/news/get-the-most-out-of-your-outreachy-application-process-937d4a8ab4bf/
+
+We also recommend you read through the Outreachy Applicant Guide:
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'docs-applicant' %}
 
-We highly recommend you buy the DRM-free e-book "Forge Your Future with Open Source". The book will help you pick an Outreachy open source project and give you tips for making your first contributions to open source. You can get a discount on the book price by using the coupon code "{{ application.application_round.coupon_code }}":
+We especially recommend you read the "Preparing for the contribution period" section and the "Making Contributions" section:
 
-https://pragprog.com/book/vbopens/forge-your-future-with-open-source
+{{ request.scheme }}://{{ request.get_host }}{% url 'docs-applicant' %}#application-prep
+{{ request.scheme }}://{{ request.get_host }}{% url 'docs-applicant' %}#make-contributions
 
-If you're new to open source, we recommend brushing up on your GitHub skills by following the tutorials here:
+If you're new to open source, you may want to read this "Open Source 101" article:
 
-https://lab.github.com/
+https://opensource.com/resources/what-open-source
+
+Many (but not all) of Outreachy projects will require you to use the revision control system called git. Some projects will use GitHub to track project tasks. You may want to complete the first three tutorials of the "First Day on GitHub" course:
+
+https://lab.github.com/githubtraining/first-day-on-github
 
 If you want to brush up on your programming skills, we recommend accessing the free resources and community forums on FreeCodeCamp:
 
 https://www.freecodecamp.org/
+
+You may also want to buy the DRM-free e-book "Forge Your Future with Open Source". The book will give you tips for making your first contributions to open source.
+
+https://pragprog.com/book/vbopens/forge-your-future-with-open-source
 
 Good luck applying to Outreachy!
 
