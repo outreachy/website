@@ -43,6 +43,10 @@ We especially recommend you read the "Preparing for the contribution period" sec
 {{ request.scheme }}://{{ request.get_host }}{% url 'docs-applicant' %}#application-prep
 {{ request.scheme }}://{{ request.get_host }}{% url 'docs-applicant' %}#make-contributions
 
+
+Resources for newcomers
+---
+
 If you're new to open source, you may want to read this "Open Source 101" article:
 
 https://opensource.com/resources/what-open-source
@@ -54,10 +58,6 @@ https://lab.github.com/githubtraining/first-day-on-github
 If you want to brush up on your programming skills, we recommend accessing the free resources and community forums on FreeCodeCamp:
 
 https://www.freecodecamp.org/
-
-You may also want to buy the DRM-free e-book "Forge Your Future with Open Source". The book will give you tips for making your first contributions to open source.
-
-https://pragprog.com/book/vbopens/forge-your-future-with-open-source
 
 Good luck applying to Outreachy!
 
