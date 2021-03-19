@@ -2,9 +2,9 @@ import datetime
 from django.core import mail
 from django.core.management.base import BaseCommand
 from django.template.loader import get_template
+from email.headerregistry import Address
 from home.email import send_group_template_mail
 from home.models import RoundPage, ApprovalStatus, get_deadline_date_for
-
 
 class Command(BaseCommand):
     help = 'Sends email updates about current-round initial applications'
@@ -43,6 +43,8 @@ class Command(BaseCommand):
             applicants = current_round.applicantapproval_set.approved()
 
         template = get_template(template_name, using='plaintext')
+        applicant_help = Address("Outreachy Applicant Helpers", "applicant-help", "outreachy.org")
+
 
         with mail.get_connection() as connection:
             for application in applicants.iterator():
@@ -50,4 +52,4 @@ class Command(BaseCommand):
                 send_group_template_mail(template, {
                     'application': application,
                     'recipient': recipient,
-                }, [recipient], request=request, connection=connection)
+                }, [recipient], from_email=applicant_help, request=request, connection=connection)
