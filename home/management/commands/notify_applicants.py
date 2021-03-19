@@ -34,10 +34,7 @@ class Command(BaseCommand):
 
         if options['message'] == 'received':
             template_name = "home/email/application-received.txt"
-            applicants = current_round.applicantapproval_set.exclude(
-                approval_status=ApprovalStatus.REJECTED,
-                reason_denied__in=("GENERAL", "TIME"),
-            )
+            applicants = current_round.applicantapproval_set.all()
         elif options['message'] == 'approved':
             template_name = "home/email/applicantapproval-approved.txt"
             applicants = current_round.applicantapproval_set.approved()
