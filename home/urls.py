@@ -144,6 +144,7 @@ urlpatterns = [
     url(r'^blog/2020-08-28/december-2020-internship-applications-open/$', views.blog_2020_08_23_initial_applications_open, name='2020-08-initial-apps-open'),
     url(r'^blog/2021-01-15/may-2021-community-cfp-open/$', views.blog_2021_01_15_community_cfp_open, name='2021-01-community-cfp-open'),
     url(r'^blog/2021-02-01/may-2021-initial-applications-open/$', views.blog_2021_02_01_initial_applications_open, name='2021-01-initial-applications-open'),
+    url(r'^blog/2021-03-23/fsf-participation-barred/$', views.blog_2021_03_23_fsf_participation_barred, name='2021-03-fsf-participation-barred'),
 
     url(r'^privacy-policy/$', views.privacy_policy, name='privacy-policy'),
 ]

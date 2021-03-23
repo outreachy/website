@@ -2753,6 +2753,9 @@ def blog_2021_02_01_initial_applications_open(request):
         'current_round': current_round,
         })
 
+def blog_2021_03_23_fsf_participation_barred(request):
+    return render(request, 'home/blog/2021-03-23-fsf-participation-barred.html')
+
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(InitialMentorFeedback,
             fields=(
