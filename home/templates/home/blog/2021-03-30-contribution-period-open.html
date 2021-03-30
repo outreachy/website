@@ -1,0 +1,172 @@
+{% extends "base.html" %} 
+{% load static %}
+
+{% block title %}
+Outreachy May 2021 contribution period open
+{% endblock %}
+
+{% block content %}
+{% load humanize %}
+
+
+<h1>Outreachy contribution period open</h1>
+
+<p><i>Date: March 30, 2021</i></p>
+{% comment %}<p><i>Last updated: DATE</i> - See the "SECTION" section below.</p>{% endcomment %}
+
+<p>
+We are pleased to announce that the Outreachy contribution period is open!  Outreachy has approved 733 applicants to continue onto the contribution period.
+</p>
+
+<p>
+Outreachy received a record 3,308 initial applications for the May 2021 cohort, our largest number of applicants for any round by far. This reflects how much our program, and programs like ours are needed right now. We get into the details of our review of initial applications a little bit more below, after some practical information for this round's applicants.
+</p>
+
+<h2>Application results</h2>
+
+<p>
+Approved applicants have been sent an email with next steps. Please check your spam folder, or your Promotions or Updates tab in Gmail. You can also see whether your initial application has been accepted by going to the Outreachy website dashboard:
+</p>
+
+<p><a href="{% url 'dashboard' %}" class="btn btn-success">Your application results</a></p>
+
+<p>
+If your initial application has been accepted, please pick a project and start making contributions as soon as you can!
+</p>
+
+<p><a href="{% url 'project-selection' %}" class="btn btn-info">View internship projects</a></p>
+
+
+<h2>Future rounds</h2>
+
+<p>
+If your initial application was not accepted, we encourage you to apply early to the next round that you're eligible for. <a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">Sign up for the Outreachy announcements mailing list</a> for a reminder of application deadlines.
+</p>
+
+<p>
+If you are not a student, you may apply to either the May or the December cohorts.
+</p>
+
+<p>
+If you are a student in the southern hemisphere, you are only eligible to apply for the December cohorts. We invite you to apply to the December 2021 cohort. Applications for the December 2021 cohort will open in early August 2021.
+</p>
+
+<p>
+If you are a student in the northern hemisphere, you are only eligible to apply for the May cohorts. We invite you to apply to the May 2022 cohort if your initial application was not accepted for this cohort. Applications for the May 2022 cohort will open in early February 2022.
+</p>
+
+<h2>Other opportunities</h2>
+
+<p>
+If your initial application was not accepted, we encourage you to take a look at our list of <a href="https://www.outreachy.org/opportunities/">job opportunities from Outreachy sponsors</a>.
+</p>
+
+<p>
+Additionally, you may want to apply to other free software and open source internship programs:
+</p>
+
+<ul>
+	<li><a href="https://summerofcode.withgoogle.com/">Google Summer of Code</a> is open to university students, and coding school students from accediated coding schools. Google Summer of Code's student application process is open for the May to August 2021 internships.</li>
+	<li><a href="https://mentorship.lfx.linuxfoundation.org/">Community Bridge</a> is an open source internship program run by the Linux Foundation. Applications for the summer 2021 cohort are closed.</li>
+	<li><a href="https://fellowship.mlh.io/">Major League Hacking fellowships</a> has some fellowships to work on open source, as well as other types of fellowships. However, please note that MLH charges a one-time application fee. The application fee is $5 USD and $30 USD, adjusted based on the country you'd be residing in during the program. Outreachy does not charge any application fees</li>
+</ul>
+
+<h2>Outreachy application process, year-over-year</h2>
+
+<p>
+Outreachy organizers often get asked, "How many applicants applied last year?" The best comparison is the May 2020 cohort, since application numbers decrease during the December rounds, when students from the northern hemisphere are not eligible for Outreachy. Below is a break down of how our progress for the May 2021 cohort compares to the May 2020 cohort.
+</p>	
+
+
+<p>
+We onboarded an increased number of mentoring communities this round:
+</p>
+<ul>
+	<li>For the May 2020 cohort, there were 27 mentoring communities</li>
+	<li>For the May 2021 cohort, there are 38 mentoring communities</li>
+</ul>
+
+<p>
+We increased the number of interns that will be accepted:
+</p>
+<ul>
+	<li>For the May 2020 cohort, Outreachy accepted 54 interns</li>
+	<li>For the May 2021 cohort, we are on track to accept 60 to 70 interns</li>
+</ul>
+
+<p>
+An increased number of applicants applied this round:
+</p>
+<ul>
+	<li>For the May 2020 cohort, there were 2,666 initial applications</li>
+	<li>For the May 2021 cohort, there were 3,308 initial applications</li>
+</ul>
+
+<p>
+We slightly increased the number of initial applications that were reviewed:
+</p>	
+<ul>
+	<li>For the May 2020 cohort, Outreachy reviewed 2,436 initial applications</li>
+	<li>For the May 2021 cohort, Outreachy reviewed 2,506 initial applications</li>
+</ul>
+
+<h2>Cause for increased applications</h2>
+
+<p>
+Outreachy suspected that we may receive a larger number of initial applications this round. However, we did not expect an almost doubled number of initial applications from students.
+</p>
+
+<p>
+Other than the normal increase of interest over time as more people participate in Outreachy and spread the word about the program, we suspect there are two reasons for the increase in student applications for the May 2021 cohort.
+</p>
+
+<p>
+First, many in-person internships are cancelled because companies do not wish to expose students to additional risk of catching COVID-19. Students are looking for remote internships, which makes Outreachy appealing.
+</p>
+
+<p>
+Second, Google Summer of Code (GSoC) made <a href="https://opensource.googleblog.com/2020/10/google-summer-of-code-2021-is-bringing.html">changes to its internship program</a>. GSoC lowered the required number of intern working hours from 30 hours per week to 18 hours per week. GSoC also cut the <a href="https://developers.google.com/open-source/gsoc/help/student-stipends">student stipend</a> in half, from a maximum of ($6,600 USD) to a maximum of ($3,300 USD). GSoC uses global pay parity to calculate the <a href="https://developers.google.com/open-source/gsoc/help/student-stipends#total_stipend_amount">total internship stipend per country</a>.
+</p>
+
+<p>
+Outreachy generally expects interns to work 40 hours per week, or 30 hours per week if they are <a href="https://www.outreachy.org/blog/2021-02-01/may-2021-initial-applications-open/#covid-19">impacted by COVID-19</a>. Outreachy's total internship stipend is $6,000 USD for everyone around the world.
+</p>
+
+<p>
+It's likely that the combination of full-time work experience and a higher stipend would attract more students to apply who would normally apply to Google Summer of Code.
+</p>
+
+<h2>Focus on increasing opportunities</h2>
+
+<p>
+Outreachy organizers recognize that we offer a small number of internships for the size of the pool of applicants that are permitted to proceed to the contribution period. It's not a new problem for our program. For the May 2020 cohort, we had 889 approved initial applications for only 54 internships.
+</p>
+
+<p>
+We have been working to improve that situation. We are proud that we have increased the number of available internships for this round. To do this, we onboarded more communities, which takes a considerable amount of our organizers' time. For example, last May, 27 communities signed up to participate in Outreachy. This May, 47 communities signed up to participate in Outreachy. This includes 15 communities who have never participated in Outreachy before.
+</p>
+
+<p>
+We expect this round to have somewhere between 60 and 70 internships. Unforutnately, the efforts to onboard the new communities reduced the number of initial applications we could review. However, the direct result of this effort is not only more internships this round, but more internships for future rounds, as many of these communities are likely to participate again.
+</p>
+
+
+<h2>Application review progress</h2>
+
+<p>
+We planned for the increased number of applications in advance by increasing our staff time significantly. However, we were really surprised at a dramatic spike in applications during the last week of the application period. To give you some context,  during the initial application period for the May 2020 cohort, 990 applicants submitted initial applications in the last week before the deadline. In the May 2021 cohort, a whopping 2,034 initial applications were submitted in the last week. Student applications accounted for 1,433 of those last-minute applications.
+</p>
+
+<p>
+When we noticed this last minute spike in applications, we increased our staff time for application review further and also engaged trusted long-time volunteers to help too. Due to this offset (and a heroic effort by these folks stepping in to help), we wound up slightly ahead of where we were last year. We are proud to report that we were able to review all but the last days of applications.
+</p>
+
+<p>
+We understand that it is disappointing for those who applied at the end of the application period who would perhaps otherwise have been eligible. Please know that our staff and volunteers worked around the clock to review as many applications as possible, and that we have been focused on providing more internships so that the application process will be more fruitful for more people now and in the future.
+</p>
+
+<p>
+We're also now more prepared to handle this increased level of applications in the future. Still, we are planning more changes for the May 2022 round, including even more increased staff and reviewer time. We'll continuing to do the best we can to provide as many internships as possible to the folks who need them the most.
+</p>
+
+{% endblock %}

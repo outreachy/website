@@ -2756,6 +2756,9 @@ def blog_2021_02_01_initial_applications_open(request):
 def blog_2021_03_23_fsf_participation_barred(request):
     return render(request, 'home/blog/2021-03-23-fsf-participation-barred.html')
 
+def blog_2021_03_30_contribution_period_open(request):
+    return render(request, 'home/blog/2021-03-30-contribution-period-open.html')
+
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(InitialMentorFeedback,
             fields=(
