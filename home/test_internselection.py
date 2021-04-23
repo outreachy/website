@@ -867,3 +867,39 @@ class InternSelectionTestCase(TestCase):
 
                 self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
 
+    def test_mentor_can_give_final_feedback_after_five_week_extension(self):
+        """
+        Mentors should be able to give final feedback if they haven't,
+        even if the internship has gone past the date we consider it to be ended.
+        For example, an intern may have a five week extension,
+        and the mentor may go on vacation before they can give final feedback.
+        """
+        current_round = RoundPageFactory(start_from='finalfeedback', days_after_today=-7*5)
+        internship_end_date = current_round.finalfeedback + datetime.timedelta(7*5)
+        internselection = InternSelectionFactory(
+            active=True,
+            round=current_round,
+            intern_ends = internship_end_date,
+            final_feedback_opens = internship_end_date,
+            final_feedback_due = internship_end_date + datetime.timedelta(7),
+        )
+
+        answers = self._final_mentor_feedback_form(internselection)
+        response = self._submit_mentor_feedback_form(internselection, 'final', answers)
+        self.assertEqual(response.status_code, 302)
+
+        # will raise DoesNotExist if the view didn't create this
+        feedback = internselection.finalmentorfeedback
+
+        # Add in the fields automatically set by the action the mentor requested
+        answers['payment_approved'] = True
+        answers['request_extension'] = False
+        answers['extension_date'] = None
+        answers['request_termination'] = False
+        for key, expected in answers.items():
+            self.assertEqual(getattr(feedback, key), expected)
+
+        # only allow submitting once
+        self.assertFalse(feedback.allow_edits)
+
+        self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
