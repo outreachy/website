@@ -199,9 +199,16 @@ class InternSelectionTestCase(TestCase):
         defaults.update(kwargs)
         return defaults
 
-    def _submit_mentor_feedback_form(self, internselection, stage, answers):
+    def _submit_mentor_feedback_form(self, internselection, stage, answers, on_dashboard=True):
         mentor = internselection.mentors.get()
         self.client.force_login(mentor.mentor.account)
+
+        # Make sure there's a link on the dashboard to that type of open feedback
+        response = self.client.get(reverse('dashboard'))
+        if on_dashboard:
+            self.assertContains(response, '<button type="button" class="btn btn-info">Submit {} Feedback</button>'.format(stage.capitalize()), html=True)
+        else:
+            self.assertNotContains(response, '<button type="button" class="btn btn-info">Submit {} Feedback</button>'.format(stage.capitalize()), html=True)
 
         path = reverse(stage + '-mentor-feedback', kwargs={
             'username': internselection.applicant.applicant.account.username,
@@ -365,7 +372,7 @@ class InternSelectionTestCase(TestCase):
                 internselection = prior.intern_selection
 
                 answers = self._mentor_feedback_form(internselection)
-                response = self._submit_mentor_feedback_form(internselection, 'initial', answers)
+                response = self._submit_mentor_feedback_form(internselection, 'initial', answers, False)
 
                 # permission denied
                 self.assertEqual(response.status_code, 403)
@@ -612,7 +619,7 @@ class InternSelectionTestCase(TestCase):
                 internselection = prior.intern_selection
 
                 answers = self._midpoint_mentor_feedback_form(internselection)
-                response = self._submit_mentor_feedback_form(internselection, 'midpoint', answers)
+                response = self._submit_mentor_feedback_form(internselection, 'midpoint', answers, False)
 
                 # permission denied
                 self.assertEqual(response.status_code, 403)
