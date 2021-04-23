@@ -2,7 +2,7 @@
 	{% load wagtailcore_tags %}
 	<h1>My Outreachy Internship</h1>
 
-	<p>You {% if not my_round.has_internship_ended %}are participating{% else %}had participated{% endif %} in the <a href="{% pageurl my_round %}">{{ my_round.official_name }}</a>.
+	<p>You {% if internship.is_internship_active %}are participating{% else %}had participated{% endif %} in the <a href="{% pageurl my_round %}">{{ my_round.official_name }}</a>.
 	You can view your profile, project, and mentor on <a href="{% url 'alums' %}">the intern list page</a>.
 	To change your profile, click the 'Edit Profile' button above.
 	</p>
@@ -41,13 +41,13 @@
 	{% endif %}
 	</p>
 
-	{% if not my_round.has_internship_ended %}
+	{% if internship.is_internship_active %}
 		<h2>Internship Dates</h2>
 		{% if not internship.intern_has_custom_dates %}
-			<p>Your Outreachy internship starts on {{ my_round.internstarts }} and ends on {{ my_round.internends }}.{% if not my_round.has_internship_ended %} <a href="/mentor/mentor-faq/#internship-delays">Internships can be extended</a> by up to five weeks if your mentor feels you are not putting in a full-time (40 hours a week effort), or you need to take more than a week off from your internship. Please have your mentor <a href="{% url 'contact-organizers' %}">discuss any extensions</a> or changes to your start date with the Outreachy organizers.{% endif %}</p>
+			<p>Your Outreachy internship starts on {{ my_round.internstarts }} and ends on {{ my_round.internends }}.{% if internship.is_internship_active %} <a href="/mentor/mentor-faq/#internship-delays">Internships can be extended</a> by up to five weeks if your mentor feels you are not putting in a full-time (40 hours a week effort), or you need to take more than a week off from your internship. Please have your mentor <a href="{% url 'contact-organizers' %}">discuss any extensions</a> or changes to your start date with the Outreachy organizers.{% endif %}</p>
 		{% else %}
 			<p>Your Outreachy internship has custom start or end dates, or custom feedback dates.</p>
-			<p>Your internship will start on {{ internship.intern_starts }} and end on {{ internship.intern_ends}}.{% if not my_round.has_internship_ended %} <a href="/mentor/mentor-faq/#internship-delays">Internships can be extended</a> by up to five weeks from the official end date of {{ my_round.internends }}. Please have your mentor <a href="{% url 'contact-organizers' %}">discuss any further extensions</a> or changes to the your start date with the Outreachy organizers.{% endif %}</p>
+			<p>Your internship will start on {{ internship.intern_starts }} and end on {{ internship.intern_ends}}.{% if internship.is_internship_active %} <a href="/mentor/mentor-faq/#internship-delays">Internships can be extended</a> by up to five weeks from the official end date of {{ my_round.internends }}. Please have your mentor <a href="{% url 'contact-organizers' %}">discuss any further extensions</a> or changes to the your start date with the Outreachy organizers.{% endif %}</p>
 		{% endif %}
 
 		<h2 id="feedback">Internship Feedback</h2>

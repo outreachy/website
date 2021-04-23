@@ -423,12 +423,6 @@ class RoundPage(AugmentDeadlines, Page):
     def has_internship_ended(self):
         return (self.internends + datetime.timedelta(days=7 * 5)).has_passed()
 
-    def is_internship_active(self):
-        if self.internstarts.has_passed():
-            if not self.has_internship_ended():
-                return True
-        return False
-
     # The travel stipend policy changed for the December 2017 round
     # so that the travel stipend would be good for two years.
     # Rounds older than that are no longer valid.
@@ -3996,6 +3990,43 @@ class InternSelection(AugmentDeadlines, models.Model):
             return self.finalinternfeedback.can_edit()
         except FinalInternFeedback.DoesNotExist:
             return True
+
+    def is_internship_active(self):
+        """
+        Is the internship currently running?
+
+        The internship "runs" from when the internship is announced until either
+        1) the internship is terminated early, or
+        2) the Outreachy organizers review the final feedback submitted by the mentor.
+
+        This function returns False if the internship is not approved, has not yet been announced, or has ended.
+        Otherwise if the internship is approved and running, it returns true.
+        """
+        now = datetime.datetime.now(datetime.timezone.utc)
+        today = get_deadline_date_for(now)
+
+        # Is the intern selection rejected by the Outreachy organizers?
+        if not self.organizer_approved:
+            return False
+
+        # Has the internship not been announced yet?
+        if self.project.project_round.participating_round.internannounce > today:
+            return False
+
+        # Has the internship been terminated early?
+        if not self.in_good_standing:
+            return False
+
+        # Is the mentor final feedback waiting to be reviewed by Outreachy organizers?
+        try:
+            if self.finalmentorfeedback.organizer_payment_approved == None:
+                return True
+        # Has the mentor not given final feedback yet?
+        except FinalMentorFeedback.DoesNotExist:
+            return True
+
+        # The intern final feedback has been reviewed by Outreachy organizers
+        return False
 
     def intern_name(self):
         return self.applicant.applicant.public_name

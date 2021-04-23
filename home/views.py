@@ -2394,15 +2394,11 @@ class InternRemoval(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.Re
     def get_object(self):
         current_round = get_object_or_404(RoundPage, slug=self.kwargs['round_slug'])
 
-        # If the internship is currently active,
+        # If the internship has been announced
         # then only Outreachy organizers should remove interns
         # by setting them not in good standing on the alums page.
-        if current_round.is_internship_active():
+        if current_round.internannounce.has_passed():
             raise PermissionDenied("Only Outreachy organizers can remove an intern after the internship starts.")
-
-        # Mentors shouldn't be able to delete interns after the internship ends.
-        if current_round.has_internship_ended():
-            raise PermissionDenied("Outreachy interns cannot be removed after the internship ends.")
 
         set_project_and_applicant(self, current_round)
         self.intern_selection = get_object_or_404(InternSelection,
