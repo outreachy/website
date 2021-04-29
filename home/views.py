@@ -3216,32 +3216,42 @@ class ReviewInterns(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
         context['intern_selections'] = InternSelection.objects.filter(applicant__application_round=current_round).order_by('project__project_round__community__name')
         return context
 
-def alums_page(request):
-    # Get all the older AlumInfo models (before we had round pages)
-    pages = CohortPage.objects.all()
-    old_cohorts = []
-    for p in pages:
-        old_cohorts.append((p.round_start, p.round_end,
-            AlumInfo.objects.filter(page=p).order_by('community', 'name')))
-
+def alums_page(request, year=None, month=None):
     now = datetime.now(timezone.utc)
     today = get_deadline_date_for(now)
-    rounds = list(RoundPage.objects.filter(
-        internannounce__lte=today,
-    ).order_by('-internstarts'))
+    visible_rounds = RoundPage.objects.filter(internannounce__lte=today)
 
-    current_round = None
-    num_in_good_standing = 0
-    if rounds:
-        current_round = rounds[0]
-        num_in_good_standing = current_round.get_in_good_standing_intern_selections().count()
+    # Sorting the combined list in the database is hard to get right, but this
+    # is a small list so it's fine to sort it in Python instead.
+    start_dates = sorted(
+        set(visible_rounds.values_list("internstarts", flat=True).order_by()).union(
+            CohortPage.objects.values_list("round_start", flat=True).order_by()
+        ),
+        reverse=True,
+    )
 
-    return render(request, 'home/alums.html', {
-        'current_round': current_round,
-        'num_in_good_standing': num_in_good_standing,
-        'old_cohorts': old_cohorts,
-        'rounds': [Role(request.user, past_round) for past_round in rounds],
-    })
+    if year is None or month is None:
+        starts = start_dates[0]
+        return redirect("cohort", year=starts.year, month=str(starts.month).rjust(2, "0"))
+
+    try:
+        round_page = visible_rounds.get(internstarts__year=year, internstarts__month=month)
+        interns = Role(request.user, round_page).visible_intern_selections
+        return render(request, 'home/alums_roundpage.html', {
+            "start_dates": start_dates,
+            "round": round_page,
+            "interns": interns,
+        })
+
+    except RoundPage.DoesNotExist:
+        # Check the historical records from before we had round pages:
+        cohort_page = get_object_or_404(CohortPage, round_start__year=year, round_start__month=month)
+        interns = cohort_page.participant.order_by('community', 'name')
+        return render(request, 'home/alums_cohortpage.html', {
+            "start_dates": start_dates,
+            "cohort": cohort_page,
+            "interns": interns,
+        })
 
 def privacy_policy(request):
     with open(path.join(settings.BASE_DIR, 'docs', 'privacy-policy.md')) as policy_file:

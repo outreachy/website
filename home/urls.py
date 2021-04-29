@@ -80,6 +80,7 @@ urlpatterns = [
     url(r'^generic-intern-contract-export/$', views.generic_intern_contract_export_view, name='generic-intern-contract-export'),
     url(r'^generic-mentor-contract-export/$', views.generic_mentor_contract_export_view, name='generic-mentor-contract-export'),
     url(r'^alums/$', views.alums_page, name='alums'),
+    url(r'^alums/(?P<year>[1-9]\d*)-(?P<month>\d{2})/$', views.alums_page, name='cohort'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
     # all pending applications
     url(r'^dashboard/pending-applications/$', views.applicant_review_summary, name='pending-applicants-summary', kwargs={'status': ApprovalStatus.PENDING, 'owner_username': 'all'}),
