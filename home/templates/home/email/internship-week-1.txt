@@ -18,13 +18,9 @@ The first internship chat will take place on {{ current_round.week_two_chat_text
 Mentor Goals
 ------------
 
-Week 1 goals:
+Please review the expectations for mentors during week 1 and 2 of the Outreachy internship:
 
- - Set up a weekly real-time conversation to check in. This could take place either in chat, phone, or video chat.
- - Let your mentee know what day and times you'll be available to answer questions
- - Be responsive to questions from your intern
- - Send your intern documentation or other resources to help them learn more about your community and their first tasks (you may need to create it if it doesn't exist)
- - Spend time with your intern explaining community norms (contribution style requirements, where to ask questions, who is working on this part of the project, etc)
+{{ request.scheme }}://{{ request.get_host }}{% url 'docs-community' %}#week-1-expectations
 
 Week 1 tips:
 
