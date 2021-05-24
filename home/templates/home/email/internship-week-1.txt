@@ -4,7 +4,7 @@ Welcome to the first week of your Outreachy internship! We're happy to support y
 
 This is the first of several messages Outreachy organizers will send throughout the internship period. Each message will have a section for interns and a section for mentors. We hope this transparency provides better understanding of expectations and goals for both parties and ultimately creates a successful internship!
 
-We have some goals and assignments for both mentors and interns. Please read the sections below to ensure that the first internship feedback (due on {{ current_round.initialfeedback }}) is successful. Contact us at organizers@outreachy.org anytime with questions or comments.
+Please read the sections below to ensure that the first internship feedback (due on {{ current_round.initialfeedback }}) is successful. Contact us at organizers@outreachy.org anytime with questions or comments.
 
 Internship chats
 ----------------
