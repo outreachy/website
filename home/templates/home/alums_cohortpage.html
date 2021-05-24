@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}
+Outreachy Alums, {{ cohort.round_start|date:"F Y" }} to {{ cohort.round_end|date:"F Y" }}
+{% endblock %}
+
+{% block content %}
+<p>Other cohorts: {% for start_date in start_dates %}
+{% if start_date != cohort.round_start %}<a href="{% url "cohort" year=start_date.year month=start_date|date:"m" %}">{% endif %}
+{{ start_date|date:"F Y" }}
+{% if start_date != cohort.round_start %}</a>{% endif %}
+{% if not forloop.last %}|{% endif %}
+{% endfor %}</p>
+
+<h2>Outreachy {{ cohort.round_start|date:"F Y" }} to {{ cohort.round_end|date:"F Y" }} Interns</h2>
+<p>{{ interns|length }} interns were selected for this cohort.</p>
+{% for intern in interns %}
+	{% ifchanged %}
+		<div class="card border mt-3">
+		<div class="card-header bg-light">{{ intern.community }}</div>
+	{% else %}
+		<div class="card border">
+	{% endifchanged %}
+	<div class="card-body">
+		{% if intern.picture %}
+			<img src="{{ intern.picture.file.url }}" class="img-thumbnail float-left mr-3" height="200" width="200" alt="Photo of {{ intern.name }}">
+		{% endif %}
+		<div class="card-text">
+			<h4 class="mt-0">
+			{{ intern.name }}
+			</h4>
+			{% if intern.location %}
+				Location: {{ intern.location }}<BR>
+			{% endif %}
+			{% if intern.blog %}
+				Blog: <a href="{{ intern.blog }}">{{ intern.blog }}</a><BR>
+			{% endif %}
+			{% if intern.nick %}
+				IRC/Chat/Forum username: {{ intern.nick }}<BR>
+			{% endif %}
+			<BR>{{ intern.community }} mentor(s): {{ intern.mentors }}
+			<BR>Project: {{ intern.project }}
+		</div>
+	</div>
+	</div>
+{% endfor %}
+
+<BR>
+<p>TWITTER, TWEET, RETWEET and the Twitter logo are trademarks of Twitter, Inc. or its affiliates.</p>
+<p>The GitLab logo and wordmark artwork are licensed under a <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a></p>
+<p>GITHUB®, the GITHUB® logo design, OCTOCAT® and the OCTOCAT® logo design are exclusive trademarks registered in the United States by GitHub, Inc.</p>
+{% endblock %}

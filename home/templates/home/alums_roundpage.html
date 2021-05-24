@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Outreachy Alums, {{ round.internstarts|date:"F Y" }} to {{ round.internends|date:"F Y" }}
+{% endblock %}
+
+{% block content %}
+<p>Other cohorts: {% for start_date in start_dates %}
+{% if start_date != round.internstarts %}<a href="{% url "cohort" year=start_date.year month=start_date|date:"m" %}">{% endif %}
+{{ start_date|date:"F Y" }}
+{% if start_date != round.internstarts %}</a>{% endif %}
+{% if not forloop.last %}|{% endif %}
+{% endfor %}</p>
+
+<form method="post">
+{% csrf_token %}
+
+<h2>Outreachy {{ round.internstarts|date:"F Y" }} to {{ round.internends|date:"F Y" }} Interns</h2>
+<p>{{ interns|length }} interns were selected for this cohort.</p>
+{% for i in interns %}
+{% with intern=i.applicant.applicant %}
+	{% ifchanged %}
+		<div class="card border mt-3">
+		<div class="card-header bg-light">{{ i.project.project_round.community }}</div>
+	{% else %}
+		<div class="card border">
+	{% endifchanged %}
+	<div class="card-body">
+		{% if intern.photo %}
+			<img src="{{ intern.photo.url }}" class="img-thumbnail float-left mr-3" alt="Photo of {{ intern.public_name }}" height="200" width="200">
+		{% else %}
+		{% static 'outreachy-bot-200x200-avatar-1.png' as avatar1 %}
+		{% static 'outreachy-bot-200x200-avatar-2.png' as avatar2 %}
+		{% static 'outreachy-bot-200x200-avatar-3.png' as avatar3 %}
+		{% static 'outreachy-bot-200x200-avatar-4.png' as avatar4 %}
+		<img src='{% cycle avatar1 avatar2 avatar3 avatar4 as avatar %}' class="img-thumbnail float-left mr-3" height="200" width="200" alt="Default avatar for {{ intern.public_name }}">
+		{% endif %}
+		<div class="card-text">
+			<h4 class="mt-0">
+			{{ intern.public_name }}{% if not i.in_good_standing %} - [HIDDEN] - Not in good standing{% endif %}
+			</h4>
+			{% if user.is_staff %}
+				<div class="dropdown">
+					<button class="btn btn-secondary dropdown-toggle" type="button" id="AlumStandingMenu-{{ intern.account.username }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Alum Standing</button>
+					<div class="dropdown-menu" aria-labelledby="AlumStandingMenu-{{ intern.account.username }}">
+						<button class="dropdown-item" formaction="{% url 'alum-standing' round_slug=round.slug community_slug=i.project.project_round.community.slug project_slug=i.project.slug applicant_username=i.applicant.applicant.account.username standing='Good' %}">Good Standing</button>
+						<button class="dropdown-item" formaction="{% url 'alum-standing' round_slug=round.slug community_slug=i.project.project_round.community.slug project_slug=i.project.slug applicant_username=i.applicant.applicant.account.username standing='Failed' %}">Failed</button>
+					</div>
+				</div>
+				<BR>
+			{% endif %}
+			<div class="container">
+				{% if intern.blog_url %}
+					<a href="{{ intern.blog_url }}"><img src="{% static 'link-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="Blog"></a>
+				{% endif %}
+				{% if intern.twitter_url %}
+					<a href="{{ intern.twitter_url }}"><img src="{% static 'Twitter/Twitter_Social_Icon_Circle_Color-32px.png' %}" class="mx-1" alt="Twitter"></a>
+				{% endif %}
+				{% if intern.github_url %}
+					<a href="{{ intern.github_url }}"><img src="{% static 'GitHub/PNG/GitHub-Mark-32px.png' %}" class="mx-1" alt="GitHub"></a>
+				{% endif %}
+				{% if intern.gitlab_url %}
+					<a href="{{ intern.gitlab_url }}"><img src="{% static 'GitLab/gitlab-logo-square-32px.png' %}" class="mx-1" alt="GitLab"></a>
+				{% endif %}
+			</div>
+			{% if intern.pronouns_public %}
+				<BR>Pronouns: {{ intern.get_pronouns_html|safe }}<BR>
+			{% endif %}
+			{% if intern.location %}
+				Location: {{ intern.location }}<BR>
+			{% endif %}
+			{% if intern.nick %}
+				IRC/Chat/Forum username: {{ intern.nick }}<BR>
+			{% endif %}
+			<BR>{{ i.project.project_round.community }} mentor(s): {{ i.mentor_names }}
+			<BR>Project: {{ i.project.short_title }}
+		</div>
+	</div>
+	</div>
+{% endwith %}
+{% endfor %}
+</form>
+
+<BR>
+<p>TWITTER, TWEET, RETWEET and the Twitter logo are trademarks of Twitter, Inc. or its affiliates.</p>
+<p>The GitLab logo and wordmark artwork are licensed under a <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a></p>
+<p>GITHUB®, the GITHUB® logo design, OCTOCAT® and the OCTOCAT® logo design are exclusive trademarks registered in the United States by GitHub, Inc.</p>
+{% endblock %}
