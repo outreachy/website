@@ -41,7 +41,7 @@ This week, we want Outreachy mentors and interns to review the original project 
 
 Make adjustments to the project goals to ensure you'll complete them before your internship ends. Outreachy organizers view the internship as more like a fellowship. As long as an intern is working full-time on a project, Outreachy organizers consider this a success. Outreachy internships should not be extended to meet a particular project goal. Interns are not required to continue working on their project after their internship ends. Some Outreachy interns do continue working as volunteers on their project, but it's completely optional.
 
-Week 8 Mentor & Intern Chat
+Week 7 Mentor & Intern Chat
 ---------------------------
 
 On {{ current_round.week_eight_chat_text_date }} UTC we will host a chat for both Outreachy interns and mentors:

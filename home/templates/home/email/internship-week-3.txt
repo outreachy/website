@@ -15,7 +15,7 @@ https://en.wikipedia.org/wiki/Rubber_duck_debugging
 
 Part of the reason many people find free and open source software development intimidating is because they need to work in the open. The positive part of working in the open is that community contributors reach out to each other on public forums to get help when they're stuck. You can often learn a lot from watching two experienced contributors work through a tough problem together.
 
-Week 4 Mentor & Intern Chat
+Week 3 Mentor & Intern Chat
 ---------------------------
 
 On {{ current_round.week_four_chat_text_date }} UTC we will host a chat for both Outreachy interns and mentors. We encourage you to briefly share something you're currently stuck on. That includes mentors! We'll talk about different ways to get unstuck and how to seek help.

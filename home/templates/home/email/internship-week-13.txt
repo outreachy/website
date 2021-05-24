@@ -20,7 +20,7 @@ We'd like interns and mentors to take time this week to reflect on the progress 
 
 You can always provide private feedback to the Outreachy organizers in the final feedback form. Final internship feedback will be due on {{ current_round.finalfeedback }}. The form will open 1 week before the due date. You'll receive an email reminder to fill it out.
 
-Week 14 Mentor & Intern Chat
+Week 13 Mentor & Intern Chat
 ----------------------------
 
 On {{ current_round.week_fourteen_chat_text_date }} UTC we will host a chat for Outreachy interns and mentors:

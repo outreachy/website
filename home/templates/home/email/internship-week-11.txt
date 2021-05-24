@@ -28,7 +28,7 @@ We also have a list of people who have volunteered to chat with interns! They ar
 {{ request.scheme }}://{{ request.get_host }}{% url 'informal-chat-contacts' %}
 
 
-Week 12 Mentor & Intern Chat
+Week 11 Mentor & Intern Chat
 ----------------------------
 
 On {{ current_round.week_twelve_chat_text_date }} UTC we will host a chat for Outreachy interns, alums, and mentors:

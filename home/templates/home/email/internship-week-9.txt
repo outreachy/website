@@ -24,7 +24,7 @@ It's important to talk to your mentor, coordinators, and Outreachy organizers ab
 
 Your goal for this week's blog post is to write a post about what direction you want your career to go. You may want to wait to publish the post until after you participate in next week's chat, since your goals might change!
 
-Week 10 Mentor & Intern Chat
+Week 9 Mentor & Intern Chat
 ----------------------------
 
 For this chat, we're also inviting past Outreachy interns to participate!

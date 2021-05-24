@@ -25,7 +25,7 @@ As you write this blog post, think about what terms or concepts were confusing t
 
 See the detailed section below for more prompts.
 
-Week 6 Mentor & Intern Chat
+Week 5 Mentor & Intern Chat
 ---------------------------
 
 On {{ current_round.week_six_chat_text_date }} UTC we will host a chat for both Outreachy interns, alums, and mentors.
