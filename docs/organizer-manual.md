@@ -571,6 +571,51 @@ Near the end of the chat, I say, "I want to make sure we can hear from some of t
 
 Chats typically take 1 hour.
 
+# Week 1: Intro chat
+
+The role of the Outreachy organizers in this chat is to be encouraging and open. We want to make Outreachy intern feel comfortable sharing their doubts and concerns. We want to encourage them to open up so they don't feel alone, and so that they can connect to other interns who share their experiences.
+
+Make note of any interns that say they have not been in contact with their mentors. Also note any other issues that should be addressed. Follow up with the interns and their mentors via email.
+
+Opening question:
+```
+:question: How did your first day go? React with an emoji and a comment to let us know how you felt. :question:
+```
+
+Summary of topics from previous chats:
+
+```
+If anyone missed the chat, they can comment afterwards. I know the chat time might be inconvenient for some people.
+
+# Questions
+
+:question:  The questions asked on this chat were: :question: 
+
+1. How did your first day go? React with an emoji and a comment to let us know how you felt.
+2. Did you have any issues? If so, please contact your mentor, or an Outreachy organizer via DM or email organizers@outreachy.org
+3. Has your mentor been in contact? Have you scheduled a time to talk on the phone or video chat yet?
+4. Was there anything in particular you were nervous or anxious about?
+5. What are your hopes and expectations for the first two weeks of your internship?
+
+# Notes
+
+:note:  Summary of notes from the chat: :note: 
+
+Remember, you deserve this internship. :heart: You overcame a lot to make contributions during the application process. And you'll overcome a lot during your internship too! You got this! :muscle: 
+
+Your mentors are here to support you as you start working on your project. Please reach out to them about your doubts. No question is too silly or simple! If your mentor hasn't been in contact with you for the first 2 days of the internship, please let us know via email organizers@outreachy.org or DM to me or @**Anna e só**. Also contact us if your mentor hasn't scheduled a phone or video chat by the end of this week. We want to make sure you're supported. :handshake: 
+
+Don't work more than 40 hours a week. We don't want you to burn out! :fire: 
+
+If you're impacted by COVID-19, you're only expected to work 30 hours a week. And Outreachy organizers are very understanding about the pandemic situations, so please do reach out if 30 hours a week is too much for you, and we can work out a solution. :mask: 
+
+If you're queer or LGBTQ+, there's a private chat channel for queer Outreachy participants. Please DM me if you want an invitation. :rainbow: 
+
+Please share your joy, hobbies, and triumphs in the #**The Joy Channel**! It's always nice to see pictures of pets or plants there. :fireworks: :plant: :dog: :cat: :painting: 
+
+If you need any help, you can ask on #**help** , DM @**Anna e só**  or me, or send an email to organizers@outreachy.org
+```
+
 # Week 6: Conferences
 
 Topics:
