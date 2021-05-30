@@ -4111,7 +4111,7 @@ class InternSelection(AugmentDeadlines, models.Model):
                 return self.PAY
             else:
                 return self.EXTEND
-        except InitialMentorFeedback.DoesNotExist:
+        except MidpointMentorFeedback.DoesNotExist:
             return self.MISSING
 
     def get_intern_midpoint_feedback_status(self):
@@ -4133,7 +4133,7 @@ class InternSelection(AugmentDeadlines, models.Model):
                 return self.PAY
             else:
                 return self.EXTEND
-        except InitialMentorFeedback.DoesNotExist:
+        except FinalMentorFeedback.DoesNotExist:
             return self.MISSING
 
     def get_intern_final_feedback_status(self):
