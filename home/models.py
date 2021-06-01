@@ -4118,7 +4118,7 @@ class InternSelection(AugmentDeadlines, models.Model):
         try:
             if self.midpointinternfeedback:
                 return self.SUBMITTED
-        except InitialInternFeedback.DoesNotExist:
+        except MidpointInternFeedback.DoesNotExist:
             return self.MISSING
 
     def get_mentor_final_feedback_status(self):
@@ -4140,7 +4140,7 @@ class InternSelection(AugmentDeadlines, models.Model):
         try:
             if self.finalinternfeedback:
                 return self.SUBMITTED
-        except InitialInternFeedback.DoesNotExist:
+        except FinalInternFeedback.DoesNotExist:
             return self.MISSING
 
     def __str__(self):
