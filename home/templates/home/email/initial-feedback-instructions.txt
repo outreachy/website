@@ -22,16 +22,20 @@ We encourage mentors and interns to provide honest feedback on how the internshi
 Feedback Questions
 ---
 
+Mentors and interns will be asked:
+ * Do mentor(s) answer the intern's questions within 10 hours?
+ * Does the intern ask mentor(s) questions when stuck for more than 1 to 3 hours?
+ * Do mentor(s) offer more support if the intern is stuck?
+ * Do mentor(s) meet privately with the intern?
+ * Do mentor(s) meet with the intern over phone or video chat?
+ * Has the intern recently missed more than 2 meetings?
+ * Do mentor(s) and the intern talk about project progress at least 3 days a week?
+ * Has the intern created a blog?
+
 Mentors will be asked:
- * Has your intern been in contact to discuss how to approach their first tasks?
- * Has your intern been asking questions about their first tasks?
- * Has your intern been active on public project channels, such as the community's chat, forums, issue tracker, mailing list, etc?
- * Have you provided documentation or other resources to help onboard your intern?
- * How often do you have a real-time chat, video conference, or phone conversation to check in with your intern's progress on tasks?
  * What was the last date you were in contact with your intern?
- * On average, how long does it take for your intern to respond to your questions or feedback?
- * On average, how long does it take for you to respond to your intern's questions or requests for feedback?
  * Please provide a paragraph describing your intern's progress on establishing communication with you, connecting to your FOSS community, and ramping up on their first tasks. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.
+ * Please provide a paragraph describing what support you are providing as an Outreachy mentor. This will be shared with Outreachy organizers and your community coordinator.
  * Do you believe your Outreachy intern is putting in a full-time, 40 hours a week effort into the internship?
  * Should your Outreachy intern be paid the initial ${{ current_round.initialpayment }} payment?
  * Questions about whether the intern needs an internship extension.
@@ -39,16 +43,10 @@ Mentors will be asked:
  * (The questions about internship extensions and terminations aren't needed for most internships, but our form asks them of all mentors.)
 
 Interns will be asked:
- * Have you been in contact with your mentor to discuss how to approach your first tasks?
- * Have you been asking questions about your first tasks?
- * Have you been active on public project channels, such as the community's chat, forums, issue tracker, mailing list, etc?
- * Has your mentor provided documentation or other resources to help you learn more about your community and your first tasks?
- * How often does your mentor have a real-time chat, video conference, or phone conversation to check in with your progress on tasks?
  * What was the last date you were in contact with your mentor?
- * On average, how long does it take for you to respond to your mentor's questions or feedback?
- * On average, how long does it take for your mentor to respond to your questions or requests for feedback?
- * Questions about how your mentor is supporting you
- * Questions about your internship effort
+ * What is the average number of hours per week the intern spends on their Outreachy internship?
+ * Please provide a paragraph describing how your mentor has (or has not) been helping you. This information will only be seen by Outreachy mentors. We want you to be honest with us if you are having trouble with your mentor, so we can help you get a better internship experience.
+ * Please provide a paragraph describing your progress on establishing communication with your mentor, and ramping up on your first tasks. This information will only be seen by Outreachy organizers. If you are having any difficulties or facing any barriers, please let us know, so we can help you.
 
 Initial Feedback Success Metrics
 ---

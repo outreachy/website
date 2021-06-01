@@ -27,8 +27,8 @@ from .models import FinalInternFeedback
 from .models import FinalMentorFeedback
 from .models import InformalChatContact
 from .models import InternSelection
-from .models import InitialMentorFeedback
-from .models import InitialInternFeedback
+from .models import InitialMentorFeedbackV2
+from .models import InitialInternFeedbackV2
 from .models import MidpointMentorFeedback
 from .models import MidpointInternFeedback
 from .models import MentorApproval
@@ -575,13 +575,13 @@ class SignedContractAdmin(admin.ModelAdmin):
             'date_signed',
             )
 
-class InitialMentorFeedbackInline(admin.StackedInline):
-    model = InitialMentorFeedback
+class InitialMentorFeedbackV2Inline(admin.StackedInline):
+    model = InitialMentorFeedbackV2
     can_delete = False
     verbose_name_plural = 'Mentor submitted initial feedback forms'
 
-class InitialInternFeedbackInline(admin.StackedInline):
-    model = InitialInternFeedback
+class InitialInternFeedbackV2Inline(admin.StackedInline):
+    model = InitialInternFeedbackV2
     can_delete = False
     verbose_name_plural = 'Intern submitted initial feedback forms'
 
@@ -630,7 +630,7 @@ class InternSelectionAdmin(reversion.admin.VersionAdmin):
             'project',
             'intern_contract',
             )
-    inlines = (InitialMentorFeedbackInline, InitialInternFeedbackInline, MidpointMentorFeedbackInline, MidpointInternFeedbackInline, FinalMentorFeedbackInline, FinalInternFeedbackInline)
+    inlines = (InitialMentorFeedbackV2Inline, InitialInternFeedbackV2Inline, MidpointMentorFeedbackInline, MidpointInternFeedbackInline, FinalMentorFeedbackInline, FinalInternFeedbackInline)
 
 class FeedbackAdmin(reversion.admin.VersionAdmin):
     list_display = (

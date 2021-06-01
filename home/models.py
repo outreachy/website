@@ -3932,8 +3932,8 @@ class InternSelection(AugmentDeadlines, models.Model):
         if not self.initial_feedback_opens.has_passed():
             return False
         try:
-            return self.initialmentorfeedback.can_edit()
-        except InitialMentorFeedback.DoesNotExist:
+            return self.initialmentorfeedbackv2.can_edit()
+        except InitialMentorFeedbackV2.DoesNotExist:
             return True
 
     def is_initial_feedback_on_intern_past_due(self):
@@ -3945,8 +3945,8 @@ class InternSelection(AugmentDeadlines, models.Model):
         if not self.initial_feedback_opens.has_passed():
             return False
         try:
-            return self.initialinternfeedback.can_edit()
-        except InitialInternFeedback.DoesNotExist:
+            return self.initialinternfeedbackv2.can_edit()
+        except InitialInternFeedbackV2.DoesNotExist:
             return True
 
     def is_midpoint_feedback_on_intern_open(self):
@@ -4079,24 +4079,24 @@ class InternSelection(AugmentDeadlines, models.Model):
     TERMINATE = 'TER'
     def get_mentor_initial_feedback_status(self):
         try:
-            if self.initialmentorfeedback.organizer_payment_approved:
+            if self.initialmentorfeedbackv2.organizer_payment_approved:
                 return self.PAID
 
-            actions_requested = self.initialmentorfeedback.actions_requested
+            actions_requested = self.initialmentorfeedbackv2.actions_requested
             if actions_requested == BaseMentorFeedback.TERMINATE_PAY or actions_requested == BaseMentorFeedback.TERMINATE_NO_PAY:
                 return self.TERMINATE
             elif actions_requested == BaseMentorFeedback.PAY_AND_CONTINUE:
                 return self.PAY
             else:
                 return self.EXTEND
-        except InitialMentorFeedback.DoesNotExist:
+        except InitialMentorFeedbackV2.DoesNotExist:
             return self.MISSING
 
     def get_intern_initial_feedback_status(self):
         try:
-            if self.initialinternfeedback:
+            if self.initialinternfeedbackv2:
                 return self.SUBMITTED
-        except InitialInternFeedback.DoesNotExist:
+        except InitialInternFeedbackV2.DoesNotExist:
             return self.MISSING
 
     def get_mentor_midpoint_feedback_status(self):
@@ -4401,6 +4401,71 @@ class InitialMentorFeedback(BaseMentorFeedback):
         if requested_extension > 0:
             self.extension_date = self.intern_selection.round().initialfeedback + datetime.timedelta(weeks=requested_extension)
 
+class InitialMentorFeedbackV2(BaseMentorFeedback):
+    # XXX - Make sure to change the questions in
+    # home/templates/home/email/initial-feedback-instructions.txt
+    # home/templates/home/initialmentorfeedbackv2_form.html
+    # if you change these verbose names.
+
+    # 1. Clearing up doubts
+    mentor_answers_questions = models.BooleanField(verbose_name="Do you (or a co-mentor) answer the intern's questions within 10 hours?")
+    intern_asks_questions = models.BooleanField(verbose_name="Does the intern ask you (or a co-mentor) questions when stuck for more than 1 to 3 hours?")
+    mentor_support_when_stuck = models.BooleanField(verbose_name="Do you (or a co-mentor) offer more support if the intern is stuck?")
+
+    # 2. Intern and mentor meetings
+    meets_privately = models.BooleanField(verbose_name="Do you (or a co-mentor) meet privately with the intern?")
+    meets_over_phone_or_video_chat = models.BooleanField(verbose_name="Do you (or a co-mentor) meet with the intern over phone or video chat?")
+    intern_missed_meetings = models.BooleanField(verbose_name="Has the intern recently missed more than 2 meetings?")
+
+    # 3. Project progress
+    talk_about_project_progress = models.BooleanField(verbose_name="Does the intern and you (or a co-mentor) talk about project progress at least 3 days a week?")
+    blog_created = models.BooleanField(verbose_name="Has the intern created a blog?")
+
+    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your intern's progress on establishing communication with you, connecting to your FOSS community, and ramping up on their first tasks. This will only be shown to Outreachy organizers, your community coordinators, and the Software Freedom Conservancy accounting staff.")
+
+    # This data is set in clean() to be used for intern payment authorization JSON export
+    payment_approved = models.BooleanField(verbose_name="Should your Outreachy intern be paid the initial $1,000 payment?", help_text="Please base your answer on whether your intern has put in a full-time, 40 hours a week effort. They should have established communication with you and other mentors, and have started learning how to tackle their first tasks. If you are going to ask for an internship extension, please say no to this question.")
+
+    # This data is set in clean() to be used for intern payment authorization JSON export
+    extension_date = models.DateField(help_text="If you want to extend the internship, please pick a date when you will be asked to update your intern's initial feedback and authorize payment. Internships can be extended for up to five weeks. We don't recommend extending an internship for more than 1 week at initial feedback. Please leave this field blank if you are not asking for an extension.", blank=True, null=True)
+
+    ACTION_CHOICES = (
+        (BaseMentorFeedback.PAY_AND_CONTINUE, 'Pay the initial intern stipend'),
+        (BaseMentorFeedback.EXT_1_WEEK, 'Delay payment - extend the internship 1 week total'),
+        (BaseMentorFeedback.EXT_2_WEEK, 'Delay payment - extend the internship 2 weeks total'),
+        (BaseMentorFeedback.EXT_3_WEEK, 'Delay payment - extend the internship 3 weeks total'),
+        (BaseMentorFeedback.EXT_4_WEEK, 'Delay payment - extend the internship 4 weeks total'),
+        (BaseMentorFeedback.EXT_5_WEEK, 'Delay payment - extend the internship 5 weeks total'),
+        (BaseMentorFeedback.TERMINATE_PAY, 'Terminate the internship contract, and pay the initial intern stipend'),
+        (BaseMentorFeedback.TERMINATE_NO_PAY, 'Terminate the internship contract, and do NOT pay the initial intern stipend'),
+        (BaseMentorFeedback.DONT_KNOW, "I don't know what action to recommend, please advise"),
+    )
+    actions_requested = models.CharField(max_length=9, choices=ACTION_CHOICES, default=BaseMentorFeedback.PAY_AND_CONTINUE, verbose_name="What actions are you requesting Outreachy organizers to take, based on your feedback?")
+
+    def can_edit(self):
+        if not self.allow_edits:
+            return False
+
+        # XXX: I guess we open the feedback form at 4pm UTC?
+        if self.intern_selection.initial_feedback_opens.has_passed():
+            return True
+        return False
+
+    def clean(self):
+        # Note - we'd like to be able to check that mentors didn't ask
+        # didn't ask to decrease the internship extension.
+        # E.g. The intern had a 2 week total extension,
+        # and the mentor chose the option for a 1 week total extension.
+        # However, if we do that, Outreachy organizers
+        # cannot change the internship dates through the Django admin interface.
+
+        # Set historic fields used for JSON export of internship payment authorization
+        self.set_payment_for_json_export()
+        self.set_termination_request_for_json_export()
+        requested_extension = self.set_and_return_extension_for_json_export()
+        if requested_extension > 0:
+            self.extension_date = self.intern_selection.round().initialfeedback + datetime.timedelta(weeks=requested_extension)
+
 class BaseInternFeedback(BaseFeedback):
     last_contact = models.DateField(verbose_name="What was the last date you were in contact with your mentor?")
 
@@ -4412,7 +4477,9 @@ class BaseInternFeedback(BaseFeedback):
     HOURS_30 = '30H'
     HOURS_35 = '35H'
     HOURS_40 = '40H'
+    HOURS_45 = '45H'
     HOURS_50 = '50H'
+    HOURS_55 = '55H'
     HOURS_60 = '60H'
     WORK_HOURS_CHOICES = (
         (HOURS_5, '5 hours'),
@@ -4423,7 +4490,9 @@ class BaseInternFeedback(BaseFeedback):
         (HOURS_30, '30 hours'),
         (HOURS_35, '35 hours'),
         (HOURS_40, '40 hours'),
+        (HOURS_45, '45 hours'),
         (HOURS_50, '50 hours'),
+        (HOURS_55, '55 hours'),
         (HOURS_60, '60 hours'),
     )
     hours_worked = models.CharField(max_length=3, choices=WORK_HOURS_CHOICES, verbose_name="What is the average number of hours per week you spend on your Outreachy internship?", help_text="Include time you spend researching questions, communicating with your mentor and the community, reading about the project and the community, working on skills you need in order to complete your tasks, and working on the tasks themselves. Please be honest about the number of hours you are putting in.")
@@ -4510,6 +4579,36 @@ class InitialInternFeedback(BaseInternFeedback):
             return True
         return False
 
+class InitialInternFeedbackV2(BaseInternFeedback):
+    # XXX - Make sure to change the questions in
+    # home/templates/home/email/initial-feedback-instructions.txt
+    # if you change these verbose names.
+
+    # 1. Clearing up doubts
+    mentor_answers_questions = models.BooleanField(verbose_name="Do your mentor(s) answer your questions within 10 hours?")
+    intern_asks_questions = models.BooleanField(verbose_name="Do you ask your mentor(s) questions when stuck for more than 1 to 3 hours?")
+    mentor_support_when_stuck = models.BooleanField(verbose_name="Do your mentor(s) offer more support if you are stuck?")
+
+    # 2. Intern and mentor meetings
+    meets_privately = models.BooleanField(verbose_name="Do your mentor(s) meet privately with you?")
+    meets_over_phone_or_video_chat = models.BooleanField(verbose_name="Do your mentor(s) meet with you over phone or video chat?")
+    intern_missed_meetings = models.BooleanField(verbose_name="Have you recently missed more than 2 meetings with your mentor(s)?")
+
+    # 3. Project progress
+    talk_about_project_progress = models.BooleanField(verbose_name="Do you and your mentor(s) talk about project progress at least 3 days a week?")
+    blog_created = models.BooleanField(verbose_name="Have you created a blog?")
+
+    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your progress on establishing communication with your mentor, and ramping up on your first tasks. This information will only be seen by Outreachy organizers. If you are having any difficulties or facing any barriers, please let us know, so we can help you.")
+
+    def can_edit(self):
+        if not self.allow_edits:
+            return False
+
+        if self.intern_selection.initial_feedback_opens.has_passed():
+            return True
+        return False
+
+
 class MidpointMentorFeedback(BaseMentorFeedback):
     # XXX - Make sure to change the questions in
     # home/templates/home/email/midpoint-feedback-instructions.txt
@@ -4595,7 +4694,7 @@ class MidpointMentorFeedback(BaseMentorFeedback):
         return False
 
     def clean(self):
-        # See comments in class InitialMentorFeedback's clean method. Same applies here.
+        # See comments in class InitialMentorFeedbackV2's clean method. Same applies here.
         self.set_payment_for_json_export()
         self.set_termination_request_for_json_export()
         requested_extension = self.set_and_return_extension_for_json_export()
@@ -4795,7 +4894,7 @@ class FinalMentorFeedback(BaseMentorFeedback):
         return False
 
     def clean(self):
-        # See comments in class InitialMentorFeedback's clean method. Same applies here.
+        # See comments in class InitialMentorFeedbackV2's clean method. Same applies here.
         self.set_payment_for_json_export()
         self.set_termination_request_for_json_export()
         requested_extension = self.set_and_return_extension_for_json_export()

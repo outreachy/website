@@ -516,7 +516,7 @@ class MentorRelationshipFactory(factory.django.DjangoModelFactory):
 
 class InitialMentorFeedbackFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = models.InitialMentorFeedback
+        model = models.InitialMentorFeedbackV2
         django_get_or_create = ('intern_selection',)
 
     intern_selection = factory.SubFactory(
@@ -527,18 +527,19 @@ class InitialMentorFeedbackFactory(factory.django.DjangoModelFactory):
     allow_edits = False
     ip_address = factory.Faker('ipv4_public')
 
-    in_contact = True
-    asking_questions = True
-    active_in_public = True
-    provided_onboarding = True
-
-    checkin_frequency = factory.Iterator(models.InitialMentorFeedback.CHECKIN_FREQUENCY_CHOICES, getter=lambda c: c[0])
-
+    mentor_answers_questions = True
+    intern_asks_questions = True
+    mentor_support_when_stuck = True
     last_contact = factory.Faker('past_date')
 
-    intern_response_time = factory.Iterator(models.InitialMentorFeedback.RESPONSE_TIME_CHOICES, getter=lambda c: c[0])
-    mentor_response_time = factory.Iterator(models.InitialMentorFeedback.RESPONSE_TIME_CHOICES, getter=lambda c: c[0])
+    meets_privately = True
+    meets_over_phone_or_video_chat = True
+    intern_missed_meetings = False
 
+    talk_about_project_progress = True
+    blog_created = True
+
+    mentors_report = factory.Faker('paragraph')
     progress_report = factory.Faker('paragraph')
 
     full_time_effort = True

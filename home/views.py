@@ -69,8 +69,8 @@ from .models import get_deadline_date_for
 from .models import InformalChatContact
 from .models import InternSelection
 from .models import InitialApplicationReview
-from .models import InitialMentorFeedback
-from .models import InitialInternFeedback
+from .models import InitialMentorFeedbackV2
+from .models import InitialInternFeedbackV2
 from .models import MidpointMentorFeedback
 from .models import MidpointInternFeedback
 from .models import FinalMentorFeedback
@@ -2756,27 +2756,33 @@ def blog_2021_03_30_contribution_period_open(request):
     return render(request, 'home/blog/2021-03-30-contribution-period-open.html')
 
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
-    form_class = modelform_factory(InitialMentorFeedback,
+    form_class = modelform_factory(InitialMentorFeedbackV2,
             fields=(
-                'provided_onboarding',
-                'checkin_frequency',
-                'mentor_response_time',
-                'mentors_report',
-                'in_contact',
-                'asking_questions',
-                'active_in_public',
+                'mentor_answers_questions',
+                'intern_asks_questions',
+                'mentor_support_when_stuck',
                 'last_contact',
-                'intern_response_time',
+                'meets_privately',
+                'meets_over_phone_or_video_chat',
+                'intern_missed_meetings',
+                'talk_about_project_progress',
+                'blog_created',
+                'mentors_report',
                 'progress_report',
                 'full_time_effort',
                 'actions_requested',
             ),
             field_classes = {
+                'mentor_answers_questions': RadioBooleanField,
+                'intern_asks_questions': RadioBooleanField,
+                'mentor_support_when_stuck': RadioBooleanField,
+                'meets_privately': RadioBooleanField,
+                'meets_over_phone_or_video_chat': RadioBooleanField,
+                'intern_missed_meetings': RadioBooleanField,
+                'talk_about_project_progress': RadioBooleanField,
+                'blog_created': RadioBooleanField,
                 'in_contact': RadioBooleanField,
-                'asking_questions': RadioBooleanField,
-                'active_in_public': RadioBooleanField,
                 'provided_onboarding': RadioBooleanField,
-                'share_mentor_feedback_with_community_coordinator': RadioBooleanField,
                 'full_time_effort': RadioBooleanField,
             },
         )
@@ -2796,12 +2802,12 @@ class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMi
             raise PermissionDenied("{} is not an intern in good standing".format(self.kwargs['username']))
 
         try:
-            feedback = InitialMentorFeedback.objects.get(intern_selection=internship)
+            feedback = InitialMentorFeedbackV2.objects.get(intern_selection=internship)
             if not feedback.can_edit():
                 raise PermissionDenied("This feedback is already submitted and can't be updated right now.")
             return feedback
-        except InitialMentorFeedback.DoesNotExist:
-            return InitialMentorFeedback(intern_selection=internship)
+        except InitialMentorFeedbackV2.DoesNotExist:
+            return InitialMentorFeedbackV2(intern_selection=internship)
 
     def form_valid(self, form):
         feedback = form.save(commit=False)
@@ -2811,16 +2817,17 @@ class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMi
         return redirect(reverse('dashboard') + '#feedback')
 
 class InitialInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
-    form_class = modelform_factory(InitialInternFeedback,
+    form_class = modelform_factory(InitialInternFeedbackV2,
             fields=(
-                'in_contact',
-                'asking_questions',
-                'active_in_public',
-                'provided_onboarding',
-                'checkin_frequency',
+                'mentor_answers_questions',
+                'intern_asks_questions',
+                'mentor_support_when_stuck',
+                'meets_privately',
+                'meets_over_phone_or_video_chat',
+                'intern_missed_meetings',
+                'talk_about_project_progress',
+                'blog_created',
                 'last_contact',
-                'intern_response_time',
-                'mentor_response_time',
                 'mentor_support',
                 'share_mentor_feedback_with_community_coordinator',
                 'hours_worked',
@@ -2828,10 +2835,14 @@ class InitialInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMi
                 'progress_report',
                 ),
             field_classes = {
-                'in_contact': RadioBooleanField,
-                'asking_questions': RadioBooleanField,
-                'active_in_public': RadioBooleanField,
-                'provided_onboarding': RadioBooleanField,
+                'mentor_answers_questions': RadioBooleanField,
+                'intern_asks_questions': RadioBooleanField,
+                'mentor_support_when_stuck': RadioBooleanField,
+                'meets_privately': RadioBooleanField,
+                'meets_over_phone_or_video_chat': RadioBooleanField,
+                'intern_missed_meetings': RadioBooleanField,
+                'talk_about_project_progress': RadioBooleanField,
+                'blog_created': RadioBooleanField,
                 'share_mentor_feedback_with_community_coordinator': RadioBooleanField,
                 },
             )
@@ -2841,12 +2852,12 @@ class InitialInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMi
             raise PermissionDenied("The account for {} is not associated with an intern in good standing".format(self.request.user.username))
 
         try:
-            feedback = InitialInternFeedback.objects.get(intern_selection=self.internship)
+            feedback = InitialInternFeedbackV2.objects.get(intern_selection=self.internship)
             if not feedback.can_edit():
                 raise PermissionDenied("This feedback is already submitted and can't be updated right now.")
             return feedback
-        except InitialInternFeedback.DoesNotExist:
-            return InitialInternFeedback(intern_selection=self.internship)
+        except InitialInternFeedbackV2.DoesNotExist:
+            return InitialInternFeedbackV2(intern_selection=self.internship)
 
     def get_context_data(self, **kwargs):
         context = super(InitialInternFeedbackUpdate, self).get_context_data(**kwargs)
@@ -2886,8 +2897,8 @@ def initial_mentor_feedback_export_view(request, round_slug):
     dictionary_list = []
     for i in interns:
         try:
-            dictionary_list.append(export_feedback(i.initialmentorfeedback))
-        except InitialMentorFeedback.DoesNotExist:
+            dictionary_list.append(export_feedback(i.initialmentorfeedbackv2))
+        except InitialMentorFeedbackV2.DoesNotExist:
             continue
     response = JsonResponse(dictionary_list, safe=False)
     response['Content-Disposition'] = 'attachment; filename="' + round_slug + '-initial-feedback.json"'

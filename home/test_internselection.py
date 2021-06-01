@@ -183,14 +183,15 @@ class InternSelectionTestCase(TestCase):
     @staticmethod
     def _mentor_feedback_form(internselection, **kwargs):
         defaults = {
-            'in_contact': True,
-            'asking_questions': True,
-            'active_in_public': True,
-            'provided_onboarding': True,
-            'checkin_frequency': models.InitialMentorFeedback.ONCE_WEEKLY,
+            'mentor_answers_questions': True,
+            'intern_asks_questions': True,
+            'mentor_support_when_stuck': True,
+            'meets_privately': True,
+            'meets_over_phone_or_video_chat': True,
+            'intern_missed_meetings': False,
+            'talk_about_project_progress': True,
+            'blog_created': True,
             'last_contact': internselection.initial_feedback_opens,
-            'intern_response_time': models.InitialMentorFeedback.HOURS_12,
-            'mentor_response_time': models.InitialMentorFeedback.HOURS_12,
             'progress_report': 'Everything is fine.',
             'mentors_report': 'I am very supportive',
             'full_time_effort': True,
@@ -239,7 +240,7 @@ class InternSelectionTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
-        feedback = internselection.initialmentorfeedback
+        feedback = internselection.initialmentorfeedbackv2
 
         # Add in the fields automatically set by the action the mentor requested
         answers['payment_approved'] = True
@@ -270,7 +271,7 @@ class InternSelectionTestCase(TestCase):
                 self.assertEqual(response.status_code, 302)
 
                 # will raise DoesNotExist if the view didn't create this
-                feedback = internselection.initialmentorfeedback
+                feedback = internselection.initialmentorfeedbackv2
 
                 # Add in the fields automatically set by the action the mentor requested
                 if action == models.BaseMentorFeedback.TERMINATE_PAY:
@@ -302,7 +303,7 @@ class InternSelectionTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
-        feedback = internselection.initialmentorfeedback
+        feedback = internselection.initialmentorfeedbackv2
 
         # Add in the fields automatically set by the action the mentor requested
         answers['payment_approved'] = False
@@ -334,7 +335,7 @@ class InternSelectionTestCase(TestCase):
                 self.assertEqual(response.status_code, 302)
 
                 # will raise DoesNotExist if the view didn't create this
-                feedback = internselection.initialmentorfeedback
+                feedback = internselection.initialmentorfeedbackv2
 
                 answers['payment_approved'] = False
                 answers['request_extension'] = True
@@ -389,7 +390,7 @@ class InternSelectionTestCase(TestCase):
         internselection = models.InternSelection.objects.get(pk=internselection.pk)
 
         # will raise DoesNotExist if the view destroyed this feedback
-        feedback = internselection.initialmentorfeedback
+        feedback = internselection.initialmentorfeedbackv2
 
         for key, expected in answers.items():
             self.assertEqual(getattr(feedback, key), expected)
@@ -404,19 +405,20 @@ class InternSelectionTestCase(TestCase):
     @staticmethod
     def _intern_feedback_form(internselection, **kwargs):
         defaults = {
-            'in_contact': True,
-            'asking_questions': True,
-            'active_in_public': True,
-            'provided_onboarding': True,
-            'checkin_frequency': models.InitialInternFeedback.ONCE_WEEKLY,
+            'mentor_answers_questions': True,
+            'intern_asks_questions': True,
+            'mentor_support_when_stuck': True,
+            'meets_privately': True,
+            'meets_over_phone_or_video_chat': True,
+            'intern_missed_meetings': False,
+            'talk_about_project_progress': True,
+            'blog_created': True,
             'last_contact': internselection.initial_feedback_opens,
-            'intern_response_time': models.InitialInternFeedback.HOURS_12,
-            'mentor_response_time': models.InitialInternFeedback.HOURS_12,
             'mentor_support': 'My mentor is awesome.',
-            'hours_worked': models.InitialInternFeedback.HOURS_40,
+            'share_mentor_feedback_with_community_coordinator': True,
+            'hours_worked': models.InitialInternFeedbackV2.HOURS_40,
             'time_comments': '',
             'progress_report': 'Everything is fine.',
-            'share_mentor_feedback_with_community_coordinator': True,
         }
         defaults.update(kwargs)
         return defaults
@@ -446,7 +448,7 @@ class InternSelectionTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
-        feedback = internselection.initialinternfeedback
+        feedback = internselection.initialinternfeedbackv2
 
         for key, expected in answers.items():
             self.assertEqual(getattr(feedback, key), expected)
@@ -634,7 +636,7 @@ class InternSelectionTestCase(TestCase):
             'intern_contribution_revision_time': models.MidpointInternFeedback.DAYS_2,
             'last_contact': internselection.midpoint_feedback_opens,
             'mentor_support': 'My mentor is awesome.',
-            'hours_worked': models.InitialInternFeedback.HOURS_40,
+            'hours_worked': models.InitialInternFeedbackV2.HOURS_40,
             'time_comments': '',
             'progress_report': 'Everything is fine.',
             'share_mentor_feedback_with_community_coordinator': True,

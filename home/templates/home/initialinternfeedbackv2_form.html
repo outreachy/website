@@ -34,29 +34,23 @@ Initial internship feedback
 <form method="post" action="">
 {% csrf_token %}
 {% for field in form.visible_fields %}
-	{% if 'What is the average number of hours' in field.label_tag %}
-		<h2>Your Internship Efforts</h2>
+	{% if 'Do your mentor(s) answer your questions' in field.label_tag %}
+		<hr>
+		<h2>1. Clearing up doubts</h2>
+	{% elif 'Do your mentor(s) meet privately with you' in field.label_tag %}
+		<hr>
+		<h2>2. Intern and mentor meetings</h2>
+	{% elif 'Do you and your mentor(s) talk about project progress' in field.label_tag %}
+		<hr>
+		<h2>3. Tracking project progress</h2>
+	{% elif 'What was the last date you were in contact with your mentor' in field.label_tag %}
+		<hr>
+		<h2>4. Mentor support</h2>
+	{% elif 'What is the average number of hours per week' in field.label_tag %}
+		<hr>
+		<h2>5. Intern progress</h2>
 	{% endif %}
-	{% if 'Have you been in contact' in field.label_tag %}
-		<h2>Your Communication</h2>
-	{% endif %}
-	{% if 'Has your mentor provided documentation' in field.label_tag %}
-		<h2>Mentor Support</h2>
-	{% endif %}
-	{% if 'On average' in field.label_tag %}
-		<div class="form-group card">
-			{{ field.errors }}
-			<div class = "card-header">
-				<label for="{{ field.id_for_label }}">{{ field.label|safe }}</label>
-			</div>
-			<div class = "card-body">
-				{{ field }}
-			</div>
-			{% if field.help_text %}
-				<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
-			{% endif %}
-		</div>
-	{% elif 'average number of hours per week' in field.label_tag %}
+	{% if 'average number of hours per week' in field.label_tag %}
 		{% include 'home/snippet/covid-19-time-policy.html' %}
 		<div class="form-group card">
 			{{ field.errors }}

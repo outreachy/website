@@ -6,7 +6,7 @@ Initial mentor feedback
 {% endblock %}
 
 {% block content %}
-<h1>Initial feedback on {{ initialmentorfeedback.intern_selection.applicant.applicant.public_name }}</h1>
+<h1>Initial feedback on {{ initialmentorfeedbackv2.intern_selection.applicant.applicant.public_name }}</h1>
 
 <p>Outreachy organizers collect intern feedback from mentors three times during the Outreachy internship.</p>
 
@@ -37,45 +37,43 @@ Initial mentor feedback
     </div>
     <div class="card-body">
         <p class="card-text">
-	<b>{{ initialmentorfeedback.intern_selection.applicant.applicant.public_name }}</b> is the intern you are giving feedback on.
+	<b>{{ initialmentorfeedbackv2.intern_selection.applicant.applicant.public_name }}</b> is the intern you are giving feedback on.
 	If you are mentoring multiple interns, please make sure you're filling out the right initial feedback form.
         </p>
     </div>
 </div>
 <hr>
-<h2>Mentor Support</h2>
 
 <form method="post" action="">
 {% csrf_token %}
 {% for field in form.visible_fields %}
-	{% if 'Has your intern been in contact' in field.label_tag %}
+	{% if 'Do you (or a co-mentor) answer the intern' in field.label_tag %}
 		<hr>
-		<h2>Intern Feedback</h2>
+		<h2>1. Clearing up doubts</h2>
+	{% elif 'Do you (or a co-mentor) meet privately' in field.label_tag %}
+		<hr>
+		<h2>2. Intern and mentor meetings</h2>
+	{% elif 'Does the intern and you (or a co-mentor) talk about project progress' in field.label_tag %}
+		<hr>
+		<h2>3. Tracking project progress</h2>
+	{% elif 'What is the average number of hours per week you spend on mentoring' in field.label_tag %}
+		<hr>
+		<h2>4. Mentor support</h2>
+	{% elif 'Please provide a paragraph describing your intern' in field.label_tag %}
+		<hr>
+		<h2>5. Intern progress</h2>
 	{% endif %}
-	{% if 'On average' in field.label_tag %}
-		<div class="form-group card">
-			{{ field.errors }}
-			<div class = "card-header">
-				<label for="{{ field.id_for_label }}">{{ field.label|safe }}</label>
-			</div>
-			<div class = "card-body">
-				{{ field }}
-			</div>
-			{% if field.help_text %}
-				<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
-			{% endif %}
-		</div>
-	{% elif 'What actions' in field.label_tag %}
+	{% if 'What actions' in field.label_tag %}
 		<hr>
-		<h2>Internship Schedule</h2>
+		<h2>6. Payments, extensions, or terminations</h2>
+		<h3>Internship Schedule</h3>
 
-		{% with intern_selection=initialmentorfeedback.intern_selection %}
+		{% with intern_selection=initialmentorfeedbackv2.intern_selection %}
 			{% include 'home/snippet/internship_dates_table.html' %}
 
 			{% include 'home/snippet/internship_extensions_instructions.html' %}
 
 			<h2>Intern Payment, Extensions, or Termination</h2>
-			<p><a href="https://www.outreachy.org/mentor/mentor-faq/#payments-extensions-and-terminations">Please read the Mentor FAQ</a> for details about payments, internship extensions, and internship contract termination.</p>
 		{% endwith %}
 
 		<div class="form-group card">
@@ -91,8 +89,7 @@ Initial mentor feedback
 			{% endif %}
 		</div>
 	{% elif 'Do you believe your Outreachy intern is putting in a full-time' in field.label_tag %}
-		<hr>
-		<h2>Intern Time Commitment</h2>
+		<h3>Intern Time Commitment</h3>
 		<p>Please <a href="{% url 'docs-internship' %}#time-commitment">read the intern time commitment section</a> in the Internship guide. That section outlines how many hours per week interns are required to work.</p>
 		<p>If you are unsure whether your intern is putting in enough hours per week, please <a href="https://www.outreachy.org/mentor/mentor-faq/#payments-extensions-and-terminations">read the "Intern Time Commitment" section in the Mentor FAQ</a>.</p>
 		{% include 'home/snippet/covid-19-time-policy.html' %}
@@ -131,7 +128,7 @@ Initial mentor feedback
     </div>
     <div class="card-body">
         <p class="card-text">
-	<b>{{ initialmentorfeedback.intern_selection.applicant.applicant.public_name }}</b> is the intern you are giving feedback on.
+	<b>{{ initialmentorfeedbackv2.intern_selection.applicant.applicant.public_name }}</b> is the intern you are giving feedback on.
 	If you are mentoring multiple interns, please make sure you're filling out the right initial feedback form.
         </p>
     </div>

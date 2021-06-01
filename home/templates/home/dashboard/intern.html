@@ -66,16 +66,16 @@
 		{% endif %}
 		<p>Feedback and payment status:</p>
 		<ul>
-			{% if internship.initialinternfeedback %}
+			{% if internship.initialinternfeedbackv2 %}
 				<li>Your initial feedback was submitted.</li>
 			{% endif %}
-			{% if internship.initialmentorfeedback %}
-				<li>Your mentor most recently submitted initial feedback on {{ internship.initialmentorfeedback.find_version_mentor_edited.revision.date_created }}</li>
+			{% if internship.initialmentorfeedbackv2 %}
+				<li>Your mentor most recently submitted initial feedback on {{ internship.initialmentorfeedbackv2.find_version_mentor_edited.revision.date_created }}</li>
 			{% endif %}
-			{% if not internship.initialinternfeedback and not internship.initialmentorfeedback %}
+			{% if not internship.initialinternfeedbackv2 and not internship.initialmentorfeedbackv2 %}
 				<li>Neither you nor your mentor have submitted initial feedback.</li>
 			{% endif %}
-			{% if internship.initialmentorfeedback.organizer_payment_approved %}
+			{% if internship.initialmentorfeedbackv2.organizer_payment_approved %}
 				<li>The Outreachy organizers have requested that the Software Freedom Conservancy pay your initial stipend.</li>
 			{% endif %}
 			{% if internship.midpointinternfeedback %}
