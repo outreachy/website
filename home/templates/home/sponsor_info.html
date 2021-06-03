@@ -28,7 +28,7 @@ Sponsor info for {{ current_round.official_name }}
 		<p>
 		{% with approved_coordinator_list=community.coordinatorapproval_set.approved %}
 			{% if approved_coordinator_list %}
-				<p>Coordinator{{ approved_coordinator_list|length|pluralize:":,s:" }}
+				Coordinator{{ approved_coordinator_list|length|pluralize:":,s:" }}
 				{% for approval in approved_coordinator_list %}
 					{{ approval.coordinator.public_name }} &lt;{{ approval.coordinator.account.email }}&gt;{% if not forloop.last %}, {% else %}{% endif %}
 				{% endfor %}
