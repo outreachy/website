@@ -1595,6 +1595,9 @@ class Participation(ApprovalStatus):
         # Use integer division so it rounds down.
         return total_funding // 6500
 
+    def number_interns_approved(self):
+        return InternSelection.objects.filter(project__project_round=self, organizer_approved=True).count()
+
     # Plain text string to use in email to Outreachy organizers
     # to confirm this community's participation in the round
     def intern_funding_details(self):
