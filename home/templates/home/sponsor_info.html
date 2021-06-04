@@ -25,7 +25,7 @@ Sponsor info for {{ current_round.official_name }}
 	<h2>Community Sponsors</h2>
 	{% for community, sponsor_set, number_interns_approved, total_funding_needed in community_sponsors %}
 		<hr><h3>{{ community }}</h3>
-		<p>${{ total_funding_needed|intcomma }} total funding needed for {{ number_interns_approved }} approved interns.</p>
+		<p>${{ total_funding_needed|intcomma }} total funding needed for {{ number_interns_approved }} approved interns. <a href="{% url 'sponsor-info-details' round_slug=current_round.slug community_slug=community.slug %}">Sponsorship details and revision history.</a></p>
 		
 		<ul>
 			{% for s in sponsor_set %}

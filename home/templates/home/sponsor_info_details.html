@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}
+Sponsor info for {{ community }} in {{ current_round.official_name }}
+{% endblock %}
+
+{% block content %}
+{% if request.user.is_staff %}
+	<h2>{{ community }} Sponsorship Details</h2>
+	<hr>
+	<p>
+	{% with approved_coordinator_list=community.coordinatorapproval_set.approved %}
+		{% if approved_coordinator_list %}
+			Community coordinator{{ approved_coordinator_list|length|pluralize:":,s:" }}
+			{% for approval in approved_coordinator_list %}
+				{{ approval.coordinator.public_name }} &lt;{{ approval.coordinator.account.email }}&gt;{% if not forloop.last %}, {% else %}{% endif %}
+			{% endfor %}
+		{% endif %}
+	{% endwith %}
+	</p>
+	<p><b>Funding required:</b></p>
+	<ul>
+		<li>{{ number_interns_approved }} interns approved by Outreachy organizers</li>
+		<li>${{ total_funding_needed|intcomma }} is required to fund these interns</li>
+	</ul>
+
+	<p><b>Sponsorship summary:</b></p>
+	<ul>
+		{% for s in sponsor_set %}
+			<li>
+				{% if not s.funding_secured %}<span class="badge badge-pill badge-warning">Unconfirmed</span> {% endif %}
+				{{ s.name }}: ${{ s.amount|intcomma }}
+			</li>
+		{% endfor %}
+	</ul>
+	<p><b>Sponsorship editing history:</b></p>
+
+	<table class="table table-striped table-bordered">
+	{% for s in sponsor_set %}
+		<thead class="thead-dark">
+			<tr>
+				<th scope="col" colspan="4">Sponsor: {{ s.name }}</th>
+			</tr>
+		</thead>
+		<thead class="thead-light">
+			<tr>
+				<th scope="col">Revision date</th>
+				<th scope="col">Editor username</th>
+				<th scope="col">Editor contact</th>
+				<th scope="col">Sponsor information</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for history in s.sponsorship_history %}
+			<tr>
+				<td>{{ history.0 }}</td>
+				<td>{{ history.1 }}</td>
+				<td>{{ history.2 }}</td>
+				<td>
+					<ul>
+						<li>Sponsor name: {{ history.3 }}</li>
+						<li>Amount: ${{ history.4|intcomma }}</li>
+						<li>Additional info: {{ history.7|safe }}</li>
+					</ul>
+				</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	{% endfor %}
+	</table>
+
+{% endif %}
+{% endblock %}

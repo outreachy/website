@@ -1707,6 +1707,27 @@ class Sponsorship(models.Model):
     def number_interns(self):
         return self.amount / 6500
 
+    def sponsorship_history(self):
+        versions = Version.objects.get_for_object(self)
+        history = []
+        for v in versions:
+            try:
+                comrade = Comrade.objects.get(account=v.revision.user)
+                email = "{} <{}>".format(comrade.public_name, comrade.account.email)
+            except Comrade.DoesNotExist:
+                email = ""
+            history.append([
+                v.revision.date_created,
+                v.revision.user.username,
+                email,
+                v.field_dict['name'],
+                v.field_dict['amount'],
+                v.field_dict['funding_secured'],
+                v.field_dict['funding_decision_date'],
+                v.field_dict['additional_information'],
+                ])
+        return history
+
     def __str__(self):
         return "{name} sponsorship for {community}".format(
                 name=self.name,

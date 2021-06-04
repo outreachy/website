@@ -3197,6 +3197,26 @@ def sponsor_info(request, round_slug):
 
 @login_required
 @staff_member_required
+def sponsor_info_details(request, round_slug, community_slug):
+    """
+    Show sponsor details and sponsorship revision history for a particular community.
+    """
+    current_round = get_object_or_404(RoundPage, slug=round_slug)
+    participation = get_object_or_404(Participation, participating_round=current_round, approval_status=ApprovalStatus.APPROVED, community__slug=community_slug)
+
+    return render(request, 'home/sponsor_info_details.html',
+            {
+            'current_round' : current_round,
+            'participation' : participation,
+            'number_interns_approved' : participation.number_interns_approved(),
+            'total_funding_needed' : participation.number_interns_approved() * 6500,
+            'community' : participation.community,
+            'sponsor_set' : participation.sponsorship_set.all(),
+            },
+            )
+
+@login_required
+@staff_member_required
 def review_interns(request, round_slug):
     """
     Show information about applicants that are selected by mentors as interns.
