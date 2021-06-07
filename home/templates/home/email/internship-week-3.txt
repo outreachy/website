@@ -7,18 +7,33 @@ We have some goals and assignments for both mentors and interns. Please read the
 Week 3 Theme
 ------------
 
-The theme for this week is "Everybody Struggles." When newcomers are working with experienced contributors, their mentors may seem perfect to them. Interns often see their mentors' contributions once they are ready for review. Interns don't always see their mentors put in long hours hunting down subtle mistakes in their contributions. Interns don't see the days their mentors spent searching documentation and forums for why something isn't working.
+The theme for this week is "Everyone Struggles."
 
-If we never acknowledge the effort and struggle we experience, other people may feel bad about getting stuck. They may hesitate to reach out when they need help. However, sometimes even the act of asking for help can solve your problem! Often when we start to write about what we're stuck on, or talk with another person about it, we end up figuring out something new to try or realizing what our issue was. Programmers often call this "rubber duck" debugging:
+For many Outreachy interns, their mentors may seem perfect. It feels like mentors are "experts" who know everything. Interns may struggle to understand their project or struggle to make a contribution. They may compare their current skills to their mentor's skills.
+
+It's important to remember that no one starts out being an "expert". We all start out knowing nothing. We all learn, practice, and grow.
+
+Learning can be hard! We may struggle to understand something. We may make a lot of mistakes when we practice new skills. And that's okay, because everyone struggles.
+
+When you're struggling, it can be hard to reach out for help. But it's important to remember that Outreachy mentors are here to help you. It can bring mentors happiness or joy to share what they know!
+
+https://xkcd.com/1053/
+
+The first part of asking for help is figuring out what to ask. Sometimes you may not even be able to put your confusion into words. It's okay to reach out to your mentor and say, "I'm confused about something, but I don't know what questions to ask." Your mentor can ask questions about what you do know about the topic. They can help you understand what you do know, what you are confused about, and what you don't know.
+
+Sometimes the act of writing about what you are struggling with can help you find the answer. When you write about your confusion, you may think of a place you haven't searched for help. When you write about a problem you're stuck on, you may think of a way to fix it. Programmers often call this "rubber duck" debugging:
 
 https://en.wikipedia.org/wiki/Rubber_duck_debugging
 
-Part of the reason many people find free and open source software development intimidating is because they need to work in the open. The positive part of working in the open is that community contributors reach out to each other on public forums to get help when they're stuck. You can often learn a lot from watching two experienced contributors work through a tough problem together.
 
 Week 3 Mentor & Intern Chat
 ---------------------------
 
-On {{ current_round.week_four_chat_text_date }} UTC we will host a chat for both Outreachy interns and mentors. We encourage you to briefly share something you're currently stuck on. That includes mentors! We'll talk about different ways to get unstuck and how to seek help.
+On {{ current_round.week_four_chat_text_date }} UTC we will host a chat for both Outreachy interns and mentors. We encourage both mentors and interns to talk about confusing open source vocabulary terms.
+
+The vocabulary term could be a word, phrase, acronym, or concept. The vocabulary term should be related to open source, your community, or the internship project. You could be currently confused about the vocabulary term, or you could have recently learned about the vocabulary term.
+
+We encourage both interns and mentors to share a vocabulary term that is new to them! Both interns and mentors are encouraged to help others understand confusing vocabulary terms. The goal of this chat is to share knowledge, ask for help, and help others.
 
 {{ current_round.week_four_stuck_chat_url }}
 
@@ -32,38 +47,49 @@ Week 3 goals:
  - Model how you would work through being stuck on a tough contribution
  - Have a screen share with your intern to work through a problem together
  - Introduce your intern to a new resource or a new person in the community they can ask questions
- - Encourage your community members to talk about a time when they were really stuck
+ - Encourage your community members to talk about open source vocabulary terms that are confusing
 
 Goals for Interns
 -----------------
 
 Week 3 goals:
 
- - Write your blog post about a time you were stuck (see guidelines below)
- - If you're stuck for more than a couple hours, ask your mentor
+ - Write your blog post about an open source vocabulary term
+ - If you're stuck for more than 1 to 3 hours, ask your mentor
  - Try asking a question on the public community forums or community chat
- - Get your mentor to talk about a problem they've been stuck on
+ - Get your mentor to talk about an open source vocabulary term they recently learned about
 
 Week 3 Blog
 -----------
 
-For this week's blog post, we'd like you to write a blog post about a time in the last three weeks you were stuck. The audience for this blog post is an Outreachy applicant or intern who stuck, and is hesitant to reach out to get help.
+For this week's blog post, please write about an open source vocabulary term. A "vocabulary term" could be a word, phrase, acronym, or concept.
 
-When you model that you (a successful accepted Outreachy intern) get stuck, that helps the next round of Outreachy applicants and interns see that it's okay to get stuck. Everybody struggles!
+Write about a vocabulary term you didn't know before you applied to Outreachy. The vocabulary term you write about should be related to open source, your open source community, or your internship project.
+
+It's important to look back at what you have learned. Everyone starts out not knowing things. This is true of your mentors too! We all put in effort to learn, practice, and grow our skills. Even "experts" have to keep growing and learning new things. If we stop learning and growing, our work stops feeling challenging.
+
+Sometimes there's a word or concept lots of people around you understand, but you don't. You might feel nervous, anxious, or scared to ask what it means. It can be intimidating to ask questions in the open source community chat.
+
+It's important to remember that other people might also be confused. There might be newcomers to the community who are also unsure what the vocabulary term means. When you ask what the vocabulary term means in the community chat, you will help other people who are also shy and unsure.
+
+Your blog post will also help future Outreachy applicants. They may be hesitant to ask questions of their mentors. Your blog post will explain that you didn't know a vocabulary term. You'll talk about where you found resources, or who you asked for help. This will reassure future applicants that it's okay not to know everything, and it's okay to ask questions. Everyone struggles!
 
 Here's some prompts that could get you started writing this blog post:
 
- - What were you stuck on?
- - Why was it confusing or hard?
- - What did you try that didn't work?
- - Where did you search for help?
- - What resources did you find?
- - Were any of those resources out of date or confusing?
- - Were you hesitant to reach out for help, and if so, why were you hesitant?
+ - What vocabulary term were you confused about during the Outreachy application process?
+ - The vocabulary term could be a word, phrase, acronym or concept
+ - The vocabulary term needs to be related to open source, your project, or your community
+ - What does that vocabulary term mean?
+ - Where did you see that vocabulary term used?
+ - Where did you look for a definition of that vocabulary term?
+ - What resources did you find? (Link to any online resources)
+ - Who did you ask about the definition of that vocabulary term?
+ - Were you hesitant to ask someone to define the vocabulary term? If so, why were you hesitant?
  - What happened when you reached out for help?
- - What would you tell someone who is worried about asking for help?
+ - Were there other people who didn't understand that vocabulary term?
+ - What would you tell someone who is worried about asking questions?
 
-Think about your core values you talked about in your first blog post. Did any of your core values help you overcome your struggles?
+Think about your core values you talked about in your first blog post. Did any of your core values help you overcome your worries about asking for help?
 
 Again, if you have any questions, please contact us!
 
