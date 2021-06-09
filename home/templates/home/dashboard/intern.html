@@ -75,7 +75,7 @@
 			{% if not internship.initialinternfeedbackv2 and not internship.initialmentorfeedbackv2 %}
 				<li>Neither you nor your mentor have submitted initial feedback.</li>
 			{% endif %}
-			{% if internship.initialmentorfeedbackv2.organizer_payment_approved %}
+			{% if internship.inital_payment_status == internship.REQUESTED %}
 				<li>The Outreachy organizers have requested that the Software Freedom Conservancy pay your initial stipend.</li>
 			{% endif %}
 			{% if internship.midpointinternfeedback %}
@@ -87,7 +87,7 @@
 			{% if not internship.midpointinternfeedback and not internship.midpointmentorfeedback %}
 				<li>Neither you nor your mentor have submitted midpoint feedback.</li>
 			{% endif %}
-			{% if internship.midpointmentorfeedback.organizer_payment_approved %}
+			{% if internship.midpoint_payment_status == internship.REQUESTED %}
 				<li>The Outreachy organizers have requested that the Software Freedom Conservancy pay your midpoint stipend.</li>
 			{% endif %}
 			{% if internship.finalinternfeedback %}
@@ -99,7 +99,7 @@
 			{% if not internship.finalinternfeedback and not internship.finalmentorfeedback %}
 				<li>Neither you nor your mentor have submitted final feedback.</li>
 			{% endif %}
-			{% if internship.finalmentorfeedback.organizer_payment_approved %}
+			{% if internship.final_payment_status == internship.REQUESTED %}
 				<li>The Outreachy organizers have requested that the Software Freedom Conservancy pay your final stipend.</li>
 			{% endif %}
 		</ul>

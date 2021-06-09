@@ -2097,7 +2097,17 @@ class ActiveInternshipContactsView(UserPassesTestMixin, TemplateView):
                     organizer_approved=True,
                     project__project_round__participating_round__internannounce__lte=today,
                     in_good_standing=True,
-                    finalmentorfeedback__organizer_payment_approved=None,
+                    final_payment_status=InternSelection.WAITINGONFEEDBACK,
+                ) | models.Q(
+                    organizer_approved=True,
+                    project__project_round__participating_round__internannounce__lte=today,
+                    in_good_standing=True,
+                    final_payment_status=InternSelection.UNDERREVIEW,
+                ) | models.Q(
+                    organizer_approved=True,
+                    project__project_round__participating_round__internannounce__lte=today,
+                    in_good_standing=True,
+                    final_payment_status=InternSelection.QUEUED,
                 )).order_by('project__project_round__community__name').order_by('-project__project_round__participating_round__internstarts')
 
         mentors_and_coordinators = Comrade.objects.filter(

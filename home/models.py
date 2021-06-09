@@ -3912,6 +3912,10 @@ class InternSelection(AugmentDeadlines, models.Model):
     survey_opt_out = models.BooleanField(default=False)
     in_good_standing = models.BooleanField(default=True)
 
+    organizer_notes = CKEditorField(
+            blank=True,
+            verbose_name="Outreachy organizer notes")
+
     intern_starts = models.DateField("Date the internship starts", blank=True)
     initial_feedback_opens = models.DateField("Date initial feedback form opens (typically 7 days before the initial feedback deadline)", blank=True)
     initial_feedback_due = models.DateField("Date initial feedback form due", blank=True)
@@ -3920,6 +3924,34 @@ class InternSelection(AugmentDeadlines, models.Model):
     final_feedback_opens = models.DateField("Date final feedback form opens", blank=True)
     final_feedback_due = models.DateField("Date final feedback form due (typically 3 days after the internship ends)", blank=True)
     intern_ends = models.DateField("Date the internship ends", blank=True)
+
+    WAITINGONFEEDBACK = 'WOF'
+    UNDERREVIEW = 'UNR'
+    QUEUED = 'QUE'
+    REQUESTED = 'REQ'
+    DONOTPAY = 'DOP'
+    PAYMENT_STATUS = (
+        (WAITINGONFEEDBACK, 'Waiting for new or updated feedback from the mentor'),
+        (UNDERREVIEW, 'Feedback about intern not reviewed'),
+        (QUEUED, 'Payment request queued'),
+        (REQUESTED, 'Payment request sent'),
+        (DONOTPAY, 'Do not pay stipend'),
+    )
+    initial_payment_status = models.CharField(
+        max_length=3,
+        choices=PAYMENT_STATUS,
+        default=WAITINGONFEEDBACK,
+    )
+    midpoint_payment_status = models.CharField(
+        max_length=3,
+        choices=PAYMENT_STATUS,
+        default=WAITINGONFEEDBACK,
+    )
+    final_payment_status = models.CharField(
+        max_length=3,
+        choices=PAYMENT_STATUS,
+        default=WAITINGONFEEDBACK,
+    )
 
     class Meta:
         unique_together = (
@@ -4041,15 +4073,21 @@ class InternSelection(AugmentDeadlines, models.Model):
         if not self.in_good_standing:
             return False
 
-        # Is the mentor final feedback waiting to be reviewed by Outreachy organizers?
-        try:
-            if self.finalmentorfeedback.organizer_payment_approved == None:
-                return True
-        # Has the mentor not given final feedback yet?
-        except FinalMentorFeedback.DoesNotExist:
+        # Are we waiting on final mentor feedback from mentors?
+        if self.final_payment_status == self.WAITINGONFEEDBACK:
             return True
 
-        # The intern final feedback has been reviewed by Outreachy organizers
+        # Are we waiting on final mentor feedback review from Outreachy organizers?
+        if self.final_payment_status == self.UNDERREVIEW:
+            return True
+
+        # Are we waiting for final mentor feedback to be sent to Conservancy?
+        if self.final_payment_status == self.QUEUED:
+            return True
+
+        # The intern final feedback has been sent to Conservancy,
+        # along with the recommendation to pay or not pay the intern.
+        # Therefore the internship is not active any more.
         return False
 
     def intern_name(self):
@@ -4104,7 +4142,7 @@ class InternSelection(AugmentDeadlines, models.Model):
     TERMINATE = 'TER'
     def get_mentor_initial_feedback_status(self):
         try:
-            if self.initialmentorfeedbackv2.organizer_payment_approved:
+            if self.initial_payment_status == self.REQUESTED:
                 return self.PAID
 
             actions_requested = self.initialmentorfeedbackv2.actions_requested
@@ -4128,7 +4166,7 @@ class InternSelection(AugmentDeadlines, models.Model):
 
     def get_mentor_midpoint_feedback_status(self):
         try:
-            if self.midpointmentorfeedback.organizer_payment_approved:
+            if self.midpoint_payment_status == self.REQUESTED:
                 return self.PAID
 
             actions_requested = self.midpointmentorfeedback.actions_requested
@@ -4150,7 +4188,7 @@ class InternSelection(AugmentDeadlines, models.Model):
 
     def get_mentor_final_feedback_status(self):
         try:
-            if self.finalmentorfeedback.organizer_payment_approved:
+            if self.final_payment_status == self.REQUESTED:
                 return self.PAID
 
             actions_requested = self.finalmentorfeedback.actions_requested
@@ -4227,7 +4265,7 @@ class BaseMentorFeedback(BaseFeedback):
 
     full_time_effort = models.BooleanField(verbose_name="Do you believe your Outreachy intern is putting in a full-time, 40 hours a week effort into the internship?")
 
-    # FIXME - send email to mentors and interns when organizers approve their payment and send documentation off to Conservancy
+    # Deprecated - use InternSelection fields initial_payment_status, midpoint_payment_status, or final_payment_status
     organizer_payment_approved = models.BooleanField(
         help_text="Outreachy organizers approve or do not approve to pay this intern.",
         null=True,
