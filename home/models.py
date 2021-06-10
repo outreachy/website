@@ -4099,6 +4099,7 @@ class InternSelection(AugmentDeadlines, models.Model):
     MISSING = 'MIS'
     PAY = 'PAY'
     PAID = 'PAID'
+    DONT_KNOW = 'DKN'
     EXTEND = 'EXT'
     TERMINATE = 'TER'
     def get_mentor_initial_feedback_status(self):
@@ -4111,6 +4112,8 @@ class InternSelection(AugmentDeadlines, models.Model):
                 return self.TERMINATE
             elif actions_requested == BaseMentorFeedback.PAY_AND_CONTINUE:
                 return self.PAY
+            elif actions_requested == BaseMentorFeedback.DONT_KNOW:
+                return self.DONT_KNOW
             else:
                 return self.EXTEND
         except InitialMentorFeedbackV2.DoesNotExist:
