@@ -2824,6 +2824,8 @@ class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMi
         feedback.allow_edits = False
         feedback.ip_address = self.request.META.get('REMOTE_ADDR')
         feedback.save()
+        feedback.intern_selection.initial_payment_status = InternSelection.UNDERREVIEW
+        feedback.intern_selection.save()
         return redirect(reverse('dashboard') + '#feedback')
 
 class InitialInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
@@ -2972,6 +2974,8 @@ class MidpointMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionM
         feedback.allow_edits = False
         feedback.ip_address = self.request.META.get('REMOTE_ADDR')
         feedback.save()
+        feedback.intern_selection.midpoint_payment_status = InternSelection.UNDERREVIEW
+        feedback.intern_selection.save()
         return redirect(reverse('dashboard') + '#feedback')
 
 class MidpointInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
@@ -3101,6 +3105,8 @@ class FinalMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixi
         feedback.allow_edits = False
         feedback.ip_address = self.request.META.get('REMOTE_ADDR')
         feedback.save()
+        feedback.intern_selection.final_payment_status = InternSelection.UNDERREVIEW
+        feedback.intern_selection.save()
         return redirect(reverse('dashboard') + '#feedback')
 
 class FinalInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
