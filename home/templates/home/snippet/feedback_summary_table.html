@@ -1,0 +1,55 @@
+{% comment %}
+pass into this template snippet the following arguments:
+	- intern_feedback - from any one of these classes: InitialInternFeedbackV2, MidpointInternFeedback, FinalInternFeedback
+	- intern_selection - class InternSelection
+	- feedback_due - any one of these fields from class InternSelection: initial_feedback_due, midpoint_feedback_due, final_feedback_due
+	- mentor_feedback - from any one of these classes: InitialMentorFeedbackV2, MidpointMentorFeedback, FinalMentorFeedback
+	- mentor_feedback_status - the return value from any one of these functions in class InternSelection: get_mentor_initial_feedback_status, get_mentor_midpoint_feedback_status, get_mentor_final_feedback_status
+	- payment_status - any one of these fields from class InternSelection: initial_payment_status, midpoint_payment_status, final_payment_status
+{% endcomment %}
+<table class="table table-bordered">
+	<tr>
+		<th colspan="3">
+			Feedback summary - {{ intern_selection.applicant.applicant.public_name }} - {{ intern_selection.community_name }}
+		</th>
+	</tr>
+	{% if mentor_feedback.actions_requested == intern_selection.TERMINATE or mentor_feedback.actions_requested == intern_selection.TERMINATE %}
+	<tr class="table-danger">
+	{% elif mentor_feedback.actions_requested == intern_selection.EXTEND %}
+	<tr class="table-warning">
+	{% elif mentor_feedback.actions_requested == intern_selection.DONT_KNOW %}
+	<tr class="table-warning">
+	{% else %}
+	<tr class="table">
+	{% endif %}
+
+		<td>
+			<p>Mentor recommended action:</p>
+		</td>
+		<td>
+			{% include 'home/snippet/mentor-feedback-status.html' with intern=intern_selection mentor_status=mentor_feedback_status %}
+			{{ mentor_feedback.get_actions_requested_display }}
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Is the intern working full time?
+		</td>
+		<td>
+			<p>Mentor says: {% if mentor_feedback %}{% if mentor_feedback.full_time_effort %}<button class="btn btn-success">Full-time effort</button>{% else %}<button class="btn btn-danger">Not a full-time effort</button>{% endif %}{% endif %}</p>
+		</td>
+		<td>
+			<p>Intern says: {% if not intern_feedback %}Missing intern feedback{% else %}{% if intern_feedback.hours_worked == intern_feedback.HOURS_40 %}<button class="btn btn-success">Full-time effort</button>{% elif intern_feedback.hours_worked == intern_feedback.HOURS_45 or intern_feedback.hours_worked == intern_feedback.HOURS_50 or intern_feedback.hours_worked == intern_feedback.HOURS_55 or intern_feedback.hours_worked == intern_feedback.HOURS_60 %}<button class="btn btn-warning">Overtime effort</button>{% else %}<button class="btn btn-danger">Not a full-time effort</button>{% endif %}<br>{{ intern_feedback.get_hours_worked_display }} per week{% endif %}</p>
+	</tr>
+	<tr>
+		<td>
+			Feedback and payment status:
+		</td>
+		<td>
+			{% include 'home/snippet/payment_feedback_status.html' %}
+		</td>
+		<td>
+			{% include 'home/snippet/payment_feedback_details.html' %}
+		</td>
+	</tr>
+</table>

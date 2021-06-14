@@ -1,0 +1,17 @@
+{% comment %}
+pass into this template snippet the following arguments:
+	- intern_selection - class InternSelection
+	- feedback_due - any one of these fields from class InternSelection: initial_feedback_due, midpoint_feedback_due, final_feedback_due
+	- payment_status - any one of these fields from class InternSelection: initial_payment_status, midpoint_payment_status, final_payment_status
+{% endcomment %}
+{% if payment_status == intern_selection.WAITINGONFEEDBACK %}
+{{ feedback_due|date:"F d, Y" }} - deadline for mentor to submit feedback
+{% elif payment_status == intern_selection.UNDERREVIEW %}
+Waiting on Outreachy organizer review of feedback
+{% elif payment_status == intern_selection.QUEUED %}
+In payment request queue, ready to be sent to Conservancy
+{% elif payment_status == intern_selection.REQUESTED %}
+<span class="badge badge-success">Payment request sent</span>
+{% elif payment_status == intern_selection.DONOTPAY %}
+<span class="badge badge-danger">Payment denial sent</span>
+{% endif %}
