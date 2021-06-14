@@ -2927,6 +2927,73 @@ def initial_feedback_summary(request, round_slug):
             },
             )
 
+@login_required
+@staff_member_required
+def dequeue_initial_feedback_payment_authorization(request, round_slug, username):
+    """
+    Remove the payment (or non-payment) authorization request for an intern in a particular cohort (internship round).
+    This function will put the feedback back into the "needs Outreachy organizer review" state.
+
+    This function will return a 404 if any of the following things are true:
+     - The intern does not exist in this cohort
+     - The initial feedback was not submitted by the mentor (which means it should have never been queued in the first place)
+
+    This function will return a PermissionDenied error if any of the following things are true:
+     - the payment (or non-payment) authorization request is not in the queue
+    """
+    intern_selection = get_object_or_404(InternSelection, applicant__applicant__account__username=username, applicant__application_round__slug=round_slug)
+    initial_mentor_feedback = get_object_or_404(InitialMentorFeedbackV2, intern_selection=intern_selection)
+
+    if intern_selection.initial_payment_status != intern_selection.QUEUED:
+        raise PermissionDenied("Cannot remove initial feedback payment/non-payment authorization for {}. It does not exist in the queue.".format(intern_selection.applicant.applicant.public_name))
+
+    intern_selection.initial_payment_status = intern_selection.UNDERREVIEW
+    intern_selection.save()
+
+    # Redirect back to the initial feedback summary page, at the heading for this intern
+    return redirect(reverse('initial-feedback-summary', kwargs = {
+                'round_slug': round_slug,
+                }) + '#anchor-{}'.format(intern_selection.pk))
+
+@login_required
+@staff_member_required
+def queue_initial_feedback_payment_authorization(request, round_slug, username):
+    """
+    Queue the payment (or non-payment) authorization request for an intern in a particular cohort (internship round).
+
+    This function will return a 404 if any of the following things are true:
+     - The intern does not exist in this cohort
+     - The initial feedback was not submitted by the mentor
+
+    This function will return a PermissionDenied error if any of the following things are true:
+     - the mentor has requested an internship extension at the initial feedback point, and the extension is still active
+     - the mentor said in the feedback that they were unsure whether the intern should be paid or not paid the initial stipend
+     - the payment authorization request has already been queued
+     - the payment / non-payment authorization request has already been sent
+    """
+    intern_selection = get_object_or_404(InternSelection, applicant__applicant__account__username=username, applicant__application_round__slug=round_slug)
+    initial_mentor_feedback = get_object_or_404(InitialMentorFeedbackV2, intern_selection=intern_selection)
+
+    if initial_mentor_feedback.actions_requested in [initial_mentor_feedback.EXT_1_WEEK, initial_mentor_feedback.EXT_2_WEEK, initial_mentor_feedback.EXT_3_WEEK, initial_mentor_feedback.EXT_4_WEEK, initial_mentor_feedback.EXT_5_WEEK]:
+        raise PermissionDenied("Cannot queue initial feedback payment/non-payment authorization for {}. Their internship extension is still active. The mentors have not given updated feedback.".format(intern_selection.applicant.applicant.public_name))
+
+    if initial_mentor_feedback.actions_requested == initial_mentor_feedback.DONT_KNOW:
+        raise PermissionDenied("Cannot queue initial feedback payment/non-payment authorization for {}. Their mentor is unsure whether the intern should be paid or not.".format(intern_selection.applicant.applicant.public_name))
+
+    if intern_selection.initial_payment_status == intern_selection.QUEUED:
+        raise PermissionDenied("Cannot queue initial feedback payment/non-payment authorization for {}. The feedback has already been queued.".format(intern_selection.applicant.applicant.public_name))
+
+    if intern_selection.initial_payment_status == intern_selection.REQUESTED or intern_selection.initial_payment_status == intern_selection.DONOTPAY:
+        raise PermissionDenied("Cannot queue initial feedback payment/non-payment authorization for {}. The feedback has already been sent to Conservancy.".format(intern_selection.applicant.applicant.public_name))
+
+    intern_selection.initial_payment_status = intern_selection.QUEUED
+    intern_selection.save()
+
+    # Redirect back to the initial feedback summary page, at the heading for this intern
+    return redirect(reverse('initial-feedback-summary', kwargs = {
+                'round_slug': round_slug,
+                }) + '#anchor-{}'.format(intern_selection.pk))
+
 class MidpointMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(MidpointMentorFeedback,
             fields=(
