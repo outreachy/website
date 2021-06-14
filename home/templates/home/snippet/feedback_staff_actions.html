@@ -1,0 +1,63 @@
+{% comment %}
+pass into this template snippet the following arguments:
+	- intern_feedback - from any one of these classes: InitialInternFeedbackV2, MidpointInternFeedback, FinalInternFeedback
+	- intern_selection - class InternSelection
+	- feedback_due - any one of these fields from class InternSelection: initial_feedback_due, midpoint_feedback_due, final_feedback_due
+	- mentor_feedback - from any one of these classes: InitialMentorFeedbackV2, MidpointMentorFeedback, FinalMentorFeedback
+	- mentor_feedback_status - the return value from any one of these functions in class InternSelection: get_mentor_initial_feedback_status, get_mentor_midpoint_feedback_status, get_mentor_final_feedback_status
+	- payment_status - any one of these fields from class InternSelection: initial_payment_status, midpoint_payment_status, final_payment_status
+	- queue_url_slug - any of the following strings: 'queue-initial-feedback'
+	- dequeue_url_slug - any of the following strings: 'dequeue-initial-feedback'
+{% endcomment %}
+<table class="table table-bordered">
+	<tr>
+		<th scope="col" class="col-md-1">Organizer action</th>
+		<th scope="col" class="col-md-3">Description</th>
+	</tr>
+	{% comment %}
+	Only show the button to put intern feedback in the payment queue
+	when the mentor requests to pay or not pay the stipend.
+	Hide this if the feedback hasn't been submitted,
+	the mentor doesn't know what action to recommend,
+	or the mentor wants to extend the internship.
+	{% endcomment %}
+	{% if payment_status == intern_selection.UNDERREVIEW and mentor_feedback %}
+		{% if mentor_feedback.actions_requested == mentor_feedback.PAY_AND_CONTINUE or mentor_feedback.actions_requested == mentor_feedback.TERMINATE_PAY or mentor_feedback.actions_requested == mentor_feedback.TERMINATE_NO_PAY %}
+			<tr>
+				<td>
+					<a href="{% url queue_url_slug round_slug=intern_selection.applicant.application_round.slug username=intern_selection.applicant.applicant.account.username %}"><button class="btn btn-success" type="button">Queue feedback</button></a>
+				</td>
+				<td>
+					Put this feedback into the payment request queue.
+				</td>
+			</tr>
+		{% else %}
+			<tr>
+				<td>
+					<button class="btn btn-secondary" type="button" disabled>Queue feedback</button>
+				</td>
+				<td>
+					<i>Mentor has not authorized stipend payment or non-payment. Cannot put in payment request queue.</i>
+				</td>
+			</tr>
+		{% endif %}
+	{% elif payment_status == intern_selection.QUEUED %}
+		<tr>
+			<td>
+				<a href="{% url dequeue_url_slug round_slug=intern_selection.applicant.application_round.slug username=intern_selection.applicant.applicant.account.username %}"><button class="btn btn-warning" type="button">Remove from queue</button></a>
+			</td>
+			<td>
+				Remove this feedback from the payment request queue.
+			</td>
+		</tr>
+	{% else %}
+		<tr>
+			<td>
+				<button class="btn btn-secondary" type="button" disabled>Queue feedback</button>
+			</td>
+			<td>
+				<i>Mentor has not authorized stipend payment or non-payment. Cannot put in payment request queue.</i>
+			</td>
+		</tr>
+	{% endif %}
+</table>

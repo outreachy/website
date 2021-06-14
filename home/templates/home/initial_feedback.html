@@ -227,6 +227,8 @@ Initial Feedback for {{ current_round.official_name }}
 
 						{% include 'home/snippet/feedback_summary_table.html' %}
 
+						{% include 'home/snippet/feedback_staff_actions.html' %}
+
 					</div>
 					<p><button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapse-{{ intern_selection.pk }}" aria-expanded="false" aria-controls="collapse-{{ intern_selection.pk }}">Show/hide feedback details</button></p>
 				{% endwith %}
