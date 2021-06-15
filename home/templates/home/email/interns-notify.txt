@@ -108,15 +108,6 @@ Depending on the country you reside in, you will be asked to provide either a W-
 
 Tax forms and payment routing information are due by {{ current_round.tax_form_deadline }}. Tax forms are required in order to be paid the internship stipend. You may be dropped from the program if you are asked for a form and you do not provide it within a month.
 
-Travel Allowance
-----------------
-
-{% if current_round.internstarts|date:'Y-m-d' == '2020-12-01'%}All travel using the Outreachy travel stipend is prohibited. You will receive your travel stipend as part of your internship payment.{% else %}You have $500 travel allowance available to you for travel relevant to Outreachy. The travel allowance is good for one year from the date your internship starts. Please review the information at https://www.outreachy.org/travel-stipend
-
-You will need to discuss the travel stipend with your mentor to determine which conference or event is most relevant to your internship. You mentor will need to approve the conference or event before you book your travel.
-
-Please note that before you book any flights, you will need to take a screenshot of your flight search using a widely-recognized airfare comparison site, such as Orbitz, Kayak or Hipmunk. You should also double check before booking travel if you will need to seek pre-approval from the Outreachy organizers for the travel. https://www.outreachy.org/travel-stipend#preapproval If you don't need pre-approval, and your mentor approves the travel as relevant to your internship, there is no need to email the organizers before your travel.{% endif %}
-
 Intern Blog
 -----------
 
