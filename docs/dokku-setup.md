@@ -355,4 +355,20 @@ current_round = RoundPage.objects.get(interstarts='YYYY-MM-DD')
 ...     except FinalMentorFeedback.DoesNotExist:
 ...             pass
 ... 
+>>>
+
+Creating a new internship cohort
+---
+
+To create a new RoundPage with approximately the correct dates, use the factories code:
+
+```
+>>> from home import factories
+>>> from datetime import datetime, timedelta, timezone, date
+>>> now = datetime.now(timezone.utc)
+>>> internstarts = date(2021, 12, 6)
+>>> current_round = factories.RoundPageFactory(start_from="internstarts", days_after_today=(internstarts - datetime.date(now)).days)
+>>> current_round
+<RoundPage: Outreachy December 2021 internship round>
 >>> 
+```
