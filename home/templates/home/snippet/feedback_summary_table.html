@@ -36,10 +36,10 @@ pass into this template snippet the following arguments:
 			Is the intern working full time?
 		</td>
 		<td>
-			<p>Mentor says: {% if mentor_feedback %}{% if mentor_feedback.full_time_effort %}<button class="btn btn-success">Full-time effort</button>{% else %}<button class="btn btn-danger">Not a full-time effort</button>{% endif %}{% endif %}</p>
+			<p>Mentor says: {% if mentor_feedback %}{% if mentor_feedback.full_time_effort %}<span class="badge badge-success">Full-time effort</span>{% else %}<span class="badge badge-danger">Not a full-time effort</span>{% endif %}{% endif %}</p>
 		</td>
 		<td>
-			<p>Intern says: {% if not intern_feedback %}Missing intern feedback{% else %}{% if intern_feedback.hours_worked == intern_feedback.HOURS_40 %}<button class="btn btn-success">Full-time effort</button>{% elif intern_feedback.hours_worked == intern_feedback.HOURS_45 or intern_feedback.hours_worked == intern_feedback.HOURS_50 or intern_feedback.hours_worked == intern_feedback.HOURS_55 or intern_feedback.hours_worked == intern_feedback.HOURS_60 %}<button class="btn btn-warning">Overtime effort</button>{% else %}<button class="btn btn-danger">Not a full-time effort</button>{% endif %}<br>{{ intern_feedback.get_hours_worked_display }} per week{% endif %}</p>
+			<p>Intern says: {% if not intern_feedback %}Missing intern feedback{% else %}{% if intern_feedback.hours_worked == intern_feedback.HOURS_40 %}<span class="badge badge-success">Full-time effort</span>{% elif intern_feedback.hours_worked == intern_feedback.HOURS_45 or intern_feedback.hours_worked == intern_feedback.HOURS_50 or intern_feedback.hours_worked == intern_feedback.HOURS_55 or intern_feedback.hours_worked == intern_feedback.HOURS_60 %}<span class="badge badge-warning">Overtime effort</span>{% else %}<span class="badge badge-danger">Not a full-time effort</span>{% endif %}<br>{{ intern_feedback.get_hours_worked_display }} per week{% endif %}</p>
 	</tr>
 	<tr>
 		<td>
