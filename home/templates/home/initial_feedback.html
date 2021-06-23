@@ -7,6 +7,10 @@ Initial Feedback for {{ current_round.official_name }}
 
 {% block content %}
 {% if request.user.is_staff %}
+	<h1>Payment authorization queue</h1>
+	<p><a href="{% url 'initial-feedback-queue' round_slug=current_round.slug %}"><button class="btn btn-info" type="button">View queue</button></a></p>
+	<hr>
+	<h1>Feedback details</h1>
 	{% with interns=current_round.get_approved_intern_selections %}
 		{% for intern_selection in interns %}
 			{% with intern_feedback=intern_selection.initialinternfeedbackv2 feedback_due=intern_selection.initial_feedback_due mentor_feedback=intern_selection.initialmentorfeedbackv2 mentor_feedback_status=intern_selection.get_mentor_initial_feedback_status payment_status=intern_selection.initial_payment_status queue_url_slug='queue-initial-feedback' dequeue_url_slug='dequeue-initial-feedback' %}
@@ -235,5 +239,8 @@ Initial Feedback for {{ current_round.official_name }}
 			</div>
 		{% endfor %}
 	{% endwith %}
+	<hr>
+	<h1>Payment authorization queue</h1>
+	<p><a href="{% url 'initial-feedback-queue' round_slug=current_round.slug %}"><button class="btn btn-info" type="button">View queue</button></a></p>
 {% endif %}
 {% endblock %}

@@ -2929,6 +2929,76 @@ def initial_feedback_summary(request, round_slug):
 
 @login_required
 @staff_member_required
+def initial_feedback_queue(request, round_slug):
+    current_round = get_object_or_404(RoundPage, slug=round_slug)
+
+    queued_interns = InternSelection.objects.filter(applicant__application_round__slug=round_slug, initial_payment_status=InternSelection.QUEUED)
+
+    new_successful_interns = queued_interns.filter(initialmentorfeedbackv2__actions_requested=InitialMentorFeedbackV2.PAY_AND_CONTINUE)
+    new_terminations_with_pay = queued_interns.filter(initialmentorfeedbackv2__actions_requested=InitialMentorFeedbackV2.TERMINATE_PAY)
+    new_terminations_with_no_pay = queued_interns.filter(initialmentorfeedbackv2__actions_requested=InitialMentorFeedbackV2.TERMINATE_NO_PAY)
+
+    total_reviewed_and_queued = queued_interns.count() + InternSelection.objects.filter(applicant__application_round__slug=round_slug, initial_payment_status=InternSelection.REQUESTED).count() + InternSelection.objects.filter(applicant__application_round__slug=round_slug, initial_payment_status=InternSelection.DONOTPAY).count()
+
+    # Find interns who have missing feedback
+    # and their initial feedback due date has passed
+    now = datetime.now(timezone.utc)
+    today = get_deadline_date_for(now)
+    interns_missing_feedback = InternSelection.objects.filter(
+            applicant__application_round__slug=round_slug,
+            initial_payment_status=InternSelection.WAITINGONFEEDBACK,
+            initial_feedback_due__lte=today,
+            )
+
+    # Find interns who have missing feedback
+    # and their initial feedback due date is in the future.
+    # Exclude interns without an extension (where the initial feedback due date matches the official date),
+    # in case we're looking at this page before the official initial feedback due date.
+    interns_with_active_extensions = InternSelection.objects.filter(
+            applicant__application_round__slug=round_slug,
+            initial_payment_status=InternSelection.WAITINGONFEEDBACK,
+            initial_feedback_due__gt=today,
+            ).exclude(initial_feedback_due=current_round.initialfeedback)
+
+    interns_with_unreviewed_feedback = InternSelection.objects.filter(
+            applicant__application_round__slug=round_slug,
+            initial_payment_status=InternSelection.UNDERREVIEW,
+            )
+
+    return render(request, 'home/initial_feedback_queue.html',
+            {
+            'current_round' : current_round,
+            'queued_interns' : queued_interns,
+            'new_successful_interns' : new_successful_interns,
+            'new_terminations_with_pay' : new_terminations_with_pay,
+            'new_terminations_with_no_pay' : new_terminations_with_no_pay,
+            'interns_missing_feedback' : interns_missing_feedback,
+            'interns_with_active_extensions' : interns_with_active_extensions,
+            'interns_with_unreviewed_feedback' : interns_with_unreviewed_feedback,
+            'total_terminations' : new_terminations_with_pay.count() + new_terminations_with_no_pay.count(),
+            'total_reviewed_and_queued' : total_reviewed_and_queued,
+            },
+            )
+
+@login_required
+@staff_member_required
+def export_initial_feedback_queue(request, round_slug):
+    this_round = get_object_or_404(RoundPage, slug=round_slug)
+    interns = this_round.get_approved_intern_selections().filter(initial_payment_status=InternSelection.QUEUED)
+    dictionary_list = []
+    for i in interns:
+        try:
+            dictionary_list.append(export_feedback(i.initialmentorfeedbackv2))
+        except InitialMentorFeedbackV2.DoesNotExist:
+            continue
+    response = JsonResponse(dictionary_list, safe=False)
+
+    now = datetime.now(timezone.utc)
+    response['Content-Disposition'] = 'attachment; filename="' + round_slug + '-initial-feedback-{}.json"'.format(now.strftime('%Y-%m-%d-%H-%M'))
+    return response
+
+@login_required
+@staff_member_required
 def dequeue_initial_feedback_payment_authorization(request, round_slug, username):
     """
     Remove the payment (or non-payment) authorization request for an intern in a particular cohort (internship round).
@@ -2993,6 +3063,41 @@ def queue_initial_feedback_payment_authorization(request, round_slug, username):
     return redirect(reverse('initial-feedback-summary', kwargs = {
                 'round_slug': round_slug,
                 }) + '#anchor-{}'.format(intern_selection.pk))
+
+@login_required
+@staff_member_required
+def process_queued_initial_feedback_payment_authorizations(request, round_slug):
+    """
+    Process all the payment (or non-payment) authorization requests for a particular cohort (internship round).
+    This function will put the feedback into either the "Payment request sent" state or the "Do not pay stipend" state. Both of these states mean the payment/non-payment status has been sent to Conservancy via email.
+
+    This function will return a 404 if any of the following things are true:
+     - The cohort does not exist
+
+    This function will only change the initial payment status if the mentor has requested one of the following actions:
+     - PAY_AND_CONTINUE - Pay the initial intern stipend
+     - TERMINATE_PAY - Terminate the internship contract, and pay the initial intern stipend
+     - TERMINATE_NO_PAY - Terminate the internship contract, and do NOT pay the initial intern stipend
+
+    If a mentor has requested an internship extension, or the mentor does not know what action to recommend, the feedback remains in the queue.
+    """
+
+    current_round = get_object_or_404(RoundPage, slug=round_slug)
+    intern_selections = InternSelection.objects.filter(applicant__application_round__slug=round_slug, initial_payment_status=InternSelection.QUEUED, initialmentorfeedbackv2__isnull=False)
+
+    for intern_selection in intern_selections:
+        actions_requested = intern_selection.initialmentorfeedbackv2.actions_requested
+        if actions_requested == InitialMentorFeedbackV2.TERMINATE_NO_PAY:
+            intern_selection.initial_payment_status = intern_selection.DONOTPAY
+        elif actions_requested == InitialMentorFeedbackV2.TERMINATE_PAY:
+            intern_selection.initial_payment_status = intern_selection.REQUESTED
+        elif actions_requested == InitialMentorFeedbackV2.PAY_AND_CONTINUE:
+            intern_selection.initial_payment_status = intern_selection.REQUESTED
+        intern_selection.save()
+    # Redirect back to the initial feedback queue page, at the heading for the queue processing steps
+    return redirect(reverse('initial-feedback-queue', kwargs = {
+                'round_slug': round_slug,
+                }) + '#queue-processing-instructions')
 
 class MidpointMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(MidpointMentorFeedback,

@@ -1,0 +1,169 @@
+{% extends "base.html" %} 
+{% load approval_status %}
+
+{% block title %}
+Initial feedback queue for {{ current_round.official_name }}
+{% endblock %}
+
+{% block content %}
+{% if request.user.is_staff %}
+	{% comment %}
+	Pass the following variables into this template:
+	 - current_round - class RoundPage
+	 - queued_interns - InternSelection objects that are marked as reviewed and ready to be sent to Conservancy for payment or internship termination
+	 - new_successful_interns - the subset of queued interns that are marked as being successful and need to be paid
+	 - new_terminations_with_pay - the subset of queued interns with an internship termination that should be paid the initial stipend
+	 - new_terminations_with_no_pay - the subset of queued interns with an internship termination that should *NOT* be paid the initial stipend
+	 - interns_missing_feedback - mentors have not submitted feedback for the intern, and the initial feedback deadline has passed
+	 - interns_with_active_extensions - mentors have not submitted feedback for the intern, and the initial feedback deadline has not passed
+	 - interns_with_unreviewed_feedback : interns_with_unreviewed_feedback,
+	 - total_reviewed_and_queued - number of interns in the queue, plus the number of interns who Outreachy organizers have sent their internship feedback off to Conservancy
+	 - total_terminations - number of internship terminations that are queued to be communicated to Conservancy
+	 - total_number_interns
+	{% endcomment %}
+
+	<p><a href="{% url 'initial-feedback-summary' round_slug=current_round.slug %}"><button class="btn btn-info" type="button">Initial feedback details</button></a></p>
+	<h1>Feedback and payment</h1>
+	<p>Outreachy organizers review feedback submitted by mentors, and queue them to be sent in batches to Conservancy. This page shows the status of queued, sent, and missing feedback, as well as extended internships.</p>
+
+	<h2>Feedback and payment status</h2>
+
+	<p>{{ current_round.get_approved_intern_selections.count }} total interns:</p>
+	<ul>
+		<li>{{ queued_interns.count }} intern{{ queued_interns.count|pluralize:" has,s have" }} feedback queued</li>
+		<li>{{ interns_missing_feedback.count }} intern{{ interns_missing_feedback.count|pluralize:" is,s are" }} missing feedback</li>
+		<li>{{ interns_with_active_extensions.count }} intern{{ interns_with_active_extensions.count|pluralize:" has,s have" }} an internship extension</li>
+		<li>{{ interns_with_unreviewed_feedback.count }} intern{{ interns_with_unreviewed_feedback.count|pluralize:" has,s have" }} unreviewed feedback</li>
+	</ul>
+
+	{% if total_terminations %}
+		<p><span class="badge badge-danger">Termination</span> {{ total_terminations }} internship termination{{ total_terminations|pluralize }} will be communicated to Conservancy.</p>
+	{% endif %}
+
+	<h2>Queued for Conservancy</h2>
+	<p>Status update to be sent to Conservancy:</p>
+
+	{% include 'home/snippet/initial_payment_queue_table.html' %}
+
+	<h2>Email to Conservancy</h2>
+
+	<p>Subject: [Outreachy] {{ current_round.internstarts|date:"M Y" }} initial payment authorization</p>
+
+
+	{% if queued_interns %}
+		<p>Please find attached the JSON file of mentor feedback for the initial ${{ current_round.initialpayment }} internship stipend.</p>
+
+		<p>This email includes new {% if new_successful_interns %}payment{% endif %}{% if new_successful_interns and total_terminated_interns %} and {% endif %}{% if total_terminated_interns %}termination{% endif %} authorizations for {{ queued_interns.count }} intern{{ queued_interns.count|pluralize }}.</p>
+	<p>Including this email, Outreachy organizers have now reviewed initial feedback for {{ total_reviewed_and_queued }} out of {{ current_round.get_approved_intern_selections.count }} interns.</p>
+	{% else %}
+		<p>This email is a status update only. Outreachy organizers have not reviewed any new initial feedback.</p>
+
+		<p>Outreachy organizers have reviewed initial feedback for {{ total_reviewed_and_queued }} out of {{ current_round.get_approved_intern_selections.count }} interns.</p>
+	{% endif %}
+
+
+	{% if new_successful_interns %}
+		<p>Successful feedback<br>
+		---</p>
+
+		<p>{{ new_successful_interns.count }} intern{{ new_successful_interns.count|pluralize:" has,s have"}} new successful feedback. We are authorizing their initial stipend payment:</p>
+
+		<ul>
+			{% for intern_selection in new_successful_interns %}
+				<li>{{ intern_selection.applicant.applicant.public_name }} &lt;{{ intern_selection.applicant.applicant.account.email }}&gt; # {{ intern_selection.community_name }}</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+
+	{% if total_terminations %}
+		<p>Terminations<br>
+		---</p>
+
+		<p>Mentors have requested internship termination for {{ total_terminations}} intern{{ total_terminations|pluralize }}. These new terminations need to be processed.</p>
+
+		{% if new_terminations_with_pay %}
+			{% include 'home/snippet/terminate_with_pay_list.html' %}
+		{% endif %}
+
+		{% if new_terminations_with_no_pay %}
+			{% include 'home/snippet/terminate_with_no_pay_list.html' %}
+		{% endif %}
+
+		<p>We have attached documentation of email conversations with mentors confirming the terminations of those internships.</p>
+	{% endif %}
+
+	{% if interns_missing_feedback %}
+		<p>Missing feedback<br>
+		---</p>
+
+		<p>{{ interns_missing_feedback.count }} intern{{ interns_missing_feedback|pluralize:" is,s are" }} missing mentor feedback:</p>
+
+		<ul>
+			{% for intern_selection in interns_missing_feedback %}
+				<li>{{ intern_selection.applicant.applicant.public_name }} &lt;{{ intern_selection.applicant.applicant.account.email }}&gt; # {{ intern_selection.community_name }} - initial feedback due {{ intern_selection.initial_feedback_due }}</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+
+	{% if interns_with_active_extensions %}
+		<p>Extensions<br>
+		---</p>
+
+		<p>{{ interns_with_active_extensions.count }} internship{{ interns_with_active_extensions.count|pluralize:" has,s have" }} been extended, and their initial feedback is not due yet:</p>
+
+		<ul>
+			{% for intern_selection in interns_with_active_extensions %}
+				<li>{{ intern_selection.applicant.applicant.public_name }} &lt;{{ intern_selection.applicant.applicant.account.email }}&gt; # {{ intern_selection.community_name }} - initial feedback due {{ intern_selection.initial_feedback_due }}</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+
+	{% if interns_with_unreviewed_feedback %}
+		<p>Unreviewed feedback<br>
+		---</p>
+
+		<p>Feedback for {{ interns_with_unreviewed_feedback.count }} intern{{ interns_with_unreviewed_feedback.count|pluralize:" has,s have" }} been submitted, but not reviewed by Outreachy organizers:</p>
+
+		<ul>
+			{% for intern_selection in interns_with_unreviewed_feedback %}
+				<li>{{ intern_selection.applicant.applicant.public_name }} &lt;{{ intern_selection.applicant.applicant.account.email }}&gt; # {{ intern_selection.community_name }}</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+
+	<h1 id="queue-processing-instructions">Process payment queue</h1>
+
+	<p><b>Step 1:</b> Communicate to other Outreachy organizers that you will be processing the payment queue. Tell them not to put any new interns into the queue before you clear it. Otherwise the file you export in Step 2 will be missing feedback you mark as processed in Step 4.</p>
+
+	<p><b>Step 2:</b> Review the queue below, and then export the JSON file and save it.</p>
+
+	{% include 'home/snippet/initial_payment_queue_table.html' %}
+
+	<p><a href="{% url 'export-initial-feedback-queue' round_slug=current_round.slug %}"><button class="btn btn-info" type="button">Export queue</button></a></p>
+
+	<p><b>Step 3:</b> Send personalized internship termination emails. Once the queue has been cleared, interns will be able to see whether their mentor has said they should be paid or not paid the initial stipend. This should not come as a surprise to the intern when looking at their Outreachy website dashboard.</p>
+
+	{% if total_terminations %}
+		{% if new_terminations_with_pay %}
+			{% include 'home/snippet/terminate_with_pay_list.html' %}
+		{% endif %}
+
+		{% if new_terminations_with_no_pay %}
+			{% include 'home/snippet/terminate_with_no_pay_list.html' %}
+		{% endif %}
+	{% else %}
+		<ul>
+			<li>No termination requests in the payment authorization queue.</li>
+		</ul>
+	{% endif %}
+
+	<p><b>Step 4:</b> Clear the queue. Processing the queue will change the initial payment status from "queued" to "paid" (successful feedback, or internship terminated with pay), or "do not pay" (internship terminated without pay). After processing the queue, the processed payment authorizations will not show up in the JSON file export.</p>
+	<p><a href="{% url 'process-initial-feedback-queue' round_slug=current_round.slug %}"><button class="btn btn-warning" type="button">Clear queue</button></a></p>
+	<p><b>Step 5:</b> Communicate to other Outreachy organizers that you are done processing the payment queue.</p>
+	<p><b>Step 6:</b> Review more intern feedback?</p>
+	<ul>
+		<li>{{ interns_with_unreviewed_feedback.count }} intern{{ interns_with_unreviewed_feedback.count|pluralize:" has,s have" }} unreviewed feedback</li>
+	</ul>
+	<p><a href="{% url 'initial-feedback-summary' round_slug=current_round.slug %}"><button class="btn btn-info" type="button">Initial feedback details</button></a></p>
+{% endif %}
+{% endblock %}

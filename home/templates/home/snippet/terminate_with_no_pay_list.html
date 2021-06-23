@@ -1,0 +1,12 @@
+{% comment %}
+Pass the following variables into this template:
+ - new_terminations_with_no_pay - list of class InternSelection, or empty list
+{% endcomment %}
+
+<p>{{ new_terminations_with_no_pay.count }} internship{{ new_terminations_with_no_pay.count|pluralize:" has,s have" }} been terminated, and the intern{{ new_terminations_with_no_pay.count|pluralize }} should *NOT* be paid the initial stipend:</p>
+
+<ul>
+	{% for intern_selection in new_terminations_with_no_pay %}
+		<li>{{ intern_selection.applicant.applicant.public_name }} &lt;{{ intern_selection.applicant.applicant.account.email }}&gt; # {{ intern_selection.community_name }}</li>
+	{% endfor %}
+</ul>

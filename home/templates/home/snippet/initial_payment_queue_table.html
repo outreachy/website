@@ -1,0 +1,17 @@
+<table class="table table-bordered">
+	<tr>
+		<th>Status</th>
+		<th>Intern</th>
+		<th>Community</th>
+		<th>Remove from queue?</th>
+	</tr>
+	{% for intern_selection in queued_interns %}
+		<tr>
+			<td>{% include 'home/snippet/mentor-feedback-status.html' with intern=intern_selection mentor_status=intern_selection.get_mentor_initial_feedback_status %}</td>
+			<td>{{ intern_selection.applicant.applicant.public_name }}</td>
+			<td>{{ intern_selection.community_name }}</td>
+			<td>
+				<a href="{% url 'dequeue-initial-feedback' round_slug=intern_selection.applicant.application_round.slug username=intern_selection.applicant.applicant.account.username %}"><button class="btn btn-warning" type="button">Remove</button></a>
+			</td>
+	{% endfor %}
+</table>
