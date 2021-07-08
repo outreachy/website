@@ -70,7 +70,7 @@
 				<li>Your initial feedback was submitted.</li>
 			{% endif %}
 			{% if internship.initialmentorfeedbackv2 %}
-				<li>Your mentor most recently submitted initial feedback on {{ internship.initialmentorfeedbackv2.find_version_mentor_edited.revision.date_created }}</li>
+				<li>Your mentor most recently submitted initial feedback on {{ internship.initialmentorfeedbackv2.find_version_mentor_edited.revision.date_created|date:"F d, Y" }}</li>
 			{% endif %}
 			{% if not internship.initialinternfeedbackv2 and not internship.initialmentorfeedbackv2 %}
 				<li>Neither you nor your mentor have submitted initial feedback.</li>
