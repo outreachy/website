@@ -834,3 +834,57 @@ To mark all interns with successful mid-point feedback as being authorized payme
 >>>
 ```
 
+# Internship extensions
+
+## Intern is struggling
+
+Reach out to the intern, and give them the opportunity to explain what's happening:
+
+1. How has their internship been going?
+
+2. Any issues?
+
+3. Are they getting support from their mentor?
+
+4. Is there anything we can do to help them?
+
+5. Talk about any concerning things we noticed in their internship feedback
+
+Discuss with mentors:
+
+1. How long of an extension is needed? Typically, we extend an internship by 1 or 2 weeks at most for the first extension. A shorter extension is better, since it means we can extend the internship again.
+
+2. Decide the criteria for a successful internship extension. Typically this involves increased communication, such as additional video chats/pair programming sessions, or a daily stand-up on real-time text chat. We tend to avoid setting the success criteria based on contribution output, since many factors can impact the quantity/quality of contributions.
+
+Set the internship extension dates:
+
+1. Go to the InternSelection class in the [Django admin console](https://www.outreachy.org/django-admin/home/internselection/)
+
+2. Search for the intern, either by name or by email. You can also filter by cohort or community from the menu to the right.
+
+3. Click on the link in the left most "Round" column to open the class InternSelection object. Scroll down to the series of dates that start with the field "Date the internship starts". You'll want to change some of the dates by the amount of the internship extension (e.g. 2 weeks).
+
+ - if you are extending the internship at the initial feedback point, you'll need to change all the dates starting from "Date initial feedback form opens..." Move all the dates forward by the amount of the internship extension.
+
+ - if you are extending the internship at the midpoint feedback point, you'll need to change all the dates starting from "Date mid-point feedback form opens..." Move all the dates forward by the amount of the internship extension.
+
+ - if you are extending the internship at the final feedback point, you'll need to change all the dates starting from "Date final feedback form opens..." Move all the dates forward by the amount of the internship extension.
+
+4. If the mentor has already given feedback, you'll need to allow them to re-submit feedback. For example, if the mentor has given midpoint feedback, their feedback will automatically be locked so it cannot be edited. The mentor will need to edit their midpoint feedback once the internship extension is over. So you will need to set the 'Allow edits' check box on both the "Mentor Submitted Midpoint Feedback Forms" and the "Intern Submitted Midpoint Feedback Forms" classes.
+
+5. Save the InternSelection object.
+
+
+Communicate to the intern, and Cc the mentor and coordinators:
+
+1. Why the internship extension is needed
+
+1. Internship extension length
+
+2. Criteria for a successful internship extension
+
+3. No question is too simple or silly. Mentors are here to help.
+
+4. Copy the new internship dates that are visible on the [active internships page](https://www.outreachy.org/dashboard/active-internship-contacts/).
+
+5. Mention that the intern's payment schedule will be shifted by the same amount of time as the internship extension (e.g. 2 weeks).
