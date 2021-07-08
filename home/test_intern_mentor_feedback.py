@@ -737,3 +737,57 @@ class InternSelectionTestCase(TestCase):
         self.assertFalse(feedback.allow_edits)
 
         self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+
+    def test_intern_sees_unsubmitted_initial_mentor_feedback(self):
+        """
+        The intern should be able to see on their dashboard
+        if their mentor has not submitted initial feedback.
+        """
+        current_round = RoundPageFactory(start_from='initialfeedback')
+        intern_selection = InternSelectionFactory(
+            active=True,
+            round=current_round,
+        )
+        self.client.force_login(intern_selection.applicant.applicant.account)
+        response = self.client.get(reverse('dashboard'))
+        self.assertContains(response, '<li>Neither you nor your mentor have submitted midpoint feedback.</li>', html=True)
+
+    def test_intern_sees_submitted_unreviewed_initial_mentor_feedback(self):
+        """
+        The intern should be able to see on their dashboard
+        if their mentor has submitted initial feedback.
+        """
+        # "Your mentor most recently submitted initial feedback on June 10, 2021, 4:14 p.m."
+        current_round = RoundPageFactory(start_from='initialfeedback')
+        intern_selection = InternSelectionFactory(
+            active=True,
+            round=current_round,
+        )
+
+        # We need to submit the initial mentor feedback through the web form
+        # so that it is properly under revision control
+        answers = self._mentor_feedback_form(intern_selection,
+            actions_requested=models.BaseMentorFeedback.PAY_AND_CONTINUE,
+        )
+        response = self._submit_mentor_feedback_form(intern_selection, 'initial', answers)
+        self.client.logout()
+
+        initial_mentor_feedback = models.InitialMentorFeedbackV2.objects.get(intern_selection = intern_selection)
+
+        self.client.force_login(intern_selection.applicant.applicant.account)
+        response = self.client.get(reverse('dashboard'))
+        self.assertContains(response, '<li>Your mentor most recently submitted initial feedback on {}</li>'.format(initial_mentor_feedback.find_version_mentor_edited().revision.date_created.strftime("%F %d, %Y")), html=True)
+
+    def test_intern_sees_reviewed_successful_initial_mentor_feedback(self):
+        """
+        The intern should be able to see on their dashboard
+        if the Outreachy organizers have approved their initial stipend payment.
+        """
+        self.assertTrue(False)
+
+    def test_intern_sees_reviewed_unsuccessful_initial_mentor_feedback(self):
+        """
+        The intern should be able to see on their dashboard
+        if the Outreachy organizers have NOT approved their initial stipend payment.
+        """
+        self.assertTrue(False)
