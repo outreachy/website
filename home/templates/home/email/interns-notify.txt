@@ -108,6 +108,17 @@ Depending on the country you reside in, you will be asked to provide either a W-
 
 Tax forms and payment routing information are due by {{ current_round.tax_form_deadline }}. Tax forms are required in order to be paid the internship stipend. You may be dropped from the program if you are asked for a form and you do not provide it within a month.
 
+Internet Censorship Prep
+---
+
+All Outreachy interns need to take steps in order to prepare for the possibility of internet censorship.
+
+Some Outreachy interns live in countries where the government can restrict internet access. This can impact your ability to work on your internship project, as popular sites like Gmail, GitHub, or GitLab may be blocked. Even if you think it's unlikely your internet will be censored, you can still help friends and other Outreachy participants if their internet is censored.
+
+Please read the "Internet Censorship Preparedness" section in the Internship Guide:
+
+http://www.outreachy.org/docs/internship/#internet-censorship-prep
+
 Travel Allowance
 ----------------
 
