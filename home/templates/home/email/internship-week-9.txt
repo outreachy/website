@@ -11,9 +11,9 @@ The theme for this week is "Career opportunities".
 
 Some Outreachy interns may not know what they want to do with their career. Other Outreachy interns may be switching careers, and not know how to break into a new field. There may be Outreachy interns who took time off from their career to raise kids, and want to get back to work.
 
-It's important to talk to your mentor, coordinators, and Outreachy organizers about what career opportunities are possible. If you don't ask for help finding opportunities, you may miss one! We'll have an Outreachy chat to share career opportunities.
+It's important to talk to your mentor, coordinators, and Outreachy organizers about what career opportunities are possible. We encourage you to talk to your mentor about what career options you would like to explore.
 
-Your goal for this week's blog post is to write a post about what direction you want your career to go. You may want to wait to publish the post until after you participate in next week's chat, since your goals might change!
+Your goal for this week's blog post is to write a post about what direction you want your career to go. You may want to wait to publish the post until after you participate in the intern chat, since your goals might change!
 
 Week 9 Mentor & Intern Chat
 ----------------------------
@@ -77,6 +77,30 @@ If you're looking for a job opportunity, here's some additional things you might
  - Are you looking for a remote job? (Hint, saying you already have three months experience as a remote intern will help you find another remote position!)
  - Are you looking for a full-time or part-time paid position?
  - Are you open to being a self-employed contractor?
+
+Social media promotion
+---
+
+Once you've written your blog post, we encourage you to share it on Twitter. Please include the Twitter account of your community. Please also include Outreachy's Twitter account (@outreachy). The Outreachy Twitter account will retweet your blog post. This may help you find people to help you with your career goals.
+
+It's important to write a tweet that encourages people to take a particular action. In this case, the action you want people to take is to help you further your career goal (not just read your blog post).
+
+Let's look at good example of how to promote your career blog post. Look at this tweet from a past Outreachy intern, Eduar Tua:
+
+https://twitter.com/eduartua/status/1113594223562035200
+
+This tweet is good at promoting Eduar's career goals because:
+
+1. It mentions what career goal Eduar wants: "I'm looking for a job"
+2. It mentions where Eduar is willing to live to meet his career goal: "I'm based in Mexico but willing to relocate"
+3. It mentions specific things Eduar would like to work on during his career: "Golang, Kubernetes, Linux, Web Development"
+4. It mentions an action people can take: "If you know someone who is hiring, let me know"
+5. It mentions what Eduar was working on during his Outreachy internship: "revamping de @kubernetesio developers guide"
+6. It tags social media handles of Outreachy (@outreachy) and the community Eduar worked with (@kubernetesio)
+
+While Eduar didn't include a link to a blog post about his career goals, we encourage you to link to your blog post.
+
+Don't stress too much about getting your social media post or blog post perfect. It's better to get the information out there and make connections than to spend too much time perfecting your blog post. We don't recommend spending more than 1 to 3 hours on your blog post.
 
 If you have any questions, please contact the Outreachy organizers organizers@outreachy.org
 
