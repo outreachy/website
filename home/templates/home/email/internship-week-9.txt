@@ -4,15 +4,6 @@ Welcome to week nine of your Outreachy internship! Now is a good time to start t
 
 We have some goals and assignments for both mentors and interns. Please read the sections below.
 
-Travel stipend
---------------
-
-If you haven't discussed with your mentor how you could use the Outreachy travel stipend, now is a good time to do so! Conferences and events are a great way to network and find new opportunities.
-
-Both you and your mentor(s) should carefully read Outreachy's travel stipend policy:
-
-{{ request.scheme }}://{{ request.get_host }}{% url 'travel-stipend' %}
-
 Week 9 Theme
 ------------
 
