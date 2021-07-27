@@ -2,7 +2,7 @@
 
 {% block title %}
 {{ community.name }}:
-{% if not current_round and participation_info and not participation_info.is_rejected and not participation_info.is_withdrawn %}
+{% if current_round and participation_info and not participation_info.is_rejected and not participation_info.is_withdrawn %}
 Call for Outreachy mentors and volunteers
 {% else %}
 Past community participation in Outreachy
