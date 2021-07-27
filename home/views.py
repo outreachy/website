@@ -1144,6 +1144,8 @@ class CommunityCreate(LoginRequiredMixin, ComradeRequiredMixin, CreateView):
     fields = ['name',
             'reason_for_participation',
             'mentorship_programs',
+            'repositories',
+            'licenses_used',
             'approved_license',
             'no_proprietary_software',
             'cla',

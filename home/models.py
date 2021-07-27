@@ -1515,6 +1515,18 @@ class NewCommunity(Community):
             verbose_name="What different organizations and companies participate in this FOSS community?",
             help_text="If there are many organizations, list the top five organizations who make large contributions.")
 
+    repositories = models.TextField(
+            blank=True,
+            max_length=THREE_PARAGRAPH_LENGTH,
+            verbose_name="List of repositories",
+            help_text="List the URLs of community repositories. Repositories can contain your open source community's code, documentation, and/or creative works. Repositories are usually hosted on GitHub, GitLab, or community web servers. If your community has multiple repositories, list the repositories which Outreachy applicants and interns will be likely to interact with.")
+
+    licenses_used = models.TextField(
+            blank=True,
+            max_length=THREE_PARAGRAPH_LENGTH,
+            verbose_name="List of open source licenses used",
+            help_text="For each repository listed above, say which open source license they use.")
+
     approved_license = models.BooleanField(
             default=False,
             help_text='I assert that all Outreachy internship projects under my community will be released under either an <a href="https://opensource.org/licenses/alphabetical">OSI-approved open source license</a> that is also identified by the FSF as a <a href="https://www.gnu.org/licenses/license-list.html">free software license</a>, OR a <a href="https://creativecommons.org/share-your-work/public-domain/freeworks/">Creative Commons license approved for free cultural works</a>')

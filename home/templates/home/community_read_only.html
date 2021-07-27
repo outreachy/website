@@ -318,6 +318,15 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 
 				    <p><b>Organizations that participate in this community:</b> {{ community.newcommunity.participating_orgs }}</p>
 
+				    {% if community.newcommunity.repositories %}
+					    <p><b>Repositories:</b></p>
+					    <p>{{ community.newcommunity.repositories|linebreaksbr }}</p>
+				    {% else %}
+					    <p>Links to code or creative works repositories were not provided.</p>
+				    {% endif %}
+
+				    <p>{% if community.newcommunity.licenses_used %}<b>Open source licenses used:</b></p><p>{{ community.newcommunity.licenses_used|linebreaksbr }}{% else %}A list of open source licenses used was not provided.{% endif %}</p>
+
 				    <p><b>{% if community.newcommunity.governance %}<a href="{{ community.newcommunity.governance }}">Governance policy</a>{% else %}Governance policy{% endif %}</b>. Organizations that participate in governance: {{ community.newcommunity.participating_orgs_in_goverance }}</p>
 
 				    <p>{% if community.newcommunity.cla %}<b><a href="{{ community.newcommunity.cla }}">CLA</a></b>{% else %}CLA not provided{% endif %}</p>
