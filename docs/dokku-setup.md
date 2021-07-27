@@ -344,6 +344,9 @@ $ ssh -t dokku@www.outreachy.org run www env --unset=SENTRY_DSN python manage.py
 
 # Marking interns as paid
 
+If all interns can be paid:
+
+```
 >>> from home.models import *
 current_round = RoundPage.objects.get(interstarts='YYYY-MM-DD')
 >>> interns = current_round.get_in_good_standing_intern_selections()
@@ -356,3 +359,17 @@ current_round = RoundPage.objects.get(interstarts='YYYY-MM-DD')
 ...             pass
 ... 
 >>> 
+```
+
+If you have a list of interns that have their payment authorized, but not all interns should be paid:
+
+```
+>>> emails = [ ... ]
+>>> from home import models
+>>> feedback = models.MidpointMentorFeedback.objects.filter(intern_selection__applicant__applicant__account__email__in=emails).exclude(organizer_payment_approved=False).filter(payment_approved=True)
+>>> for f in feedback:
+...     f.organizer_payment_approved = True
+...     f.save()
+...
+>>>
+```
