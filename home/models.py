@@ -4112,6 +4112,7 @@ class InternSelection(AugmentDeadlines, models.Model):
     PAY = 'PAY'
     PAID = 'PAID'
     EXTEND = 'EXT'
+    DUNNO = 'DUN'
     TERMINATE = 'TER'
     def get_mentor_initial_feedback_status(self):
         try:
@@ -4123,6 +4124,8 @@ class InternSelection(AugmentDeadlines, models.Model):
                 return self.TERMINATE
             elif actions_requested == BaseMentorFeedback.PAY_AND_CONTINUE:
                 return self.PAY
+            elif actions_requested == BaseMentorFeedback.DONT_KNOW:
+                return self.DUNNO
             else:
                 return self.EXTEND
         except InitialMentorFeedbackV2.DoesNotExist:
@@ -4145,6 +4148,8 @@ class InternSelection(AugmentDeadlines, models.Model):
                 return self.TERMINATE
             elif actions_requested == BaseMentorFeedback.PAY_AND_CONTINUE:
                 return self.PAY
+            elif actions_requested == BaseMentorFeedback.DONT_KNOW:
+                return self.DUNNO
             else:
                 return self.EXTEND
         except MidpointMentorFeedback.DoesNotExist:
@@ -4167,6 +4172,8 @@ class InternSelection(AugmentDeadlines, models.Model):
                 return self.TERMINATE
             elif actions_requested == BaseMentorFeedback.PAY_AND_CONTINUE:
                 return self.PAY
+            elif actions_requested == BaseMentorFeedback.DONT_KNOW:
+                return self.DUNNO
             else:
                 return self.EXTEND
         except FinalMentorFeedback.DoesNotExist:
