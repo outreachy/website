@@ -655,6 +655,7 @@ class InformalChatContactAdmin(reversion.admin.VersionAdmin):
     list_display = (
             'name',
             'email',
+            'comrade',
             )
     raw_id_fields = (
         'comrade',
@@ -665,10 +666,11 @@ class InformalChatContactAdmin(reversion.admin.VersionAdmin):
             'comrade__public_name',
             'comrade__legal_name',
             '=comrade__account__email',
-            'contributions',
+            'relationship_to_outreachy',
+            'foss_communities',
+            'paid_foss_roles',
+            'volunteer_foss_roles',
             'company',
-            'paid_roles',
-            'volunteer_roles',
             )
 
 admin.site.unregister(User)
