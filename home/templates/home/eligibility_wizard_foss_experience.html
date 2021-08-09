@@ -6,21 +6,23 @@ Outreachy Initial Application
 
 {% block content %}
 <h1>Outreachy Initial Application</h1>
-<p>
-Outreachy welcomes applicants who are newcomers to free and open source software (FOSS).
-We also welcome applicants who have made contributions to FOSS, and want to take the next step in their FOSS career.
-</p>
-<p>
-Outreachy asks the following questions to see if we are meeting our goal
-of promoting free software to people from groups under-represented in the technology industry.
-</p>
-<p>
-The answer to these questions will only be seen by the <a href="{% url 'contact-us' %}">Outreachy organizers</a>.
-It will not be shared with mentors, coordinators, or other applicants.
-Please be completely honest in your answers.
-</p>
 
 {% include "home/snippet/privacy_policy.html" %}
+
+<h2>Open Source Experience</h2>
+<p>
+<b>Outreachy welcomes applicants who are new to open source.</b>
+</p>
+
+<p>
+It is okay if you have never contributed to open source before!
+The following questions help us gather statistics.
+</p>
+
+<p>
+We do not reject initial applications for too little open source experience.
+You are welcome here.
+</p>
 
 <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
 <hr>
@@ -29,7 +31,21 @@ Please be completely honest in your answers.
 {{ wizard.form.media }}
 {{ wizard.management_form }}
 {% for field in form.visible_fields %}
-    {% if 'outreachy' in field.label_tag or 'ave you contributed' in field.label_tag or 'ave you ever been' in field.label_tag or 'your contribution type' in field.label_tag %}
+    {% if 'Have you contributed to' in field.label_tag %}
+	    <div class="form-group card">
+		    {{ field.errors }}
+		    <div class = "card-header">
+			    {{ field.label_tag|safe }}
+		    </div>	    
+		    <div class = "card-body">
+			    {{ field }}
+		    </div>
+		    <div class="card-footer bg-white">
+			    <p>Outreachy welcomes applicants who are new open source. Saying 'no' to this question will not effect your chances of being accepted. It is only to gather statistics.</p>
+			    <p>Please exclude contributions that were made as part of a prior Outreachy application period.</p>
+		    </div>
+	    </div>
+    {% else %}
 	    <div class="form-group card">
 		    {{ field.errors }}
 		    <div class = "card-header">
@@ -42,27 +58,6 @@ Please be completely honest in your answers.
 			    <div class="card-footer bg-white">{{ field.help_text|safe }}</div>
 		    {% endif %}
 	    </div>
-    {% elif 'Programming:' in field.label_tag %}
-	    <div class="form-group card">
-		    <div class = "card-header">
-			    <p>In the past, how have you contributed to free and open source software? Check all that apply. Please record both paid and unpaid contributions. Exclude contributions that were made as part of a prior Outreachy application period.</p>
-		    </div>
-		    <div class = "card-body">
-			    <p>
-			    {{ field.errors }}
-			    {{ field.label_tag }}
-			    {{ field }}
-			    </p>
-    {% else %}
-		    <p>
-		    {{ field.errors }}
-		    {{ field.label_tag }}
-		    {{ field }}
-		    </p>
-    {% endif %} 
-    {% if 'accessibility' in field.label_tag %}
-	    </div>
-    </div>
     {% endif %} 
 {% endfor %}
 {% for hidden in form.hidden_fields %}

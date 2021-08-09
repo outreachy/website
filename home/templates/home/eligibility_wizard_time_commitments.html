@@ -9,29 +9,120 @@ Are you eligible to apply to Outreachy?
 
 {% include "home/snippet/privacy_policy.html" %}
 
+<h2>Time Commitments</h2>
+
 <p>
-Please enter information about your time commitments during the Outreachy internship period,
-from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
+Tell us about things that take up your time:
 </p>
+<ul>
+	<li>school</li>
+	<li>jobs</li>
+	<li>online courses</li>
+	<li>volunteer work</li>
+</ul>
+
+<p>
+Include your schedule from <b>today until {{ current_round.sfc_payment_last_date|date:"F d, Y" }}</b>.
+</p>
+
 <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
 <hr>
 
 <form action="" method="post">{% csrf_token %}
 {{ wizard.form.media }}
 {{ wizard.management_form }}
-{% if wizard.form.forms %}
-    {{ wizard.form.management_form }}
-    {% for form in wizard.form.forms %}
-        {% include "bootstrap_card_form.html" with form=form only %}
-	<hr>
-    {% endfor %}
-{% else %}
-    {% include "bootstrap_card_form.html" with form=wizard.form only %}
-{% endif %}
+{% for field in form.visible_fields %}
+    {% if 'university' in field.label_tag %}
+	    <div class="form-group card">
+		    {{ field.errors }}
+		    <div class = "card-header">
+			    {{ field.label_tag|safe }}
+		    </div>	    
+		    <div class = "card-body">
+			    {{ field }}
+		    </div>
+		    <div class="card-footer bg-white">
+			    <p>If you will be a student before {{ current_round.sfc_payment_last_date|date:"F d, Y" }}, say 'Yes'.</p>
+			    <p>If you are currently a student, say 'Yes'.</p>
+			    <p>If you are a student who will graduate soon, say 'Yes'.</p>
+			    <p>If your school break is during the internship, say 'Yes'.</p>
+			    <p>If you are a masters or PhD student working on your thesis, say 'Yes'.</p>
+		    </div>
+	    </div>
+    {% elif 'employee' in field.label_tag %}
+	    <div class="form-group card">
+		    {{ field.errors }}
+		    <div class = "card-header">
+			    {{ field.label_tag|safe }}
+		    </div>	    
+		    <div class = "card-body">
+			    {{ field }}
+		    </div>
+		    <div class="card-footer bg-white">
+			    <p>If you have a job, say 'Yes'. If you plan on quitting your job, say yes.</p>
+			    <p>If you have an unpaid internship, say 'Yes'.</p>
+			    <p>If you have a job offer, say 'Yes'. If the job starts after the Outreachy internship ends, say 'Yes'.<p>
+			    <p>If you are applying to jobs, but you do not have a job offer, say 'No'.</p>
+			    <p>Do not count the Outreachy internship as a job.</p>
+		    </div>
+	    </div>
+    {% elif 'contractor' in field.label_tag %}
+	    <div class="form-group card">
+		    {{ field.errors }}
+		    <div class = "card-header">
+			    {{ field.label_tag|safe }}
+		    </div>	    
+		    <div class = "card-body">
+			    {{ field }}
+		    </div>
+		    <div class="card-footer bg-white">
+			<p>A contractor (or consultant) is paid to work on projects. They may work with multiple clients. Once the project is finished, the client can choose whether to hire them again.</p>
+			
+			<p>If you are a contractor or consultant, say 'Yes'.</p>
+
+			<p>When in doubt, say 'No'</p>
+		    </div>
+	    </div>
+    {% elif 'volunteer' in field.label_tag %}
+	    <div class="form-group card">
+		    {{ field.errors }}
+		    <div class = "card-header">
+			    {{ field.label_tag|safe }}
+		    </div>	    
+		    <div class = "card-body">
+			    {{ field }}
+		    </div>
+		    <div class="card-footer bg-white">
+			<p>Volunteering means helping without pay. You may volunteer to help a person, a group, or an organization. Examples of ways people volunteer: helping with an event, running a school club, playing in a band, or mentoring people.</p>
+			<p>Do not count the Outreachy internship as volunteer work.</p>
+			<p>Do not count volunteer work that is less than 10 hours per week.</p>
+			<p>If you have an unpaid internship, say 'No'.</p>
+		    </div>
+	    </div>
+    {% else %}
+	    <div class="form-group card">
+		    {{ field.errors }}
+		    <div class = "card-header">
+			    {{ field.label_tag|safe }}
+		    </div>	    
+		    <div class = "card-body">
+			    {{ field }}
+		    </div>
+		    {% if field.help_text %}
+			    <div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+		    {% endif %}
+	    </div>
+    {% endif %} 
+{% endfor %}
+{% for hidden in form.hidden_fields %}
+{{ hidden }}
+{% endfor %}
+
 {% if wizard.steps.prev %}
 <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.first }}">First step</button>
 <button name="wizard_goto_step" class="btn btn-secondary" type="submit" value="{{ wizard.steps.prev }}">Previous step</button>
 {% endif %}
+
 <input type="submit" class="btn btn-primary" value="Next step"/>
 </form>
 

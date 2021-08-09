@@ -11,6 +11,8 @@ Outreachy Initial Application
 
 {% include "home/snippet/privacy_policy.html" %}
 
+<h2>Essay Questions</h2>
+
 <p>
 Outreachy's goal is to support people from groups who are under-represented in the technology industry.
 The following essay questions help us determine if your application is aligned with our program goal.
@@ -192,7 +194,27 @@ It will not be shared with mentors, coordinators, or other applicants.
 
 				    <p>
 				    Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>
+				</div>
 			</div>
+		{% elif 'Content warnings' in field.label_tag %}
+			<div class="form-group card">
+				{{ field.errors }}
+				<div class="card-header">
+					(Optional) {{ field.label_tag }}
+				</div>
+				<div class="card-body">
+					{{ field }}
+				</div>
+				<div class="card-footer bg-white">
+					<p>Some essays may talk about very harsh or hard things. That's okay. There's no need to change your essay.</p>
+
+					<p>It can help us to know what harsh or hard topics are in your essay. These are called "content warnings".</p>
+
+					<p>Content warnings can be one or two words. Examples include: "violence", "sexual assault", or "war".</p>
+					<p>Content warnings help reviewers mentally prepare to read your essay. Thank you for your help!</p>
+					<p>If you do you not talk about harsh or hard things in your essays, leave this field blank.
+					</p>
+				</div>
 			</div>
 		{% else %}
 			<div class="form-group card">

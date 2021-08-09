@@ -2916,16 +2916,13 @@ class WorkEligibility(models.Model):
             verbose_name='Will you be 18 years or older when the Outreachy internship starts?')
 
     student_visa_restrictions = models.BooleanField(
-            verbose_name='Do you have a student visa that limits the dates that you can work 40 hours a week during the internship period?',
-            help_text='Your student visa must allow you to work 40 hours a week for you to be eligible for Outreachy. If you are on a student visa in the United States of America, you might have limited dates when you can work 40 hours a week. We will work with you to shift your internship dates by up to five weeks. However, we cannot accommodate shortening the 12 week internship. Students on an F-1 visa might need to provide their university documentation to apply for CPT. Outreachy organizers can provide you CPT documentation once you are selected as an intern.')
+            verbose_name='Do you have a student visa?')
 
     eligible_to_work = models.BooleanField(
-            verbose_name='Are you eligible to work for 40 hours a week in ALL the countries you will be living in for the entire internship period, and five weeks after the internship period ends?',
-            help_text='<p><b>Student visas</b>: Please note that in some countries, students studying abroad on a student visa may not be eligible to work full-time (40 hours a week). If you are on a student visa, please double check the hours and dates of the internship with your school counselors before applying.</p><p><b>Spouse visas</b>: In some countries, spousal visas may not allow spouses to work. Please contact your immigration officer if you have any questions about whether your visa allows you to work full-time (40 hours a week).</p><p><b>International Travel</b>: Outreachy interns are not required to work while they are traveling internationally. If you travel for more than 1 week, you may need to extend your internship. Internships can be extended for up to five weeks with prior approval from your mentor and the Outreachy Organizers.</p>')
+            verbose_name='Are you eligible to work for 40 hours a week in ALL the countries you will be living in for the entire internship period, and five weeks after the internship period ends?')
 
     under_export_control = models.BooleanField(
-            verbose_name='Are you a person or entity restricted by United States of America export controls or sanctions programs?',
-            help_text='See the <a href="https://www.treasury.gov/resource-center/sanctions/Programs/Pages/Programs.aspx">US export control and sanctions list</a> for more information')
+            verbose_name='Are you a person or entity restricted by United States of America export controls or sanctions programs?')
 
     us_sanctioned_country = models.BooleanField(
             verbose_name='Are you a citizen, resident, or national of Crimea, Cuba, Iran, North Korea, or Syria?',
@@ -2956,63 +2953,13 @@ class PriorFOSSExperience(models.Model):
             verbose_name='Have you been accepted as a Google Summer of Code intern, an Outreach Program for Women intern, or an Outreachy intern before?',
             help_text='Please say yes even if you did not successfully complete the internship.')
 
-    prior_contributor = models.BooleanField(verbose_name='Have you contributed to free and open source software before?', help_text='<p>Outreachy welcomes applicants who are newcomers to free and open source software (FOSS). We also welcome applicants who have made contributions to FOSS, and want to take the next step in their FOSS career. Outreachy asks this questions to see if we are meeting our goal of promoting free software to people from groups under-represented in the technology industry.</p><p>Please exclude contributions that were made as part of a prior Outreachy application period.</p>')
+    prior_contributor = models.BooleanField(
+            verbose_name='Have you contributed to open source before?')
 
     prior_paid_contributor = models.BooleanField(verbose_name='Have you ever been PAID to contribute to free and open source software before?', help_text='Please include paid internships, contract work, employment, stipends, or grants.')
 
-    # A series of check boxes to say what areas they have contributed to free software before
-    prior_contrib_coding = models.BooleanField(verbose_name='Programming')
-    prior_contrib_forums = models.BooleanField(verbose_name='Participating in forums')
-    prior_contrib_events = models.BooleanField(verbose_name='Organizing events')
-    prior_contrib_issues = models.BooleanField(verbose_name='Reporting issues')
-    prior_contrib_devops = models.BooleanField(verbose_name='Running project infrastructure')
-    prior_contrib_docs = models.BooleanField(verbose_name='Documentation')
-    prior_contrib_data = models.BooleanField(verbose_name='Data science')
-    prior_contrib_translate = models.BooleanField(verbose_name='Translation')
-    prior_contrib_illustration = models.BooleanField(verbose_name='Graphical design')
-    prior_contrib_ux = models.BooleanField(verbose_name='User experience')
-    prior_contrib_short_talk = models.BooleanField(verbose_name='Giving a short talk')
-    prior_contrib_testing = models.BooleanField(verbose_name='Testing releases or quality assurance')
-    prior_contrib_security = models.BooleanField(verbose_name='Improving security or pen testing')
-    prior_contrib_marketing = models.BooleanField(verbose_name='Marketing for projects')
-    prior_contrib_reviewer = models.BooleanField(verbose_name='Reviewing contributions')
-    prior_contrib_mentor = models.BooleanField(verbose_name='Mentoring contributors')
-    prior_contrib_accessibility = models.BooleanField(verbose_name='Improving or testing accessibility')
-    prior_contrib_self_identify = models.CharField(max_length=SENTENCE_LENGTH,
-            blank=True,
-            verbose_name="If your contribution type is NOT listed above, how have you contributed to free and open source software before?")
-
-    def get_prior_contribution_types(self):
-        # getattr looks up the field's value on the object
-        prior_contribs = [f.verbose_name.lower() for f in self._meta.get_fields() if f.get_internal_type() == 'BooleanField' and getattr(self, f.attname) and f.name.startswith('prior_contrib_')]
-        if len(prior_contribs) == 0:
-            return ''
-
-        if self.prior_contrib_self_identify:
-            prior_contribs.append(self.prior_contrib_self_identify)
-
-        prior_contribs_string = ', '.join(prior_contribs[:-1])
-
-        if len(prior_contribs) == 1:
-            ending_joiner = ''
-        else:
-            ending_joiner = ' and '
-        prior_contribs_string = prior_contribs_string + ending_joiner + prior_contribs[-1]
-
-        return prior_contribs_string
-
     def get_answers(self):
-        # getattr looks up the field's value on the object
-        answers = [
-            (f, "Yes" if getattr(self, f.attname) else "No")
-            for f in self._meta.get_fields()
-            if f.get_internal_type() == 'BooleanField' and not f.name.startswith('prior_contrib_')
-        ]
-        answers.append((
-            { 'verbose_name': 'In the past, how have you contributed to free and open source software?' },
-            self.get_prior_contribution_types() or 'No prior contributions',
-        ))
-        return answers
+        return get_answers_for_all_booleans(self)
 
 
 class ApplicantGenderIdentity(models.Model):
@@ -3132,7 +3079,12 @@ class ApplicantRaceEthnicityInformation(models.Model):
 
 
 class BarriersToParticipation(models.Model):
+    ESSAY_LENGTH=1000
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
+
+    content_warnings = models.CharField(verbose_name='Content warnings',
+            blank=True,
+            max_length=SENTENCE_LENGTH)
 
     # NOTE: Update home/templates/home/eligibility.html if you change the text here:
     country_living_in_during_internship = models.CharField(
@@ -3150,14 +3102,18 @@ class BarriersToParticipation(models.Model):
             blank=True,
             )
 
-    underrepresentation = models.TextField(verbose_name='Are you part of an underrepresented group (in the technology industry of the country listed above)? How are you underrepresented?')
+    underrepresentation = models.TextField(verbose_name='Are you part of an underrepresented group (in the technology industry of the country listed above)? How are you underrepresented?',
+            max_length=ESSAY_LENGTH)
 
-    lacking_representation = models.TextField(verbose_name='Does your learning environment have few people who share your identity or background? Please provide details.')
+    lacking_representation = models.TextField(verbose_name='Does your learning environment have few people who share your identity or background? Please provide details.',
+            max_length=ESSAY_LENGTH)
 
-    systemic_bias = models.TextField(verbose_name='What systemic bias or discrimination have you faced while building your skills?')
+    systemic_bias = models.TextField(verbose_name='What systemic bias or discrimination have you faced while building your skills?',
+            max_length=ESSAY_LENGTH)
 
-    employment_bias = models.TextField(verbose_name='What systemic bias or discrimination would you face if you applied for a job in the technology industry of your country?')
-
+    employment_bias = models.TextField(verbose_name='What systemic bias or discrimination would you face if you applied for a job in the technology industry of your country?',
+            max_length=ESSAY_LENGTH)
+    
     applicant_should_update = models.BooleanField(default=False)
 
     def get_answers(self):
@@ -3188,29 +3144,20 @@ class TimeCommitmentSummary(models.Model):
     applicant = models.OneToOneField(ApplicantApproval, on_delete=models.CASCADE, primary_key=True)
 
     enrolled_as_student = models.BooleanField(
-            verbose_name='Are you (or will you be) a university or college student?',
-            help_text='Will you be enrolled in a university or college? Please state yes even if only a few days overlap with the Outreachy internship period.')
+            verbose_name='Are you (or will you be) a university or college student?')
 
     enrolled_as_noncollege_student = models.BooleanField(
-            verbose_name='Are you enrolled in a coding school or self-paced online courses?',
-            help_text='Will you be enrolled in a coding school or self-paced online classes during the Outreachy internship period?')
+            verbose_name='Are you (or will you be) enrolled in a coding school or self-paced online courses?')
 
     employed = models.BooleanField(
-            help_text='Will you be an employee (for any number of hours) during the Outreachy internship period?')
+            verbose_name='Are you (or will you be) an employee?')
 
     contractor = models.BooleanField(
-            verbose_name='Will you be a contractor during the Outreachy internship period?',
-            help_text="A contractor is someone who is self-employed. Contractors have clients. They are not employees of their clients. Instead, they are paid for completing a project. After the project ends, the contractor is no longer working for the client. When in doubt, say 'No' to this question.",
+            verbose_name='Are you (or will you be) a contractor?',
             )
 
     volunteer_time_commitments = models.BooleanField(
-            help_text='Will you have any volunteer positions (such as volunteering with a non-profit or community center, participating in a community band, or volunteering to organize an event) that require more than 10 hours a week during the Outreachy internship period? Do not count your Outreachy internship time as a volunteer position.')
-
-    # FIXME: this field was never used in a view??
-    other_time_commitments = models.TextField(
-            max_length=THREE_PARAGRAPH_LENGTH,
-            blank=True,
-            help_text="(Optional) If you have other time commitments outside of school, work, or volunteer hours, please use this field to let your mentor know. Examples of other time commitments include vacation that lasts longer than a week, coding school time commitments, community or online classes, etc.")
+            verbose_name='Are you (or will you be) a volunteer?')
 
 class VolunteerTimeCommitment(models.Model):
     applicant = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
@@ -3278,6 +3225,10 @@ class OfficialSchool(models.Model):
 
     university_website = models.URLField(
             help_text="University or college website")
+
+    notes = models.TextField(
+            help_text="Notes to display to initial application reviewers",
+            blank=True)
 
 class OfficialSchoolTerm(models.Model):
     school = models.ForeignKey(OfficialSchool, on_delete=models.CASCADE)

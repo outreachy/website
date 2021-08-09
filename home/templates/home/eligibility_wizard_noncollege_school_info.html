@@ -9,12 +9,27 @@ Are you eligible to apply to Outreachy?
 
 {% include "home/snippet/privacy_policy.html" %}
 
+<h2>Coding School & Online Courses</h2>
 <p>
-Please enter information about your coding school or online courses during the Outreachy internship period,
-from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
-If you have less than five courses, leave additional ones blank.
-If your coding school doesn't have courses, fill out your time commitments in one "course".
+Tell us about your schedule:
 </p>
+<ul>
+	<li>What dates will you go to coding school?</li>
+	<li>What dates will you go to online courses?</li>
+</ul>
+
+<p>
+Include your schedule from <b>today until {{ current_round.sfc_payment_last_date|date:"F d, Y" }}</b>.
+</p>
+
+<p>If your coding school will end soon, please still fill out this form.</p>
+
+<p>If your coding school does not have courses, fill in your coding school dates in one "course".</p>
+
+<p>If your coding school has breaks, fill in multiple "courses".</p>
+
+<p>Leave unused "courses" blank.</p>
+
 <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
 <hr>
 

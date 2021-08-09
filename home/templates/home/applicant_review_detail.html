@@ -25,6 +25,10 @@
 	{% include 'home/snippet/applicant_review_actions.html' %}
 	<h1>Initial Application</h1>
 
+	{% if application.barrierstoparticipation.content_warnings %}
+		<p>Content warnings: <b>{{ application.barrierstoparticipation.content_warnings }}</b></p>
+	{% endif %}
+
 	<h2>Time Commitment Details</h2>
 	{% include 'home/snippet/time_commitment_overview.html' %}
 	{% include 'home/snippet/applicant_review_time_commitments.html' %}
@@ -121,7 +125,6 @@
 				<b>No</b>, no they have not been paid for their contributions to FOSS.
 			{% endif %}
 		</li>
-		<li>Prior experiences contributing to FOSS as a volunteer or paid contributor: <b>{{ application.priorfossexperience.get_prior_contribution_types }}</b>{% if not application.priorfossexperience.get_prior_contribution_types %}None{% endif %}</li>
 	</ul>
 
 	<h2>Reviewer Comments</h2>

@@ -6,16 +6,22 @@ Outreachy Initial Application
 
 {% block content %}
 <h1>Outreachy Initial Application</h1>
+
+{% include "home/snippet/privacy_policy.html" %}
+
+<h2>Gender identity</h2>
+
 <p>
 The answer to these questions will only be seen by the <a href="{% url 'contact-us' %}">Outreachy organizers</a>.
 It will not be shared with mentors, coordinators, or other applicants.
 </p>
 
-{% include "home/snippet/privacy_policy.html" %}
+<p>
+If you do not understand what a term means, don't check it or say yes.
+</p>
 
 <p>
 When you get to the questions about your gender identity, please check all that apply.
-If you do not understand what a term means, don't check it or say yes.
 </p>
 <p>
 If you are questioning whether you identify as a particular gender, please check that gender identity.

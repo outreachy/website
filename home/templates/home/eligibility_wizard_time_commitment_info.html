@@ -9,12 +9,20 @@ Are you eligible to apply to Outreachy?
 
 {% include "home/snippet/privacy_policy.html" %}
 
+<h2>Volunteer roles</h2>
+
+<p>Volunteering means helping without pay. You may volunteer to help a person, a group, or an organization. Examples of ways people volunteer: helping with an event, running a school club, playing in a band, or mentoring people.</p>
 <p>
-Please enter information about your time commitments during the Outreachy internship period,
-from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
-Only enter time commitments that will require more than 10 hours a week.
+Include the volunteer roles you will have from <b>today until {{ current_round.sfc_payment_last_date|date:"F d, Y" }}</b>.
+</p>
+<p>Do not count the Outreachy internship as volunteer work.</p>
+<p>Do not count volunteer work that is less than 10 hours per week.</p>
+<p>Do not count unpaid internships.</p>
+
+<p>
 If you have less than three time commitments, leave additional ones blank.
 </p>
+
 <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
 <hr>
 

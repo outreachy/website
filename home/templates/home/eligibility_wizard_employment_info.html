@@ -9,10 +9,22 @@ Are you eligible to apply to Outreachy?
 
 {% include "home/snippet/privacy_policy.html" %}
 
+<h2>Current and future employment</h2>
+</p>
+<p>Include your employment from <b>today until {{ current_round.sfc_payment_last_date|date:"F d, Y" }}</b>.
+</p>
 <p>
-The following questions apply to employment contracts, including full-time or part-time employment and contract work.
-Only fill out employment information for contracts that are valid during the Outreachy internships period,
-from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
+Tell us about your:
+</p>
+<ul>
+	<li>current part-time jobs</li>
+	<li>current full-time jobs</li>
+	<li>current unpaid internships</li>
+	<li>job offers</li>
+</ul>
+
+<p>
+Do not include the Outreachy internship.
 </p>
 
 <p>
@@ -31,6 +43,7 @@ If you have less than three employment periods during the Outreachy internship p
 <p>
 If you are a teacher who has a break between terms, enter your employment period as two employment time commitments. The first time commitment end date should be the last day of exams (or your last day of work before the break). The second time commitment start date should be the first day you go back to teach.
 </p>
+
 <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
 <hr>
 

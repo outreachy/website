@@ -9,8 +9,8 @@ Outreachy Initial Application
 
 {% include "home/snippet/privacy_policy.html" %}
 
+<h2>How did you find us?</h2>
 <p>
-We'd like to know how you found us!
 The answer to the following question will only be seen by the <a href="{% url 'contact-us' %}">Outreachy organizers</a>.
 It will not be shared with mentors, coordinators, or other applicants.
 </p>
@@ -30,17 +30,20 @@ It will not be shared with mentors, coordinators, or other applicants.
         {% include "bootstrap_card_form.html" with form=wizard.form only %}
 {% endif %}
 
+<h2>Review Your Application</h2>
+
 <div class="card border mt-3" id="essay-rating">
 	<div class="card-header bg-warning text-white">Please double check your answers</div>
 	<div class="card-body">
 		<div class="card-text">
-			<p>Please carefully review your initial application answers before you submit it.
-			Please do not skip questions, and make sure you answer either 'Yes' or 'No' to all Yes/No questions.
-			</p>
-			<p>You can review your answers by using the 'Previous step' button below.
-			You will not be able to edit your application after you submit it.
-			Once you are sure your answers are correct, click the 'Submit Initial Application' button below.
-			</p>
+			<p><b>Are you ready to submit your application?</b></p>
+			
+			<p>The button below will submit your application.</p>
+			<p>You will not be able to edit your application after you submit it.</p>
+			<p>Please carefully review your answers. You can review your answers by using the 'Previous step' button below.</p>
+			<p>Make sure you answered all 'yes or no' questions.</p>
+			<p>Do not skip questions.</p>
+			<p>Once you are sure your answers are correct, click the 'Submit Initial Application' button below.</p>
 		</div>
 	</div>
 </div>
