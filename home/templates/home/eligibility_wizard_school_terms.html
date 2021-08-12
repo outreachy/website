@@ -11,18 +11,57 @@ Are you eligible to apply to Outreachy?
 
 <h2>School Term Dates</h2>
 
-<p><b>Please enter information your current school term and your next two school terms.</b></p>
 
-<p>Common questions about school term dates:</p>
+<p>Outreachy needs to know the school term dates for:</p>
 <ul>
-	<li><strong>A school term lasts from the first possible day of classes for ALL students until the last possible exam date for ALL students.</strong></li>
-	<li>Outreachy cannot accept university letters of late enrollment.</li>
-	<li>The last school term day must be the last possible exam date, and it cannot be the day you think will be your last exam.</li>
-	<li>If you don't know the dates for future terms, use the dates for those terms in the previous school year.</li>
-	<li>If one of these school terms is your last term before graduation, fill out the information for that school term and check 'This is the last term in my degree'. If you will continue onto another degree after your graduation, make sure to fill in the remaining school terms.</li>
+	<li>your <b>current</b> school term</li>
+	<li>your <b>next</b> school term</li>
+	<li>the school term <b>following</b> your next school term</li>
 </ul>
+
+<p><b>Uncertain term dates</b></p>
+
+<p>Some universities may not have released the schedule for future terms. In this case, use the dates from past academic calendars. Use the most recent calendar available for that term.</p>
+
+<p><b>Applying to universities</b></p>
+
+<p>
+If you are applying to universities and colleges, Outreachy needs to know your approximate school term dates. You can update your initial application if you find out what school you are accepted to. For now, use the academic calendar from the university you are most likely to be accepted at.
+</p>
+
+<p><b>Graduating students</b></p>
+
+<p>If one of these school terms is your last term before graduation, check 'This is the last term in my degree' on that school term. If you will continue onto another degree after your graduation, make sure to fill in the remaining school terms. If you are switching to another university, note which university the school term is associated with.</p>
+
+<p><b>Masters and PhD students</b></p>
+
+<p>
+If you are enrolled in classes, use your school's academic calendar, and the instructions below.
+</p>
+
+<p>
+If you are working on your thesis, you may not be enrolled in school classes. Outreachy counts thesis research and writing as a "school term".
+</p>
+
+<p>
+Fill in the date classes start as today's date. Fill in the date exams end as your thesis defense date. If your thesis defense is not scheduled, use the approximate date your thesis defense would be scheduled for.
+</p>
+
+<p>
+If you will take a break from thesis work over a school vacation period, then use multiple school terms.
+Set the date exams end of one school term to be the start of the school vacation.
+Set the date classes start of the next school term to be the end of the school vacation.
+</p>
+
 <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
 <hr>
+
+<p>Tell us about your school terms:
+<ul>
+	<li>your <b>current</b> school term</li>
+	<li>your <b>next</b> school term</li>
+	<li>the school term <b>following</b> your next school term</li>
+</ul>
 
 <form action="" method="post">{% csrf_token %}
 {{ wizard.form.media }}
@@ -31,6 +70,7 @@ Are you eligible to apply to Outreachy?
     {{ wizard.form.management_form }}
     {{ wizard.form.non_form_errors }}
     {% for form in wizard.form.forms %}
+	{% with term_number=forloop.counter %}
 	<div class="card border-info mb-3">
 		{% if forloop.counter == 1 %}
 		<div class="card-header text-white bg-info">Current Term</div>
@@ -41,10 +81,101 @@ Are you eligible to apply to Outreachy?
 		{% endif %}
 	</div>
 	{% for field in form.visible_fields %}
-		{% if 'Last term:' in field.label_tag %}
+		{% if 'Term name' in field.label_tag %}
+			<div class="form-group card">
+				{{ field.errors }}
+				<div class = "card-header">
+					{% if term_number == 1%}Current term name{% elif term_number == 2 %}Next term name{% else %}Following term name{% endif %}
+				</div>	    
+				<div class = "card-body">
+					{{ field }}
+				</div>
+				<div class="card-footer bg-white">
+					<p><b>What is the name of {% if term_number == 1%}your current term{% elif term_number == 2 %}your next term{% else %}the following term{% endif %}?</b>
+
+					<p>
+					Some universities use term names, like "Winter {{ current_round.initial_applications_open|date:"Y" }}".
+					Some universities use numbered terms, like "5th semester".
+					Tell us the term name printed on your academic calendar.
+					</p>
+				</div>
+			</div>
+		{% elif 'Date classes start' in field.label_tag %}
+			<div class="form-group card">
+				{{ field.errors }}
+				<div class = "card-header">
+					Date classes start for {% if term_number == 1%}your current term{% elif term_number == 2 %}your next term{% else %}the following term{% endif %}
+				</div>	    
+				<div class = "card-body">
+					{{ field }}
+				</div>
+				{% if field.help_text %}
+				<div class="card-footer bg-white">
+					<p><b>What is the date of your first day of class?</b>
+
+					<p>
+					Find your academic calendar. Tell us the first day of classes for this term.
+					</p>
+
+					<p>
+					Some schools have activities before the first day of classes. Those activities could be things like new student week or moving into a student dormitory. Do not use the start date of those activities.
+					</p>
+
+					<p>
+					Some students start classes on different dates. In that case, use the date classes start for your group of students. For example, 5th semester students may start classes on a different date than 7th semester students. If you are a 5th semester student, use the date classes start for 5th semester students.
+					</p>
+
+					<p>
+					You must use the class start dates in your university academic calendar. Some universities allow students to join classes after their official start date. However, please use the class dates listed in your academic calendar. Outreachy cannot accept a letter from your university about late enrollment.
+					</p>
+
+					<p>
+					If you don't see a calendar pop-up, please use the date format YYYY-MM-DD.
+					</p>
+
+				</div>
+				{% endif %}
+			</div>
+		{% elif 'Date all exams end' in field.label_tag %}
+			<div class="form-group card">
+				{{ field.errors }}
+				<div class = "card-header">
+					Date exams end for {% if term_number == 1%}your current term{% elif term_number == 2 %}your next term{% else %}the following term{% endif %}
+				</div>	    
+				<div class = "card-body">
+					{{ field }}
+				</div>
+				{% if field.help_text %}
+				<div class="card-footer bg-white">
+					<p><b>What is the date exams end for ALL students in this term?</b>
+
+					<p>
+					You must use the exam dates listed in your academic calendar.
+					</p>
+
+					<p>
+					On your academic calendar, find the last possible exam date. Use that for the date when your school term ends.
+					</p>
+
+					<p>
+					Do not count "remedial exams" that are only mandatory if you fail the final exam.
+					</p>
+
+					<p>
+					Students in the same university may have final exams at different times. Depending on what classes you take, your exams may end earlier than the date on your academic calendar. However, you must use the exam dates in your academic calendar.
+					</p>
+
+					<p>
+					If you don't see a calendar pop-up, please use the date format YYYY-MM-DD.
+					</p>
+
+				</div>
+				{% endif %}
+			</div>
+		{% elif 'Last term:' in field.label_tag %}
 			<div class="form-group card">
 				<div class = "card-header">
-					Are you graduating after this term?
+					Are you graduating after for {% if term_number == 1%}your current term{% elif term_number == 2 %}your next term{% else %}the following term{% endif %}?
 				</div>
 				<div class = "card-body">
 					<p>
@@ -72,6 +203,7 @@ Are you eligible to apply to Outreachy?
 	{% for hidden in form.hidden_fields %}
 		{{ hidden }}
 	{% endfor %}
+	{% endwith %}
     {% endfor %}
 {% else %}
     {% include "bootstrap_card_form.html" with form=wizard.form only %}
