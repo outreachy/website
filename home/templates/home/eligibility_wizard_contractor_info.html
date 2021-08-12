@@ -11,15 +11,34 @@ Are you eligible to apply to Outreachy?
 
 <h2>Contractors and Consultants</h2>
 
+<p>A contractor (or consultant) is paid to work on projects. They may work with multiple clients. Once the project is finished, the client can choose whether to hire them again.</p>
+
+<p>Outreachy needs to know your weekly time commitments to clients from <b>{{ current_round.internstarts }} until {{ current_round.sfc_payment_last_date|date:"F d, Y" }}</b>.
+
 <p>
-If you are a self-employed contractor who owns their own business, hours spent on business development and marketing count for the number of hours spent on your contracting business in the equestion below.
+If you will not be accepting client work during those dates, say 'No' to "Will you be doing contract work during the Outreachy internship period?" Otherwise say 'Yes'.
 </p>
+
+<p><b>Active contractors and consultants</b></p>
+
 <p>
-If you work for a company that contracts out your hours and you don't need to do marketing or business development in order to find contracts, only count the number of hours you spend working on contracts.
+If you already know the hours per week you will work from {{ current_round.internstarts }} until {{ current_round.sfc_payment_last_date|date:"F d, Y" }}, fill that in the "Average number of hours spent on contractor business" field.
 </p>
+
 <p>
-The Outreachy internship period is from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}.
+Otherwise, use this form to estimate the number of hours per week you will work for clients.
 </p>
+
+<p>
+Time spent on business development and marketing count towards your weekly hours.
+Not all contractors or consultants will spend time on business development or marketing.
+If you do not do these activities, only count the number of hours per week you spend on client work.
+</p>
+
+<p>
+Do not count the Outreachy internship hours in your average number of contracting hours per week.
+</p>
+
 <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
 <hr>
 
