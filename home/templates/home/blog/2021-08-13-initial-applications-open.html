@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Outreachy December 2021 internship applications
+{% endblock %}
+
+{% block content %}
+{% load humanize %}
+
+
+<h1>Outreachy December 2021 internship applications</h1>
+
+<p><i>Date: August 13, 2021</i></p>
+{% comment %}<p><i>Last updated: DATE</i> - See the "SECTION" section below.</p>{% endcomment %}
+
+<img src="{% static 'img/apply-now-flickr-cc-by-CC-BY-2_0-GotCredit.jpg' %}" alt="cc-by 2.0 GotCredit" class="img-fluid">
+<p><i>Photo CC BY 2.0 GotCredit</i></p>
+
+<h2>Outreachy internship applications</h2>
+<p>
+Outreachy initial applications are open for the December 2021 to March 2022 internships.
+</p>
+
+<p>
+<b>The initial application deadline is earlier this year.</b>
+</p>
+
+<p>
+The initial application system will open at {{ current_round.initial_applications_open }} at 4pm UTC. Initial applications are due {{ current_round.initial_applications_close }} at 4pm UTC.
+</p>
+
+<p>
+We <b>strongly</b> recommend you <a href="{% url 'docs-applicant' %}#essay-tips">read our tips for application essays</a> before submitting your initial application.
+</p>
+
+<p><a href="{% url 'docs-applicant' %}" class="btn btn-info">Read applicant guide</a></p>
+
+<p>
+Please read about <a href="#change-log">changes to our initial application</a>.
+</p>
+
+<p>
+Initial applications are reviewed on a first-come-first-served basis. Don't wait until the last day to submit your application!
+</p>
+
+<p><a href="{% url 'eligibility-information' %}" class="btn btn-success">Apply for Outreachy</a></p>
+
+<hr>
+
+<h2 id='toc'>Important information</h2>
+
+<p>
+<a href='#what-is-outreachy'>What is Outreachy?</a><br>
+<a href='#faq'>Commonly asked questions</a><br>
+<a href='#important-dates'>Important dates</a><br>
+<a href='#twitter-chat'>Twitter chat</a><br>
+<a href='#student-eligibility'>Student eligibility policy</a></br>
+<a href='#covid-19'>COVID-19 temporary time commitment policy</a></br>
+<a href='#change-log'>Changes for this round</a><br>
+</p>
+
+<hr>
+
+<h2 id='what-is-outreachy'><a href='#what-is-outreachy'>What is Outreachy?</a></h2>
+
+<p>
+Outreachy provides internships from May to August and December to March.
+</p>
+<p>
+You'll work on open source projects. Experienced mentors will guide you.
+</p>
+<p>
+Outreachy internships are paid! You will receive a $6,000 USD total stipend.
+</p>
+<p>
+The internship is completely remote. You'll work from home. Your mentor will also be remote.
+</p>
+<h2>Outreachy supports diversity in tech</h2>
+
+{% include 'home/snippet/diversity_statement.html' %}
+
+<hr>
+<h2 id='faq'><a href='#faq'>Commonly asked questions</a></h2>
+
+<p>The <a href="{% url 'docs-applicant' %}">Outreachy Applicant Guide</a> has answers to many common questions, such as:</p>
+
+<ul>
+	<li><a href="{% url 'docs-applicant' %}#am-i-experienced-enough">Am I experienced enough for an Outreachy internship?</a></li>
+	<li><a href="{% url 'docs-applicant' %}#non-programming-projects">Do I have to be a programmer to apply?</a></li>
+	<li><a href="{% url 'docs-applicant' %}#project-types">Do you have the type of project I'm interested in?</a></li>
+	<li><a href="{% url 'docs-applicant' %}#what-is-free-software">What is free software and open source?</a></li>
+</ul>
+
+<p><a href="{% url 'docs-applicant' %}" class="btn btn-info">Read applicant guide</a></p>
+
+<h2 id='important-dates'><a href='#important-dates'>Important dates</a></h2>
+
+<p>
+<b>The initial application deadline is earlier this year.</b>
+The initial application system will open at {{ current_round.initial_applications_open }} at 4pm UTC. Initial applications are due {{ current_round.initial_applications_close }} at 4pm UTC.
+</p>
+
+<p>
+The Outreachy intern project project list will not be finalized until {{ current_round.contributions_open }}.
+That is after the initial application deadline.
+</p>
+
+<p>
+Please fill out an initial application, even if you don't see a project that interests you.
+More projects will be added after the initial application deadline.
+</p>
+{% include 'home/snippet/round_timeline.html' %}
+
+<hr>
+<h2 id='twitter-chat'><a href='#twitter-chat'>Twitter chat</a></h2>
+
+<p>Want to know what it's like to be an Outreachy intern? Have questions about applying? Join us for a Twitter chat!</p>
+
+<p>Outreachy will run a chat on Twitter. The chat will introduce you to past Outreachy interns and current mentors.</p>
+
+<p>The chat will have a question and answer format. The Outreachy Twitter account will ask questions of applicants, past interns, and current mentors. We will retweet all answers. You are welcome to ask additional questions during and after the chat. You can direct your questions to the Outreachy Twitter account, or past interns or current mentors who are participating in the chat.</p>
+
+<p>The #OutreachyChat will happen on {{ current_round.outreachy_chat }} UTC. Please double check <a href="{{ current_round.outreachy_chat_timezone_url }}">what time that is in your timezone</a>. Please <a href="https://www.twitter.com/outreachy">follow Outreachy on Twitter</a> if you have a Twitter account.</p>
+
+<h3>Outreachy Twitter chat instructions</h3>
+
+{% include 'home/snippet/twitter_chat_instructions.html' %}
+
+<hr>
+<h2 id='student-eligibility'><a href='#student-eligibility'>Student eligibility policy</a></h2>
+
+<p>
+Outreachy is open to both students and people who are not students.
+Please see our full <a href="{% url 'eligibility-information' %}#rules">eligibility guidelines</a>.
+</p>
+
+<p>
+Outreachy organizers understand that schools are impacted by COVID-19.
+Some schools may have changed their term dates.
+We expect school term dates to continue to shift into 2022.
+</p>
+
+<p>
+Outreachy wants to ensure students from the southern hemisphere to have a fair chance at an internship.
+Therefore, we are sticking with our policy that northern hemisphere students are only eligible for the May to August rounds.
+We consider India to be in the northern hemisphere, regardless of where the university is located.
+</p>
+
+<p>
+We invite students from the southern hemisphere to apply to the Outreachy December 2021 to March 2022 round.
+If your university is near the equator, you are welcome to apply.
+</p>
+
+<p>
+We want to ensure students with shifted term dates can participate.
+We typically require students to have 49 days free from school and exams during the internship.
+As a temporary policy, we have lowered that requirement to 42 days free from school during the internship.
+</p>
+
+<p>
+Students in the northern hemisphere should to apply to the May 2022 to August 2022 internships, not to the December internship cohort.
+</p>
+
+<p>
+Outreachy organizers will review the revised term dates for northern hemisphere schools before the next internship round.
+We will implement a similar policy (if needed) for the May 2022 to August 2022 internship cohort.
+We thank northern hemisphere students for their patience and support of southern hemisphere students.
+</p>
+
+<hr>
+<h2 id='covid-19'><a href='#covid-19'>COVID-19 temporary time commitment policy</a></h2>
+
+<p>
+Our temporary intern time commitment policy remains in place. This temporary policy applies to the December 2021 to March 2022 round:
+</p>
+
+<ul>
+	<li>
+		Interns impacted by COVID-19 are only required to work 30 hours a week
+	</li>
+	<li>
+		Interns who are not impacted are encouraged to work 40 hours a week
+	</li>
+</ul>
+
+<p>
+We're only asking impacted interns to commit to working 75% of their normal hours. If interns are able to work more normal hours, they will get more out of the internship. We encourage interns to work as best they can, while not burning themselves out.
+</p>
+
+<p>
+Mentors have been briefed to expect that some impacted interns may work less. That may mean mentors reduce the scope of their project, or expect that it will not be finished.
+</p>
+
+<p>
+Outreachy already has permanent policies in place that ensure flexibility for interns:
+</p>
+
+<ul>
+	<li>
+		Interns are required to work 12 weeks out of the 13 week internship
+	</li>
+	<li>
+		If interns temporarily cannot work full-time, internships can be extended
+	</li>
+	<li>
+		Internships can be extended for up to 5 weeks
+	</li>
+</ul>
+
+<hr>
+<h2 id='change-log'><a href='#change-log'>Changes for this cohort</a></h2>
+
+<p>
+<b>The initial application deadline is earlier this year.</b>
+</p>
+
+<p>
+The initial application system will open at {{ current_round.initial_applications_open }} at 4pm UTC. Initial applications are due {{ current_round.initial_applications_close }} at 4pm UTC.
+</p>
+
+<p>
+Shortening the initial application period helps Outreachy organizers.
+It means we have more time to review initial applications.
+We have added more initial application reviewers for this cohort.
+However, given the high volume of applications we receive,
+we need a full 4 weeks to review applications.
+</p>
+
+<p>
+Outreachy organizers have made some changes to the initial application.
+</p>
+
+<p><b>Clearer application instructions</b></p>
+<p>We made application instructions more detailed. The new instructions answer common questions we get from applicants.</p>
+<p>We simplified the English in our initial application. Our goal was to have a reading level of grade 4 or below. We hope this will help non-native English speakers.</p>
+<p>Please read the initial application instructions carefully, since they have changed.</p>
+<p><b>Essay length limit</b></p>
+<p>Each essay answer is limited to 1000 characters. That is about 200 words.</p>
+<p>Limiting the essay answer length helps us review applications faster.</p>
+<p><b>Essay content warnings</b></p>
+
+<p>Initial applications have essay questions. Some applicants may talk about very harsh or hard things in their essays. That's okay. There's no need to change your essay.</p>
+
+<p>It can help Outreachy application reviewers to know what harsh or hard topics are in your essay. These are called "content warnings".</p>
+
+<p>Content warnings can be one or two words. Examples include: "violence", "sexual assault", or "war".</p>
+
+<p>The initial application now has a "content warnings" field in the essay section. It is an optional field. Applicants can use that field to add content warnings about their essays.</p>
+
+<p>Content warnings help application reviewers mentally prepare to read your essay. Thank you for your help!</p>
+
+<p>If you do you not talk about harsh or hard things in your essays, leave this field blank.
+</p>
+<p><b>Shorted open source contribution questions</b></p>
+
+<p>The initial application used to ask detailed questions about past open source contributions. The initial application asked what type of contributions applicants made. There was a long series of check boxes for different open source contribution types.</p>
+
+<p>We had tried to be inclusive towards people who make non-programming contributions to open source. The check boxes included many types of contributions, like documentation or event planning.</p>
+
+<p>However, we found that the long list of open source contribution types had a negative effect on applicants. Applicants who were new to open source felt very intimidated by the list. Some people did not apply because they worried about being too inexperienced.</p>
+
+<p><b>Outreachy welcomes newcomers to open source.</b> You do not need to have open source experience to apply to Outreachy. Many past Outreachy interns had not made open source contributions before the application period. We encourage you to apply.</p>
+
+<p>We have removed the list of the different types of contributions from the Outreachy initial application. It was only used for statistical purposes. Removing this data collection will help encourage newcomers to apply to Outreachy. We apologize for the impact this data collection had on past applicants.</p>
+
+
+{% endblock %}
