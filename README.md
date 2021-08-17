@@ -102,7 +102,7 @@ You can run Django locally to test changes to the code, test creating new pages,
 To set up your local development environment, first clone the repository to your local machine:
 
 ```
-git clone https://github.com/outreachy/website.git
+git clone git@github.com:outreachy/website.git
 ```
 
 In order to develop with Python, you'll need the Python 3 development headers, so install them. For example, on Debian or Ubuntu Linux, you can use `apt-get install python3-dev` to install the Python 3 development headers. On other Linux distributions, it may be called `python3-devel` or installed by default with `python` packages.
