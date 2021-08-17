@@ -816,6 +816,17 @@ Outreachy tries to support interns and help them grow. What aspect of the intern
 
 What are your plans after the internship?
 
+
+Talk about asking for letters of recommendation from your mentor. Talk about asking for a letter of participation from Outreachy organizers.
+
+
+One thing I want to mention: it's okay to ask to stay in contact with your mentor! Even though the internship is officially over, some mentors may have time to meet and chat.
+
+For example, you could ask your mentor for a 30 minute chat in a month. That way you can talk about how things are going after your internship, ask them for advice, or heck, even share your excitement about what your next opportunity might be.
+
+Some mentors might not have time, but it never hurts to ask. Most mentors will be thrilled that you still want to talk with them.
+
+
 Speaking of plans after the internship, are any of you planning to stay involved in Outreachy?
 
 There are lots of ways you can contribute after your internship ends:
@@ -824,15 +835,19 @@ There are lots of ways you can contribute after your internship ends:
 
 2. Participating in the #OutreachyChat on Twitter. We'll be running a Twitter chat on DATE TIME. The chat is designed to answer applicant's questions about what it's like to be an Outreachy intern. You can help by answer the questions for past interns (alums): https://www.outreachy.org/promote/#outreachychat
 
-3. Helping new Outreachy applicants who are to your community. During the contribution period, applicants may have questions about getting started. You have over 3 months experience contributing to this community! Even if you only answer simple questions, that will give other mentors more time to answer complex questions.
+3. Improving community documentation. You may have kept notes about issues you ran into during the contribution period or during the internship. Maybe you found resources that helped you understand a new concept. We encourage you to share those notes with your mentor and community coordinator. If you have time, you could improve community documentation by adding your notes to it.
 
-4. Welcoming new interns to the Zulip chat. The ROUND interns will start on DATE. They'll be talking in the #Connections (location and language) stream. Interns will be looking for people in their region or who speak their language. It would be great for past interns to keep an eye on that topic. After interns start is also a great time to share hobbies, pictures, and success stories on #The Joy Channel.
+4. Helping new Outreachy applicants who are to your community. During the contribution period, applicants may have questions about getting started. You have over 3 months experience contributing to this community! Even if you only answer simple questions, that will give other mentors more time to answer complex questions.
 
-5. Sharing open source job opportunities you find, either on Zulip or the opportunities list.
+5. Welcoming new interns to the Zulip chat. The ROUND interns will start on DATE. They'll be talking in the #Connections (location and language) stream. Interns will be looking for people in their region or who speak their language. It would be great for past interns to keep an eye on that topic. After interns start is also a great time to share hobbies, pictures, and success stories on #The Joy Channel.
 
-6. Volunteering for the informal chats in a future internship cohort.
+6. Continuing to contribute to your open source community.
 
-7. Helping co-mentor an Outreachy intern, and even becoming an Outreachy mentor yourself. Did you know you don't have to be the only mentor on a project? Many projects have two or more mentors, who "co-mentor" an intern. So you can help future Outreachy interns, while working with a more experienced mentor.
+7. Sharing open source job opportunities you find, either on Zulip or the opportunities list. You can share job opportunities on the #jobs and opportunities stream. You can sign up for the opportunities mailing list here: https://lists.outreachy.org/cgi-bin/mailman/listinfo/opportunities
+
+8. Volunteering for the informal chats in a future internship cohort. Once you have found your next opportunity (even if it's not a full time job), you can share your journey with future interns.
+
+9. Helping co-mentor an Outreachy intern, and even becoming an Outreachy mentor yourself. Did you know you don't have to be the only mentor on a project? Many projects have two or more mentors, who "co-mentor" an intern. So you can help future Outreachy interns, while working with a more experienced mentor.
 
 Does helping in any of those ways sound interesting to you? What questions can we answer about those volunteer roles?
 
