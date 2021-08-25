@@ -373,3 +373,9 @@ If you have a list of interns that have their payment authorized, but not all in
 ...
 >>>
 ```
+
+You can use the following regular expression command in vim to turn a list of interns in format "Name <email> # community" into a list of emails:
+
+```
+%s/^.*<\(.*\)>.*/"\1",/
+```
