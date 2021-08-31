@@ -663,7 +663,11 @@ Once you've run the above setup commands, you should be all set to start testing
 PATH="$PWD/node_modules/.bin:$PATH" ./manage.py runserver
 ```
 
-To make sure you've set up an internship round successfully, go to the internship project selection page at `http://localhost:8000/apply/project-selection/`. You should see that the internship round dates are correct. If you created an internship round where the final application date has passed, you can see older rounds at `http://localhost:8000/past-projects/`.
+To make sure you've set up an internship round successfully, go to the internship project selection page at `http://localhost:8000/apply/project-selection/`.
+
+*Note: If you get an error saying "postcss: not found", make sure you run the whole command above, including the PATH part. For an explanation of what the PATH part of the command does, [read this issue comment](https://github.com/outreachy/website/issues/492#issuecomment-909371352).*
+
+Once you go to `http://localhost:8000/apply/project-selection/`, you should see that the internship round dates are correct. If you created an internship round where the final application date has passed, you can see older rounds at `http://localhost:8000/past-projects/`.
 
 To go to the Django administrative interface, go to `http://localhost:8000/django-admin/`. You can log in into with the account you created with `./manage.py createsuperuser`. If you're new to Django, you may want to find the RoundPage you created and edit some of the dates. You can find it by clicking the 'Round pages' link under the HOME section. You'll see the changed dates reflected in the internship project selection page if you refresh it.
 
