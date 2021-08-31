@@ -3995,6 +3995,20 @@ class InternSelection(AugmentDeadlines, models.Model):
         # The intern final feedback has been reviewed by Outreachy organizers
         return False
 
+    def has_final_payment_passed(self):
+        now = datetime.datetime.now(datetime.timezone.utc)
+        today = get_deadline_date_for(now)
+
+        try:
+            # Even with delays in processing feedback,
+            # interns should be paid 60 days after their final feedback due date
+            if self.finalmentorfeedback.organizer_payment_approved == True and self.final_feedback_due + datetime.timedelta(days=60) < today:
+                return True
+            return False
+        # Has the mentor not given final feedback yet?
+        except FinalMentorFeedback.DoesNotExist:
+            return False
+
     def intern_name(self):
         return self.applicant.applicant.public_name
 

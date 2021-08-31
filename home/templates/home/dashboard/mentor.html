@@ -64,7 +64,9 @@
 				{% else %}
 					<p>Your intern has custom internship dates. Their internship will start on {{ rel.intern_selection.intern_starts }} and end on {{ rel.intern_selection.intern_ends}}.{% if rel.intern_selection.is_internship_active %} <a href="/mentor/mentor-faq/#internship-delays">Internships can be extended</a> by up to five weeks from the official end date of {{ rel.round.internends }}. Please <a href="{% url 'contact-organizers' %}">discuss any further extensions</a> or changes to the intern start date with the Outreachy organizers.{% endif %}</p>
 				{% endif %}
+			{% endif %}
 
+			{% if not rel.intern_selection.has_final_payment_passed %}
 				<h3 id="feedback">Internship Feedback</h3>
 
 				<p>Outreachy organizers require <a href="/mentor/mentor-faq/#mid-point-and-final-review">mentor feedback</a> at three points during the internship. We must receive successful feedback from one mentor in order for the intern to be paid their stipends on time.</p>
