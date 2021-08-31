@@ -119,9 +119,6 @@
 				</ul>
 				</p>
 			{% endif %}
-			<h3>Intern Travel Stipend</h3>
-			<p><a href="{% url 'travel-stipend' %}">Travel stipend requirements</a>.{% if not rel.round.has_travel_stipend_ended %} Your mentee is eligible for a $500 USD travel stipend. As a mentor, you should discuss with them what event or conference would be appropriate to attend. The event must be related to their internship (either an event for your community, or another FOSS event). Interns who network with the FOSS community are much more likely to feel connected to our community, and to find a job where they can work with or on FOSS.</p>
-			<p>{{ rel.intern_name }}'s travel stipend is valid for travel between {{ rel.round.travel_stipend_starts }} and {{ rel.round.travel_stipend_ends }}.{% else %} Your mentee's $500 USD travel stipend expired on {{ rel.round.travel_stipend_ends }}.{% endif %}</p>
 			<a href="{% url 'mentor-contract' round_slug=rel.round.slug community_slug=rel.intern_selection.project.project_round.community.slug project_slug=rel.intern_selection.project.slug applicant_username=rel.intern_selection.applicant.applicant.account.username %}"><button type="button" class="btn btn-info">Export Mentor Contract</button></a>
 		{% endif %}
 	{% endfor %}

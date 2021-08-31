@@ -213,7 +213,6 @@ class SyntaxTestCase(TestCase):
                 "/apply/project-selection/",
                 "/past-projects/",
                 "/apply/eligibility/",
-                "/travel-stipend/",
                 "/blog/{}/application-period-statistics/".format(current_round.slug),
                 "/privacy-policy/",
             ],

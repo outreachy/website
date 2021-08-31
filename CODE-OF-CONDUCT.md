@@ -1,6 +1,6 @@
 # Outreachy Community Code of Conduct
   
-_last edited - August 16, 2020_
+_last edited - August 31, 2021_
 
 ## Our Pledge
 
@@ -68,7 +68,7 @@ Outreachy organizers have the right to ban temporarily or permanently any Outrea
 * A temporary or permanent ban from an Outreachy project space
 * A temporary or permanent ban from applying for an Outreachy internship
 * A temporary or permanent ban from participating as an Outreachy mentor, coordinator, organizer, alumni, or contributor
-* Removal of an Outreachy intern from the program, severance of their Outreachy internship agreement, and no disbursement of any remaining internship stipends or travel stipends
+* Removal of an Outreachy intern from the program, severance of their Outreachy internship agreement, and no disbursement of any remaining internship stipends
 
 ## Scope
 
@@ -97,7 +97,7 @@ When Outreachy community members make contributions and participate in public di
 This Code of Conduct also applies to official Outreachy communication, such as:
 
 * Using an official outreachy.org e-mail address
-* Acting as an appointed representative at an online or offline event, including all cases when you have Outreachy travel funding allocated for that event
+* Acting as an appointed representative at an online or offline event, including all cases when your travel costs are partially or fully sponsored by Outreachy
 * Posting via an official Outreachy social media account:
   * [Twitter](https://twitter.com/outreachy)
   * [LinkedIn](https://www.linkedin.com/company/18204091/)

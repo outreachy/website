@@ -3859,12 +3859,6 @@ def docs_internship(request):
         'intern_round': intern_round,
         })
 
-def travel_stipend(request):
-    rounds = RoundPage.objects.all().order_by('-internstarts')
-    return render(request, 'home/travel_stipend.html', {
-        'rounds': rounds,
-        })
-
 class InformalChatContacts(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
     template_name = 'home/informal_chat_contacts.html'
 

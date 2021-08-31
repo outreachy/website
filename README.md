@@ -4,7 +4,7 @@ This repository is for the code that comprises the [Outreachy website](https://w
 
 Outreachy provides remote internships. Outreachy supports diversity in open source and free software!
 
-Outreachy internships are 3 months long. Interns are paid an internship stipend of $5,500 USD. Interns have a $500 USD travel stipend to attend conferences or events.
+Outreachy internships are 3 months long. Interns are paid an internship stipend of $6,000 USD.
 
 Interns work with experienced mentors from open source communities. Outreachy internship projects may include programming, user experience, documentation, illustration, graphical design,  data science, project marketing, user advocacy, or community event planning.
 

@@ -28,19 +28,6 @@
 	Details about your internship are documented in the <a href='{% url 'docs-internship' %}'>Internship Guide</a>.
 	</p>
 
-	<h2>Travel Stipend</h2>
-
-	<p><b>Please read the <a href="{% url 'travel-stipend' %}">travel stipend details</a> before booking your travel!</b></p>
-	
-	<p>Each Outreachy intern has a $500 USD stipend to travel to conferences or events related to their internship.
-	{% if my_round.travel_stipend_ends.has_passed %}
-		Your travel stipend is currently expired.
-	{% else %}
-		Your travel stipend is good for travel starting on {{ my_round.travel_stipend_starts }} to {{ my_round.travel_stipend_ends }}.
-		Please talk with your mentor about what conferences you might use your travel stipend for.
-	{% endif %}
-	</p>
-
 	{% if internship.is_internship_active %}
 		<h2>Internship Dates</h2>
 		{% if not internship.intern_has_custom_dates %}

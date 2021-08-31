@@ -132,7 +132,6 @@ urlpatterns = [
     url(r'^register/activate/(?P<activation_key>[-.:\w]+)/$', views.ActivationView.as_view(), name='django_registration_activate'),
     url(r'^register/activate/$', views.ActivationCompleteView.as_view(), name='django_registration_activation_complete'),
     url(r'^rename-project-skills/$', views.ProjectSkillsRename.as_view(), name='rename-project-skills'),
-    url(r'^travel-stipend/$', views.travel_stipend, name='travel-stipend'),
     url(r'^internship-cohort-statistics/$', views.internship_cohort_statistics, name='internship-cohort-statistics'),
     url(r'^informal-chat-contacts/$', views.InformalChatContacts.as_view(), name='informal-chat-contacts'),
     url(r'^sponsor/donate/$', views.donate, name='donate'),

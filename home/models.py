@@ -423,14 +423,6 @@ class RoundPage(AugmentDeadlines, Page):
     def has_internship_ended(self):
         return (self.internends + datetime.timedelta(days=7 * 5)).has_passed()
 
-    # The travel stipend policy changed for the December 2017 round
-    # so that the travel stipend would be good for two years.
-    # Rounds older than that are no longer valid.
-    # Find the set of rounds after December 2017 where
-    # the intern start date + 2 years is greater than or equal to today's date.
-    def travel_stipend_deadline(self):
-        return self.internstarts + datetime.timedelta(days=365*2)
-
     # Outreachy internships can be extended for up to five weeks past the official end date.
     # In some cases, we've changed or added an intern after the official announcement date.
     # The very latest we could do that would be five weeks after the official start date.
@@ -581,18 +573,6 @@ class RoundPage(AugmentDeadlines, Page):
                 communities.append((p.community, intern_count, funded))
         communities.sort(key=lambda x: x[0].name)
         return communities
-
-    def travel_stipend_starts(self):
-        return self.internannounce
-
-    # Travel stipends are good for travel starting the day the internship is announced
-    # Until one year after their internship begins.
-    def travel_stipend_ends(self):
-        return self.internstarts + datetime.timedelta(days=365)
-
-    # Interns have up to 90 days to submit their travel stipend request
-    def has_travel_stipend_ended(self):
-        return (self.travel_stipend_ends() + datetime.timedelta(days=90)).has_passed()
 
     def get_common_skills_counter(self):
         approved_projects = Project.objects.filter(project_round__participating_round=self, approval_status=Project.APPROVED)
