@@ -1249,6 +1249,49 @@ To sync your installed pipenv packages with any changes made in the Outreachy Gi
 pipenv sync
 ```
 
+# Updating Python versions
+
+If you want to update the version of Python that the production server is using, there are several different things you'll need to know.
+
+Dokku uses the "buildpacks" from Heroku to find the correct version of Python to install. Think of buildpacks as a series of scripts that download and install programming language files. Heroku has buildpacks for many different programming languages. The Outreachy website uses Python and Node.js Heroku buildpacks.
+
+When you want to update the version of Python that the production server is running, you'll need to:
+
+1. Update herokuish using aptitude on the server:
+
+```
+$ ssh root@www.outreachy.org
+# aptitude update
+# aptitude install herokuish
+```
+
+2. Find the [latest version of Python that Heroku supports](https://devcenter.heroku.com/articles/python-support#supported-runtimes). Change the version in [runtime.txt](https://github.com/outreachy/website/blob/master/runtime.txt) to match the latest version of Python.
+
+3. You will need to update the [Heroku Python buildpack version](https://devcenter.heroku.com/articles/python-support#checking-the-python-buildpack-version). Change the version in [.buildpacks](https://github.com/outreachy/website/blob/master/.buildpacks) to match the URL of the [latest Python buildpack GitHub tag](https://github.com/heroku/heroku-buildpack-python/tags). Use the format in the `.buildpack` file.
+
+4. Commit both files (`runtime.txt` and `.buildpack`).
+
+5. Deploy to the Outreachy test server. DO NOT DEPLOY TO PRODUCTION WITHOUT TESTING ON THE TEST SERVER FIRST. In the deployment log, you should see lines like:
+
+```
+=====> Downloading Buildpack: https://github.com/heroku/heroku-buildpack-python
+=====> Detected Framework: Python
+-----> Using Python version specified in runtime.txt
+-----> Stack has changed from heroku-18 to heroku-20, clearing cache
+remote: cp: cannot stat '/tmp/build/requirements.txt': No such file or directory
+-----> Installing python-3.9.7
+```
+
+You'll note in this log that the server picked up on the updated herokuish package (`Stack has changed from heroku-18 to heroku-20, clearing cache`).
+
+Also note that dokku is installing python-3.9.7, which was the latest Python version available through Heroku as of the time this section was written.
+
+Don't worry about the error saying there's no requirements.txt. We use pip, so we don't have a requirements.txt.
+
+6. Test the updated code on the test server. Make sure you can change your account picture, see the community CFP page, edit a Wagtail page like the home page, etc.
+
+7. Deploy to the production server.
+
 # Debugging errors
 
 # Debugging package installs
