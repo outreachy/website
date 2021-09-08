@@ -1292,6 +1292,46 @@ Don't worry about the error saying there's no requirements.txt. We use pip, so w
 
 7. Deploy to the production server.
 
+# Updating Node.js versions
+
+If you want to update the version of Node.js that the production server is using, there are several different things you'll need to know.
+
+Dokku uses the "buildpacks" from Heroku to find the correct version of Node.js to install. Think of buildpacks as a series of scripts that download and install programming language files. Heroku has buildpacks for many different programming languages. The Outreachy website uses Python and Node.js Heroku buildpacks.
+
+When you want to update the version of Node.js that the production server is running, you'll need to:
+
+1. Update the [Heroku Node.js buildpack version](https://devcenter.heroku.com/articles/nodejs-support#node-js-runtimes). Change the Node.js version in the [.buildpacks file](https://github.com/outreachy/website/blob/master/.buildpacks) to match the URL of the [latest Node.js buildpack GitHub tag](https://github.com/heroku/heroku-buildpack-nodejs/tags). Use the format in the `.buildpack` file.
+
+2. Commit `.buildpack`.
+
+3. Deploy to the Outreachy test server. DO NOT DEPLOY TO PRODUCTION WITHOUT TESTING ON THE TEST SERVER FIRST. In the deployment log, you should see lines like:
+
+```
+=====> Downloading Buildpack: https://github.com/heroku/heroku-buildpack-nodejs
+=====> Detected Framework: Node.js
+       
+-----> Creating runtime environment
+       
+       NPM_CONFIG_LOGLEVEL=error
+       NODE_VERBOSE=false
+       NODE_ENV=production
+       NODE_MODULES_CACHE=true
+       
+-----> Installing binaries
+       engines.node (package.json):  unspecified
+       engines.npm (package.json):   unspecified (use default)
+       
+       Resolving node version 14.x...
+       Downloading and installing node 14.17.6...
+       Using default npm version: 6.14.15
+```
+
+You'll note in this log that dokku is installing node version 14.x, which was the latest Stable version of Node.js available through Heroku as of the time this section was written.
+
+4. Test the updated code on the test server. Make sure you can change your account picture, see the community CFP page, edit a Wagtail page like the home page, etc.
+
+5. Deploy to the production server.
+
 # Debugging errors
 
 # Debugging package installs
