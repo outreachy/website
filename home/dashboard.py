@@ -45,6 +45,7 @@ from .models import ApprovalStatus
 from .models import Community
 from .models import Comrade
 from .models import DASHBOARD_MODELS
+from .models import InitialApplicationReview
 from .models import MentorApproval
 from .models import MentorRelationship
 from .models import Participation
@@ -155,6 +156,11 @@ def application_summary(request, today):
     rejected_applications_count = current_applicants.rejected().count()
     approved_applications_count = current_applicants.approved().count()
 
+    reviewed_strong_count = current_applicants.filter(initialapplicationreview__essay_rating=InitialApplicationReview.STRONG).exclude(approval_status=ApprovalStatus.APPROVED).count()
+    reviewed_good_count = current_applicants.pending().filter(initialapplicationreview__essay_rating=InitialApplicationReview.GOOD).count()
+    reviewed_maybe_count = current_applicants.pending().filter(initialapplicationreview__essay_rating=InitialApplicationReview.MAYBE).count()
+    reviewed_unclear_count = current_applicants.pending().filter(initialapplicationreview__essay_rating=InitialApplicationReview.UNCLEAR).count()
+
     reviewers = ApplicationReviewer.objects.filter(reviewing_round=current_round).approved().order_by('comrade__public_name').annotate(number_pending_applications_owned=models.Count('applicantapproval', filter=models.Q(applicantapproval__approval_status=ApprovalStatus.PENDING)))
 
     return {
@@ -162,6 +168,10 @@ def application_summary(request, today):
         'pending_unreviewed_unowned_count': pending_unreviewed_unowned_count,
         'pending_unreviewed_unowned_non_student_count': pending_unreviewed_unowned_non_student_count,
         'pending_reviewed_unowned_count': pending_reviewed_unowned_count,
+        'reviewed_strong_count': reviewed_strong_count,
+        'reviewed_good_count': reviewed_good_count,
+        'reviewed_maybe_count': reviewed_maybe_count,
+        'reviewed_unclear_count': reviewed_unclear_count,
         'rejected_applications_count': rejected_applications_count,
         'approved_applications_count': approved_applications_count,
         'reviewers': reviewers,

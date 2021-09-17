@@ -3405,7 +3405,7 @@ class Survey2018Notification(LoginRequiredMixin, ComradeRequiredMixin, TemplateV
         return redirect('dashboard')
 
 @login_required
-def applicant_review_summary(request, status, owner_username=None, review_status=None):
+def applicant_review_summary(request, status, owner_username=None, review_status=None, rating=None):
     """
     For applicant reviewers and staff, show the status of applications that
     have the specified approval status.
@@ -3453,6 +3453,9 @@ def applicant_review_summary(request, status, owner_username=None, review_status
     elif review_status == 'reviewed':
         applications = applications.filter(initialapplicationreview__isnull=False)
     # else don't filter on review status
+
+    if rating:
+        applications = applications.filter(initialapplicationreview__essay_rating=rating)
 
     paginator = Paginator(applications, 25)
     page_number = request.GET.get("page", 1)

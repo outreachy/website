@@ -1,24 +1,49 @@
 {% with pending_applications_count=section.pending_applications_count pending_revisions_count=section.pending_revisions_count rejected_applications_count=section.rejected_applications_count approved_applications_count=section.approved_applications_count pending_unreviewed_count=section.pending_unreviewed_count %}
 
 <h1>Application Status</h1>
+<p>Pending:</p>
 <ul>
 	{% if pending_applications_count %}
-	<li>{{ pending_applications_count }} - <a href="{% url 'pending-applicants-summary' %}">all pending applications</a>
+		<li>{{ pending_applications_count }} - <a href="{% url 'pending-applicants-summary' %}">All pending applications</a>
 			<ul>
-				<li>{{ section.pending_unreviewed_unowned_non_student_count }} - <a href="{% url 'unreviewed-unowned-non-student-pending-applicants-summary' %}">Non-student, unreviewed, no owner</a></li>
-				<li>{{ section.pending_unreviewed_unowned_count }} - <a href="{% url 'unreviewed-unowned-pending-applicants-summary' %}">Unreviewed, no owner</a></li>
-				<li>{{ section.pending_reviewed_unowned_count }} - <a href="{% url 'reviewed-unowned-pending-applicants-summary' %}">Reviewed, no owner</a></li>
-				{% for reviewer in section.reviewers %}
-					<li>{{ reviewer.number_pending_applications_owned }} - <a href="{% url 'owned-pending-applicants-summary' owner_username=reviewer.comrade.account.username %}">Owned by {{ reviewer.comrade.public_name }}</a></li>
-				{% endfor %}
+				<li>{{ section.pending_unreviewed_unowned_count }} - <a href="{% url 'unreviewed-unowned-pending-applicants-summary' %}">All unreviewed</a></li>
+				<li>{{ section.pending_unreviewed_unowned_non_student_count }} - <a href="{% url 'unreviewed-unowned-non-student-pending-applicants-summary' %}">Non-student unreviewed</a></li>
+			</ul>
+		</li>
+		<li>Assigned to reviewers:
+			<ul>
+					{% for reviewer in section.reviewers %}
+						<li>{{ reviewer.number_pending_applications_owned }} - <a href="{% url 'owned-pending-applicants-summary' owner_username=reviewer.comrade.account.username %}">{{ reviewer.comrade.public_name }}</a></li>
+					{% endfor %}
 			</ul>
 		</li>
 	{% endif %}
-	{% if rejected_applications_count %}
-		<li><a href="{% url 'rejected-applicants-summary' %}">{{ rejected_applications_count }} rejected applications</a></li>
+</ul>
+
+<p>Reviewed:</p>
+<ul>
+	{% if section.reviewed_strong_count %}
+	<li>{{ section.reviewed_strong_count }} - <a href="{% url 'strong-reviewed-applicants' %}">+3 rated applications</a></li>
 	{% endif %}
+	{% if section.reviewed_good_count %}
+	<li>{{ section.reviewed_good_count }} - <a href="{% url 'good-reviewed-applicants' %}">+2 rated applications</a></li>
+	{% endif %}
+	{% if section.reviewed_maybe_count %}
+	<li>{{ section.reviewed_maybe_count }} - <a href="{% url 'maybe-reviewed-applicants' %}">+1 rated applications</a></li>
+	{% endif %}
+	{% if section.reviewed_unclear_count %}
+	<li>{{ section.reviewed_unclear_count }} - <a href="{% url 'unclear-reviewed-applicants' %}">Unclear essays</a></li>
+	<li>{{ section.pending_reviewed_unowned_count }} - <a href="{% url 'reviewed-unowned-pending-applicants-summary' %}">Reviewed, no owner</a></li>
+	{% endif %}
+</ul>
+
+<p>Finalized:</p>
+<ul>
 	{% if approved_applications_count %}
 		<li><a href="{% url 'approved-applicants-summary' %}">{{ approved_applications_count }} approved applications</a></li>
+	{% endif %}
+	{% if rejected_applications_count %}
+		<li><a href="{% url 'rejected-applicants-summary' %}">{{ rejected_applications_count }} rejected applications</a></li>
 	{% endif %}
 	{% if pending_applications_count == 0 and rejected_applications_count == 0 and approved_applications_count == 0 %}
 		<li>No initial applications have been submitted</li>

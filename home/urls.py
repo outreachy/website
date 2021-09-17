@@ -1,5 +1,6 @@
 from . import dashboard, views
 from .models import ApprovalStatus
+from .models import InitialApplicationReview
 
 from django.views.generic import TemplateView
 from django.conf.urls import include, url
@@ -85,6 +86,10 @@ urlpatterns = [
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
     # all pending applications
     url(r'^dashboard/pending-applications/$', views.applicant_review_summary, name='pending-applicants-summary', kwargs={'status': ApprovalStatus.PENDING, 'owner_username': 'all'}),
+    url(r'^dashboard/strong-reviewed-applications/$', views.applicant_review_summary, name='strong-reviewed-applicants', kwargs={'review_status': 'reviewed', 'status': ApprovalStatus.PENDING, 'rating': InitialApplicationReview.STRONG }),
+    url(r'^dashboard/good-reviewed-applications/$', views.applicant_review_summary, name='good-reviewed-applicants', kwargs={'review_status': 'reviewed', 'status': ApprovalStatus.PENDING, 'rating': InitialApplicationReview.GOOD }),
+    url(r'^dashboard/maybe-reviewed-applications/$', views.applicant_review_summary, name='maybe-reviewed-applicants', kwargs={'review_status': 'reviewed', 'status': ApprovalStatus.PENDING, 'rating': InitialApplicationReview.MAYBE }),
+    url(r'^dashboard/unclear-reviewed-applications/$', views.applicant_review_summary, name='unclear-reviewed-applicants', kwargs={'review_status': 'reviewed', 'status': ApprovalStatus.PENDING, 'rating': InitialApplicationReview.UNCLEAR }),
     url(r'^dashboard/unreviewed-unowned-pending-applications/$', views.applicant_review_summary, name='unreviewed-unowned-pending-applicants-summary', kwargs={'review_status': 'unreviewed', 'status': ApprovalStatus.PENDING}),
     url(r'^dashboard/unreviewed-unowned-non-student-pending-applications/$', views.applicant_review_summary, name='unreviewed-unowned-non-student-pending-applicants-summary', kwargs={'review_status': 'unreviewed-non-student', 'status': ApprovalStatus.PENDING}),
     url(r'^dashboard/reviewed-unowned-pending-applications/$', views.applicant_review_summary, name='reviewed-unowned-pending-applicants-summary', kwargs={'review_status': 'reviewed', 'status': ApprovalStatus.PENDING}),
