@@ -3662,7 +3662,7 @@ class SetReviewOwner(LoginRequiredMixin, ComradeRequiredMixin, View):
         application.review_owner = reviewer
         application.save()
 
-        return redirect(application.get_preview_url())
+        return redirect(self.request.GET.get('next', application.get_preview_url()))
 
 class EssayRating(LoginRequiredMixin, ComradeRequiredMixin, View):
     def post(self, request, *args, **kwargs):
@@ -3688,7 +3688,7 @@ class EssayRating(LoginRequiredMixin, ComradeRequiredMixin, View):
             review.essay_rating = review.SPAM
         review.save()
 
-        return redirect(application.get_preview_url())
+        return redirect(self.request.GET.get('next', application.get_preview_url()))
 
 # When reviewing the application's time commitments, there are several red flags
 # reviewers can set or unset.
@@ -3782,7 +3782,7 @@ class ReviewCommentUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
         return review
 
     def get_success_url(self):
-        return self.object.application.get_preview_url()
+        return self.request.GET.get('next', self.object.application.get_preview_url())
 
 @login_required
 def internship_cohort_statistics(request):
