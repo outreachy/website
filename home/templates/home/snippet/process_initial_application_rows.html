@@ -1,0 +1,36 @@
+<tr id="app-{{ app.pk }}">
+	<td>
+		<p>{{ app.submission_date }}</p>
+		{% if app.approval_status == app.REJECTED %}
+		<p><span class="badge badge-pill badge-danger">{{ app.get_approval_status_display }}</span></p>
+		{% elif app.approval_status == app.PENDING %}
+		<p><span class="badge badge-pill badge-secondary">{{ app.get_approval_status_display }}</span></p>
+		{% elif app.approval_status == app.APPROVED %}
+		<p><span class="badge badge-pill badge-success">{{ app.get_approval_status_display }}</span></p>
+		{% elif app.approval_status == app.WITHDRAWN %}
+		<p><span class="badge badge-pill badge-warning">{{ app.get_approval_status_display }}</span></p>
+		{% endif %}
+	</td>
+	<td>
+		{% for essay_rating in app.get_essay_ratings %}
+			<p>{% include 'home/snippet/essay_rating.html' %}</p>
+		{% endfor %}
+		<button type="button" class="btn btn-secondary">
+		Quality: {{ app.essay_qualities.count }}
+		</button>
+		<p>{% if app.review_owner %}Owned by: {{ app.review_owner.comrade.public_name }}{% endif %}</p>
+	</td>
+	<td>
+		{% for red_flag_tuple in app.get_all_red_flags %}
+			<p>{% include 'home/snippet/red_flags_display.html' %}</p>
+		{% endfor %}
+	</td>
+	<td><p>{% if app.schoolinformation %}🧑🏽‍🎓 student{% endif %}</p>
+	<td>
+		{% if app.reason_denied == 'SANCTIONED' %}
+			<p><span class="badge badge-pill badge-warning">warning</span>{{ app.get_reason_for_status }}</p>
+		{% endif %}
+	</td>
+	<td>"{{ app.applicant.public_name }}" &lt;{{ app.applicant.account.email }}&gt;</td>
+	<td><a class='btn btn-info' href="{% url 'process-application' applicant_username=app.applicant.account.username %}">Process Application</a></td>
+</tr>

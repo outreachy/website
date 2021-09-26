@@ -1,0 +1,40 @@
+{% extends "base.html" %} 
+
+{% block title %}
+Process Initial Applications
+{% endblock %}
+
+{% block content %}
+	<h1>{{ heading }}</h1>
+	{% if applications %}
+		<table class="table table-striped table-bordered">
+			{% include 'home/snippet/process_initial_application_headers.html' %}
+			{% for app in applications %}
+				{% include 'home/snippet/process_initial_application_rows.html' %}
+			{% endfor %}
+		</table>
+	{% else %}
+		<p>No applications found.</p>
+	{% endif %}
+
+	<p>
+	{% if applications.has_previous %}
+	{% if applications.previous_page_number > 1 %}
+	<a class='btn btn-info' href="?page=1">1</a>
+	&hellip;
+	{% endif %}
+	<a class='btn btn-info' href="?page={{ applications.previous_page_number }}">{{ applications.previous_page_number }}</a>
+	{% endif %}
+
+	&lt;{{ applications.number }}&gt;
+
+	{% if applications.has_next %}
+	<a class='btn btn-info' href="?page={{ applications.next_page_number }}">{{ applications.next_page_number }}</a>
+	{% if applications.next_page_number < applications.paginator.num_pages %}
+	&hellip;
+	<a class='btn btn-info' href="?page={{ applications.paginator.num_pages }}">{{ applications.paginator.num_pages }}</a>
+	{% endif %}
+	{% endif %}
+	</p>
+
+{% endblock %}

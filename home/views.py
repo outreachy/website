@@ -765,6 +765,28 @@ class ViewInitialApplication(LoginRequiredMixin, ComradeRequiredMixin, DetailVie
                     applicant__account__username=self.kwargs['applicant_username'],
                     application_round=current_round)
 
+class ProcessInitialApplication(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
+    template_name = 'home/process_initial_application.html'
+    context_object_name = 'application'
+
+    def get_context_data(self, **kwargs):
+        context = super(ProcessInitialApplication, self).get_context_data(**kwargs)
+        context['current_round'] = self.object.application_round
+        context['role'] = self.role
+        return context
+
+    def get_object(self):
+        current_round = get_current_round_for_initial_application_review()
+
+        self.role = Role(self.request.user, current_round)
+
+        if not self.role.is_organizer and not self.role.is_reviewer:
+            raise PermissionDenied("You are not authorized to review applications.")
+
+        return get_object_or_404(ApplicantApproval,
+                    applicant__account__username=self.kwargs['applicant_username'],
+                    application_round=current_round)
+
 def promote_page(request):
     now = datetime.now(timezone.utc)
     today = get_deadline_date_for(now)
@@ -3405,7 +3427,7 @@ class Survey2018Notification(LoginRequiredMixin, ComradeRequiredMixin, TemplateV
         return redirect('dashboard')
 
 @login_required
-def applicant_review_summary(request, status, owner_username=None, review_status=None, rating=None):
+def applicant_review_summary(request, status, owner_username=None, review_status=None, rating=None, process=False):
     """
     For applicant reviewers and staff, show the status of applications that
     have the specified approval status.
@@ -3469,6 +3491,12 @@ def applicant_review_summary(request, status, owner_username=None, review_status
         heading = 'Approved Applications'
     if owner_username and owner_username != 'all':
         heading = heading + ' - owned by {}'.format(comrade.public_name)
+
+    if process:
+        return render(request, 'home/process_initial_applications_summary.html', {
+            "applications": page_obj,
+            "heading": heading,
+        })
 
     return render(request, 'home/applicant_review_summary.html', {
         "applications": page_obj,

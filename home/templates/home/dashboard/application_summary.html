@@ -23,17 +23,16 @@
 <p>Reviewed:</p>
 <ul>
 	{% if section.reviewed_strong_count %}
-	<li>{{ section.reviewed_strong_count }} - <a href="{% url 'strong-reviewed-applicants' %}">+3 rated applications</a></li>
+		<li>{{ section.reviewed_strong_count }} - <a href="{% url 'process-strong-applications' %}">+3 rated applications</a></li>
 	{% endif %}
 	{% if section.reviewed_good_count %}
-	<li>{{ section.reviewed_good_count }} - <a href="{% url 'good-reviewed-applicants' %}">+2 rated applications</a></li>
+		<li>{{ section.reviewed_good_count }} - <a href="{% url 'process-good-applications' %}">+2 rated applications</a></li>
 	{% endif %}
 	{% if section.reviewed_maybe_count %}
-	<li>{{ section.reviewed_maybe_count }} - <a href="{% url 'maybe-reviewed-applicants' %}">+1 rated applications</a></li>
+		<li>{{ section.reviewed_maybe_count }} - <a href="{% url 'process-maybe-applications' %}">+1 rated applications</a></li>
 	{% endif %}
 	{% if section.reviewed_unclear_count %}
-	<li>{{ section.reviewed_unclear_count }} - <a href="{% url 'unclear-reviewed-applicants' %}">Unclear essays</a></li>
-	<li>{{ section.pending_reviewed_unowned_count }} - <a href="{% url 'reviewed-unowned-pending-applicants-summary' %}">Reviewed, no owner</a></li>
+		<li>{{ section.reviewed_unclear_count }} - <a href="{% url 'process-unclear-applications' %}">Unclear essays</a></li>
 	{% endif %}
 </ul>
 

@@ -1,0 +1,339 @@
+{% extends "base.html" %} 
+{% load compress %}
+{% load static %}
+
+{% block title %}
+{{ application.applicant.public_name }} - Process Application
+{% endblock %}
+
+{% block content %}
+	{% if application.is_approved %}
+		<p><a class='btn btn-secondary' href="{% url 'approved-applicants-summary' %}"> &lt;- Back to summary of approved applications</a></p>
+	{% elif application.is_pending %}
+		<p><a class='btn btn-secondary' href="{% url 'pending-applicants-summary' %}"> &lt;- Back to summary of pending applications</a></p>
+	{% elif application.is_rejected %}
+		<p><a class='btn btn-secondary' href="{% url 'rejected-applicants-summary' %}"> &lt;- Back to summary of rejected applications</a></p>
+	{% endif %}
+
+	<h1>Status</h1>
+	<table class="table table-striped table-bordered">
+		{% include 'home/snippet/process_initial_application_headers.html' %}
+		{% with app=application %}
+			{% include 'home/snippet/process_initial_application_rows.html' %}
+		{% endwith %}
+	</table>
+
+	<h2>Eligibility warnings</h2>
+	<ul>
+		{% if application.is_over_18 == False %}
+		<li>
+			<span class="badge badge-warning">Warning</span> Age eligibility: <b>No</b>, applicant is not over 18 years of age when the internship starts.
+		</li>
+		{% endif %}
+
+		{% if application.is_eligible_to_work == False %}
+			<li><span class="badge badge-warning">Warning</span> Work eligibility: <b>No</b>, applicant is not eligible to work in the countries they are living in during the internship.</li>
+		{% endif %}
+	{% with tcs=application.get_time_commitments %}
+		{% if tcs.longest_period_free < application.required_days_free %}
+			<li><span class="badge badge-warning">Warning</span> Time eligibility: <b>No</b>, applicant has {{ tcs.longest_period_free }} days free / {{ tcs.internship_total_days.days }} days total. This applicant is required to have {{ application.required_days_free }} days free.</li>
+		{% endif %}
+		{% if tcs.employment_time_commitments %}
+			<li><span class="badge badge-warning">Warning</span> Applicant has a part-time job.</li>
+		{% endif %}
+	{% endwith %}
+	{% if application.schoolinformation %}
+		<li><span class="badge badge-warning">Warning</span> This is a student from {% include 'home/snippet/applicant_location.html' %}.</li>
+		{% with stats=application.schoolinformation.classmate_statistics %}
+		<li>{% if stats.graduating %}Graduating{% else %}Non-graduating{% endif %} classmates: {{ stats.acceptance_rate|floatformat }}% accepted, {{ stats.time_rejection_rate|floatformat }}% rejected for full-time commitments</li>
+		{% endwith %}
+	{% endif %}
+		{% if application.is_not_under_export_control == False %}
+			<li><span class="badge badge-warning">Warning</span> Free from U.S. export control: <b>No</b>, applicant is under U.S. export control.</li>
+		{% endif %}
+		{% if application.is_not_under_sanctions == False %}
+			<li><span class="badge badge-warning">Warning</span> Free from U.S. sanctions: <b>No</b>, applicant is in a country or region under U.S. sanctions.</li>
+		{% endif %}
+		{% if application.was_not_intern_with_gsoc_or_outreachy == False %}
+			<li><span class="badge badge-warning">Warning</span> Has not participated in GSoC or Outreachy: <b>No</b>, applicant has participated in Google Summer of Code, Outreach Program for Women, or Outreachy before.</li>
+		{% endif %}
+	</ul>
+	<h2>Reviews</h2>
+	<p>Essay qualities:</p>
+	<ul>
+		{% for quality in application.get_essay_qualities %}
+		<li>{{ quality }}</li>
+		{% endfor %}
+	</ul>
+	{% if application.barrierstoparticipation.content_warnings %}
+		<p>Content warnings: <b>{{ application.barrierstoparticipation.content_warnings }}</b></p>
+	{% endif %}
+
+	{% for reviewer, comment in application.get_reviewer_comments %}
+		<div class="card mb-3">
+			<div class="card-header">{{ reviewer }} - Reviewer Comments</div>
+			<div class="card-body">
+				<div class="card-text">{{ comment|linebreaks }}</div>
+			</div>
+		</div>
+	{% endfor %}
+	<p><a class='btn btn-info' href="{% url 'update-comment' applicant_username=application.applicant.account.username %}?next={{ request.path|urlencode }}">Update your comments</a></p>
+
+
+	<h2>Time Commitments</h2>
+	{% include 'home/snippet/time_commitment_overview.html' %}
+
+	<h1>Staff Actions</h1>
+
+	<table class="table table-bordered">
+		<tr>
+			<th scope="col">Approve applicant?</th>
+			<th scope="col">Request essay revision?</th>
+			<th scope="col">Reject applicant?</th>
+			<th scope="col">Delete application?</th>
+		</tr>
+		<tr>
+			<td>
+				{% if not application.is_approved %}
+				<form action="{{ application.get_approve_url }}" method="post">
+				    {% csrf_token %}
+				    <input type="submit" class="btn btn-success" value="Approve Application" />
+				</form>
+				{% endif %}
+			</td>
+			<td>
+				{% if application.is_pending %}
+				<form method="post" action="{% url 'request-essay-revision' applicant_username=application.applicant.account.username %}">
+					{% csrf_token %}
+					<input type='submit' class='btn btn-info' value="Request Essay Revision">
+				</form>
+				{% endif %}
+			</td>
+			<td>{% if not application.is_rejected %}
+					<a class='btn btn-warning' href="{{ application.get_reject_url }}">Reject Application</a>
+				{% endif %}
+			</td>
+			<td>
+				<form method="post" action="{% url 'delete-application' applicant_username=application.applicant.account.username %}">
+					{% csrf_token %}
+					<input type='submit' class='btn btn-danger' value="Delete Application">
+				</form>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			</td>
+			<td>
+				<form method="post">
+					{% csrf_token %}
+					<div class="dropdown">
+						<button class="btn btn-secondary dropdown-toggle" type="button" id="EssayRatingMenu-{{ intern.account.username }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Your rating for this essay</button>
+						<div class="dropdown-menu" aria-labelledby="EssayRatingMenu-{{ intern.account.username }}">
+							<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='STRONG' %}?next={{ request.path|urlencode }}">+3</button>
+							<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='GOOD' %}?next={{ request.path|urlencode }}">+2</button>
+							<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='MAYBE' %}?next={{ request.path|urlencode }}">+1</button>
+							<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='UNCLEAR' %}?next={{ request.path|urlencode }}">??</button>
+							<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='NOTCOMPELLING' %}?next={{ request.path|urlencode }}">-1</button>
+							<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='NOTUNDERSTOOD' %}?next={{ request.path|urlencode }}">-2</button>
+							<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='SPAM' %}?next={{ request.path|urlencode }}">-3</button>
+							<button class="dropdown-item" formaction="{% url 'essay-rating' applicant_username=application.applicant.account.username rating='UNRATED' %}">Mark as unrated</button>
+						</div>
+					</div>
+				</form>
+			</td>
+			<td>
+				<form method="post">
+					{% csrf_token %}
+					<div class="dropdown">
+						<button class="btn btn-secondary dropdown-toggle" type="button" id="review-owner-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Assign application owner</button>
+						<div class="dropdown-menu" aria-labelledby="review-owner-menu">
+							{% for reviewer in application.get_possible_reviewers %}
+							<button class="dropdown-item" formaction="{% url 'set-review-owner' applicant_username=application.applicant.account.username owner=reviewer.comrade.account.username %}?next={{ request.path|urlencode }}">{{ reviewer.comrade.public_name }}</button>
+							{% endfor %}
+							<button class="dropdown-item" formaction="{% url 'set-review-owner' applicant_username=application.applicant.account.username owner=None %}?next={{ request.path|urlencode }}">Clear reviewer</button>
+						</div>
+			</td>
+					</div>
+				</form>
+		</tr>
+	</table>
+
+
+	<h2>Additional Information</h2>
+	<p>Pronouns: <b>{{ application.applicant.get_pronouns_display }}</b>
+	<p>Gender identity: {% if application.applicantgenderidentity %}<b>{{ application.applicantgenderidentity }}</b>{% else %} [Removed]{% endif %}</p>
+	<p>Location during internship: {% if not application.barrierstoparticipation %}[Removed]{% else %}<b>{{ application.barrierstoparticipation.country_living_in_during_internship }}</b>{% endif %}</p>
+	
+	<p>Racial or ethnic minority in the United States technology industry: {% if not application.paymenteligibility.us_national_or_permanent_resident %}Unknown; not a U.S. resident or national.{% elif not application.applicantraceethnicityinformation %}[Removed]{% elif application.applicantraceethnicityinformation.us_resident_demographics %}<b>Yes</b>, they're Black/African American, Hispanic/Latinx, Native American, Alaska Native, Native Hawaiian, or Pacific Islander{% else %}<b>No</b>, they're not Black/African American, Hispanic/Latinx, Native American, Alaska Native, Native Hawaiian, or Pacific Islander.{% endif %}</p>
+
+	<p>Prior experience with FOSS:</p>
+	<ul>
+		<li>
+			{% if application.priorfossexperience.prior_contributor %}
+				<b>Yes</b>, they have volunteered to create FOSS contributions.
+			{% else %}
+				<b>No</b>, no they have not volunteered contributions to FOSS.
+			{% endif %}
+		</li>
+		<li>
+			{% if application.priorfossexperience.prior_paid_contributor %}
+				<span class="badge badge-warning">Warning</span><b>Yes</b>, they have been paid for their FOSS contributions.
+			{% else %}
+				<b>No</b>, no they have not been paid for their contributions to FOSS.
+			{% endif %}
+		</li>
+	</ul>
+
+	<h2>Essay Answers</h2>
+
+	{% if not application.barrierstoparticipation %}
+		<p>The essay answers have been removed after initial application processing.</p>
+	{% else %}
+		{% for field, answer in application.barrierstoparticipation.get_answers %}
+		<div class="card mb-3">
+			<div class="card-header">Q{{ forloop.counter }}. {{ field.verbose_name }}</div>
+			<div class="card-body">
+				<p class="card-text">A{{ forloop.counter }}. {{ answer|linebreaksbr }}
+				</p>
+			</div>
+			<div class="card-footer bg-white">
+				<div class="card border-info mb-3" id="essay-accordian-{{ forloop.counter }}">
+					<div class="card-header" id="essay-tips-header">
+						<h5 class="mb-0">
+							<button class="btn btn-link" data-toggle="collapse" data-target="#essay-tips-accordion-{{ forloop.counter }}" aria-expanded="false" aria-controls="essay-tips-accordion" href="#essay-tips-accordion">- Help text</button>
+						</h5>
+					</div>
+					<div id="essay-tips-accordion-{{ forloop.counter }}" class="collapse hide" aria-labelledby="essay-tips-header" data-parent="#essay-accordian-{{ forloop.counter }}">
+						<div class="card-body">
+							<div class="card-text">
+								<p>Help text:</p> {{ field.help_text|safe }}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	{% endif %}
+
+	<h2>Essay Review</h2>
+	{% include 'home/snippet/applicant_review_essay_rating.html' %}
+
+	<h2>Time Commitment Warnings</h2>
+	{% include 'home/snippet/applicant_review_time_commitments.html' %}
+
+	{% include 'home/snippet/applicant_review_actions.html' %}
+{% endblock %}
+
+{% block extra_css %}
+{% compress css %}
+<link rel="stylesheet" href="{% static "timeline-chart.css" %}">
+<style>
+.timeline-chart rect.interval {
+	fill: #6c757d;
+}
+.timeline-chart rect.interval.conflict {
+	fill: #dc3545;
+}
+.timeline-chart.enough-time rect.interval.conflict {
+	fill: #ffc107;
+}
+.timeline-chart.enough-time .interval-text.conflict {
+	fill: #212529;
+}
+.timeline-chart rect.interval.reference {
+	fill: #000;
+}
+</style>
+{% endcompress %}
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
+<script src="{% static "timeline-chart.js" %}"></script>
+{% with tcs=application.get_relevant_time_commitments current_round=application.application_round %}
+<script>
+	new TimelineChart(document.getElementById("time-commitments-timeline"), [{
+		label: "Internship period",
+		data: [{
+			type: TimelineChart.TYPE.INTERVAL,
+			customClass: "reference",
+			from: new Date([{{ current_round.internstarts|date:"Y, n, j" }}]),
+			to: new Date([{{ current_round.internends|date:"Y, n, j" }}])
+		}]
+	}, {
+		label: "School terms",
+		data: [{
+{% for term in tcs.school_time_commitments %}
+			label: "{{ term.term_name|escapejs }}{% if term.last_term %} (last){% endif %}",
+			customClass: "{% if term.start_date <= current_round.internends and current_round.internstarts <= term.end_date %}conflict{% endif %}",
+			type: TimelineChart.TYPE.INTERVAL,
+			from: new Date([{{ term.start_date|date:"Y, n, j" }}]),
+			to: new Date([{{ term.end_date|date:"Y, n, j" }}])
+{% if not forloop.last %}
+		}, {
+{% endif %}
+{% endfor %}
+		}]
+	}, {
+{% with terms=application.schoolinformation.find_official_terms %}
+		label: "Official terms",
+		data: [{
+{% for term in terms %}
+			label: "{{ term.term_name|escapejs }}",
+			customClass: "reference",
+			type: TimelineChart.TYPE.INTERVAL,
+			from: new Date([{{ term.start_date|date:"Y, n, j" }}]),
+			to: new Date([{{ term.end_date|date:"Y, n, j" }}])
+{% if not forloop.last %}
+		}, {
+{% endif %}
+{% endfor %}
+		}]
+{% endwith %}
+	}, {
+		label: "Online/coding school",
+		data: [{
+{% for course in tcs.noncollege_school_time_commitments %}
+			label: "{{ course.hours_per_week }} hours/week{% if course.quit_on_acceptance %} (will quit){% endif %}",
+			customClass: "{% if not course.quit_on_acceptance and course.start_date <= current_round.internends and current_round.internstarts <= course.end_date %}conflict{% endif %}",
+			type: TimelineChart.TYPE.INTERVAL,
+			from: new Date([{{ course.start_date|date:"Y, n, j" }}]),
+			to: new Date([{{ course.end_date|date:"Y, n, j" }}])
+{% if not forloop.last %}
+		}, {
+{% endif %}
+{% endfor %}
+		}]
+	}, {
+		label: "Employment",
+		data: [{
+{% for period in tcs.employment_time_commitments %}
+			label: "{{ period.hours_per_week }} hours/week as {{ period.job_title|escapejs }}{% if period.quit_on_acceptance %} (will quit){% endif %}",
+			customClass: "{% if not period.quit_on_acceptance and period.start_date <= current_round.internends and current_round.internstarts <= period.end_date %}conflict{% endif %}",
+			type: TimelineChart.TYPE.INTERVAL,
+			from: new Date([{{ period.start_date|date:"Y, n, j" }}]),
+			to: new Date([{{ period.end_date|date:"Y, n, j" }}])
+{% if not forloop.last %}
+		}, {
+{% endif %}
+{% endfor %}
+		}]
+	}, {
+		label: "Volunteering",
+		data: [{
+{% for period in tcs.volunteer_time_commitments %}
+			label: "{{ period.hours_per_week }} hours/week",
+			customClass: "{% if period.start_date <= current_round.internends and current_round.internstarts <= period.end_date %}conflict{% endif %}",
+			type: TimelineChart.TYPE.INTERVAL,
+			from: new Date([{{ period.start_date|date:"Y, n, j" }}]),
+			to: new Date([{{ period.end_date|date:"Y, n, j" }}])
+{% if not forloop.last %}
+		}, {
+{% endif %}
+{% endfor %}
+		}]
+	}]);
+</script>
+{% endwith %}
+{% endblock %}
