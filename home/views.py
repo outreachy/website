@@ -3479,6 +3479,8 @@ def applicant_review_summary(request, status, owner_username=None, review_status
     if rating:
         applications = applications.filter(initialapplicationreview__essay_rating=rating)
 
+    applications.distinct()
+
     paginator = Paginator(applications, 25)
     page_number = request.GET.get("page", 1)
     page_obj = paginator.page(page_number)

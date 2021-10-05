@@ -148,18 +148,18 @@ def application_summary(request, today):
 
     current_applicants = current_round.applicantapproval_set
 
-    pending_applications_count = current_applicants.pending().count()
-    pending_unreviewed_unowned_count = current_applicants.pending().filter(initialapplicationreview__isnull=True, review_owner=None).count()
-    pending_unreviewed_unowned_non_student_count = current_applicants.pending().filter(initialapplicationreview__isnull=True, review_owner=None, schoolinformation__isnull=True).count()
-    pending_reviewed_unowned_count = current_applicants.pending().filter(initialapplicationreview__isnull=False, review_owner=None).count()
+    pending_applications_count = current_applicants.pending().distinct().count()
+    pending_unreviewed_unowned_count = current_applicants.pending().filter(initialapplicationreview__isnull=True, review_owner=None).distinct().count()
+    pending_unreviewed_unowned_non_student_count = current_applicants.pending().filter(initialapplicationreview__isnull=True, review_owner=None, schoolinformation__isnull=True).distinct().count()
+    pending_reviewed_unowned_count = current_applicants.pending().filter(initialapplicationreview__isnull=False, review_owner=None).distinct().count()
 
-    rejected_applications_count = current_applicants.rejected().count()
-    approved_applications_count = current_applicants.approved().count()
+    rejected_applications_count = current_applicants.rejected().distinct().count()
+    approved_applications_count = current_applicants.approved().distinct().count()
 
-    reviewed_strong_count = current_applicants.filter(initialapplicationreview__essay_rating=InitialApplicationReview.STRONG).exclude(approval_status=ApprovalStatus.APPROVED).count()
-    reviewed_good_count = current_applicants.pending().filter(initialapplicationreview__essay_rating=InitialApplicationReview.GOOD).count()
-    reviewed_maybe_count = current_applicants.pending().filter(initialapplicationreview__essay_rating=InitialApplicationReview.MAYBE).count()
-    reviewed_unclear_count = current_applicants.pending().filter(initialapplicationreview__essay_rating=InitialApplicationReview.UNCLEAR).count()
+    reviewed_strong_count = current_applicants.filter(initialapplicationreview__essay_rating=InitialApplicationReview.STRONG).exclude(approval_status=ApprovalStatus.APPROVED).distinct().count()
+    reviewed_good_count = current_applicants.pending().filter(initialapplicationreview__essay_rating=InitialApplicationReview.GOOD).distinct().count()
+    reviewed_maybe_count = current_applicants.pending().filter(initialapplicationreview__essay_rating=InitialApplicationReview.MAYBE).distinct().count()
+    reviewed_unclear_count = current_applicants.pending().filter(initialapplicationreview__essay_rating=InitialApplicationReview.UNCLEAR).distinct().count()
 
     reviewers = ApplicationReviewer.objects.filter(reviewing_round=current_round).approved().order_by('comrade__public_name').annotate(number_pending_applications_owned=models.Count('applicantapproval', filter=models.Q(applicantapproval__approval_status=ApprovalStatus.PENDING)))
 
