@@ -13,7 +13,9 @@
 		<li>Assigned to reviewers:
 			<ul>
 					{% for reviewer in section.reviewers %}
-						<li>{{ reviewer.number_pending_applications_owned }} - <a href="{% url 'owned-pending-applicants-summary' owner_username=reviewer.comrade.account.username %}">{{ reviewer.comrade.public_name }}</a></li>
+						{% if reviewer.number_pending_applications_owned != 0 %}
+							<li>{{ reviewer.number_pending_applications_owned }} - <a href="{% url 'owned-pending-applicants-summary' owner_username=reviewer.comrade.account.username %}">{{ reviewer.comrade.public_name }}</a></li>
+						{% endif %}
 					{% endfor %}
 			</ul>
 		</li>
