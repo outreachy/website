@@ -156,10 +156,10 @@ def application_summary(request, today):
     rejected_applications_count = current_applicants.rejected().distinct().count()
     approved_applications_count = current_applicants.approved().distinct().count()
 
-    reviewed_strong_count = current_applicants.filter(initialapplicationreview__essay_rating=InitialApplicationReview.STRONG).exclude(approval_status=ApprovalStatus.APPROVED).distinct().count()
-    reviewed_good_count = current_applicants.pending().filter(initialapplicationreview__essay_rating=InitialApplicationReview.GOOD).distinct().count()
-    reviewed_maybe_count = current_applicants.pending().filter(initialapplicationreview__essay_rating=InitialApplicationReview.MAYBE).distinct().count()
-    reviewed_unclear_count = current_applicants.pending().filter(initialapplicationreview__essay_rating=InitialApplicationReview.UNCLEAR).distinct().count()
+    reviewed_strong_count = current_applicants.pending().filter(review_owner=None).filter(initialapplicationreview__essay_rating=InitialApplicationReview.STRONG).distinct().count()
+    reviewed_good_count = current_applicants.pending().filter(review_owner=None).filter(initialapplicationreview__essay_rating=InitialApplicationReview.GOOD).distinct().count()
+    reviewed_maybe_count = current_applicants.pending().filter(review_owner=None).filter(initialapplicationreview__essay_rating=InitialApplicationReview.MAYBE).distinct().count()
+    reviewed_unclear_count = current_applicants.pending().filter(review_owner=None).filter(initialapplicationreview__essay_rating=InitialApplicationReview.UNCLEAR).distinct().count()
 
     reviewers = ApplicationReviewer.objects.filter(reviewing_round=current_round).approved().order_by('comrade__public_name').annotate(number_pending_applications_owned=models.Count('applicantapproval', filter=models.Q(applicantapproval__approval_status=ApprovalStatus.PENDING)))
 
