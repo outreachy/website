@@ -2786,6 +2786,9 @@ def blog_2021_08_18_cfp_open(request):
         'current_round': current_round,
         })
 
+def blog_2021_10_outreachy_hiring(request):
+    return render(request, 'home/blog/2021-10-12-outreachy-is-hiring.html')
+
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(InitialMentorFeedbackV2,
             fields=(
