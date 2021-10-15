@@ -157,7 +157,7 @@ class WagtailFeed(Feed):
             full_url=reverse('2021-10-outreachy-hiring'),
             owner=author,
             first_published_at=pacific.localize(datetime.datetime(2021, 10, 14, 17, 25, 0)),
-            last_published_at=pacific.localize(datetime.datetime(2021, 10, 14, 17, 25, 0)),
+            last_published_at=pacific.localize(datetime.datetime(2021, 10, 15, 16, 20, 0)),
         ))
 
         # put the Wagtail pages and special posts together in the right order
