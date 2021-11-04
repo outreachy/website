@@ -2,7 +2,7 @@
 
 **Internship Terms of Participation**
 
-_last edited - April 28, 2021_
+_last edited - November 4, 2021_
 
 **Dear Participant:**
 
@@ -86,19 +86,19 @@ will make best efforts to send out payments quickly after internship progress
 confirmations. Payments may be issued earlier than scheduled deadlines below,
 but interns should not rely on earlier payments.
 
- * $2,000 will be sent to you by or around July 7, 2021 if your Volunteer Mentor
-   confirms to Conservancy by June 7, 2021 that you are in good
+ * $2,000 will be sent to you by or around January 12, 2022 if your Volunteer
+   Mentor confirms to Conservancy by December 13, 2021 that you are in good
    standing. If Conservancy receives such confirmation late, your payment will
    be delayed. If such confirmation is not received, you will not receive
    payment.
 
- * $2,000 will be sent to you by or around August 4, 2021 if your Volunteer
-   Mentor confirms to Conservancy by July 5, 2021 that you are in good standing.
+ * $2,000 will be sent to you by or around February 16, 2022 if your Volunteer
+   Mentor confirms to Conservancy by January 17, 2022 that you are in good standing.
    If Conservancy receives such confirmation late, your payment will be delayed.
    If such confirmation is not received, you will not receive payment.
 
- * $2,000 will be sent to you by or around September 23, 2021 if your Volunteer
-   Mentor confirms to Conservancy by August 24, 2021 that you successfully
+ * $2,000 will be sent to you by or around April 4, 2022 if your Volunteer
+   Mentor confirms to Conservancy by March 4, 2022 that you successfully
    completed your internship. If Conservancy receives such confirmation late,
    your payment will be delayed. If such confirmation is not received, you will
    not receive payment.
@@ -160,7 +160,7 @@ and are not currently residing in one of these countries;
 (c) you are not a person or entity restricted by US export controls or
 sanctions programs;
 
-(d) you are or will be 18 years of age or older by May 24, 2021;
+(d) you are or will be 18 years of age or older by December 6, 2021;
 
 (e) (i) the contents of your Application and information you submitted for your
 Initial Application, including your stated availability and time commitment to
@@ -201,7 +201,7 @@ which furthers Conservancy’s charitable purposes.
 
 **Termination.**
 
-The internship will take place between May 24, 2021 and August 24, 2021. In
+The internship will take place between December 6, 2021 and March 4, 2022. In
 exceptional situations, your internship can be extended for up to five weeks,
 provided that both you and your Volunteer Mentor send a written request for an
 extension specifying a new end date to the Outreachy Project's leadership

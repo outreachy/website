@@ -2,7 +2,7 @@
 
 **Mentorship Terms of Participation**
 
-_last edited - April 28, 2021_
+_last edited - November 4, 2021_
 
 **Dear Mentor:**
 
@@ -61,7 +61,7 @@ North Korea, or Syria;
 (c) you are not a person or entity restricted by US export controls or
 sanctions programs; and
 
-(d) you are or will be 18 years of age or older by May 24, 2021.
+(d) you are or will be 18 years of age or older by Dec 6, 2021.
 
 **Indemnification.**
 
@@ -97,8 +97,8 @@ Conservancy’s charitable purposes.
 
 **Termination.**
 
-Internships in the Program will take place between May 24, 2021 and August 24,
-2021. In exceptional situations, the internship can be extended for up to five
+Internships in the Program will take place between Dec 6, 2021 and Mar 4,
+2022. In exceptional situations, the internship can be extended for up to five
 weeks, provided that both you and your Intern send a written request for an
 extension specifying a new end date to the Outreachy Project's leadership
 committee, operating under Conservancy's auspices, and that the Outreachy
