@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Update Your Final Application</h1>
+
+{% include "home/snippet/privacy_policy.html" %}
+
+<form method="post" action="">
+{% csrf_token %}
+    {{ form.as_p }}
+<input type="submit" class="btn btn-block btn-primary" value="Save" />
+<input type="hidden" name="next" value="{{ next }}" />
+</form>
+
+{% endblock %}

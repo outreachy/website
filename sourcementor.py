@@ -1,0 +1,1 @@
+It's fine for communities
