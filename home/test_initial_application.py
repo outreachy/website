@@ -326,7 +326,7 @@ class ProjectSubmissionTestCase(TestCase):
 
         response = self.client.get(reverse('project-selection'))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, '<h4 id="debian">Debian - 2 interns</h4>', html=True)
+        self.assertContains(response, '<h4 id="debian"><a href="#debian">Debian</a> - 2 interns</h4>', html=True)
         self.assertContains(response, 'Project details are hidden.')
         self.assertNotContains(response, '<a href="{}">Debian community landing page</a>'.format(reverse('community-landing', kwargs={'round_slug': project.project_round.participating_round.slug, 'community_slug': project.project_round.community.slug})), html=True)
         self.assertNotContains(response, '<a href="{}#{}">{}</a>'.format(project.project_round.get_absolute_url(), project.slug, project.short_title), html=True)
@@ -350,7 +350,7 @@ class ProjectSubmissionTestCase(TestCase):
 
                 response = self.client.get(reverse('project-selection'))
                 self.assertEqual(response.status_code, 200)
-                self.assertContains(response, '<h4 id="debian">Debian - 2 interns</h4>', html=True)
+                self.assertContains(response, '<h4 id="debian"><a href="#debian">Debian</a> - 2 interns</h4>', html=True)
                 self.assertContains(response, 'Project details are hidden.')
                 self.assertNotContains(response, '<a href="{}">Debian community landing page</a>'.format(reverse('community-landing', kwargs={'round_slug': project.project_round.participating_round.slug, 'community_slug': project.project_round.community.slug})), html=True)
                 self.assertNotContains(response, '<a href="{}#{}">{}</a>'.format(project.project_round.get_absolute_url(), project.slug, project.short_title), html=True)
@@ -374,7 +374,7 @@ class ProjectSubmissionTestCase(TestCase):
 
                 response = self.client.get(reverse('project-selection'))
                 self.assertEqual(response.status_code, 200)
-                self.assertContains(response, '<h4 id="debian">Debian - 2 interns</h4>', html=True)
+                self.assertContains(response, '<h4 id="debian"><a href="#debian">Debian</a> - 2 interns</h4>', html=True)
                 self.assertContains(response, 'Project details are hidden.')
                 self.assertNotContains(response, '<a href="{}">Debian community landing page</a>'.format(reverse('community-landing', kwargs={'round_slug': project.project_round.participating_round.slug, 'community_slug': project.project_round.community.slug})), html=True)
                 self.assertNotContains(response, '<a href="{}#{}">{}</a>'.format(project.project_round.get_absolute_url(), project.slug, project.short_title), html=True)
@@ -394,7 +394,7 @@ class ProjectSubmissionTestCase(TestCase):
 
         response = self.client.get(reverse('project-selection'))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, '<h4 id="debian">Debian - 2 interns</h4>', html=True)
+        self.assertContains(response, '<h4 id="debian"><a href="#debian">Debian</a> - 2 interns</h4>', html=True)
         self.assertContains(response, 'Project details are hidden.')
         self.assertNotContains(response, '<a href="{}">Debian community landing page</a>'.format(reverse('community-landing', kwargs={'round_slug': project.project_round.participating_round.slug, 'community_slug': project.project_round.community.slug})), html=True)
         self.assertNotContains(response, '<a href="{}#{}">{}</a>'.format(project.project_round.get_absolute_url(), project.slug, project.short_title), html=True)
@@ -413,7 +413,7 @@ class ProjectSubmissionTestCase(TestCase):
 
         response = self.client.get(reverse('project-selection'))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, '<h4 id="debian">Debian - 2 interns</h4>', html=True)
+        self.assertContains(response, '<h4 id="debian"><a href="#debian">Debian</a> - 2 interns</h4>', html=True)
         self.assertNotContains(response, 'Project details are hidden.')
         self.assertContains(response, '<a href="{}">Debian community landing page</a>'.format(reverse('community-landing', kwargs={'round_slug': project.project_round.participating_round.slug, 'community_slug': project.project_round.community.slug})), html=True)
         self.assertContains(response, '<a href="{}#{}">{}</a>'.format(project.project_round.get_absolute_url(), project.slug, project.short_title), html=True)
