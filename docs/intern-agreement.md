@@ -36,11 +36,12 @@ Participating Organization, (ii) a Free Software license as designated by the Fr
 Software Foundation, and (iii) an Open Source license as approved by the Open
 Source Initiative (“Project License”).
 
-Additionally, you agree to blog at least once every two weeks about your work.
-You hereby license each blog entry – and all other documentation you create for
-this Project – under the Creative Commons Attribution-ShareAlike 4.0 International
-License, and agree that it may be included on any site that aggregates blog posts
-of Program participants or Participating Organization contributors.
+Additionally, you are encouraged to blog at least once every two weeks about the
+effort you put into the internship. You hereby license each blog entry – and all
+other documentation you create for this Project – under the Creative Commons
+Attribution-ShareAlike 4.0 International License, and agree that it may be
+included on any site that aggregates blog posts of Program participants or
+Participating Organization contributors.
 
 You hereby represent, warrant and agree that all Project Work Product, blogs, and
 other work you complete related to the project:
