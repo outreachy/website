@@ -79,29 +79,23 @@ any contractual commitment on your part.
 
 **Stipend.**
 
-Conservancy will pay you a $6,000 USD stipend (“Stipend”) for the Project in
+Conservancy will pay you a $7,000 USD stipend (“Stipend”) for the Project in
 accordance with the following schedule. Conservancy payments are generally paid
 on a NET-30 basis. Recognizing internship structure of Outreachy, Conservancy
 will make best efforts to send out payments quickly after internship progress
 confirmations. Payments may be issued earlier than scheduled deadlines below,
 but interns should not rely on earlier payments.
 
- * $2,000 will be sent to you by or around January 12, 2022 if Outreachy
+ * $3,000 will be sent to you by or around January 20, 2022 if Outreachy
    organizers confirm to Conservancy by December 13, 2021 that you are in good
    standing. If Conservancy receives such confirmation late, your payment will
    be delayed. If such confirmation is not received, you will not receive
    payment.
 
- * $2,000 will be sent to you by or around February 16, 2022 if Outreachy
-   organizers confirm to Conservancy by January 17, 2022 that you are in good standing.
-   If Conservancy receives such confirmation late, your payment will be delayed.
-   If such confirmation is not received, you will not receive payment.
-
- * $2,000 will be sent to you by or around April 4, 2022 if your Volunteer
-   Mentor confirms to Conservancy by March 4, 2022 that you successfully
-   completed your internship. If Conservancy receives such confirmation late,
-   your payment will be delayed. If such confirmation is not received, you will
-   not receive payment.
+ * $4,000 will be sent to you by or around March 4, 2022 if Outreachy organizers
+   confirm to Conservancy by January 17, 2022 that you are in good standing. If
+   Conservancy receives such confirmation late, your payment will be delayed. If
+   such confirmation is not received, you will not receive payment.
 
 Participants will be in good standing if they have used their reasonable best
 efforts to engage in an effort to learn during the internship (per Program
