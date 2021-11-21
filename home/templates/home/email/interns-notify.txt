@@ -20,7 +20,7 @@ https://www.outreachy.org/docs/internship/#time-commitment
 Unless contrary to any laws where you are located, you should put at least 30 hours per week of effort into your internship.
 
 COVID-19 policies
----
+-----------------
 
 If an intern's school terms have shifted due to COVID-19 impacts, they will only be required to work 10 hours a week during classes and exams.
 
@@ -48,7 +48,7 @@ This email outlines the next steps for participating in the program, so please r
 
  4. Respond to the Software Freedom Conservancy with your tax form W-9 or W8-BEN. Conservancy will send you an email request for the tax documentation. That email request will typically come 1 week after the internship announcement. Conservancy will let you know when the deadline is to send the tax documentation in.
 
- 5. Create a blog to use to document your Outreachy internship. You will be required to blog every two weeks (more details on that below).
+ 5. Create a blog to use to document your Outreachy internship. You are encouraged to blog every two weeks (more details on that below).
 
  6. Add the blog URL and RSS feed link to your profile: https://www.outreachy.org/account/
 
@@ -93,13 +93,13 @@ Payments schedule
 Your payments will be sent on the following schedule. See the Internship Guide for full details: http://www.outreachy.org/docs/internship/#payments
 
  * The ${{ current_round.initialpayment }} initial payment will be issued by {{ current_round.initial_stipend_payment_deadline }}
- * The ${{ current_round.midpayment }} mid-point payment will be issued by {{ current_round.midpoint_stipend_payment_deadline }}
  * The ${{ current_round.finalpayment }} final payment will be issued by {{ current_round.final_stipend_payment_deadline }}
 
 Your payments may be delayed if:
 
  * You do not turn in payment routing and tax forms by the deadline set by Conservancy in the tax documentation request email
- * Your mentor does not provide feedback by the initial, mid-point, or final feedback deadlines
+ * Your mentor does not provide feedback for feedback #1 by the feedback deadline
+ * Your mentor does not provide feedback for feedback #3 by the feedback deadline
  * You have a custom internship start date or an internship extension
 
 Tax forms
