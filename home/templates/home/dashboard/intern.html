@@ -45,62 +45,61 @@
 		<p>The feedback is private and completely optional. Your feedback about your mentors will only be seen by the Outreachy organizers. We will discuss the feedback with you before contacting your mentors about how to improve their mentorship.</p>
 
 		{% if internship.is_initial_feedback_on_mentor_open %}
-			<p><a href="{% url 'initial-intern-feedback' %}"><button type="button" class="btn btn-info">Submit Initial Feedback</button></a></p>
+			<p><a href="{% url 'initial-intern-feedback' %}"><button type="button" class="btn btn-info">Submit Feedback #1</button></a></p>
 		{% endif %}
 		{% if internship.is_midpoint_feedback_on_mentor_open %}
-			<p><a href="{% url 'midpoint-intern-feedback' %}"><button type="button" class="btn btn-info">Submit Midpoint Feedback</button></a></p>
+			<p><a href="{% url 'midpoint-intern-feedback' %}"><button type="button" class="btn btn-info">Submit Feedback #2</button></a></p>
 		{% endif %}
 		{% if internship.is_final_feedback_on_mentor_open %}
-			<p><a href="{% url 'final-intern-feedback' %}"><button type="button" class="btn btn-info">Submit Final Feedback</button></a></p>
+			<p><a href="{% url 'final-intern-feedback' %}"><button type="button" class="btn btn-info">Submit Feedback #3</button></a></p>
 		{% endif %}
 		<p>Feedback and payment status:</p>
 		<ul>
 			{% if internship.initialinternfeedbackv2 %}
-				<li>Your initial feedback was submitted.</li>
+				<li>You submitted feedback #1.</li>
 			{% endif %}
 			{% if internship.initialmentorfeedbackv2 %}
-				<li>Your mentor most recently submitted initial feedback on {{ internship.initialmentorfeedbackv2.find_version_mentor_edited.revision.date_created }}</li>
+				<li>Your mentor submitted feedback #1 on {{ internship.initialmentorfeedbackv2.find_version_mentor_edited.revision.date_created }}</li>
 			{% endif %}
 			{% if not internship.initialinternfeedbackv2 and not internship.initialmentorfeedbackv2 %}
-				<li>Neither you nor your mentor have submitted initial feedback.</li>
+				<li>Neither you nor your mentor have submitted feedback #1.</li>
 			{% endif %}
 			{% if internship.initialmentorfeedbackv2.organizer_payment_approved %}
 				<li>The Outreachy organizers have requested that the Software Freedom Conservancy pay your initial stipend.</li>
 			{% endif %}
 			{% if internship.midpointinternfeedback %}
-				<li>Your midpoint feedback was submitted.</li>
+				<li>You submitted feedback #2.</li>
 			{% endif %}
 			{% if internship.midpointmentorfeedback %}
-				<li>Your mentor most recently submitted midpoint feedback on {{ internship.midpointmentorfeedback.find_version_mentor_edited.revision.date_created }}</li>
+				<li>Your mentor submitted feedback #2 on {{ internship.midpointmentorfeedback.find_version_mentor_edited.revision.date_created }}</li>
 			{% endif %}
 			{% if not internship.midpointinternfeedback and not internship.midpointmentorfeedback %}
-				<li>Neither you nor your mentor have submitted midpoint feedback.</li>
+				<li>Neither you nor your mentor have submitted feedback #2.</li>
 			{% endif %}
 			{% if internship.midpointmentorfeedback.organizer_payment_approved %}
-				<li>The Outreachy organizers have requested that the Software Freedom Conservancy pay your midpoint stipend.</li>
+				<li>The Outreachy organizers have reviewed feedback #2. Your internship is in good standing.</li>
 			{% endif %}
 			{% if internship.finalinternfeedback %}
-				<li>Your final feedback was submitted.</li>
+				<li>You submitted feedback #3.</li>
 			{% endif %}
 			{% if internship.finalmentorfeedback %}
-				<li>Your mentor most recently submitted final feedback on {{ internship.finalmentorfeedback.find_version_mentor_edited.revision.date_created }}</li>
+				<li>Your mentor submitted feedback #3 on {{ internship.finalmentorfeedback.find_version_mentor_edited.revision.date_created }}</li>
 			{% endif %}
 			{% if not internship.finalinternfeedback and not internship.finalmentorfeedback %}
-				<li>Neither you nor your mentor have submitted final feedback.</li>
+				<li>Neither you nor your mentor have submitted feedback #3.</li>
 			{% endif %}
 			{% if internship.finalmentorfeedback.organizer_payment_approved %}
-				<li>The Outreachy organizers have requested that the Software Freedom Conservancy pay your final stipend.</li>
+				<li>The Outreachy organizers have reviewed feedback #3. Your internship is in good standing. The Outreachy organizers have requested that the Software Freedom Conservancy pay your final stipend.</li>
 			{% endif %}
+			<li>Neither you nor your mentor have submitted feedback #4.</li>
 		</ul>
 
-		<p>Dates for you to give feedback on your mentor:
+		<p>Dates for you to give feedback on your internship:
 		<ul>
-			<li>{{ internship.initial_feedback_opens }} 4pm UTC - Initial feedback forms open</li>
-			<li>{{ internship.initial_feedback_due }} 4pm UTC - Initial feedback is due</li>
-			<li>{{ internship.midpoint_feedback_opens }} 4pm UTC - Mid-point feedback forms open</li>
-			<li>{{ internship.midpoint_feedback_due }} - Mid-point feedback is due</li>
-			<li>{{ internship.final_feedback_opens }} 4pm UTC - Final feedback forms open</li>
-			<li>{{ internship.final_feedback_due }} - Final feedback is due</li>
+			<li>{{ internship.initial_feedback_due }} 4pm UTC - Feedback #1 is due</li>
+			<li>{{ internship.midpoint_feedback_due }} 4pm UTC - Feedback #2 is due</li>
+			<li>{{ internship.final_feedback_due }} 4pm UTC - Feedback #3 is due</li>
+			<li>TBD - Feedback #4 is due</li>
 		</ul>
 		</p>
 		<p>You can <a href="{% url 'contact-organizers' %}">contact Outreachy organizers</a> at any time to give informal feedback or ask for additional help.</p>
@@ -117,13 +116,12 @@
 		<li>Your payment account was in another person's name, and you needed to complete a third-party payment form.
 		That form must be approved by the Software Freedom Conservancy's Executive Director, Karen Sandler.
 		Payment cannot be processed until the third party payment form is approved.
-		Please notify SFC accounting ASAP if you have a different name on your account than the legal name you signed your contract with.
+		Please notify Software Freedom Conservancy accounting ASAP if you have a different name on your account than the legal name you signed your contract with.
 		</li>
 		<li>You have an extension for your internship.
-		If your internship was extended at the midpoint, your midpoint payment will be delayed by that amount of time.
-		This will also move your final payment by the same amount of time (or more, if your internship is extended again).
+		If your internship was extended for a specific number of weeks, your payments will be delayed by the same amount of time.
 		</li>
 	</ul>
 	</p>
-	<p>If you do not think your payment has been delayed for any of the reasons above, please wait at least ten days past the payment deadline before contacting the SFC accounting.</p>
+	<p>If you do not think your payment has been delayed for any of the reasons above, please wait at least ten days past the payment deadline before contacting the Software Freedom Conservancy accounting.</p>
 {% endwith %}
