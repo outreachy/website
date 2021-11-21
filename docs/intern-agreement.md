@@ -171,11 +171,11 @@ Initial Application, including your stated availability and time commitment to
 participate in the Program, are truthful and accurate or (ii) you corrected the
 contents of your Application and information you submitted for the Initial
 Application, including your stated availability and time commitment to
-participate in the Program, by emailing Outreachy Organizers at
-organizers@outreachy.org and your Volunteer Mentor, and you represent that the
-combined information is truthful and accurate. Outreachy Organizers and your
-Volunteer Mentor have confirmed in writing that you can proceed with your
-participation in the Program.
+participate in the Program, by including updated information in your Final
+Application or by emailing Outreachy Organizers at applicant-help@outreachy.org
+and your Volunteer Mentor, and you represent that the combined information is
+truthful and accurate. Outreachy Organizers must have confirmed in writing that
+you can proceed with your participation in the Program.
 
 **Indemnification.**
 
