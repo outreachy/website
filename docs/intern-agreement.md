@@ -93,7 +93,7 @@ but interns should not rely on earlier payments.
    payment.
 
  * $4,000 will be sent to you by or around March 4, 2022 if Outreachy organizers
-   confirm to Conservancy by January 17, 2022 that you are in good standing. If
+   confirm to Conservancy by January 31, 2022 that you are in good standing. If
    Conservancy receives such confirmation late, your payment will be delayed. If
    such confirmation is not received, you will not receive payment.
 
