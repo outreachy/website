@@ -208,13 +208,13 @@ which furthers Conservancy’s charitable purposes.
 The internship will take place between December 6, 2021 and March 4, 2022. In
 exceptional situations, your internship can be extended for up to five weeks,
 provided that both you and your Volunteer Mentor send a written request for an
-extension specifying a new end date to the Outreachy Project's leadership
-committee, operating under Conservancy's auspices, and that the Outreachy
-Project's leadership committee provides written approval. Notwithstanding the
-foregoing, all of Conservancy’s obligations to you will terminate with the **earlier**
-of issuance of the third and final stipend payment -or- Conservancy receiving
-confirmation from your Volunteer Mentor that you have completed your
-internship, but have failed to perform at a satisfactory level.
+extension specifying a new end date to the Outreachy organizers, operating under
+Conservancy's auspices, and that the Outreachy organizers provide written
+approval. Notwithstanding the foregoing, all of Conservancy’s obligations to you
+will terminate with the **earlier** of issuance of the third and final stipend
+payment -or- Conservancy receiving confirmation from your Volunteer Mentor that
+you have completed your internship, but have failed to perform at a satisfactory
+level.
 
 This Agreement and your participation may be terminated by Conservancy or you
 at any time, with or without cause, by written notice to the other party. Upon
