@@ -2,7 +2,7 @@
 
 **Internship Terms of Participation**
 
-_last edited - November 4, 2021_
+_last edited - November 20, 2021_
 
 **Dear Participant:**
 
@@ -86,14 +86,14 @@ will make best efforts to send out payments quickly after internship progress
 confirmations. Payments may be issued earlier than scheduled deadlines below,
 but interns should not rely on earlier payments.
 
- * $2,000 will be sent to you by or around January 12, 2022 if your Volunteer
-   Mentor confirms to Conservancy by December 13, 2021 that you are in good
+ * $2,000 will be sent to you by or around January 12, 2022 if Outreachy
+   organizers confirm to Conservancy by December 13, 2021 that you are in good
    standing. If Conservancy receives such confirmation late, your payment will
    be delayed. If such confirmation is not received, you will not receive
    payment.
 
- * $2,000 will be sent to you by or around February 16, 2022 if your Volunteer
-   Mentor confirms to Conservancy by January 17, 2022 that you are in good standing.
+ * $2,000 will be sent to you by or around February 16, 2022 if Outreachy
+   organizers confirm to Conservancy by January 17, 2022 that you are in good standing.
    If Conservancy receives such confirmation late, your payment will be delayed.
    If such confirmation is not received, you will not receive payment.
 
@@ -103,13 +103,16 @@ but interns should not rely on earlier payments.
    your payment will be delayed. If such confirmation is not received, you will
    not receive payment.
 
-Participants will be in good standing if they have used their best efforts to
-complete their Project Work Product. Whether or not you are in good standing
-with your Volunteer Mentor is within the sole judgment of that Volunteer Mentor
-upon consultation with the Program coordinators. You understand and agree that
-Conservancy does not have the ability to control, direct, or instruct the Volunteer
-Mentor’s judgment regarding your good standing. You may request that the
-Program coordinators review the Volunteer Mentor's decision.
+Participants will be in good standing if they have used their reasonable best
+efforts to engage in an effort to learn during the internship (per Program
+guidelines) and they are communicating with their Volunteer Mentor. Outreachy
+organizers collect internship feedback from both Participants and their
+Volunteer Mentor. Whether or not you are in good standing is within the sole
+judgment of the Outreachy organizers, upon review of feedback from Participants
+and their Volunteer Mentor. You understand and agree that Conservancy does not
+have the ability to control, direct, or instruct the Volunteer Mentor’s judgment
+or the Outreachy organizers' judgment regarding your good standing. You may
+request that Outreachy organizers review the Volunteer Mentor's decision.
 
 In addition to being subject to your good standing, payment according to this
 schedule is subject to the timely receipt of appropriate tax documentation
