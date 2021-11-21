@@ -19,7 +19,7 @@ charity, and corporate home of the Outreachy Project.
 
 You agree to perform the Project as assigned to the Application you submitted
 to Conservancy (the “Application”). Your project should be your primary focus.
-Unless contrary to any laws where you are located, you should dedicate 40 hours
+Unless contrary to any laws where you are located, you should dedicate 30 hours
 per week to your project for at least 12 weeks of the Program's 13 week
 duration. From time to time, you will deliver work product related to
 your Project (“Project Work Product”) to your Participating Organization (as set
