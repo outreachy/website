@@ -76,20 +76,17 @@ Internship Guide | Outreachy Documentation
 <hr>
 <h2 id='payments'><a href='#payments'>Payments</a></h2>
 
-<p>Outreachy interns are paid $5,500 USD total for three months of work. The stipend is paid in three parts:</p>
+<p>Outreachy interns are paid $7,000 USD total for three months of work. The stipend is paid in two payments:</p>
 <ul>
 	{% if applicant_round %}
 		<li>${{ applicant_round.initialpayment|intcomma }} initial stipend</li>
-		<li>${{ applicant_round.midpayment|intcomma }} mid-point stipend</li>
 		<li>${{ applicant_round.finalpayment|intcomma }} final stipend</li>
 	{% elif intern_round %}
 		<li>${{ intern_round.initialpayment|intcomma }} initial stipend</li>
-		<li>${{ intern_round.midpayment|intcomma }} mid-point stipend</li>
 		<li>${{ intern_round.finalpayment|intcomma }} final stipend</li>
 	{% else %}
-		<li>$1,000 initial stipend</li>
-		<li>$2,000 mid-point stipend</li>
-		<li>$2,500 final stipend</li>
+		<li>$3,000 initial stipend</li>
+		<li>$4,000 final stipend</li>
 	{% endif %}
 </ul>
 

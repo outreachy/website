@@ -1,10 +1,10 @@
 <table class="table">
 	<tr><th width="175">{{ current_round.internstarts }}</th><td>Internships starts</td></tr>
-	<tr><th>{{ current_round.initialfeedback }}</th><td>Initial feedback due</td></tr>
-	<tr><th>{{ current_round.initial_stipend_payment_deadline }}</th><td>The ${{ current_round.initialpayment }} initial stipend will be issued to interns with successful initial feedback</td></tr>
-	<tr><th>{{ current_round.midfeedback }} </th><td>Mid-point feedback due</td></tr>
-	<tr><th>{{ current_round.midpoint_stipend_payment_deadline }}</th><td>The ${{ current_round.midpayment }} midpoint stipend will be issued to interns with successful mid-point feedback</td></tr>
+	<tr><th>{{ current_round.initialfeedback }}</th><td>Feedback #1 due</td></tr>
+	<tr><th>{{ current_round.midfeedback }} </th><td>Feedback #2 due</td></tr>
+	<tr><th>{{ current_round.initial_stipend_payment_deadline }}</th><td>${{ current_round.initialpayment }} stipend will be issued to interns with successful feedback #1</td></tr>
+	<tr><th>{{ current_round.finalfeedback }} </th><td>Feedback #3 feedback due</td></tr>
+	<tr><th>TBD </th><td>Feedback #4 feedback due</td></tr>
+	<tr><th>{{ current_round.final_stipend_payment_deadline }}</th><td>${{ current_round.finalpayment }} stipend will be issued to interns with successful feedback #3</td></tr>
 	<tr><th>{{ current_round.internends }}</th><td>Internships end</td></tr>
-	<tr><th>{{ current_round.finalfeedback }} </th><td>Final feedback due</td></tr>
-	<tr><th>{{ current_round.final_stipend_payment_deadline }}</th><td>The ${{ current_round.finalpayment }} final stipend will be issued to interns with successful final feedback</td></tr>
 </table>
