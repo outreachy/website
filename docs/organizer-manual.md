@@ -605,9 +605,7 @@ Remember, you deserve this internship. :heart: You overcame a lot to make contri
 
 Your mentors are here to support you as you start working on your project. Please reach out to them about your doubts. No question is too silly or simple! If your mentor hasn't been in contact with you for the first 2 days of the internship, please let us know via email organizers@outreachy.org or DM to me or @**Anna e só**. Also contact us if your mentor hasn't scheduled a phone or video chat by the end of this week. We want to make sure you're supported. :handshake: 
 
-Don't work more than 40 hours a week. We don't want you to burn out! :fire: 
-
-If you're impacted by COVID-19, you're only expected to work 30 hours a week. And Outreachy organizers are very understanding about the pandemic situations, so please do reach out if 30 hours a week is too much for you, and we can work out a solution. :mask: 
+Don't work more than 30 hours a week. We don't want you to burn out! :fire: 
 
 If you're queer or LGBTQ+, there's a private chat channel for queer Outreachy participants. Please DM me if you want an invitation. :rainbow: 
 

@@ -43,15 +43,15 @@ Before you fill out your application, please read the following:
 		<div class="form-group card">
 			{{ field.errors }}
 			<div class = "card-header">
-				Are you eligible to work for 40 hours a week in ALL the countries you will be living in from 
+				Are you eligible to work for 30 hours a week in ALL the countries you will be living in from 
 				{{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.sfc_payment_last_date|date:"F d, Y" }}?
 			</div>	    
 			<div class = "card-body">
 				{{ field }}
 			</div>
 			<div class="card-footer bg-white">
-				<p><b>Student visas</b>: Please note that in some countries, students studying abroad on a student visa may not be eligible to work full-time (40 hours a week). If you are on a student visa, please double check the hours and dates of the internship with your school counselors before applying.</p>
-				<p><b>Spouse visas</b>: In some countries, spousal visas may not allow spouses to work. Please contact your immigration officer if you have any questions about whether your visa allows you to work full-time (40 hours a week).</p>
+				<p><b>Student visas</b>: Please note that in some countries, students studying abroad on a student visa may not be eligible to work full-time (30 hours a week). If you are on a student visa, please double check the hours and dates of the internship with your school counselors before applying.</p>
+				<p><b>Spouse visas</b>: In some countries, spousal visas may not allow spouses to work. Please contact your immigration officer if you have any questions about whether your visa allows you to work full-time (30 hours a week).</p>
 				<p><b>International Travel</b>: Outreachy interns are not required to work while they are traveling internationally. If you travel for more than 1 week, you may need to extend your internship. Internships can be extended for up to five weeks with prior approval from your mentor and the Outreachy Organizers.</p>
 			</div>
 		</div>
@@ -59,7 +59,7 @@ Before you fill out your application, please read the following:
 		<div class="form-group card">
 			{{ field.errors }}
 			<div class = "card-header">
-				Do you have a student visa that limits the dates that you can work 40 hours a week from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}?
+				Do you have a student visa that limits the dates that you can work 30 hours a week from {{ current_round.internstarts|date:"F d, Y" }} to {{ current_round.internends|date:"F d, Y" }}?
 			</div>	    
 			<div class = "card-body">
 				{{ field }}

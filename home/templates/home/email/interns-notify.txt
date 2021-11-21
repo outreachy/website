@@ -15,13 +15,12 @@ If your time commitments are incorrect or have changed (such as if you have a jo
 
 {% if current_round.internstarts|date:'Y-m-d' == '2020-12-01'%}Minimum hours per week policy:
  - If an intern's school terms have shifted due to COVID-19 impacts, they will only be required to work 10 hours a week during classes and exams.
- - If an intern is otherwise impacted by COVID-19, they will only be required to work 30 hours a week.
- - Interns who are not impacted by COVID-19 are required to work 40 hours a week.
+ - Interns are required to work 30 hours a week.
  - Please read our COVID-19 policy for this round for details: {{ request.scheme }}://{{ request.get_host }}{% url '2020-08-initial-apps-open' %}/#covid-19
 
 Interns are required to work for 12 weeks of the Outreachy internship's 13 week duration.
 
-Please reach out to your mentor if you are impacted by COVID-19. You'll need to create a plan for a reduced project timeline.{% else %}Unless contrary to any laws where you are located, you should dedicate 40 hours per week to your project for at least 12 weeks of the Outreachy internship's 13 week duration. If you should need to not work on your project for a period of time, please see details in the Internship Guide: https://www.outreachy.org/docs/internship/#time-commitment{% endif %}
+Please reach out to your mentor if you are impacted by COVID-19. You'll need to create a plan for a reduced project timeline.{% else %}Unless contrary to any laws where you are located, you should dedicate 30 hours per week to your project for at least 12 weeks of the Outreachy internship's 13 week duration. If you should need to not work on your project for a period of time, please see details in the Internship Guide: https://www.outreachy.org/docs/internship/#time-commitment{% endif %}
 
 Internship Guide
 ----------------
