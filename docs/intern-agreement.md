@@ -80,8 +80,7 @@ any contractual commitment on your part.
 **Stipend.**
 
 Conservancy will pay you a $6,000 USD stipend (“Stipend”) for the Project in
-accordance with the following schedule, subject to Conservancy’s receipt of
-such funds from the relevant sponsor. Conservancy payments are generally paid
+accordance with the following schedule. Conservancy payments are generally paid
 on a NET-30 basis. Recognizing internship structure of Outreachy, Conservancy
 will make best efforts to send out payments quickly after internship progress
 confirmations. Payments may be issued earlier than scheduled deadlines below,
