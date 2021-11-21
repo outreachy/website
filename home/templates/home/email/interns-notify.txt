@@ -46,7 +46,7 @@ This email outlines the next steps for participating in the program, so please r
 
  3. Set an email filter to ensure all emails from outreachy.org and sfconservancy.org go to your Inbox.
 
- 4. Respond to the Software Freedom Conservancy with your tax form W-9 or W8-BEN by {{ current_round.tax_form_deadline }}.
+ 4. Respond to the Software Freedom Conservancy with your tax form W-9 or W8-BEN. Conservancy will send you an email request for the tax documentation. That email request will typically come 1 week after the internship announcement. Conservancy will let you know when the deadline is to send the tax documentation in.
 
  5. Create a blog to use to document your Outreachy internship. You will be required to blog every two weeks (more details on that below).
 
@@ -98,7 +98,7 @@ Your payments will be sent on the following schedule. See the Internship Guide f
 
 Your payments may be delayed if:
 
- * You do not turn in payment routing and tax forms by {{ current_round.tax_form_deadline }}
+ * You do not turn in payment routing and tax forms by the deadline set by Conservancy in the tax documentation request email
  * Your mentor does not provide feedback by the initial, mid-point, or final feedback deadlines
  * You have a custom internship start date or an internship extension
 
@@ -109,7 +109,7 @@ Once the deadline to sign the internship agreement is passed ({{ current_round.i
 
 Depending on the country you reside in, you will be asked to provide either a W-9 or a W8-BEN form.
 
-Tax forms and payment routing information are due by {{ current_round.tax_form_deadline }}. Tax forms are required in order to be paid the internship stipend. You may be dropped from the program if you are asked for a form and you do not provide it within a month.
+Tax forms and payment routing information are due by the deadline set by Conservancy in the tax documentation request email. Tax forms are required in order to be paid the internship stipend. You may be dropped from the program if you are asked for a form and you do not provide it within a month.
 
 Intern Blog
 -----------
