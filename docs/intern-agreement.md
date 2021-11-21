@@ -115,9 +115,9 @@ or the Outreachy organizers' judgment regarding your good standing. You may
 request that Outreachy organizers review the Volunteer Mentor's decision.
 
 In addition to being subject to your good standing, payment according to this
-schedule is subject to the timely receipt of appropriate tax documentation
-which you will provide to Conservancy as we may request, and adherence to the
-Outreachy Code of Conduct at
+schedule is subject to the timely receipt of appropriate tax documentation and
+payment logistics information which you will provide to Conservancy as we may
+request, and adherence to the Outreachy Code of Conduct at
 [https://github.com/outreachy/website/blob/master/CODE-OF-CONDUCT.md](https://github.com/outreachy/website/blob/master/CODE-OF-CONDUCT.md)
 
 **Taxes, Insurance, Benefits and Business Expenses.**
