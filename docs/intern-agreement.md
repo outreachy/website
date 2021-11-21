@@ -2,7 +2,7 @@
 
 **Internship Terms of Participation**
 
-_last edited - November 20, 2021_
+_last edited - November 21, 2021_
 
 **Dear Participant:**
 
