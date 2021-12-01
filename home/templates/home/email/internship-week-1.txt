@@ -15,6 +15,8 @@ Every two weeks during the internship, interns, mentors, coordinators, and Outre
 
 The first internship chat will take place on {{ current_round.week_two_chat_text_date|date:"D M d, Y" }} {{ current_round.week_two_chat_text_date|time:"H:i" }} UTC on {{ current_round.week_two_chat_text_url }}
 
+Both interns and mentors should attend this first chat.
+
 Mentor Goals
 ------------
 
@@ -30,10 +32,6 @@ Week 1 tips:
 
 Intern Goals
 ------------
-
-Save the date for an introduction chat and Q&A! We want to let you ask any questions of Outreachy organizers, and give you time to connect to other Outreachy interns. The chat will be text-based, using the Outreachy Zulip chat.
-
-The text chat will take place on {{ current_round.week_two_chat_text_date|date:"D M d, Y" }} {{ current_round.week_two_chat_text_date|time:"H:i" }} UTC on {{ current_round.week_two_chat_text_url }}
 
 Week 1 goals:
 
