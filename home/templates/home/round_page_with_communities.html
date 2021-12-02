@@ -135,7 +135,7 @@ Outreachy Internships | Apply | Pick a Project
 
 	{% for participation, projects in ontime_projects %}
 	{% with community=participation.community funded_interns=participation.interns_funded %}
-		<h4 id='{{ community.slug }}'>{{ community.name }} - {{ funded_interns }} intern{{ funded_interns|pluralize }}</h4>
+	<h4 id='{{ community.slug }}'><a href="#{{ community.slug }}">{{ community.name }}</a> - {{ funded_interns }} intern{{ funded_interns|pluralize }}</h4>
 		<p>{{ community.description }}</p>
 		{% if role.is_approved_applicant or role.is_volunteer %}
 			{% if not current_round.contributions_close.has_passed %}
