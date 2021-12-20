@@ -9,9 +9,13 @@ Week 3 Theme
 
 The theme for this week is "Everyone Struggles."
 
-For many Outreachy interns, their mentors may seem perfect. It feels like mentors are "experts" who know everything. Interns may struggle to understand their project or struggle to make a contribution. They may compare their current skills to their mentor's skills.
+When newcomers to open source work with experienced contributors, the community project and their mentors may seem perfect to them. Interns often see finished contributions or finished code. That finished work can seem perfect, and that can be intimidating!
 
-It's important to remember that no one starts out being an "expert". We all start out knowing nothing. We all learn, practice, and grow.
+A finished work is often the result of a lot of time and effort. The community members who worked on your project in the past probably struggled a lot!
+
+Your community's project may be a result of years of effort. It can take a lot of time to hunt down and fix subtle mistakes. Documentation is written one sentence at a time, and revised over and over again. Your community may have tried a lot of things that didn't work before improving their processes.
+
+It's important to remember that no one starts out being an "expert". Even your mentor was a newcomer to open source at one time. We all start out knowing nothing. We all learn, practice, and grow.
 
 Learning can be hard! We may struggle to understand something. We may make a lot of mistakes when we practice new skills. And that's okay, because everyone struggles.
 
@@ -26,16 +30,33 @@ Sometimes the act of writing about what you are struggling with can help you fin
 https://en.wikipedia.org/wiki/Rubber_duck_debugging
 
 
-Week 3 Mentor & Intern Chat
----------------------------
+Week 3 Intern *Only* Chat
+-------------------------
 
-On {{ current_round.week_four_chat_text_date }} UTC we will host a chat for both Outreachy interns and mentors. We encourage both mentors and interns to talk about confusing open source vocabulary terms.
+On {{ current_round.week_four_chat_text_date }} UTC we will host a chat for Outreachy interns *only*.
 
-The vocabulary term could be a word, phrase, acronym, or concept. The vocabulary term should be related to open source, your community, or the internship project. You could be currently confused about the vocabulary term, or you could have recently learned about the vocabulary term.
+We encourage interns share something you're currently stuck on. We'll talk about different ways to get unstuck and how to seek help. If you aren't currently struggling with something, we encourage you to come and help your fellow interns. Suggestions and tips are welcome!
 
-We encourage both interns and mentors to share a vocabulary term that is new to them! Both interns and mentors are encouraged to help others understand confusing vocabulary terms. The goal of this chat is to share knowledge, ask for help, and help others.
+The chat will take place on the private Intern & Alums channel. We hope hosting the chat in a channel only for interns will make the interns feel more comfortable sharing their concerns.
 
 {{ current_round.week_four_stuck_chat_url }}
+
+Mentors - if you are an Outreachy alum, please don't read the chat log. Thanks!
+
+If you have a sensitive or confidential situation, please contact Outreachy organizers directly. Outreachy organizers are available via DM on the Outreachy Zulip chat, or via email to <organizers@outreachy.org>.
+
+
+Week 3 Mentor Questions
+-----------------------
+
+If you are a mentor who has questions or is struggling with something, please tell us!
+
+We encourage mentors to ask questions on the private mentor chat channel. Past Outreachy mentors and coordinators often have good advice. Other mentors and coordinators may also respond faster than Outreachy organizers.
+
+https://chat.outreachy.org/#narrow/stream/29-Mentors-.26.20Coordinators
+
+If you have a sensitive or confidential situation, please contact Outreachy organizers directly. Outreachy organizers are available via DM on the Outreachy Zulip chat, or via email to <organizers@outreachy.org>.
+
 
 Goals for Mentors
 -----------------
@@ -43,11 +64,11 @@ Goals for Mentors
 Week 3 goals:
 
  - Model to your intern that you're not perfect!
- - If you're you're unsure or don't know how to tackle a task, tell your intern what you don't know
- - Model how you would work through being stuck on a tough contribution
+ - Talk to your intern about a problem you're currently stuck on
+ - If your intern asks a question you don't know the answer to, tell them you don't know!
  - Have a screen share with your intern to work through a problem together
  - Introduce your intern to a new resource or a new person in the community they can ask questions
- - Encourage your community members to talk about open source vocabulary terms that are confusing
+ - Encourage your community members to talk about a time when they were really stuck
 
 Goals for Interns
 -----------------
@@ -57,7 +78,7 @@ Week 3 goals:
  - Write your blog post about an open source vocabulary term
  - If you're stuck for more than 1 to 3 hours, ask your mentor
  - Try asking a question on the public community forums or community chat
- - Get your mentor to talk about an open source vocabulary term they recently learned about
+ - Ask your mentor to talk about a problem they've been stuck on
 
 Week 3 Blog
 -----------
@@ -66,9 +87,9 @@ For this week's blog post, please write about an open source vocabulary term. A 
 
 Write about a vocabulary term you didn't know before you applied to Outreachy. The vocabulary term you write about should be related to open source, your open source community, or your internship project.
 
-It's important to look back at what you have learned. Everyone starts out not knowing things. This is true of your mentors too! We all put in effort to learn, practice, and grow our skills. Even "experts" have to keep growing and learning new things. If we stop learning and growing, our work stops feeling challenging.
+It's important to look back at what you have learned.
 
-Sometimes there's a word or concept lots of people around you understand, but you don't. You might feel nervous, anxious, or scared to ask what it means. It can be intimidating to ask questions in the open source community chat.
+Everyone starts out not knowing things. Sometimes there's a word or concept lots of people around you understand, but you don't. You might feel nervous, anxious, or scared to ask what it means. It can be intimidating to ask questions in the open source community chat.
 
 It's important to remember that other people might also be confused. There might be newcomers to the community who are also unsure what the vocabulary term means. When you ask what the vocabulary term means in the community chat, you will help other people who are also shy and unsure.
 
