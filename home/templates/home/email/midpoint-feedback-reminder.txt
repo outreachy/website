@@ -1,6 +1,6 @@
-[URGENT] Mentor feedback required for mid-point payment to {{ intern_selection.applicant.applicant.public_name }}
+[URGENT] Mentor feedback #2 required for {{ intern_selection.applicant.applicant.public_name }}
 
-Please provide feedback on your intern through the Outreachy website. Their mid-point feedback was due on {{ intern_selection.midpoint_feedback_due|date:"M d, Y" }}. Their mid-point ${{ current_round.midpayment }} payment will be delayed until you provide feedback:
+Please provide feedback on your intern through the Outreachy website. Their mid-point feedback was due on {{ intern_selection.midpoint_feedback_due|date:"M d, Y" }}. Please fill out the feedback form ASAP:
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}#feedback
 
