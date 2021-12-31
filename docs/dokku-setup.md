@@ -366,7 +366,7 @@ If you have a list of interns that have their payment authorized, but not all in
 ```
 >>> emails = [ ... ]
 >>> from home import models
->>> feedback = models.MidpointMentorFeedback.objects.filter(intern_selection__applicant__applicant__account__email__in=emails).exclude(organizer_payment_approved=False).filter(payment_approved=True)
+>>> feedback = models.Feedback2FromMentor.objects.filter(intern_selection__applicant__applicant__account__email__in=emails).exclude(organizer_payment_approved=False).filter(payment_approved=True)
 >>> for f in feedback:
 ...     f.organizer_payment_approved = True
 ...     f.save()

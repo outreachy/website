@@ -6,7 +6,7 @@ Midpoint mentor feedback
 {% endblock %}
 
 {% block content %}
-<h1>Midpoint Feedback on {{ midpointmentorfeedback.intern_selection.applicant.applicant.public_name }}</h1>
+<h1>Midpoint Feedback on {{ feedback2frommentor.intern_selection.applicant.applicant.public_name }}</h1>
 
 <p>Outreachy organizers collect intern feedback from mentors three times during the Outreachy internship.</p>
 
@@ -16,7 +16,7 @@ Midpoint mentor feedback
 
 <p>Only one mentor can submit feedback for one intern. If you are co-mentoring an intern, please talk with your co-mentor to decide what your feedback should be.</p>
 
-<p>Once you submit this form and you mark your intern as being able to be paid, the form cannot be edited. If you ask for an extension for this internship milestone, you will be able to update your answers after the extension is complete.</p>
+<p>Once you submit this form, the form cannot be edited. If you ask for an extension for this internship milestone, you will be able to update your answers after the extension is complete.</p>
 
 <h2>Privacy</h2>
 
@@ -24,7 +24,7 @@ Midpoint mentor feedback
 
 <h2>Metrics for Success</h2>
 
-<p>The most important metric for success is whether your intern is putting in the minimum internship time commitment. Please see the temporary policy below for a definition of "minimum time commitment."</p>
+<p>The most important metric for success is whether your intern is putting in the minimum internship time commitment.</p>
 
 <p>If an intern isn't putting in the minimum internship time commitment, we use the other metrics to come up with a plan to get the intern back on track. We also gather metrics about mentor engagement to ensure success for all Outreachy mentors.</p>
 
@@ -36,39 +36,51 @@ Midpoint mentor feedback
     </div>
     <div class="card-body">
         <p class="card-text">
-	<b>{{ midpointmentorfeedback.intern_selection.applicant.applicant.public_name }}</b> is the intern you are giving feedback on.
+	<b>{{ feedback2frommentor.intern_selection.applicant.applicant.public_name }}</b> is the intern you are giving feedback on.
 	If you are mentoring multiple interns, please make sure you're filling out the right mid-point feedback form.
         </p>
     </div>
 </div>
-<hr>
-<h2>Mentor Support</h2>
 
 <form method="post" action="">
 {% csrf_token %}
 {% for field in form.visible_fields %}
-	{% if 'ask for your help' in field.label_tag %}
+	{% if 'questions within 10 hours' in field.label_tag %}
 		<hr>
-		<h2>Intern Feedback</h2>
+		<h2>Clearing up doubts</h2>
+	{% elif 'daily stand ups' in field.label_tag %}
+		<hr>
+		<h2>Meetings</h2>
+	{% elif 'project progress' in field.label_tag %}
+		<hr>
+		<h2>Tracking project progress</h2>
+	{% elif 'work-in-progress' in field.label_tag %}
+		<hr>
+		<h2>Project feedback</h2>
+	{% elif 'positive feedback' in field.label_tag %}
+		<hr>
+		<h2>Acknowledgment and praise</h2>
+	{% elif 'creating blog posts' in field.label_tag %}
+		<hr>
+		<h2>Intern blog</h2>
+	{% elif 'introduce your intern to your open source community' in field.label_tag %}
+		<hr>
+		<h2>Networking</h2>
+	{% elif 'support you are providing as an Outreachy mentor' in field.label_tag %}
+		<hr>
+		<h2>Mentor support</h2>
+	{% elif 'support you are providing as an Outreachy mentor' in field.label_tag %}
+		<hr>
+		<h2>Mentor support</h2>
+	{% elif 'last date you were in contact' in field.label_tag %}
+		<hr>
+		<h2>Intern progress</h2>
 	{% endif %}
-	{% if 'How often' in field.label_tag or 'How long' in field.label_tag %}
-		<div class="form-group card">
-			{{ field.errors }}
-			<div class = "card-header">
-				<label for="{{ field.id_for_label }}">{{ field.label|safe }}</label>
-			</div>
-			<div class = "card-body">
-				{{ field }}
-			</div>
-			{% if field.help_text %}
-				<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
-			{% endif %}
-		</div>
-	{% elif 'What actions' in field.label_tag %}
+	{% if 'What actions' in field.label_tag %}
 		<hr>
 		<h2>Internship Schedule</h2>
 
-		{% with intern_selection=midpointmentorfeedback.intern_selection %}
+		{% with intern_selection=feedback2frommentor.intern_selection %}
 			{% include 'home/snippet/internship_dates_table.html' %}
 
 			{% include 'home/snippet/internship_extensions_instructions.html' %}
@@ -129,7 +141,7 @@ Midpoint mentor feedback
     </div>
     <div class="card-body">
         <p class="card-text">
-	<b>{{ midpointmentorfeedback.intern_selection.applicant.applicant.public_name }}</b> is the intern you are giving feedback on.
+	<b>{{ feedback2frommentor.intern_selection.applicant.applicant.public_name }}</b> is the intern you are giving feedback on.
 	If you are mentoring multiple interns, please make sure you're filling out the right mid-point feedback form.
         </p>
     </div>

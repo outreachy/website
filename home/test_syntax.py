@@ -157,7 +157,6 @@ class SyntaxTestCase(TestCase):
             "/contract-export/",
             "/initial-feedback-export/",
             "/initial-feedback-summary/",
-            "/midpoint-feedback-export/",
             "/midpoint-feedback-summary/",
             "/email/deadline-review/",
             "/email/mentor-application-deadline-reminder/",

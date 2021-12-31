@@ -71,8 +71,8 @@ from .models import InternSelection
 from .models import InitialApplicationReview
 from .models import Feedback1FromMentor
 from .models import Feedback1FromIntern
-from .models import MidpointMentorFeedback
-from .models import MidpointInternFeedback
+from .models import Feedback2FromMentor
+from .models import Feedback2FromIntern
 from .models import FinalMentorFeedback
 from .models import FinalInternFeedback
 from .models import MentorApproval
@@ -2949,22 +2949,72 @@ def initial_feedback_summary(request, round_slug):
             },
             )
 
-class MidpointMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
-    form_class = modelform_factory(MidpointMentorFeedback,
+class Feedback2FromMentorUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
+    form_class = modelform_factory(Feedback2FromMentor,
             fields=(
-                'mentor_help_response_time',
-                'mentor_review_response_time',
+                'mentor_answers_questions',
+                'intern_asks_questions',
+                'mentor_support_when_stuck',
+
+                'daily_stand_ups',
+                'meets_privately',
+                'meets_over_phone_or_video_chat',
+                'intern_missed_meetings',
+                'talk_about_project_progress',
+
+                'contribution_drafts',
+                'contribution_review',
+                'contribution_revised',
+
+                'mentor_shares_positive_feedback',
+                'mentor_promoting_work_to_community',
+                'mentor_promoting_work_on_social_media',
+
+                'intern_blogging',
+                'mentor_discussing_blog',
+                'mentor_promoting_blog_to_community',
+                'mentor_promoting_blog_on_social_media',
+
+                'mentor_introduced_intern_to_community',
+                'intern_asks_questions_of_community_members',
+                'intern_talks_to_community_members',
+
                 'mentors_report',
-                'intern_help_requests_frequency',
                 'last_contact',
-                'intern_contribution_frequency',
-                'intern_contribution_revision_time',
                 'progress_report',
+
                 'full_time_effort',
+
                 'actions_requested',
             ),
             field_classes = {
-                'in_contact': RadioBooleanField,
+                'mentor_answers_questions': RadioBooleanField,
+                'intern_asks_questions': RadioBooleanField,
+                'mentor_support_when_stuck': RadioBooleanField,
+
+                'daily_stand_ups': RadioBooleanField,
+                'meets_privately': RadioBooleanField,
+                'meets_over_phone_or_video_chat': RadioBooleanField,
+                'intern_missed_meetings': RadioBooleanField,
+                'talk_about_project_progress': RadioBooleanField,
+
+                'contribution_drafts': RadioBooleanField,
+                'contribution_review': RadioBooleanField,
+                'contribution_revised': RadioBooleanField,
+
+                'mentor_shares_positive_feedback': RadioBooleanField,
+                'mentor_promoting_work_to_community': RadioBooleanField,
+                'mentor_promoting_work_on_social_media': RadioBooleanField,
+
+                'intern_blogging': RadioBooleanField,
+                'mentor_discussing_blog': RadioBooleanField,
+                'mentor_promoting_blog_to_community': RadioBooleanField,
+                'mentor_promoting_blog_on_social_media': RadioBooleanField,
+
+                'mentor_introduced_intern_to_community': RadioBooleanField,
+                'intern_asks_questions_of_community_members': RadioBooleanField,
+                'intern_talks_to_community_members': RadioBooleanField,
+
                 'full_time_effort': RadioBooleanField,
             },
         )
@@ -2984,12 +3034,12 @@ class MidpointMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionM
             raise PermissionDenied("{} is not an intern in good standing".format(self.kwargs['username']))
 
         try:
-            feedback = MidpointMentorFeedback.objects.get(intern_selection=internship)
+            feedback = Feedback2FromMentor.objects.get(intern_selection=internship)
             if not feedback.can_edit():
                 raise PermissionDenied("This feedback is already submitted and can't be updated right now.")
             return feedback
-        except MidpointMentorFeedback.DoesNotExist:
-            return MidpointMentorFeedback(intern_selection=internship)
+        except Feedback2FromMentor.DoesNotExist:
+            return Feedback2FromMentor(intern_selection=internship)
 
     def form_valid(self, form):
         feedback = form.save(commit=False)
@@ -2998,22 +3048,71 @@ class MidpointMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionM
         feedback.save()
         return redirect(reverse('dashboard') + '#feedback')
 
-class MidpointInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
-    form_class = modelform_factory(MidpointInternFeedback,
+class Feedback2FromInternUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
+    form_class = modelform_factory(Feedback2FromIntern,
             fields=(
-                'mentor_help_response_time',
-                'mentor_review_response_time',
-                'last_contact',
-                'mentor_support',
                 'share_mentor_feedback_with_community_coordinator',
-                'intern_help_requests_frequency',
-                'intern_contribution_frequency',
-                'intern_contribution_revision_time',
+
+                'mentor_answers_questions',
+                'intern_asks_questions',
+                'mentor_support_when_stuck',
+
+                'daily_stand_ups',
+                'meets_privately',
+                'meets_over_phone_or_video_chat',
+                'intern_missed_meetings',
+                'talk_about_project_progress',
+
+                'contribution_drafts',
+                'contribution_review',
+                'contribution_revised',
+
+                'mentor_shares_positive_feedback',
+                'mentor_promoting_work_to_community',
+                'mentor_promoting_work_on_social_media',
+
+                'intern_blogging',
+                'mentor_discussing_blog',
+                'mentor_promoting_blog_to_community',
+                'mentor_promoting_blog_on_social_media',
+
+                'mentor_introduced_intern_to_community',
+                'intern_asks_questions_of_community_members',
+                'intern_talks_to_community_members',
+
+                'mentor_support',
+                'last_contact',
                 'hours_worked',
                 'time_comments',
                 'progress_report',
                 ),
             field_classes = {
+                'mentor_answers_questions': RadioBooleanField,
+                'intern_asks_questions': RadioBooleanField,
+                'mentor_support_when_stuck': RadioBooleanField,
+
+                'daily_stand_ups': RadioBooleanField,
+                'meets_privately': RadioBooleanField,
+                'meets_over_phone_or_video_chat': RadioBooleanField,
+                'intern_missed_meetings': RadioBooleanField,
+                'talk_about_project_progress': RadioBooleanField,
+
+                'contribution_drafts': RadioBooleanField,
+                'contribution_review': RadioBooleanField,
+                'contribution_revised': RadioBooleanField,
+
+                'mentor_shares_positive_feedback': RadioBooleanField,
+                'mentor_promoting_work_to_community': RadioBooleanField,
+                'mentor_promoting_work_on_social_media': RadioBooleanField,
+
+                'intern_blogging': RadioBooleanField,
+                'mentor_discussing_blog': RadioBooleanField,
+                'mentor_promoting_blog_to_community': RadioBooleanField,
+                'mentor_promoting_blog_on_social_media': RadioBooleanField,
+
+                'mentor_introduced_intern_to_community': RadioBooleanField,
+                'intern_asks_questions_of_community_members': RadioBooleanField,
+                'intern_talks_to_community_members': RadioBooleanField,
                 'share_mentor_feedback_with_community_coordinator': RadioBooleanField,
             },
             )
@@ -3024,15 +3123,15 @@ class MidpointInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionM
             raise PermissionDenied("The account for {} is not associated with an intern in good standing".format(self.request.user.username))
 
         try:
-            feedback = MidpointInternFeedback.objects.get(intern_selection=self.internship)
+            feedback = Feedback2FromIntern.objects.get(intern_selection=self.internship)
             if not feedback.can_edit():
                 raise PermissionDenied("This feedback is already submitted and can't be updated right now.")
             return feedback
-        except MidpointInternFeedback.DoesNotExist:
-            return MidpointInternFeedback(intern_selection=self.internship)
+        except Feedback2FromIntern.DoesNotExist:
+            return Feedback2FromIntern(intern_selection=self.internship)
 
     def get_context_data(self, **kwargs):
-        context = super(MidpointInternFeedbackUpdate, self).get_context_data(**kwargs)
+        context = super(Feedback2FromInternUpdate, self).get_context_data(**kwargs)
         context['internship'] = self.internship
         return context
 
@@ -3042,21 +3141,6 @@ class MidpointInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionM
         feedback.ip_address = self.request.META.get('REMOTE_ADDR')
         feedback.save()
         return redirect(reverse('dashboard') + '#feedback')
-
-@login_required
-@staff_member_required
-def midpoint_mentor_feedback_export_view(request, round_slug):
-    this_round = get_object_or_404(RoundPage, slug=round_slug)
-    interns = this_round.get_approved_intern_selections()
-    dictionary_list = []
-    for i in interns:
-        try:
-            dictionary_list.append(export_feedback(i.midpointmentorfeedback))
-        except MidpointMentorFeedback.DoesNotExist:
-            continue
-    response = JsonResponse(dictionary_list, safe=False)
-    response['Content-Disposition'] = 'attachment; filename="' + round_slug + '-midpoint-feedback.json"'
-    return response
 
 @login_required
 @staff_member_required

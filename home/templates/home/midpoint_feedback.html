@@ -29,7 +29,8 @@ Midpoint Feedback for {{ current_round.official_name }}
 							<p>{% include 'home/snippet/mentor-feedback-status.html' with intern=i mentor_status=midpoint_mentor_status extension_date=i.midpoint_date %}</p>
 						</div>
 						<div class="col-8">
-							<p>{{ i.midpointmentorfeedback.get_actions_requested_display }}</p>
+							<p>
+							{{ i.feedback2frommentor.get_actions_requested_display }}</p>
 						</div>
 					</div>
 				</div>
@@ -50,51 +51,478 @@ Midpoint Feedback for {{ current_round.official_name }}
 						<td></td>
 					</tr>
 					<tr>
-						<td>{% if i.midpointmentorfeedback %}{% if i.midpointmentorfeedback.mentor_help_response_time == i.midpointmentorfeedback.HOURS_1 or i.midpointmentorfeedback.mentor_help_response_time == i.midpointmentorfeedback.HOURS_3 or i.midpointmentorfeedback.mentor_help_response_time == i.midpointmentorfeedback.HOURS_6 %}<button class="btn btn-success">Prompt response</button>{% elif i.midpointmentorfeedback.mentor_help_response_time == i.midpointmentorfeedback.HOURS_12 or i.midpointmentorfeedback.mentor_help_response_time == i.midpointmentorfeedback.DAYS_1 %}<button class="btn btn-warning">Delayed response</button>{% else %}<button class="btn btn-danger">Very delayed response</button>{% endif %}<br>{{ i.midpointmentorfeedback.get_mentor_help_response_time_display }}{% endif %}</td>
-						<td>{% if i.midpointinternfeedback %}{% if i.midpointinternfeedback.mentor_help_response_time == i.midpointinternfeedback.HOURS_1 or i.midpointinternfeedback.mentor_help_response_time == i.midpointinternfeedback.HOURS_3 or i.midpointinternfeedback.mentor_help_response_time == i.midpointinternfeedback.HOURS_6 %}<button class="btn btn-success">Prompt response</button>{% elif i.midpointinternfeedback.mentor_help_response_time == i.midpointinternfeedback.HOURS_12 or i.midpointinternfeedback.mentor_help_response_time == i.midpointinternfeedback.DAYS_1 %}<button class="btn btn-warning">Delayed response</button>{% else %}<button class="btn btn-danger">Very delayed response</button>{% endif %}<br>{{ i.midpointinternfeedback.get_mentor_help_response_time_display }}{% endif %}</td>
-						<td>How long does it take the mentor to respond to intern requests for help?</td>
+						<td colspan="3"><b>Clearing up doubts</b></td>
 					</tr>
 					<tr>
-						<td>{% if i.midpointmentorfeedback %}{% if i.midpointmentorfeedback.mentor_review_response_time == i.midpointmentorfeedback.HOURS_1 or i.midpointmentorfeedback.mentor_review_response_time == i.midpointmentorfeedback.HOURS_3 or i.midpointmentorfeedback.mentor_review_response_time == i.midpointmentorfeedback.HOURS_6 %}<button class="btn btn-success">Prompt response</button>{% elif i.midpointmentorfeedback.mentor_review_response_time == i.midpointmentorfeedback.HOURS_12 or i.midpointmentorfeedback.mentor_review_response_time == i.midpointmentorfeedback.DAYS_1 %}<button class="btn btn-warning">Delayed response</button>{% else %}<button class="btn btn-danger">Very delayed response</button>{% endif %}<br>{{ i.midpointmentorfeedback.get_mentor_review_response_time_display }}{% endif %}</td>
-						<td>{% if i.midpointinternfeedback %}{% if i.midpointinternfeedback.mentor_review_response_time == i.midpointinternfeedback.HOURS_1 or i.midpointinternfeedback.mentor_review_response_time == i.midpointinternfeedback.HOURS_3 or i.midpointinternfeedback.mentor_review_response_time == i.midpointinternfeedback.HOURS_6 %}<button class="btn btn-success">Prompt response</button>{% elif i.midpointinternfeedback.mentor_review_response_time == i.midpointinternfeedback.HOURS_12 or i.midpointinternfeedback.mentor_review_response_time == i.midpointinternfeedback.DAYS_1 %}<button class="btn btn-warning">Delayed response</button>{% else %}<button class="btn btn-danger">Very delayed response</button>{% endif %}<br>{{ i.midpointinternfeedback.get_mentor_review_response_time_display }}{% endif %}</td>
-						<td>How long does it take the mentor to review and give feedback on their intern's contributions?</td>
-					</tr>
-					{% if midpoint_intern_status == i.SUBMITTED %}<tr><td colspan="3"><p>Intern's report on the support they received from their mentor:</p><p>{{ i.midpointinternfeedback.mentor_support|linebreaksbr }}</p></td></tr>{% endif %}
-					{% if i.midpointmentorfeedback %}<tr><td colspan="3"><p>Mentor's report on the support they are providing:</p><p>{{ i.midpointmentorfeedback.mentors_report|linebreaksbr }}</p></td></tr>{% endif %}
-					<tr><td colspan="3"><b>Intern progress</b></td></tr>
-					<tr>
-						<td>{% if i.midpointmentorfeedback %}{% if i.midpointmentorfeedback.intern_help_requests_frequency == i.midpointmentorfeedback.ONCE_DAILY or i.midpointmentorfeedback.intern_help_requests_frequency == i.midpointmentorfeedback.MULTIPLE_DAILY %}<button class="btn btn-warning">Frequent requests for help</button>{% elif i.midpointmentorfeedback.intern_help_requests_frequency == i.midpointmentorfeedback.MULTIPLE_WEEKLY or i.midpointmentorfeedback.intern_help_requests_frequency == i.midpointmentorfeedback.ONCE_WEEKLY %}<button class="btn btn-success">Asks for help at least weekly</button>{% else %}<button class="btn btn-danger">Infrequently asking for help</button>{% endif %}<br>{{ i.midpointmentorfeedback.get_intern_help_requests_frequency_display }}{% endif %}</td>
-						<td>{% if i.midpointinternfeedback %}{% if i.midpointinternfeedback.intern_help_requests_frequency == i.midpointinternfeedback.ONCE_DAILY or i.midpointinternfeedback.intern_help_requests_frequency == i.midpointinternfeedback.MULTIPLE_DAILY %}<button class="btn btn-warning">Frequent requests for help</button>{% elif i.midpointinternfeedback.intern_help_requests_frequency == i.midpointinternfeedback.MULTIPLE_WEEKLY or i.midpointinternfeedback.intern_help_requests_frequency == i.midpointinternfeedback.ONCE_WEEKLY %}<button class="btn btn-success">Asks for help at least weekly</button>{% else %}<button class="btn btn-danger">Infrequently asking for help</button>{% endif %}<br>{{ i.midpointinternfeedback.get_intern_help_requests_frequency_display }}{% endif %}</td>
-						<td>How often does the intern ask for help?</td>
-					</tr>
-					<tr>
-						<td>{% if i.midpointmentorfeedback %}{% if i.midpointmentorfeedback.intern_contribution_frequency == i.midpointmentorfeedback.ONCE_DAILY or i.midpointmentorfeedback.intern_contribution_frequency == i.midpointmentorfeedback.MULTIPLE_WEEKLY or i.midpointmentorfeedback.intern_contribution_frequency == i.midpointmentorfeedback.ONCE_WEEKLY %}<button class="btn btn-success">Submits weekly contributions</button>{% else %}<button class="btn btn-danger">Infrequently submitting contributions</button>{% endif %}<br>{{ i.midpointmentorfeedback.get_intern_contribution_frequency_display }}{% endif %}</td>
-						<td>{% if i.midpointinternfeedback %}{% if i.midpointinternfeedback.intern_contribution_frequency == i.midpointinternfeedback.ONCE_DAILY or i.midpointinternfeedback.intern_contribution_frequency == i.midpointinternfeedback.MULTIPLE_WEEKLY or i.midpointinternfeedback.intern_contribution_frequency == i.midpointinternfeedback.ONCE_WEEKLY %}<button class="btn btn-success">Submits weekly contributions</button>{% else %}<button class="btn btn-danger">Infrequently submitting contributions</button>{% endif %}<br>{{ i.midpointinternfeedback.get_intern_contribution_frequency_display }}{% endif %}</td>
-						<td>How often does the intern submit a contribution?</td>
-					</tr>
-					<tr>
-						<td>{% if i.midpointmentorfeedback %}{% if i.midpointmentorfeedback.intern_contribution_revision_time == i.midpointmentorfeedback.HOURS_1 or i.midpointmentorfeedback.intern_contribution_revision_time == i.midpointmentorfeedback.HOURS_3 or i.midpointmentorfeedback.intern_contribution_revision_time == i.midpointmentorfeedback.HOURS_6 or i.midpointmentorfeedback.intern_contribution_revision_time == i.midpointmentorfeedback.HOURS_12 or i.midpointmentorfeedback.intern_contribution_revision_time == i.midpointmentorfeedback.DAYS_1 or i.midpointmentorfeedback.intern_contribution_revision_time == i.midpointmentorfeedback.DAYS_2 %}<button class="btn btn-success">Prompt revision</button>{% elif i.midpointmentorfeedback.intern_contribution_revision_time == i.midpointmentorfeedback.DAYS_4 or i.midpointmentorfeedback.intern_contribution_revision_time == i.midpointmentorfeedback.DAYS_6 %}<button class="btn btn-warning">Delayed revision</button>{% else %}<button class="btn btn-danger">Very delayed revision</button>{% endif %}<br>{{ i.midpointmentorfeedback.get_intern_contribution_revision_time_display }}{% endif %}</td>
-						<td>{% if i.midpointinternfeedback %}{% if i.midpointinternfeedback.intern_contribution_revision_time == i.midpointinternfeedback.HOURS_1 or i.midpointinternfeedback.intern_contribution_revision_time == i.midpointinternfeedback.HOURS_3 or i.midpointinternfeedback.intern_contribution_revision_time == i.midpointinternfeedback.HOURS_6 or i.midpointinternfeedback.intern_contribution_revision_time == i.midpointinternfeedback.HOURS_12 or i.midpointinternfeedback.intern_contribution_revision_time == i.midpointinternfeedback.DAYS_1 or i.midpointinternfeedback.intern_contribution_revision_time == i.midpointinternfeedback.DAYS_2 %}<button class="btn btn-success">Prompt revision</button>{% elif i.midpointinternfeedback.intern_contribution_revision_time == i.midpointinternfeedback.DAYS_4 or i.midpointinternfeedback.intern_contribution_revision_time == i.midpointinternfeedback.DAYS_6 %}<button class="btn btn-warning">Delayed revision</button>{% else %}<button class="btn btn-danger">Very delayed revision</button>{% endif %}<br>{{ i.midpointinternfeedback.get_intern_contribution_revision_time_display }}{% endif %}</td>
-						<td>How long does it take the intern to revise a contribution?</td>
+						<td>
+							{% if i.feedback2frommentor %}
+								{% if i.feedback2frommentor.mentor_answers_questions %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td>
+							{% if i.feedback2fromintern %}
+								{% if i.feedback2fromintern.mentor_answers_questions %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						<td>Do mentor(s) answer the intern's questions within 10 hours?</td>
 					</tr>
 					<tr>
-						<td>{% if i.midpointmentorfeedback %}{% if i.midpointmentorfeedback.full_time_effort %}<button class="btn btn-success">Full-time effort</button>{% else %}<button class="btn btn-danger">Not a full-time effort</button>{% endif %}{% endif %}</td>
-						<td>{% if i.midpointinternfeedback %}{% if i.midpointinternfeedback.hours_worked == i.midpointinternfeedback.HOURS_30 %}<button class="btn btn-success">Full-time effort</button>{% elif i.midpointinternfeedback.hours_worked == i.midpointinternfeedback.HOURS_35 or i.midpointinternfeedback.hours_worked == i.midpointinternfeedback.HOURS_40 or i.midpointinternfeedback.hours_worked == i.midpointinternfeedback.HOURS_45 or i.midpointinternfeedback.hours_worked == i.midpointinternfeedback.HOURS_50 or i.midpointinternfeedback.hours_worked == i.midpointinternfeedback.HOURS_55 or i.midpointinternfeedback.hours_worked == i.midpointinternfeedback.HOURS_60 %}<button class="btn btn-warning">Overtime effort</button>{% else %}<button class="btn btn-danger">Not a full-time effort</button>{% endif %}<br>{{ i.midpointinternfeedback.get_hours_worked_display }} per week{% endif %}</td>
+						<td>
+							{% if i.feedback2frommentor %}
+								{% if i.feedback2frommentor.intern_asks_questions %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td>
+							{% if i.feedback2fromintern %}
+								{% if i.feedback2fromintern.intern_asks_questions %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						<td>Does the intern ask mentor(s) questions when stuck for more than 1 to 3 hours?</td>
+					</tr>
+					<tr>
+						<td>
+							{% if i.feedback2frommentor %}
+								{% if i.feedback2frommentor.mentor_support_when_stuck %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td>
+							{% if i.feedback2fromintern %}
+								{% if i.feedback2fromintern.mentor_support_when_stuck %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						<td>Do mentor(s) offer more support if the intern is stuck?</td>
+					</tr>
+					<tr>
+						<td colspan="3"><b>Meetings</b></td>
+					</tr>
+					<tr>
+						<td>
+							{% if i.feedback2frommentor %}
+								{% if i.feedback2frommentor.daily_stand_ups %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td>
+							{% if i.feedback2fromintern %}
+								{% if i.feedback2fromintern.daily_stand_ups %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						<td>Do mentor(s) have daily stand ups with the intern?</td>
+					</tr>
+					<tr>
+						<td>
+							{% if i.feedback2frommentor %}
+								{% if i.feedback2frommentor.meets_privately %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td>
+							{% if i.feedback2fromintern %}
+								{% if i.feedback2fromintern.meets_privately %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						<td>Do mentor(s) meet privately with the intern?</td>
+					</tr>
+					<tr>
+						<td>
+							{% if i.feedback2frommentor %}
+								{% if i.feedback2frommentor.meets_over_phone_or_video_chat %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td>
+							{% if i.feedback2fromintern %}
+								{% if i.feedback2fromintern.meets_over_phone_or_video_chat %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						<td>Do mentor(s) meet with the intern over phone or video chat?</td>
+					</tr>
+					<tr>
+						<td>
+							{% if i.feedback2frommentor %}
+								{% if i.feedback2frommentor.intern_missed_meetings %}
+									<button class="btn btn-warning">Yes</button>
+								{% else %}
+									<button class="btn btn-success">No</button>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td>
+							{% if i.feedback2fromintern %}
+								{% if i.feedback2fromintern.intern_missed_meetings %}
+									<button class="btn btn-warning">Yes</button>
+								{% else %}
+									<button class="btn btn-success">No</button>
+								{% endif %}
+							{% endif %}
+						<td>Has the intern recently missed more than 2 meetings?</td>
+					</tr>
+					<tr>
+						<td colspan="3"><b>Tracking project progress</b></td>
+					</tr>
+					<tr>
+						<td>
+							{% if i.feedback2frommentor %}
+								{% if i.feedback2frommentor.talk_about_project_progress %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td>
+							{% if i.feedback2fromintern %}
+								{% if i.feedback2fromintern.talk_about_project_progress %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						<td>Do mentor(s) and the intern talk about project progress at least 3 days a week?</td>
+					</tr>
+					<tr>
+						<td colspan="3"><b>Project feedback</b></td>
+					</tr>
+					<tr>
+						<td>
+							{% if i.feedback2frommentor %}
+								{% if i.feedback2frommentor.contribution_drafts %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td>
+							{% if i.feedback2fromintern %}
+								{% if i.feedback2fromintern.contribution_drafts %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						<td>Does the intern share work-in-progress or draft contributions with mentor(s)?</td>
+					</tr>
+					<tr>
+						<td>
+							{% if i.feedback2frommentor %}
+								{% if i.feedback2frommentor.contribution_review %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td>
+							{% if i.feedback2fromintern %}
+								{% if i.feedback2fromintern.contribution_review %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						<td>Do mentors review intern contributions within 1 to 3 days?</td>
+					</tr>
+					<tr>
+						<td>
+							{% if i.feedback2frommentor %}
+								{% if i.feedback2frommentor.contribution_revised %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td>
+							{% if i.feedback2fromintern %}
+								{% if i.feedback2fromintern.contribution_revised %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						<td>Does the intern revise their contribution(s) based on feedback?</td>
+					</tr>
+					<tr>
+						<td colspan="3"><b>Acknowledgment and praise</b></td>
+					</tr>
+					<tr>
+						<td>
+							{% if i.feedback2frommentor %}
+								{% if i.feedback2frommentor.mentor_shares_positive_feedback %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td>
+							{% if i.feedback2fromintern %}
+								{% if i.feedback2fromintern.mentor_shares_positive_feedback %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						<td>Do the mentors give the intern praise and positive feedback?</td>
+					</tr>
+					<tr>
+						<td>
+							{% if i.feedback2frommentor %}
+								{% if i.feedback2frommentor.mentor_promoting_work_to_community %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td>
+							{% if i.feedback2fromintern %}
+								{% if i.feedback2fromintern.mentor_promoting_work_to_community %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						<td>Do the mentors promote the intern's contributions within their open source community?</td>
+					</tr>
+					<tr>
+						<td>
+							{% if i.feedback2frommentor %}
+								{% if i.feedback2frommentor.mentor_promoting_work_on_social_media %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td>
+							{% if i.feedback2fromintern %}
+								{% if i.feedback2fromintern.mentor_promoting_work_on_social_media %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						<td>Do the mentors promote the intern's contributions on social media?</td>
+					</tr>
+					<tr>
+						<td colspan="3">
+							{% if not i.applicant.applicant.blog_url %}<b>Intern blog</b>: Missing{% else %}<b>Intern blog</b>: <a href="{{ i.applicant.applicant.blog_url }}">Present</a>{% endif %}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							{% if i.feedback2frommentor %}
+								{% if i.feedback2frommentor.intern_blogging %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td>
+							{% if i.feedback2fromintern %}
+								{% if i.feedback2fromintern.intern_blogging %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						<td>Does the intern create blog posts?</td>
+					</tr>
+					<tr>
+						<td>
+							{% if i.feedback2frommentor %}
+								{% if i.feedback2frommentor.mentor_discussing_blog %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td>
+							{% if i.feedback2fromintern %}
+								{% if i.feedback2fromintern.mentor_discussing_blog %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						<td>Do the mentors discuss the intern's blog posts with the intern?</td>
+					</tr>
+					<tr>
+						<td>
+							{% if i.feedback2frommentor %}
+								{% if i.feedback2frommentor.mentor_promoting_blog_to_community %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td>
+							{% if i.feedback2fromintern %}
+								{% if i.feedback2fromintern.mentor_promoting_blog_to_community %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						<td>Do the mentors promote the intern's blog posts within their open source community?</td>
+					</tr>
+					<tr>
+						<td>
+							{% if i.feedback2frommentor %}
+								{% if i.feedback2frommentor.mentor_promoting_blog_on_social_media %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td>
+							{% if i.feedback2fromintern %}
+								{% if i.feedback2fromintern.mentor_promoting_blog_on_social_media %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						<td>Do the mentors promote the intern's blog posts on social media?</td>
+					</tr>
+					<tr>
+						<td colspan="3"><b>Networking</b></td>
+					</tr>
+					<tr>
+						<td>
+							{% if i.feedback2frommentor %}
+								{% if i.feedback2frommentor.mentor_introduced_intern_to_community %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td>
+							{% if i.feedback2fromintern %}
+								{% if i.feedback2fromintern.mentor_introduced_intern_to_community %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						<td>Did the mentors introduce the intern to their open source community?</td>
+					</tr>
+					<tr>
+						<td>
+							{% if i.feedback2frommentor %}
+								{% if i.feedback2frommentor.intern_asks_questions_of_community_members %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td>
+							{% if i.feedback2fromintern %}
+								{% if i.feedback2fromintern.intern_asks_questions_of_community_members %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						<td>Does the intern seek help from open source community members who are not their mentors?</td>
+					</tr>
+					<tr>
+						<td>
+							{% if i.feedback2frommentor %}
+								{% if i.feedback2frommentor.intern_talks_to_community_members %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td>
+							{% if i.feedback2fromintern %}
+								{% if i.feedback2fromintern.intern_talks_to_community_members %}
+									<button class="btn btn-success">Yes</button>
+								{% else %}
+									<button class="btn btn-warning">No</button>
+								{% endif %}
+							{% endif %}
+						<td>Does the intern have casual conversations with open source community members who are not their mentors?</td>
+					</tr>
+					<tr>
+						<td colspan="3"><b>Mentor support</b></td>
+					</tr>
+
+					{% if midpoint_intern_status == i.SUBMITTED %}<tr><td colspan="3"><p>Intern's report on mentor support:</p><p>{{ i.feedback2fromintern.mentor_support|linebreaksbr }}</p></td></tr>{% endif %}
+
+					{% if i.feedback2frommentor %}<tr><td colspan="3"><p>Mentor's report on mentor support:</p><p>{{ i.feedback2frommentor.mentors_report|linebreaksbr }}</p></td></tr>{% endif %}
+
+					<tr>
+						<td colspan="3"><b>Intern progress</b></td>
+					</tr>
+					<tr>
+						<td>{% if i.feedback2frommentor %}{% if i.feedback2frommentor.full_time_effort %}<button class="btn btn-success">Full-time effort</button>{% else %}<button class="btn btn-danger">Not a full-time effort</button>{% endif %}{% endif %}</td>
+						<td>{% if i.feedback2fromintern %}{% if i.feedback2fromintern.hours_worked == i.feedback2fromintern.HOURS_30 %}<button class="btn btn-success">Full-time effort</button>{% elif i.feedback2fromintern.hours_worked == i.feedback2fromintern.HOURS_35 or i.feedback2fromintern.hours_worked == i.feedback2fromintern.HOURS_40 or i.feedback2fromintern.hours_worked == i.feedback2fromintern.HOURS_45 or i.feedback2fromintern.hours_worked == i.feedback2fromintern.HOURS_50 or i.feedback2fromintern.hours_worked == i.feedback2fromintern.HOURS_55 or i.feedback2fromintern.hours_worked == i.feedback2fromintern.HOURS_60 %}<button class="btn btn-warning">Overtime effort</button>{% else %}<button class="btn btn-danger">Not a full-time effort</button>{% endif %}<br>{{ i.feedback2fromintern.get_hours_worked_display }} per week{% endif %}</td>
 						<td>Is the intern putting in a full-time effort?</td>
 					</tr>
-					{% if i.midpointinternfeedback.time_comments %}<tr><td colspan="3"><p>Intern's comments on their time commitments:</p><p>{{ i.midpointinternfeedback.time_comments }}</p></td></tr>{% endif %}
+
+					{% if i.feedback2fromintern.time_comments %}<tr><td colspan="3"><p>Intern's comments on their time commitments:</p><p>{{ i.feedback2fromintern.time_comments }}</p></td></tr>{% endif %}
+					{% if i.feedback2frommentor %}<tr><td colspan="3"><p>Mentor's report on intern progress:</p><p>{{ i.feedback2frommentor.progress_report }}</p></td></tr>{% endif %}
+					{% if i.feedback2fromintern %}<tr><td colspan="3"><p>Intern's report on intern progress:</p><p>{{ i.feedback2fromintern.progress_report }}</p></td></tr>{% endif %}
 					<tr>
-						<td>{% if i.midpointmentorfeedback %}{{ i.midpointmentorfeedback.last_contact }}{% endif %}</td>
-						<td>{% if i.midpointinternfeedback %}{{ i.midpointinternfeedback.last_contact }}{% endif %}</td>
+						<td>{% if i.feedback2frommentor %}{{ i.feedback2frommentor.last_contact }}{% endif %}</td>
+						<td>{% if i.feedback2fromintern %}{{ i.feedback2fromintern.last_contact }}{% endif %}</td>
 						<td>Date intern and mentor were last in contact</td>
 					</tr>
 					<tr>
-						<td>{% if i.midpointmentorfeedback %}{{ i.midpointmentorfeedback.get_submission_date }}{% endif %}</td>
-						<td>{% if i.midpointinternfeedback %}{{ i.midpointinternfeedback.get_submission_date }}{% endif %}</td>
+						<td>{% if i.feedback2frommentor %}{{ i.feedback2frommentor.get_submission_date }}{% endif %}</td>
+						<td>{% if i.feedback2fromintern %}{{ i.feedback2fromintern.get_submission_date }}{% endif %}</td>
 						<td>Date latest feedback was submitted</td>
 					</tr>
-					{% if i.midpointmentorfeedback %}<tr><td colspan="3"><p>Mentor's report on the intern's progress:</p><p>{{ i.midpointmentorfeedback.progress_report }}</p></td></tr>{% endif %}
-					{% if i.midpointinternfeedback %}<tr><td colspan="3"><p>Intern's report on their own progress:</p><p>{{ i.midpointinternfeedback.progress_report }}</p></td></tr>{% endif %}
 				{% endwith %}
 			</table>
 		{% endfor %}

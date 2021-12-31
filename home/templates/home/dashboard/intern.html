@@ -47,7 +47,7 @@
 		{% if internship.is_initial_feedback_on_mentor_open %}
 			<p><a href="{% url 'initial-intern-feedback' %}"><button type="button" class="btn btn-info">Submit Feedback #1</button></a></p>
 		{% endif %}
-		{% if internship.is_midpoint_feedback_on_mentor_open %}
+		{% if internship.is_feedback_2_form_open_to_intern %}
 			<p><a href="{% url 'midpoint-intern-feedback' %}"><button type="button" class="btn btn-info">Submit Feedback #2</button></a></p>
 		{% endif %}
 		{% if internship.is_final_feedback_on_mentor_open %}
@@ -67,16 +67,16 @@
 			{% if internship.feedback1frommentor.organizer_payment_approved %}
 				<li>The Outreachy organizers have requested that the Software Freedom Conservancy pay your initial stipend.</li>
 			{% endif %}
-			{% if internship.midpointinternfeedback %}
+			{% if internship.feedback2fromintern %}
 				<li>You submitted feedback #2.</li>
 			{% endif %}
-			{% if internship.midpointmentorfeedback %}
-				<li>Your mentor submitted feedback #2 on {{ internship.midpointmentorfeedback.find_version_mentor_edited.revision.date_created }}</li>
+			{% if internship.feedback2frommentor %}
+				<li>Your mentor submitted feedback #2 on {{ internship.feedback2frommentor.find_version_mentor_edited.revision.date_created }}</li>
 			{% endif %}
-			{% if not internship.midpointinternfeedback and not internship.midpointmentorfeedback %}
+			{% if not internship.feedback2fromintern and not internship.feedback2frommentor %}
 				<li>Neither you nor your mentor have submitted feedback #2.</li>
 			{% endif %}
-			{% if internship.midpointmentorfeedback.organizer_payment_approved %}
+			{% if internship.feedback2frommentor.organizer_payment_approved %}
 				<li>The Outreachy organizers have reviewed feedback #2. Your internship is in good standing.</li>
 			{% endif %}
 			{% if internship.finalinternfeedback %}

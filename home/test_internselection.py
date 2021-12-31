@@ -461,21 +461,45 @@ class InternSelectionTestCase(TestCase):
     @staticmethod
     def _midpoint_mentor_feedback_form(internselection, **kwargs):
         defaults = {
-            'intern_help_requests_frequency': models.MidpointMentorFeedback.MULTIPLE_WEEKLY,
-            'mentor_help_response_time': models.MidpointMentorFeedback.HOURS_6,
-            'intern_contribution_frequency': models.MidpointMentorFeedback.ONCE_WEEKLY,
-            'mentor_review_response_time': models.MidpointMentorFeedback.HOURS_3,
-            'intern_contribution_revision_time': models.MidpointMentorFeedback.DAYS_2,
-            'last_contact': internselection.midpoint_feedback_opens,
-            'full_time_effort': True,
-            'progress_report': 'Everything is fine.',
+            'mentor_answers_questions': True,
+            'intern_asks_questions': True,
+            'mentor_support_when_stuck': True,
+
+            'daily_stand_ups': True,
+            'meets_privately': True,
+            'meets_over_phone_or_video_chat': True,
+            'intern_missed_meetings': False,
+            'talk_about_project_progress': True,
+
+            'contribution_drafts': True,
+            'contribution_review': True,
+            'contribution_revised': True,
+
+            'mentor_shares_positive_feedback': True,
+            'mentor_promoting_work_to_community': True,
+            'mentor_promoting_work_on_social_media': True,
+
+            'intern_blogging': True,
+            'mentor_discussing_blog': True,
+            'mentor_promoting_blog_to_community': True,
+            'mentor_promoting_blog_on_social_media': True,
+
+            'mentor_introduced_intern_to_community': True,
+            'intern_asks_questions_of_community_members': True,
+            'intern_talks_to_community_members': True,
+
             'mentors_report': 'I am very supportive',
+            'last_contact': internselection.midpoint_feedback_opens,
+            'progress_report': 'Everything is fine.',
+
+            'full_time_effort': True,
+
             'actions_requested': models.BaseMentorFeedback.PAY_AND_CONTINUE,
         }
         defaults.update(kwargs)
         return defaults
 
-    def test_mentor_can_give_successful_midpoint_feedback(self):
+    def test_mentor_can_give_successful_feedback2(self):
         current_round = RoundPageFactory(start_from='midfeedback')
         internselection = InternSelectionFactory(
                 active=True,
@@ -487,7 +511,7 @@ class InternSelectionTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
-        feedback = internselection.midpointmentorfeedback
+        feedback = internselection.feedback2frommentor
 
         # Add in the fields automatically set by the action the mentor requested
         answers['payment_approved'] = True
@@ -502,41 +526,43 @@ class InternSelectionTestCase(TestCase):
 
         self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
 
-    def test_mentor_can_give_terminate_midpoint_feedback(self):
+    # Since there's no payment associated with Feedback #2,
+    # terminating the internship at that point means
+    # the initial payment has been paid (associated with Feedback #1),
+    # and the final stipend will not be paid (associated with Feedback #3).
+    #
+    # Therefore we only need to test submitting the form
+    # with the TERMINATE_NO_PAY action to take
+    def test_mentor_can_give_terminate_feedback2(self):
         current_round = RoundPageFactory(start_from='midfeedback')
-        for action in (models.BaseMentorFeedback.TERMINATE_PAY, models.BaseMentorFeedback.TERMINATE_NO_PAY):
-            with self.subTest(action=action):
-                internselection = InternSelectionFactory(
-                    active=True,
-                    round=current_round,
-                )
+        internselection = InternSelectionFactory(
+            active=True,
+            round=current_round,
+        )
 
-                answers = self._midpoint_mentor_feedback_form(internselection,
-                    actions_requested=action,
-                )
-                response = self._submit_mentor_feedback_form(internselection, 'midpoint', 'Submit Feedback #2', answers)
-                self.assertEqual(response.status_code, 302)
+        answers = self._midpoint_mentor_feedback_form(internselection,
+            actions_requested=models.BaseMentorFeedback.TERMINATE_NO_PAY,
+        )
+        response = self._submit_mentor_feedback_form(internselection, 'midpoint', 'Submit Feedback #2', answers)
+        self.assertEqual(response.status_code, 302)
 
-                # will raise DoesNotExist if the view didn't create this
-                feedback = internselection.midpointmentorfeedback
+        # will raise DoesNotExist if the view didn't create this
+        feedback = internselection.feedback2frommentor
 
-                # Add in the fields automatically set by the action the mentor requested
-                if action == models.BaseMentorFeedback.TERMINATE_PAY:
-                    answers['payment_approved'] = True
-                else:
-                    answers['payment_approved'] = False
-                answers['request_extension'] = False
-                answers['extension_date'] = None
-                answers['request_termination'] = True
-                for key, expected in answers.items():
-                    self.assertEqual(getattr(feedback, key), expected)
+        # Add in the fields automatically set by the action the mentor requested
+        answers['payment_approved'] = False
+        answers['request_extension'] = False
+        answers['extension_date'] = None
+        answers['request_termination'] = True
+        for key, expected in answers.items():
+            self.assertEqual(getattr(feedback, key), expected)
 
-                # only allow submitting once
-                self.assertFalse(feedback.allow_edits)
+        # only allow submitting once
+        self.assertFalse(feedback.allow_edits)
 
-                self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+        self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
 
-    def test_mentor_can_give_uncertain_midpoint_feedback(self):
+    def test_mentor_can_give_uncertain_feedback2(self):
         current_round = RoundPageFactory(start_from='midfeedback')
         internselection = InternSelectionFactory(
             active=True,
@@ -550,7 +576,7 @@ class InternSelectionTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
-        feedback = internselection.midpointmentorfeedback
+        feedback = internselection.feedback2frommentor
 
         # Add in the fields automatically set by the action the mentor requested
         answers['payment_approved'] = False
@@ -565,7 +591,7 @@ class InternSelectionTestCase(TestCase):
 
         self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
 
-    def test_mentor_can_give_extension_midpoint_feedback(self):
+    def test_mentor_can_give_extension_feedback2(self):
         current_round = RoundPageFactory(start_from='midfeedback')
         for action in (models.BaseMentorFeedback.EXT_1_WEEK, models.BaseMentorFeedback.EXT_2_WEEK, models.BaseMentorFeedback.EXT_3_WEEK, models.BaseMentorFeedback.EXT_4_WEEK, models.BaseMentorFeedback.EXT_5_WEEK):
             with self.subTest(action=action):
@@ -581,7 +607,7 @@ class InternSelectionTestCase(TestCase):
                 self.assertEqual(response.status_code, 302)
 
                 # will raise DoesNotExist if the view didn't create this
-                feedback = internselection.midpointmentorfeedback
+                feedback = internselection.feedback2frommentor
 
                 answers['payment_approved'] = False
                 answers['request_extension'] = True
@@ -617,7 +643,7 @@ class InternSelectionTestCase(TestCase):
         )
         for params in disallowed_when:
             with self.subTest(params=params):
-                prior = MidpointMentorFeedbackFactory(intern_selection__round=current_round, **params)
+                prior = Feedback2FromMentorFactory(intern_selection__round=current_round, **params)
                 internselection = prior.intern_selection
 
                 answers = self._midpoint_mentor_feedback_form(internselection)
@@ -629,22 +655,53 @@ class InternSelectionTestCase(TestCase):
     @staticmethod
     def _midpoint_intern_feedback_form(internselection, **kwargs):
         defaults = {
-            'intern_help_requests_frequency': models.MidpointInternFeedback.MULTIPLE_WEEKLY,
-            'mentor_help_response_time': models.MidpointInternFeedback.HOURS_6,
-            'intern_contribution_frequency': models.MidpointInternFeedback.ONCE_WEEKLY,
-            'mentor_review_response_time': models.MidpointInternFeedback.HOURS_3,
-            'intern_contribution_revision_time': models.MidpointInternFeedback.DAYS_2,
+            'share_mentor_feedback_with_community_coordinator': True,
+
+            # 1. Clearing up doubts
+            'mentor_answers_questions': True,
+            'intern_asks_questions': True,
+            'mentor_support_when_stuck': True,
+
+            # 2. Meetings
+            'daily_stand_ups': True,
+            'meets_privately': True,
+            'meets_over_phone_or_video_chat': True,
+            'intern_missed_meetings': False,
+
+            # 2. Tracking project progress
+            'talk_about_project_progress': True,
+
+            # 4. Project feedback
+            'contribution_drafts': True,
+            'contribution_review': True,
+            'contribution_revised': True,
+        
+            # 3. Acknowledgment and praise
+            'mentor_shares_positive_feedback': True,
+            'mentor_promoting_work_to_community': True,
+            'mentor_promoting_work_on_social_media': True,
+
+            # 3/6. Blogging
+            'intern_blogging': True,
+            'mentor_discussing_blog': True,
+            'mentor_promoting_blog_to_community': True,
+            'mentor_promoting_blog_on_social_media': True,
+
+            # 6. Networking
+            'mentor_introduced_intern_to_community': True,
+            'intern_asks_questions_of_community_members': True,
+            'intern_talks_to_community_members': True,
+
+            'progress_report': 'Everything is fine.',
+            'hours_worked': models.Feedback1FromIntern.HOURS_30,
+            'time_comments': '',
             'last_contact': internselection.midpoint_feedback_opens,
             'mentor_support': 'My mentor is awesome.',
-            'hours_worked': models.Feedback1FromIntern.HOURS_40,
-            'time_comments': '',
-            'progress_report': 'Everything is fine.',
-            'share_mentor_feedback_with_community_coordinator': True,
         }
         defaults.update(kwargs)
         return defaults
 
-    def test_intern_can_give_midpoint_feedback(self):
+    def test_intern_can_give_feedback2(self):
         internselection = InternSelectionFactory(
             active=True,
             round__start_from='midfeedback',
@@ -655,7 +712,7 @@ class InternSelectionTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
-        feedback = internselection.midpointinternfeedback
+        feedback = internselection.feedback2fromintern
 
         for key, expected in answers.items():
             self.assertEqual(getattr(feedback, key), expected)

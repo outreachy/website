@@ -856,11 +856,11 @@ To mark all interns with successful mid-point feedback as being authorized payme
 ```
 >>> from home import models
 >>> current_round = models.RoundPage.objects.get(internstarts='2019-12-03')
->>> interns = models.InternSelection.objects.filter(applicant__application_round=current_round, midpointmentorfeedback__payment_approved=True, midpointmentorfeedback__extension_date__isnull=True)
+>>> interns = models.InternSelection.objects.filter(applicant__application_round=current_round, feedback2frommentor__payment_approved=True, feedback2frommentor__extension_date__isnull=True)
 >>> len(interns) # make sure this matches the number of interns you say you're paying in the email
 >>> for i in interns:
-...     i.midpointmentorfeedback.organizer_payment_approved = True
-...     i.midpointmentorfeedback.save()
+...     i.feedback2frommentor.organizer_payment_approved = True
+...     i.feedback2frommentor.save()
 ... 
 >>>
 ```

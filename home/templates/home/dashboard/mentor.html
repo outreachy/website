@@ -78,7 +78,7 @@
 				{% if rel.intern_selection.is_initial_feedback_on_intern_open %}
 					<p><a href="{% url 'initial-mentor-feedback' username=rel.intern_selection.applicant.applicant.account.username %}"><button type="button" class="btn btn-info">Submit Feedback #1</button></a></p>
 				{% endif %}
-				{% if rel.intern_selection.is_midpoint_feedback_on_intern_open %}
+				{% if rel.intern_selection.is_feedback_2_form_open_to_mentor %}
 					<p><a href="{% url 'midpoint-mentor-feedback' username=rel.intern_selection.applicant.applicant.account.username %}"><button type="button" class="btn btn-info">Submit Feedback #2</button></a></p>
 				{% endif %}
 				{% if rel.intern_selection.is_final_feedback_on_intern_open %}
@@ -90,13 +90,13 @@
 				{% if rel.intern_selection.feedback1frommentor %}
 				<li><p>Feedback #1: {% if rel.intern_selection.feedback1frommentor.payment_approved %}<button type="button" class="btn btn-success">Initial payment approved</button>{% else %}<button type="button" class="btn btn-warning">Initial payment not approved</button>{% endif %}{% if rel.intern_selection.get_mentor_initial_feedback_status == rel.intern_selection.DUNNO %} Advice requested from Outreachy organizers.{% endif %}{% if rel.intern_selection.feedback1frommentor.request_extension %} Internship extension requested.{% endif %}{% if rel.intern_selection.feedback1frommentor.request_termination %} Termination requested for this internship.{% endif %}</p></li>
 				{% endif %}
-				{% if rel.intern_selection.midpointmentorfeedback %}
-					<li><p>Feedback #2: {% if rel.intern_selection.midpointmentorfeedback.payment_approved %}<button type="button" class="btn btn-success">Successful</button>{% else %}<button type="button" class="btn btn-warning">Not successful</button>{% endif %}{% if rel.intern_selection.get_mentor_midpoint_feedback_status == rel.intern_selection.DUNNO %} Advice requested from Outreachy organizers.{% endif %}{% if rel.intern_selection.midpointmentorfeedback.request_extension %} Extension requested for feedback #2 until {{ rel.intern_selection.midpointmentorfeedback.extension_date|date:"M d, Y" }}.{% endif %}{% if rel.intern_selection.midpointmentorfeedback.request_termination %} Termination requested for this internship.{% endif %}</p></li>
+				{% if rel.intern_selection.feedback2frommentor %}
+					<li><p>Feedback #2: {% if rel.intern_selection.feedback2frommentor.payment_approved %}<button type="button" class="btn btn-success">Successful</button>{% else %}<button type="button" class="btn btn-warning">Not successful</button>{% endif %}{% if rel.intern_selection.get_mentor_midpoint_feedback_status == rel.intern_selection.DUNNO %} Advice requested from Outreachy organizers.{% endif %}{% if rel.intern_selection.feedback2frommentor.request_extension %} Internship extension requested.{% endif %}{% if rel.intern_selection.feedback2frommentor.request_termination %} Termination requested for this internship.{% endif %}</p></li>
 				{% endif %}
 				{% if rel.intern_selection.finalmentorfeedback %}
 					<li><p>Feedback #3: {% if rel.intern_selection.finalmentorfeedback.payment_approved %}<button type="button" class="btn btn-success">Final payment approved</button>{% else %}<button type="button" class="btn btn-warning">Final payment not approved</button>{% endif %}{% if rel.intern_selection.get_mentor_final_feedback_status == rel.intern_selection.DUNNO %} Advice requested from Outreachy organizers.{% endif %}{% if rel.intern_selection.finalmentorfeedback.request_extension %} Extension requested for final feedback until {{ rel.intern_selection.finalmentorfeedback.extension_date|date:"M d, Y" }}.{% endif %}{% if rel.intern_selection.finalmentorfeedback.request_termination %} Termination requested for this internship.{% endif %}</p></li>
 				{% endif %}
-				{% if not rel.intern_selection.feedback1frommentor and not rel.intern_selection.midpointmentorfeedback and not rel.intern_selection.finalmentorfeedback %}
+				{% if not rel.intern_selection.feedback1frommentor and not rel.intern_selection.feedback2frommentor and not rel.intern_selection.finalmentorfeedback %}
 					<li>No feedback has been submitted yet.</li>
 				{% endif %}
 				</ul>

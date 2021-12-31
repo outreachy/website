@@ -672,7 +672,7 @@ class MidpointFeedbackInstructions(FeedbackInstructions):
         interns = current_round.get_interns_with_open_midpoint_feedback()
 
         for i in interns:
-            email.feedback_email(i, self.request, "midpoint", i.is_midpoint_feedback_on_intern_past_due(), connection=connection)
+            email.feedback_email(i, self.request, "midpoint", i.is_feedback_2_from_mentor_past_due(), connection=connection)
 
 
 class FinalFeedbackInstructions(FeedbackInstructions):

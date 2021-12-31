@@ -29,8 +29,8 @@ from .models import InformalChatContact
 from .models import InternSelection
 from .models import Feedback1FromMentor
 from .models import Feedback1FromIntern
-from .models import MidpointMentorFeedback
-from .models import MidpointInternFeedback
+from .models import Feedback2FromMentor
+from .models import Feedback2FromIntern
 from .models import MentorApproval
 from .models import MentorRelationship
 from .models import NewCommunity
@@ -585,13 +585,13 @@ class Feedback1FromInternInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Feedback #2 from intern'
 
-class MidpointMentorFeedbackInline(admin.StackedInline):
-    model = MidpointMentorFeedback
+class Feedback2FromMentorInline(admin.StackedInline):
+    model = Feedback2FromMentor
     can_delete = False
     verbose_name_plural = 'Mentor submitted midpoint feedback forms'
 
-class MidpointInternFeedbackInline(admin.StackedInline):
-    model = MidpointInternFeedback
+class Feedback2FromInternInline(admin.StackedInline):
+    model = Feedback2FromIntern
     can_delete = False
     verbose_name_plural = 'Intern submitted midpoint feedback forms'
 
@@ -630,7 +630,7 @@ class InternSelectionAdmin(reversion.admin.VersionAdmin):
             'project',
             'intern_contract',
             )
-    inlines = (Feedback1FromMentorInline, Feedback1FromInternInline, MidpointMentorFeedbackInline, MidpointInternFeedbackInline, FinalMentorFeedbackInline, FinalInternFeedbackInline)
+    inlines = (Feedback1FromMentorInline, Feedback1FromInternInline, Feedback2FromMentorInline, Feedback2FromInternInline, FinalMentorFeedbackInline, FinalInternFeedbackInline)
 
 class FeedbackAdmin(reversion.admin.VersionAdmin):
     list_display = (

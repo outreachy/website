@@ -552,9 +552,9 @@ class InitialMentorFeedbackFactory(factory.django.DjangoModelFactory):
 
     request_termination = False
 
-class MidpointMentorFeedbackFactory(factory.django.DjangoModelFactory):
+class Feedback2FromMentorFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = models.MidpointMentorFeedback
+        model = models.Feedback2FromMentor
         django_get_or_create = ('intern_selection',)
 
     intern_selection = factory.SubFactory(
@@ -565,16 +565,37 @@ class MidpointMentorFeedbackFactory(factory.django.DjangoModelFactory):
     allow_edits = False
     ip_address = factory.Faker('ipv4_public')
 
-    intern_help_requests_frequency = factory.Iterator(models.MidpointMentorFeedback.ASKING_FOR_HELP_FREQUENCY_CHOICES, getter=lambda c: c[0])
-    mentor_help_response_time = factory.Iterator(models.MidpointMentorFeedback.RESPONSE_TIME_CHOICES, getter=lambda c: c[0])
-    intern_contribution_frequency = factory.Iterator(models.MidpointMentorFeedback.CONTRIBUTION_FREQUENCY_CHOICES, getter=lambda c: c[0])
-    mentor_review_response_time = factory.Iterator(models.MidpointMentorFeedback.RESPONSE_TIME_CHOICES, getter=lambda c: c[0])
-    intern_contribution_revision_time = factory.Iterator(models.MidpointMentorFeedback.RESPONSE_TIME_CHOICES, getter=lambda c: c[0])
+    mentor_answers_questions = True
+    intern_asks_questions = True
+    mentor_support_when_stuck = True
 
-    last_contact = factory.Faker('past_date')
+    daily_stand_ups = True
+    meets_privately = True
+    meets_over_phone_or_video_chat = True
+    intern_missed_meetings = False
+    talk_about_project_progress = True
 
+    contribution_drafts = True
+    contribution_review = True
+    contribution_revised = True
+        
+    mentor_shares_positive_feedback = True
+    mentor_promoting_work_to_community = True
+    mentor_promoting_work_on_social_media = True
+
+    intern_blogging = True
+    mentor_discussing_blog = True
+    mentor_promoting_blog_to_community = True
+    mentor_promoting_blog_on_social_media = True
+
+    mentor_introduced_intern_to_community = True
+    intern_asks_questions_of_community_members = True
+    intern_talks_to_community_members = True
+
+    mentors_report = factory.Faker('paragraph')
     progress_report = factory.Faker('paragraph')
 
+    last_contact = factory.Faker('past_date')
     full_time_effort = True
 
     actions_requested = models.BaseMentorFeedback.PAY_AND_CONTINUE
