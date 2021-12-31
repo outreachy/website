@@ -4286,109 +4286,6 @@ class BaseMentorFeedback(BaseFeedback):
     class Meta:
         abstract = True
 
-# There shouldn't be a need to record which mentor filled out the form.
-# The revision control on the object should store which Django user made the changes.
-#
-# We can dig out the latest feedback version
-# (assuming self references the InitialMentorFeedback object):
-# from reversion.models import Version
-# versions = Version.objects.get_for_object(self)
-# print('On {:%Y-%m-%d at %I:%M%p} %u wrote:\n{}'.format(versions[0].revision.date_created, versions[0].revision.user))
-#
-# This also allows us to keep the feedback around, even if a mentor withdraws from the project.
-# As long as their Django user account is intact, the feedback should remain intact.
-# This is important to keep around for Conservancy record keeping.
-class InitialMentorFeedback(BaseMentorFeedback):
-    # XXX - Make sure to change the questions in
-    # home/templates/home/email/initial-feedback-instructions.txt
-    # if you change these verbose names.
-    in_contact = models.BooleanField(verbose_name="Has your intern been in contact to discuss how to approach their first tasks?")
-    asking_questions = models.BooleanField(verbose_name="Has your intern been asking questions about their first tasks?")
-    active_in_public = models.BooleanField(verbose_name="Has your intern been active on public project channels, such as the community's chat, forums, issue tracker, mailing list, etc?")
-    provided_onboarding = models.BooleanField(verbose_name="Have you provided documentation or other resources to help onboard your intern?")
-
-    NOT_SCHEDULED = '0'
-    ONCE_DAILY = 'D'
-    MULTIPLE_WEEKLY = 'M'
-    ONCE_WEEKLY = 'W'
-    EVERY_OTHER_WEEK = 'B'
-    CHECKIN_FREQUENCY_CHOICES = (
-        (NOT_SCHEDULED, 'Not scheduled yet'),
-        (ONCE_DAILY, 'Once per day'),
-        (MULTIPLE_WEEKLY, 'Multiple times per week'),
-        (ONCE_WEEKLY, 'Once per week'),
-        (EVERY_OTHER_WEEK, 'Every other week'),
-    )
-    checkin_frequency = models.CharField(max_length=1, choices=CHECKIN_FREQUENCY_CHOICES, default=NOT_SCHEDULED, verbose_name="How often do you have a real-time chat, video conference, or phone conversation to check in with your intern's progress on tasks?")
-
-    HOURS_1 = '1H'
-    HOURS_3 = '3H'
-    HOURS_6 = '6H'
-    HOURS_12 = '12H'
-    DAYS_1 = '1D'
-    DAYS_2 = '2D'
-    DAYS_4 = '4D'
-    DAYS_6 = '6D'
-    LONGER = '>7D'
-    RESPONSE_TIME_CHOICES = (
-        (HOURS_1, '1 hour'),
-        (HOURS_3, '3 hours'),
-        (HOURS_6, '6 hours'),
-        (HOURS_12, '12 hours'),
-        (DAYS_1, '1 day'),
-        (DAYS_2, '2-3 days'),
-        (DAYS_4, '4-5 days'),
-        (DAYS_6, '6-7 days'),
-        (LONGER, '> 7 days'),
-    )
-    intern_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="On average, how long does it take for <b>your intern</b> to respond to your questions or feedback?")
-    mentor_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="On average, how long does it take for <b>you</b> to respond to your intern's questions or requests for feedback?")
-
-    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your intern's progress on establishing communication with you, connecting to your FOSS community, and ramping up on their first tasks. This will only be shown to Outreachy organizers, your community coordinators, and the Software Freedom Conservancy accounting staff.")
-
-    # Deprecated - this data is set in clean() to be used for intern payment authorization JSON export
-    payment_approved = models.BooleanField(verbose_name="Should your Outreachy intern be paid the initial $1,000 payment?", help_text="Please base your answer on whether your intern has put in a full-time, 40 hours a week effort. They should have established communication with you and other mentors, and have started learning how to tackle their first tasks. If you are going to ask for an internship extension, please say no to this question.")
-
-    # Deprecated - this data is set in clean() to be used for intern payment authorization JSON export
-    extension_date = models.DateField(help_text="If you want to extend the internship, please pick a date when you will be asked to update your intern's initial feedback and authorize payment. Internships can be extended for up to five weeks. We don't recommend extending an internship for more than 1 week at initial feedback. Please leave this field blank if you are not asking for an extension.", blank=True, null=True)
-
-    ACTION_CHOICES = (
-        (BaseMentorFeedback.PAY_AND_CONTINUE, 'Pay the initial intern stipend'),
-        (BaseMentorFeedback.EXT_1_WEEK, 'Delay payment - extend the internship 1 week total'),
-        (BaseMentorFeedback.EXT_2_WEEK, 'Delay payment - extend the internship 2 weeks total'),
-        (BaseMentorFeedback.EXT_3_WEEK, 'Delay payment - extend the internship 3 weeks total'),
-        (BaseMentorFeedback.EXT_4_WEEK, 'Delay payment - extend the internship 4 weeks total'),
-        (BaseMentorFeedback.EXT_5_WEEK, 'Delay payment - extend the internship 5 weeks total'),
-        (BaseMentorFeedback.TERMINATE_PAY, 'Terminate the internship contract, and pay the initial intern stipend'),
-        (BaseMentorFeedback.TERMINATE_NO_PAY, 'Terminate the internship contract, and do NOT pay the initial intern stipend'),
-        (BaseMentorFeedback.DONT_KNOW, "I don't know what action to recommend, please advise"),
-    )
-    actions_requested = models.CharField(max_length=9, choices=ACTION_CHOICES, default=BaseMentorFeedback.PAY_AND_CONTINUE, verbose_name="What actions are you requesting Outreachy organizers to take, based on your feedback?")
-
-    def can_edit(self):
-        if not self.allow_edits:
-            return False
-
-        # XXX: I guess we open the feedback form at 4pm UTC?
-        if self.intern_selection.initial_feedback_opens.has_passed():
-            return True
-        return False
-
-    def clean(self):
-        # Note - we'd like to be able to check that mentors didn't ask
-        # didn't ask to decrease the internship extension.
-        # E.g. The intern had a 2 week total extension,
-        # and the mentor chose the option for a 1 week total extension.
-        # However, if we do that, Outreachy organizers
-        # cannot change the internship dates through the Django admin interface.
-
-        # Set historic fields used for JSON export of internship payment authorization
-        self.set_payment_for_json_export()
-        self.set_termination_request_for_json_export()
-        requested_extension = self.set_and_return_extension_for_json_export()
-        if requested_extension > 0:
-            self.extension_date = self.intern_selection.round().initialfeedback + datetime.timedelta(weeks=requested_extension)
-
 class InitialMentorFeedbackV2(BaseMentorFeedback):
     # XXX - Make sure to change the questions in
     # home/templates/home/email/initial-feedback-instructions.txt
@@ -4509,63 +4406,6 @@ class BaseInternFeedback(BaseFeedback):
 
     class Meta:
         abstract = True
-
-# Feedback intern submits about their mentor and their internship
-class InitialInternFeedback(BaseInternFeedback):
-    # XXX - Make sure to change the questions in
-    # home/templates/home/email/initial-feedback-instructions.txt
-    # if you change these verbose names.
-    in_contact = models.BooleanField(verbose_name="Have you been in contact with your mentor to discuss how to approach your first tasks?")
-    asking_questions = models.BooleanField(verbose_name="Have you been asking questions about your first tasks?")
-    active_in_public = models.BooleanField(verbose_name="Have you been active on public project channels, such as the community's chat, forums, issue tracker, mailing list, etc?")
-    provided_onboarding = models.BooleanField(verbose_name="Has your mentor provided documentation or other resources to help you learn more about your community and your first tasks?")
-
-    NOT_SCHEDULED = '0'
-    ONCE_DAILY = 'D'
-    MULTIPLE_WEEKLY = 'M'
-    ONCE_WEEKLY = 'W'
-    EVERY_OTHER_WEEK = 'B'
-    CHECKIN_FREQUENCY_CHOICES = (
-        (NOT_SCHEDULED, 'Not scheduled yet'),
-        (ONCE_DAILY, 'Once per day'),
-        (MULTIPLE_WEEKLY, 'Multiple times per week'),
-        (ONCE_WEEKLY, 'Once per week'),
-        (EVERY_OTHER_WEEK, 'Every other week'),
-    )
-    checkin_frequency = models.CharField(max_length=1, choices=CHECKIN_FREQUENCY_CHOICES, default=NOT_SCHEDULED, verbose_name="How often does your mentor have a real-time chat, video conference, or phone conversation to check in with your progress on tasks?")
-
-    HOURS_1 = '1H'
-    HOURS_3 = '3H'
-    HOURS_6 = '6H'
-    HOURS_12 = '12H'
-    DAYS_1 = '1D'
-    DAYS_2 = '2D'
-    DAYS_4 = '4D'
-    DAYS_6 = '6D'
-    LONGER = '>7D'
-    RESPONSE_TIME_CHOICES = (
-        (HOURS_1, '1 hour'),
-        (HOURS_3, '3 hours'),
-        (HOURS_6, '6 hours'),
-        (HOURS_12, '12 hours'),
-        (DAYS_1, '1 day'),
-        (DAYS_2, '2-3 days'),
-        (DAYS_4, '4-5 days'),
-        (DAYS_6, '6-7 days'),
-        (LONGER, '> 7 days'),
-    )
-    intern_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="On average, how long does it take for <b>you</b> to respond to your mentor's questions or feedback?")
-    mentor_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="On average, how long does it take for <b>your mentor</b> to respond to your questions or requests for feedback?")
-
-    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your progress on establishing communication with your mentor, and ramping up on your first tasks. This information will only be seen by Outreachy organizers. If you are having any difficulties or facing any barriers, please let us know, so we can help you.")
-
-    def can_edit(self):
-        if not self.allow_edits:
-            return False
-
-        if self.intern_selection.initial_feedback_opens.has_passed():
-            return True
-        return False
 
 class InitialInternFeedbackV2(BaseInternFeedback):
     # XXX - Make sure to change the questions in
@@ -5579,3 +5419,189 @@ DASHBOARD_MODELS = (
         Project,
         MentorApproval,
         )
+
+
+# --- Deprecated models ---
+#
+# These models are ones we historically used to collect internship feedback.
+#
+# Eventually the goal for these models are:
+#  - Write an export function that exports all prior feedback collected
+#    - CSV export is probably the easiest format for quick checks
+#    - JSON export might be nice for preserving data types for data science
+#    - explore Django management dumpdata command
+#  - Export feedback from all cohorts that are not currently active
+#  - Add a new 'inactive' Boolean to the InternSelection class
+#  - Mark all interns who had their final stipend approved
+#    (FinalMentorFeedback.organizer_payment_approved == True)
+#    or are not in good standing
+#    as inactive
+#  - Manually mark all interns from the May 2018 cohort as inactive
+#    - we didn't collect any feedback through the website for that cohort
+#  - Stop relying on the final payment authorization data to determine if
+#    an internship is inactive in the 'active internship contacts' page
+#    (home/views.py - ActiveInternshipContactsView)
+#    use the new 'inactive' flag instead
+#  - Delete all feedback objects from the website production database
+#
+# --- Deprecated models ---
+
+# There shouldn't be a need to record which mentor filled out the form.
+# The revision control on the object should store which Django user made the changes.
+#
+# We can dig out the latest feedback version
+# (assuming self references the InitialMentorFeedback object):
+# from reversion.models import Version
+# versions = Version.objects.get_for_object(self)
+# print('On {:%Y-%m-%d at %I:%M%p} %u wrote:\n{}'.format(versions[0].revision.date_created, versions[0].revision.user))
+#
+# This also allows us to keep the feedback around, even if a mentor withdraws from the project.
+# As long as their Django user account is intact, the feedback should remain intact.
+# This is important to keep around for Conservancy record keeping.
+class InitialMentorFeedback(BaseMentorFeedback):
+    # XXX - Make sure to change the questions in
+    # home/templates/home/email/initial-feedback-instructions.txt
+    # if you change these verbose names.
+    in_contact = models.BooleanField(verbose_name="Has your intern been in contact to discuss how to approach their first tasks?")
+    asking_questions = models.BooleanField(verbose_name="Has your intern been asking questions about their first tasks?")
+    active_in_public = models.BooleanField(verbose_name="Has your intern been active on public project channels, such as the community's chat, forums, issue tracker, mailing list, etc?")
+    provided_onboarding = models.BooleanField(verbose_name="Have you provided documentation or other resources to help onboard your intern?")
+
+    NOT_SCHEDULED = '0'
+    ONCE_DAILY = 'D'
+    MULTIPLE_WEEKLY = 'M'
+    ONCE_WEEKLY = 'W'
+    EVERY_OTHER_WEEK = 'B'
+    CHECKIN_FREQUENCY_CHOICES = (
+        (NOT_SCHEDULED, 'Not scheduled yet'),
+        (ONCE_DAILY, 'Once per day'),
+        (MULTIPLE_WEEKLY, 'Multiple times per week'),
+        (ONCE_WEEKLY, 'Once per week'),
+        (EVERY_OTHER_WEEK, 'Every other week'),
+    )
+    checkin_frequency = models.CharField(max_length=1, choices=CHECKIN_FREQUENCY_CHOICES, default=NOT_SCHEDULED, verbose_name="How often do you have a real-time chat, video conference, or phone conversation to check in with your intern's progress on tasks?")
+
+    HOURS_1 = '1H'
+    HOURS_3 = '3H'
+    HOURS_6 = '6H'
+    HOURS_12 = '12H'
+    DAYS_1 = '1D'
+    DAYS_2 = '2D'
+    DAYS_4 = '4D'
+    DAYS_6 = '6D'
+    LONGER = '>7D'
+    RESPONSE_TIME_CHOICES = (
+        (HOURS_1, '1 hour'),
+        (HOURS_3, '3 hours'),
+        (HOURS_6, '6 hours'),
+        (HOURS_12, '12 hours'),
+        (DAYS_1, '1 day'),
+        (DAYS_2, '2-3 days'),
+        (DAYS_4, '4-5 days'),
+        (DAYS_6, '6-7 days'),
+        (LONGER, '> 7 days'),
+    )
+    intern_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="On average, how long does it take for <b>your intern</b> to respond to your questions or feedback?")
+    mentor_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="On average, how long does it take for <b>you</b> to respond to your intern's questions or requests for feedback?")
+
+    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your intern's progress on establishing communication with you, connecting to your FOSS community, and ramping up on their first tasks. This will only be shown to Outreachy organizers, your community coordinators, and the Software Freedom Conservancy accounting staff.")
+
+    # Deprecated - this data is set in clean() to be used for intern payment authorization JSON export
+    payment_approved = models.BooleanField(verbose_name="Should your Outreachy intern be paid the initial $1,000 payment?", help_text="Please base your answer on whether your intern has put in a full-time, 40 hours a week effort. They should have established communication with you and other mentors, and have started learning how to tackle their first tasks. If you are going to ask for an internship extension, please say no to this question.")
+
+    # Deprecated - this data is set in clean() to be used for intern payment authorization JSON export
+    extension_date = models.DateField(help_text="If you want to extend the internship, please pick a date when you will be asked to update your intern's initial feedback and authorize payment. Internships can be extended for up to five weeks. We don't recommend extending an internship for more than 1 week at initial feedback. Please leave this field blank if you are not asking for an extension.", blank=True, null=True)
+
+    ACTION_CHOICES = (
+        (BaseMentorFeedback.PAY_AND_CONTINUE, 'Pay the initial intern stipend'),
+        (BaseMentorFeedback.EXT_1_WEEK, 'Delay payment - extend the internship 1 week total'),
+        (BaseMentorFeedback.EXT_2_WEEK, 'Delay payment - extend the internship 2 weeks total'),
+        (BaseMentorFeedback.EXT_3_WEEK, 'Delay payment - extend the internship 3 weeks total'),
+        (BaseMentorFeedback.EXT_4_WEEK, 'Delay payment - extend the internship 4 weeks total'),
+        (BaseMentorFeedback.EXT_5_WEEK, 'Delay payment - extend the internship 5 weeks total'),
+        (BaseMentorFeedback.TERMINATE_PAY, 'Terminate the internship contract, and pay the initial intern stipend'),
+        (BaseMentorFeedback.TERMINATE_NO_PAY, 'Terminate the internship contract, and do NOT pay the initial intern stipend'),
+        (BaseMentorFeedback.DONT_KNOW, "I don't know what action to recommend, please advise"),
+    )
+    actions_requested = models.CharField(max_length=9, choices=ACTION_CHOICES, default=BaseMentorFeedback.PAY_AND_CONTINUE, verbose_name="What actions are you requesting Outreachy organizers to take, based on your feedback?")
+
+    def can_edit(self):
+        if not self.allow_edits:
+            return False
+
+        # XXX: I guess we open the feedback form at 4pm UTC?
+        if self.intern_selection.initial_feedback_opens.has_passed():
+            return True
+        return False
+
+    def clean(self):
+        # Note - we'd like to be able to check that mentors didn't ask
+        # didn't ask to decrease the internship extension.
+        # E.g. The intern had a 2 week total extension,
+        # and the mentor chose the option for a 1 week total extension.
+        # However, if we do that, Outreachy organizers
+        # cannot change the internship dates through the Django admin interface.
+
+        # Set historic fields used for JSON export of internship payment authorization
+        self.set_payment_for_json_export()
+        self.set_termination_request_for_json_export()
+        requested_extension = self.set_and_return_extension_for_json_export()
+        if requested_extension > 0:
+            self.extension_date = self.intern_selection.round().initialfeedback + datetime.timedelta(weeks=requested_extension)
+
+# Feedback intern submits about their mentor and their internship
+class InitialInternFeedback(BaseInternFeedback):
+    # XXX - Make sure to change the questions in
+    # home/templates/home/email/initial-feedback-instructions.txt
+    # if you change these verbose names.
+    in_contact = models.BooleanField(verbose_name="Have you been in contact with your mentor to discuss how to approach your first tasks?")
+    asking_questions = models.BooleanField(verbose_name="Have you been asking questions about your first tasks?")
+    active_in_public = models.BooleanField(verbose_name="Have you been active on public project channels, such as the community's chat, forums, issue tracker, mailing list, etc?")
+    provided_onboarding = models.BooleanField(verbose_name="Has your mentor provided documentation or other resources to help you learn more about your community and your first tasks?")
+
+    NOT_SCHEDULED = '0'
+    ONCE_DAILY = 'D'
+    MULTIPLE_WEEKLY = 'M'
+    ONCE_WEEKLY = 'W'
+    EVERY_OTHER_WEEK = 'B'
+    CHECKIN_FREQUENCY_CHOICES = (
+        (NOT_SCHEDULED, 'Not scheduled yet'),
+        (ONCE_DAILY, 'Once per day'),
+        (MULTIPLE_WEEKLY, 'Multiple times per week'),
+        (ONCE_WEEKLY, 'Once per week'),
+        (EVERY_OTHER_WEEK, 'Every other week'),
+    )
+    checkin_frequency = models.CharField(max_length=1, choices=CHECKIN_FREQUENCY_CHOICES, default=NOT_SCHEDULED, verbose_name="How often does your mentor have a real-time chat, video conference, or phone conversation to check in with your progress on tasks?")
+
+    HOURS_1 = '1H'
+    HOURS_3 = '3H'
+    HOURS_6 = '6H'
+    HOURS_12 = '12H'
+    DAYS_1 = '1D'
+    DAYS_2 = '2D'
+    DAYS_4 = '4D'
+    DAYS_6 = '6D'
+    LONGER = '>7D'
+    RESPONSE_TIME_CHOICES = (
+        (HOURS_1, '1 hour'),
+        (HOURS_3, '3 hours'),
+        (HOURS_6, '6 hours'),
+        (HOURS_12, '12 hours'),
+        (DAYS_1, '1 day'),
+        (DAYS_2, '2-3 days'),
+        (DAYS_4, '4-5 days'),
+        (DAYS_6, '6-7 days'),
+        (LONGER, '> 7 days'),
+    )
+    intern_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="On average, how long does it take for <b>you</b> to respond to your mentor's questions or feedback?")
+    mentor_response_time = models.CharField(max_length=3, choices=RESPONSE_TIME_CHOICES, verbose_name="On average, how long does it take for <b>your mentor</b> to respond to your questions or requests for feedback?")
+
+    progress_report = models.TextField(verbose_name="Please provide a paragraph describing your progress on establishing communication with your mentor, and ramping up on your first tasks. This information will only be seen by Outreachy organizers. If you are having any difficulties or facing any barriers, please let us know, so we can help you.")
+
+    def can_edit(self):
+        if not self.allow_edits:
+            return False
+
+        if self.intern_selection.initial_feedback_opens.has_passed():
+            return True
+        return False
