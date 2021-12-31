@@ -24,7 +24,7 @@
 			<tr>
 				<td>{{ intern.applicant.applicant.public_name }}{% if not intern.in_good_standing %} <span class="badge badge-pill badge-warning">internship terminated</span>{% endif %}</td>
 				<td>
-					{% include 'home/snippet/mentor-feedback-status.html' with mentor_status=intern.get_mentor_initial_feedback_status extension_date=intern.initialmentorfeedbackv2.extension_date %}
+					{% include 'home/snippet/mentor-feedback-status.html' with mentor_status=intern.get_mentor_initial_feedback_status extension_date=intern.feedback1frommentor.extension_date %}
 				</td>
 				<td>
 					{% include 'home/snippet/intern-feedback-status.html' with intern_status=intern.get_intern_initial_feedback_status %}

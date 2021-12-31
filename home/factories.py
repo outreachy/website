@@ -516,7 +516,7 @@ class MentorRelationshipFactory(factory.django.DjangoModelFactory):
 
 class InitialMentorFeedbackFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = models.InitialMentorFeedbackV2
+        model = models.Feedback1FromMentor
         django_get_or_create = ('intern_selection',)
 
     intern_selection = factory.SubFactory(

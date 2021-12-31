@@ -27,10 +27,10 @@ Initial Feedback for {{ current_round.official_name }}
 							<p>Action to take:</p>
 						</div>
 						<div class="col-2">
-							<p>{% include 'home/snippet/mentor-feedback-status.html' with intern=i mentor_status=initial_mentor_status extension_date=i.initialmentorfeedbackv2.extension_date %}</p>
+							<p>{% include 'home/snippet/mentor-feedback-status.html' with intern=i mentor_status=initial_mentor_status extension_date=i.feedback1frommentor.extension_date %}</p>
 						</div>
 						<div class="col-8">
-							<p>{{ i.initialmentorfeedbackv2.get_actions_requested_display }}</p>
+							<p>{{ i.feedback1frommentor.get_actions_requested_display }}</p>
 						</div>
 					</div>
 				</div>
@@ -53,8 +53,8 @@ Initial Feedback for {{ current_round.official_name }}
 					</tr>
 					<tr>
 						<td>
-							{% if i.initialmentorfeedbackv2 %}
-								{% if i.initialmentorfeedbackv2.mentor_answers_questions %}
+							{% if i.feedback1frommentor %}
+								{% if i.feedback1frommentor.mentor_answers_questions %}
 									<button class="btn btn-success">Yes</button>
 								{% else %}
 									<button class="btn btn-warning">No</button>
@@ -62,8 +62,8 @@ Initial Feedback for {{ current_round.official_name }}
 							{% endif %}
 						</td>
 						<td>
-							{% if i.initialinternfeedbackv2 %}
-								{% if i.initialinternfeedbackv2.mentor_answers_questions %}
+							{% if i.feedback1fromintern %}
+								{% if i.feedback1fromintern.mentor_answers_questions %}
 									<button class="btn btn-success">Yes</button>
 								{% else %}
 									<button class="btn btn-warning">No</button>
@@ -73,8 +73,8 @@ Initial Feedback for {{ current_round.official_name }}
 					</tr>
 					<tr>
 						<td>
-							{% if i.initialmentorfeedbackv2 %}
-								{% if i.initialmentorfeedbackv2.intern_asks_questions %}
+							{% if i.feedback1frommentor %}
+								{% if i.feedback1frommentor.intern_asks_questions %}
 									<button class="btn btn-success">Yes</button>
 								{% else %}
 									<button class="btn btn-warning">No</button>
@@ -82,8 +82,8 @@ Initial Feedback for {{ current_round.official_name }}
 							{% endif %}
 						</td>
 						<td>
-							{% if i.initialinternfeedbackv2 %}
-								{% if i.initialinternfeedbackv2.intern_asks_questions %}
+							{% if i.feedback1fromintern %}
+								{% if i.feedback1fromintern.intern_asks_questions %}
 									<button class="btn btn-success">Yes</button>
 								{% else %}
 									<button class="btn btn-warning">No</button>
@@ -93,8 +93,8 @@ Initial Feedback for {{ current_round.official_name }}
 					</tr>
 					<tr>
 						<td>
-							{% if i.initialmentorfeedbackv2 %}
-								{% if i.initialmentorfeedbackv2.mentor_support_when_stuck %}
+							{% if i.feedback1frommentor %}
+								{% if i.feedback1frommentor.mentor_support_when_stuck %}
 									<button class="btn btn-success">Yes</button>
 								{% else %}
 									<button class="btn btn-warning">No</button>
@@ -102,8 +102,8 @@ Initial Feedback for {{ current_round.official_name }}
 							{% endif %}
 						</td>
 						<td>
-							{% if i.initialinternfeedbackv2 %}
-								{% if i.initialinternfeedbackv2.mentor_support_when_stuck %}
+							{% if i.feedback1fromintern %}
+								{% if i.feedback1fromintern.mentor_support_when_stuck %}
 									<button class="btn btn-success">Yes</button>
 								{% else %}
 									<button class="btn btn-warning">No</button>
@@ -116,8 +116,8 @@ Initial Feedback for {{ current_round.official_name }}
 					</tr>
 					<tr>
 						<td>
-							{% if i.initialmentorfeedbackv2 %}
-								{% if i.initialmentorfeedbackv2.meets_privately %}
+							{% if i.feedback1frommentor %}
+								{% if i.feedback1frommentor.meets_privately %}
 									<button class="btn btn-success">Yes</button>
 								{% else %}
 									<button class="btn btn-warning">No</button>
@@ -125,8 +125,8 @@ Initial Feedback for {{ current_round.official_name }}
 							{% endif %}
 						</td>
 						<td>
-							{% if i.initialinternfeedbackv2 %}
-								{% if i.initialinternfeedbackv2.meets_privately %}
+							{% if i.feedback1fromintern %}
+								{% if i.feedback1fromintern.meets_privately %}
 									<button class="btn btn-success">Yes</button>
 								{% else %}
 									<button class="btn btn-warning">No</button>
@@ -136,8 +136,8 @@ Initial Feedback for {{ current_round.official_name }}
 					</tr>
 					<tr>
 						<td>
-							{% if i.initialmentorfeedbackv2 %}
-								{% if i.initialmentorfeedbackv2.meets_over_phone_or_video_chat %}
+							{% if i.feedback1frommentor %}
+								{% if i.feedback1frommentor.meets_over_phone_or_video_chat %}
 									<button class="btn btn-success">Yes</button>
 								{% else %}
 									<button class="btn btn-warning">No</button>
@@ -145,8 +145,8 @@ Initial Feedback for {{ current_round.official_name }}
 							{% endif %}
 						</td>
 						<td>
-							{% if i.initialinternfeedbackv2 %}
-								{% if i.initialinternfeedbackv2.meets_over_phone_or_video_chat %}
+							{% if i.feedback1fromintern %}
+								{% if i.feedback1fromintern.meets_over_phone_or_video_chat %}
 									<button class="btn btn-success">Yes</button>
 								{% else %}
 									<button class="btn btn-warning">No</button>
@@ -156,8 +156,8 @@ Initial Feedback for {{ current_round.official_name }}
 					</tr>
 					<tr>
 						<td>
-							{% if i.initialmentorfeedbackv2 %}
-								{% if i.initialmentorfeedbackv2.intern_missed_meetings %}
+							{% if i.feedback1frommentor %}
+								{% if i.feedback1frommentor.intern_missed_meetings %}
 									<button class="btn btn-warning">Yes</button>
 								{% else %}
 									<button class="btn btn-success">No</button>
@@ -165,8 +165,8 @@ Initial Feedback for {{ current_round.official_name }}
 							{% endif %}
 						</td>
 						<td>
-							{% if i.initialinternfeedbackv2 %}
-								{% if i.initialinternfeedbackv2.intern_missed_meetings %}
+							{% if i.feedback1fromintern %}
+								{% if i.feedback1fromintern.intern_missed_meetings %}
 									<button class="btn btn-warning">Yes</button>
 								{% else %}
 									<button class="btn btn-success">No</button>
@@ -179,8 +179,8 @@ Initial Feedback for {{ current_round.official_name }}
 					</tr>
 					<tr>
 						<td>
-							{% if i.initialmentorfeedbackv2 %}
-								{% if i.initialmentorfeedbackv2.talk_about_project_progress %}
+							{% if i.feedback1frommentor %}
+								{% if i.feedback1frommentor.talk_about_project_progress %}
 									<button class="btn btn-success">Yes</button>
 								{% else %}
 									<button class="btn btn-warning">No</button>
@@ -188,8 +188,8 @@ Initial Feedback for {{ current_round.official_name }}
 							{% endif %}
 						</td>
 						<td>
-							{% if i.initialinternfeedbackv2 %}
-								{% if i.initialinternfeedbackv2.talk_about_project_progress %}
+							{% if i.feedback1fromintern %}
+								{% if i.feedback1fromintern.talk_about_project_progress %}
 									<button class="btn btn-success">Yes</button>
 								{% else %}
 									<button class="btn btn-warning">No</button>
@@ -199,8 +199,8 @@ Initial Feedback for {{ current_round.official_name }}
 					</tr>
 					<tr>
 						<td>
-							{% if i.initialmentorfeedbackv2 %}
-								{% if i.initialmentorfeedbackv2.blog_created %}
+							{% if i.feedback1frommentor %}
+								{% if i.feedback1frommentor.blog_created %}
 									<button class="btn btn-success">Yes</button>
 								{% else %}
 									<button class="btn btn-warning">No</button>
@@ -208,8 +208,8 @@ Initial Feedback for {{ current_round.official_name }}
 							{% endif %}
 						</td>
 						<td>
-							{% if i.initialinternfeedbackv2 %}
-								{% if i.initialinternfeedbackv2.blog_created %}
+							{% if i.feedback1fromintern %}
+								{% if i.feedback1fromintern.blog_created %}
 									<button class="btn btn-success">Yes</button>
 								{% else %}
 									<button class="btn btn-warning">No</button>
@@ -221,30 +221,30 @@ Initial Feedback for {{ current_round.official_name }}
 						<td colspan="3"><b>4. Mentor support</b></td>
 					</tr>
 
-					{% if initial_intern_status == i.SUBMITTED %}<tr><td colspan="3"><p>Intern's report on mentor support:</p><p>{{ i.initialinternfeedbackv2.mentor_support|linebreaksbr }}</p></td></tr>{% endif %}
+					{% if initial_intern_status == i.SUBMITTED %}<tr><td colspan="3"><p>Intern's report on mentor support:</p><p>{{ i.feedback1fromintern.mentor_support|linebreaksbr }}</p></td></tr>{% endif %}
 
-					{% if i.initialmentorfeedbackv2 %}<tr><td colspan="3"><p>Mentor's report on mentor support:</p><p>{{ i.initialmentorfeedbackv2.mentors_report|linebreaksbr }}</p></td></tr>{% endif %}
+					{% if i.feedback1frommentor %}<tr><td colspan="3"><p>Mentor's report on mentor support:</p><p>{{ i.feedback1frommentor.mentors_report|linebreaksbr }}</p></td></tr>{% endif %}
 
 					<tr>
 						<td colspan="3"><b>5. Intern progress</b></td>
 					</tr>
 					<tr>
-						<td>{% if i.initialmentorfeedbackv2 %}{% if i.initialmentorfeedbackv2.full_time_effort %}<button class="btn btn-success">Full-time effort</button>{% else %}<button class="btn btn-danger">Not a full-time effort</button>{% endif %}{% endif %}</td>
-						<td>{% if i.initialinternfeedbackv2 %}{% if i.initialinternfeedbackv2.hours_worked == i.initialinternfeedbackv2.HOURS_30 %}<button class="btn btn-success">Full-time effort</button>{% elif i.initialinternfeedbackv2.hours_worked == i.initialinternfeedbackv2.HOURS_35 or i.initialinternfeedbackv2.hours_worked == i.initialinternfeedbackv2.HOURS_40 or i.initialinternfeedbackv2.hours_worked == i.initialinternfeedbackv2.HOURS_45 or i.initialinternfeedbackv2.hours_worked == i.initialinternfeedbackv2.HOURS_50 or i.initialinternfeedbackv2.hours_worked == i.initialinternfeedbackv2.HOURS_55 or i.initialinternfeedbackv2.hours_worked == i.initialinternfeedbackv2.HOURS_60 %}<button class="btn btn-warning">Overtime effort</button>{% else %}<button class="btn btn-danger">Not a full-time effort</button>{% endif %}<br>{{ i.initialinternfeedbackv2.get_hours_worked_display }} per week{% endif %}</td>
+						<td>{% if i.feedback1frommentor %}{% if i.feedback1frommentor.full_time_effort %}<button class="btn btn-success">Full-time effort</button>{% else %}<button class="btn btn-danger">Not a full-time effort</button>{% endif %}{% endif %}</td>
+						<td>{% if i.feedback1fromintern %}{% if i.feedback1fromintern.hours_worked == i.feedback1fromintern.HOURS_30 %}<button class="btn btn-success">Full-time effort</button>{% elif i.feedback1fromintern.hours_worked == i.feedback1fromintern.HOURS_35 or i.feedback1fromintern.hours_worked == i.feedback1fromintern.HOURS_40 or i.feedback1fromintern.hours_worked == i.feedback1fromintern.HOURS_45 or i.feedback1fromintern.hours_worked == i.feedback1fromintern.HOURS_50 or i.feedback1fromintern.hours_worked == i.feedback1fromintern.HOURS_55 or i.feedback1fromintern.hours_worked == i.feedback1fromintern.HOURS_60 %}<button class="btn btn-warning">Overtime effort</button>{% else %}<button class="btn btn-danger">Not a full-time effort</button>{% endif %}<br>{{ i.feedback1fromintern.get_hours_worked_display }} per week{% endif %}</td>
 						<td>Is the intern putting in a full-time effort?</td>
 					</tr>
 
-					{% if i.initialinternfeedbackv2.time_comments %}<tr><td colspan="3"><p>Intern's comments on their time commitments:</p><p>{{ i.initialinternfeedbackv2.time_comments }}</p></td></tr>{% endif %}
-					{% if i.initialmentorfeedbackv2 %}<tr><td colspan="3"><p>Mentor's report on intern progress:</p><p>{{ i.initialmentorfeedbackv2.progress_report }}</p></td></tr>{% endif %}
-					{% if i.initialinternfeedbackv2 %}<tr><td colspan="3"><p>Intern's report on intern progress:</p><p>{{ i.initialinternfeedbackv2.progress_report }}</p></td></tr>{% endif %}
+					{% if i.feedback1fromintern.time_comments %}<tr><td colspan="3"><p>Intern's comments on their time commitments:</p><p>{{ i.feedback1fromintern.time_comments }}</p></td></tr>{% endif %}
+					{% if i.feedback1frommentor %}<tr><td colspan="3"><p>Mentor's report on intern progress:</p><p>{{ i.feedback1frommentor.progress_report }}</p></td></tr>{% endif %}
+					{% if i.feedback1fromintern %}<tr><td colspan="3"><p>Intern's report on intern progress:</p><p>{{ i.feedback1fromintern.progress_report }}</p></td></tr>{% endif %}
 					<tr>
-						<td>{% if i.initialmentorfeedbackv2 %}{{ i.initialmentorfeedbackv2.last_contact }}{% endif %}</td>
-						<td>{% if i.initialinternfeedbackv2 %}{{ i.initialinternfeedbackv2.last_contact }}{% endif %}</td>
+						<td>{% if i.feedback1frommentor %}{{ i.feedback1frommentor.last_contact }}{% endif %}</td>
+						<td>{% if i.feedback1fromintern %}{{ i.feedback1fromintern.last_contact }}{% endif %}</td>
 						<td>Date intern and mentor were last in contact</td>
 					</tr>
 					<tr>
-						<td>{% if i.initialmentorfeedbackv2 %}{{ i.initialmentorfeedbackv2.get_submission_date }}{% endif %}</td>
-						<td>{% if i.initialinternfeedbackv2 %}{{ i.initialinternfeedbackv2.get_submission_date }}{% endif %}</td>
+						<td>{% if i.feedback1frommentor %}{{ i.feedback1frommentor.get_submission_date }}{% endif %}</td>
+						<td>{% if i.feedback1fromintern %}{{ i.feedback1fromintern.get_submission_date }}{% endif %}</td>
 						<td>Date latest feedback was submitted</td>
 					</tr>
 				{% endwith %}

@@ -3899,8 +3899,8 @@ class InternSelection(AugmentDeadlines, models.Model):
         if not self.initial_feedback_opens.has_passed():
             return False
         try:
-            return self.initialmentorfeedbackv2.can_edit()
-        except InitialMentorFeedbackV2.DoesNotExist:
+            return self.feedback1frommentor.can_edit()
+        except Feedback1FromMentor.DoesNotExist:
             return True
 
     def is_initial_feedback_on_intern_past_due(self):
@@ -3912,8 +3912,8 @@ class InternSelection(AugmentDeadlines, models.Model):
         if not self.initial_feedback_opens.has_passed():
             return False
         try:
-            return self.initialinternfeedbackv2.can_edit()
-        except InitialInternFeedbackV2.DoesNotExist:
+            return self.feedback1fromintern.can_edit()
+        except Feedback1FromIntern.DoesNotExist:
             return True
 
     def is_midpoint_feedback_on_intern_open(self):
@@ -4061,10 +4061,10 @@ class InternSelection(AugmentDeadlines, models.Model):
     TERMINATE = 'TER'
     def get_mentor_initial_feedback_status(self):
         try:
-            if self.initialmentorfeedbackv2.organizer_payment_approved:
+            if self.feedback1frommentor.organizer_payment_approved:
                 return self.PAID
 
-            actions_requested = self.initialmentorfeedbackv2.actions_requested
+            actions_requested = self.feedback1frommentor.actions_requested
             if actions_requested == BaseMentorFeedback.TERMINATE_PAY or actions_requested == BaseMentorFeedback.TERMINATE_NO_PAY:
                 return self.TERMINATE
             elif actions_requested == BaseMentorFeedback.PAY_AND_CONTINUE:
@@ -4073,14 +4073,14 @@ class InternSelection(AugmentDeadlines, models.Model):
                 return self.DUNNO
             else:
                 return self.EXTEND
-        except InitialMentorFeedbackV2.DoesNotExist:
+        except Feedback1FromMentor.DoesNotExist:
             return self.MISSING
 
     def get_intern_initial_feedback_status(self):
         try:
-            if self.initialinternfeedbackv2:
+            if self.feedback1fromintern:
                 return self.SUBMITTED
-        except InitialInternFeedbackV2.DoesNotExist:
+        except Feedback1FromIntern.DoesNotExist:
             return self.MISSING
 
     def get_mentor_midpoint_feedback_status(self):
@@ -4286,10 +4286,10 @@ class BaseMentorFeedback(BaseFeedback):
     class Meta:
         abstract = True
 
-class InitialMentorFeedbackV2(BaseMentorFeedback):
+class Feedback1FromMentor(BaseMentorFeedback):
     # XXX - Make sure to change the questions in
     # home/templates/home/email/initial-feedback-instructions.txt
-    # home/templates/home/initialmentorfeedbackv2_form.html
+    # home/templates/home/feedback1frommentor_form.html
     # if you change these verbose names.
 
     # 1. Clearing up doubts
@@ -4407,7 +4407,7 @@ class BaseInternFeedback(BaseFeedback):
     class Meta:
         abstract = True
 
-class InitialInternFeedbackV2(BaseInternFeedback):
+class Feedback1FromIntern(BaseInternFeedback):
     # XXX - Make sure to change the questions in
     # home/templates/home/email/initial-feedback-instructions.txt
     # if you change these verbose names.
@@ -4522,7 +4522,7 @@ class MidpointMentorFeedback(BaseMentorFeedback):
         return False
 
     def clean(self):
-        # See comments in class InitialMentorFeedbackV2's clean method. Same applies here.
+        # See comments in class Feedback1FromMentor's clean method. Same applies here.
         self.set_payment_for_json_export()
         self.set_termination_request_for_json_export()
         requested_extension = self.set_and_return_extension_for_json_export()
@@ -4722,7 +4722,7 @@ class FinalMentorFeedback(BaseMentorFeedback):
         return False
 
     def clean(self):
-        # See comments in class InitialMentorFeedbackV2's clean method. Same applies here.
+        # See comments in class Feedback1FromMentor's clean method. Same applies here.
         self.set_payment_for_json_export()
         self.set_termination_request_for_json_export()
         requested_extension = self.set_and_return_extension_for_json_export()

@@ -240,7 +240,7 @@ class InternSelectionTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
-        feedback = internselection.initialmentorfeedbackv2
+        feedback = internselection.feedback1frommentor
 
         # Add in the fields automatically set by the action the mentor requested
         answers['payment_approved'] = True
@@ -271,7 +271,7 @@ class InternSelectionTestCase(TestCase):
                 self.assertEqual(response.status_code, 302)
 
                 # will raise DoesNotExist if the view didn't create this
-                feedback = internselection.initialmentorfeedbackv2
+                feedback = internselection.feedback1frommentor
 
                 # Add in the fields automatically set by the action the mentor requested
                 if action == models.BaseMentorFeedback.TERMINATE_PAY:
@@ -303,7 +303,7 @@ class InternSelectionTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
-        feedback = internselection.initialmentorfeedbackv2
+        feedback = internselection.feedback1frommentor
 
         # Add in the fields automatically set by the action the mentor requested
         answers['payment_approved'] = False
@@ -335,7 +335,7 @@ class InternSelectionTestCase(TestCase):
                 self.assertEqual(response.status_code, 302)
 
                 # will raise DoesNotExist if the view didn't create this
-                feedback = internselection.initialmentorfeedbackv2
+                feedback = internselection.feedback1frommentor
 
                 answers['payment_approved'] = False
                 answers['request_extension'] = True
@@ -390,7 +390,7 @@ class InternSelectionTestCase(TestCase):
         internselection = models.InternSelection.objects.get(pk=internselection.pk)
 
         # will raise DoesNotExist if the view destroyed this feedback
-        feedback = internselection.initialmentorfeedbackv2
+        feedback = internselection.feedback1frommentor
 
         for key, expected in answers.items():
             self.assertEqual(getattr(feedback, key), expected)
@@ -416,7 +416,7 @@ class InternSelectionTestCase(TestCase):
             'last_contact': internselection.initial_feedback_opens,
             'mentor_support': 'My mentor is awesome.',
             'share_mentor_feedback_with_community_coordinator': True,
-            'hours_worked': models.InitialInternFeedbackV2.HOURS_40,
+            'hours_worked': models.Feedback1FromIntern.HOURS_40,
             'time_comments': '',
             'progress_report': 'Everything is fine.',
         }
@@ -448,7 +448,7 @@ class InternSelectionTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
-        feedback = internselection.initialinternfeedbackv2
+        feedback = internselection.feedback1fromintern
 
         for key, expected in answers.items():
             self.assertEqual(getattr(feedback, key), expected)
@@ -636,7 +636,7 @@ class InternSelectionTestCase(TestCase):
             'intern_contribution_revision_time': models.MidpointInternFeedback.DAYS_2,
             'last_contact': internselection.midpoint_feedback_opens,
             'mentor_support': 'My mentor is awesome.',
-            'hours_worked': models.InitialInternFeedbackV2.HOURS_40,
+            'hours_worked': models.Feedback1FromIntern.HOURS_40,
             'time_comments': '',
             'progress_report': 'Everything is fine.',
             'share_mentor_feedback_with_community_coordinator': True,

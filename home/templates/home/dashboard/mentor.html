@@ -87,8 +87,8 @@
 
 				<p>Submitted feedback:</p>
 				<ul>
-				{% if rel.intern_selection.initialmentorfeedbackv2 %}
-				<li><p>Feedback #1: {% if rel.intern_selection.initialmentorfeedbackv2.payment_approved %}<button type="button" class="btn btn-success">Initial payment approved</button>{% else %}<button type="button" class="btn btn-warning">Initial payment not approved</button>{% endif %}{% if rel.intern_selection.get_mentor_initial_feedback_status == rel.intern_selection.DUNNO %} Advice requested from Outreachy organizers.{% endif %}{% if rel.intern_selection.initialmentorfeedbackv2.request_extension %} Extension requested for initial feedback until {{ rel.intern_selection.initialmentorfeedbackv2.extension_date|date:"M d, Y" }}.{% endif %}{% if rel.intern_selection.initialmentorfeedbackv2.request_termination %} Termination requested for this internship.{% endif %}</p></li>
+				{% if rel.intern_selection.feedback1frommentor %}
+				<li><p>Feedback #1: {% if rel.intern_selection.feedback1frommentor.payment_approved %}<button type="button" class="btn btn-success">Initial payment approved</button>{% else %}<button type="button" class="btn btn-warning">Initial payment not approved</button>{% endif %}{% if rel.intern_selection.get_mentor_initial_feedback_status == rel.intern_selection.DUNNO %} Advice requested from Outreachy organizers.{% endif %}{% if rel.intern_selection.feedback1frommentor.request_extension %} Internship extension requested.{% endif %}{% if rel.intern_selection.feedback1frommentor.request_termination %} Termination requested for this internship.{% endif %}</p></li>
 				{% endif %}
 				{% if rel.intern_selection.midpointmentorfeedback %}
 					<li><p>Feedback #2: {% if rel.intern_selection.midpointmentorfeedback.payment_approved %}<button type="button" class="btn btn-success">Successful</button>{% else %}<button type="button" class="btn btn-warning">Not successful</button>{% endif %}{% if rel.intern_selection.get_mentor_midpoint_feedback_status == rel.intern_selection.DUNNO %} Advice requested from Outreachy organizers.{% endif %}{% if rel.intern_selection.midpointmentorfeedback.request_extension %} Extension requested for feedback #2 until {{ rel.intern_selection.midpointmentorfeedback.extension_date|date:"M d, Y" }}.{% endif %}{% if rel.intern_selection.midpointmentorfeedback.request_termination %} Termination requested for this internship.{% endif %}</p></li>
@@ -96,7 +96,7 @@
 				{% if rel.intern_selection.finalmentorfeedback %}
 					<li><p>Feedback #3: {% if rel.intern_selection.finalmentorfeedback.payment_approved %}<button type="button" class="btn btn-success">Final payment approved</button>{% else %}<button type="button" class="btn btn-warning">Final payment not approved</button>{% endif %}{% if rel.intern_selection.get_mentor_final_feedback_status == rel.intern_selection.DUNNO %} Advice requested from Outreachy organizers.{% endif %}{% if rel.intern_selection.finalmentorfeedback.request_extension %} Extension requested for final feedback until {{ rel.intern_selection.finalmentorfeedback.extension_date|date:"M d, Y" }}.{% endif %}{% if rel.intern_selection.finalmentorfeedback.request_termination %} Termination requested for this internship.{% endif %}</p></li>
 				{% endif %}
-				{% if not rel.intern_selection.initialmentorfeedbackv2 and not rel.intern_selection.midpointmentorfeedback and not rel.intern_selection.finalmentorfeedback %}
+				{% if not rel.intern_selection.feedback1frommentor and not rel.intern_selection.midpointmentorfeedback and not rel.intern_selection.finalmentorfeedback %}
 					<li>No feedback has been submitted yet.</li>
 				{% endif %}
 				</ul>
