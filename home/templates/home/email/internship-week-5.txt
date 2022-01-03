@@ -28,13 +28,13 @@ See the detailed section below for more prompts.
 Week 5 Mentor & Intern Chat
 ---------------------------
 
-On {{ current_round.week_six_chat_text_date }} UTC we will host a chat for both Outreachy interns, alums, and mentors.
-
-We will be discussing free software and technical conferences. Conferences and events are a big part of free software and open source culture. But it's likely interns haven't been to a free software conference, event, or meetup. Some mentors and coordinators may have been to many conferences.
-
-We'll talk about why free software conferences are important. Anyone who has been to a free software or technical conference will share their tips for getting the most out of conferences. Anyone is welcome to share information about free software events they know about.
+On {{ current_round.week_six_chat_text_date }} UTC we will host a chat for both Outreachy interns, alums, and mentors:
 
 {{ current_round.week_six_audience_chat_url }}
+
+We will be talking about open source conferences and events! Details are in the Internship Guide:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'docs-internship' %}#week-5-chat
 
 Goals for Mentors
 -----------------
