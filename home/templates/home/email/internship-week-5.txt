@@ -4,11 +4,11 @@ Welcome to week five of your Outreachy internship! We hope you're making good pr
 
 We have some goals and assignments for both mentors and interns. Please read the sections below.
 
-For most interns, mid-point feedback is due on {{ current_round.midfeedback }}. The midpoint feedback form will be available on {{ current_round.intern_midpoint_feedback_opens }}, at which point you'll see a button on your dashboard:
+For most interns, feedback #2 is due on {{ current_round.midfeedback }}. The feedback #2 form will be available on {{ current_round.intern_midpoint_feedback_opens }}, at which point you'll see a button on your dashboard:
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}#feedback
 
-The goal of midpoint feedback is to ensure that interns are working full-time on their projects, communicating with their mentor(s), and revising their contributions based on feedback in a timely manner.
+The goal of feedback #2 is to ensure that interns are working full-time on their projects, communicating with their mentor(s), and revising their contributions based on feedback in a timely manner.
 
 Week 5 Theme
 ------------
