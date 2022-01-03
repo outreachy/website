@@ -389,10 +389,10 @@ class RoundPage(AugmentDeadlines, Page):
         return(self.internannounce + datetime.timedelta(days=5))
 
     def intern_initial_feedback_opens(self):
-        return(self.initialfeedback - datetime.timedelta(days=7))
+        return(self.initialfeedback - datetime.timedelta(days=4))
 
     def intern_midpoint_feedback_opens(self):
-        return(self.midfeedback - datetime.timedelta(days=7))
+        return(self.midfeedback - datetime.timedelta(days=4))
 
     def intern_not_started_deadline(self):
         return(self.initialfeedback - datetime.timedelta(days=1))
