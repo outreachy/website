@@ -39,14 +39,9 @@ We will be talking about open source conferences and events! Details are in the 
 Goals for Mentors
 -----------------
 
-Week 5 goals:
+Please review the expectations for mentors during week 5 and 6 of the Outreachy internship:
 
- - Keep your own explanations simple
- - It's okay if your intern asks you to explain something again
- - Trying explaining something a different way
- - Make sure your intern understands foundational concepts
- - Check whether your community's documentation of those concepts is up-to-date
- - Ask your intern open-ended questions to check if they understand your explanation
+{{ request.scheme }}://{{ request.get_host }}{% url 'docs-community' %}#week-5-expectations
 
 Goals for Interns
 -----------------
