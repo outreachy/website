@@ -215,7 +215,8 @@ Initial Feedback for {{ current_round.official_name }}
 									<button class="btn btn-warning">No</button>
 								{% endif %}
 							{% endif %}
-						<td>Has the intern created a blog?</td>
+						<td>Has the intern created a blog? {% if not i.applicant.applicant.blog_url %}Missing{% else %}<a href="{{ i.applicant.applicant.blog_url }}">Present</a>{% endif %}
+						</td>
 					</tr>
 					<tr>
 						<td colspan="3"><b>4. Mentor support</b></td>
