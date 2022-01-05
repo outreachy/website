@@ -50,7 +50,7 @@ Initial internship feedback
 		<hr>
 		<h2>5. Intern progress</h2>
 	{% endif %}
-	{% if 'average number of hours per week' in field.label_tag %}
+	{% if 'Time comments' in field.label_tag %}
 		<div class="form-group card">
 			{{ field.errors }}
 			<div class = "card-header">
@@ -59,9 +59,7 @@ Initial internship feedback
 			<div class = "card-body">
 				{{ field }}
 			</div>
-			{% if field.help_text %}
-				<div class="card-footer bg-white">{{ field.help_text }}</div>
-			{% endif %}
+			<div class="card-footer bg-white"><p>(Optional) If you have not been working 30 hours per week, please let us know why. We want to support you, so let us know if there's anything we can do to help</p></div>
 		</div>
 	{% else %}
 		<div class="form-group card">
