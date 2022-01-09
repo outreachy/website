@@ -1237,12 +1237,17 @@ class GeneralFundingApplication(LoginRequiredMixin, UpdateView):
     form_class = modelform_factory(
             Community,
             fields=(
+                'inclusive_participation',
+                'additional_sponsors',
                 'humanitarian_community',
                 'general_funding_application',
-                'additional_sponsors',
+                'open_science_community',
+                'open_science_practices',
+                'open_science_funder_questions',
                 ),
             field_classes={
                 'humanitarian_community': RadioBooleanField,
+                'open_science_community': RadioBooleanField,
                 }
     )
     template_name = 'home/general_funding_application.html'

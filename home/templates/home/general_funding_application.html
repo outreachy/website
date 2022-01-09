@@ -7,29 +7,54 @@ Outreachy general funding application
 {% block content %}
 
 <form action="" method="post">
-	<h1>Humanitarian open source community</h1>
+	<h1>Outreachy general funding</h1>
 
-	<p>If your humanitarian open source community is applying for Outreachy general funding, please fill out the fields below.</p>
+	<p>Thank you for applying for Outreachy general funding. Please answer the questions below.</p>
 
-	<p>Otherwise, please leave the form blank.</p>
+	<hr>
 
+	<h2>All communities</h2>
 
 	{% csrf_token %}
 	{{ form.media }}
 	{{ form.non_field_errors }}
 	{% for field in form.visible_fields %}
-		<div class="form-group card">
-			{{ field.errors }}
-			<div class="card-header">
-				{{ field.label_tag }}
+		{% if 'Is your community an open science community' in field.label_tag %}
+			<hr>
+			<h2>Open science communities</h2>
+		{% elif 'Is your community a humanitarian' in field.label_tag %}
+			<hr>
+			<h2>Humanitarian communities</h2>
+		{% endif %}
+		{% if 'Open science funder questions' in field.label_tag %}
+			<div class="form-group card">
+				{{ field.errors }}
+				<div class="card-header">
+					(Optional) How does your community align with Wellcome Trust funding goals?
+				</div>
+				<div class="card-body">
+					{{ field }}
+				</div>
+				<div class="card-footer bg-white">
+					<p>How does your community further <a href="https://wellcome.org/what-we-do/discovery-research">discovery of scientific research</a>, or create tools for scientists?</p>
+
+					<p>How does your community tackle any of the following challenges: <a href="https://wellcome.org/what-we-do/infectious-disease">infectious diseases</a>, <a href="https://wellcome.org/what-we-do/climate-and-health">the health impacts of climate change</a>, or <a href="https://wellcome.org/what-we-do/mental-health">mental health</a>?</p>
+				</div>
 			</div>
-			<div class="card-body">
-				{{ field }}
+		{% else %}
+			<div class="form-group card">
+				{{ field.errors }}
+				<div class="card-header">
+					{{ field.label_tag }}
+				</div>
+				<div class="card-body">
+					{{ field }}
+				</div>
+				{% if field.help_text %}
+				<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+				{% endif %}
 			</div>
-			{% if field.help_text %}
-			<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
-			{% endif %}
-		</div>
+		{% endif %}
 	{% endfor %}
 	<input class="btn btn-success" type="submit" value="Submit" />
 </form>

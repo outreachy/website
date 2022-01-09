@@ -1397,6 +1397,27 @@ class Community(models.Model):
             verbose_name="What humanitarian issues is your community addressing?",
             )
 
+    open_science_community = models.BooleanField(
+            default=False,
+            verbose_name='Is your community an open science community?')
+
+    open_science_funder_questions = models.TextField(
+            blank=True,
+            max_length=THREE_PARAGRAPH_LENGTH,
+            )
+
+    open_science_practices = models.TextField(
+            blank=True,
+            max_length=THREE_PARAGRAPH_LENGTH,
+            verbose_name="How does your community implement reproducible research, open access, open data sets, open data science, open collaboration, citizen science, or open source software?",
+            )
+
+    inclusive_participation = models.TextField(
+            blank=True,
+            max_length=THREE_PARAGRAPH_LENGTH,
+            verbose_name="How do people impacted by your work participate in your community?",
+            )
+
     additional_sponsors = models.TextField(
             blank=True,
             max_length=THREE_PARAGRAPH_LENGTH,
