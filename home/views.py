@@ -878,6 +878,9 @@ def current_round_page(request):
             projects = p.project_set.approved().filter(new_contributors_welcome=True)
             if projects:
                 ontime_approved_projects.append((p, projects))
+            # List communities that are approved but don't have any projects yet
+            if not p.project_set.approved():
+                ontime_approved_projects.append((p, None))
 
     return render(request, 'home/round_page_with_communities.html',
             {

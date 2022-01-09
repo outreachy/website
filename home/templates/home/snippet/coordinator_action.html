@@ -24,7 +24,8 @@
 					</p>
 					<ul>
 						<li><a href="{% url 'community-read-only' community_slug=community.slug %}">Community CFP page for mentors</a></li>
-						<li><a href="{{ participation.get_absolute_url }}">Projects page for applicants</a> (details hidden from applicants until {{ current_round.contributions_open }})</li>
+						{% if participation %}<li><a href="{% url 'project-selection' %}#{{ community.slug }}">Project list for applicants</a></li>{% endif %}
+						{% if participation %}<li><a href="{{ participation.get_absolute_url }}">Projects details for applicants</a> (details hidden from applicants until {{ current_round.contributions_open }})</li>{% endif %}
 					</ul>
 				</div>
 			</div>
