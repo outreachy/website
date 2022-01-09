@@ -95,7 +95,9 @@ Outreachy internships working with {{ community.name }}
 		{% endif %}
 
 		{% if approved_coordinator %}
-			{% include 'home/snippet/coordinator_action.html' %}
+			{% with participation=participation_info %}
+				{% include 'home/snippet/coordinator_action.html' %}
+			{% endwith %}
 		{% endif %}
 
 

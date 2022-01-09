@@ -56,7 +56,9 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 	{% elif participation_info.is_rejected %}
 	<p>Unfortunately, the Outreachy organizers have determined your community should not participate in this round. Please <a href="{% url 'contact-us' %}">contact us</a> for more details.</p>
 	{% else %}
-		{% include 'home/snippet/coordinator_action.html' %}
+		{% with participation=participation_info %}
+			{% include 'home/snippet/coordinator_action.html' %}
+		{% endwith %}
 	{% endif %}
 {% endif %}
 
