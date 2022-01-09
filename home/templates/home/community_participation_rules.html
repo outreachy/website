@@ -7,35 +7,36 @@ Community participation rules
 {% block content %}
 <h1>Outreachy community sign up</h1>
 
-<p>Outreachy needs open source communities to mentor interns.</p>
+<p>Outreachy needs open source and open science communities to mentor interns.</p>
 
 <p>Please review the rules below before signing up your community.</p>
 
 <h2>Participation rules</h2>
 <hr>
 
-<h3>1. Open source projects and non-profits can mentor interns</h3>
+<h3>1. Mentoring communities must be open source, open science, or a non-profit</h3>
 
 <div class="container mx-4">
-	<p>Two types of <b>communities</b> can participate in Outreachy:</p>
+	<p>Three types of <b>communities</b> can participate as an Outreachy mentoring community:</p>
 	<ul>
-		<li><a href="{% url 'docs-community' %}#community-types-open-source-projects">open source projects</a></li>
+		<li><a href="{% url 'docs-community' %}#community-types-open-source-projects">open source communities</a></li>
+		<li><a href="{% url 'docs-community' %}#community-types-open-science-projects">open science communities</a></li>
 		<li><a href="{% url 'docs-community' %}#community-types-non-profits">non-profit organizations</a></li>
 	</ul>
 </div>
 
-<h3>2. Only open source intern projects</h3>
+<h3>2. Internship projects must be published in an open, public manner</h3>
 
 <div class="container mx-4">
 	<p>All work done by the intern must be publicly released under <a href="{% url 'docs-community' %}#licensing-requirements">an open source license</a>.</p>
-
-	<p>Outreachy intern projects must <a href="{% url 'docs-community' %}#commercial-ties">not be tied to proprietary software.</a></p>
 
 </div>
 
 <h3>3. No for-profit communities</h3>
 
 <div class="container mx-4">
+	<p>Outreachy intern projects must <a href="{% url 'docs-community' %}#commercial-ties">not be tied to proprietary software.</a></p>
+
 	<p>Participating communities cannot be tied to only one for-profit company. Please <a href="{% url 'docs-community' %}#commercial-ties">read our rules about commercial ties</a>.</p>
 </div>
 
@@ -49,7 +50,7 @@ Community participation rules
 	<p>Open source communities must find <a href="{% url 'docs-community' %}#intern-funding">internship funding</a> ($6,500 USD per intern):</p>
 	<ul>
 		<li>Humanitarian open source communities can apply for the <a href="{% url 'docs-community' %}#outreachy-general-fund" %}>Outreachy general fund.</a></li>
-		<li>Open science communities can apply for funding from <a href="{% url 'docs-community' %}#wellcome-trust-funding" %}>Wellcome Trust</a></li>
+		<li>Open science communities can apply for funding from <a href="{% url 'docs-community' %}#open-science-funding" %}>Outreachy general fund</a></li>
 		<li>Other communities must find funding elsewhere, either from community funds or from a community sponsor.</li>
 	</ul>
 	<p>Once funding for one intern is secured, communities can <a href="{% url 'docs-community' %}#partial-general-funding" %}>request additional funding</a> from the Outreachy general fund.</p>
