@@ -1,0 +1,181 @@
+{% extends "base.html" %} 
+{% load static %}
+
+{% block title %}
+Call for May 2022 mentoring communities
+{% endblock %}
+
+{% block content %}
+{% load humanize %}
+
+
+<h1>Call for May 2022 mentoring communities</h1>
+
+<p><i>Date: January 10, 2022</i></p>
+{% comment %}<p><i>Last updated: DATE</i> - See the "SECTION" section below.</p>{% endcomment %}
+
+<img src="{% static 'img/73-cc-by-2_0-WOCinTech-Chat.jpg' %}" alt="Two black women sit on a couch, with laptops on their lap. One woman is pointing to the other woman's laptop screen. The other woman is smiling. Photo is cc-by 2.0 WOCinTech Chat" class="img-fluid">
+<p><i>Photo CC BY 2.0 WOCinTech Chat</i></p>
+
+<h2>Outreachy seeks mentors</h2>
+
+<p>
+Outreachy is seeking open source and open science communities to mentor Outreachy interns in the May 2022 cohort.
+</p>
+
+{% include 'home/snippet/funding_short_description.html' %}
+
+<p><b>Important dates:</b></p>
+
+<ul>
+	<li>{{ current_round.outreachy_chat }} - <a href="{% url 'promote' %}#outreachychat">Outreachy Twitter Chat</a> with potential applicants</li>
+	<li>{{ current_round.lateorgs }} at 4pm UTC - deadline for <a href="{% url 'community-cfp' %}">open source communities to apply to participate</a></li>
+	<li>{{ current_round.project_soft_deadline }} at 4pm UTC - deadline for <a href="{% url 'community-cfp' %}">mentors to submit projects</a></li>
+</ul>
+
+<p>Please see the <a href="#important-dates">full mentor schedule</a> below.</p>
+
+<p><a class='btn btn-success' href="{% url 'community-cfp' %}">Submit Community Application</a></p>
+
+<hr>
+<h2 id='toc'>What communities need to know</h2>
+
+<p>
+<a href='#what-is-outreachy'>What is Outreachy?</a><br>
+<a href='#mentor-duties'>Mentor duties</a></br>
+<a href='#important-dates'>May 2022 internship dates</a><br>
+<a href='#humanitarian-funding'>Humanitarian open source funding</a><br>
+<a href='#open-science-funding'>Open science funding</a><br>
+</p>
+
+<hr>
+<h2 id='what-is-outreachy'><a href="#what-is-outreachy">What is Outreachy?</a></h2>
+
+<p>Outreachy is an internship program. Outreachy internships are:</p>
+
+<p class="ml-4 mb-0">💵 <b>Paid</b> - $7,000 USD total internship stipend</p>
+
+<p class="ml-4 my-0">🌍 <b>Remote</b> - both interns and mentors work remotely</p>
+
+<p class="ml-4 mt-0">🕰 <b>3 months</b> - internships run {{ current_round.internstarts|date:"F d" }} to {{ current_round.internends|date:"F d" }}</p>
+
+<p>Outreachy's goal is to increase <b>diversity in open source</b>. Past Outreachy interns are:</p>
+
+<p class="ml-4 mb-0">♀️ 92% women</li>
+<p class="ml-4 my-0">🏳️‍🌈 4% transgender, genderqueer, or non-binary people</p>
+<p class="ml-4 my-0">🧕🏾 64% people of color</p>
+<p class="ml-4 mt-0">🧑🏿 12% people from a historically disadvantaged caste or tribe</p>
+
+<p><i>Statistics are based on responses to the 2019 longitudinal study of Outreachy alums.</i></p>
+
+<p><a class='btn btn-info' href="{% url 'docs-community' %}">Read Community Guide</a></p>
+
+<hr>
+<h2 id='mentor-duties'><a href='#mentor-duties'>Mentor duties</a></h2>
+
+<p>The heart of Outreachy is our volunteer mentors. Mentors work directly with Outreachy applicants and interns.</p>
+
+<p>Outreachy looks for mentors who are <i>helpful, patient, welcoming, and kind</i>.</p>
+
+<p>
+<b>Mentor time commitment:</b>
+</p>
+<ul>
+	<li>{{ current_round.contributions_open|date:"F j" }} to {{ current_round.contributions_close|date:"F j" }}: Mentors spend <b>5 to 10 hours per week</b> during the applicant contribution period.</li>
+	<li>{{ current_round.internstarts|date:"F j" }} to {{ current_round.internends|date:"F j" }}: Mentors spend <b>5 hours per week</b> during the internship period.</li>
+</ul>
+
+<p>Mentors will need to provide an internship project description. Outreachy does not allow applicants to submit project ideas.</p>
+
+<p>It is okay for mentors to submit multiple project ideas. Communities with sponsorship for one intern tend to list 1 to 3 projects. Some communities list as many as 5 to 7 projects.</p>
+
+<p>Outreachy encourages co-mentoring! Co-mentoring is when two or more people mentor the same Outreachy intern.</p>
+
+<p>Mentors will need to provide a list of tasks for applicants to work on during the contribution period.</p>
+
+<hr>
+<h2 id='important-dates'><a href='#important-dates'>May 2022 internship dates</a></h2>
+
+{% include 'home/snippet/mentor-timeline.html' %}
+
+<hr>
+<h2 id='intern-funding'><a href='#intern-funding'>Intern funding</a></h2>
+
+{% include 'home/snippet/funding_short_description.html' %}
+
+<hr>
+<h2 id='humanitarian-funding'><a href='#humanitarian-funding'>Humanitarian open source funding</a></h2>
+
+<p>Outreachy is seeking humanitarian open source communities to participate in the May 2022 internship round.</p>
+
+<p>Outreachy welcomes applications from all open source communities that address humanitarian issues. You will need to meet <a href="{% url 'docs-community' %}#participation-rules">our eligibility criteria</a>.</p>
+
+<p>In short, your community must be:</p>
+
+<ul>
+	<li><b>open source</b>: your project's source code and creative works must be published under an open source license</li>
+
+	<li><b>humanitarian focused</b>: your project should tackle a humanitarian issue</li>
+
+	<li><b>community</b>: your project should have at least 2-3 people who make regular open source contributions to your project</li>
+</ul>
+
+<p>In the December 2021 cohort, 5 humanitarian open source communities received sponsorship for interns. Those communities included projects like:</p>
+
+<ul>
+	<li>moja global helps prevent climate change by calculating green house gas emissions from forestry, agriculture, and other land uses</li>
+	<li>Oppia provides online high-quality education to those who lack access to education</li>
+	<li>Public Lab democratizes science to help citizen scientists address environmental issues</li>
+</ul>
+
+<p>Outreachy will fund up to 10 humanitarian open source communities in the May 2022 internship cohort. Humanitarian communities will be guaranteed funding for at least 1 intern.</p>
+
+<p>To apply for humanitarian open source intern funding, please <a href={% url 'community-cfp' %}>submit a community application</a>.</p>
+
+<p>Please <a href='{% url 'contact-organizers' %}'>contact Outreachy organizers</a> with your questions about humanitarian open source funding!</p>
+
+<hr>
+
+<h2 id='open-science-funding'><a href='#open-science-funding'>Open science funding</a></h2>
+
+<div class="mb-3" id='czi-open-science-funding' ><a href='#czi-open-science-funding'><u>All open science communities</u></a></div>
+
+<p>Outreachy is pleased to receive a grant from <a href="">Chan Zuckerberg Initiative</a> to provide funding for open science interns.</p>
+
+<p>Outreachy welcomes open science communities who focus on any of the following areas:</p>
+
+{% include 'home/snippet/open_science_practices.html' %}
+
+<p>Outreachy's CZI grant will fund up to 10 open science communities in the May 2022 Outreachy internship cohort.</p>
+
+<div class="mb-3" id='wellcome-trust-open-science-funding'><a href='#wellcome-trust-science-funding'><u>Research on infectious diseases, climate change, and mental health</u></a></div>
+
+<p>Outreachy is also excited to work with <a href="https://wellcome.org/">Wellcome Trust</a> to provide additional funding for open science communities. Wellcome Trust is focused on funding Outreachy interns working on open science projects that address urgent health challenges or discovery research.</p>
+
+<p>In order to qualify for funding from Wellcome Trust, projects:</p>
+
+<ul>
+	<li>further <a href="https://wellcome.org/what-we-do/discovery-research">discovery of scientific research</a>, or create tools for scientists</li>
+
+	<li>tackle one of the following challenges: <a href="https://wellcome.org/what-we-do/infectious-disease">infectious diseases</a>, <a href="https://wellcome.org/what-we-do/climate-and-health">the health impacts of climate change</a>, or <a href="https://wellcome.org/what-we-do/mental-health">mental health</a></li>
+</ul>
+
+<p>Wellcome Trust will fund up to 6 open science communities in the May 2022 Outreachy internship cohort.</p>
+
+<p>In the December 2022 cohort, three open science communities received Wellcome Trust funding.</p>
+
+<ul>
+	<li>Mboalab is researching how to improve the diagnostics of typhoid in Africa by using open science and open AI</li>
+	<li>moja global helps prevent climate change by calculating green house gas emissions from forestry, agriculture, and other land uses</li>
+	<li>ODK-X collects, manages, and helps people use data in resource-constrained environments</li>
+</ul>
+
+<p>To apply for open science intern funding, please <a href={% url 'community-cfp' %}>submit a community application</a>.</p>
+
+<hr>
+
+<h2>Apply to participate</h2>
+
+<p class="mt-4"><a class='btn btn-success' href="{% url 'community-cfp' %}">Submit Community Application</a></p>
+
+{% endblock %}
