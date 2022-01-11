@@ -159,6 +159,13 @@ class WagtailFeed(Feed):
             first_published_at=pacific.localize(datetime.datetime(2021, 10, 14, 17, 25, 0)),
             last_published_at=pacific.localize(datetime.datetime(2021, 10, 15, 16, 20, 0)),
         ))
+        items.append(PseudoPage(
+            title='Call for May 2022 mentoring communities',
+            full_url=reverse('2022-01-cfp-open'),
+            owner=author,
+            first_published_at=pacific.localize(datetime.datetime(2022, 1, 10, 16, 00, 0)),
+            last_published_at=pacific.localize(datetime.datetime(2021, 1, 10, 16, 00, 0)),
+        ))
 
         # put the Wagtail pages and special posts together in the right order
         items.sort(key=operator.attrgetter('first_published_at'), reverse=True)
