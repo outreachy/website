@@ -47,24 +47,32 @@
 			<td>{{ intern_selection.midpoint_feedback_due }}</td>
 		</tr>
 	{% endif %}
-	{% if intern_selection.final_feedback_due == intern_selection.round.finalfeedback %}
+	{% if intern_selection.feedback3_due == intern_selection.round.feedback3_due %}
 		<tr>
 			<td>Feedback #3 due</td>
-			<td>{{ intern_selection.final_feedback_due }}</td>
+			<td>{{ intern_selection.feedback3_due }}</td>
 			<td> - </td>
 		</tr>
 	{% else %}
 		<tr class="table-info">
 			<td>Feedback #3 due</td>
+			<td>{{ intern_selection.round.feedback3_due }}</td>
+			<td>{{ intern_selection.feedback3_due }}</td>
+		</tr>
+	{% endif %}
+	{% if intern_selection.final_feedback_due == intern_selection.round.finalfeedback %}
+		<tr>
+			<td>Feedback #4 due</td>
+			<td>{{ intern_selection.final_feedback_due }}</td>
+			<td> - </td>
+		</tr>
+	{% else %}
+		<tr class="table-info">
+			<td>Feedback #4 due</td>
 			<td>{{ intern_selection.round.finalfeedback }}</td>
 			<td>{{ intern_selection.final_feedback_due }}</td>
 		</tr>
 	{% endif %}
-	<tr>
-		<td>Feedback #4 due</td>
-		<td>TBD</td>
-		<td></td>
-	</tr>
 	{% if intern_selection.intern_ends == intern_selection.round.internends %}
 		<tr>
 			<td>Internship end date</td>

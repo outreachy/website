@@ -50,8 +50,11 @@
 		{% if internship.is_feedback_2_form_open_to_intern %}
 			<p><a href="{% url 'midpoint-intern-feedback' %}"><button type="button" class="btn btn-info">Submit Feedback #2</button></a></p>
 		{% endif %}
+		{% if internship.is_feedback_3_form_open_to_intern %}
+			<p><a href="{% url 'feedback-3-from-intern' %}"><button type="button" class="btn btn-info">Submit Feedback #3</button></a></p>
+		{% endif %}
 		{% if internship.is_final_feedback_on_mentor_open %}
-			<p><a href="{% url 'final-intern-feedback' %}"><button type="button" class="btn btn-info">Submit Feedback #3</button></a></p>
+			<p><a href="{% url 'final-intern-feedback' %}"><button type="button" class="btn btn-info">Submit Feedback #4</button></a></p>
 		{% endif %}
 		<p>Feedback and payment status:</p>
 		<ul>
@@ -79,17 +82,29 @@
 			{% if internship.feedback2frommentor.organizer_payment_approved %}
 				<li>The Outreachy organizers have reviewed feedback #2. Your internship is in good standing.</li>
 			{% endif %}
-			{% if internship.finalinternfeedback %}
+			{% if internship.feedback3fromintern %}
 				<li>You submitted feedback #3.</li>
 			{% endif %}
-			{% if internship.finalmentorfeedback %}
-				<li>Your mentor submitted feedback #3 on {{ internship.finalmentorfeedback.find_version_mentor_edited.revision.date_created }}</li>
+			{% if internship.feedback3frommentor %}
+				<li>Your mentor submitted feedback #3 on {{ internship.feedback3frommentor.find_version_mentor_edited.revision.date_created }}</li>
 			{% endif %}
-			{% if not internship.finalinternfeedback and not internship.finalmentorfeedback %}
+			{% if not internship.feedback3fromintern and not internship.feedback3frommentor %}
 				<li>Neither you nor your mentor have submitted feedback #3.</li>
 			{% endif %}
+			{% if internship.feedback3frommentor.organizer_payment_approved %}
+				<li>The Outreachy organizers have reviewed feedback #3. Your internship is in good standing.</li>
+			{% endif %}
+			{% if internship.finalinternfeedback %}
+				<li>You submitted feedback #4.</li>
+			{% endif %}
+			{% if internship.finalmentorfeedback %}
+				<li>Your mentor submitted feedback #4 on {{ internship.finalmentorfeedback.find_version_mentor_edited.revision.date_created }}</li>
+			{% endif %}
+			{% if not internship.finalinternfeedback and not internship.finalmentorfeedback %}
+				<li>Neither you nor your mentor have submitted feedback #4.</li>
+			{% endif %}
 			{% if internship.finalmentorfeedback.organizer_payment_approved %}
-				<li>The Outreachy organizers have reviewed feedback #3. Your internship is in good standing. The Outreachy organizers have requested that the Software Freedom Conservancy pay your final stipend.</li>
+				<li>The Outreachy organizers have reviewed feedback #4. Your internship is in good standing. The Outreachy organizers have requested that the Software Freedom Conservancy pay your final stipend.</li>
 			{% endif %}
 			<li>Neither you nor your mentor have submitted feedback #4.</li>
 		</ul>
@@ -98,8 +113,8 @@
 		<ul>
 			<li>{{ internship.initial_feedback_due }} 4pm UTC - Feedback #1 is due</li>
 			<li>{{ internship.midpoint_feedback_due }} 4pm UTC - Feedback #2 is due</li>
-			<li>{{ internship.final_feedback_due }} 4pm UTC - Feedback #3 is due</li>
-			<li>TBD - Feedback #4 is due</li>
+			<li>{{ internship.feedback3_due }} 4pm UTC - Feedback #3 is due</li>
+			<li>{{ internship.final_feedback_due }} 4pm UTC - Feedback #4 is due</li>
 		</ul>
 		</p>
 		<p>You can <a href="{% url 'contact-organizers' %}">contact Outreachy organizers</a> at any time to give informal feedback or ask for additional help.</p>

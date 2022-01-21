@@ -73,6 +73,8 @@ from .models import Feedback1FromMentor
 from .models import Feedback1FromIntern
 from .models import Feedback2FromMentor
 from .models import Feedback2FromIntern
+from .models import Feedback3FromMentor
+from .models import Feedback3FromIntern
 from .models import FinalMentorFeedback
 from .models import FinalInternFeedback
 from .models import MentorApproval
@@ -2371,6 +2373,9 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     final_feedback_opens=current_round.finalfeedback - timedelta(days=7),
                     final_feedback_due=current_round.finalfeedback,
                     )
+            if current_round.feedback3_due:
+                    intern_selection.feedback3_opens = current_round.feedback3_due - timedelta(days=7)
+                    intern_selection.feedback3_due = current_round.feedback3_due
 
         # Fill in the date and IP address of the signed contract
         signed_contract = form['contract'].save(commit=False)
@@ -3168,6 +3173,231 @@ def midpoint_feedback_summary(request, round_slug):
     current_round = get_object_or_404(RoundPage, slug=round_slug)
 
     return render(request, 'home/midpoint_feedback.html',
+            {
+            'current_round' : current_round,
+            },
+            )
+
+class Feedback3FromMentorUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
+    form_class = modelform_factory(Feedback3FromMentor,
+            fields=(
+                'mentor_answers_questions',
+                'intern_asks_questions',
+                'mentor_support_when_stuck',
+
+                'daily_stand_ups',
+                'meets_privately',
+                'meets_over_phone_or_video_chat',
+                'intern_missed_meetings',
+
+                'talk_about_project_progress',
+                'reviewed_original_timeline',
+
+                'contribution_drafts',
+                'contribution_review',
+                'contribution_revised',
+
+                'mentor_shares_positive_feedback',
+                'mentor_promoting_work_to_community',
+                'mentor_promoting_work_on_social_media',
+
+                'intern_blogging',
+                'mentor_discussing_blog',
+                'mentor_promoting_blog_to_community',
+                'mentor_promoting_blog_on_social_media',
+
+                'mentor_introduced_intern_to_community',
+                'intern_asks_questions_of_community_members',
+                'intern_talks_to_community_members',
+
+                'mentors_report',
+                'last_contact',
+                'progress_report',
+
+                'full_time_effort',
+
+                'actions_requested',
+            ),
+            field_classes = {
+                'mentor_answers_questions': RadioBooleanField,
+                'intern_asks_questions': RadioBooleanField,
+                'mentor_support_when_stuck': RadioBooleanField,
+
+                'daily_stand_ups': RadioBooleanField,
+                'meets_privately': RadioBooleanField,
+                'meets_over_phone_or_video_chat': RadioBooleanField,
+                'intern_missed_meetings': RadioBooleanField,
+                'talk_about_project_progress': RadioBooleanField,
+                'reviewed_original_timeline': RadioBooleanField,
+
+                'contribution_drafts': RadioBooleanField,
+                'contribution_review': RadioBooleanField,
+                'contribution_revised': RadioBooleanField,
+
+                'mentor_shares_positive_feedback': RadioBooleanField,
+                'mentor_promoting_work_to_community': RadioBooleanField,
+                'mentor_promoting_work_on_social_media': RadioBooleanField,
+
+                'intern_blogging': RadioBooleanField,
+                'mentor_discussing_blog': RadioBooleanField,
+                'mentor_promoting_blog_to_community': RadioBooleanField,
+                'mentor_promoting_blog_on_social_media': RadioBooleanField,
+
+                'mentor_introduced_intern_to_community': RadioBooleanField,
+                'intern_asks_questions_of_community_members': RadioBooleanField,
+                'intern_talks_to_community_members': RadioBooleanField,
+
+                'full_time_effort': RadioBooleanField,
+            },
+        )
+
+    def get_object(self):
+        applicant = get_object_or_404(User, username=self.kwargs['username'])
+        mentor_relationship = MentorRelationship.objects.filter(
+            mentor__mentor__account=self.request.user,
+            intern_selection__applicant__applicant__account=applicant,
+        )
+
+        if not mentor_relationship.exists():
+            raise PermissionDenied("You are not a mentor for {}.".format(self.kwargs['username']))
+
+        internship = intern_in_good_standing(applicant)
+        if not internship:
+            raise PermissionDenied("{} is not an intern in good standing".format(self.kwargs['username']))
+
+        try:
+            feedback = Feedback3FromMentor.objects.get(intern_selection=internship)
+            if not feedback.can_edit():
+                raise PermissionDenied("This feedback is already submitted and can't be updated right now.")
+            return feedback
+        except Feedback3FromMentor.DoesNotExist:
+            return Feedback3FromMentor(intern_selection=internship)
+
+    def form_valid(self, form):
+        feedback = form.save(commit=False)
+        feedback.allow_edits = False
+        feedback.ip_address = self.request.META.get('REMOTE_ADDR')
+        feedback.save()
+        return redirect(reverse('dashboard') + '#feedback')
+
+class Feedback3FromInternUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
+    form_class = modelform_factory(Feedback3FromIntern,
+            fields=(
+                'share_mentor_feedback_with_community_coordinator',
+
+                'mentor_answers_questions',
+                'intern_asks_questions',
+                'mentor_support_when_stuck',
+
+                'daily_stand_ups',
+                'meets_privately',
+                'meets_over_phone_or_video_chat',
+                'intern_missed_meetings',
+
+                'talk_about_project_progress',
+                'reviewed_original_timeline',
+
+                'contribution_drafts',
+                'contribution_review',
+                'contribution_revised',
+
+                'mentor_shares_positive_feedback',
+                'mentor_promoting_work_to_community',
+                'mentor_promoting_work_on_social_media',
+
+                'intern_blogging',
+                'mentor_discussing_blog',
+                'mentor_promoting_blog_to_community',
+                'mentor_promoting_blog_on_social_media',
+
+                'mentor_introduced_intern_to_community',
+                'intern_asks_questions_of_community_members',
+                'intern_talks_to_community_members',
+
+                'mentor_support',
+                'last_contact',
+                'hours_worked',
+                'time_comments',
+                'progress_report',
+                ),
+            field_classes = {
+                'mentor_answers_questions': RadioBooleanField,
+                'intern_asks_questions': RadioBooleanField,
+                'mentor_support_when_stuck': RadioBooleanField,
+
+                'daily_stand_ups': RadioBooleanField,
+                'meets_privately': RadioBooleanField,
+                'meets_over_phone_or_video_chat': RadioBooleanField,
+                'intern_missed_meetings': RadioBooleanField,
+                'talk_about_project_progress': RadioBooleanField,
+                'reviewed_original_timeline': RadioBooleanField,
+
+                'contribution_drafts': RadioBooleanField,
+                'contribution_review': RadioBooleanField,
+                'contribution_revised': RadioBooleanField,
+
+                'mentor_shares_positive_feedback': RadioBooleanField,
+                'mentor_promoting_work_to_community': RadioBooleanField,
+                'mentor_promoting_work_on_social_media': RadioBooleanField,
+
+                'intern_blogging': RadioBooleanField,
+                'mentor_discussing_blog': RadioBooleanField,
+                'mentor_promoting_blog_to_community': RadioBooleanField,
+                'mentor_promoting_blog_on_social_media': RadioBooleanField,
+
+                'mentor_introduced_intern_to_community': RadioBooleanField,
+                'intern_asks_questions_of_community_members': RadioBooleanField,
+                'intern_talks_to_community_members': RadioBooleanField,
+                'share_mentor_feedback_with_community_coordinator': RadioBooleanField,
+            },
+            )
+
+    def get_object(self):
+        self.internship = intern_in_good_standing(self.request.user)
+        if not self.internship:
+            raise PermissionDenied("The account for {} is not associated with an intern in good standing".format(self.request.user.username))
+
+        try:
+            feedback = Feedback3FromIntern.objects.get(intern_selection=self.internship)
+            if not feedback.can_edit():
+                raise PermissionDenied("This feedback is already submitted and can't be updated right now.")
+            return feedback
+        except Feedback3FromIntern.DoesNotExist:
+            return Feedback3FromIntern(intern_selection=self.internship)
+
+    def get_context_data(self, **kwargs):
+        context = super(Feedback3FromInternUpdate, self).get_context_data(**kwargs)
+        context['internship'] = self.internship
+        return context
+
+    def form_valid(self, form):
+        feedback = form.save(commit=False)
+        feedback.allow_edits = False
+        feedback.ip_address = self.request.META.get('REMOTE_ADDR')
+        feedback.save()
+        return redirect(reverse('dashboard') + '#feedback')
+
+@login_required
+@staff_member_required
+def feedback_3_export_view(request, round_slug):
+    this_round = get_object_or_404(RoundPage, slug=round_slug)
+    interns = this_round.get_approved_intern_selections()
+    dictionary_list = []
+    for i in interns:
+        try:
+            dictionary_list.append(export_feedback(i.feedback3frommentor))
+        except Feedback3FromMentor.DoesNotExist:
+            continue
+    response = JsonResponse(dictionary_list, safe=False)
+    response['Content-Disposition'] = 'attachment; filename="' + round_slug + '-feedback-3.json"'
+    return response
+
+@login_required
+@staff_member_required
+def feedback_3_summary(request, round_slug):
+    current_round = get_object_or_404(RoundPage, slug=round_slug)
+
+    return render(request, 'home/feedback3.html',
             {
             'current_round' : current_round,
             },

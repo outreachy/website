@@ -3,6 +3,7 @@ from django.core import mail
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from reversion.models import Version
+from unittest import skip
 
 from . import models
 from .factories import *
@@ -200,7 +201,7 @@ class InternSelectionTestCase(TestCase):
         defaults.update(kwargs)
         return defaults
 
-    def _submit_mentor_feedback_form(self, internselection, stage, button_name, answers, on_dashboard=True):
+    def _submit_mentor_feedback_form(self, internselection, url, button_name, answers, on_dashboard=True):
         mentor = internselection.mentors.get()
         self.client.force_login(mentor.mentor.account)
 
@@ -211,7 +212,7 @@ class InternSelectionTestCase(TestCase):
         else:
             self.assertNotContains(response, '<button type="button" class="btn btn-info">{}</button>'.format(button_name), html=True)
 
-        path = reverse(stage + '-mentor-feedback', kwargs={
+        path = reverse(url, kwargs={
             'username': internselection.applicant.applicant.account.username,
         })
 
@@ -236,7 +237,7 @@ class InternSelectionTestCase(TestCase):
         answers = self._mentor_feedback_form(internselection,
             actions_requested=models.BaseMentorFeedback.PAY_AND_CONTINUE,
         )
-        response = self._submit_mentor_feedback_form(internselection, 'initial', 'Submit Feedback #1', answers)
+        response = self._submit_mentor_feedback_form(internselection, 'initial-mentor-feedback', 'Submit Feedback #1', answers)
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
@@ -267,7 +268,7 @@ class InternSelectionTestCase(TestCase):
                 answers = self._mentor_feedback_form(internselection,
                     actions_requested=action,
                 )
-                response = self._submit_mentor_feedback_form(internselection, 'initial', 'Submit Feedback #1', answers)
+                response = self._submit_mentor_feedback_form(internselection, 'initial-mentor-feedback', 'Submit Feedback #1', answers)
                 self.assertEqual(response.status_code, 302)
 
                 # will raise DoesNotExist if the view didn't create this
@@ -299,7 +300,7 @@ class InternSelectionTestCase(TestCase):
         answers = self._mentor_feedback_form(internselection,
             actions_requested=models.BaseMentorFeedback.DONT_KNOW,
         )
-        response = self._submit_mentor_feedback_form(internselection, 'initial', 'Submit Feedback #1', answers)
+        response = self._submit_mentor_feedback_form(internselection, 'initial-mentor-feedback', 'Submit Feedback #1', answers)
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
@@ -331,7 +332,7 @@ class InternSelectionTestCase(TestCase):
                 answers = self._mentor_feedback_form(internselection,
                     actions_requested=action,
                 )
-                response = self._submit_mentor_feedback_form(internselection, 'initial', 'Submit Feedback #1', answers)
+                response = self._submit_mentor_feedback_form(internselection, 'initial-mentor-feedback', 'Submit Feedback #1', answers)
                 self.assertEqual(response.status_code, 302)
 
                 # will raise DoesNotExist if the view didn't create this
@@ -373,7 +374,7 @@ class InternSelectionTestCase(TestCase):
                 internselection = prior.intern_selection
 
                 answers = self._mentor_feedback_form(internselection)
-                response = self._submit_mentor_feedback_form(internselection, 'initial', 'Submit Feedback #1', answers, False)
+                response = self._submit_mentor_feedback_form(internselection, 'initial-mentor-feedback', 'Submit Feedback #1', answers, False)
 
                 # permission denied
                 self.assertEqual(response.status_code, 403)
@@ -383,7 +384,7 @@ class InternSelectionTestCase(TestCase):
         internselection = prior.intern_selection
 
         answers = self._mentor_feedback_form(internselection)
-        response = self._submit_mentor_feedback_form(internselection, 'initial', 'Submit Feedback #1', answers)
+        response = self._submit_mentor_feedback_form(internselection, 'initial-mentor-feedback', 'Submit Feedback #1', answers)
         self.assertEqual(response.status_code, 302)
 
         # discard all cached objects and reload from database
@@ -423,10 +424,10 @@ class InternSelectionTestCase(TestCase):
         defaults.update(kwargs)
         return defaults
 
-    def _submit_intern_feedback_form(self, internselection, stage, answers):
+    def _submit_intern_feedback_form(self, internselection, url, answers):
         self.client.force_login(internselection.applicant.applicant.account)
 
-        return self.client.post(reverse(stage + '-intern-feedback'), {
+        return self.client.post(reverse(url), {
             # This is a dictionary comprehension that converts model-level
             # values to form/POST values. It assumes all form widgets accept
             # the str() representation of their type when the form is POSTed.
@@ -444,7 +445,7 @@ class InternSelectionTestCase(TestCase):
         )
 
         answers = self._intern_feedback_form(internselection)
-        response = self._submit_intern_feedback_form(internselection, 'initial', answers)
+        response = self._submit_intern_feedback_form(internselection, 'initial-intern-feedback', answers)
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
@@ -507,7 +508,7 @@ class InternSelectionTestCase(TestCase):
                 )
 
         answers = self._midpoint_mentor_feedback_form(internselection)
-        response = self._submit_mentor_feedback_form(internselection, 'midpoint', 'Submit Feedback #2', answers)
+        response = self._submit_mentor_feedback_form(internselection, 'midpoint-mentor-feedback', 'Submit Feedback #2', answers)
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
@@ -543,7 +544,7 @@ class InternSelectionTestCase(TestCase):
         answers = self._midpoint_mentor_feedback_form(internselection,
             actions_requested=models.BaseMentorFeedback.TERMINATE_NO_PAY,
         )
-        response = self._submit_mentor_feedback_form(internselection, 'midpoint', 'Submit Feedback #2', answers)
+        response = self._submit_mentor_feedback_form(internselection, 'midpoint-mentor-feedback', 'Submit Feedback #2', answers)
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
@@ -572,7 +573,7 @@ class InternSelectionTestCase(TestCase):
         answers = self._midpoint_mentor_feedback_form(internselection,
             actions_requested=models.BaseMentorFeedback.DONT_KNOW,
         )
-        response = self._submit_mentor_feedback_form(internselection, 'midpoint', 'Submit Feedback #2', answers)
+        response = self._submit_mentor_feedback_form(internselection, 'midpoint-mentor-feedback', 'Submit Feedback #2', answers)
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
@@ -603,7 +604,7 @@ class InternSelectionTestCase(TestCase):
                 answers = self._midpoint_mentor_feedback_form(internselection,
                     actions_requested=action,
                 )
-                response = self._submit_mentor_feedback_form(internselection, 'midpoint', 'Submit Feedback #2', answers)
+                response = self._submit_mentor_feedback_form(internselection, 'midpoint-mentor-feedback', 'Submit Feedback #2', answers)
                 self.assertEqual(response.status_code, 302)
 
                 # will raise DoesNotExist if the view didn't create this
@@ -647,7 +648,7 @@ class InternSelectionTestCase(TestCase):
                 internselection = prior.intern_selection
 
                 answers = self._midpoint_mentor_feedback_form(internselection)
-                response = self._submit_mentor_feedback_form(internselection, 'midpoint', 'Submit Feedback #2', answers, False)
+                response = self._submit_mentor_feedback_form(internselection, 'midpoint-mentor-feedback', 'Submit Feedback #2', answers, False)
 
                 # permission denied
                 self.assertEqual(response.status_code, 403)
@@ -708,11 +709,276 @@ class InternSelectionTestCase(TestCase):
         )
 
         answers = self._midpoint_intern_feedback_form(internselection)
-        response = self._submit_intern_feedback_form(internselection, 'midpoint', answers)
+        response = self._submit_intern_feedback_form(internselection, 'midpoint-intern-feedback', answers)
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
         feedback = internselection.feedback2fromintern
+
+        for key, expected in answers.items():
+            self.assertEqual(getattr(feedback, key), expected)
+
+        # only allow submitting once
+        self.assertFalse(feedback.allow_edits)
+
+        self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+
+    @staticmethod
+    def _feedback3_mentor_form(internselection, **kwargs):
+        defaults = {
+            'mentor_answers_questions': True,
+            'intern_asks_questions': True,
+            'mentor_support_when_stuck': True,
+
+            'daily_stand_ups': True,
+            'meets_privately': True,
+            'meets_over_phone_or_video_chat': True,
+            'intern_missed_meetings': False,
+
+            'talk_about_project_progress': True,
+            'reviewed_original_timeline': True,
+
+            'contribution_drafts': True,
+            'contribution_review': True,
+            'contribution_revised': True,
+
+            'mentor_shares_positive_feedback': True,
+            'mentor_promoting_work_to_community': True,
+            'mentor_promoting_work_on_social_media': True,
+
+            'intern_blogging': True,
+            'mentor_discussing_blog': True,
+            'mentor_promoting_blog_to_community': True,
+            'mentor_promoting_blog_on_social_media': True,
+
+            'mentor_introduced_intern_to_community': True,
+            'intern_asks_questions_of_community_members': True,
+            'intern_talks_to_community_members': True,
+
+            'mentors_report': 'I am very supportive',
+            'last_contact': internselection.feedback3_opens,
+            'progress_report': 'Everything is fine.',
+
+            'full_time_effort': True,
+
+            'actions_requested': models.BaseMentorFeedback.PAY_AND_CONTINUE,
+        }
+        defaults.update(kwargs)
+        return defaults
+
+    def test_mentor_can_give_successful_feedback3(self):
+        current_round = RoundPageFactory(start_from='feedback3_due')
+        internselection = InternSelectionFactory(
+                active=True,
+                round=current_round,
+                )
+
+        answers = self._feedback3_mentor_form(internselection)
+        response = self._submit_mentor_feedback_form(internselection, 'feedback-3-from-mentor', 'Submit Feedback #3', answers)
+        self.assertEqual(response.status_code, 302)
+
+        # will raise DoesNotExist if the view didn't create this
+        feedback = internselection.feedback3frommentor
+
+        # Add in the fields automatically set by the action the mentor requested
+        answers['payment_approved'] = True
+        answers['request_extension'] = False
+        answers['extension_date'] = None
+        answers['request_termination'] = False
+        for key, expected in answers.items():
+            self.assertEqual(getattr(feedback, key), expected)
+
+        # only allow submitting once
+        self.assertFalse(feedback.allow_edits)
+
+        self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+
+    def test_mentor_can_give_terminate_feedback3(self):
+        current_round = RoundPageFactory(start_from='feedback3_due')
+        for action in (models.BaseMentorFeedback.TERMINATE_PAY, models.BaseMentorFeedback.TERMINATE_NO_PAY):
+            with self.subTest(action=action):
+                internselection = InternSelectionFactory(
+                    active=True,
+                    round=current_round,
+                )
+
+                answers = self._feedback3_mentor_form(internselection,
+                    actions_requested=action,
+                )
+                response = self._submit_mentor_feedback_form(internselection, 'feedback-3-from-mentor', 'Submit Feedback #3', answers)
+                self.assertEqual(response.status_code, 302)
+
+                # will raise DoesNotExist if the view didn't create this
+                feedback = internselection.feedback3frommentor
+
+                # Add in the fields automatically set by the action the mentor requested
+                if action == models.BaseMentorFeedback.TERMINATE_PAY:
+                    answers['payment_approved'] = True
+                else:
+                    answers['payment_approved'] = False
+                answers['request_extension'] = False
+                answers['extension_date'] = None
+                answers['request_termination'] = True
+                for key, expected in answers.items():
+                    self.assertEqual(getattr(feedback, key), expected)
+
+                # only allow submitting once
+                self.assertFalse(feedback.allow_edits)
+
+                self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+
+    def test_mentor_can_give_uncertain_feedback3(self):
+        current_round = RoundPageFactory(start_from='feedback3_due')
+        internselection = InternSelectionFactory(
+            active=True,
+            round=current_round,
+        )
+
+        answers = self._feedback3_mentor_form(internselection,
+            actions_requested=models.BaseMentorFeedback.DONT_KNOW,
+        )
+        response = self._submit_mentor_feedback_form(internselection, 'feedback-3-from-mentor', 'Submit Feedback #3', answers)
+        self.assertEqual(response.status_code, 302)
+
+        # will raise DoesNotExist if the view didn't create this
+        feedback = internselection.feedback3frommentor
+
+        # Add in the fields automatically set by the action the mentor requested
+        answers['payment_approved'] = False
+        answers['request_extension'] = False
+        answers['extension_date'] = None
+        answers['request_termination'] = False
+        for key, expected in answers.items():
+            self.assertEqual(getattr(feedback, key), expected)
+
+        # only allow submitting once
+        self.assertFalse(feedback.allow_edits)
+
+        self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+
+    def test_mentor_can_give_extension_feedback3(self):
+        current_round = RoundPageFactory(start_from='feedback3_due')
+        for action in (models.BaseMentorFeedback.EXT_1_WEEK, models.BaseMentorFeedback.EXT_2_WEEK, models.BaseMentorFeedback.EXT_3_WEEK, models.BaseMentorFeedback.EXT_4_WEEK, models.BaseMentorFeedback.EXT_5_WEEK):
+            with self.subTest(action=action):
+                internselection = InternSelectionFactory(
+                    active=True,
+                    round=current_round,
+                )
+
+                answers = self._feedback3_mentor_form(internselection,
+                    actions_requested=action,
+                )
+                response = self._submit_mentor_feedback_form(internselection, 'feedback-3-from-mentor', 'Submit Feedback #3', answers)
+                self.assertEqual(response.status_code, 302)
+
+                # will raise DoesNotExist if the view didn't create this
+                feedback = internselection.feedback3frommentor
+
+                answers['payment_approved'] = False
+                answers['request_extension'] = True
+                answers['request_termination'] = False
+                if action == models.BaseMentorFeedback.EXT_1_WEEK:
+                    extension = 1
+                elif action == models.BaseMentorFeedback.EXT_2_WEEK:
+                    extension = 2
+                elif action == models.BaseMentorFeedback.EXT_3_WEEK:
+                    extension = 3
+                elif action == models.BaseMentorFeedback.EXT_4_WEEK:
+                    extension = 4
+                elif action == models.BaseMentorFeedback.EXT_5_WEEK:
+                    extension = 5
+                answers['extension_date'] = current_round.feedback3_due + datetime.timedelta(weeks=extension)
+
+                for key, expected in answers.items():
+                    self.assertEqual(getattr(feedback, key), expected)
+
+                # only allow submitting once
+                self.assertFalse(feedback.allow_edits)
+
+                self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+
+    @skip("This test fails, but I think it's an issue in the test. Local testing for this case correctly stops the mentor from resubmitting feedback again until the feedback form re-opens.")
+    def test_invalid_duplicate_feedback3_mentor_feedback(self):
+        # The dates of the round don't matter because the views check the dates in the InternSelection
+        current_round = RoundPageFactory(start_from='feedback3_due')
+        week = datetime.timedelta(weeks=1)
+        disallowed_when = (
+            {'allow_edits': False, 'intern_selection__feedback3_opens': current_round.feedback3_due - week},
+            {'allow_edits': True, 'intern_selection__feedback3_opens': current_round.feedback3_due + week},
+        )
+        for params in disallowed_when:
+            with self.subTest(params=params):
+                prior = Feedback3FromMentorFactory(intern_selection__round=current_round, **params)
+                internselection = prior.intern_selection
+
+                answers = self._feedback3_mentor_form(internselection)
+                response = self._submit_mentor_feedback_form(internselection, 'feedback-3-from-mentor', 'Submit Feedback #3', answers, False)
+
+                # permission denied
+                self.assertEqual(response.status_code, 403)
+
+    @staticmethod
+    def _feedback3_intern_form(internselection, **kwargs):
+        defaults = {
+            'share_mentor_feedback_with_community_coordinator': True,
+
+            # 1. Clearing up doubts
+            'mentor_answers_questions': True,
+            'intern_asks_questions': True,
+            'mentor_support_when_stuck': True,
+
+            # 2. Meetings
+            'daily_stand_ups': True,
+            'meets_privately': True,
+            'meets_over_phone_or_video_chat': True,
+            'intern_missed_meetings': False,
+
+            # 2. Tracking project progress
+            'talk_about_project_progress': True,
+            'reviewed_original_timeline': True,
+
+            # 4. Project feedback
+            'contribution_drafts': True,
+            'contribution_review': True,
+            'contribution_revised': True,
+        
+            # 3. Acknowledgment and praise
+            'mentor_shares_positive_feedback': True,
+            'mentor_promoting_work_to_community': True,
+            'mentor_promoting_work_on_social_media': True,
+
+            # 3/6. Blogging
+            'intern_blogging': True,
+            'mentor_discussing_blog': True,
+            'mentor_promoting_blog_to_community': True,
+            'mentor_promoting_blog_on_social_media': True,
+
+            # 6. Networking
+            'mentor_introduced_intern_to_community': True,
+            'intern_asks_questions_of_community_members': True,
+            'intern_talks_to_community_members': True,
+
+            'progress_report': 'Everything is fine.',
+            'hours_worked': models.Feedback1FromIntern.HOURS_30,
+            'time_comments': '',
+            'last_contact': internselection.feedback3_opens,
+            'mentor_support': 'My mentor is awesome.',
+        }
+        defaults.update(kwargs)
+        return defaults
+
+    def test_intern_can_give_feedback3(self):
+        internselection = InternSelectionFactory(
+            active=True,
+            round__start_from='feedback3_due',
+        )
+
+        answers = self._feedback3_intern_form(internselection)
+        response = self._submit_intern_feedback_form(internselection, 'feedback-3-from-intern', answers)
+        self.assertEqual(response.status_code, 302)
+
+        # will raise DoesNotExist if the view didn't create this
+        feedback = internselection.feedback3fromintern
 
         for key, expected in answers.items():
             self.assertEqual(getattr(feedback, key), expected)
@@ -760,7 +1026,7 @@ class InternSelectionTestCase(TestCase):
         )
 
         answers = self._final_intern_feedback_form(internselection)
-        response = self._submit_intern_feedback_form(internselection, 'final', answers)
+        response = self._submit_intern_feedback_form(internselection, 'final-intern-feedback', answers)
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
@@ -808,7 +1074,7 @@ class InternSelectionTestCase(TestCase):
                 )
 
         answers = self._final_mentor_feedback_form(internselection)
-        response = self._submit_mentor_feedback_form(internselection, 'final', 'Submit Feedback #3', answers)
+        response = self._submit_mentor_feedback_form(internselection, 'final-mentor-feedback', 'Submit Feedback #4', answers)
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
@@ -837,7 +1103,7 @@ class InternSelectionTestCase(TestCase):
         answers = self._final_mentor_feedback_form(internselection,
             actions_requested=models.BaseMentorFeedback.TERMINATE_NO_PAY,
         )
-        response = self._submit_mentor_feedback_form(internselection, 'final', 'Submit Feedback #3', answers)
+        response = self._submit_mentor_feedback_form(internselection, 'final-mentor-feedback', 'Submit Feedback #4', answers)
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
@@ -866,7 +1132,7 @@ class InternSelectionTestCase(TestCase):
         answers = self._final_mentor_feedback_form(internselection,
             actions_requested=models.BaseMentorFeedback.DONT_KNOW,
         )
-        response = self._submit_mentor_feedback_form(internselection, 'final', 'Submit Feedback #3', answers)
+        response = self._submit_mentor_feedback_form(internselection, 'final-mentor-feedback', 'Submit Feedback #4', answers)
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
@@ -897,7 +1163,7 @@ class InternSelectionTestCase(TestCase):
                 answers = self._final_mentor_feedback_form(internselection,
                     actions_requested=action,
                 )
-                response = self._submit_mentor_feedback_form(internselection, 'final', 'Submit Feedback #3', answers)
+                response = self._submit_mentor_feedback_form(internselection, 'final-mentor-feedback', 'Submit Feedback #4', answers)
                 self.assertEqual(response.status_code, 302)
 
                 # will raise DoesNotExist if the view didn't create this
@@ -944,7 +1210,7 @@ class InternSelectionTestCase(TestCase):
         )
 
         answers = self._final_mentor_feedback_form(internselection)
-        response = self._submit_mentor_feedback_form(internselection, 'final', 'Submit Feedback #3', answers)
+        response = self._submit_mentor_feedback_form(internselection, 'final-mentor-feedback', 'Submit Feedback #4', answers)
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this

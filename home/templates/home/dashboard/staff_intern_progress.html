@@ -5,19 +5,22 @@
 <ul>
 	<li><p>{{ current_round.initialfeedback }} - Feedback #1 is due. <a href="{% url 'initial-feedback-summary' round_slug=current_round.slug %}"><button class="btn btn-secondary">View Feedback #1</button></a> <a href="{% url 'initial-feedback-export' round_slug=current_round.slug %}"><button class="btn btn-success">Export Feedback #1</button></a></p></li>
 	<li><p>{{ current_round.midfeedback }} - Feedback #2 is due. <a href="{% url 'midpoint-feedback-summary' round_slug=current_round.slug %}"><button class="btn btn-secondary">View Feedback #2</button></a></p></li>
-	<li><p>{{ current_round.finalfeedback }} - Final feedback is due. <a href="{% url 'final-feedback-summary' round_slug=current_round.slug %}"><button class="btn btn-secondary">View Final Feedback</button></a> <a href="{% url 'final-feedback-export' round_slug=current_round.slug %}"><button class="btn btn-success">Export Final Feedback</button></a></p></li>
+	<li><p>{{ current_round.feedback3_due }} - Feedback #2 is due. <a href="{% url 'feedback-3-summary' round_slug=current_round.slug %}"><button class="btn btn-secondary">View Feedback #3</button></a> <a href="{% url 'feedback-3-export' round_slug=current_round.slug %}"><button class="btn btn-success">Export Feedback #3</button></a></p></li>
+	<li><p>{{ current_round.finalfeedback }} - Final feedback is due. <a href="{% url 'final-feedback-summary' round_slug=current_round.slug %}"><button class="btn btn-secondary">View Feedback #4</button></a></li>
 </ul>
 {% with interns=current_round.get_approved_intern_selections %}
 	<table class="table table-striped table-bordered">
 		<thread class="thread-dark">
 		<tr>
 			<th scope="col">Intern</th>
-			<th scope="col">Initial mentor feedback</th>
-			<th scope="col">Initial intern feedback</th>
-			<th scope="col">Mid-point mentor feedback</th>
-			<th scope="col">Mid-point intern feedback</th>
-			<th scope="col">Final mentor feedback</th>
-			<th scope="col">Final intern feedback</th>
+			<th scope="col">Feedback #1 (mentor)</th>
+			<th scope="col">Feedback #1 (intern)</th>
+			<th scope="col">Feedback #2 (mentor)</th>
+			<th scope="col">Feedback #2 (intern)</th>
+			<th scope="col">Feedback #3 (mentor)</th>
+			<th scope="col">Feedback #3 (intern)</th>
+			<th scope="col">Feedback #4 (mentor)</th>
+			<th scope="col">Feedback #4 (intern)</th>
 		</tr>
 		</thread>
 		{% for intern in interns %}
@@ -34,6 +37,12 @@
 				</td>
 				<td>
 					{% include 'home/snippet/intern-feedback-status.html' with intern_status=intern.get_intern_midpoint_feedback_status %}
+				</td>
+				<td>
+					{% include 'home/snippet/mentor-feedback-status.html' with mentor_status=intern.get_feedback_3_status_from_mentor extension_date=intern.feedback3frommentor.extension_date %}
+				</td>
+				<td>
+					{% include 'home/snippet/intern-feedback-status.html' with intern_status=intern.get_feedback_3_status_from_intern %}
 				</td>
 				<td>
 					{% include 'home/snippet/mentor-feedback-status.html' with mentor_status=intern.get_mentor_final_feedback_status extension_date=intern.finalmentorfeedback.extension_date %}
