@@ -2367,6 +2367,8 @@ class InternSelectionUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.
                     initial_feedback_due=current_round.initialfeedback,
                     midpoint_feedback_opens=current_round.midfeedback - timedelta(days=7),
                     midpoint_feedback_due=current_round.midfeedback,
+                    feedback3_opens=current_round.feedback3_due - timedelta(days=7),
+                    feedback3_due=current_round.feedback3_due,
                     intern_ends=current_round.internends,
                     final_feedback_opens=current_round.finalfeedback - timedelta(days=7),
                     final_feedback_due=current_round.finalfeedback,

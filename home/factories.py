@@ -98,8 +98,8 @@ class PageFactory(factory.Factory):
 round_dates = (
     'pingold',
     'orgreminder',
-    'initial_applications_open',
     'lateorgs',
+    'initial_applications_open',
     'outreachy_chat',
     'initial_applications_close',
     'landingdue',
@@ -116,15 +116,16 @@ round_dates = (
     'initialfeedback',
     'week_four_chat_text_date',
     'week_six_chat_text_date',
-    'week_eight_chat_text_date',
-    'initial_payment_date',
     'midfeedback',
+    'initial_payment_date',
+    'week_eight_chat_text_date',
+    'feedback3_due',
     'week_ten_chat_text_date',
-    'week_twelve_chat_text_date',
     'midpoint_payment_date',
+    'week_twelve_chat_text_date',
+    'finalfeedback',
     'week_fourteen_chat_text_date',
     'internends',
-    'finalfeedback',
     'final_payment_date',
 )
 
@@ -156,73 +157,79 @@ class RoundPageFactory(PageFactory):
 
     roundnumber = factory.Sequence(int)
 
-    # week 0 - Jan 8 / Aug 6
+    # week -20 - Monday, Jan 3, 2022
     pingold = datetime.timedelta(days=0)
-    # week 1
-    orgreminder = datetime.timedelta(days=7)
-    # week 2 - Jan 22 / Aug 20
-    initial_applications_open = datetime.timedelta(days=7)
-    # week 3
-    # week 4 - Feb 5 / Sept 3
-    lateorgs = datetime.timedelta(days=14)
-    # week 5 - Monday Feb 12 / Sept 9
-    outreachy_chat = datetime.timedelta(days=7)
-    # week 6
-    # week 7 - Feb 26 / Sept 24 - "soft" deadline for project submission
-    # week 7 - Feb 26 / Sept 24 - deadline for submitting initial applications
-    initial_applications_close = datetime.timedelta(days=14)
+    # week -19
+    # week -18 - Monday, Jan 17, 2022
+    orgreminder = datetime.timedelta(days=14)
+    # week -17
+    # week -16 - Thursday, Feb 3, 2022
+    lateorgs = datetime.timedelta(days=17)
+    initial_applications_open = datetime.timedelta(days=1)
+    # week -15
+    # week -14 - Monday, Feb 14, 2022
+    outreachy_chat = datetime.timedelta(days=10)
+    # week -13 - Friday, Feb 25, 2022 - "soft" deadline for project submission
+    # week -13 - Friday, Feb 25, 2022 - deadline for submitting initial applications
+    initial_applications_close = datetime.timedelta(days=11)
     landingdue = datetime.timedelta(days=0)
-    # week 8 - Mar 5 / Oct 1 - deadline for approving initial apps & projects
-    lateprojects = datetime.timedelta(days=7)
-    contributions_open = datetime.timedelta(days=0)
-    # week 9
-    # week 10
-    # week 11
-    # week 12
-    # week 13 - Apr 9 / Nov 5 - contribution and final application deadline
-    contributions_close = datetime.timedelta(days=35)
-    # week 14
-    # week 15 - Apr 18 / Nov 14 - deadline for intern selection
-    mentor_intern_selection_deadline = datetime.timedelta(days=9)
-    # week 16 - Apr 22 / Nov 18 - deadline for coordinators to set intern funding
-    coordinator_funding_deadline = datetime.timedelta(days=4)
-    # week 16 - Apr 23 / Nov 19 - thanksgiving holiday
-    internapproval = datetime.timedelta(days=1)
-    # For the December round, there's a short delay between the intern announcement
-    # and when the interns start.
-    #
-    # week 17 - Nov 26
-    # week 18 - Dec 3 - interns start
-    #
-    # Pass the following parameters to set up the December round:
-    # internapproval = datetime.timedelta(days=1),
-    # internannounce = datetime.timedelta(days=7),
-    # internstarts=datetime.timedelta(days=7),
-    #
-    #
-    # The May round aligns with Google summer of Code, so there's a longer
-    # period between when interns are announced and when they start
-    # in the Outreachy May round. The code below sets up the May round:
-    # week 17
-    # week 18
-    internannounce = datetime.timedelta(days=14)
-    # week 20 - May 20
-    internstarts = datetime.timedelta(days=7)
+    # week -12
+    # week -11 - Friday, Mar 11, 2022 - "hard" deadline for project submission
+    lateprojects = datetime.timedelta(days=14)
+    # week -10
+    # week -9 - Friday, Mar 25 - contribution period opens
+    contributions_open = datetime.timedelta(days=14)
+    # week -8
+    # week -7
+    # week -6
+    # week -5 - Apr 22, 2022 - contribution and final application deadline
+    contributions_close = datetime.timedelta(days=28)
+    # week -4
+    # week -3 - Wednesday, May 4, 2022 - deadline for intern selection
+    mentor_intern_selection_deadline = datetime.timedelta(days=12)
+    # week -3 - Friday, May 6, 2022 - deadline for coordinators to set intern funding
+    coordinator_funding_deadline = datetime.timedelta(days=2)
+    # week -2
+    # week -1 - Monday, May 16, 2022 - Outreachy organizers finalize intern selections
+    internapproval = datetime.timedelta(days=10)
+    # week -1 - Friday, May 20, 2022 - interns announced along with GSoC interns
+    internannounce = datetime.timedelta(days=4)
+    # week 0
+    # week 1 - Monday, May 30 - interns start
+    internstarts = datetime.timedelta(days=10)
+    # week 1 - Tuesday, May 31 - chat
     week_two_chat_text_date = datetime.timedelta(days=1)
-    tax_form_deadline = datetime.timedelta(days=6)
-    initialfeedback = datetime.timedelta(days=7)
-    week_four_chat_text_date = datetime.timedelta(days=1)
+    # week 1 - Friday, June 3 - interns start
+    tax_form_deadline = datetime.timedelta(days=3)
+    # week 2 - Monday, June 6, 2022 - feedback #1 due
+    initialfeedback = datetime.timedelta(days=3)
+    # week 3 - Tuesday, June 14, 2022 - chat
+    week_four_chat_text_date = datetime.timedelta(days=8)
+    # week 4
+    # week 5 - Tuesday, June 28, 2022 - chat
     week_six_chat_text_date = datetime.timedelta(days=14)
-    week_eight_chat_text_date = datetime.timedelta(days=14)
-    initial_payment_date = datetime.timedelta(days=1)
-    midfeedback = datetime.timedelta(days=-2)
-    week_ten_chat_text_date = datetime.timedelta(days=15)
-    week_twelve_chat_text_date = datetime.timedelta(days=14)
-    midpoint_payment_date = datetime.timedelta(days=1)
-    week_fourteen_chat_text_date = datetime.timedelta(days=13)
-    internends = datetime.timedelta(days=7)
-    finalfeedback = datetime.timedelta(days=0)
-    final_payment_date = datetime.timedelta(days=30)
+    # week 6 - Monday, July 4, 2022 - feedback #2 due
+    midfeedback = datetime.timedelta(days=6)
+    # week 7 - Monday, July 11, 2022 - payment #1 initiated by
+    initial_payment_date = datetime.timedelta(days=7)
+    # week 7 - Tuesday, July 12, 2022 - chat
+    week_eight_chat_text_date = datetime.timedelta(days=1)
+    # week 8
+    # week 9 - Monday, July 25, 2022 - feedback #3 due
+    feedback3_due = datetime.timedelta(days=13)
+    # week 9 - Tuesday, July 26, 2022 - chat
+    week_ten_chat_text_date = datetime.timedelta(days=1)
+    # week 10 - Monday, Aug 1, 2022 - we don't pay the midpoint payment anymore, but it's a required field
+    midpoint_payment_date = datetime.timedelta(days=6)
+    # week 11 - Tuesday, Aug 9, 2022 - chat
+    week_twelve_chat_text_date = datetime.timedelta(days=8)
+    # week 12 - Monday, Aug 15, 2022 - feedback #4 due
+    finalfeedback = datetime.timedelta(days=6)
+    # week 13 - Monday, Aug 22, 2022 - chat
+    week_fourteen_chat_text_date = datetime.timedelta(days=7)
+    # week 13 - Friday, Aug 26, 2022 - internship ends
+    internends = datetime.timedelta(days=4)
+    final_payment_date = datetime.timedelta(days=0)
 
     @factory.lazy_attribute
     def pingnew(obj):
@@ -467,6 +474,8 @@ class InternSelectionFactory(factory.django.DjangoModelFactory):
     initial_feedback_opens = factory.LazyAttribute(lambda o: o.initial_feedback_due - datetime.timedelta(days=7))
     midpoint_feedback_due = factory.SelfAttribute('round.midfeedback')
     midpoint_feedback_opens = factory.LazyAttribute(lambda o: o.midpoint_feedback_due - datetime.timedelta(days=7))
+    feedback3_due = factory.SelfAttribute('round.feedback3_due')
+    feedback3_opens = factory.LazyAttribute(lambda o: o.feedback3_due - datetime.timedelta(days=7))
     final_feedback_due = factory.SelfAttribute('round.finalfeedback')
     final_feedback_opens = factory.LazyAttribute(lambda o: o.final_feedback_due - datetime.timedelta(days=7))
     intern_ends = factory.SelfAttribute('round.internends')
