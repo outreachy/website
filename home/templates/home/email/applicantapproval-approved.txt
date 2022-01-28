@@ -49,7 +49,7 @@ If you are having trouble finding a project or contacting a mentor, please conta
 Unofficial Resources
 ---
 
-If you haven't participated in open source before, we recommend reading the book "Forge Your Future with Open Source". Please use the code "{{ application.application_round.coupon_code }}" for a discount:
+If you haven't participated in open source before, we recommend reading the book "Forge Your Future with Open Source":
 
 https://pragprog.com/book/vbopens/forge-your-future-with-open-source
 
