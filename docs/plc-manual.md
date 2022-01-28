@@ -28,7 +28,6 @@ The duties of an Outreachy PLC member are:
 
 Current Outreachy PLC member list:
 
- - Cindy Pallares-Quezada
  - Karen Sandler
  - Tony Sebro
  - Sage Sharp

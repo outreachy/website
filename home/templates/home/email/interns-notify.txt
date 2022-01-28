@@ -76,7 +76,7 @@ Legal Name
 
 You will need to provide your full legal name as your electronic signature on the internship agreement. You will also need to use your full legal name on your tax paperwork. Please make sure the names match.
 
-Only Outreachy organizers (Marina, Sage, Karen, Cindy, and Tony) and Software Freedom Conservancy staff will see your legal name. You may use a nickname, pseudonym, or a shortened name for working with Outreachy mentors. You can also use a nickname, pseudonym, or shortened name for display on the Outreachy alums page.
+Only Outreachy organizers (Marina, Sage, Karen, Anna, and Tony) and Software Freedom Conservancy staff will see your legal name. You may use a nickname, pseudonym, or a shortened name for working with Outreachy mentors. You can also use a nickname, pseudonym, or shortened name for display on the Outreachy alums page.
 
 Payment Accounting
 ------------------
@@ -123,7 +123,7 @@ Please update your profile https://www.outreachy.org/account/ with a link to bot
 E-mails for coordinators and mentors
 ------------------------------------
 
-organizers@outreachy.org is an email shared by the organizers of the program (Cindy Pallares, Karen Sandler, Tony Sebro, Sage Sharp, and Marina Zhurakhinskaya).
+organizers@outreachy.org is an email shared by the organizers of the program (Anna e só, Karen Sandler, Tony Sebro, Sage Sharp, and Marina Zhurakhinskaya).
 
 Please feel free to e-mail us if you have any general questions about the program at any time. Please always e-mail that address, and not one of us individually. Please make sure to always use "Reply to All".
 

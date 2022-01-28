@@ -1,6 +1,6 @@
 # Outreachy Community Code of Conduct
   
-_last edited - August 31, 2021_
+_last edited - January 28, 2022_
 
 ## Our Pledge
 
@@ -110,14 +110,10 @@ If a concern about a past incident in any space is brought up about a current Ou
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the Outreachy organizers through our [website contact form](https://www.outreachy.org/contact/contact-us/).
 
-The contact form reaches the five Outreachy organizers, who can be emailed
-individually with an incident report:
+The contact form reaches all Outreachy organizers, including organizers who are not on the Outreachy Code of Conduct committee. You can individually email the Outreachy Code of Conduct committee members with an incident report by using these email addresses:
 
 * Sage Sharp <sage@outreachy.org>
-* Marina Zhurakhinskaya <marinaz@outreachy.org>
 * Karen Sandler <karen@outreachy.org>
-* Tony Sebro <tony@outreachy.org>
-* Cindy Pallares-Quezada <cindy@outreachy.org>
 
 All complaints will be reviewed and investigated and will result in a response that is deemed necessary and appropriate to the circumstances. The Outreachy organizers are obligated to maintain confidentiality with regard to the reporter of an incident. Further details of specific enforcement policies may be posted separately.
 
