@@ -1,0 +1,41 @@
+[Due {{ intern_selection.feedback3_due|date:"M j" }}] Outreachy feedback #3 requested for {{ intern_selection.applicant.applicant.public_name }}
+
+Greetings Outreachy interns and mentors! We are asking both interns and one of their mentors to provide feedback on the internship.
+
+This is an automated email to ask you to fill out your feedback form linked from your dashboard:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}#feedback
+
+You can only submit feedback once. If your dashboard shows you have already submitted feedback, please disregard this email.
+
+Only one mentor can submit feedback for one intern. If you are co-mentoring an intern, please talk with your co-mentor to decide what feedback to submit, and who should submit it.
+
+Feedback from both interns and mentors will help Outreachy organizers understand how we all can better support each other.
+
+Privacy
+---
+
+Feedback is completely private, and will only be seen by Outreachy Organizers and Software Freedom Conservancy accounting staff. Outreachy organizers will discuss your feedback with you and draft a response with you before contacting the other person about any issues.
+
+We encourage mentors and interns to provide honest feedback on how the internship is going.
+
+Feedback #3 Success Metrics
+---
+
+Outreachy organizers view this internship as a fellowship. Mentors should not expect a certain project to be completed by the intern, but rather expect that the intern's work will be adjusted to the level of their ability, their interests, and the project's priorities throughout the internship. Outreachy organizers prefer not to fail people in the program as long as they are working full-time on the project.
+
+The most important metric for success is whether the mentor knows their intern is putting in a full-time, 30 hours a week effort. If an intern isn't putting in a full-time effort, we use the other metrics to come up with a plan to get the intern back on track. We also gather metrics about mentor engagement to ensure success for all Outreachy mentors.
+
+Transparency
+---
+
+Interns will be able to see on their dashboard if their mentor has submitted feedback, but not the contents of that feedback. The interns will be able to see on their dashboard when the mentor feedback is reviewed by the Outreachy organizers and their payment authorization is sent to the Software Freedom Conservancy. As we batch payment authorizations, please do not email Outreachy organizers to remind us of feedback that needs to be reviewed.
+
+If the mentor has requested that an internship be extended, interns will receive an email from Outreachy organizers to confirm the internship extension. If an internship has already been extended, and the mentor feels like an intern has not put in a full-time effort (and is unlikely to put in a full-time effort), then the mentor can indicate they wish to terminate the internship. Interns will get an email from the Outreachy organizers if that unlikely event occurs.
+
+If feedback that interns give for their mentors indicate that the Outreachy organizers need to contact the mentor, we will get in touch with the intern via email. The Outreachy organizers will ask the intern if it is okay to share some details of their feedback with their mentor, in order to encourage the mentor to improve. If a mentor does not improve or is unresponsive, Outreachy organizers will work with the community coordinator (or other Outreachy coordinators and mentors in different communities) to try and find a new mentor.
+
+Please let us know in the feedback form or via email if there's anything else we can do to support this internship! If you have any questions, please contact us.
+
+Outreachy Organizers
+{% include 'home/email/footer-mentor-intern-coordinator.txt' %}

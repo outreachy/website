@@ -563,6 +563,13 @@ class RoundPage(AugmentDeadlines, Page):
                 interns.append(i)
         return interns
 
+    def get_interns_with_open_feedback3(self):
+        interns = []
+        for i in self.get_in_good_standing_intern_selections():
+            if i.is_feedback_3_form_open_to_mentor():
+                interns.append(i)
+        return interns
+
     def get_interns_with_open_final_feedback(self):
         interns = []
         for i in self.get_in_good_standing_intern_selections():

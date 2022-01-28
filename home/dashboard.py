@@ -675,6 +675,36 @@ class MidpointFeedbackInstructions(FeedbackInstructions):
             email.feedback_email(i, self.request, "midpoint", i.is_feedback_2_from_mentor_past_due(), connection=connection)
 
 
+class Feedback3FeedbackInstructions(FeedbackInstructions):
+    """
+    Send feedback #3 instructions to mentors and interns.
+
+    When: When feedback #3 forms open, and again if feedback is missing.
+          Emails may be sent with an URGENT subject if feedback is late.
+          Emails may be sent multiple times if there is a internship extension.
+
+    Templates: home/templates/home/email/feedback3-feedback-reminder.txt
+               home/templates/home/email/feedback3-feedback-instructions.txt
+    """
+    description = 'Feedback #3 Reminder'
+    slug = 'feedback3-feedback-instructions'
+
+    @staticmethod
+    def due_date(current_round):
+        return current_round.feedback3_due
+
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+
+        # Only get interns that are in good standing and
+        # where a mentor or intern hasn't submitted feedback.
+        interns = current_round.get_interns_with_open_feedback3()
+
+        for i in interns:
+            email.feedback_email(i, self.request, "feedback3", i.is_feedback_3_from_mentor_past_due(), connection=connection)
+
+
 class FinalFeedbackInstructions(FeedbackInstructions):
     """
     Send final feedback instructions to mentors and interns.
@@ -761,6 +791,7 @@ all_round_events = (
     InternWeek.at(week=11),
     InternWeek.at(week=13),
     MidpointFeedbackInstructions,
+    Feedback3FeedbackInstructions,
     FinalFeedbackInstructions,
 )
 
