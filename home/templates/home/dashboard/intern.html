@@ -111,10 +111,16 @@
 
 		<p>Dates for you to give feedback on your internship:
 		<ul>
-			<li>{{ internship.initial_feedback_due }} 4pm UTC - Feedback #1 is due</li>
-			<li>{{ internship.midpoint_feedback_due }} 4pm UTC - Feedback #2 is due</li>
-			<li>{{ internship.feedback3_due }} 4pm UTC - Feedback #3 is due</li>
-			<li>{{ internship.final_feedback_due }} 4pm UTC - Feedback #4 is due</li>
+			{% if internship.feedback3_due %}
+				<li>{{ internship.initial_feedback_due }} 4pm UTC - Feedback #1 is due</li>
+				<li>{{ internship.midpoint_feedback_due }} 4pm UTC - Feedback #2 is due</li>
+				<li>{{ internship.feedback3_due }} 4pm UTC - Feedback #3 is due</li>
+				<li>{{ internship.final_feedback_due }} 4pm UTC - Feedback #4 is due</li>
+			{% else %}
+				<li>{{ internship.initial_feedback_due }} 4pm UTC - Initial feedback is due</li>
+				<li>{{ internship.midpoint_feedback_due }} 4pm UTC - Midpoint feedback is due</li>
+				<li>{{ internship.final_feedback_due }} 4pm UTC - Final feedback is due</li>
+			{% endif %}
 		</ul>
 		</p>
 		<p>You can <a href="{% url 'contact-organizers' %}">contact Outreachy organizers</a> at any time to give informal feedback or ask for additional help.</p>

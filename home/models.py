@@ -3975,7 +3975,7 @@ class InternSelection(AugmentDeadlines, models.Model):
             return True
 
     def is_feedback_3_form_open_to_mentor(self):
-        if not self.feedback3_opens.has_passed():
+        if not self.feedback3_opens or not self.feedback3_opens.has_passed():
             return False
         try:
             return self.feedback3frommentor.can_edit()
@@ -3983,12 +3983,14 @@ class InternSelection(AugmentDeadlines, models.Model):
             return True
 
     def is_feedback_3_from_mentor_past_due(self):
+        if not self.feedback3_due:
+            return False
         if self.feedback3_due.has_passed():
             return True
         return False
 
     def is_feedback_3_form_open_to_intern(self):
-        if not self.feedback3_opens.has_passed():
+        if not self.feedback3_opens or not self.feedback3_opens.has_passed():
             return False
         try:
             return self.feedback3fromintern.can_edit()

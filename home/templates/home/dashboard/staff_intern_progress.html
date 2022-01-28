@@ -5,7 +5,7 @@
 <ul>
 	<li><p>{{ current_round.initialfeedback }} - Feedback #1 is due. <a href="{% url 'initial-feedback-summary' round_slug=current_round.slug %}"><button class="btn btn-secondary">View Feedback #1</button></a> <a href="{% url 'initial-feedback-export' round_slug=current_round.slug %}"><button class="btn btn-success">Export Feedback #1</button></a></p></li>
 	<li><p>{{ current_round.midfeedback }} - Feedback #2 is due. <a href="{% url 'midpoint-feedback-summary' round_slug=current_round.slug %}"><button class="btn btn-secondary">View Feedback #2</button></a></p></li>
-	<li><p>{{ current_round.feedback3_due }} - Feedback #2 is due. <a href="{% url 'feedback-3-summary' round_slug=current_round.slug %}"><button class="btn btn-secondary">View Feedback #3</button></a> <a href="{% url 'feedback-3-export' round_slug=current_round.slug %}"><button class="btn btn-success">Export Feedback #3</button></a></p></li>
+	<li><p>{{ current_round.feedback3_due }} - Feedback #3 is due. <a href="{% url 'feedback-3-summary' round_slug=current_round.slug %}"><button class="btn btn-secondary">View Feedback #3</button></a> <a href="{% url 'feedback-3-export' round_slug=current_round.slug %}"><button class="btn btn-success">Export Feedback #3</button></a></p></li>
 	<li><p>{{ current_round.finalfeedback }} - Final feedback is due. <a href="{% url 'final-feedback-summary' round_slug=current_round.slug %}"><button class="btn btn-secondary">View Feedback #4</button></a></li>
 </ul>
 {% with interns=current_round.get_approved_intern_selections %}
