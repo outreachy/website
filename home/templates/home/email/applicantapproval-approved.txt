@@ -42,9 +42,8 @@ Please review the applicant guide:
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'docs-applicant' %}
 
-If you are having trouble finding a project or contacting a mentor, please reach out to the mentors mailing list or contact the Outreachy applicant helpers:
+If you are having trouble finding a project or contacting a mentor, please contact the Outreachy applicant helpers:
 
-{{ request.scheme }}://{{ request.get_host }}{% url 'contact-mentors' %}
 {{ request.scheme }}://{{ request.get_host }}{% url 'contact-applicant-help' %}
 
 Unofficial Resources
