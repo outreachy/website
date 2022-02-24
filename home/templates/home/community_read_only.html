@@ -350,6 +350,17 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 			{% if community.humanitarian_community %}<li><b>Humanitarian open source community.</b></li>{% endif %}
 			{% if community.general_funding_application %}<li>Humanitarian issues the community addresses: {{ community.general_funding_application }}</li>{% endif %}
 			{% if community.additional_sponsors %}<li>Community sponsors Outreachy might want to ask for internship funding: {{ community.additional_sponsors }}</li>{% endif %}
+			{% if community.open_science_community %}<li><b>Open science community.</b></li>{% endif %}
+			{% if community.open_science_funder_questions %}
+			<li>
+				<p>Alignment with Wellcome Trust sponsorship goals:</p>
+				<p>{{ community.open_science_funder_questions|linebreaksbr }}</p>
+			</li>{% endif %}
+			{% if community.open_science_practices %}
+			<li>
+				<p>Community open science practices:</p>
+				<p>{{ community.open_science_practices|linebreaksbr }}</p>
+			</li>{% endif %}
 		</ul>
 		<div class="container">
 			<div class="row">
