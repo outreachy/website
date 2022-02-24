@@ -13,94 +13,100 @@ from home.email import organizers
 # don't try to use the static files manifest during tests
 @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
 class InternSelectionTestCase(TestCase):
-    def test_intern_selection_process(self):
-        for phase in ('contributions_open', 'contributions_close'):
-            with self.subTest(phase=phase):
-                current_round = RoundPageFactory(start_from=phase)
-                applicantapproval = ApplicantApprovalFactory(
-                    application_round=current_round,
-                    approval_status=models.ApprovalStatus.APPROVED,
-                )
 
-                project = ProjectFactory(
-                    project_round__participating_round=current_round,
-                    approval_status=models.ApprovalStatus.APPROVED,
-                    project_round__approval_status=models.ApprovalStatus.APPROVED,
-                )
+    @staticmethod
+    def _test_intern_selection_process(self, phase):
+        current_round = RoundPageFactory(start_from=phase)
+        applicantapproval = ApplicantApprovalFactory(
+            application_round=current_round,
+            approval_status=models.ApprovalStatus.APPROVED,
+        )
 
-                finalapplication = FinalApplicationFactory(
-                    round=current_round, project=project, applicant=applicantapproval
-                )
+        project = ProjectFactory(
+            project_round__participating_round=current_round,
+            approval_status=models.ApprovalStatus.APPROVED,
+            project_round__approval_status=models.ApprovalStatus.APPROVED,
+        )
 
-                mentorapproval = MentorApprovalFactory(
-                    project=project, approval_status=models.ApprovalStatus.APPROVED
-                )
+        finalapplication = FinalApplicationFactory(
+            round=current_round, project=project, applicant=applicantapproval
+        )
 
-                coordinatorapproval = CoordinatorApprovalFactory(
-                    community=project.project_round.community,
-                    approval_status=models.ApprovalStatus.APPROVED,
-                )
+        mentorapproval = MentorApprovalFactory(
+            project=project, approval_status=models.ApprovalStatus.APPROVED
+        )
 
-                organizer = ComradeFactory(account__is_staff=True).account
+        coordinatorapproval = CoordinatorApprovalFactory(
+            community=project.project_round.community,
+            approval_status=models.ApprovalStatus.APPROVED,
+        )
 
-                post_params = {
-                    "round_slug": current_round.slug,
-                    "community_slug": project.project_round.community.slug,
-                    "project_slug": project.slug,
-                    "applicant_username": applicantapproval.applicant.account.username,
-                }
+        organizer = ComradeFactory(account__is_staff=True).account
 
-                # mentor selects the intern..
-                self.client.force_login(mentorapproval.mentor.account)
-                path = reverse("select-intern", kwargs={**post_params})
+        post_params = {
+            "round_slug": current_round.slug,
+            "community_slug": project.project_round.community.slug,
+            "project_slug": project.slug,
+            "applicant_username": applicantapproval.applicant.account.username,
+        }
 
-                legal_name = mentorapproval.mentor.public_name
-                response = self.client.post(path, {
-                    "rating-rating": models.FinalApplication.AMAZING,
-                    "contract-legal_name": legal_name,
-                })
-                self.assertEqual(response.status_code, 302)
+        # mentor selects the intern..
+        self.client.force_login(mentorapproval.mentor.account)
+        path = reverse("select-intern", kwargs={**post_params})
 
-                new_relationship = models.MentorRelationship.objects.get(mentor=mentorapproval)
-                intern_selection = new_relationship.intern_selection
-                self.assertEqual(new_relationship.contract.legal_name, legal_name)
-                self.assertEqual(intern_selection.applicant, applicantapproval)
-                self.assertEqual(intern_selection.project, project)
+        legal_name = mentorapproval.mentor.public_name
+        response = self.client.post(path, {
+            "rating-rating": models.FinalApplication.AMAZING,
+            "contract-legal_name": legal_name,
+        })
+        self.assertEqual(response.status_code, 302)
 
-                # organizer approves too early, rejected..
-                self.client.force_login(organizer)
-                path = reverse("intern-approval", kwargs={
-                    **post_params,
-                    "approval": "Approved",
-                })
-                response = self.client.post(path)
-                self.assertEqual(response.status_code, 403)
-                intern_selection = models.InternSelection.objects.get(project=project)
-                self.assertEqual(intern_selection.organizer_approved, None)
+        new_relationship = models.MentorRelationship.objects.get(mentor=mentorapproval)
+        intern_selection = new_relationship.intern_selection
+        self.assertEqual(new_relationship.contract.legal_name, legal_name)
+        self.assertEqual(intern_selection.applicant, applicantapproval)
+        self.assertEqual(intern_selection.project, project)
 
-                # coordinator adds funding..
-                self.client.force_login(coordinatorapproval.coordinator.account)
-                path = reverse("intern-fund", kwargs={
-                    **post_params,
-                    "funding": models.InternSelection.GENERAL_FUNDED,
-                })
-                response = self.client.post(path)
-                self.assertEqual(response.status_code, 302)
+        # organizer approves too early, rejected..
+        self.client.force_login(organizer)
+        path = reverse("intern-approval", kwargs={
+            **post_params,
+            "approval": "Approved",
+        })
+        response = self.client.post(path)
+        self.assertEqual(response.status_code, 403)
+        intern_selection = models.InternSelection.objects.get(project=project)
+        self.assertEqual(intern_selection.organizer_approved, None)
 
-                intern_selection = models.InternSelection.objects.get(project=project)
-                self.assertEqual(intern_selection.funding_source, models.InternSelection.GENERAL_FUNDED)
+        # coordinator adds funding..
+        self.client.force_login(coordinatorapproval.coordinator.account)
+        path = reverse("intern-fund", kwargs={
+            **post_params,
+            "funding": models.InternSelection.GENERAL_FUNDED,
+        })
+        response = self.client.post(path)
+        self.assertEqual(response.status_code, 302)
 
-                # organizer approves..
-                self.client.force_login(organizer)
-                path = reverse("intern-approval", kwargs={
-                    **post_params,
-                    "approval": "Approved",
-                })
-                response = self.client.post(path)
-                self.assertEqual(response.status_code, 302)
+        intern_selection = models.InternSelection.objects.get(project=project)
+        self.assertEqual(intern_selection.funding_source, models.InternSelection.GENERAL_FUNDED)
 
-                intern_selection = models.InternSelection.objects.get(project=project)
-                self.assertEqual(intern_selection.organizer_approved, True)
+        # organizer approves..
+        self.client.force_login(organizer)
+        path = reverse("intern-approval", kwargs={
+            **post_params,
+            "approval": "Approved",
+        })
+        response = self.client.post(path)
+        self.assertEqual(response.status_code, 302)
+
+        intern_selection = models.InternSelection.objects.get(project=project)
+        self.assertEqual(intern_selection.organizer_approved, True)
+
+    def test_intern_selection_process_when_contributions_open(self):
+        self._test_intern_selection_process(self, 'contributions_open')
+
+    def test_intern_selection_process_when_contributions_close(self):
+        self._test_intern_selection_process(self, 'contributions_close')
 
     def test_intern_selection_emails(self):
         scenario = scenarios.ContributionsClosedScenario()
