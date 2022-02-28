@@ -14,11 +14,13 @@ For Outreachy interns without an extension, this week is the last week of the in
 Goals for Mentors & Interns
 ---------------------------
 
-We know Outreachy interns learn and grow a lot during the internship! We encourage both you and your mentor to look at the blog post you made at the start of the internship about the ways you were struggling. Have you found new ways to cope with your worries? Have you gotten better about asking for help? How have you grown since the start of the internship? Then write a blog post reflecting on the ways you've grown and what skills you've learned.
+We know Outreachy interns learn and grow a lot during the internship! We encourage both you and your mentor to look at the blog post you made at the start of the internship about the ways you were struggling. How have you grown since the start of the internship? Then write a blog post reflecting on the ways you've grown and what skills you've learned.
 
-We'd like interns and mentors to take time this week to reflect on the progress you've made. Please provide each other with feedback on how the internship went. Feedback can include technical feedback, communication skills feedback, and mentor skills feedback.
+We'd like interns and mentors to take time this week to reflect on the internship together. We encourage both interns and mentors to provide feedback. Please provide each other with feedback on technical skills, communication skills, and mentoring skills.
 
-You can always provide private feedback to the Outreachy organizers in the final feedback form. Final internship feedback will be due on {{ current_round.finalfeedback }}. The form will open 1 week before the due date. You'll receive an email reminder to fill it out.
+Interns should also talk with their mentors about ways they can stay involved in the open source or open science community. Please see the goals sections below for details.
+
+Outreachy organizers will be collecting final feedback from both interns and mentors. You will receive an email asking for final feedback sometime this week (unless your internship has been extended).
 
 Week 13 Mentor & Intern Chat
 ----------------------------
@@ -42,8 +44,11 @@ Week 13 goals:
 
  - Provide feedback on how you've seen your intern grow during the internship
  - Feedback can include technical feedback or communication skills feedback
- - Discuss ways your intern can continue to connect with you and the open source community
+ - Discuss ways your intern can continue to connect with you and the open source or open science community
+ - Discuss co-mentoring a future Outreachy intern with your current intern
  - Discuss open source events or conferences your intern could attend
+ - Write your intern a letter of recommendation (if they want one)
+ - Write your intern a recommendation on their LinkedIn profile (if they have one)
 
 Goals for Interns
 -----------------
@@ -51,9 +56,14 @@ Goals for Interns
 Week 13 goals:
 
  - Provide feedback to your mentor about how they helped you and any ways they could improve their mentorship skills
- - Discuss ways you can continue to connect with your mentor and the open source community
+ - Discuss ways you can continue to connect with your mentor and the open source or open science community
  - Discuss any open source events or conferences you could attend
+ - Discuss co-mentoring a future Outreachy intern with your mentor
+ - Ask your mentor to provide you a letter of recommendation (if you want one)
+ - Ask your mentor to write a recommendation on your LinkedIn profile
  - Write a wrap-up blog post for your internship
+ - Sign up for the Outreachy opportunities mailing list
+
 
 Week 13 Blog
 ------------
@@ -73,6 +83,41 @@ Here's some prompts that could get you started writing this blog post:
  - What are the next steps for you (or someone else) to complete the project?
 
 Think about your core values you talked about in your first blog post. Did any of your core values help you during your internship?
+
+
+Sharing opportunities
+---
+
+We love to share opportunities with past Outreachy participants!
+
+Please sign up for the Outreachy opportunities mailing list:
+
+https://lists.outreachy.org/cgi-bin/mailman/listinfo/opportunities
+
+Both interns and mentors are encouraged to sign up for the mailing list. Employees of Outreachy sponsors are also welcome to subscribe to the mailing list.
+
+Both interns and mentors are invited to email the mailing list. You can share things like job posts, internships, calls for speakers, event announcements, and any other opportunities that you think might be of interest to the Outreachy community.
+
+You can also share opportunities on the private Outreachy Zulip chat:
+
+https://chat.outreachy.org/#narrow/stream/49-jobs-and.20opportunities
+
+
+Resumes and Outreachy
+---
+
+Many Outreachy interns will be updating their resumes and LinkedIn profiles to list their Outreachy internship.
+
+Please make sure you list your internship as "Outreachy intern working with {{ intern_selection.community_name }}" on your resume. Do not say you worked for an Outreachy sponsor. Do not say you worked for your open source or open science community. It's important to accurately represent your Outreachy internship.
+
+When listing your Outreachy internship on LinkedIn, list your employer as Outreachy:
+
+https://www.linkedin.com/company/18204091/
+
+If you need a letter of participation, you can request one as soon as your mentor submits successful internship feedback for feedback #4. Please email <organizers@outreachy.org> with the subject "Internship letter request". Please make sure to include your full name, which community you worked with, and which internship cohort you were participating in.
+
+Please note that Outreachy organizers cannot give letters of recommendation. You will need to talk with your mentor if you want a letter of recommendation. It can also be helpful to ask your mentor to provide a written recommendation for your LinkedIn profile.
+
 
 We're so proud of all of you! If you have any questions or feedback for us, please contact the Outreachy organizers organizers@outreachy.org
 
