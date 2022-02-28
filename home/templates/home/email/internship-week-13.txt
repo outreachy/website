@@ -49,6 +49,7 @@ Week 13 goals:
  - Discuss open source events or conferences your intern could attend
  - Write your intern a letter of recommendation (if they want one)
  - Write your intern a recommendation on their LinkedIn profile (if they have one)
+ - Sign up for the Outreachy opportunities mailing list
 
 Goals for Interns
 -----------------
@@ -90,11 +91,9 @@ Sharing opportunities
 
 We love to share opportunities with past Outreachy participants!
 
-Please sign up for the Outreachy opportunities mailing list:
+Both interns and mentors are encouraged to sign up for the mailing list. Employees of Outreachy sponsors are also welcome to subscribe to the mailing list. Sign up for the mailing list here:
 
 https://lists.outreachy.org/cgi-bin/mailman/listinfo/opportunities
-
-Both interns and mentors are encouraged to sign up for the mailing list. Employees of Outreachy sponsors are also welcome to subscribe to the mailing list.
 
 Both interns and mentors are invited to email the mailing list. You can share things like job posts, internships, calls for speakers, event announcements, and any other opportunities that you think might be of interest to the Outreachy community.
 
@@ -114,9 +113,15 @@ When listing your Outreachy internship on LinkedIn, list your employer as Outrea
 
 https://www.linkedin.com/company/18204091/
 
-If you need a letter of participation, you can request one as soon as your mentor submits successful internship feedback for feedback #4. Please email <organizers@outreachy.org> with the subject "Internship letter request". Please make sure to include your full name, which community you worked with, and which internship cohort you were participating in.
 
-Please note that Outreachy organizers cannot give letters of recommendation. You will need to talk with your mentor if you want a letter of recommendation. It can also be helpful to ask your mentor to provide a written recommendation for your LinkedIn profile.
+Internship participation letter
+---
+
+Outreachy can provide interns with a letter certifying that you completed your internship. This can be helpful to provide to potential employers, for visa applications, and for getting school credit for your internship.
+
+If you need an internship participation letter, you can request one as soon as your mentor submits successful internship feedback for feedback #4. Please email <organizers@outreachy.org> with the subject "Internship participation letter request". Please make sure to include your full name, which community you worked with, and which internship cohort you were participating in.
+
+We encourage interns ask their mentor for a letter of recommendation. We also encourage interns to ask their mentor to provide a recommendation on your LinkedIn profile.
 
 
 We're so proud of all of you! If you have any questions or feedback for us, please contact the Outreachy organizers organizers@outreachy.org
