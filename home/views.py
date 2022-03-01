@@ -3401,7 +3401,7 @@ def feedback_3_export_view(request, round_slug):
         except Feedback3FromMentor.DoesNotExist:
             continue
     response = JsonResponse(dictionary_list, safe=False)
-    response['Content-Disposition'] = 'attachment; filename="' + round_slug + '-feedback-3.json"'
+    response['Content-Disposition'] = 'attachment; filename="' + round_slug + '-midpoint-feedback.json"'
     return response
 
 @login_required
