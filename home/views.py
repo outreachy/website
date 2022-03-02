@@ -75,6 +75,8 @@ from .models import Feedback2FromMentor
 from .models import Feedback2FromIntern
 from .models import Feedback3FromMentor
 from .models import Feedback3FromIntern
+from .models import Feedback4FromMentor
+from .models import Feedback4FromIntern
 from .models import FinalMentorFeedback
 from .models import FinalInternFeedback
 from .models import MentorApproval
@@ -3415,31 +3417,87 @@ def feedback_3_summary(request, round_slug):
             },
             )
 
-class FinalMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
-    form_class = modelform_factory(FinalMentorFeedback,
+class Feedback4FromMentorUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
+    form_class = modelform_factory(Feedback4FromMentor,
             fields=(
-                'mentor_help_response_time',
-                'mentor_review_response_time',
+                'mentor_answers_questions',
+                'intern_asks_questions',
+                'mentor_support_when_stuck',
+
+                'daily_stand_ups',
+                'meets_privately',
+                'meets_over_phone_or_video_chat',
+                'intern_missed_meetings',
+
+                'talk_about_project_progress',
+                'reviewed_original_timeline',
+
+                'contribution_drafts',
+                'contribution_review',
+                'contribution_revised',
+
+                'mentor_shares_positive_feedback',
+                'mentor_promoting_work_to_community',
+                'mentor_promoting_work_on_social_media',
+
+                'intern_blogging',
+                'mentor_discussing_blog',
+                'mentor_promoting_blog_to_community',
+                'mentor_promoting_blog_on_social_media',
+
+                'mentor_introduced_intern_to_community',
+                'intern_asks_questions_of_community_members',
+                'intern_talks_to_community_members',
+                'mentor_introduced_to_informal_chat_contacts',
+                'intern_had_informal_chats',
+
                 'mentors_report',
-                'intern_help_requests_frequency',
                 'last_contact',
-                'intern_contribution_frequency',
-                'intern_contribution_revision_time',
                 'progress_report',
+
                 'full_time_effort',
+
                 'actions_requested',
-                'mentoring_recommended',
-                'blog_frequency',
-                'blog_prompts_caused_writing',
-                'blog_prompts_caused_overhead',
-                'recommend_blog_prompts',
-                'zulip_caused_intern_discussion',
-                'zulip_caused_mentor_discussion',
-                'recommend_zulip',
-                'feedback_for_organizers',
+
+                'recommend_mentoring',
+                'mentoring_positive_impacts',
+                'mentoring_improvement_suggestions',
+                'new_mentor_suggestions',
+                'community_positive_impacts',
+                'community_improvement_suggestions',
+                'additional_feedback',
             ),
             field_classes = {
-                'in_contact': RadioBooleanField,
+                'mentor_answers_questions': RadioBooleanField,
+                'intern_asks_questions': RadioBooleanField,
+                'mentor_support_when_stuck': RadioBooleanField,
+
+                'daily_stand_ups': RadioBooleanField,
+                'meets_privately': RadioBooleanField,
+                'meets_over_phone_or_video_chat': RadioBooleanField,
+                'intern_missed_meetings': RadioBooleanField,
+                'talk_about_project_progress': RadioBooleanField,
+                'reviewed_original_timeline': RadioBooleanField,
+
+                'contribution_drafts': RadioBooleanField,
+                'contribution_review': RadioBooleanField,
+                'contribution_revised': RadioBooleanField,
+
+                'mentor_shares_positive_feedback': RadioBooleanField,
+                'mentor_promoting_work_to_community': RadioBooleanField,
+                'mentor_promoting_work_on_social_media': RadioBooleanField,
+
+                'intern_blogging': RadioBooleanField,
+                'mentor_discussing_blog': RadioBooleanField,
+                'mentor_promoting_blog_to_community': RadioBooleanField,
+                'mentor_promoting_blog_on_social_media': RadioBooleanField,
+
+                'mentor_introduced_intern_to_community': RadioBooleanField,
+                'intern_asks_questions_of_community_members': RadioBooleanField,
+                'intern_talks_to_community_members': RadioBooleanField,
+                'mentor_introduced_to_informal_chat_contacts': RadioBooleanField,
+                'intern_had_informal_chats': RadioBooleanField,
+
                 'full_time_effort': RadioBooleanField,
             },
         )
@@ -3459,12 +3517,12 @@ class FinalMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixi
             raise PermissionDenied("{} is not an intern in good standing".format(self.kwargs['username']))
 
         try:
-            feedback = FinalMentorFeedback.objects.get(intern_selection=internship)
+            feedback = Feedback4FromMentor.objects.get(intern_selection=internship)
             if not feedback.can_edit():
                 raise PermissionDenied("This feedback is already submitted and can't be updated right now.")
             return feedback
-        except FinalMentorFeedback.DoesNotExist:
-            return FinalMentorFeedback(intern_selection=internship)
+        except Feedback4FromMentor.DoesNotExist:
+            return Feedback4FromMentor(intern_selection=internship)
 
     def form_valid(self, form):
         feedback = form.save(commit=False)
@@ -3473,35 +3531,90 @@ class FinalMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixi
         feedback.save()
         return redirect(reverse('dashboard') + '#feedback')
 
-class FinalInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
-    form_class = modelform_factory(FinalInternFeedback,
+class Feedback4FromInternUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
+    form_class = modelform_factory(Feedback4FromIntern,
             fields=(
-                'intern_help_requests_frequency',
-                'mentor_help_response_time',
-                'intern_contribution_frequency',
-                'mentor_review_response_time',
-                'intern_contribution_revision_time',
-                'last_contact',
-                'mentor_support',
                 'share_mentor_feedback_with_community_coordinator',
+                'mentor_answers_questions',
+                'intern_asks_questions',
+                'mentor_support_when_stuck',
+
+                'daily_stand_ups',
+                'meets_privately',
+                'meets_over_phone_or_video_chat',
+                'intern_missed_meetings',
+
+                'talk_about_project_progress',
+                'reviewed_original_timeline',
+
+                'contribution_drafts',
+                'contribution_review',
+                'contribution_revised',
+
+                'mentor_shares_positive_feedback',
+                'mentor_promoting_work_to_community',
+                'mentor_promoting_work_on_social_media',
+
+                'intern_blogging',
+                'mentor_discussing_blog',
+                'mentor_promoting_blog_to_community',
+                'mentor_promoting_blog_on_social_media',
+
+                'mentor_introduced_intern_to_community',
+                'intern_asks_questions_of_community_members',
+                'intern_talks_to_community_members',
+                'mentor_introduced_to_informal_chat_contacts',
+                'intern_had_informal_chats',
+
+                'mentor_support',
+                'last_contact',
                 'hours_worked',
                 'time_comments',
                 'progress_report',
-                'interning_recommended',
-                'tech_industry_prep',
-                'foss_confidence',
-                'recommend_intern_chat',
-                'chat_frequency',
-                'blog_prompts_caused_writing',
-                'blog_prompts_caused_overhead',
-                'blog_frequency',
-                'recommend_blog_prompts',
-                'zulip_caused_intern_discussion',
-                'zulip_caused_mentor_discussion',
-                'recommend_zulip',
-                'feedback_for_organizers',
-                ),
-            )
+
+                'recommend_open_source',
+                'recommend_interning',
+                'application_period_positive_impacts',
+                'application_period_improvement_suggestions',
+                'new_applicant_advice',
+                'interning_positive_impacts',
+                'interning_improvement_suggestions',
+                'community_positive_impacts',
+                'community_improvement_suggestions',
+                'additional_feedback',
+            ),
+            field_classes = {
+                'mentor_answers_questions': RadioBooleanField,
+                'intern_asks_questions': RadioBooleanField,
+                'mentor_support_when_stuck': RadioBooleanField,
+
+                'daily_stand_ups': RadioBooleanField,
+                'meets_privately': RadioBooleanField,
+                'meets_over_phone_or_video_chat': RadioBooleanField,
+                'intern_missed_meetings': RadioBooleanField,
+                'talk_about_project_progress': RadioBooleanField,
+                'reviewed_original_timeline': RadioBooleanField,
+
+                'contribution_drafts': RadioBooleanField,
+                'contribution_review': RadioBooleanField,
+                'contribution_revised': RadioBooleanField,
+
+                'mentor_shares_positive_feedback': RadioBooleanField,
+                'mentor_promoting_work_to_community': RadioBooleanField,
+                'mentor_promoting_work_on_social_media': RadioBooleanField,
+
+                'intern_blogging': RadioBooleanField,
+                'mentor_discussing_blog': RadioBooleanField,
+                'mentor_promoting_blog_to_community': RadioBooleanField,
+                'mentor_promoting_blog_on_social_media': RadioBooleanField,
+
+                'mentor_introduced_intern_to_community': RadioBooleanField,
+                'intern_asks_questions_of_community_members': RadioBooleanField,
+                'intern_talks_to_community_members': RadioBooleanField,
+                'mentor_introduced_to_informal_chat_contacts': RadioBooleanField,
+                'intern_had_informal_chats': RadioBooleanField,
+            },
+    )
 
     def get_object(self):
         self.internship = intern_in_good_standing(self.request.user)
@@ -3509,15 +3622,15 @@ class FinalInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixi
             raise PermissionDenied("The account for {} is not associated with an intern in good standing".format(self.request.user.username))
 
         try:
-            feedback = FinalInternFeedback.objects.get(intern_selection=self.internship)
+            feedback = Feedback4FromIntern.objects.get(intern_selection=self.internship)
             if not feedback.can_edit():
                 raise PermissionDenied("This feedback is already submitted and can't be updated right now.")
             return feedback
-        except FinalInternFeedback.DoesNotExist:
-            return FinalInternFeedback(intern_selection=self.internship)
+        except Feedback4FromIntern.DoesNotExist:
+            return Feedback4FromIntern(intern_selection=self.internship)
 
     def get_context_data(self, **kwargs):
-        context = super(FinalInternFeedbackUpdate, self).get_context_data(**kwargs)
+        context = super(Feedback4FromInternUpdate, self).get_context_data(**kwargs)
         context['internship'] = self.internship
         return context
 
@@ -3530,25 +3643,10 @@ class FinalInternFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixi
 
 @login_required
 @staff_member_required
-def final_mentor_feedback_export_view(request, round_slug):
-    this_round = get_object_or_404(RoundPage, slug=round_slug)
-    interns = this_round.get_approved_intern_selections()
-    dictionary_list = []
-    for i in interns:
-        try:
-            dictionary_list.append(export_feedback(i.finalmentorfeedback))
-        except FinalMentorFeedback.DoesNotExist:
-            continue
-    response = JsonResponse(dictionary_list, safe=False)
-    response['Content-Disposition'] = 'attachment; filename="' + round_slug + '-final-feedback.json"'
-    return response
-
-@login_required
-@staff_member_required
-def final_feedback_summary(request, round_slug):
+def feedback_4_summary(request, round_slug):
     current_round = get_object_or_404(RoundPage, slug=round_slug)
 
-    return render(request, 'home/final_feedback.html',
+    return render(request, 'home/feedback4.html',
             {
             'current_round' : current_round,
             },

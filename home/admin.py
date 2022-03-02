@@ -33,6 +33,8 @@ from .models import Feedback2FromMentor
 from .models import Feedback2FromIntern
 from .models import Feedback3FromMentor
 from .models import Feedback3FromIntern
+from .models import Feedback4FromMentor
+from .models import Feedback4FromIntern
 from .models import MentorApproval
 from .models import MentorRelationship
 from .models import NewCommunity
@@ -607,15 +609,15 @@ class Feedback3FromInternInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Feedback #3 from intern'
 
-class FinalMentorFeedbackInline(admin.StackedInline):
-    model = FinalMentorFeedback
+class Feedback4FromMentorInline(admin.StackedInline):
+    model = Feedback4FromMentor
     can_delete = False
-    verbose_name_plural = 'Mentor submitted final feedback forms'
+    verbose_name_plural = 'Feedback #4 from mentor'
 
-class FinalInternFeedbackInline(admin.StackedInline):
-    model = FinalInternFeedback
+class Feedback4FromInternInline(admin.StackedInline):
+    model = Feedback4FromIntern
     can_delete = False
-    verbose_name_plural = 'Intern submitted final feedback forms'
+    verbose_name_plural = 'Feedback #4 from intern'
 
 class InternSelectionAdmin(reversion.admin.VersionAdmin):
     list_display = (
@@ -642,7 +644,7 @@ class InternSelectionAdmin(reversion.admin.VersionAdmin):
             'project',
             'intern_contract',
             )
-    inlines = (Feedback1FromMentorInline, Feedback1FromInternInline, Feedback2FromMentorInline, Feedback2FromInternInline, Feedback3FromMentorInline, Feedback3FromInternInline, FinalMentorFeedbackInline, FinalInternFeedbackInline)
+    inlines = (Feedback1FromMentorInline, Feedback1FromInternInline, Feedback2FromMentorInline, Feedback2FromInternInline, Feedback3FromMentorInline, Feedback3FromInternInline, Feedback4FromMentorInline, Feedback4FromInternInline)
 
 class FeedbackAdmin(reversion.admin.VersionAdmin):
     list_display = (

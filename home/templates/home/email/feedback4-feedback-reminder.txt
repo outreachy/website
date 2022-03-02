@@ -1,0 +1,13 @@
+[URGENT] Mentor feedback #4 required for {{ intern_selection.applicant.applicant.public_name }}
+
+Please provide feedback on your intern through the Outreachy website. Feedback #4 was due on {{ intern_selection.feedback4_due|date:"M d, Y" }}. Please fill out the feedback form ASAP:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}#feedback
+
+See instructions below for more information. If you are mentoring more than one intern, you may need to scroll further down your dashboard to find their feedback button.
+
+Outreachy Organizers
+
+---
+
+{% include 'home/email/feedback4-feedback-instructions.txt' %}

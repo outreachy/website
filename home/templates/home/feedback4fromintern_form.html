@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}
+Internship feedback #4
+{% endblock %}
+
+{% block content %}
+<h1>Feedback on Your Internship</h1>
+
+<p>Outreachy organizers collect feedback from interns four times during the Outreachy internship. Please give yourself at least 5 to 15 minutes to complete this form.</p>
+
+<h2>Instructions</h2>
+
+<p>You will submit one form that gives feedback on all your mentors. When in doubt, give feedback on how your primary mentor provides support.</p>
+
+<h2>Metrics for Success</h2>
+
+<p>Outreachy organizers view this internship as a fellowship. Mentors should not expect a certain project to be completed by the intern, but rather expect that the intern's work will be adjusted to the level of their ability, their interests, and the project's priorities throughout the internship. Outreachy organizers prefer not to fail people in the program as long as they are working full-time on the project.</p>
+
+<p>The most important metric for success is whether you are putting in the minimum internship time commitment.</p>
+
+<p>If you aren't putting in the minimum internship time commitment, Outreachy organizers and mentors use the other metrics to come up with a plan to get you back on track. Outreachy organizers also gather metrics about mentor engagement to ensure success for all Outreachy mentors.</p>
+
+<h2>Privacy</h2>
+
+<p>Your answers about your internship efforts will only be seen by Outreachy organizers and by Software Freedom Conservancy accounting staff.</p>
+
+<p>Your mentor will not be able to see your answers about your internship efforts. If Outreachy organizers need to discuss your feedback with your mentor, we will draft a response with you before contacting your mentor.</p>
+
+<p>Please be honest about your relationship with your mentor. We want to provide you help and ensure you get the support you need.</p>
+
+<p>By default, your mentor will not be able to see your answers about mentor support. If you opt in, we will share your mentor feedback with your community coordinator. Please note that if you opt in and your mentor is a community coordinator, you will be sharing your feedback with them. Your mentors are: {{ internship.mentor_names }}. Your community coordinators are: {{ internship.coordinator_names }}.</p>
+
+<form method="post" action="">
+{% csrf_token %}
+{% for field in form.visible_fields %}
+	{% if 'questions within 10 hours' in field.label_tag %}
+		<hr>
+		<h2>Clearing up doubts</h2>
+	{% elif 'daily stand ups' in field.label_tag %}
+		<hr>
+		<h2>Meetings</h2>
+	{% elif 'project progress' in field.label_tag %}
+		<hr>
+		<h2>Tracking project progress</h2>
+	{% elif 'work-in-progress' in field.label_tag %}
+		<hr>
+		<h2>Project feedback</h2>
+	{% elif 'positive feedback' in field.label_tag %}
+		<hr>
+		<h2>Acknowledgment and praise</h2>
+	{% elif 'creating blog posts' in field.label_tag %}
+		<hr>
+		<h2>Intern blog</h2>
+	{% elif 'introduce you to your open source community' in field.label_tag %}
+		<hr>
+		<h2>Networking</h2>
+	{% elif 'support you are providing as an Outreachy mentor' in field.label_tag %}
+		<hr>
+		<h2>Mentor support</h2>
+	{% elif 'mentor has (or has not) been helping you' in field.label_tag %}
+		<hr>
+		<h2>Mentor support</h2>
+	{% elif 'last date you were in contact' in field.label_tag %}
+		<hr>
+		<h2>Intern progress</h2>
+	{% endif %}
+	{% if 'Time comments' in field.label_tag %}
+		
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class = "card-header">
+				{{ field.label_tag }}
+			</div>
+			<div class = "card-body">
+				{{ field }}
+			</div>
+			<div class="card-footer bg-white"><p>(Optional) If you have not been working 30 hours per week, please let us know why. We want to support you, so let us know if there's anything we can do to help</p></div>
+		</div>
+	{% else %}
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class = "card-header">
+				{{ field.label_tag }}
+			</div>
+			<div class = "card-body">
+				{{ field }}
+			</div>
+			{% if field.help_text %}
+				<div class="card-footer bg-white">{{ field.help_text }}</div>
+			{% endif %}
+		</div>
+	{% endif %}
+{% endfor %}
+{% for hidden in form.hidden_fields %}
+	{{ hidden }}
+{% endfor %}
+<input type="submit" class="btn btn-block btn-primary" value="Submit feedback" />
+</form>
+
+{% endblock %}

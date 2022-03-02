@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}
+Internship feedback #4
+{% endblock %}
+
+{% block content %}
+<h1>Feedback #4 on {{ feedback4frommentor.intern_selection.applicant.applicant.public_name }}</h1>
+
+<p>Outreachy organizers collect intern feedback from mentors four times during the Outreachy internship.</p>
+
+<h2>Instructions</h2>
+
+<p>Please give yourself at least 5 to 15 minutes to complete this form.</p>
+
+<p>Only one mentor can submit feedback for one intern. If you are co-mentoring an intern, please talk with your co-mentor to decide what your feedback should be.</p>
+
+<p>Once you submit this form, the form cannot be edited. If you ask for an extension for this internship milestone, you will be able to update your answers after the extension is complete.</p>
+
+<h2>Privacy</h2>
+
+<p>Your answers will only be seen by Outreachy organizers, your community coordinators, and Software Freedom Conservancy accounting staff. Your intern will be able to see when you submit your feedback to us, but will not be able see what the feedback is. If Outreachy organizers need to discuss your feedback with your intern, we will draft a response with you before contacting your intern.</p>
+
+<h2>Metrics for Success</h2>
+
+<p>The most important metric for success is whether your intern is putting in the minimum internship time commitment.</p>
+
+<p>If an intern isn't putting in the minimum internship time commitment, we use the other metrics to come up with a plan to get the intern back on track. We also gather metrics about mentor engagement to ensure success for all Outreachy mentors.</p>
+
+<hr>
+<h2>Verify Intern Name</h2>
+<div class="card border-warning mb-3">
+    <div class="card-header text-white bg-warning">
+        Verify your intern name
+    </div>
+    <div class="card-body">
+        <p class="card-text">
+	<b>{{ feedback4frommentor.intern_selection.applicant.applicant.public_name }}</b> is the intern you are giving feedback on.
+	If you are mentoring multiple interns, please make sure you're filling out the right feedback form.
+        </p>
+    </div>
+</div>
+
+<form method="post" action="">
+{% csrf_token %}
+{% for field in form.visible_fields %}
+	{% if 'questions within 10 hours' in field.label_tag %}
+		<hr>
+		<h2>Clearing up doubts</h2>
+	{% elif 'daily stand ups' in field.label_tag %}
+		<hr>
+		<h2>Meetings</h2>
+	{% elif 'project progress' in field.label_tag %}
+		<hr>
+		<h2>Tracking project progress</h2>
+	{% elif 'work-in-progress' in field.label_tag %}
+		<hr>
+		<h2>Project feedback</h2>
+	{% elif 'positive feedback' in field.label_tag %}
+		<hr>
+		<h2>Acknowledgment and praise</h2>
+	{% elif 'creating blog posts' in field.label_tag %}
+		<hr>
+		<h2>Intern blog</h2>
+	{% elif 'introduce your intern to your open source community' in field.label_tag %}
+		<hr>
+		<h2>Networking</h2>
+	{% elif 'support you are providing as an Outreachy mentor' in field.label_tag %}
+		<hr>
+		<h2>Mentor support</h2>
+	{% elif 'support you are providing as an Outreachy mentor' in field.label_tag %}
+		<hr>
+		<h2>Mentor support</h2>
+	{% elif 'last date you were in contact' in field.label_tag %}
+		<hr>
+		<h2>Intern progress</h2>
+	{% elif 'How likely would you be to recommend' in field.label_tag %}
+		<hr>
+		<h2>(Optional) Internship Survey</h2>
+		<p>The following survey is completely optional. Your feedback will only be shared with Outreachy organizers.</p>
+		<p>Text fields are limited to 800 characters (about 1 to 3 paragraphs).</p>
+	{% endif %}
+	{% if 'What actions' in field.label_tag %}
+		<hr>
+		<h2>Internship Schedule</h2>
+
+		{% with intern_selection=feedback4frommentor.intern_selection %}
+			{% include 'home/snippet/internship_dates_table.html' %}
+
+			{% include 'home/snippet/internship_extensions_instructions.html' %}
+
+			<h2>Intern Payment, Extensions, or Termination</h2>
+			<p><a href="https://www.outreachy.org/mentor/mentor-faq/#payments-extensions-and-terminations">Please read the Mentor FAQ</a> for details about payments, internship extensions, and internship contract termination.</p>
+		{% endwith %}
+
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class = "card-header">
+				<label for="{{ field.id_for_label }}">{{ field.label|safe }}</label>
+			</div>
+			<div class = "card-body">
+				{{ field }}
+			</div>
+			{% if field.help_text %}
+				<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+			{% endif %}
+		</div>
+	{% elif 'Do you believe your Outreachy intern is putting in a full-time' in field.label_tag %}
+		<hr>
+		<h2>Intern Time Commitment</h2>
+		<p>Please <a href="{% url 'docs-internship' %}#time-commitment">read the intern time commitment section</a> in the Internship guide. That section outlines how many hours per week interns are required to work.</p>
+		<p>If you are unsure whether your intern is putting in enough hours per week, please <a href="https://www.outreachy.org/mentor/mentor-faq/#payments-extensions-and-terminations">read the "Intern Time Commitment" section in the Mentor FAQ</a>.</p>
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class = "card-header">
+				Do you believe your Outreachy intern is putting in the minimum internship time commitment?
+			</div>
+			<div class = "card-body">
+				{{ field }}
+			</div>
+		</div>
+	{% else %}
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class = "card-header">
+				{{ field.label_tag }}
+			</div>
+			<div class = "card-body">
+				{{ field }}
+			</div>
+			{% if field.help_text %}
+				<div class="card-footer bg-white">{{ field.help_text }}</div>
+			{% endif %}
+		</div>
+	{% endif %} 
+{% endfor %}
+{% for hidden in form.hidden_fields %}
+	{{ hidden }}
+{% endfor %}
+<hr>
+<h2>Verify Intern Name</h2>
+<div class="card border-warning mb-3">
+    <div class="card-header text-white bg-warning">
+        Please double check the intern name is correct
+    </div>
+    <div class="card-body">
+        <p class="card-text">
+	<b>{{ feedback4frommentor.intern_selection.applicant.applicant.public_name }}</b> is the intern you are giving feedback on.
+	If you are mentoring multiple interns, please make sure you're filling out the right feedback form.
+        </p>
+    </div>
+</div>
+<input type="submit" class="btn btn-block btn-primary" value="Submit feedback" />
+</form>
+
+{% endblock %}
