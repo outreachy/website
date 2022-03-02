@@ -45,10 +45,10 @@
 					{% include 'home/snippet/intern-feedback-status.html' with intern_status=intern.get_feedback_3_status_from_intern %}
 				</td>
 				<td>
-					{% include 'home/snippet/mentor-feedback-status.html' with mentor_status=intern.get_mentor_final_feedback_status extension_date=intern.finalmentorfeedback.extension_date %}
+					{% include 'home/snippet/mentor-feedback-status.html' with mentor_status=intern.get_feedback_4_status_from_mentor extension_date=intern.feedback4frommentor.extension_date %}
 				</td>
 				<td>
-					{% include 'home/snippet/intern-feedback-status.html' with intern_status=intern.get_intern_final_feedback_status %}
+					{% include 'home/snippet/intern-feedback-status.html' with intern_status=intern.get_feedback_4_status_from_intern %}
 				</td>
 			</tr>
 			{% if intern.intern_has_custom_dates %}
