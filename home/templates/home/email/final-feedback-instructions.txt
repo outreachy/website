@@ -10,8 +10,6 @@ You can only submit feedback once. If your dashboard shows you have already subm
 
 Only one mentor can submit feedback for one intern. If you are co-mentoring an intern, please talk with your co-mentor to decide what feedback to submit, and who should submit it.
 
-The mentor feedback will determine whether the intern is paid their ${{ current_round.finalpayment }} final stipend. Feedback from both interns and mentors will help Outreachy organizers understand how we all can better support each other.
-
 Privacy
 ---
 
@@ -19,38 +17,12 @@ Feedback is completely private, and will only be seen by Outreachy Organizers an
 
 We encourage mentors and interns to provide honest feedback on how the internship is going.
 
-Feedback Questions
+Survey
 ---
 
-Mentors will be asked:
- * How often does your intern ask for your help or feedback?
- * How long does it take for you to respond to your intern's request for help or feedback?
- * How often does your intern submit a project contribution?
- * How long does it take for you to give feedback on your intern's contributions?
- * How long does it take for your intern to incorporate feedback and resubmit a contribution?
- * What was the last date you were in contact with your intern?
- * Please provide a paragraph describing your intern's progress on their project. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.
- * Do you believe your Outreachy intern is putting in a full-time, 30 hours a week effort into the internship?
- * Should your Outreachy intern be paid the final ${{ current_round.finalpayment }} payment?
- * Questions about whether the intern needs an internship extension.
- * Questions about whether the internship contract may need to be terminated.
- * (The questions about internship extensions and terminations aren't needed for most internships, but our form asks them of all mentors.)
- * Would you would recommend mentoring for Outreachy to a friend?
+An optional survey is included in the final feedback form. Both mentors and interns and encouraged to fill out the survey. The survey results will help us keep the parts of the internship program that are working, and improve the parts that aren't working.
 
-Interns will be asked:
- * How often do you ask for your mentor's help or feedback?
- * How long does it take for your mentor to respond to your intern's request for help or feedback?
- * How often do you submit a project contribution?
- * How long does it take for your mentor to give feedback on your contributions?
- * How long does it take for you to incorporate your mentor's feedback and resubmit a contribution?
- * Questions about how your mentor is supporting you
- * Questions about your internship effort
- * Questions about whether Outreachy has helped you
- * Questions about whether the video chat with all interns and Outreachy organizers was useful
-
-Both mentor and intern will be asked:
- * Questions about whether the blog post prompts were effective
- * Questions about whether the Outreachy Zulip chat was useful
+Please share your feedback with us! We are open to both positive and negative feedback.
 
 Final Feedback Success Metrics
 ---
