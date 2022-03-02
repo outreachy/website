@@ -94,19 +94,18 @@
 			{% if internship.feedback3frommentor.organizer_payment_approved %}
 				<li>The Outreachy organizers have reviewed feedback #3. Your internship is in good standing.</li>
 			{% endif %}
-			{% if internship.finalinternfeedback %}
+			{% if internship.feedback4fromintern %}
 				<li>You submitted feedback #4.</li>
 			{% endif %}
-			{% if internship.finalmentorfeedback %}
-				<li>Your mentor submitted feedback #4 on {{ internship.finalmentorfeedback.find_version_mentor_edited.revision.date_created }}</li>
+			{% if internship.feedback4frommentor %}
+				<li>Your mentor submitted feedback #4 on {{ internship.feedback4frommentor.find_version_mentor_edited.revision.date_created }}</li>
 			{% endif %}
-			{% if not internship.finalinternfeedback and not internship.finalmentorfeedback %}
+			{% if not internship.feedback4fromintern and not internship.feedback4frommentor %}
 				<li>Neither you nor your mentor have submitted feedback #4.</li>
 			{% endif %}
-			{% if internship.finalmentorfeedback.organizer_payment_approved %}
-				<li>The Outreachy organizers have reviewed feedback #4. Your internship is in good standing. The Outreachy organizers have requested that the Software Freedom Conservancy pay your final stipend.</li>
+			{% if internship.feedback4frommentor.organizer_payment_approved %}
+				<li>The Outreachy organizers have reviewed feedback #4. Your internship is in good standing.</li>
 			{% endif %}
-			<li>Neither you nor your mentor have submitted feedback #4.</li>
 		</ul>
 
 		<p>Dates for you to give feedback on your internship:

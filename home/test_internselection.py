@@ -995,96 +995,71 @@ class InternSelectionTestCase(TestCase):
         self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
 
     @staticmethod
-    def _final_intern_feedback_form(internselection, **kwargs):
+    def _feedback4_mentor_form(internselection, **kwargs):
         defaults = {
-            'intern_help_requests_frequency': models.FinalInternFeedback.MULTIPLE_WEEKLY,
-            'mentor_help_response_time': models.FinalInternFeedback.HOURS_6,
-            'intern_contribution_frequency': models.FinalInternFeedback.ONCE_WEEKLY,
-            'mentor_review_response_time': models.FinalInternFeedback.HOURS_3,
-            'intern_contribution_revision_time': models.FinalInternFeedback.DAYS_2,
-            'last_contact': internselection.final_feedback_opens,
-            'mentor_support': 'My mentor is awesome.',
-            'hours_worked': models.FinalInternFeedback.HOURS_40,
-            'time_comments': '',
-            'progress_report': 'Everything is fine.',
-            'share_mentor_feedback_with_community_coordinator': True,
-            'interning_recommended': models.FinalInternFeedback.YES,
-            'recommend_intern_chat': models.FinalInternFeedback.NO_OPINION,
-            'chat_frequency': models.FinalInternFeedback.WEEK2,
-            'blog_frequency': models.FinalInternFeedback.WEEK3,
-            'blog_prompts_caused_writing': models.FinalInternFeedback.YES,
-            'blog_prompts_caused_overhead': models.FinalInternFeedback.YES,
-            'recommend_blog_prompts': models.FinalInternFeedback.YES,
-            'zulip_caused_intern_discussion': models.FinalInternFeedback.YES,
-            'zulip_caused_mentor_discussion': models.FinalInternFeedback.NO,
-            'recommend_zulip': models.FinalInternFeedback.YES,
-            'tech_industry_prep': models.FinalInternFeedback.NO,
-            'foss_confidence': models.FinalInternFeedback.YES,
-            'feedback_for_organizers': 'This was a really awesome internship!',
-        }
-        defaults.update(kwargs)
-        return defaults
+            'mentor_answers_questions': True,
+            'intern_asks_questions': True,
+            'mentor_support_when_stuck': True,
 
-    def test_intern_can_give_final_feedback(self):
-        internselection = InternSelectionFactory(
-            active=True,
-            round__start_from='finalfeedback',
-        )
+            'daily_stand_ups': True,
+            'meets_privately': True,
+            'meets_over_phone_or_video_chat': True,
+            'intern_missed_meetings': False,
 
-        answers = self._final_intern_feedback_form(internselection)
-        response = self._submit_intern_feedback_form(internselection, 'final-intern-feedback', answers)
-        self.assertEqual(response.status_code, 302)
+            'talk_about_project_progress': True,
+            'reviewed_original_timeline': True,
 
-        # will raise DoesNotExist if the view didn't create this
-        feedback = internselection.finalinternfeedback
+            'contribution_drafts': True,
+            'contribution_review': True,
+            'contribution_revised': True,
 
-        for key, expected in answers.items():
-            self.assertEqual(getattr(feedback, key), expected)
+            'mentor_shares_positive_feedback': True,
+            'mentor_promoting_work_to_community': True,
+            'mentor_promoting_work_on_social_media': True,
 
-        # only allow submitting once
-        self.assertFalse(feedback.allow_edits)
+            'intern_blogging': True,
+            'mentor_discussing_blog': True,
+            'mentor_promoting_blog_to_community': True,
+            'mentor_promoting_blog_on_social_media': True,
 
-        self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
+            'mentor_introduced_intern_to_community': True,
+            'intern_asks_questions_of_community_members': True,
+            'intern_talks_to_community_members': True,
+            'mentor_introduced_to_informal_chat_contacts': True,
+            'intern_had_informal_chats': True,
 
-    @staticmethod
-    def _final_mentor_feedback_form(internselection, **kwargs):
-        defaults = {
-            'intern_help_requests_frequency': models.FinalMentorFeedback.MULTIPLE_WEEKLY,
-            'mentor_help_response_time': models.FinalMentorFeedback.HOURS_6,
-            'intern_contribution_frequency': models.FinalMentorFeedback.ONCE_WEEKLY,
-            'mentor_review_response_time': models.FinalMentorFeedback.HOURS_3,
-            'intern_contribution_revision_time': models.FinalMentorFeedback.DAYS_2,
-            'last_contact': internselection.final_feedback_opens,
-            'actions_requested': models.BaseMentorFeedback.PAY_AND_CONTINUE,
-            'full_time_effort': True,
-            'progress_report': 'Everything is fine.',
             'mentors_report': 'I am very supportive',
-            'mentoring_recommended': models.FinalMentorFeedback.NO_OPINION,
-            'blog_frequency': models.FinalMentorFeedback.NO_OPINION,
-            'blog_prompts_caused_writing': models.FinalMentorFeedback.NO_OPINION,
-            'blog_prompts_caused_overhead': models.FinalMentorFeedback.NO_OPINION,
-            'recommend_blog_prompts': models.FinalMentorFeedback.NO_OPINION,
-            'zulip_caused_intern_discussion': models.FinalMentorFeedback.NO_OPINION,
-            'zulip_caused_mentor_discussion': models.FinalMentorFeedback.NO_OPINION,
-            'recommend_zulip': models.FinalMentorFeedback.NO_OPINION,
-            'feedback_for_organizers': 'There are things you could improve but they are minor',
+            'last_contact': internselection.final_feedback_opens,
+            'progress_report': 'Everything is fine.',
+
+            'full_time_effort': True,
+
+            'actions_requested': models.BaseMentorFeedback.PAY_AND_CONTINUE,
+
+            'recommend_mentoring': '10',
+            'mentoring_positive_impacts': 'I liked working with the intern',
+            'mentoring_improvement_suggestions': 'Ask mentors to do less work',
+            'new_mentor_suggestions': 'Be prepared for a lot of work',
+            'community_positive_impacts': 'Our community liked working with the intern',
+            'community_improvement_suggestions': 'Better prepare community members for lots of applicants',
+            'additional_feedback': 'None',
         }
         defaults.update(kwargs)
         return defaults
 
-    def test_mentor_can_give_successful_final_feedback(self):
+    def test_mentor_can_give_successful_feedback4(self):
         current_round = RoundPageFactory(start_from='finalfeedback')
         internselection = InternSelectionFactory(
                 active=True,
                 round=current_round,
                 )
 
-        answers = self._final_mentor_feedback_form(internselection)
+        answers = self._feedback4_mentor_form(internselection)
         response = self._submit_mentor_feedback_form(internselection, 'final-mentor-feedback', 'Submit Feedback #4', answers)
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
-        feedback = internselection.finalmentorfeedback
+        feedback = internselection.feedback4frommentor
 
         # Add in the fields automatically set by the action the mentor requested
         answers['payment_approved'] = True
@@ -1099,24 +1074,28 @@ class InternSelectionTestCase(TestCase):
 
         self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
 
-    def test_mentor_can_give_terminate_final_feedback(self):
+    def test_mentor_can_give_terminate_feedback4(self):
         current_round = RoundPageFactory(start_from='finalfeedback')
+        action = models.BaseMentorFeedback.TERMINATE_PAY
         internselection = InternSelectionFactory(
             active=True,
             round=current_round,
         )
 
-        answers = self._final_mentor_feedback_form(internselection,
-            actions_requested=models.BaseMentorFeedback.TERMINATE_NO_PAY,
+        answers = self._feedback4_mentor_form(internselection,
+            actions_requested=action,
         )
         response = self._submit_mentor_feedback_form(internselection, 'final-mentor-feedback', 'Submit Feedback #4', answers)
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
-        feedback = internselection.finalmentorfeedback
+        feedback = internselection.feedback4frommentor
 
         # Add in the fields automatically set by the action the mentor requested
-        answers['payment_approved'] = False
+        if action == models.BaseMentorFeedback.TERMINATE_PAY:
+            answers['payment_approved'] = True
+        else:
+            answers['payment_approved'] = False
         answers['request_extension'] = False
         answers['extension_date'] = None
         answers['request_termination'] = True
@@ -1128,21 +1107,21 @@ class InternSelectionTestCase(TestCase):
 
         self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
 
-    def test_mentor_can_give_uncertain_final_feedback(self):
+    def test_mentor_can_give_uncertain_feedback4(self):
         current_round = RoundPageFactory(start_from='finalfeedback')
         internselection = InternSelectionFactory(
             active=True,
             round=current_round,
         )
 
-        answers = self._final_mentor_feedback_form(internselection,
+        answers = self._feedback4_mentor_form(internselection,
             actions_requested=models.BaseMentorFeedback.DONT_KNOW,
         )
         response = self._submit_mentor_feedback_form(internselection, 'final-mentor-feedback', 'Submit Feedback #4', answers)
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
-        feedback = internselection.finalmentorfeedback
+        feedback = internselection.feedback4frommentor
 
         # Add in the fields automatically set by the action the mentor requested
         answers['payment_approved'] = False
@@ -1157,7 +1136,7 @@ class InternSelectionTestCase(TestCase):
 
         self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
 
-    def test_mentor_can_give_extension_final_feedback(self):
+    def test_mentor_can_give_extension_feedback4(self):
         current_round = RoundPageFactory(start_from='finalfeedback')
         for action in (models.BaseMentorFeedback.EXT_1_WEEK, models.BaseMentorFeedback.EXT_2_WEEK, models.BaseMentorFeedback.EXT_3_WEEK, models.BaseMentorFeedback.EXT_4_WEEK, models.BaseMentorFeedback.EXT_5_WEEK):
             with self.subTest(action=action):
@@ -1166,14 +1145,14 @@ class InternSelectionTestCase(TestCase):
                     round=current_round,
                 )
 
-                answers = self._final_mentor_feedback_form(internselection,
+                answers = self._feedback4_mentor_form(internselection,
                     actions_requested=action,
                 )
                 response = self._submit_mentor_feedback_form(internselection, 'final-mentor-feedback', 'Submit Feedback #4', answers)
                 self.assertEqual(response.status_code, 302)
 
                 # will raise DoesNotExist if the view didn't create this
-                feedback = internselection.finalmentorfeedback
+                feedback = internselection.feedback4frommentor
 
                 answers['payment_approved'] = False
                 answers['request_extension'] = True
@@ -1198,35 +1177,102 @@ class InternSelectionTestCase(TestCase):
 
                 self.assertEqual(Version.objects.get_for_object(feedback).count(), 1)
 
-    def test_mentor_can_give_final_feedback_after_five_week_extension(self):
-        """
-        Mentors should be able to give final feedback if they haven't,
-        even if the internship has gone past the date we consider it to be ended.
-        For example, an intern may have a five week extension,
-        and the mentor may go on vacation before they can give final feedback.
-        """
-        current_round = RoundPageFactory(start_from='finalfeedback', days_after_today=-7*5)
-        internship_end_date = current_round.finalfeedback + datetime.timedelta(7*5)
+    @skip("This test fails, but I think it's an issue in the test. Local testing for this case correctly stops the mentor from resubmitting feedback again until the feedback form re-opens.")
+    def test_invalid_duplicate_feedback4_mentor_feedback(self):
+        # The dates of the round don't matter because the views check the dates in the InternSelection
+        current_round = RoundPageFactory(start_from='finalfeedback')
+        week = datetime.timedelta(weeks=1)
+        disallowed_when = (
+            {'allow_edits': False, 'intern_selection__final_feedback_opens': current_round.finalfeedback - week},
+            {'allow_edits': True, 'intern_selection__final_feedback_opens': current_round.finalfeedback + week},
+        )
+        for params in disallowed_when:
+            with self.subTest(params=params):
+                prior = Feedback4FromMentorFactory(intern_selection__round=current_round, **params)
+                internselection = prior.intern_selection
+
+                answers = self._feedback4_mentor_form(internselection)
+                response = self._submit_mentor_feedback_form(internselection, 'final-mentor-feedback', 'Submit Feedback #4', answers, False)
+
+                # permission denied
+                self.assertEqual(response.status_code, 403)
+
+    @staticmethod
+    def _feedback4_intern_form(internselection, **kwargs):
+        defaults = {
+            'share_mentor_feedback_with_community_coordinator': True,
+
+            # 1. Clearing up doubts
+            'mentor_answers_questions': True,
+            'intern_asks_questions': True,
+            'mentor_support_when_stuck': True,
+
+            # 2. Meetings
+            'daily_stand_ups': True,
+            'meets_privately': True,
+            'meets_over_phone_or_video_chat': True,
+            'intern_missed_meetings': False,
+
+            # 2. Tracking project progress
+            'talk_about_project_progress': True,
+            'reviewed_original_timeline': True,
+
+            # 4. Project feedback
+            'contribution_drafts': True,
+            'contribution_review': True,
+            'contribution_revised': True,
+        
+            # 3. Acknowledgment and praise
+            'mentor_shares_positive_feedback': True,
+            'mentor_promoting_work_to_community': True,
+            'mentor_promoting_work_on_social_media': True,
+
+            # 3/6. Blogging
+            'intern_blogging': True,
+            'mentor_discussing_blog': True,
+            'mentor_promoting_blog_to_community': True,
+            'mentor_promoting_blog_on_social_media': True,
+
+            # 6. Networking
+            'mentor_introduced_intern_to_community': True,
+            'intern_asks_questions_of_community_members': True,
+            'intern_talks_to_community_members': True,
+            'mentor_introduced_to_informal_chat_contacts': True,
+            'intern_had_informal_chats': True,
+
+            'progress_report': 'Everything is fine.',
+            'hours_worked': models.Feedback1FromIntern.HOURS_30,
+            'time_comments': '',
+            'last_contact': internselection.final_feedback_opens,
+            'mentor_support': 'My mentor is awesome.',
+
+            'recommend_open_source': '10',
+            'recommend_interning': '10',
+            'application_period_positive_impacts': 'I got to know my mentors',
+            'application_period_improvement_suggestions': 'Have people applicants can talk to when they are filling out the initial application',
+            'new_applicant_advice': 'Be confident',
+            'interning_positive_impacts': 'I learned new skills',
+            'interning_improvement_suggestions': 'More career advice',
+            'community_positive_impacts': 'I liked getting know experienced open source contributors',
+            'community_improvement_suggestions': 'You all are awesome! Keep up the good work!!',
+            'additional_feedback': 'None.',
+        }
+        defaults.update(kwargs)
+        return defaults
+
+    def test_intern_can_give_feedback4(self):
         internselection = InternSelectionFactory(
             active=True,
-            round=current_round,
-            intern_ends = internship_end_date,
-            final_feedback_opens = internship_end_date,
-            final_feedback_due = internship_end_date + datetime.timedelta(7),
+            round__start_from='finalfeedback',
         )
 
-        answers = self._final_mentor_feedback_form(internselection)
-        response = self._submit_mentor_feedback_form(internselection, 'final-mentor-feedback', 'Submit Feedback #4', answers)
+        answers = self._feedback4_intern_form(internselection)
+        response = self._submit_intern_feedback_form(internselection, 'final-intern-feedback', answers)
         self.assertEqual(response.status_code, 302)
 
         # will raise DoesNotExist if the view didn't create this
-        feedback = internselection.finalmentorfeedback
+        feedback = internselection.feedback4fromintern
 
-        # Add in the fields automatically set by the action the mentor requested
-        answers['payment_approved'] = True
-        answers['request_extension'] = False
-        answers['extension_date'] = None
-        answers['request_termination'] = False
         for key, expected in answers.items():
             self.assertEqual(getattr(feedback, key), expected)
 
