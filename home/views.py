@@ -3662,8 +3662,28 @@ def sponsor_info(request, round_slug):
     to gather invoice information.
     """
     current_round = get_object_or_404(RoundPage, slug=round_slug)
-    community_sponsors = [(p.community, p.sponsorship_set.all(), p.number_interns_approved(), p.number_interns_approved() * 6500) for p in Participation.objects.filter(participating_round=current_round, approval_status=ApprovalStatus.APPROVED).order_by('community__name')]
-    sponsors_alpha = Sponsorship.objects.filter(participation__participating_round=current_round, participation__approval_status=ApprovalStatus.APPROVED).order_by('participation__community__name').order_by('name')
+
+    # Before new communities are approved,
+    # it's helpful to know who is requesting Outreachy general funding.
+    # Therefore, include both approved and pending communities.
+    participations = Participation.objects.filter(
+                models.Q(
+                    approval_status=ApprovalStatus.APPROVED
+                ) | models.Q(
+                    approval_status=ApprovalStatus.PENDING
+                ),
+                participating_round=current_round,
+            ).order_by('community__name')
+
+    community_sponsors = [(p.community, p.sponsorship_set.all(), p.number_interns_approved(), p.number_interns_approved() * 6500) for p in participations]
+    sponsors_alpha = Sponsorship.objects.filter(
+                models.Q(
+                    participation__approval_status=ApprovalStatus.APPROVED
+                ) | models.Q(
+                    participation__approval_status=ApprovalStatus.PENDING
+                ),
+                participation__participating_round=current_round,
+            ).order_by('participation__community__name').order_by('name')
 
     return render(request, 'home/sponsor_info.html',
             {
