@@ -2,7 +2,7 @@ from datetime import date, timedelta
 from django.test import TestCase, override_settings
 
 from .factories import ApplicantFactory, RoundPageFactory
-from .models import ApprovalStatus, RoundPage, PromotionTracking
+from .models import ApplicantApproval, ApprovalStatus, RoundPage, PromotionTracking
 from .views import determine_eligibility, EligibilityUpdateView
 
 @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
@@ -214,6 +214,32 @@ class EligibilityTests(TestCase):
         result = applicant.applicantapproval_set.get()
         self.assertEqual(result.approval_status, expected_status)
         self.assertEqual(result.reason_denied, expected_reason)
+
+    def test_saving_country_information(self):
+        self.assertEligible(
+                ApprovalStatus.PENDING,
+                'ESSAY',
+                self.approved_work_eligibility(),
+                self.approved_payment_eligibility(),
+                self.approved_foss_experience(),
+                self.gender_identity(self.all_gender_identities[0]),
+                self.barriers_to_participation(),
+                self.time_commitments(),
+                self.promotional(),
+                )
+        application = ApplicantApproval.objects.get()
+
+        # Check that the country information
+        # in BarriersToParticipation is copied to ApplicantApproval
+        self.assertEqual(application.initial_application_country_living_in_during_internship, 'Dwendalian Empire')
+        self.assertEqual(application.initial_application_country_living_in_during_internship_code, '00')
+
+        # Check that collecting statistics and purging data
+        # still leaves the country information in the ApplicantApproval object
+        application.collect_statistics()
+        application.purge_sensitive_data()
+        self.assertEqual(application.initial_application_country_living_in_during_internship, 'Dwendalian Empire')
+        self.assertEqual(application.initial_application_country_living_in_during_internship_code, '00')
 
     def test_reject_general(self):
         reject_if = (

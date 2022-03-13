@@ -2490,6 +2490,19 @@ class ApplicantApproval(ApprovalStatus):
     review_owner = models.ForeignKey(ApplicationReviewer, blank=True, null=True, on_delete=models.SET_NULL)
     collected_statistics = models.BooleanField(default=False)
 
+    # This information is saved to pass onto Software Freedom Conservancy accounting
+    initial_application_country_living_in_during_internship = models.CharField(
+            verbose_name='Country applicant will be living in during the internship - from initial application',
+            max_length=PARAGRAPH_LENGTH,
+            blank=True,
+            )
+
+    initial_application_country_living_in_during_internship_code = models.CharField(
+            verbose_name='Country code from initial application - ISO 3166-1 alpha-2 country code',
+            max_length=2,
+            blank=True,
+            )
+
     def get_essay_qualities(self):
         return [q.__str__ for q in self.essay_qualities.all()]
 

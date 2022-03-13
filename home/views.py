@@ -717,6 +717,14 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWiz
         # already on the models. The cost is reading back some of the objects
         # we just wrote and then re-saving an object, but that isn't a big hit.
         self.object.approval_status, self.object.reason_denied = determine_eligibility(self, self.object)
+
+        # Save the country and country code
+        # in a field for Software Freedom Conservancy accounting
+        cleaned_data = self.get_cleaned_data_for_step('Barriers-to-Participation')
+        if cleaned_data:
+            self.object.initial_application_country_living_in_during_internship = cleaned_data['country_living_in_during_internship']
+            self.object.initial_application_country_living_in_during_internship_code = cleaned_data['country_living_in_during_internship_code']
+
         self.object.save()
 
         return redirect(self.request.GET.get('next', reverse('eligibility-results')))
