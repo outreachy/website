@@ -53,23 +53,22 @@
 								{% if tcs.school_time_commitments %}
 								{% with stats=application.schoolinformation.classmate_statistics %}
 								<p>{% if stats.graduating %}Graduating{% else %}Non-graduating{% endif %} classmates with the same school website:<br>{{ stats.total_classmates }} applied, {{ stats.pending_classmates }} pending, {{ stats.acceptance_rate|floatformat }}% accepted, {{ stats.time_rejection_rate|floatformat }}% rejected for full-time commitments</p>
-			{% if stats.rejected_classmates %}
-				<p><span class="badge badge-warning">Warning</span> Classmates rejected for time:</p>
-				<ul>
-					{% for classmate in stats.rejected_classmates %}
-					<li><a href="{% url 'process-application' applicant_username=classmate.applicant.account.username %}">{{ classmate.applicant.public_name }}</a></li>
-					{% endfor %}
-				</ul>
-			{% endif %}
-			{% if stats.all_classmates %}
-				<p>List of classmates:</p>
-				<ul>
-					{% for classmate in stats.all_classmates %}
-					<li><a href="{% url 'process-application' applicant_username=classmate.applicant.account.username %}">{{ classmate.applicant.public_name }}</a> ({{ classmate.get_approval_status_display }})</li>
-					{% endfor %}
-				</ul>
-			{% endif %}
-		</li>
+								{% if stats.rejected_classmates %}
+									<p><span class="badge badge-warning">Warning</span> Classmates rejected for time:</p>
+									<ul>
+										{% for classmate in stats.rejected_classmates %}
+										<li><a href="{% url 'process-application' applicant_username=classmate.applicant.account.username %}">{{ classmate.applicant.public_name }}</a></li>
+										{% endfor %}
+									</ul>
+								{% endif %}
+								{% if stats.all_classmates %}
+									<p>List of classmates:</p>
+									<ul>
+										{% for classmate in stats.all_classmates %}
+										<li><a href="{% url 'process-application' applicant_username=classmate.applicant.account.username %}">{{ classmate.applicant.public_name }}</a> ({{ classmate.get_approval_status_display }})</li>
+										{% endfor %}
+									</ul>
+								{% endif %}
 								{% endwith %}
 								<p>Possible school term matches:</p>
 								<ul>
