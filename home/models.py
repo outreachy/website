@@ -3427,12 +3427,22 @@ class SchoolInformation(models.Model):
         total = classmates.count()
         accepted = classmates.approved().count()
         rejected = classmates.rejected().filter(reason_denied="TIME").count()
+
+        all_classmates = ApplicantApproval.objects.filter(
+            application_round=self.applicant.application_round,
+            schoolinformation__university_website__icontains=self.school_domain,
+        ).exclude(pk=self.applicant.pk).order_by('pk')
+        rejected_classmates = all_classmates.rejected().filter(reason_denied="TIME")
+        all_classmates = all_classmates.exclude(pk__in=rejected_classmates)
+
         return {
             'graduating': graduating,
             'pending_classmates': classmates.pending().count(),
             'total_classmates': total,
             'acceptance_rate': 100 * accepted / total,
             'time_rejection_rate': 100 * rejected / total,
+            'all_classmates': all_classmates,
+            'rejected_classmates': rejected_classmates,
         }
 
     def print_terms(school_info):
