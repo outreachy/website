@@ -3340,7 +3340,7 @@ class SchoolInformation(models.Model):
 
     @property
     def school_domain(self):
-        return urlparse(self.university_website).hostname
+        return urlparse(self.university_website).hostname.removeprefix('www.')
 
     @staticmethod
     def roll_year(d, years):
