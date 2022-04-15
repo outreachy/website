@@ -2836,6 +2836,9 @@ def blog_2022_02_04_initial_applications_open(request):
         'current_round': current_round,
         })
 
+def blog_2022_04_15_new_community_manager(request):
+    return render(request, 'home/blog/2022-04-15-new-outreachy-community-manager.html')
+
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(Feedback1FromMentor,
             fields=(

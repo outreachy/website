@@ -173,6 +173,13 @@ class WagtailFeed(Feed):
             first_published_at=pacific.localize(datetime.datetime(2022, 2, 4, 16, 00, 0)),
             last_published_at=pacific.localize(datetime.datetime(2022, 2, 4, 16, 00, 0)),
         ))
+        items.append(PseudoPage(
+            title='Outreachy welcomes new community manager',
+            full_url=reverse('2022-04-new-community-manager'),
+            owner=author,
+            first_published_at=pacific.localize(datetime.datetime(2022, 4, 15, 16, 00, 0)),
+            last_published_at=pacific.localize(datetime.datetime(2022, 4, 15, 16, 00, 0)),
+        ))
 
         # put the Wagtail pages and special posts together in the right order
         items.sort(key=operator.attrgetter('first_published_at'), reverse=True)
