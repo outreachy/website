@@ -86,7 +86,7 @@ will make best efforts to send out payments quickly after internship progress
 confirmations. Payments may be issued earlier than scheduled deadlines below,
 but interns should not rely on earlier payments.
 
- * $3,000 will be sent to you by or around July 10, 2022 if Outreachy
+ * $3,000 will be sent to you by or around July 11, 2022 if Outreachy
    organizers confirm to Conservancy by June 6, 2022 that you are in good
    standing. If Conservancy receives such confirmation late, your payment will
    be delayed. If such confirmation is not received, you will not receive
