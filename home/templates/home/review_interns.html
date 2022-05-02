@@ -22,7 +22,7 @@ Review interns for {{ current_round.official_name }}
 
 <h2>Intern Information</h2>
 {% for i in intern_selections %}
-{% with intern=i.applicant.applicant %}
+{% with intern=i.applicant.applicant applications=i.get_previous_initial_applications %}
 	<div class="card border mt-3" id="intern-{{ intern.account.pk }}">
 	<div class="card-body">
 		{% if intern.photo %}
@@ -43,6 +43,7 @@ Review interns for {{ current_round.official_name }}
 			<BR>Coordinator(s): {% for email in i.project.project_round.community.get_coordinator_email_list %}{{ email }}, {% endfor %}
 			<BR>Project: {{ i.project.short_title }}
 			<BR>Mentor(s): {% for email in i.mentor_emails %}{{ email }}, {% endfor %}<br>
+			<BR><a href="{{ i.project.get_applicants_url }}#{{ i.applicant.applicant.pk }}">Final application</a><br>
 			<BR>Public name: {{ intern.public_name }}
 			<BR>Legal name: {{ intern.legal_name }}
 			<BR>Email: {{ intern.account.email }}
@@ -108,6 +109,18 @@ Review interns for {{ current_round.official_name }}
 			<BR>Outreachy website username: {{ intern.username }}<BR>
 			Last login: {{ intern.account.last_login }}<BR>
 			Date joined: {{ intern.account.date_joined }}<BR>
+			<br>
+			Initial application submission date: {{ i.applicant.submission_date }}<BR>
+			{% if not applications %}
+				First time applicant<BR>
+			{% else %}
+				Previous initial applications:<BR>
+				<ul>
+					{% for app in applications %}
+					<li>{{ app.application_round }} - {{ app.get_approval_status_display }}{% if app.reason_denied %} ({{ app.reason_denied }}){% endif %}</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
 		</div>
 	</div>
 	</div>

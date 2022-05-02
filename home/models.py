@@ -4129,6 +4129,11 @@ class InternSelection(AugmentDeadlines, models.Model):
                 applicant=self.applicant,
                 )
 
+    def get_previous_initial_applications(self):
+        return ApplicantApproval.objects.filter(
+                applicant=self.applicant.applicant,
+                ).exclude(application_round=self.project.project_round.participating_round)
+
     def needs_cpt(self):
         work_info = WorkEligibility.objects.get(
                 applicant=self.applicant)
