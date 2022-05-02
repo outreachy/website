@@ -386,7 +386,7 @@ def get_current_round_for_initial_application_review():
     try:
         current_round = RoundPage.objects.get(
             initial_applications_open__lte=today,
-            contributions_close__gt=today,
+            internstarts__gt=today,
         )
         current_round.today = today
     except RoundPage.DoesNotExist:
