@@ -1,0 +1,21 @@
+{% with community=project.project_round.community %}{% with current_round=project.round %}{% with contributors=project.get_applicants_and_contributions_list %}{% with applicants=project.get_applications %}{% with coordinators=community.get_coordinator_email_list %}[Due {{ current_round.mentor_intern_selection_deadline|date:"F j" }}] Missing Outreachy intern selection for {{ community.name }}
+
+Hi Outreachy mentor,
+
+{{ current_round.mentor_intern_selection_deadline|date:"F j" }} is the deadline for selecting an Outreachy intern for your {{ community.name }} project "{{ project.short_title }}".
+
+Please select your intern ASAP and rate other applicants here:
+
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_applicants_url }}
+
+If you are not going to accept an intern for this project, please let us know.
+
+If you need to wait for a team meeting to decide on intern selections, please let us know what date you will make a decision by.
+
+The Outreachy organizers' goal is to review all intern selections by {{ current_round.internapproval|date:"F j" }}. Intern selections made after that date may be missed and your applicant may not be approved to participate as an intern.
+
+We know picking an intern is a tough decision to make. Let us know if you need any help or advice.
+
+Outreachy Organizers
+
+{% include 'home/email/footer-mentor.txt' %}{% endwith %} {% endwith %} {% endwith %} {% endwith %} {% endwith %}

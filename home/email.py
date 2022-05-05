@@ -157,6 +157,20 @@ def coordinator_intern_selection_reminder(participation, request, **kwargs):
             recipient_list=email_list,
             **kwargs)
 
+def mentor_intern_selection_deadline_reminder(project, request, **kwargs):
+    email_list = project.get_mentor_email_list()
+    # Include community coordinators (who approve projects to participate)
+    email_list.extend(project.get_approver_email_list())
+    # Include Outreachy organizers
+    email_list.extend([organizers])
+
+    send_group_template_mail('home/email/mentor-intern-selection-deadline-reminder.txt', {
+        'project': project,
+        },
+        request=request,
+        recipient_list=email_list,
+        **kwargs)
+
 def co_mentor_intern_selection_notification(intern_selection, email_list, request):
     if email_list:
         send_group_template_mail('home/email/co-mentor-sign-agreement.txt', {

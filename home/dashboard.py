@@ -522,6 +522,43 @@ class ContributorsDeadlinesReminder(SendEmailView):
                 connection=connection,
             )
 
+class MentorInternSelectionDeadlineReminder(SendEmailView):
+    """
+    Remind mentors who haven't selected an intern of the intern selection deadline.
+
+    When: The day of the intern selection deadline.
+
+    Template: home/templates/home/email/mentor-intern-selection-deadline-reminder.txt
+    """
+    description = 'Mentor Intern Selection Deadline Reminder'
+    slug = 'mentor-intern-selection-deadline-reminder'
+
+    @staticmethod
+    def instance(current_round):
+        return current_round.mentor_intern_selection_deadline
+
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+
+        # Find approved projects for this internship cohort
+        # Look for projects that haven't made an intern selection yet
+        # Only include projects where:
+        #   - An applicant created a final application AND
+        #   - At least one final application was unrated, or rated 3 or above
+        projects = Project.objects.approved().filter(
+            project_round__participating_round=current_round,
+            internselection__isnull=True,
+            finalapplication__isnull=False
+        ).filter(
+                models.Q(finalapplication__rating='0')
+                | models.Q(finalapplication__rating='3')
+                | models.Q(finalapplication__rating='4')
+                | models.Q(finalapplication__rating='5')
+        ).distinct()
+
+        for p in projects:
+            email.mentor_intern_selection_deadline_reminder(p, self.request, connection=connection)
 
 class InternNotification(SendEmailView):
     """
@@ -779,6 +816,7 @@ all_round_events = (
     MentorInternSelectionReminder,
     CoordinatorInternSelectionReminder,
     ContributorsApplicationPeriodEndedReminder,
+    MentorInternSelectionDeadlineReminder,
     InternNotification,
     ContractReminder,
     InternWeek.at(week=1),
