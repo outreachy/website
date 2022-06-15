@@ -4280,7 +4280,11 @@ class InternSelection(AugmentDeadlines, models.Model):
 class MentorRelationship(models.Model):
     intern_selection = models.ForeignKey(InternSelection, on_delete=models.CASCADE)
     mentor = models.ForeignKey(MentorApproval, on_delete=models.CASCADE)
-    contract = models.OneToOneField(SignedContract, on_delete=models.PROTECT)
+    # When a mentor relationship is removed, keep the signed mentor contract
+    # If a mentor withdraws from the mentor relationship, we still need to preserve the contract they signed
+    # This does mean we'll keep the contract after a mentor removes an intern,
+    # but we can't tell the difference easily.
+    contract = models.OneToOneField(SignedContract, on_delete=models.SET_NULL, null=True)
 
     def intern_name(self):
         return self.intern_selection.applicant.applicant.public_name
