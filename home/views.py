@@ -2839,6 +2839,9 @@ def blog_2022_02_04_initial_applications_open(request):
 def blog_2022_04_15_new_community_manager(request):
     return render(request, 'home/blog/2022-04-15-new-outreachy-community-manager.html')
 
+def blog_2022_06_14_remembering_marina(request):
+    return render(request, 'home/blog/2022-06-14-remembering-and-honoring-marina.html')
+
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(Feedback1FromMentor,
             fields=(

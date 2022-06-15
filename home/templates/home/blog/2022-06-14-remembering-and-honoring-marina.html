@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Remembering and Honoring Marina Zhurakhinsakaya, Founder of Outreachy
+{% endblock %}
+
+{% block content %}
+{% load humanize %}
+
+
+<h1>Remembering and Honoring Marina Zhurakhinsakaya, Founder of Outreachy</h1>
+
+<p><i>Date: June 14, 2022</i></p>
+{% comment %}<p><i>Last updated: DATE</i> - See the "SECTION" section below.</p>{% endcomment %}
+
+<p>It is with great sadness that we write about the death of one of the most significant contributors to Free and Open Source Software, Marina Zhurakhinskaya. Marina was a force for change and leaves a profound legacy of diversity, inclusion, equity and justice. It is impossible to imagine what Software Freedom Conservancy and Outreachy would be like without Marina.</p>
+
+<img src="{% static 'organizers/marina.jpg' %}" alt="Photo of Marina Zhurakhinskaya" class="img-fluid">
+<p><i>Photo courtesy of Marina Zhurakhinskaya</i></p>
+
+<p>Born in Kyiv, Ukraine, Marina moved to the United States after completing high school. She was accepted at the Massachusetts Institute of Technology after less than a year in the United States and graduated from MIT with a Bachelor’s and Master’s degree in Computer Science. After working at the MIT Lincoln Laboratory for several years, she joined Red Hat, a company focused on open source solutions for the enterprise market. While at Red Hat, Marina began to contribute to the GNOME desktop, working as a developer on GNOME Shell, and then became active in the GNOME community.</p>
+
+<p>Marina tirelessly created and improved systems to help new people contribute to GNOME and free software, generally. She created a mentors list for GNOME as well as a newcomers' tutorial. She helped improve GNOME's participation in Google Summer of Code. In 2009, Marina reinvented a program to provide paid internships for women to contribute to GNOME. That program, which Marina carefully architected and continued to lead and collaborate on for the next decade, became GNOME's Outreach Program for Women and ultimately grew into Outreachy, an internship program for everyone subject to systemic bias and impacted by underrepresentation — one of the most important programs of Software Freedom Conservancy.</p>
+
+<p>Marina always cared about getting the details right. This dedication was consistently reflected in her meticulous efforts to document Outreachy's processes and to keep records of the successes of the program. Marina's caring and enthusiasm for Outreachy's participants resulted in deep relationships with many of the program's alums. Marina celebrated every conference presentation by former participants in the program, and any news of their career developments. Along with Karen Sandler, Marina refined and grew the program beyond GNOME to include more open source communities. Since Marina ran the first round of the program in 2010, 866 people have successfully completed the program.</p>
+
+<p>When Outreach Program for Women became much bigger than just including GNOME participants, Marina stewarded the transition to Software Freedom Conservancy, where she led the effort to rebrand the program as Outreachy. She worked with Sage Sharp to develop the program's operations go become the program it is today, with well over 100 interns per year. Marina remained a critical voice and active participant (along with Karen, Sage and Tony Sebro) on Outreachy's Leadership Committee.  Marina was active in the Leadership Committee until her last few days.</p>
+
+<p>Marina diligently sought and found opportunities to create systemic change; she was recognized for these contributions. Marina was elected to and served on the GNOME board of Directors as well as the Ada Initiative's Board. In 2012, Marina was awarded the "Pants Award" by the GNOME Foundation —  the community's highest honor awarded annually. She was awarded the O'Reilly Open Source Award in 2015, and a Silver Stevie award in the “Women Helping Women” category in 2016. Along with Karen, she accepted the Award for Social Benefit for Free Software on behalf of Outreachy in 2014.</p>
+
+<p>Marina was proud of her more than 16 years of work for Red Hat.  Following her technical role, she transitioned to the position of Senior Outreach Specialist, Community Diversity and Inclusion at Red Hat. Marina's role included her work on Outreachy in addition to working on Red Hat's own efforts to support diversity and combat bias in its operations and in open source communities. Marina created Red Hat’s diversity scholarships for DevConf.US and DevConf.CZ conferences, which have supported over 40 scholarship recipients.</p>
+
+<p>Marina was diagnosed with breast cancer three and a half years ago, and, with characteristic determination, not only left no stone unturned in her own treatment, but connected, became friends, and shared her knowledge with many others dealing with this awful disease. She died on June 11, 2022. Marina is survived by her husband, Owen Taylor, an important contributor to the GNOME Desktop and fellow Red Hat employee, and their three children. Marina encouraged people to take advantage of available, life-saving genetic testing for mutations that cause breast cancer and other diseases, and we elevate that message today. The family has asked for donations in Marina's honor to <a href="https://danafarber.jimmyfund.org/site/TR?team_id=6863&fr_id=1200&pg=team">Dana Farber's Metastatic Breast Cancer Research Fund</a> or <a href="https://www.outreachy.org/sponsor/donate/">Outreachy</a>.</p>
+
+<p>We share the grief with everyone in the GNOME, Outreachy, and Red Hat communities. Please support each other, and be kind to yourself. We encourage community members to take the time they need to remember and honor Marina. Past Outreachy interns, mentors, and community coordinators are encouraged to <a href="{% url 'contact-us' %}">contact Outreachy organizers</a> if they wish to participate in a private Outreachy chat thread to share photos and memories of Marina.</p>
+
+{% endblock %}
