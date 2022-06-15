@@ -181,11 +181,11 @@ class WagtailFeed(Feed):
             last_published_at=pacific.localize(datetime.datetime(2022, 4, 15, 16, 00, 0)),
         ))
         items.append(PseudoPage(
-            title='Remembering and Honoring Marina Zhurakhinsakaya, Founder of Outreachy',
+            title='Remembering and Honoring Marina Zhurakhinskaya, Founder of Outreachy',
             full_url=reverse('2022-06-remembering-marina'),
             owner=author,
             first_published_at=pacific.localize(datetime.datetime(2022, 6, 15, 3, 00, 0)),
-            last_published_at=pacific.localize(datetime.datetime(2022, 6, 15, 3, 00, 0)),
+            last_published_at=pacific.localize(datetime.datetime(2022, 6, 15, 14, 00, 0)),
         ))
 
         # put the Wagtail pages and special posts together in the right order
