@@ -5071,6 +5071,8 @@ class InformalChatContact(models.Model):
     company = models.CharField(blank=True, max_length=PARAGRAPH_LENGTH, verbose_name='What company do you work for?')
     paid_foss_roles = models.CharField(blank=True, max_length=PARAGRAPH_LENGTH, verbose_name='What open source roles (e.g. community manager, JavaScript programmer, Linux systems admin) are you paid to work on?')
     volunteer_foss_roles = models.CharField(blank=True, max_length=PARAGRAPH_LENGTH, verbose_name='What open source roles (e.g. community manager, JavaScript programmer, Linux systems admin) do you volunteer for?')
+    tools_used = models.CharField(blank=True, max_length=PARAGRAPH_LENGTH, verbose_name='What tools or programming languages do you use in these roles?')
+    topics = models.CharField(blank=True, max_length=PARAGRAPH_LENGTH, verbose_name='What topics are you excited to talk to Outreachy interns about?')
 
     def get_name(self):
         if self.name:

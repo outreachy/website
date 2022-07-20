@@ -37,6 +37,9 @@ Informal Chat Contacts
 								{% if contact.comrade.pronouns_to_participants %}
 									<BR><b>Pronouns:</b> {{ contact.comrade.get_pronouns_html|safe }}
 								{% endif %}
+								{% if contact.topics %}
+									<BR><b>I'm excited to talk to you about:</b> {{ contact.topics }}
+								{% endif %}
 								{% if contact.relationship_to_outreachy %}
 									<BR><b>Relation to Outreachy:</b> {{ contact.relationship_to_outreachy }}
 								{% endif %}
@@ -53,6 +56,9 @@ Informal Chat Contacts
 								{% endif %}
 								{% if contact.paid_foss_roles %}
 									<BR><b>Paid open source roles:</b> {{ contact.paid_foss_roles }}
+								{% endif %}
+								{% if contact.tools_used %}
+									<BR><b>Tools and programming languages:</b> {{ contact.tools_used }}
 								{% endif %}
 							</div>
 						</div>

@@ -46,6 +46,9 @@ If you want to participate in an informal chats with Outreachy interns, please e
  5. What company do you work for?
  6. What open source roles (e.g. community manager, JavaScript programmer, Linux systems admin) you are *paid* to work on?
  7. What open source roles do you *volunteer* for?
+ 8. What tools or programming languages do you use in these roles?
+ 9. What topics are you excited to talk to Outreachy interns about?
+ (e.g. Python programming, user experience, technical writing, using open source in academic research, working on open science, speaking at open source conferences)
 
 We'll give current Outreachy interns a list of people they can request an informal chat with. They will opt-in to which people they want to contact. Please make sure you're checking your email for invitations to chat with Outreachy interns.
 

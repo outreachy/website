@@ -685,6 +685,8 @@ class InformalChatContactAdmin(reversion.admin.VersionAdmin):
             'paid_foss_roles',
             'volunteer_foss_roles',
             'company',
+            'tools_used',
+            'topics',
             )
 
 admin.site.unregister(User)
