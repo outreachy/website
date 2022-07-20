@@ -210,8 +210,41 @@ Upgrading the base dokku version doesn't automatically upgrade external plugins.
 
 You'll need to periodically update the dokku let's encypt plug in, following the instructions in the [README](https://github.com/dokku/dokku-letsencrypt#upgrading-from-previous-versions). You need to actually ssh into the machine; you can't run this command remotely:
 ```
-dokku plugin:update letsencrypt
+dokku plugin:update letsencrypt [git tag]
 ```
+
+You'll need to specify which tagged version ("commitish") to update to. Check the GitHub repo [tags](https://github.com/dokku/dokku-letsencrypt/tags).
+
+Updating the letsencrypt SSL certificates
+---
+
+First, copy the current certificates to a backup directory:
+
+```
+cp -a /home/dokku/www/letsencrypt/ letsencrypt-dokku-backup-2022-06-27
+```
+
+Then run the command to renew the www subdomain certificates:
+
+```
+dokku letsencrypt:auto-renew www
+```
+
+If you need to run debug commands in the container, you can enter the container:
+
+```
+dokku enter www
+```
+
+When debugging the letsencrypt dokku plugin, there are a couple of resources you might look at:
+
+ - [Lets Encrypt forum](https://community.letsencrypt.org)
+ - [Dokku plugin documentation](https://dokku.com/docs/advanced-usage/plugin-management/)
+ - [Dokku letsencrypt plugin documentation](https://github.com/dokku/dokku-letsencrypt)
+ - [Getting a shell with the enter container dokku command](https://dokku.com/docs/processes/entering-containers/)
+ - [Setting dokku configuration variables](https://dokku.com/docs/configuration/environment-variables/)
+ - [Dokku redirect plugin](https://github.com/dokku/dokku-redirect/) - this ensures that the letsencrypt verification information is served on both www.outreachy.org and outreachy.org
+
 
 File upload size limits
 -----------------------
