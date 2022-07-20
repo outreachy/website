@@ -1,6 +1,6 @@
 [{{ current_round.week_ten_chat_text_date|date:"M j" }}] Invitation to chat with interns about careers in open source
 
-Every round, we discuss career opportunities with the current cohort of Outreachy interns. Many Outreachy interns don't know anyone who contributes to open source at their job. They may not be aware of how much employers value experience working in open source.
+Every round, we discuss career opportunities with the current cohort of Outreachy interns. Many Outreachy interns don't know anyone who contributes to open source at their job. They may not be aware of how much employers value experience working in open source. They may not know how much scientific and academic research is done using open source.
 
 That's where you come in! We would love it if you could share with Outreachy interns how open source has helped your career.
 
