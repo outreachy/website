@@ -1,43 +1,28 @@
 <h1>Email Subscriptions</h1>
 
-<p>
-Unfortunately, because Outreachy is running Mailman 2.0, we can't automatically
-subscribe coordinators and mentors to the mailing lists with Django.
-It's a manual process to subscribe approved mentors and approved coordinators
-for communities that are approved to participate in a round.
+<p>Subscribe mentors and coordinators to the mentor mailing list using these contact lists:
 </p>
 
-<p>
-During the application period, Outreachy organizers can see the
-<a href="{% url 'trusted-volunteers-list' %}">full list of approved volunteer email addresses</a>
-for all approved community coordinators and mentors with approved projects.
-</p>
-
-<p>
-Once all intern selections are approved by Outreachy organizers, they can see the
-<a href="{% url 'active-trusted-volunteers-list' %}">full list of active volunteer email addresses</a>
-for the intern's mentors who signed the mentor contract,
-and all approved community coordinators for communities who selected an intern.
-(This list excludes mentors and communities who don't have an approved intern.
-Mentors and coordinators will disappear from this list once their regular or
-extended internship ends.)
-</p>
-
-<p>
-Then subscribe them using the following links (anyone already subscribed won't be subscribed again):
-</p>
 <ul>
-	<li><a href="https://lists.outreachy.org/cgi-bin/mailman/admin/mentors/members/add">mentors mailing list</a></li>
-	<li><a href="https://lists.outreachy.org/cgi-bin/mailman/admin/announce/members/add">announce mailing list</a></li>
+	<li>
+<a href="{% url 'trusted-volunteers-list' %}">Participating volunteers</a> - during the application period, subscribe all mentors and coordinators to the mentor mailing list. This list includes communities who are approved to participate in this internship cohort, and mentors of projects approved by those coordinators.
+	</li>
+	<li>
+<a href="{% url 'active-trusted-volunteers-list' %}">Active volunteers</a> - after interns selection is approved by Outreachy organizers, subscribe volunteers from this list instead. It excludes mentors who did not pick an intern. Mentors will drop off this list once the internship ends.
+	</li>
 </ul>
 
+
 <p>
-You'll also need to subscribe people to the Zulip chat manually.
-Use the volunteer email list above to get all mentors and coordinators.
-You can use the following link to see a list of all intern emails,
-and get a contact list for all intern's mentors and coordinators.
+Subscribe volunteers using <a href="https://lists.outreachy.org/cgi-bin/mailman/admin/mentors/members/add">this link</a>. Anyone who is already subscribed won't be subscribed again.
 </p>
 
+<p>
+You'll also need to subscribe volunteers to the Zulip chat manually.
+</p>
+
+<h1>Intern contacts</h1>
 <p>
 <a href="{% url 'active-internship-contacts' %}">See the active internship email contacts list.</a>
 </p>
+
