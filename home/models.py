@@ -1944,6 +1944,9 @@ class Project(ApprovalStatus):
         return [ma.mentor.email_address()
                 for ma in self.mentorapproval_set.approved()]
 
+    def all_skills(self):
+        return ProjectSkill.objects.filter(project=self).order_by('skill')
+
     def required_skills(self):
         return ProjectSkill.objects.filter(project=self, required=ProjectSkill.STRONG)
 

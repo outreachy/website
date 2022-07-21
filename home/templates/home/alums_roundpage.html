@@ -75,6 +75,7 @@ Outreachy Alums, {{ round.internstarts|date:"F Y" }} to {{ round.internends|date
 			{% endif %}
 			<BR>{{ i.project.project_round.community }} mentor(s): {{ i.mentor_names }}
 			<BR>Project: {{ i.project.short_title }}
+			<BR>Project skills: {% for project_skill in i.project.all_skills %}{{ project_skill.skill }}{% if not forloop.last %}, {% endif %}{% endfor %}
 		</div>
 	</div>
 	</div>
