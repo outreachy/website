@@ -2120,6 +2120,7 @@ class ActiveInternshipContactsView(UserPassesTestMixin, TemplateView):
                     organizer_approved=True,
                     project__project_round__participating_round__internannounce__lte=today,
                     intern_ends__gte=today,
+                    in_good_standing=True,
                 ) | models.Q(
                     organizer_approved=True,
                     project__project_round__participating_round__internannounce__lte=today,
