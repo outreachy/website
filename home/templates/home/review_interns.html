@@ -44,6 +44,25 @@ Review interns for {{ current_round.official_name }}
 			<BR>Project: {{ i.project.short_title }}
 			<BR>Mentor(s): {% for email in i.mentor_emails %}{{ email }}, {% endfor %}<br>
 			<BR><a href="{{ i.project.get_applicants_url }}#{{ i.applicant.applicant.pk }}">Final application</a><br>
+			{% if not i.organizer_approved %}
+				<BR><span class="badge badge-pill badge-info">Not approved</span> - Outreachy organizers have not approved this intern selection
+			{% elif not i.in_good_standing %}
+				<BR><span class="badge badge-pill badge-warning">Internship terminated</span>
+			{% elif not i.intern_has_custom_dates %}
+				<BR>Standard internship dates
+			{% else %}
+				<BR><span class="badge badge-pill badge-info">Internship extended</span>
+				<BR>Internship start date: {{ i.intern_starts }}
+				<BR>Feedback #1 opens: {{ i.initial_feedback_opens }}
+				<BR>Feedback #1 due: {{ i.initial_feedback_due }}
+				<BR>Feedback #2 opens: {{ i.midpoint_feedback_opens }}
+				<BR>Feedback #2 due: {{ i.midpoint_feedback_due }}
+				<BR>Feedback #3 opens: {{ i.feedback3_opens }}
+				<BR>Feedback #3 due: {{ i.feedback3_due }}
+				<BR>Feedback #4 opens: {{ i.final_feedback_opens }}
+				<BR>Feedback #4 due: {{ i.final_feedback_due }}
+				<BR>Internship end date: {{ i.intern_ends }}
+			{% endif %}
 			<BR>Public name: {{ intern.public_name }}
 			<BR>Legal name: {{ intern.legal_name }}
 			<BR>Email: {{ intern.account.email }}
