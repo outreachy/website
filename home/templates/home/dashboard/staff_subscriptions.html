@@ -1,3 +1,16 @@
+<hr>
+<h1>Internship info</h1>
+
+<p>These pages have detailed information about interns and mentors. These pages also include applicants who are selected as interns by mentors, but are not yet approved by Outreachy organizers. These pages also include interns with terminated internships.</p>
+<ul>
+{% for cohort in section.cohorts %}
+	<li>
+		<a href="{% url 'review-interns' round_slug=cohort.slug %}">{{ cohort.internstarts|date:"F Y" }} internships</a>
+	</li>
+{% endfor %}
+</ul>
+<hr>
+
 <h1>Email Subscriptions</h1>
 
 <p>Subscribe mentors and coordinators to the mentor mailing list using these contact lists:
@@ -17,16 +30,14 @@
 Subscribe volunteers using <a href="https://lists.outreachy.org/cgi-bin/mailman/admin/mentors/members/add">this link</a>. Anyone who is already subscribed won't be subscribed again.
 </p>
 
-<p>
-You'll also need to subscribe volunteers to the Zulip chat manually.
-</p>
+<h1>Zulip chat invitations</h1>
 
-<h1>Intern contacts</h1>
-<p>
-<a href="{% url 'active-internship-contacts' %}">See the active internship email contacts list.</a>
-</p>
+<p>Mentors and coordinators - use the volunteer links above to get a list of mentors to invite to the Zulip chat.</p>
+
+<p><a href="{% url 'active-internship-contacts' %}">Active interns and mentors</a> - use the intern contacts on this page to invite new Outreachy interns to the Zulip chat.</p>
 
 <h1>Informal chat contacts</h1>
 <p>
-<a href="{% url 'informal-chat-contacts' %}">See the information of people who volunteered for informal chats with interns.</a>
+<a href="{% url 'informal-chat-contacts' %}">Volunteers for informal chats with interns.</a>
 </p>
+<hr>

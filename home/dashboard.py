@@ -179,9 +179,19 @@ def application_summary(request, today):
 
 
 def staff_subscriptions(request, today):
-    # This template doesn't need any data, it just needs to be
-    # hidden for non-staff.
-    return request.user.is_staff
+    if not request.user.is_staff:
+        return None
+
+    try:
+        cohorts = RoundPage.objects.filter(
+            contributions_open__lte=today,
+        ).order_by('-internstarts')
+    except RoundPage.DoesNotExist:
+        return None
+
+    return {
+        'cohorts': cohorts,
+    }
 
 
 class RoundEvent(object):
