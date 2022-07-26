@@ -738,7 +738,16 @@ class Feedback3FeedbackInstructions(FeedbackInstructions):
 
     @staticmethod
     def due_date(current_round):
-        return current_round.feedback3_due
+        # Previous cohorts didn't have a feedback #3 due date,
+        # because we collected feedback three times instead of four.
+        # However, this code still needs to run for those RoundPages
+        # where the feedback #3 due date is set to None.
+        # In this case, we feed it a bogus date - the midpoint feedback date.
+        # It doesn't matter, because that date will be long past,
+        # and the feedback #3 for that cohort will never show up in our dashboard reminders.
+        if current_round.feedback3_due:
+            return current_round.feedback3_due
+        return current_round.midfeedback
 
     def generate_messages(self, current_round, connection):
         if not self.request.user.is_staff:
