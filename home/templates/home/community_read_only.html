@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load humanize %}
 
 {% block title %}
 {{ community.name }}:
@@ -84,7 +85,7 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 				    <tr><td><span class="badge badge-pill badge-success">Participating</span></td><td>This community is approved to participate in the {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} internship round</td></tr>
 			    {% endif %}
 			    {% if participation_info and participation_info.interns_funded <= 0 %}
-				    <tr><td><span class="badge badge-pill badge-warning">Not Funded</span></td><td>The community has not found funding for at least one intern ($6,500).</td></tr>
+			    <tr><td><span class="badge badge-pill badge-warning">Not Funded</span></td><td>The community has not found funding for at least one intern (${{ participation_info.participating_round.sponsorship_per_intern|intcomma }} USD).</td></tr>
 			    {% elif participation_info and participation_info.interns_funded > 0 %}
 				    <tr><td><span class="badge badge-pill badge-success">Funded</span></td><td>This community has funding for {{ participation_info.interns_funded }} intern{{ participation_info.interns_funded|length|pluralize }}.</td></tr>
 			    {% endif %}

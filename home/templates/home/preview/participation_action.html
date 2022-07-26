@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load approval_status %}
+{% load humanize %}
 
 {% block title %}
 Intern Funding
@@ -10,7 +11,9 @@ Intern Funding
 <div class="card border-warning mb-3">
 	<div class="card-header text-white bg-warning">Outreachy internship funding is required.</div>
 	<div class="card-body">
-		{% include 'home/snippet/funding_short_description.html' %}
+		{% with current_round=participation.participating_round %}
+			{% include 'home/snippet/funding_short_description.html' %}
+		{% endwith %}
 	</div>
 </div>
 
@@ -18,7 +21,7 @@ Intern Funding
 
 <p>Please <a href="{% url 'docs-community' %}#funding-requirements">read the community guide</a> for more information about intern funding.</p>
 
-<p>Sponsorship for one intern is $6,500 USD. Please list the dollar amount in the form below, not the number of interns.</p>
+<p>Sponsorship for one intern is ${{ participation.participating_round.sponsorship_per_intern|intcomma }} USD. Please list the <b>dollar amount</b> in the form below, not the number of interns.</p>
 
 <p>If you are applying for the Outreachy general fund, please list the sponsor as "Outreachy general fund".</p>
 
@@ -83,6 +86,19 @@ Intern Funding
 						{{ field }} Check this box to delete this sponsorship information.
 						{{ field.help_text|safe }}
 					</div>
+				</div>
+			{% elif 'Sponsorship amount' in field.label_tag %}
+				<div class="form-group card">
+					{{ field.errors }}
+					<div class="card-header">
+						Sponsor {{ sponsor_number }} - {{ field.label_tag }}
+					</div>
+					<div class="card-body">
+						{{ field }}
+					</div>
+					{% if field.help_text %}
+						<div class="card-footer bg-white">Sponsorship for each intern is ${{ participation.participating_round.sponsorship_per_intern|intcomma }} USD.</div>
+					{% endif %}
 				</div>
 			{% else %}
 				<div class="form-group card">

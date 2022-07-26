@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load humanize %}
 
 {% block title %}
 Community Guide | Outreachy Documentation
@@ -327,7 +328,7 @@ Community Guide | Outreachy Documentation
 
 <p><b>Open science communities</b> are eligible for interns to be fully funded by Wellcome Trust.</p>
 
-<p><b>Other communities</b> must secure their own funding for at least one intern ($6,500 USD). After that external funding is secured, they can apply for additional interns to be funded by the Outreachy general fund.</p>
+<p><b>Other communities</b> must secure their own funding for at least one intern (${{ current_round.sponsorship_per_intern|intcomma }} USD). After that external funding is secured, they can apply for additional interns to be funded by the Outreachy general fund.</p>
 
 <h3 id='all-general-funding'><a href='#funding-during-cfp'>3.3.1 Outreachy general fund: All intern funding</a></h3>
 
@@ -388,7 +389,7 @@ Community Guide | Outreachy Documentation
 
 <h3 id='general-funding-stats'><a href='#general-funding-stats'>3.3.5 How much does the Outreachy general fund sponsor?</a></h3>
 
-<p>The sponsorship for each Outreachy intern is $6,500 USD.</p>
+<p>The sponsorship for each Outreachy intern is ${{ current_round.sponsorship_per_intern|intcomma }} USD.</p>
 
 <p>The Outreachy general fund typically sponsors 10 to 15 interns per cohort. The Outreachy general fund usually sponsors 1 intern per community, but it has occasionally sponsored up to 3 interns per community.</p>
 

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load humanize %}
 
 {% block title %}
 Community participation rules
@@ -51,7 +52,7 @@ Community participation rules
 <h3>💵 Intern funding is required</h3>
 
 <div class="container mx-4">
-	<p>Open source communities must find <a href="{% url 'docs-community' %}#intern-funding">internship funding</a> ($6,500 USD per intern):</p>
+	<p>Open source communities must find <a href="{% url 'docs-community' %}#intern-funding">internship funding</a> (${{ current_round.sponsorship_per_intern|intcomma }} USD per intern):</p>
 	<ul>
 		<li>Humanitarian open source communities can apply for funding from the <a href="{% url 'docs-community' %}#outreachy-general-fund" %}>Outreachy general fund.</a></li>
 		<li>Open science communities can apply for funding from the <a href="{% url 'docs-community' %}#open-science-funding" %}>Outreachy general fund</a></li>

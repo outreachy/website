@@ -260,6 +260,7 @@ class AugmentDeadlines(object):
 
 class RoundPage(AugmentDeadlines, Page):
     roundnumber = models.IntegerField()
+    sponsorship_per_intern = models.IntegerField(default=6500)
     pingnew = models.DateField("Date to start pinging new orgs")
     pingold = models.DateField("Date to start pinging past orgs")
     orgreminder = models.DateField("Date to remind orgs to submit their home pages")
@@ -1625,7 +1626,7 @@ class Participation(ApprovalStatus):
     def interns_funded(self):
         total_funding = self.sponsorship_set.aggregate(total=models.Sum('amount'))['total'] or 0
         # Use integer division so it rounds down.
-        return total_funding // 6500
+        return total_funding // self.participating_round.sponsorship_per_intern
 
     def number_interns_approved(self):
         return InternSelection.objects.filter(project__project_round=self, organizer_approved=True).count()
@@ -1737,7 +1738,7 @@ class Sponsorship(models.Model):
             """)
 
     def number_interns(self):
-        return self.amount / 6500
+        return self.amount / self.participation.participating_round.sponsorship_per_intern
 
     def sponsorship_history(self):
         versions = Version.objects.get_for_object(self)

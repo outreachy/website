@@ -414,6 +414,23 @@ def get_current_round_for_sponsors():
 
     return current_round
 
+def get_current_round_for_community_signup():
+    """
+    Find the current round with an open call for communities.
+    """
+
+    now = datetime.now(timezone.utc)
+    today = get_deadline_date_for(now)
+
+    try:
+        current_round = RoundPage.objects.get(
+            contributions_open__gt=today,
+        )
+        current_round.today = today
+    except RoundPage.DoesNotExist:
+        return None
+
+    return current_round
 
 class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWizardView):
     template_name = 'home/wizard_form.html'
@@ -3690,7 +3707,7 @@ def sponsor_info(request, round_slug):
                 participating_round=current_round,
             ).order_by('community__name')
 
-    community_sponsors = [(p.community, p.sponsorship_set.all(), p.number_interns_approved(), p.number_interns_approved() * 6500) for p in participations]
+    community_sponsors = [(p.community, p.sponsorship_set.all(), p.number_interns_approved(), p.number_interns_approved() * p.participating_round.sponsorship_per_intern) for p in participations]
     sponsors_alpha = Sponsorship.objects.filter(
                 models.Q(
                     participation__approval_status=ApprovalStatus.APPROVED
@@ -3722,7 +3739,7 @@ def sponsor_info_details(request, round_slug, community_slug):
             'current_round' : current_round,
             'participation' : participation,
             'number_interns_approved' : participation.number_interns_approved(),
-            'total_funding_needed' : participation.number_interns_approved() * 6500,
+            'total_funding_needed' : participation.number_interns_approved() * participation.participating_round.sponsorship_per_intern,
             'community' : participation.community,
             'sponsor_set' : participation.sponsorship_set.all(),
             },
@@ -4443,7 +4460,9 @@ def opportunities(request):
     return render(request, 'home/opportunities.html')
 
 def community_participation_rules(request):
-    return render(request, 'home/community_participation_rules.html')
+    return render(request, 'home/community_participation_rules.html', {
+        'current_round': get_current_round_for_community_signup(),
+        })
 
 @login_required
 def dashboard(request):

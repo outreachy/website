@@ -3,6 +3,7 @@ from django.conf import settings
 from django.core import mail
 from django.test import TestCase, override_settings
 from django.urls import reverse
+import pprint
 from reversion.models import Version
 
 from home.models import *
@@ -208,6 +209,105 @@ class ProjectSubmissionTestCase(TestCase):
                 self.assertContains(response, '<h2>Submit an Outreachy Intern Project Proposal</h2>', html=True)
                 self.assertContains(response, '<a class="btn btn-success" href="{}">Submit a Project Proposal</a>'.format(project_submission_path), html=True)
 
+    def test_increased_sponsorship_old_community_participation_signup(self):
+        """
+        This tests submitting an older community to participate in this round.
+         - Create a community that has been approved to participate in a past round
+         - Create a new RoundPage for the upcoming round
+         - Set the sponsorship_per_intern to 10000 USD (default is currently 6500)
+         - Submit the community to participate in the round through the form,
+           setting the sponsorship to 20000 USD
+
+        Test home/templates/home/community_read_only.html:
+         - Check:
+           - Check that the participation sign up form mentions the higher sponsorship amount
+           - Funding for 2 interns is visible on the community read-only page
+           - Email is sent to the Outreachy organizers with the correct number of interns sponsored
+        """
+        scenario = scenarios.InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
+        current_round = factories.RoundPageFactory(start_from='pingnew', days_after_today=-1, sponsorship_per_intern=10000)
+
+        sponsor_name = 'Software in the Public Interest - Debian'
+        sponsor_amount = 30000
+
+        visitors = self.get_visitors_from_past_round(scenario)
+
+        self.client.force_login(scenario.coordinator.account)
+        # Check to make sure the increased funding amount is mentioned on the participation rules page
+        response = self.client.get(reverse('community-participation-rules'))
+        self.assertContains(response, '<p>Open source communities must find <a href="{}#intern-funding">internship funding</a> ($10,000 USD per intern):</p>'.format(reverse('docs-community')), html=True)
+
+        # Check to make sure the increased funding amount is mentioned on the participation sign-up page
+        response = self.client.get(reverse(
+            'participation-action',
+            kwargs={
+                'action': 'submit',
+                'round_slug': current_round.slug,
+                'community_slug': scenario.participation.community.slug,
+        }))
+        self.assertContains(response, '<p>All communities must find finding for at least one intern ($10,000 USD):</p>', html=True)
+        self.assertContains(response, '<div class="card-footer bg-white">Sponsorship for each intern is $10,000 USD.</div>', html=True)
+                        
+        response = self.coordinator_signs_up_community_to_participate(
+                reverse('participation-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, }),
+                sponsor_name,
+                sponsor_amount,
+                )
+        self.assertEqual(response.status_code, 302)
+
+        # Make sure the email to the Outreachy organizers was sent
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, 'Approve community participation - Debian')
+        self.assertIn('Number of interns funded: 3', mail.outbox[0].body)
+        self.assertIn(sponsor_name, mail.outbox[0].body)
+        self.assertIn(str(sponsor_amount), mail.outbox[0].body)
+
+        community_read_only_path = reverse('community-read-only', kwargs={ 'community_slug': scenario.participation.community.slug, })
+        for visitor_type, visitor in visitors:
+            with self.subTest(visitor_type=visitor_type):
+                self.client.logout()
+                if visitor:
+                    self.client.force_login(visitor)
+                response = self.client.get(community_read_only_path)
+                self.assertEqual(response.status_code, 200)
+                self.assertContains(response, '<span class="badge badge-pill badge-success">Funded</span>', html=True)
+                self.assertContains(response, '<td>This community has funding for 3 interns.</td>', html=True)
+        self.client.logout()
+
+    def test_increased_sponsorship_staff_dashboard(self):
+        """
+        This tests submitting an older community to participate in this round.
+         - Create a community that has been approved to participate in a past round
+         - Create a new RoundPage for the upcoming round
+         - Set the sponsorship_per_intern to 10000 USD (default is currently 6500)
+         - Submit the community to participate in the round through the form,
+           setting the sponsorship to 20000 USD
+
+        Test home/templates/home/community_read_only.html:
+         - Check:
+           - Check that the participation sign up form mentions the higher sponsorship amount
+           - Funding for 2 interns is visible on the community read-only page
+        """
+        current_round = factories.RoundPageFactory(start_from='pingnew', days_after_today=-1, sponsorship_per_intern=10000)
+        sponsorship_a = factories.SponsorshipFactory(
+                participation__participating_round=current_round,
+                participation__approval_status=ApprovalStatus.APPROVED,
+                name="Sponsor A",
+                amount=30000,
+                funding_secured=True,
+                )
+
+        # Ensure the community's internship funding shows up correctly on the Outreachy organizer side
+        organizer = factories.ComradeFactory()
+        organizer.account.is_staff = True
+        organizer.account.save()
+        self.client.force_login(organizer.account)
+
+        response = self.client.get(reverse('dashboard'))
+        self.assertContains(response, '<td><p>Approved</p><p>3 interns funded</p></td>', html=True)
+
+        self.client.logout()
+
     def test_community_participation_approval(self):
         """
         This tests approving a community to participate in this round.
@@ -292,3 +392,31 @@ class ProjectSubmissionTestCase(TestCase):
                 self.assertContains(response, '<h2>Submit an Outreachy Intern Project Proposal</h2>', html=True)
                 self.assertContains(response, '<a class="btn btn-success" href="{}">Submit a Project Proposal</a>'.format(project_submission_path), html=True)
 
+    def test_increased_sponsorship_cfp_announce_email(self):
+        """
+        This tests whether the email Outreachy organizers should send to the mentor mailing list
+        to announce the call for community participation is open is correct:
+         - Create a new RoundPage for the upcoming round
+         - Set the sponsorship_per_intern to 10000 USD (default is currently 6500)
+
+        Test home/templates/home/email/cfp-open.txt:
+         - Check:
+           - the email reminder shows up on the staff dashboard
+           - the intern sponsorship amount mentioned in the email is correct
+        """
+        current_round = factories.RoundPageFactory(start_from='pingnew', days_after_today=-1, sponsorship_per_intern=10000)
+
+        organizer = factories.ComradeFactory()
+        organizer.account.is_staff = True
+        organizer.account.save()
+        self.client.force_login(organizer.account)
+
+        response = self.client.get(reverse('dashboard'))
+        self.assertContains(response, "<p>Announce the new round dates internally. Send an email to the mentors' mailing list:</p>", html=True)
+        # I have no idea how home/email.py generates URLs for the reminder emails
+        email_preview_url = '/{}/email/cfp-open/'.format(current_round.slug)
+        response = self.client.get(email_preview_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Each community coordinator will need to secure funding for at least one intern ($10000 USD).", html=False)
+
+        self.client.logout()

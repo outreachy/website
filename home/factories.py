@@ -301,7 +301,7 @@ class SponsorshipFactory(factory.django.DjangoModelFactory):
     participation = factory.SubFactory(ParticipationFactory)
     coordinator_can_update = True
     name = factory.Faker('name')
-    amount = 6500
+    amount = factory.LazyAttribute(lambda o : o.participation.participating_round.sponsorship_per_intern)
     funding_decision_date = datetime.date.today()
 
 class ProjectFactory(factory.django.DjangoModelFactory):

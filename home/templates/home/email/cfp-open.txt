@@ -36,7 +36,7 @@ If you're a new Outreachy coordinator, please read the coordinator FAQ:
 
 https://www.outreachy.org/mentor/#coordinator
 
-Each community coordinator will need to secure funding for at least one intern ($6,500 USD). Outreachy organizers cannot allow communities to participate unless they have funding.
+Each community coordinator will need to secure funding for at least one intern (${{ current_round.sponsorship_per_intern }} USD). Outreachy organizers cannot allow communities to participate unless they have funding.
 
 Once you have a tentative commitment for funding from a sponsor, please sign your community up to participate:
 
