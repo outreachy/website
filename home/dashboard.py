@@ -895,8 +895,8 @@ def sponsor_statistics(request, today):
 
     try:
         current_round = RoundPage.objects.filter(
-            initial_applications_open__lte=today,
-        ).latest('initial_applications_open')
+            pingnew__lte=today,
+        ).latest('pingnew')
         current_round.today = today
     except RoundPage.DoesNotExist:
         return None
