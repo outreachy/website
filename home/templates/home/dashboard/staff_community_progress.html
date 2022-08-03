@@ -40,7 +40,7 @@
 	{% empty %}
 			<tr>
 				<td>{% if not p.is_approved %}{{ p.community.name }}{% else %}<a href="{% url 'community-applicants' round_slug=current_round.slug community_slug=p.community.slug %}">{{ p.community.name }}</a>{% endif %}</td>
-				<td>{{ p.get_approval_status_display }}</td>
+				<td><p>{{ p.get_approval_status_display }}</p><p>{{ p.interns_funded }} intern{{p.interns_funded|pluralize }} funded</p></td>
 				<td>No Projects</td>
 				<td> - </td>
 				<td> - </td>
