@@ -6,14 +6,22 @@ Outreachy Initial Application
 
 {% block content %}
 <h1>Outreachy Initial Application</h1>
-<img src="https://www.outreachy.org/media/images/bot-eligibility.original.png" class="float-right">
-<p>
-Welcome to Outreachy!
-</p>
+<div class="contrainer mb-3">
+	<div class="row">
+		<div class="col-3 align-self-center">
+			<img src="https://www.outreachy.org/media/images/bot-eligibility.original.png" class="img-fluid" alt="Drawing of the Outreachy robot mascot filling out an initial application">
+		</div>
+		<div class="col-9 align-self-center">
+			<p>
+			Welcome to Outreachy!
+			</p>
 
-<p>
-You are applying for the {{ current_round.official_name }}.
-</p>
+			<p>
+			You are applying for the {{ current_round.official_name }}.
+			</p>
+		</div>
+	</div>
+</div>
 
 <div class="card border-warning mb-3">
 	<div class="card-header text-white bg-warning">Instructions</div>
