@@ -191,8 +191,8 @@ class WagtailFeed(Feed):
             title='Outreachy December 2022 internship applications',
             full_url=reverse('2022-08-initial-applications-open'),
             owner=author,
-            first_published_at=pacific.localize(datetime.datetime(2022, 8, 9, 21, 00, 0)),
-            last_published_at=pacific.localize(datetime.datetime(2022, 8, 9, 21, 00, 0)),
+            first_published_at=pacific.localize(datetime.datetime(2022, 8, 9, 15, 00, 0)),
+            last_published_at=pacific.localize(datetime.datetime(2022, 8, 9, 15, 5, 0)),
         ))
 
         # put the Wagtail pages and special posts together in the right order
