@@ -2,7 +2,7 @@
 
 **Mentorship Terms of Participation**
 
-_last edited - April 26, 2022_
+_last edited - August 9, 2022_
 
 **Dear Mentor:**
 
@@ -56,7 +56,7 @@ You hereby represent, warrant, and agree that:
 project set forth in the Program Application;
 
 (b) you are not a resident of Crimea or a resident or national of Cuba, Iran,
-North Korea, or Syria;
+North Korea, Russia, or Syria;
 
 (c) you are not a person or entity restricted by US export controls or
 sanctions programs; and

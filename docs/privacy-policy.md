@@ -1,5 +1,5 @@
 **Privacy Statement for Outreachy**
-*Last updated March 12, 2022*
+*Last updated August 9, 2022*
 
 Scope of This Notice
 ===
@@ -177,7 +177,7 @@ Only Outreachy organizers and designated applicant reviewers will have access to
     * your volunteer time commitments or other time commitments
 * information that determines whether the Software Freedom Conservancy is allowed to pay you as a contractor under U.S. non-profit laws:
     * your eligibility to work for 30-hours a week in your country of residence and all countries you will be living in from the start of your internship and five weeks after the internship ends
-    * whether you are a citizen, resident, or national of Crimea, Cuba, Iran, North Korea, or Syria. Outreachy's fiscal parent, Software Freedom Conservancy, is a 501(c)(3) U.S. non-profit. As a U.S. non-profit, Conservancy must ensure that funds are not sent to countries under U.S. sanctions programs, such as Cuba, Iran, North Korea, or Syria.
+    * whether you are a citizen, resident, or national of Crimea, Cuba, Iran, North Korea, Russia, or Syria. Outreachy's fiscal parent, Software Freedom Conservancy, is a 501(c)(3) U.S. non-profit. As a U.S. non-profit, Conservancy must ensure that funds are not sent to countries under U.S. sanctions programs, such as Cuba, Iran, North Korea, Russia, or Syria.
     * what country you will be living in during the internship, for use when the list of countries and regions under U.S. sanctions changes
     * your status as a person or entity restricted by United States of America export controls or sanctions programs
 * information that helps us determine if you are eligible for an Outreachy internship:

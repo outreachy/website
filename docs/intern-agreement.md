@@ -2,7 +2,7 @@
 
 **Internship Terms of Participation**
 
-_last edited - April 26, 2022_
+_last edited - August 9, 2022_
 
 **Dear Participant:**
 
@@ -150,8 +150,8 @@ You hereby represent, warrant, and agree that:
 reside throughout the duration of the program;
 
 (b) you (i) are not a resident of Crimea, or a resident or national of Cuba,
-Iran, North Korea, or Syria, or (ii) you have disclosed that you are a national
-of Iran, North Korea, or Syria, participating in the Program to Conservancy
+Iran, North Korea, Russia, or Syria, or (ii) you have disclosed that you are a national
+of Iran, North Korea, Russia, or Syria, participating in the Program to Conservancy
 and are not currently residing in one of these countries;
 
 (c) you are not a person or entity restricted by US export controls or
