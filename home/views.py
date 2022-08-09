@@ -2860,6 +2860,18 @@ def blog_2022_04_15_new_community_manager(request):
 def blog_2022_06_14_remembering_marina(request):
     return render(request, 'home/blog/2022-06-14-remembering-and-honoring-marina.html')
 
+def blog_2022_08_09_initial_applications_open(request):
+    try:
+        current_round = RoundPage.objects.get(
+            internstarts__gte='2022-12-01',
+            internends__lte='2023-04-01',
+        )
+    except RoundPage.DoesNotExist:
+        current_round = None
+    return render(request, 'home/blog/2022-08-09-initial-applications-open.html', {
+        'current_round': current_round,
+        })
+
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(Feedback1FromMentor,
             fields=(
