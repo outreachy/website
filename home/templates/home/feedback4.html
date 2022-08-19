@@ -571,8 +571,24 @@ Feedback #4 for {{ current_round.official_name }}
 					</tr>
 
 					{% if i.feedback4fromintern.time_comments %}<tr><td colspan="3"><p>Intern's comments on their time commitments:</p><p>{{ i.feedback4fromintern.time_comments }}</p></td></tr>{% endif %}
-					{% if i.feedback4frommentor %}<tr><td colspan="3"><p>Mentor's report on intern progress:</p><p>{{ i.feedback4frommentor.progress_report }}</p></td></tr>{% endif %}
-					{% if i.feedback4fromintern %}<tr><td colspan="3"><p>Intern's report on intern progress:</p><p>{{ i.feedback4fromintern.progress_report }}</p></td></tr>{% endif %}
+					<tr>
+						<td colspan="3">
+							<p><b>Project report:</b></p>
+							<ul>
+								<li>Summary of the project goals completed</li>
+								<li>Impact the project will have on the open source community</li>
+								<li>What the intern learned during the internship</li>
+							</ul>
+							<p><b>Internship extension:</b></p>
+							<p>If a mentor is requesting an internship extension, the mentor will provide the following information:</p>
+							<ul>
+								<li>Intern's communication frequency with the mentor</li>
+								<li>Intern's progress on their project</li>
+								<li>Information about the intern's interactions with the mentor's open source community</li>
+							</ul>
+					</tr>
+					{% if i.feedback4frommentor %}<tr><td colspan="3"><p>Mentor's report:</p><p>{{ i.feedback4frommentor.progress_report }}</p></td></tr>{% endif %}
+					{% if i.feedback4fromintern %}<tr><td colspan="3"><p>Intern's report:</p><p>{{ i.feedback4fromintern.progress_report }}</p></td></tr>{% endif %}
 					<tr>
 						<td>{% if i.feedback4frommentor %}{{ i.feedback4frommentor.last_contact }}{% endif %}</td>
 						<td>{% if i.feedback4fromintern %}{{ i.feedback4fromintern.last_contact }}{% endif %}</td>

@@ -120,6 +120,29 @@ Internship feedback #4
 				{{ field }}
 			</div>
 		</div>
+	{% elif "communication frequency" in field.label_tag %}
+		<hr>
+		<h2>Project report</h2>
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class = "card-header">
+				<p>If you are not requesting an internship extension, please provide a report on the outcome of the internship project. Include:</p>
+				<ul>
+					<li>Summary of the project goals completed</li>
+					<li>Impact the project will have on the open source community</li>
+					<li>What your intern learned during the internship</li>
+				</ul>
+				<p>If you are requesting an internship extension, please provide the following information:</p>
+				<ul>
+					<li>Your intern's communication frequency with you</li>
+					<li>Your intern's progress on their project</li>
+					<li>Information about the intern's interactions with your open source community</li>
+				</ul>
+			</div>
+			<div class = "card-body">
+				{{ field }}
+			</div>
+		</div>
 	{% else %}
 		<div class="form-group card">
 			{{ field.errors }}

@@ -80,6 +80,23 @@ Internship feedback #4
 			</div>
 			<div class="card-footer bg-white"><p>(Optional) If you have not been working 30 hours per week, please let us know why. We want to support you, so let us know if there's anything we can do to help</p></div>
 		</div>
+	{% elif "communication frequency" in field.label_tag %}
+		<hr>
+		<h2>Project report</h2>
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class = "card-header">
+				<p>Please provide a report on the outcome of your internship project. Include:</p>
+				<ul>
+					<li>Summary of the project goals completed</li>
+					<li>Impact the project will have on the open source community</li>
+					<li>What you learned during the internship</li>
+				</ul>
+			</div>
+			<div class = "card-body">
+				{{ field }}
+			</div>
+		</div>
 	{% else %}
 		<div class="form-group card">
 			{{ field.errors }}
