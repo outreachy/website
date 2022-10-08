@@ -61,7 +61,7 @@ Make sure to reach out to the project mentor if you're stuck for more than a cou
 
 The list of Outreachy internship projects can be found here:
 
-{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}{% if application.application_round.pick_a_project_blog_url %}
+{{ request.scheme }}://{{ request.get_host }}{% url 'project-selection' %}
 
 
 ❓ Finding Help
