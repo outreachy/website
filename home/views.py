@@ -1,4 +1,5 @@
 from betterforms.multiform import MultiModelForm
+from collections import Counter
 from datetime import datetime, timedelta, timezone, date
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -3787,6 +3788,28 @@ class ReviewInterns(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
             raise PermissionDenied("You are not authorized to review applications.")
 
         context['intern_selections'] = InternSelection.objects.filter(applicant__application_round=current_round).order_by('project__project_round__community__name')
+        return context
+
+class ReviewContributors(LoginRequiredMixin, ComradeRequiredMixin, TemplateView):
+    template_name = 'home/review_contributors.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ReviewContributors, self).get_context_data(**kwargs)
+        current_round = get_object_or_404(
+            RoundPage,
+            slug=self.kwargs['round_slug'],
+        )
+        context['current_round'] = current_round
+        context['role'] = Role(self.request.user, current_round)
+        if not self.request.user.is_staff and not current_round.is_reviewer(self.request.user):
+            raise PermissionDenied("You are not authorized to view this page.")
+
+        applicants = ApplicantApproval.objects.filter(application_round=current_round, contribution__isnull=False).distinct().order_by('applicant__public_name')
+
+        context['applicants'] = applicants
+        context['final_applicants'] = ApplicantApproval.objects.filter(application_round=current_round, finalapplication__isnull=False).distinct().order_by('applicant__public_name')
+        context['countries'] = Counter([a.initial_application_country_living_in_during_internship for a in applicants]).most_common()
+        context['pronouns'] = Counter([a.applicant.pronouns for a in applicants]).most_common()
         return context
 
 def alums_page(request, year=None, month=None):

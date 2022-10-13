@@ -5,7 +5,7 @@
 <ul>
 {% for cohort in section.cohorts %}
 	<li>
-		<a href="{% url 'review-interns' round_slug=cohort.slug %}">{{ cohort.internstarts|date:"F Y" }} internships</a>
+		{{ cohort.internstarts|date:"M Y" }} <a href="{% url 'review-interns' round_slug=cohort.slug %}">interns,</a> <a href="{% url 'review-contributors' round_slug=cohort.slug %}">contributors</a>
 	</li>
 {% endfor %}
 </ul>

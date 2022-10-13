@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}
+Contributors in {{ current_round.official_name }}
+{% endblock %}
+
+{% block content %}
+<h2>Contributors for {{ current_round.internstarts|date:"F Y" }} cohort</h2>
+
+<p><b>{{ applicants.count }}</b> applicants have recorded a contribution.</p>
+<p><b>{{ final_applicants.count }}</b> applicants have created a final application.</p>
+
+<p>Contributor pronouns:</p>
+<ul>
+	{% for p, num in pronouns %}
+		<li>{{ p }} - {{ num }}</li>
+	{% endfor %}
+</ul>
+
+<p>Contributor countries:</p>
+<ul>
+	{% for c, num in countries %}
+		<li>{{ c }} - {{ num }}</li>
+	{% endfor %}
+</ul>
+
+<h2>Applicant Details</h2>
+<table class="table table-striped table-bordered">
+	<th scope="col">Applicant</th>
+	{% for app in applicants %}
+		<tr>
+			<td><a href="#intern-{{ app.applicant.account.pk }}">{{ app.applicant.public_name }}</a></td>
+		</tr>
+	{% endfor %}
+</table>
+
+<h2>Intern Information</h2>
+{% for app in applicants %}
+{% with comrade=app.applicant %}
+	<div class="card border mt-3" id="intern-{{ comrade.account.pk }}">
+	<div class="card-body">
+		{% if comrade.photo %}
+			<img src="{{ comrade.photo.url }}" class="img-thumbnail float-left mr-3" alt="Photo of {{ comrade.public_name }}" height="200" width="200">
+		{% else %}
+		{% static 'outreachy-bot-200x200-avatar-1.png' as avatar1 %}
+		{% static 'outreachy-bot-200x200-avatar-2.png' as avatar2 %}
+		{% static 'outreachy-bot-200x200-avatar-3.png' as avatar3 %}
+		{% static 'outreachy-bot-200x200-avatar-4.png' as avatar4 %}
+		<img src='{% cycle avatar1 avatar2 avatar3 avatar4 as avatar %}' class="img-thumbnail float-left mr-3" height="200" width="200" alt="Default avatar for {{ comrade.public_name }}">
+		{% endif %}
+		<div class="card-text">
+			<h4 class="mt-0">{{ comrade.public_name }}</h4>
+			<BR>{{ app.application_round.internstarts|date:"F Y" }} Outreachy intern
+			<BR>Public name: {{ comrade.public_name }}
+			<BR>Legal name: {{ comrade.legal_name }}
+			<BR>Email: {{ comrade.account.email }}
+			<BR>Pronouns: {{ comrade.get_pronouns_html|safe }}<BR>
+			<BR>Location:
+			{% if comrade.location %}
+				<BR>{{ comrade.location }}
+			{% endif %}
+			<BR>{{ app.initial_application_country_living_in_during_internship }}
+			{% if comrade.timezone %}
+				<BR>Timezone: {{ comrade.timezone }}<BR><BR>
+			{% else %}
+				<BR>Timezone: <span class="badge badge-pill badge-warning">unknown</span><BR><BR>
+			{% endif %}
+			<div class="container">
+				{% if comrade.blog_url %}
+					<a href="{{ comrade.blog_url }}"><img src="{% static 'link-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="Blog"></a>
+				{% else %}
+					<img src="{% static 'link-grayed-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="no URL provided">
+				{% endif %}
+				{% if comrade.twitter_url %}
+					<a href="{{ comrade.twitter_url }}"><img src="{% static 'Twitter/Twitter_Social_Icon_Circle_Color-32px.png' %}" class="mx-1" alt="Twitter"></a>
+				{% else %}
+					<img src="{% static 'link-grayed-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="no URL provided">
+				{% endif %}
+				{% if comrade.github_url %}
+					<a href="{{ comrade.github_url }}"><img src="{% static 'GitHub/PNG/GitHub-Mark-32px.png' %}" class="mx-1" alt="GitHub"></a>
+				{% else %}
+					<img src="{% static 'link-grayed-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="no URL provided">
+				{% endif %}
+				{% if comrade.gitlab_url %}
+					<a href="{{ comrade.gitlab_url }}"><img src="{% static 'GitLab/gitlab-logo-square-32px.png' %}" class="mx-1" alt="GitLab"></a>
+				{% else %}
+					<img src="{% static 'link-grayed-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="no URL provided">
+				{% endif %}
+			</div>
+			{% if comrade.nick %}
+				<BR>IRC/Chat/Forum username: {{ comrade.nick }}<BR>
+			{% else %}
+				<BR>IRC/Chat/Forum username: <span class="badge badge-pill badge-warning">unknown</span><BR>
+			{% endif %}
+			{% if comrade.twitter_url %}
+				Twitter: <a href="{{ comrade.twitter_url }}">{{ comrade.twitter_url }}</a><BR>
+			{% else %}
+				Twitter: <span class="badge badge-pill badge-warning">unknown</span><BR>
+			{% endif %}
+			{% if comrade.github_url %}
+				GitHub: <a href="{{ comrade.github_url }}">{{ comrade.github_url }}</a><BR>
+			{% else %}
+				GitHub: <span class="badge badge-pill badge-warning">unknown</span><BR>
+			{% endif %}
+			{% if comrade.gitlab_url %}
+				GitLab: <a href="{{ comrade.gitlab_url }}">{{ comrade.gitlab_url }}</a><BR>
+			{% else %}
+				GitLab: <span class="badge badge-pill badge-warning">unknown</span><BR>
+			{% endif %}
+			{% if comrade.blog_url %}
+				Blog: <a href="{{ comrade.blog_url }}">{{ comrade.blog_url }}</a><BR>
+			{% else %}
+				Blog: <span class="badge badge-pill badge-warning">unknown</span><BR>
+			{% endif %}
+			<BR>Outreachy website username: {{ comrade.username }}<BR>
+			Last login: {{ comrade.account.last_login }}<BR>
+			Date joined: {{ comrade.account.date_joined }}<BR>
+			<br>
+			Initial application submission date: {{ i.applicant.submission_date }}<BR>
+			{% if not applications %}
+				First time applicant<BR>
+			{% else %}
+				Previous initial applications:<BR>
+				<ul>
+					{% for app in applications %}
+					<li>{{ app.application_round }} - {{ app.get_approval_status_display }}{% if app.reason_denied %} ({{ app.reason_denied }}){% endif %}</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+		</div>
+	</div>
+	</div>
+{% endwith %}
+{% endfor %}
+{% endblock %}

@@ -67,6 +67,7 @@ round_patterns = [
     url(r'^sponsor-info/$', views.sponsor_info, name='sponsor-info'),
     url(r'^sponsor-info-details/(?P<community_slug>[^/]+)/', views.sponsor_info_details, name='sponsor-info-details'),
     url(r'^review-interns/$', views.ReviewInterns.as_view(), name='review-interns'),
+    url(r'^review-contributors/$', views.ReviewContributors.as_view(), name='review-contributors'),
 ] + [
     url(r'^email/{}/$'.format(event.slug), event.as_view(), name=event.url_name())
     for event in dashboard.all_round_events
