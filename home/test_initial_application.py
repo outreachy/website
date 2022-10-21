@@ -444,7 +444,7 @@ class ProjectSubmissionTestCase(TestCase):
                         '<p>If you are an Outreachy applicant, this information will be available once the Outreachy contribution period starts on {} at 4pm UTC. You can sign up for an email notification when the round opens by <a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">subscribing to the Outreachy announcements mailing list</a>.</p>'.format(date_format(project.project_round.participating_round.contributions_open)),
                         html=True)
                 self.assertNotContains(response, '<h1>Outreachy Internships with Debian</h1>', html=True)
-                self.assertNotContains(response, '<h1>Open Projects</h1>', html=True)
+                self.assertNotContains(response, '<h2>Internship Projects</h2>', html=True)
                 self.assertNotContains(response, '<div class="card border" id="debian-{}">'.format(project.slug), html=True)
                 self.assertNotContains(response, '<hr id="{}">'.format(project.slug), html=True)
                 self.assertNotContains(response, '<h2>{}</h2>'.format(project.short_title), html=True)
@@ -476,7 +476,7 @@ class ProjectSubmissionTestCase(TestCase):
                         '<p>This information is only available to applicants who have their initial application approved. Check your <a href="{}">initial application results</a> for more details.</p>'.format(reverse('eligibility-results')),
                         html=True)
                 self.assertNotContains(response, '<h1>Outreachy Internships with Debian</h1>', html=True)
-                self.assertNotContains(response, '<h1>Open Projects</h1>', html=True)
+                self.assertNotContains(response, '<h2>Internship Projects</h2>', html=True)
                 self.assertNotContains(response, '<div class="card border" id="debian-{}">'.format(project.slug), html=True)
                 self.assertNotContains(response, '<hr id="{}">'.format(project.slug), html=True)
                 self.assertNotContains(response, '<h2>{}</h2>'.format(project.short_title), html=True)
@@ -499,7 +499,7 @@ class ProjectSubmissionTestCase(TestCase):
                 '<p>This information is only available to applicants who have their initial application approved. Check your <a href="{}">initial application results</a> for more details.</p>'.format(reverse('eligibility-results')),
                 html=True)
         self.assertNotContains(response, '<h1>Outreachy Internships with Debian</h1>', html=True)
-        self.assertNotContains(response, '<h1>Open Projects</h1>', html=True)
+        self.assertNotContains(response, '<h2>Internship Projects</h2>', html=True)
         self.assertNotContains(response, '<div class="card border" id="debian-{}">'.format(project.slug), html=True)
         self.assertNotContains(response, '<hr id="{}">'.format(project.slug), html=True)
         self.assertNotContains(response, '<h2>{}</h2>'.format(project.short_title), html=True)
@@ -526,7 +526,7 @@ class ProjectSubmissionTestCase(TestCase):
                 '<p>If you are an Outreachy applicant, this information will be available once the Outreachy contribution period starts on {} at 4pm UTC. You can sign up for an email notification when the round opens by <a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">subscribing to the Outreachy announcements mailing list</a>.</p>'.format(date_format(project.project_round.participating_round.contributions_open)),
                 html=True)
         self.assertNotContains(response, '<h1>Outreachy Internships with Debian</h1>', html=True)
-        self.assertNotContains(response, '<h1>Open Projects</h1>', html=True)
+        self.assertNotContains(response, '<h2>Internship Projects</h2>', html=True)
         self.assertNotContains(response, '<hr id="{}">'.format(project.slug), html=True)
         self.assertNotContains(response, '<h2>{}</h2>'.format(project.short_title), html=True)
 
@@ -552,7 +552,7 @@ class ProjectSubmissionTestCase(TestCase):
                         '<p>If you are an Outreachy applicant, this information will be available once the Outreachy contribution period starts on {} at 4pm UTC. You can sign up for an email notification when the round opens by <a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">subscribing to the Outreachy announcements mailing list</a>.</p>'.format(date_format(project.project_round.participating_round.contributions_open)),
                         html=True)
                 self.assertNotContains(response, '<h1>Outreachy Internships with Debian</h1>', html=True)
-                self.assertNotContains(response, '<h1>Open Projects</h1>', html=True)
+                self.assertNotContains(response, '<h2>Internship Projects</h2>', html=True)
                 self.assertNotContains(response, '<div class="card border" id="{}">'.format(project.slug), html=True)
                 self.assertNotContains(response, '<hr id="{}">'.format(project.slug), html=True)
                 self.assertNotContains(response, '<h2>{}</h2>'.format(project.short_title), html=True)
@@ -575,7 +575,7 @@ class ProjectSubmissionTestCase(TestCase):
                 '<p>If you are an Outreachy applicant, this information will be available once the Outreachy contribution period starts on {} at 4pm UTC. You can sign up for an email notification when the round opens by <a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">subscribing to the Outreachy announcements mailing list</a>.</p>'.format(date_format(project.project_round.participating_round.contributions_open)),
                 html=True)
         self.assertContains(response, '<h1>Outreachy Internships with Debian</h1>', html=True)
-        self.assertContains(response, '<h1>Open Projects</h1>', html=True)
+        self.assertContains(response, '<h2>Internship Projects</h2>', html=True)
         self.assertContains(response, '<hr id="{}">'.format(project.slug), html=True)
         self.assertContains(response, '<h2>{}</h2>'.format(project.short_title), html=True)
 

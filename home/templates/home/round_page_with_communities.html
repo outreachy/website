@@ -87,6 +87,22 @@ Outreachy Internships | Apply | Pick a Project
 			<p>If you're unsure whether you have the project skills needed, reach out the mentor via email and ask them. It's better to ask than to not apply!</p>
 		</div>
 	</div>
+		<h2>Closed projects</h2>
+
+		<p>
+		Some mentors may already be working with many applicants.
+		Those mentors will mark their projects as "closed to new applicants".
+		If you are picking a project to contribute to,
+		please avoid the projects that are closed to new applicants.
+		</p>
+
+		<p>
+		Applicants may be working on a contribution when a project
+		is marked as closed to new applicants. In that case, please check
+		with your mentor if you should continue working on your contributions.
+		Mentors will either encourage you to continue working
+		on your contributions, or will ask you to pick another project.
+		</p>
 	{% if not current_round.contributions_close.has_passed %}
 		<h2 id="open-projects">Outreachy Open Projects</h2>
 		{% with common_skills=current_round.get_common_skills %}
@@ -168,44 +184,6 @@ Outreachy Internships | Apply | Pick a Project
 	{% with project_status="pending " projects=mentors_pending_projects %}
 		{% include 'home/snippet/projects_for_round_page.html' %}
 	{% endwith %}
-{% endif %}
-{% if closed_projects %}
-	{% if not current_round.contributions_close.has_passed %}
-		<h2>Closed Outreachy Internship Projects</h2>
-
-		<p>
-		The projects in this section already have many strong
-		candidates they have worked with. If you are just starting out
-		with the Outreachy application process, we don't suggest you
-		apply for these projects. If you have been working with the
-		project mentors, please continue to work with them. Make sure
-		to submit your in-progress contributions through the community
-		landing page, and complete your final project application.
-		</p>
-	{% else %}
-		<h2>Closed Early - Outreachy Internship Projects</h2>
-		<p>
-		The following projects were closed to new applicants before
-		the final application deadline of {{ current_round.contributions_close }} at 4pm UTC.
-		This typically means the mentors were working with many promising
-		applicants early in the application period. In future rounds,
-		applicants should make sure to start their contributions early
-		to similar projects.
-	{% endif %}
-
-	{% for participation, projects in closed_projects %}
-	{% with community=participation.community %}
-		<h3>{{ community.name }}</h3>
-		<p>{{ community.description }}</p>
-		{% if role.is_approved_applicant or role.is_volunteer %}
-			<p>Document your contributions to these internship projects on the
-			<a href="{{ participation.get_absolute_url }}">{{ community.name }} community landing page</a>.</p>
-		{% endif %}
-		{% with project_status="closed " %}
-			{% include 'home/snippet/projects_for_round_page.html' %}
-		{% endwith %}
-	{% endwith %}
-	{% endfor %}
 {% endif %}
 {% endwith %}
 {% endblock %}

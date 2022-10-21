@@ -6,7 +6,7 @@
 	<div class="card border" id="{{ project.project_round.community.slug}}-{{ project.slug }}">
 		<div class="card-header bg-light">
 	{% endif %}
-		{% if not project.is_approved %}{{ project.get_approval_status_display }} {% endif %}{{ project.project_round.community.name }} {% if not project.new_contributors_welcome %}closed {% endif %}project #{{ forloop.counter }}
+		{% if not project.is_approved %}{{ project.get_approval_status_display }} {% endif %}{% if not project.new_contributors_welcome %}(Closed) {% endif %}{{ project.project_round.community.name }} project #{{ forloop.counter }}
 		</div>
 		<div class="card-body">
 		{% comment %}If this view didn't set any mentors_pending_projects, it means there's no pending mentored projects {% endcomment %}
@@ -14,6 +14,9 @@
 			<p><strong>{{ project.short_title }}</strong></p>
 			<div class="card-text">{% include 'home/snippet/project_hidden.html' %}</div>
 		{% else %}
+			{% if not project.new_contributors_welcome %}
+				{% include 'home/snippet/project_closed.html' %}
+			{% endif %}
 			<p><strong><a href="{{ project.project_round.get_absolute_url }}#{{ project.slug }}">{{ project.short_title }}</a></strong></p>
 		{% endif %}
 

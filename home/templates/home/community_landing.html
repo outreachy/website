@@ -102,13 +102,7 @@ Outreachy internships working with {{ community.name }}
 
 
 		{% if ontime_projects or mentors_pending_projects %}
-			<h1>Open Projects</h1>
-
-			<p>Mentors for these projects are willing to work with new Outreachy
-			applicants. Please note that as the round goes on, mentors may close
-			their project to new applicants because they are already working with
-			many applicants. Make sure to start your required contribution as soon
-			as possible!</p>
+			<h2>Internship Projects</h2>
 
 			<p>Each project mentor is looking for applicants who have
 			different skills. Sometimes a skill is a hard requirement for
@@ -163,7 +157,7 @@ Outreachy internships working with {{ community.name }}
 				{% endfor %}
 			{% endif %}
 
-			<h1>Open Projects</h1>
+			<h2>Project Details</h2>
 			{% if not approved_to_see_all_project_details and not mentors_pending_projects %}
 				{% include 'home/snippet/project_hidden.html' %}
 			{% elif mentors_pending_projects %}
@@ -172,7 +166,10 @@ Outreachy internships working with {{ community.name }}
 				{% with projects=ontime_projects %}
 				{% for project in projects %}
 					<hr id="{{ project.slug }}">
-					<h2>{{ project.short_title }}</h2>
+					<h3>{% if not project.new_contributions_welcome %}(Closed) {% endif %}{{ project.short_title }}</h3>
+					{% if not project.new_contributors_welcome %}
+						{% include 'home/snippet/project_closed.html' %}
+					{% endif %}
 					{% if project in mentored_projects %}
 						{% include 'home/snippet/mentor_action.html' %}
 					{% endif %}
@@ -198,43 +195,6 @@ Outreachy internships working with {{ community.name }}
 				{% endfor %}
 				{% endwith %}
 			{% endif %}
-		{% endif %}
-
-		{% if closed_projects %}
-			<h1>Closed Projects</h1>
-			<p>These projects are closed to new applicants because the mentors are already working with many applicants. Applicants who are already working with a mentor are encouraged to complete their contributions and submit an application for the project.</p>
-			{% with projects=closed_projects project_status="closed " %}
-				{% include 'home/snippet/projects_for_round_page.html' %}
-			{% endwith %}
-			{% for project in closed_projects %}
-				<hr id="{{ project.slug }}">
-				<h2>{{ project.short_title }}</h2>
-				{% include "home/snippet/project_deadline.html" %}
-				{% if role.is_approved_applicant %}
-					{% if project in contributions %}
-						<p><a class='btn btn-success' href="{{ project.get_contributions_url }}">Update Contibutions and Apply to This Project</a></p>
-					{% else %}
-						<p><a class='btn btn-success' href="{{ project.get_contributions_url }}">Record Contibutions and Apply to This Project</a></p>
-					{% endif %}
-				{% endif %}
-				{% if role.is_approved_applicant or role.is_volunteer %}
-					<div id="project-closed-accordion-{{ forloop.counter }}" class="accordion">
-						<div class="card">
-							<div class="card-header" role="tab" id="project-closed-heading-{{ forloop.counter }}">
-								<h4 class="mb-0"><a data-toggle="collapse" data-parent="project-closed-accordion-{{ forloop.counter }}" href="#project-closed-{{ forloop.counter }}">+ Detailed Project Information</a></h4>
-							</div>
-							<div class="collapse card-body" id="project-closed-{{ forloop.counter }}">
-								{% include "home/snippet/project_landing_snippet.html" %}
-							</div>
-						</div>
-					</div>
-					<br>
-				{% elif mentors_pending_projects %}
-					<p>Details for the other approved projects are hidden until you are approved to participate as a mentor.</p>
-				{% else %}
-					{% include 'home/snippet/project_hidden.html' %}
-				{% endif %}
-			{% endfor %}
 		{% endif %}
 	{% endif %}
 {% endwith %}

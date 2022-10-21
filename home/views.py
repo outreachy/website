@@ -847,8 +847,7 @@ def past_rounds_page(request):
             )
 
 def current_round_page(request):
-    closed_approved_projects = []
-    ontime_approved_projects = []
+    approved_projects = []
     example_skill = ProjectSkill
 
     now = datetime.now(timezone.utc)
@@ -902,22 +901,16 @@ def current_round_page(request):
             approved_participations = all_participations.none()
 
         for p in approved_participations:
-            projects = p.project_set.approved().filter(new_contributors_welcome=False)
-            if projects:
-                closed_approved_projects.append((p, projects))
-            projects = p.project_set.approved().filter(new_contributors_welcome=True)
-            if projects:
-                ontime_approved_projects.append((p, projects))
-            # List communities that are approved but don't have any projects yet
-            if not p.project_set.approved():
-                ontime_approved_projects.append((p, None))
+            projects = p.project_set.approved()
+            # The above request will return None if a community has no approved projects.
+            # List communities that are approved but don't have any projects yet.
+            approved_projects.append((p, projects))
 
     return render(request, 'home/round_page_with_communities.html',
             {
             'current_round' : current_round,
             'previous_round' : previous_round,
-            'closed_projects': closed_approved_projects,
-            'ontime_projects': ontime_approved_projects,
+            'ontime_projects': approved_projects,
             'example_skill': example_skill,
             'role': role,
             },
@@ -1131,8 +1124,6 @@ def community_landing_view(request, round_slug, community_slug):
         participating_round__slug=round_slug,
     )
     projects = participation_info.project_set.approved()
-    ontime_projects = [p for p in projects if p.new_contributors_welcome]
-    closed_projects = [p for p in projects if not p.new_contributors_welcome]
     example_skill = ProjectSkill
     current_round = participation_info.participating_round
 
@@ -1163,8 +1154,7 @@ def community_landing_view(request, round_slug, community_slug):
     return render(request, 'home/community_landing.html',
             {
             'participation_info': participation_info,
-            'ontime_projects': ontime_projects,
-            'closed_projects': closed_projects,
+            'ontime_projects': projects,
             'role': role,
             # TODO: make the template get these off the participation_info instead of passing them in the context
             'current_round' : current_round,
