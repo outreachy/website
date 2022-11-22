@@ -1,10 +1,19 @@
-{{ intern_selection.intern_name }} accepted for Outreachy
+{{ intern_selection.intern_name }} accepted for Outreachy 🎉
 
-Congratulations on being accepted for the {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round!
+✨ Congratulations on being accepted for the {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} Outreachy internship round! ✨
 
 You have been selected as an intern for {{ intern_selection.community_name }} working with your mentor{{ intern_selection.mentors.all|pluralize }} {{ intern_selection.mentor_names }} on the project "{{ intern_selection.project_name }}". The {{ intern_selection.community_name }} coordinator{{ coordinator_names|pluralize:" is,s are" }} {{ coordinator_names|join:" and " }}, who {{ coordinator_names|pluralize:"is,are" }} on Cc.
 
 If you don't plan on participating as an intern, please let us know as soon as possible. The later you wait, the less likely it is we'll be able to fill the internship with another candidate.
+
+Code of Conduct
+---------------
+
+Outreachy is a professional space. In particular, please note that unwanted romantic or sexual attention is a violation of the Code of Conduct. Please read our full Code of Conduct for details:
+
+https://github.com/outreachy/website/blob/master/CODE-OF-CONDUCT.md
+
+We want to make sure that all Outreachy participants feel welcome and safe. If someone acts in a way that makes you feel unwelcome, uncomfortable, or unsafe, please contact Outreachy organizers <organizers@outreachy.org>. We are here to help!
 
 Time Commitment
 ---------------
@@ -21,8 +30,6 @@ Unless contrary to any laws where you are located, you should put at least 30 ho
 
 COVID-19 policies
 -----------------
-
-If an intern's school terms have shifted due to COVID-19 impacts, they will only be required to work 10 hours a week during classes and exams.
 
 Please reach out to Outreachy organizers and your mentor if you are impacted by COVID-19, or your immediate family is impacted. We will work with you to support you!
 
@@ -123,11 +130,11 @@ Please update your profile https://www.outreachy.org/account/ with a link to bot
 E-mails for coordinators and mentors
 ------------------------------------
 
-organizers@outreachy.org is an email shared by the organizers of the program (Anna e só, Karen Sandler, Tony Sebro, Sage Sharp, and Marina Zhurakhinskaya).
+organizers@outreachy.org is an email shared by the organizers of the program (Anna e só, Karen Sandler, Omotola Omotayo, and Sage Sharp).
 
 Please feel free to e-mail us if you have any general questions about the program at any time. Please always e-mail that address, and not one of us individually. Please make sure to always use "Reply to All".
 
-For the questions specific to your organization, please contact your mentor, the organization's coordinator or a relevant community mailing list, chat, or forum.
+For the questions specific to your organization, please contact your mentor, the organization's coordinator, or a relevant community mailing list, chat, or forum.
 
 Outreachy chat server
 ---------------------
