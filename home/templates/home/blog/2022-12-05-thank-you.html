@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Thank you December 2022 mentors and coordinators!
+{% endblock %}
+
+{% block content %}
+{% load humanize %}
+
+<h1>Thank you December 2022 mentors and coordinators!</h1>
+<p><i>Date: December 5, 2022</i></p>
+{% comment %}<p><i>Last updated: DATE</i> - See the "SECTION" section below.</p>{% endcomment %}
+
+<p>
+It's the 25th cohort of the Outreachy internship program, formerly known as the Outreachy Program for Women. The December 2022 internship cohort marks our 25th round of empowering women and other marginalized populations who have faced discrimination in the technical industry of their home country.
+</p>
+
+<p>
+Outreachy supports one-on-one mentorship and open source contribution. The success of our program would not be possible without the support of the open source and open science community coordinators and mentors who have chosen to impact lives and be a source of strength for our cause.
+</p>
+
+<p>
+This is a special recognition for all our mentors and mentoring organization coordinators for their hard work!
+</p>
+
+<img src="{% static 'img/thank-you-volunteers-cake-cc-by-sa-san-jose-public-library.jpg' %}" alt="A large cake with white frosting and multi-colored sprinkles. The cake reads 'Thank you volunteers'. Photo is cc-by-sa 2.0 San José Public Library" class="img-fluid">
+<p><i>Photo CC BY SA 2.0 San José Public Library</i></p>
+
+<h2>Thank you December 2022 community coordinators</h2>
+
+<p>
+Outreachy community coordinators are the essential link to connect mentors to Outreachy. Outreachy community coordinators find mentors who are experienced contributors to their open source or open science project. Community coordinators also find internship funding, coach mentors, improve onboarding documentation, and ensure applicants and interns have a good experience.
+</p>
+
+<p>Outreachy would like to thank the following community coordinators in the December 2022 cohort:</p>
+<ul>
+{% for coordinator_name in coordinator_names %}
+	<li>{{ coordinator_name }}</li>
+{% endfor %}
+</ul>
+
+<h2>Thank you December 2022 mentors</h2>
+
+<p>
+Mentors are at the heart of Outreachy. We couldn't run our program without them! Mentors define a project for the intern to work on, come up with project tasks for applicants to work on, answer countless questions, and provide encouragement for both applicants and interns. Mentors also help interns connect to the larger open source and open science communities. Mentors provide essential support, feedback, and sponsorship to help interns find their next career, academic, or volunteer opportunity.
+</p>
+
+<p>Outreachy would like to thank the following mentors in the December 2022 cohort:</p>
+<ul>
+{% for mentor_name in mentor_names %}
+	<li>{{ mentor_name }}</li>
+{% endfor %}
+</ul>
+
+<p>
+Together, we will help Outreachy's 64 interns to build a career in tech. We will empower them with both technical and non technical skills through Outreachy's paid remote internship program.
+</p>
+
+<p>
+Thank you for all your support!
+</p>
+
+<p>
+Signed the Outreachy team:
+<BR>Anna e só
+<BR>Karen Sandler
+<BR>Omotola Omotayo
+<BR>Sage Sharp
+</p>
+
+{% endblock %}

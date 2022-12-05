@@ -2872,6 +2872,44 @@ def blog_2022_08_09_initial_applications_open(request):
         'current_round': current_round,
         })
 
+def blog_2022_12_05_thank_you(request):
+    try:
+        current_round = RoundPage.objects.get(
+            internstarts__gte='2022-12-01',
+            internends__lte='2023-04-01',
+        )
+        # Mentors who were approved, their project was approved, and their community was approved
+        mentors = MentorApproval.objects.filter(
+                approval_status=ApprovalStatus.APPROVED,
+                project__approval_status=ApprovalStatus.APPROVED,
+                project__project_round__approval_status=ApprovalStatus.APPROVED,
+                project__project_round__participating_round=current_round,
+                ).order_by('mentor__public_name')
+        mentor_names = [mentor.mentor.public_name for mentor in mentors]
+        mentor_names = sorted(list(set(mentor_names)))
+        community_names = [mentor.project.project_round.community.name for mentor in mentors]
+        community_names = sorted(list(set(community_names)))
+        coordinators = CoordinatorApproval.objects.filter(
+                approval_status=ApprovalStatus.APPROVED,
+                community__participation__participating_round=current_round,
+                community__participation__approval_status=ApprovalStatus.APPROVED,
+                ).distinct()
+        coordinator_names = [coordinator.coordinator.public_name for coordinator in coordinators]
+        coordinator_names = sorted(list(set(coordinator_names)))
+    except RoundPage.DoesNotExist:
+        current_round = None
+        mentors = None
+        mentor_names = None
+        community_names = None
+        coordinator_names = None
+    return render(request, 'home/blog/2022-12-05-thank-you.html', {
+        'current_round': current_round,
+        'mentors': mentors,
+        'mentor_names': mentor_names,
+        'community_names': community_names,
+        'coordinator_names': coordinator_names,
+        })
+
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(Feedback1FromMentor,
             fields=(
