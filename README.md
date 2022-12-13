@@ -1217,6 +1217,91 @@ Sometimes a field doesn't work out exactly the way you wanted it to, and you wan
 
 6. The third migration will fail if someone has added a new model object between the second migration and the third migration. In this case, you should roll back to the first migration (where you first added the field). You can pass the migration number to go back to: `./manage.py migrate home PREFIX` This should be a unique prefix (like the first four numbers of the migration). Then you can try to run the migration again: `./manage.py migrate`. Repeat as necessary.
 
+## Deleting old migrations
+
+Each time the Django models change, Django creates a [migration file](https://docs.djangoproject.com/en/4.1/topics/migrations/). Everytime you need to run tests, Django creates a new test database, and applies all migrations. That means that if you have many migrations, starting a test can take a long time, because all the migrations need to be applied.
+
+A way to work around this is to either:
+ 1. Squash migrations periodically
+ 2. Delete all migration files and recreate one new migration file
+
+Squashing migrations only works if you don't have a RunPython command in any migration file. We often use that command to deal with tricky migrations, such as moving old data from one field to a new field.
+
+If you can, please use squash migrations. Otherwise, read on for the second option.
+
+Delete all migration files and recreate one new migration file by:
+
+Check out a new branch:
+
+```git checkout -b delete-old-migrations```
+
+Delete the migration files from both git's history and the migration directory for the home app:
+
+```git rm home/migrations/0*```
+
+(I wasn't sure whether to leave the empty __init__.py file, so I deleted all migration files that started with 0. If you have over 1,000 migration files, you'll need to also delete files starting with 1.)
+
+Then run the command to make one new migration file, based on the current home/models.py file:
+
+```./manage.py makemigrations```
+
+Copy the production database twice -- once as a backup, in case production migration fails, and the second time as a test database update:
+
+```
+ssh dokku@outreachy.org postgres:clone www-database test-database-updated-2022-12-26
+ssh dokku@outreachy.org postgres:clone www-database www-database-backup-2022-12-26
+```
+
+Link the copied production database into the test server:
+
+```
+ssh dokku@outreachy.org postgres:link test-database-updated-2022-12-26 test
+```
+
+Unlink the old test database from the test server:
+
+```
+ssh dokku@outreachy.org postgres:unlink test-database-updated-2022-11-21 test
+```
+
+Edit the app.json file in the top-level directory of the code repo. You will change the line that auto-migrates on a git push to instead migrate with the --fake-initial flag.
+
+Make sure to commit the app.json file in the same commit that removes the old migration files and adds the new clean migration file.
+
+```
+git add app.json
+```
+
+TLDR; the --fake-initial flag lets us create one new migration file to represent all our migrations, and not touch the production or test database tables.
+
+Details: This special flag is needed because there is a mismatch in expectations between what the newly created migration file expects and the actual state of the production or test database.
+
+The newly created migration code assumes that the database it starts with is fresh and empty, with no database tables. It wants to write thos new database tables to the empty database.
+
+However, our production and test servers already have those database tables in them. Moreover, it already contains a lot of data! We don't want to delete that data, or those database tables. The tricky part is that internally, Django keeps track of which migrations are applied to the database. So we have to do something special to update Django's migration tracking database.
+
+The --fake-initial flag will tell Django, "Hey, the database schema already matches this migration I'm asking you to apply, so pretend you applied it and don't actually run the code to migrate." The flag will ask Django to delete the table in its migration tracking database, and then mark the new, one-file migration as applied without actually running the migration code.
+
+The final result is that Django will assume our new one-file migration has been applied. In the future, when we modify the models, Django will apply that new migration on top of the one-file migration.
+
+Push the new code to the test server, which will apply the app.json file, and should fake migrate the database.
+
+```
+git push dokku-test delete-old-migrations:master
+```
+
+FIXME: double check things are working on the test server
+
+FIXME: disable automatic migrations on the production dokku server
+
+FIXME: push the new code to the production server
+
+FIXME: migrate the production server with the --fake-initial flag
+
+FIXME: double check things are working on the production server
+
+FIXME: delete the old databases
+
 # Updating Packages
 
 The Outreachy website is built using several different Python packages. The Django web framework is one such Python package. Python projects have different ways of automatically installing packages, but for this project, we use [pipenv](https://pipenv.readthedocs.io/en/latest/).
