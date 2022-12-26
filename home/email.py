@@ -1,5 +1,4 @@
 from django.core.mail import send_mail
-from django.core.signing import TimestampSigner
 from django.db import transaction
 from django.template import TemplateDoesNotExist
 from django.template.loader import get_template
@@ -319,31 +318,3 @@ def career_chat_invitation(current_round, request, template, **kwargs):
         recipient_list=emails,
         **kwargs)
 
-def notify_survey(survey_tracker, request):
-    if survey_tracker.intern_info:
-        name = survey_tracker.intern_info.applicant.applicant.public_name
-        email = survey_tracker.intern_info.applicant.applicant.email_address()
-        community = survey_tracker.intern_info.project.project_round.community.name
-        internstarts = survey_tracker.intern_info.project.round().internstarts
-        internends = survey_tracker.intern_info.project.round().internends
-    elif survey_tracker.alumni_info:
-        name = survey_tracker.alumni_info.name
-        email = Address(name, addr_spec=survey_tracker.alumni_info.email)
-        community = survey_tracker.alumni_info.community
-        internstarts = survey_tracker.alumni_info.page.round_start
-        internends = survey_tracker.alumni_info.page.round_end
-    else:
-        return
-    signer = TimestampSigner()
-    token = signer.sign(survey_tracker.pk)
-
-    send_group_template_mail('home/email/alum_survey.txt', {
-        'name': name,
-        'email': email,
-        'community': community,
-        'internstarts': internstarts,
-        'internends': internends,
-        'token': token,
-        },
-        request=request,
-        recipient_list=[email])

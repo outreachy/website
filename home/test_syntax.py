@@ -205,8 +205,6 @@ class SyntaxTestCase(TestCase):
                 #"/eligibility/school-revision/{}/".format(applicant.username),
                 # can't test POST-only views, NotifyEssayNeedsUpdating/NotifySchoolInformationUpdating
                 "/eligibility-results/",
-                "/longitudinal-survey/2018-initiate/",
-                "/longitudinal-survey/2018-completed/",
                 # can't test AlumSurveyUpdate or survey_opt_out without a fake survey object
                 "/account/",
                 "/apply/project-selection/",

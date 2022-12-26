@@ -7,7 +7,6 @@ from django.urls import reverse
 import reversion.admin
 
 from .models import AlumInfo
-from .models import AlumSurvey
 from .models import ApplicantApproval
 from .models import ApplicantGenderIdentity
 from .models import ApplicantRaceEthnicityInformation
@@ -74,31 +73,6 @@ class AlumInfoAdmin(reversion.admin.VersionAdmin):
     list_filter = (
             'community',
             'page__round_start',
-            )
-
-class AlumSurveyAdmin(reversion.admin.VersionAdmin):
-    list_display = (
-            'survey_date',
-            'intern_name',
-            'community',
-            )
-    list_filter = (
-            'survey_date',
-            'survey_tracker__intern_info__project__project_round__community__name',
-            'survey_tracker__alumni_info__community',
-            'survey_tracker__intern_info__project__project_round__participating_round__internstarts',
-            'survey_tracker__alumni_info__page__round_start',
-            )
-    search_fields = (
-            'survey_date',
-            'intern_info__project__project_round__community__name',
-            'alumni_info__community',
-            'intern_info__applicant__applicant__public_name',
-            'alumni_info__name',
-            'intern_info__applicant__applicant__legal_name',
-            'intern_info__applicant__applicant__account__email',
-            'alumni_info__email',
-            'intern_info__applicant__applicant__account__username',
             )
 
 class OnlyComradeAdmin(reversion.admin.VersionAdmin):
@@ -693,7 +667,6 @@ admin.site.unregister(User)
 admin.site.register(User, ComradeAdmin)
 
 admin.site.register(AlumInfo, AlumInfoAdmin)
-admin.site.register(AlumSurvey, AlumSurveyAdmin)
 admin.site.register(ApplicantApproval, ApplicantApprovalAdmin)
 admin.site.register(ApplicationReviewer, ApplicationReviewerAdmin)
 admin.site.register(Community, CommunityAdmin)

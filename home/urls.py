@@ -2,7 +2,6 @@ from . import dashboard, views
 from .models import ApprovalStatus
 from .models import InitialApplicationReview
 
-from django.views.generic import TemplateView
 from django.conf.urls import include, url
 
 # To see all URL patterns at once, run:
@@ -130,10 +129,6 @@ urlpatterns = [
     url(r'^eligibility/request-essay-revision/(?P<applicant_username>[^/]+)/$', views.NotifyEssayNeedsUpdating.as_view(), name='request-essay-revision'),
     url(r'^eligibility/request-school-info-revision/(?P<applicant_username>[^/]+)/$', views.NotifySchoolInformationUpdating.as_view(), name='request-school-info-revision'),
     url(r'^eligibility-results/$', views.EligibilityResults.as_view(), name='eligibility-results'),
-    url(r'^longitudinal-survey/2018-initiate/$', views.Survey2018Notification.as_view(), name='longitudinal-survey-2018-initiate'),
-    url(r'^longitudinal-survey/2018/(?P<survey_slug>[^/]+)/$', views.AlumSurveyUpdate.as_view(), name='longitudinal-survey-2018'),
-    url(r'^longitudinal-survey/2018-completed/$', TemplateView.as_view(template_name='home/survey_confirmation.html'), name='longitudinal-survey-2018-completed'),
-    url(r'^longitudinal-survey/2018-opt-out/(?P<survey_slug>[^/]+)/$', views.survey_opt_out, name='longitudinal-survey-2018-opt-out'),
     url(r'^account/$', views.ComradeUpdate.as_view(), name='account'),
     url(r'^apply/project-selection/$', views.current_round_page, name='project-selection'),
     url(r'^past-projects/$', views.past_rounds_page, name='past-rounds'),
