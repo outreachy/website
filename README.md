@@ -1290,7 +1290,52 @@ Push the new code to the test server, which will apply the app.json file, and sh
 git push dokku-test delete-old-migrations:master
 ```
 
-FIXME: double check things are working on the test server
+Pushing to the dokku test webserver git repo will result in the Outreachy test being rebuilt. During the rebuild process, you will see a line saying that the --fake-initial flag is being used:
+
+```
+-----> Releasing test...
+-----> Checking for predeploy task
+-----> Executing predeploy task from app.json: python manage.py migrate --fake-initial
+=====> Start of test predeploy task (ed8c12901) output
+       Operations to perform:
+         Apply all migrations: admin, auth, contenttypes, home, reversion, sessions, taggit, wagtailadmin, wagtailcore, wagtaildocs, wagtailembeds, wagtailforms, wagtailimages, wagtailredirects, wagtailsearch, wagtailusers
+       Running migrations:
+         No migrations to apply.
+=====> End of test predeploy task (ed8c12901) output
+```
+
+Double check things are working on the test server. Go to your account page, and change your avatar. After saving, re-open the account page and make sure the new picture is displayed. Edit a model through the Django web interface and make sure the changes show up on pages that display its fields. Etc.
+
+Update the app.json file to use the --noinput flag instead of the --fake-initial flag. Then add the file to git and commit it:
+
+```
+git add app.json
+git commit -m "Revert app.json file to migrate automatically on git push to the webserver repo"
+```
+
+Push the changed app.json file to the test server:
+
+```
+git push dokku-test delete-old-migrations:master
+```
+
+Pushing to the dokku test webserver git repo will result in the Outreachy test being rebuilt. During the rebuild process, you will see a line saying that the --noinput flag is being used:
+
+```
+-----> Releasing test...
+-----> Checking for predeploy task
+-----> Executing predeploy task from app.json: python manage.py migrate --noinput
+=====> Start of test predeploy task (ecfd4fbd7) output
+       Operations to perform:
+         Apply all migrations: admin, auth, contenttypes, home, reversion, sessions, taggit, wagtailadmin, wagtailcore, wagtaildocs, wagtailembeds, wagtailforms, wagtailimages, wagtailredirects, wagtailsearch, wagtailusers
+       Running migrations:
+         No migrations to apply.
+=====> End of test predeploy task (ecfd4fbd7) output
+```
+
+Double check that the test website still works again.
+
+FIXME: change a model, create a migration, and push to the test webserver's git repo.
 
 FIXME: disable automatic migrations on the production dokku server
 
