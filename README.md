@@ -1335,17 +1335,69 @@ Pushing to the dokku test webserver git repo will result in the Outreachy test b
 
 Double check that the test website still works again.
 
-FIXME: change a model, create a migration, and push to the test webserver's git repo.
+Next, change a model, create a new migration, and push those changes to the test webserver's git repo.
 
-FIXME: disable automatic migrations on the production dokku server
+You should see output similar to the following:
 
-FIXME: push the new code to the production server
+```
+-----> Releasing test...
+-----> Checking for predeploy task
+-----> Executing predeploy task from app.json: python manage.py migrate --noinput
+=====> Start of test predeploy task (c10a5d3b0) output
+       Operations to perform:
+         Apply all migrations: admin, auth, contenttypes, home, reversion, sessions, taggit, wagtailadmin, wagtailcore, wagtaildocs, wagtailembeds, wagtailforms, wagtailimages, wagtailredirects, wagtailsearch, wagtailusers
+       Running migrations:
+         Applying home.0002_auto_20221226_2301... OK
+=====> End of test predeploy task (c10a5d3b0) output
+```
 
-FIXME: migrate the production server with the --fake-initial flag
+Now that we've made sure the test webserver works, it's time to apply a similar process to the production webserver.
 
-FIXME: double check things are working on the production server
+First, we need to push the commit that deleted all the old migration files, and disabled automatic migrations.  We can find which commit we need by running:
 
-FIXME: delete the old databases
+```
+git log --pretty=oneline --abbrev-commit
+```
+
+Let's say that gave us the following output:
+
+```
+4a6a57bc (HEAD -> 2022-12-delete-old-migrations, dokku-test/master) Revert "Add Outreachy longitudinal survey"
+a2264fa8 README: Document how to carefully start with a new set of migration files.
+097beb12 Revert app.json file to migrate automatically on git push to the webserver repo
+5057a2aa Replace migration files with one new migration.
+c4bac9b9 (github/master, dokku/master, master) Replace image on thank-you post, and center image
+```
+
+Find the commit hash for when we removed the old migration files. It should be the first commit on top of the dokku/master HEAD commit. In the above case, the commit is `5057a2aa`.
+
+Now, push that commit to the production server's master branch:
+
+```
+git push --no-verify dokku 5057a2aa:master
+```
+
+You should see output showing that the `--fake-initial` flag is being used.
+
+Next, push the commit to revert the app.json file to the production server's master branch:
+
+```
+git push --no-verify dokku 097beb12:master
+```
+
+You should see output showing that the `--noinput` flag is being used, and that there are no migrations to apply.
+
+Next, try pushing the commit that edited some models:
+
+```
+git push --no-verify dokku 4a6a57bc:master
+```
+
+You should see log output that shows the new migration was applied to the production database.
+
+Double check things are working on the production server. Check that any model changes are showing up in the Django admin interface.
+
+Once you are *absolutely positively sure* that the changes haven't caused any issues, you should delete the backup www database using the `postgres unlink` and `postgres destroy` dokku commands.
 
 # Updating Packages
 
