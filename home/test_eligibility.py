@@ -15,6 +15,12 @@ class EligibilityTests(TestCase):
             minimum_days_free_for_students=42,
             minimum_days_free_for_non_students=49,
         )
+        # As of a recent update of package dependencies on 2022-12, the code above didn't work.
+        # One hypothesis was that FactoryBoy was not running the full class initializer. That seems to not be the case.
+        # Another hypothesis involves the recent updates to Wagtail, since RoundPage is a subclass of a Wagtail Page.
+        # It could be that Wagtail changed the Page class so that it overrides the get_attribute method?
+        # In the end, we didn't figure out the root cause, but reloading the object from the database works???
+        cls.application_round = RoundPage.objects.get(pk=cls.application_round.pk)
 
     all_gender_identities = (
         'transgender',

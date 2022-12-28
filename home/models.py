@@ -37,8 +37,6 @@ from wagtail.core.fields import StreamField
 from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.admin.edit_handlers import InlinePanel
 from wagtail.core import blocks
-from wagtail.admin.edit_handlers import StreamFieldPanel
-from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
@@ -68,9 +66,9 @@ class HomePage(Page):
         ('date', blocks.DateBlock()),
         ('table', TableBlock(template="home/blocks/table.html")),
         ('quote', blocks.RichTextBlock(template="home/blocks/quote.html")),
-    ])
+    ], use_json_field=True)
     content_panels = Page.content_panels + [
-        StreamFieldPanel('body', classname="full"),
+        FieldPanel('body', classname="full"),
     ]
 
 class RichTextOnly(Page):
@@ -969,7 +967,7 @@ class AlumInfo(Orderable):
     panels = [
             FieldPanel('name'),
             FieldPanel('email'),
-            ImageChooserPanel('picture'),
+            FieldPanel('picture'),
             FieldPanel('gravitar'),
             FieldPanel('location'),
             FieldPanel('nick'),

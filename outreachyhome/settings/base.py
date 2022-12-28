@@ -173,6 +173,17 @@ DATABASES = {
         default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3'))
 }
 
+# In Django 3.2, developers introduced a new way to generate object IDs (pks)
+# migrating from the old method (django.db.models.AutoField)
+# to the new method (django.db.models.BigAutoField)
+# requires us to run an SQL query to change the IDs of all objects in our current database.
+# There's no easy way to do that with the current Django migration framework.
+#
+# https://docs.djangoproject.com/en/3.2/ref/settings/#std-setting-DEFAULT_AUTO_FIELD
+#
+# For now, tell Django we are explicitly using the old ID generation method.
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 # If an error occurs in a view, make sure none of that view's changes are saved.
 ATOMIC_REQUESTS = True
 
@@ -242,6 +253,7 @@ COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage'
 # Wagtail settings
 
 WAGTAIL_SITE_NAME = "outreachyhome"
+WAGTAILADMIN_BASE_URL = 'https://www.outreachy.org'
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash

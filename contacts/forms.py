@@ -7,7 +7,7 @@ Subject header.
 """
 from __future__ import unicode_literals
 
-from contact_form.forms import ContactForm
+from django_contact_form.forms import ContactForm
 from django import forms
 
 class OutreachyContactForm(ContactForm):

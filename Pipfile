@@ -6,37 +6,31 @@ name = "pypi"
 [packages]
 dj-database-url = "*"
 dj-static = "*"
-django = "<3.2"
+django = "~=3.2"
 django-ckeditor = "*"
 django-compressor = "*"
 django-compressor-postcss = "*"
 django-contact-form = "*"
 django-debug-toolbar = "*"
 django-extensions = "*"
-django-formtools = "*"
+django-formtools = "==2.3"
 django-libsass = "*"
 django-markdownx = "*"
 django-registration = "*"
 django-reversion = "<4.0"
 django-timezone-field = "*"
 gunicorn = "*"
-"psycopg2" = "*"
+psycopg2 = "*"
+pytz = "==2021.1"
 raven = "*"
 wagtail = "*"
 whitenoise = "*"
-
-# django-betterforms is unmaintained but this fork works
-django-betterforms = {git = "https://github.com/jpic/django-betterforms.git"}
-
-# Not used in the code outside the test suite, but useful in the Django shell
-# on the deployed site, so it's here instead of dev-packages.
 factory_boy = "*"
-
-# No longer used anywhere but still required until we squash away the
-# migrations that reference it.
-django-language-field = "*"
 
 [dev-packages]
 coverage = "*"
 django-coverage-plugin = "*"
-"flake8" = "*"
+flake8 = "*"
+
+[packages.django-betterforms]
+git = "https://github.com/jpic/django-betterforms.git"
