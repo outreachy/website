@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from .forms import OutreachyContactForm
-from contact_form.views import ContactFormView
+from django_contact_form.views import ContactFormView
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import TemplateView
