@@ -1401,6 +1401,8 @@ Once you are *absolutely positively sure* that the changes haven't caused any is
 
 # Updating Packages
 
+## Updating Python packages
+
 The Outreachy website is built using several different Python packages. The Django web framework is one such Python package. Python projects have different ways of automatically installing packages, but for this project, we use [pipenv](https://pipenv.readthedocs.io/en/latest/).
 
 Python packages the website needs to install on are listed in the top-level file `Pipfile`. Pip uses this file to figure out what packages and what versions of packages to install. If you edit `Pipfile`, you'll see some of the other Python packages we use. For example, [django-ckeditor](https://github.com/django-ckeditor/django-ckeditor) is the Django package of [CKEditor](https://ckeditor.com/). It provides the rich-text WSIWIG editor for form fields used by Outreachy mentors.
@@ -1421,7 +1423,7 @@ pipenv update <pkg>
 
 These commands will update `Pipfile` and `Pipfile.lock`. You'll need to commit both files.
 
-## Syncing updated packages
+## Syncing updated Python packages
 
 When someone else makes a commit that updates the packages listed in the pipfile, when you pull those changes, you'll need to update your installed packages. Otherwise you may (or may not!) get an error whenever you try to run a manage.py command. The error might only be triggered if you view a particular page that runs Python code that depends on those installed packages.
 
@@ -1430,6 +1432,16 @@ To sync your installed pipenv packages with any changes made in the Outreachy Gi
 ```
 pipenv sync
 ```
+
+## Updating node.js packages
+
+The Outreachy website relies on several node.js packages. You can update those packages with the node.js package manager, npm:
+
+```
+npm update
+```
+
+This commands will update `package-lock.json`. You will need to commit that file.
 
 # Updating Python versions
 
