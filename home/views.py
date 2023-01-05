@@ -1269,7 +1269,6 @@ class GeneralFundingApplication(LoginRequiredMixin, UpdateView):
                 'general_funding_application',
                 'open_science_community',
                 'open_science_practices',
-                'open_science_funder_questions',
                 ),
             field_classes={
                 'humanitarian_community': RadioBooleanField,
