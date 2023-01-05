@@ -73,7 +73,7 @@ round_patterns = [
 
 urlpatterns = [
     url(r'^communities/cfp/add/$', views.CommunityCreate.as_view(), name='community-add'),
-    url(r'^communities/cfp/participation-rules/$', views.community_participation_rules, name='community-participation-rules'),
+    url(r'^communities/cfp/participation-rules/$', views.CommunityParticipationRules.as_view(), name='community-participation-rules'),
     url(r'^communities/cfp/(?P<community_slug>[^/]+)/', include(community_cfp_patterns)),
     url(r'^communities/cfp/$', views.community_cfp_view, name='community-cfp'),
     url(r'^(?P<round_slug>[^/]+)/', include(round_patterns)),

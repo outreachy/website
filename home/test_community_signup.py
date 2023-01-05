@@ -33,14 +33,6 @@ class ProjectSubmissionTestCase(TestCase):
         self.assertNotContains(response, '<h2>Submit a New FOSS community for Organizer Review</h2>', html=True)
         self.assertNotContains(response, '<a class="btn btn-success" href="{}">Submit a New Community</a>'.format(reverse('community-add')), html=True)
 
-    def check_community_signup_marked_open(self):
-        response = self.client.get(reverse('community-cfp'))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, '<h2>New communities</h2>', html=True)
-        self.assertContains(response, '<a class="btn btn-success" href="{}">Submit community application</a>'.format(reverse('community-participation-rules')), html=True)
-        response = self.client.get(reverse('community-participation-rules'))
-        self.assertContains(response, '<a class="btn btn-success" href="{}">Submit community application</a>'.format(reverse('community-add')), html=True)
-
     def coordinator_signs_up_community_to_participate(self, community_does_participate_path, sponsor_name='Software in the Public Interest - Debian', sponsor_amount=13000):
         return self.client.post(community_does_participate_path, {
             'sponsorship_set-TOTAL_FORMS': '1',
@@ -62,15 +54,36 @@ class ProjectSubmissionTestCase(TestCase):
         current_round = factories.RoundPageFactory(start_from='pingnew')
 
         self.client.logout()
-        self.check_community_signup_marked_open()
+        response = self.client.get(reverse('community-cfp'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '<h2>New communities</h2>', html=True)
+        self.assertContains(response, '<a class="btn btn-success" href="{}">Submit community application</a>'.format(reverse('community-participation-rules')), html=True)
+        response = self.client.get(reverse('community-participation-rules'))
 
-        new_community_signup_path = reverse('community-add')
-        response = self.client.get(new_community_signup_path)
-        self.assertRedirects(response, settings.LOGIN_URL + '?next={}'.format(new_community_signup_path))
+        # The community participation rules page now requires people to log in
+        # So that we can check whether the person is a coordinator for a community
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, settings.LOGIN_URL + '?next={}'.format(reverse('community-participation-rules')))
 
         # Assume Comrade account sign up works - TODO: test this separately
         coordinator = factories.ComradeFactory()
         self.client.force_login(coordinator.account)
+
+        response = self.client.get(reverse('community-participation-rules'))
+        self.assertContains(response, '<input class="btn btn-success" type="submit" value="Submit community application" />', html=True)
+
+        # The community participation page has a form for the community name
+        response = self.client.post(reverse('community-participation-rules'), {
+            'community_name': 'Debian',
+            },
+            follow=True,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertRedirects(response, reverse('community-add'))
+
+        new_community_signup_path = reverse('community-add')
+        response = self.client.get(new_community_signup_path)
+
         response = self.client.post(new_community_signup_path, {
             'name': 'Debian',
             'reason_for_participation': 'We want more diversity in our community.',
@@ -95,6 +108,67 @@ class ProjectSubmissionTestCase(TestCase):
         self.assertRedirects(response, new_community_participation_path)
 
         # Usage case test continues in test_old_community_participation_signup
+
+    def test_old_coordinator_uses_new_community_form(self):
+        """
+        This tests submitting a past participating community's
+        name to the form that takes sign-ups for the new communities.
+        This should not create a new community with the same name as an old community.
+
+        If the community is not currently participating in this cohort,
+        the page should redirect to the participation sign-up form.
+        """
+
+        # Create the past participating community
+        scenario = scenarios.InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
+        current_round = factories.RoundPageFactory(start_from='pingnew')
+
+        # Log in as the community coordinator
+        self.client.logout()
+        self.client.force_login(scenario.coordinator.account)
+
+        # Submit the old community name to the new community participation sign up form
+        response = self.client.post(reverse('community-participation-rules'), {
+            'community_name': 'dEbian ',
+            },
+            follow=True,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertRedirects(response, reverse(
+            'participation-action',
+            kwargs={
+                'action': 'submit',
+                'round_slug': current_round.slug,
+                'community_slug': scenario.participation.community.slug,
+        }))
+
+    def test_old_coordinator_uses_new_community_form_to_sign_up_already_participating_community(self):
+        """
+        This tests submitting a past participating community's
+        name to the form that takes sign-ups for the new communities.
+        This should not create a new community with the same name as an old community.
+
+        If the community is currently participating in this cohort,
+        the page should redirect to the community mentor CFP page (community landing page).
+        """
+
+        # Create the currently participating community
+        scenario = scenarios.InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
+        current_round = factories.RoundPageFactory(start_from='pingnew')
+        participation = factories.ParticipationFactory(community=scenario.community, participating_round=current_round, approval_status=ApprovalStatus.PENDING)
+
+        self.client.logout()
+        self.client.force_login(scenario.coordinator.account)
+
+        # Submit the old community name to the new community participation sign up form
+        response = self.client.post(reverse('community-participation-rules'), {
+            'community_name': 'dEbian ',
+            },
+            follow=True,
+        )
+        self.assertEqual(response.status_code, 200)
+        print(reverse('community-read-only', kwargs={ 'community_slug': scenario.participation.community.slug, }))
+        self.assertRedirects(response, reverse('community-read-only', kwargs={ 'community_slug': scenario.participation.community.slug, }))
 
     def submit_failed_community_signup(self, current_round):
         scenario = scenarios.InternshipWeekScenario(week = 10, community__name='Debian', community__slug='debian')
@@ -237,7 +311,6 @@ class ProjectSubmissionTestCase(TestCase):
         response = self.client.get(reverse('community-participation-rules'))
         self.assertContains(response, '<p>Open source communities must find <a href="{}#intern-funding">internship funding</a> ($10,000 USD per intern):</p>'.format(reverse('docs-community')), html=True)
 
-        # Check to make sure the increased funding amount is mentioned on the participation sign-up page
         response = self.client.get(reverse(
             'participation-action',
             kwargs={

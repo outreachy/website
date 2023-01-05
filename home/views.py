@@ -38,6 +38,7 @@ from . import email
 from .dashboard import get_dashboard_sections
 
 from .forms import InviteForm
+from .forms import CommunityNameForm
 from .forms import RenameProjectSkillsForm
 from .forms import RadioBooleanField
 
@@ -4401,10 +4402,56 @@ def sponsor(request):
 def opportunities(request):
     return render(request, 'home/opportunities.html')
 
-def community_participation_rules(request):
-    return render(request, 'home/community_participation_rules.html', {
-        'current_round': get_current_round_for_community_signup(),
-        })
+class CommunityParticipationRules(LoginRequiredMixin, ComradeRequiredMixin, FormView, SingleObjectMixin):
+    template_name = 'home/community_participation_rules.html'
+    form_class = CommunityNameForm
+
+    def get_form(self, *args, **kwargs):
+        self.object = get_current_round_for_community_signup()
+        if not self.object:
+            raise PermissionDenied('Outreachy is not accepting participation requests for open source and open science communities to mentor Outreachy interns at this time.')
+        return super(CommunityParticipationRules, self).get_form(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(CommunityParticipationRules, self).get_context_data(**kwargs)
+        suggestions = list(set([c.name for c in Community.objects.all()]))
+        context.update({
+            # Make sure that someone can't inject code in another person's
+            # browser by adding a maliciously encoded community name.
+            # json.dumps() takes the community names list (encoded as a Python list)
+            # and encodes the list in JavaScript object notation.
+            # mark_safe means this data has already been cleaned,
+            # and the Django template code shouldn't clean it.
+            'suggested_community_names': mark_safe(json.dumps(suggestions)),
+            'current_round': self.object,
+            })
+        return context
+
+    def form_valid(self, form):
+        # See if the community name that was input in the form (minus capitalization) matches any community name.
+        # The community name form is already specified to strip white space at the beginning and end.
+        #
+        # If we get a community name match:
+        # - First, check that the Comrade is an approved community coordinator
+        # - If the community is already participating in this cohort, redirect to the community landing page.
+        # - If the community is not participating, redirect to that community's participation sign-up form.
+        # If we don't get a match, redirect to creating a new community.
+
+        current_round = self.object
+        community_name = form.cleaned_data['community_name']
+        try:
+            community = Community.objects.get(name__iexact=community_name)
+            user = self.request.user
+            if not community.is_coordinator(user):
+                raise PermissionDenied("A community under this name already exists, and you are not an approved community coordinator for that community. Only approved community coordinators can sign up their open source or open science community to participate as an Outreachy mentoring organization. Please contact Outreachy organizers with any questions.")
+            try:
+                participation = Participation.objects.get(community=community, participating_round=current_round)
+                return redirect(reverse('community-read-only', kwargs={'community_slug': community.slug}))
+            except Participation.DoesNotExist:
+                return redirect(reverse('participation-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': community.slug}))
+        except Community.DoesNotExist:
+            # FIXME: pass the input community name to the new community sign-up form
+            return redirect(reverse('community-add'))
 
 @login_required
 def dashboard(request):

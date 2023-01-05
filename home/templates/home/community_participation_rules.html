@@ -110,7 +110,28 @@ Community participation rules
 <h2>Sign up your community</h2>
 
 <div class="container m-4">
-	<p><a class='btn btn-success' href="{% url 'community-add' %}">Submit community application</a></p>
+	<form method="post" action="">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<input class="btn btn-success" type="submit" value="Submit community application" />
+	</form>
 </div>
 
 {% endblock content %}
+
+{% block extra_css %}
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+{% endblock %}
+
+{% block extra_js %}
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script>
+		$(function() {
+			var suggested_community_names = {{ suggested_community_names }};
+			$("#id_community_name").autocomplete({
+				source: suggested_community_names
+			});
+		});
+	</script>
+{% endblock %}
