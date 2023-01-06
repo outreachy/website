@@ -3,7 +3,6 @@ Important Dates
 ---------------
 
 {{ current_round.initial_applications_open }} - Initial applications open for applicants
-{{ current_round.outreachy_chat }} UTC - #OutreachyChat on Twitter
 {{ current_round.project_soft_deadline }} - Deadline for mentors to submit new projects
 {{ current_round.initial_applications_close }} at 4pm UTC - Initial applications deadline
 {{ current_round.contributions_open }} - Approved applicants start making contributions to projects
@@ -22,15 +21,6 @@ Promoting your community helps encourage applicants to complete an initial appli
 Please see the Outreachy promotion page for sample emails and tweets, posters, presentation materials and Outreachy logos:
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'promote' %}
-
-#OutreachyChat on Twitter
--------------------------
-
-#OutreachyChat will take place on Twitter on {{ current_round.outreachy_chat }} UTC. We need mentors and coordinators to participate in the chat. We also welcome participation from Outreachy alums.
-
-Every round, we have an #OutreachyChat on Twitter to encourage people to apply to Outreachy. It's a chance for applicants to get to know you and for you to promote your project. Please read about the format of the chat and what questions the @outreachy account will ask mentors:
-
-{{ request.scheme }}://{{ request.get_host }}{% url 'promote' %}#outreachychat
 
 Contribution Period
 -------------------

@@ -13,7 +13,6 @@ Mentors - please submit your projects by {{ current_round.project_soft_deadline|
 Schedule
 --------
 
-{{ current_round.outreachy_chat }} UTC - #OutreachyChat on Twitter to promote projects to applicants
 {{ current_round.lateorgs }} - last day for communities to sign up
 {{ current_round.project_soft_deadline }} - last day for mentors to submit projects
 {{ current_round.contributions_open }} - contribution period opens
@@ -43,13 +42,6 @@ Once you have a tentative commitment for funding from a sponsor, please sign you
 {{ request.scheme }}://{{ request.get_host }}{% url 'community-cfp' %}
 
 Outreachy provides a general fund for communities to request additional funding. Outreachy reviews the requests from all communities during the intern selection period. We accept the strongest interns, as our funding resources allow. Outreachy typically funds 1-2 interns per community, but not all communities request funding. Outreachy recommends finding more mentors than you have funding.
-
-Twitter Chat
----
-
-Each round, we have a chat on Twitter. It's an opportunity for coordinators and mentors to connect to potential Outreachy applicants. Here is the format of the Outreachy Twitter chat:
-
-{{ request.scheme }}://{{ request.get_host }}{% url 'promote' %}#outreachychat
 
 Please contact us with any questions you have!
 

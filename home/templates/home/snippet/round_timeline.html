@@ -3,7 +3,6 @@
 <table class="table">
 {% comment %}TODO: link the words "initial application" and "contribute to projects" to the right sections in the to-be-written documentation page{% endcomment %}
     <tr><td width="175"><b>{{ current_round.initial_applications_open }} at 4pm UTC</b></td><td>Initial applications open</td></tr>
-    <tr><td><b>{{ current_round.outreachy_chat }} UTC</b></td><td><a href='{% url 'promote' %}#outreachychat'>#OutreachyChat on Twitter</a></td></tr>
     <tr><td><b>{{ current_round.initial_applications_close }} at 4pm UTC</b></td><td>Initial application deadline</td></tr>
     <tr><td><b>{{ current_round.lateprojects }}</b></td><td>Project list finalized</td></tr>
     <tr><td><b>{{ current_round.contributions_open }} to {{ current_round.contributions_close }}</b></td><td>Contribute to projects</td></tr>

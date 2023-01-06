@@ -28,26 +28,22 @@ Promote Outreachy internships
 
 <p>You can use this presentation that introduces open source, Outreachy, and Google Summer of Code: (<a href="https://github.com/outreachy/creative-works-and-scripts/raw/master/creative-works/open-source-101-gsoc-outreachy.pdf">pdf</a> or <a href="https://github.com/outreachy/creative-works-and-scripts/raw/master/creative-works/open-source-101-gsoc-outreachy.odp">odp</a>)</p>
 
-<h2>Twitter</h2>
+<h2>Social media</h2>
 
-<p>Sample tweet:</p>
+<p>Sample post:</p>
 
 {% comment %}This template is passed current_round from the date when the community CFP opens and before the initial application deadline has passed.{% endcomment %}
 {% if current_round and not current_round.initial_applications_open.has_passed %}
-<p>Please RT: Outreachy internships are remote, paid ($7,000 stipend), and last three months. Outreachy supports diversity in free and open source software! Initial applications for the @outreachy {{ current_round.internstarts|date:'M Y' }} to {{ current_round.internends|date:'M Y' }} internships will open on {{ current_round.initial_applications_open|date:'M d' }}: https://www.outreachy.org/apply/</p>
+<p>Outreachy internships are remote, paid ($7,000 stipend), and last three months. Outreachy supports diversity in free and open source software! Initial applications for the @outreachy {{ current_round.internstarts|date:'M Y' }} to {{ current_round.internends|date:'M Y' }} internships will open on {{ current_round.initial_applications_open|date:'M d' }}: https://www.outreachy.org/apply/</p>
 {% elif current_round %}
-<p>Please RT: Outreachy internships are remote, paid ($7,000 stipend), and last three months. Outreachy supports diversity in free and open source software! Initial applications for the @outreachy {{ current_round.internstarts|date:'M Y' }} to {{ current_round.internends|date:'M Y' }} internships are due on {{ current_round.initial_applications_close|date:'M d' }} at 4pm UTC: https://www.outreachy.org/apply/</p>
+<p>Outreachy internships are remote, paid ($7,000 stipend), and last three months. Outreachy supports diversity in free and open source software! Initial applications for the @outreachy {{ current_round.internstarts|date:'M Y' }} to {{ current_round.internends|date:'M Y' }} internships are due on {{ current_round.initial_applications_close|date:'M d' }} at 4pm UTC: https://www.outreachy.org/apply/</p>
 {% else %}
-<p>Please RT: Outreachy internships are remote, paid ($7,000), and last three months. Outreachy supports diversity in free and open source software! Outreachy internships run from May to August and December to March. Applications open in January and August: https://www.outreachy.org/apply/</p>
+<p>Outreachy internships are remote, paid ($7,000), and last three months. Outreachy supports diversity in free and open source software! Outreachy internships run from May to August and December to March. Applications open in January and August: https://www.outreachy.org/apply/</p>
 {% endif %}
 
-<p>Follow up tweets:</p>
+<p>Follow up posts:</p>
 
-<p>Outreachy expressly invites applicants from around the world who are women (both cis and trans), trans men, and genderqueer people. Apply for our internships, which are completely remote, paid ($7,000 stipend), and last three months. https://www.outreachy.org/apply/</p>
-
-<p>Outreachy also expressly invites applications from U.S. residents and nationals of any gender who are Black/African American, Hispanic/Latinx, Native American/American Indian, Alaska Native, Native Hawaiian, or Pacific Islander. https://www.outreachy.org/apply/</p>
-
-<p>Outreachy expressly invites applicants from around the world who face under-representation, systemic bias or discrimination in the technology industry of their country. Apply for our internships, which are completely remote, paid ($7,000 stipend), and last three months. https://www.outreachy.org/apply/</p>
+<p>Outreachy internships are for applicants from around the world who face under-representation, and systemic bias or discrimination in the technology industry of their country. Our internships are completely remote, paid ($7,000 stipend), and last three months. Apply here: https://www.outreachy.org/apply/</p>
 
 <h2>Email</h2>
 
@@ -82,21 +78,5 @@ Promote Outreachy internships
 <p>Please let us know if you have any questions about the program. The Outreachy organizers can all be reached at through our contact form: <a href="https://www.outreachy.org/contact/contact-us/">https://www.outreachy.org/contact/contact-us/</a></p>
 
 <p>We hope you'll help us spread the word about Outreachy internships!</p>
-
-<h1 id="outreachychat">#OutreachyChat</h1>
-
-<p>Each round, Outreachy has a Twitter chat to introduce the program. We encourage questions from people interested in applying to Outreachy. We also pose questions for mentors and past Outreachy interns to answer. Applicants are encouraged to ask mentors and past interns questions during and after the chat.</p>
-
-{% if current_round %}
-	<p>The next #OutreachyChat will happen on {{ current_round.outreachy_chat }} UTC. Please double check <a href="{{ current_round.outreachy_chat_timezone_url }}">what time that is in your timezone</a>.</p>
-{% else %}
-	<p>The next #OutreachyChat is not scheduled yet. It's typically run two weeks after the initial application period opens, on a Monday at 4pm UTC / 8am PDT / 11pm EDT / 5pm CET / 9:30pm IST.</p>
-{% endif %}
-
-<p>Here is how the chat will work for applicants, mentors, and past interns:</p>
-
-{% include 'home/snippet/twitter_chat_instructions.html' %}
-
-<p>Mentors and past interns are encouraged to monitor the #OutreachyChat hashtag. This is especially helpful during the first question. If you see an applicant ask a question that you know the answer to, please answer it! This can help the Outreachy organizers who are running the chat answer all applicant questions.</p>
 
 {% endblock %}
