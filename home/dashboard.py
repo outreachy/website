@@ -843,6 +843,7 @@ all_round_events = (
     InternWeek.at(week=3),
     InternWeek.at(week=5),
     CareerChatInvitation,
+    InternWeek.at(week=6),
     InternWeek.at(week=7),
     InternWeek.at(week=9),
     InternWeek.at(week=11),

@@ -1,0 +1,87 @@
+Outreachy week 6: Assignments for mentors & interns
+
+Welcome to week six of your Outreachy internship! Interns without an internship extension are now half-way done with the internship.
+
+We have some goals and assignments for both mentors and interns. Please read the sections below.
+
+Week 6 Theme
+------------
+
+The theme for this week is "Modifying Expectations". Outreachy mentors and interns start the internship with a specific set of project goals. However, usually those goals need to be modified, and that's perfectly fine!
+
+Delays to projects happen. Maybe your project turned out to be more complicated than you or your mentor anticipated. Maybe you needed to learn some concepts before you could tackle project tasks. Maybe the community documentation wasn't up-to-date or was wrong. These are all perfectly valid reasons for projects to be a bit behind schedule, as long as you've been working full-time on the project.
+
+In fact, free and open source contributors have to deal with these kinds of issues all the time. Projects often seem simple until you start working on them. Project timelines are usually a very optimistic view of what could happen if everything goes exactly as planned. It often doesn't, but people still make optimistic plans:
+
+https://en.wikipedia.org/wiki/Planning_fallacy
+
+Modifying your project timeline to set more realistic goals is a skill all contributors need to learn. We encourage you to discuss your project timeline with your mentor and make adjustments to it. Outreachy organizers view the internship as more like a fellowship. Project goals should be adjusted as needed, as long as the intern is putting in a full-time effort. You can view your original project timeline here:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'project-timeline' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug applicant_username=intern_selection.applicant.applicant.account.username %}
+
+Your goal for this week's blog post is to write a report about your progress on your project. Talk about what you accomplished so far. Talk about what goals too more time than expected. Talk about your modified goals for the second half of the internship.
+
+See the detailed section below for more prompts.
+
+Mentor & Intern Assignment
+--------------------------
+
+This week, we want Outreachy mentors and interns to review the original project timeline:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'project-timeline' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug applicant_username=intern_selection.applicant.applicant.account.username %}
+
+Make adjustments to the project goals to ensure you'll complete them before your internship ends. Outreachy organizers view the internship as more like a fellowship. As long as an intern is working full-time on a project, Outreachy organizers consider this a success. Outreachy internships should not be extended to meet a particular project goal. Interns are not required to continue working on their project after their internship ends. Some Outreachy interns do continue working as volunteers on their project, but it's completely optional.
+
+Week 6 Mentor & Intern Chat
+---------------------------
+
+On {{ current_round.week_eight_chat_text_date }} UTC we will host a chat for both Outreachy interns, alums, and mentors:
+
+{{ current_round.week_eight_timeline_chat_url }}
+
+We will be talking about careers in open source! Details are in the Internship Guide:
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'docs-internship' %}#week-7-chat
+
+
+Goals for Mentors
+-----------------
+
+Week 6 goals:
+
+ - Review the original project timeline with your intern
+ - Adjust future project goals if needed
+ - Talk to your intern about a project where you needed to modify your goals or plans
+ - Ask your intern which parts of the project took the most time
+ - Think about how you would set more realistic goals for future intern projects
+
+Goals for Interns
+-----------------
+
+Week 6 goals:
+
+ - Review your original project timeline with your mentor
+ - Adjust the project goals if needed
+ - Write a blog post about the progress you've made in the first half of the internship
+ - Share in the chat one project goal that seemed easy, but took more time than you expected
+
+Week 6 Blog
+-----------
+
+For this week's blog post, we'd like to write a progress report of what you've accomplished in the first half of the internship. The blog post should also detail what your modified goals for the second half of the internship is.
+
+Here's some prompts that could get you started writing this blog post:
+
+ - What was your original internship project timeline?
+ - What goals have you met?
+ - What have you accomplished in the first half of your internship?
+ - What project goals took longer than expected?
+ - Why did those project goals take longer than expected?
+ - What would you do differently if you were starting the project over?
+ - Which original goals needed to be modified?
+ - What is your new plan for the second half of the internship?
+
+If you have any questions, please contact the Outreachy organizers organizers@outreachy.org
+
+Outreachy Organizers
+{% include 'home/email/footer-mentor-intern-coordinator.txt' %}
