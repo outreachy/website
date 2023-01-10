@@ -1,88 +1,103 @@
 Outreachy week 7: Assignments for mentors & interns
 
-Welcome to week seven of your Outreachy internship! Interns without an internship extension are now half-way done with the internship.
+Welcome to week seven of your Outreachy internship! Now is a good time to start thinking about your career path after the Outreachy internship.
 
 We have some goals and assignments for both mentors and interns. Please read the sections below.
 
 Week 7 Theme
 ------------
 
-The theme for this week is "Modifying Expectations". Outreachy mentors and interns start the internship with a specific set of project goals. However, usually those goals need to be modified, and that's perfectly fine!
+The theme for this week is "Career opportunities".
 
-Delays to projects happen. Maybe your project turned out to be more complicated than you or your mentor anticipated. Maybe you needed to learn some concepts before you could tackle project tasks. Maybe the community documentation wasn't up-to-date or was wrong. These are all perfectly valid reasons for projects to be a bit behind schedule, as long as you've been working full-time on the project.
+Some Outreachy interns may not know what they want to do with their career. Other Outreachy interns may be switching careers, and not know how to break into a new field. There may be Outreachy interns who took time off from their career to raise kids, and want to get back to work.
 
-In fact, free and open source contributors have to deal with these kinds of issues all the time. Projects often seem simple until you start working on them. Project timelines are usually a very optimistic view of what could happen if everything goes exactly as planned. It often doesn't, but people still make optimistic plans:
+It's important to talk to your mentor, coordinators, and Outreachy organizers about what career opportunities are possible. We encourage you to talk to your mentor about what career options you would like to explore.
 
-https://en.wikipedia.org/wiki/Planning_fallacy
-
-Modifying your project timeline to set more realistic goals is a skill all contributors need to learn. We encourage you to discuss your project timeline with your mentor and make adjustments to it. Outreachy organizers view the internship as more like a fellowship. Project goals should be adjusted as needed, as long as the intern is putting in a full-time effort. You can view your original project timeline here:
-
-{{ request.scheme }}://{{ request.get_host }}{% url 'project-timeline' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug applicant_username=intern_selection.applicant.applicant.account.username %}
-
-Your goal for this week's blog post is to write a report about your progress on your project. Talk about what you accomplished so far. Talk about what goals too more time than expected. Talk about your modified goals for the second half of the internship.
-
-See the detailed section below for more prompts.
-
-Mentor & Intern Assignment
---------------------------
-
-This week, we want Outreachy mentors and interns to review the original project timeline:
-
-{{ request.scheme }}://{{ request.get_host }}{% url 'project-timeline' round_slug=current_round.slug community_slug=community.slug project_slug=project.slug applicant_username=intern_selection.applicant.applicant.account.username %}
-
-Make adjustments to the project goals to ensure you'll complete them before your internship ends. Outreachy organizers view the internship as more like a fellowship. As long as an intern is working full-time on a project, Outreachy organizers consider this a success. Outreachy internships should not be extended to meet a particular project goal. Interns are not required to continue working on their project after their internship ends. Some Outreachy interns do continue working as volunteers on their project, but it's completely optional.
+Your goal for this week's blog post is to write a post about what direction you want your career to go.
 
 Week 7 Mentor & Intern Chat
 ---------------------------
 
-On {{ current_round.week_eight_chat_text_date }} UTC we will host a chat for both Outreachy interns and mentors:
+On {{ current_round.week_eight_chat_text_date }} UTC we will host a chat for both Outreachy interns, alums, and mentors:
 
 {{ current_round.week_eight_timeline_chat_url }}
 
-The internship is now half way done! Now is a good time to review your proposed project timeline with your mentor. Make changes to those plans, based on the progress you've made so far. That may mean you change your expectations around what you can accomplish.
+We will be talking about careers in open source! Details are in the Internship Guide:
 
-We encourage interns to share one project goal that they thought would be easy and why it took more time to complete.
-
-Mentors are encouraged to share a project or task of their own that took more time than expected to complete, and what they did to modify their expectations.
-
-Share why you think you underestimated the complexity of the goal. Share what you've learned about how to better estimate the complexity of this kind of goal. Often times there was nothing you could have done to better estimate the time a task would have taken, and that's okay too!
+{{ request.scheme }}://{{ request.get_host }}{% url 'docs-internship' %}#week-7-chat
 
 Goals for Mentors
 -----------------
 
 Week 7 goals:
 
- - Review the original project timeline with your intern
- - Adjust future project goals if needed
- - Talk to your intern about a project where you needed to modify your goals or plans
- - Ask your intern which parts of the project took the most time
- - Think about how you would set more realistic goals for future intern projects
+ - Talk to your intern about any opportunities to continue working in your community
+ - Ask your network about jobs, grants, or other opportunities to share during the chat
 
 Goals for Interns
 -----------------
 
 Week 7 goals:
 
- - Review your original project timeline with your mentor
- - Adjust the project goals if needed
- - Write a blog post about the progress you've made in the first half of the internship
- - Share in the chat one project goal that seemed easy, but took more time than you expected
+ - Talk to your mentor about ways you can continue working in the community
+ - Write a blog post about your career goals
 
 Week 7 Blog
 -----------
 
-For this week's blog post, we'd like to write a progress report of what you've accomplished in the first half of the internship. The blog post should also detail what your modified goals for the second half of the internship is.
+For this week's blog post, we'd like to write about what your career goals are. If you aren't looking for a job or internship, you can talk about what volunteer opportunities you'd like to participate in. If you're looking for a opportunity in the future, make sure to include when you'll be available.
 
 Here's some prompts that could get you started writing this blog post:
 
- - What was your original internship project timeline?
- - What goals have you met?
- - What have you accomplished in the first half of your internship?
- - What project goals took longer than expected?
- - Why did those project goals take longer than expected?
- - What would you do differently if you were starting the project over?
- - Which original goals needed to be modified?
- - What is your new plan for the second half of the internship?
+ - Are you looking for a job, internship, a grant, a volunteer position, or some type of other opportunity?
+ - What types of work would you like to contribute to?
+ - What tools or skills do you have that would help you with that work?
+ - What tools or skills would you like to learn?
+ - What interpersonal skills make you a collaborative team member?
+ - What languages do you speak, and at what school grade level?
+
+You might also want to talk about how your identity or background will allow you to provide a unique perspective on a team. Companies often want a diverse set of perspectives in their teams. A team with people who have all the same background makes products that don't fit everyone's needs. Please only share what you're comfortable with being public on the internet!
+
+If you're looking for a job opportunity, here's some additional things you might want to mention:
+
+ - When are you available to start work? (This should be after your Outreachy internship ends, including if you have an extension.)
+ - Are you able to move, and if so, which countries/regions are you willing to move to?
+ - Are you looking for a remote job? (Hint, saying you already have three months experience as a remote intern will help you find another remote position!)
+ - Are you looking for a full-time or part-time paid position?
+ - Are you open to being a self-employed contractor?
+
+Social media promotion
+---
+
+Once you've written your blog post, we encourage you to share it on social media. Please make sure to tag the social media account of your community. Please also include Outreachy's social media account (@outreachy on Twitter and @outreachy@hackyderm.io on Mastodon). The Outreachy social media accounts will promote your blog. This may connect you with people who can help you with your career goals.
+
+It's important to write a social media post that encourages people to take a particular action. In this case, the action you want people to take is to help you further your career goal (not just read your blog post).
+
+Let's look at good example of how to promote your career blog post. Look at this tweet from a past Outreachy intern, Eduar Tua:
+
+https://twitter.com/eduartua/status/1113594223562035200
+
+The tweet says:
+
+"Hey Twitter, I finished my @outreachy internship - revamping de @kubernetesio developers guide. I'm looking for a job now. Things I would like to work with:
+Golang
+Kubernetes
+Linux
+Web Development
+If you know someone hiring let me know. I'm based in Mexico but willing to relocate"
+
+This tweet is good at promoting Eduar's career goals because:
+
+1. It mentions what career goal Eduar wants: "I'm looking for a job"
+2. It mentions where Eduar is willing to live to meet his career goal: "I'm based in Mexico but willing to relocate"
+3. It mentions specific things Eduar would like to work on during his career: "Golang, Kubernetes, Linux, Web Development"
+4. It mentions an action people can take: "If you know someone who is hiring, let me know"
+5. It mentions what Eduar was working on during his Outreachy internship: "revamping de @kubernetesio developers guide"
+6. It tags social media handles of Outreachy (@outreachy) and the community Eduar worked with (@kubernetesio)
+
+While Eduar didn't include a link to a blog post about his career goals, we encourage you to link to your blog post.
+
+Don't stress too much about getting your social media post or blog post perfect. It's better to get the information out there and make connections than to spend too much time perfecting your blog post. We don't recommend spending more than 1 to 3 hours on your blog post.
 
 If you have any questions, please contact the Outreachy organizers organizers@outreachy.org
 

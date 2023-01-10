@@ -7,26 +7,28 @@ We have some goals and assignments for both mentors and interns. Please read the
 Week 11 Theme
 -------------
 
-The theme for this week is "Making connections".
+The theme for this week is "Continuing your open source journey".
 
-As we saw in last week's career chat, networking is really important to get a job! But many people are shy. They may not feel comfortable reaching out. Other people may not know who to reach out to.
-
-A low-stakes way to network is to ask people to participate in an informal chat. An informal chat is an conversation with another person about their career or their role as a free software contributor.
-
-An informal chat lets you get insight into what they work on, how they got their job or became a leader in free software, and who they network with. After you talk with the person, you can ask them for three other people you can talk to. This helps you expand your network!
+Now is a great time to think about how you want to continue working on open source after your internship ends.
 
 
 Goals for Mentors & Interns
 ---------------------------
 
-The goal for week 11 is for interns to brain storm with their mentors three people for them to approach for an informal chat. Outreachy organizers, your mentors, and other interns from your cohort don't count. The goal is to expand your network.
+The goal for week 11 is for interns to brain storm with their mentors ways you can continue to work on open source.
 
-You can chat with someone in your free software community. You could chat with someone at your mentor's company. You could chat with someone who you admire on social media. You could chat with a speaker that came into your classes. You could chat with someone who you know through learning forums who recently got a job. You could chat with someone you know in the local tech industry.
+Ideas could include:
 
-We also have a list of people who have volunteered to chat with interns! They are past Outreachy interns, mentors, coordinators, or employees of Outreachy sponsors who are paid to work on open source. You can see the list here:
-
-{{ request.scheme }}://{{ request.get_host }}{% url 'informal-chat-contacts' %}
-
+ - using more open source in your projects
+ - finding other open source internships
+ - using open source in your student projects
+ - finding a job in open source
+ - becoming an open source contractor
+ - identifying another project to work on within your open source or open science community
+ - finding local open source or open science meet-ups to attend (or starting your own meet-up!)
+ - attending virtual open source or open science events
+ - helping applicants to the next Outreachy cohort
+ - co-mentoring an Outreachy project with your mentor
 
 Week 11 Mentor & Intern Chat
 ----------------------------
@@ -35,15 +37,9 @@ On {{ current_round.week_twelve_chat_text_date }} UTC we will host a chat for Ou
 
 {{ current_round.week_twelve_interviewing_chat_url }}
 
-We'll be discussing how to conduct an informal chat. We'll cover:
+We'll be brainstorming next steps in our open source journey. Details are in the Internship Guide:
 
- - What an informal chat is
- - Who you might want to approach
- - How to approach them
- - What questions you can ask
- - How to maximize your networking
-
-For mentors and alums, we need your help brainstorming other ways to network.
+{{ request.scheme }}://{{ request.get_host }}{% url 'docs-internship' %}#week-11-chat
 
 
 Goals for Mentors
@@ -51,7 +47,9 @@ Goals for Mentors
 
 Week 11 goals:
 
- - Brainstorm with your intern three people they can ask to do an informal chat
+ - Brainstorm with your intern ways they can continue their open source journey
+ - Connect your intern with opportunities to continue to work on open source or open science (especially paid opportunities)
+ - Encourage your intern to think about helping Outreachy applicants or becoming a co-mentor
 
 
 Goals for Interns
@@ -59,57 +57,23 @@ Goals for Interns
 
 Week 11/12 goals:
 
- - Brainstorm with your mentor who you can ask to do an informal chat
+ - Brainstorm with your mentor what next steps you might want to take in your open source / open science journey
  - Participate in the intern chat
- - Contact three people to ask for an informal chat
- - Get your resume reviewed (see instructions below)
+ - Write a blog post about the informal chat you had
 
 
-Informational Interviews
-------------------------
+Week 11 Blog
+-----------
 
-The ideal candidate for an informal chat is someone who can expand on your own knowledge and network. Think about the blog post prompt from last week about what direction you want your career to go. Who do you admire who already has that role or job? Who do you know who might be networking with people in that field?
+By now, you should have scheduled at least one informal chat. If you haven't, we suggest you contact someone who volunteered to give an informal chat:
 
-The goal for week 12 is for interns to reach out to three people for an informal chat. You should have an chat scheduled with at least one person by the end of your internship. If none of the three people respond, that's fine! They may just be busy. We encourage you to continue reaching out to people. The worst that can happen is people don't reply, or they politely say no.
+{{ request.scheme }}://{{ request.get_host }}{% url 'informal-chat-contacts' %}
 
-Here's a script for reaching out to people:
+You can also brainstorm with your mentor who to ask for an informal chat.
 
-"Hi (name). I'm interested in your experience as (role) (with X company / in X open source project). I'm exploring different career paths, especially ones that involve open source. Would you be willing to do a 30 minute informal chat with me? I would love to learn more about your work!"
+For your blog post this week, we encourage you to blog about what you learned during that informal chat. You don't have to go into great detail. Talking about one new thing you learned or a new perspective you gained is great!
 
-Example questions you can ask during an informal chat:
-
- - What is a typical day (or week) like for you working in this role?
- - What skills, abilities, and personal attributes are essential to success in your role?
- - What is the culture like at your company? or What is the culture like in your free software organization?
- - How does your job affect your general lifestyle? or How does your free software work affect your general lifestyle?
- - How did you become interested in this field?
- - How did you begin your career? or How did you begin your free software contributions?
- - What are the most effective strategies for seeking a job in this field? or What are the most effective strategies for making a contribution to this free sofware community?
- - What steps would you recommend I take to prepare to enter this field? or What steps would you recommend I take to integrate myself into this free software community?
- - What are some common career paths in this field? or What are some common paths towards being a leader in free software?
- - I've read that the entry-level salary range for this field is usually in the range of _____ in ______ country? Does this fit with what you've seen? (Don't ask about the person's actual salary.) or I've read that many free software contributors are paid to work on their projects. What percentage of contributors in your community are paid to work on the project?
- - What related fields do you think I should consider looking into? or What related free software communities would you recommend I take a look at?
- - Can you suggest three other people I could contact for an informal chat?
-
-Resume
-------
-
-Instead of a blog post this week, we'd like interns to polish up their resume.
-
-On your resume, we ask that you list your Outreachy internship in a specific way. Don't say you're working "for" a sponsor or a community. That misrepresents your contractor status with Outreachy's fiscal sponsor, the Software Freedom Conservancy.
-
-On your resume, use the phrase "Outreachy intern working with {{ community }}".
-
-If you're updating your LinkedIn profile, make sure to list "Outreachy" as your employer:
-
-https://www.linkedin.com/company/18204091/
-
-If you've never written a resume before, here's a couple of good articles on how to start:
-
-https://www.davidhaney.io/writing-a-great-junior-tech-resume/
-https://medium.com/free-code-camp/writing-a-killer-software-engineering-resume-b11c91ef699d
-
-The second article was written for people applying to software engineering jobs, but much of the advice is relevant to other jobs in the tech industry. The article also talks a lot about how to showcase your college degree, but if you don't have a college degree, you can still list your coding schools, online courses, or certifications.
+If you have an informal chat scheduled for the upcoming weeks, wait until after the chat to work on your blog post.
 
 If you have any questions, please contact the Outreachy organizers organizers@outreachy.org
 
