@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 organizers = Address("Outreachy Organizers", "organizers", "outreachy.org")
 applicant_help = Address("Outreachy Applicant Helpers", "applicant-help", "outreachy.org")
 mentors_mailing_list = Address("Outreachy mentors list", "mentors", "lists.outreachy.org")
+opportunities_mailing_list = Address("Outreachy opportunities list", "opportunities", "lists.outreachy.org")
 
 def send_template_mail(template_name, context, recipient_list, request=None, **kwargs):
     # Only load the template once, no matter how many messages we're sending.
@@ -310,7 +311,7 @@ def feedback_email(intern_selection, request, stage, past_due, **kwargs):
         **kwargs)
 
 def career_chat_invitation(current_round, request, template, **kwargs):
-    emails = ['opportunities@lists.outreachy.org', 'mentors@lists.outreachy.org']
+    emails = [ mentors_mailing_list, opportunities_mailing_list, ]
     send_group_template_mail(template, {
         'current_round': current_round,
         },

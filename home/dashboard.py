@@ -797,7 +797,7 @@ class CareerChatInvitation(SendEmailView):
     Invite mentors and sponsor employees who are employed to work on open source
     to the careers chat and to be an informational interviewee.
 
-    When: Week 8 - sending an invitation two weeks before the career chat in week 10.
+    When: Week 6 - sending an invitation two weeks before the career chat in week 8.
 
     Template: home/templates/home/email/career-chat-invitation.txt
     """
@@ -806,19 +806,13 @@ class CareerChatInvitation(SendEmailView):
 
     @staticmethod
     def instance(current_round):
-        return current_round.week_eight_chat_text_date.date()
+        return current_round.week_six_chat_text_date.date()
 
     def generate_messages(self, current_round, connection):
         if not self.request.user.is_staff:
             raise PermissionDenied("You are not authorized to send reminder emails.")
 
-        # Only get interns that are in good standing and
-        # where a mentor or intern hasn't submitted feedback.
-        interns = current_round.get_in_good_standing_intern_selections()
-
-        for i in interns:
-            email.career_chat_invitation(current_round, self.request, template='home/email/career-chat-invitation.txt', connection=connection)
-
+        email.career_chat_invitation(current_round, self.request, template='home/email/career-chat-invitation.txt', connection=connection)
 
 # This is a list of all reminders that staff need at different times in the
 # round. Each entry should be a subclass of both RoundEvent and View.
