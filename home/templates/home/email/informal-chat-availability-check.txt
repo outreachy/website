@@ -2,7 +2,7 @@ Informal chat with Outreachy {{ current_round.internstarts|date:"F Y" }} interns
 
 In the past, you signed up to participate in 30 minute informal chats with Outreachy interns. We would really love it if you could take the time to talk with our current interns!
 
-Informal chats will take place between {{ current_round.week_ten_chat_text_date|date:"F n, Y" }} to {{ current_round.internends|date:"F n, Y" }}.
+Informal chats will take place between {{ current_round.week_ten_chat_text_date|date:"F j, Y" }} to {{ current_round.internends|date:"F j, Y" }}.
 
 If you're available, please confirm the following information is still correct:
 
