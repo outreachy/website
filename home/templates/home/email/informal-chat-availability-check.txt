@@ -1,0 +1,50 @@
+Informal chat with Outreachy {{ current_round.internstarts|date:"F Y" }} interns?
+
+In the past, you signed up to participate in 30 minute informal chats with Outreachy interns. We would really love it if you could take the time to talk with our current interns!
+
+Informal chats will take place between {{ current_round.week_ten_chat_text_date|date:"F n, Y" }} to {{ current_round.internends|date:"F n, Y" }}.
+
+If you're available, please confirm the following information is still correct:
+
+1. Relationship to Outreachy: {{ contact.relationship_to_outreachy }}
+
+2. Open source communities you participate in: {{ contact.foss_communities }}
+
+3. Volunteer open source roles: {{ contact.volunteer_foss_roles }}
+
+4. Employer: {{ contact.company }}
+
+5. Paid open source roles: {{ contact.paid_foss_roles }}
+
+6. Tools or programming languages used in these roles: {{ contact.tools_used }}
+
+7. Topics you are excited to talk to Outreachy interns about: {{ contact.topics }}
+
+What are informal chats?
+---
+
+Every round, we discuss career opportunities with the current cohort of Outreachy interns. Many Outreachy interns don't know anyone who contributes to open source at their job. They may not be aware of how much employers value experience working in open source.
+
+That's where you come in! We would love it if you could share with Outreachy interns how open source has helped your career.
+
+Please note that you need to be open to chatting with interns from any Outreachy community.
+
+Dates and time commitment
+---
+
+We're looking for people who can do video chats with Outreachy interns about careers in open source. You'll do an informal chat with 1 to 3 Outreachy interns. Chats will be 30 minutes to 1 hour.
+
+Please make sure you have time to chat sometime between {{ current_round. }} to {{ current_round. }}.
+
+What should I talk about?
+---
+
+Informal chats help Outreachy interns build their network and connect to people outside their open source community. This is a great opportunity to spend some time getting to know an Outreachy intern, and understanding what their career goals are.
+
+You can also talk about how open source has impacted your career. Talk about different roles that people are paid to work on open source (e.g. community managers, designers, programmers). If you know of paid opportunities to work on open source, please share them.
+
+Above all, this is a chance for you to connect to an Outreachy intern. If the conversation goes outside of career topics, that's fine! We want you to have interesting conversations with Outreachy interns.
+
+Please let me know if you're available to chat with Outreachy {{ current_round.internstarts|date:"F Y" }} interns.
+
+Outreachy Organizers

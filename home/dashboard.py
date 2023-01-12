@@ -45,6 +45,7 @@ from .models import ApprovalStatus
 from .models import Community
 from .models import Comrade
 from .models import DASHBOARD_MODELS
+from .models import InformalChatContact
 from .models import InitialApplicationReview
 from .models import MentorApproval
 from .models import MentorRelationship
@@ -814,6 +815,34 @@ class CareerChatInvitation(SendEmailView):
 
         email.career_chat_invitation(current_round, self.request, template='home/email/career-chat-invitation.txt', connection=connection)
 
+class InformalChatAvailabilityCheck(SendEmailView):
+    """
+    Send an invitation to the mentors and opportunities mailing lists.
+    Invite mentors and sponsor employees who are employed to work on open source
+    to the careers chat and to be an informational interviewee.
+
+    When: Week 8 - sending an invitation two weeks before the career chat in week 10.
+
+    Template: home/templates/home/email/career-chat-invitation.txt
+    """
+    description = 'Confirm availability of informal chat contacts'
+    slug = 'informal-chat-availability-check'
+
+    @staticmethod
+    def instance(current_round):
+        # Week 10 chat is when we talk about informal networking,
+        # but we need to give people time to respond to our email.
+        return current_round.week_eight_chat_text_date.date()
+
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+
+        contacts = InformalChatContact.objects.all()
+
+        for contact in contacts:
+            email.informal_chat_availability_check(current_round, contact, self.request, template='home/email/informal-chat-availability-check.txt', connection=connection)
+
 # This is a list of all reminders that staff need at different times in the
 # round. Each entry should be a subclass of both RoundEvent and View.
 #
@@ -821,6 +850,7 @@ class CareerChatInvitation(SendEmailView):
 # if we keep it sorted by when in the round each event occurs.
 all_round_events = (
     CFPOpen,
+    InformalChatAvailabilityCheck,
     CoordinatorProjectDeadline,
     MentorCheckDeadlinesReminder,
     ApplicantsDeadlinesReminder,

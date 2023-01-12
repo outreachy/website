@@ -319,3 +319,16 @@ def career_chat_invitation(current_round, request, template, **kwargs):
         recipient_list=emails,
         **kwargs)
 
+def informal_chat_availability_check(current_round, informal_chat_contact, request, template, **kwargs):
+    if informal_chat_contact.comrade:
+        emails = [informal_chat_contact.comrade.email_address()]
+    else:
+        emails = ['"{}" <{}>'.format(informal_chat_contact.name, informal_chat_contact.email)]
+    send_group_template_mail(template, {
+        'current_round': current_round,
+        'contact': informal_chat_contact,
+        },
+        request=request,
+        recipient_list=emails,
+        **kwargs)
+
