@@ -1,0 +1,14 @@
+Review Outreachy initial applications for {{ current_round.internstarts|date:"F Y" }} cohort?
+
+We are so grateful for your past review of Outreachy initial applications. Would you be available to review initial applications for the {{ current_round.internstarts|date:"F Y" }} cohort?
+
+We're looking for people to review initial applications from {{ current_round.initial_applications_open|date:"F j, Y" }} to  {{ current_round.contributions_open|date:"F j, Y" }}.
+
+We highly appreciate volunteers, but we understand if you wish to be paid for this role. If you wish to be paid as a contractor for this cohort, please let us know. We will either initiate a contract, or renew your current contract.
+
+If you don't have time to review initial applications, we completely understand! Please let us know whether you want to be contracted for reviewing future intern cohorts.
+
+Please let me know if you're available to review initial applications for the Outreachy {{ current_round.internstarts|date:"F Y" }} cohort.
+
+Thanks,
+Outreachy Organizers

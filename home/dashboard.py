@@ -843,6 +843,34 @@ class InformalChatAvailabilityCheck(SendEmailView):
         for contact in contacts:
             email.informal_chat_availability_check(current_round, contact, self.request, template='home/email/informal-chat-availability-check.txt', connection=connection)
 
+class InitialApplicationReviewerAvailabilityCheck(SendEmailView):
+    """
+    Check to see if initial application reviewers are available.
+
+    When: 2 weeks before initial applications open
+
+    Template: home/templates/home/email/initial-application-reviewer-availability-check.txt
+    """
+    description = 'Confirm availability of initial application reviewers'
+    slug = 'initial-application-reviewer-availability-check'
+
+    @staticmethod
+    def instance(current_round):
+        return current_round.initial_applications_open - datetime.timedelta(days=7*1)
+
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send reminder emails.")
+
+        # Find all initial application reviewers who were approved
+        # within the 3 cohorts (approximately 18 months)
+        # Exclude applicant-help accounts that are used to sort reviewed applications
+        cut_off_date = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=18*30)
+        reviewers = Comrade.objects.filter(applicationreviewer__reviewing_round__initial_applications_open__gte=cut_off_date).distinct().exclude(account__username__icontains='applicant-help')
+
+        for contact in reviewers:
+            email.initial_application_reviewer_availability_check(current_round, contact, self.request, template='home/email/initial-application-reviewer-availability-check.txt', connection=connection)
+
 # This is a list of all reminders that staff need at different times in the
 # round. Each entry should be a subclass of both RoundEvent and View.
 #
@@ -851,6 +879,7 @@ class InformalChatAvailabilityCheck(SendEmailView):
 all_round_events = (
     CFPOpen,
     InformalChatAvailabilityCheck,
+    InitialApplicationReviewerAvailabilityCheck,
     CoordinatorProjectDeadline,
     MentorCheckDeadlinesReminder,
     ApplicantsDeadlinesReminder,
@@ -1105,7 +1134,6 @@ def mentor_projects(request, today):
         'mentored_projects': mentored_projects,
         'mentored_communities': mentored_communities,
     }
-
 
 def approval_status(request, today):
     """

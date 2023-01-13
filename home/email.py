@@ -332,3 +332,13 @@ def informal_chat_availability_check(current_round, informal_chat_contact, reque
         recipient_list=emails,
         **kwargs)
 
+def initial_application_reviewer_availability_check(current_round, contact, request, template, **kwargs):
+    emails = [contact.email_address(), organizers]
+    send_group_template_mail(template, {
+        'current_round': current_round,
+        'contact': contact,
+        },
+        request=request,
+        recipient_list=emails,
+        **kwargs)
+
