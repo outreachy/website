@@ -17,6 +17,7 @@
 	{% if approval.mentor.github_url %}<li>GitHub profile: <a href="{{ approval.mentor.github_url }}">{{ approval.mentor.github_url }}</a></li>{% endif %}
 	{% if approval.mentor.gitlab_url %}<li>GitLab profile: <a href="{{ approval.mentor.gitlab_url }}">{{ approval.mentor.gitlab_url }}</a></li>{% endif %}
 	{% if approval.mentor.blog_url %}<li>Blog: <a href="{{ approval.mentor.blog_url }}">{{ approval.mentor.blog_url }}</a></li>{% endif %}
+	{% if approval.mentor.mastodon_url %}<li>Mastodon profile: <a href="{{ approval.mentor.mastodon_url }}">{{ approval.mentor.mastodon_url }}</a></li>{% endif %}
 	{% if approval.mentor.twitter_url %}<li>Twitter profile: <a href="{{ approval.mentor.twitter_url }}">{{ approval.mentor.twitter_url }}</a></li>{% endif %}
 </ul>
 <p>Each Outreachy mentor will have a different mentorship style, a preferred way to contact them, and different ways of working with interns. {{ approval.mentor.public_name}}'s mentorship style is: {{ approval.mentorship_style }}</p>

@@ -1090,9 +1090,13 @@ class Comrade(models.Model):
             verbose_name="Blog RSS URL",
             help_text="(Optional) The full URL to the RSS or ATOM feed for your blog.<br>For mentors and coordinators, this is unused. Applicants' blog RSS URLs will be unused. Accepted interns' blog RSS URLs will be used to create an aggregated feed of all Outreachy intern blogs, which will be displayed on the Outreachy website or Outreachy planetaria.")
 
+    mastodon_url = models.URLField(blank=True,
+            verbose_name="Mastodon profile URL",
+            help_text="(Optional) The full URL to your Mastodon profile.<br>For mentors and coordinators, this will be displayed to applicants, who may try to contact you via Mastodon. Applicants' Mastodon URLs will be shared with their mentors and coordinators. Accepted interns' Mastodon URLs will be displayed on the Outreachy website.")
+
     twitter_url = models.URLField(blank=True,
             verbose_name="Twitter profile URL",
-            help_text="(Optional) The full URL to your Twitter profile.<br>For mentors and coordinators, this will be displayed to applicants, who may try to contact you via Twitter. Applicants' Twitter URLs will be shared with their mentors and coordinators. Accepted interns' Twitter URLs will be used to create an Outreachy Twitter list for accepted interns for that round. Accepted interns' Twitter URLs will not be displayed on the Outreachy website.")
+            help_text="(Optional) The full URL to your Twitter profile.<br>For mentors and coordinators, this will be displayed to applicants, who may try to contact you via Twitter. Applicants' Twitter URLs will be shared with their mentors and coordinators. Accepted interns' Twitter URLs will be displayed on the Outreachy website.")
 
     agreed_to_code_of_conduct = models.CharField(
             max_length=LONG_LEGAL_NAME,

@@ -89,6 +89,11 @@ Review interns for {{ current_round.official_name }}
 				{% else %}
 					<img src="{% static 'link-grayed-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="no URL provided">
 				{% endif %}
+				{% if intern.mastodon_url %}
+					<a href="{{ intern.mastodon_url }}"><img src="{% static 'Mastodon/logo-purple.png' %}" class="mx-1" alt="Mastodon"></a>
+				{% else %}
+					<img src="{% static 'link-grayed-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="no URL provided">
+				{% endif %}
 				{% if intern.github_url %}
 					<a href="{{ intern.github_url }}"><img src="{% static 'GitHub/PNG/GitHub-Mark-32px.png' %}" class="mx-1" alt="GitHub"></a>
 				{% else %}

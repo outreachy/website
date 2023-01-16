@@ -1,5 +1,5 @@
 **Privacy Statement for Outreachy**
-*Last updated August 9, 2022*
+*Last updated January 16, 2023*
 
 Scope of This Notice
 ===
@@ -65,6 +65,7 @@ The types of personal data collected may include (but are not limited to):
     * (optional) your GitLab user profile URL;
     * (optional) your blog URL and RSS feed URL;
     * (optional) your Twitter user profile URL;
+    * (optional) your Mastodon account and server URL;
 * any information that Outreachy collects from people who volunteer for informal career chats with Outreachy interns:
     * (optional) your employer;
     * (optional) your relationship to Outreachy and Outreachy participation history;
@@ -91,6 +92,7 @@ If you are a current or past Outreachy intern, the following data is made public
 * (optional) your GitLab user profile URL;
 * (optional) your blog URL and RSS feed URL;
 * (optional) your Twitter user profile URL;
+* (optional) your Mastodon account and server URL;
 
 If you wish for this information to be kept private, you can opt-out of displaying this information publicly by changing your information in the [Outreachy account system](https://outreachy.org/account/). If you wish to change or remove your photo, please [e-mail the Outreachy organizers](https://outreachy.org/contact/organizers/).
  
@@ -130,6 +132,7 @@ Outreachy organizers, approved applicants, approved mentors, or approved coordin
 * (optional) your GitLab user profile URL;
 * (optional) your blog URL and RSS feed URL;
 * (optional) your Twitter user profile URL;
+* (optional) your Mastodon account and server URL;
 
 Outreachy organizers, approved applicants, approved mentors, or approved coordinators for the currently active round can see additional data about approved communities, approved mentored projects, and approved mentors:
 
@@ -158,6 +161,7 @@ When an approved Outreachy applicant records a contribution to a mentored projec
 * (optional) your GitLab user profile URL;
 * (optional) your blog URL and RSS feed URL;
 * (optional) your Twitter user profile URL;
+* (optional) your Mastodon account and server URL;
 
 Outreachy organizers may use anonymized quotes from essay questions in sponsor materials and on the Outreachy website:
 * examples of the systemic bias, discrimination you have faced

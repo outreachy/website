@@ -54,6 +54,9 @@ Outreachy Alums, {{ round.internstarts|date:"F Y" }} to {{ round.internends|date
 				{% if intern.blog_url %}
 					<a href="{{ intern.blog_url }}"><img src="{% static 'link-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="Blog"></a>
 				{% endif %}
+				{% if intern.mastodon_url %}
+					<a href="{{ intern.mastodon_url }}"><img src="{% static 'Mastodon/logo-purple.png' %}" class="mx-1" alt="Mastodon"></a>
+				{% endif %}
 				{% if intern.twitter_url %}
 					<a href="{{ intern.twitter_url }}"><img src="{% static 'Twitter/Twitter_Social_Icon_Circle_Color-32px.png' %}" class="mx-1" alt="Twitter"></a>
 				{% endif %}
@@ -87,4 +90,6 @@ Outreachy Alums, {{ round.internstarts|date:"F Y" }} to {{ round.internends|date
 <p>TWITTER, TWEET, RETWEET and the Twitter logo are trademarks of Twitter, Inc. or its affiliates.</p>
 <p>The GitLab logo and wordmark artwork are licensed under a <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a></p>
 <p>GITHUB®, the GITHUB® logo design, OCTOCAT® and the OCTOCAT® logo design are exclusive trademarks registered in the United States by GitHub, Inc.</p>
+<p>The Mastodon name and logos are trademarks of Mastodon gGmbH.</p>
+<p></p>
 {% endblock %}

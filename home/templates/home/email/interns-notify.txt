@@ -49,7 +49,7 @@ This email outlines the next steps for participating in the program, so please r
 
  1. Log into the Outreachy website and click the 'Accept Internship' button on your dashboard: https://www.outreachy.org/dashboard This will prompt you to sign the internship agreement.
 
- 2. Double check that your public information on the announcement page is correct: https://www.outreachy.org/alums/ If you want to add a photo or you need any changes, you can change your public name, location, pronouns (and their public visibility settings), and links to Twitter, GitLab, and GitHub on your account page. https://www.outreachy.org/account/
+ 2. Double check that your public information on the announcement page is correct: https://www.outreachy.org/alums/ If you want to add a photo or you need any changes, you can change your public name, location, pronouns (and their public visibility settings), and links to Mastodon, Twitter, GitLab, and GitHub on your account page. https://www.outreachy.org/account/
 
  3. Set an email filter to ensure all emails from outreachy.org and sfconservancy.org go to your Inbox.
 
@@ -157,11 +157,17 @@ https://www.outreachy.org/opportunities/
 Twitter
 -------
 
-Outreachy has a Twitter account @outreachy https://twitter.com/outreachy
+Outreachy has several social media accounts:
 
-Please add your twitter handle to your Outreachy website account if you'd like us to follow you. https://www.outreachy.org/account/
+🐘 Mastodon - https://hachyderm.io/@outreachy
+🐦 Twitter - https://www.twitter.com/Outreachy
+🖇️ LinkedIn - https://www.linkedin.com/company/outreachy
 
-When you are promoting your blogs on Twitter, please make sure to tag @outreachy. We may retweet intern tweets that use the @outreachy tag. If you don't want us to retweet you, don't add the @outreachy tag, and just use the word Outreachy.
+Please add your social media handle to your Outreachy website account if you'd like us to follow you. https://www.outreachy.org/account/
+
+When you are promoting your blogs on Mastodon, please make sure to tag @outreachy@hachyderm.io.
+
+When you are promoting your blogs on Twitter, please make sure to tag @outreachy.
 
 More questions?
 ---

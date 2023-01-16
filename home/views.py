@@ -196,6 +196,7 @@ class ComradeUpdate(LoginRequiredMixin, UpdateView):
         'blog_url',
         'blog_rss_url',
         'twitter_url',
+        'mastodon_url',
         'agreed_to_code_of_conduct',
     ]
 
