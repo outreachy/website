@@ -4,10 +4,10 @@
 {% comment %}TODO: link the words "initial application" and "contribute to projects" to the right sections in the to-be-written documentation page{% endcomment %}
     <tr><td width="175"><b>Jan. 10, 2023 at 5pm UTC</b></td><td><a href="https://www.twitter.com/Outreachy">Twitter space</a> - Career Paths in Open Source: A New year's resolution</td></tr>
     <tr><td><b>{{ current_round.initial_applications_open }} at 4pm UTC</b></td><td>Initial applications open</td></tr>
-    <tr><td><b>Jan. 17, 2023 at 3pm UTC</b></td><td><a href="https://diode.zone/a/outreachy/video-channels">Live stream</a> - Answering applicant questions</td></tr>
+    <tr><td><b>Jan. 17, 2023 at 3pm UTC</b></td><td><a href="{% url '2023-01-initial-applications-open' %}#initial-application-chat">Live stream</a> - Answering applicant questions</td></tr>
     <tr><td><b>{{ current_round.initial_applications_close }} at 4pm UTC</b></td><td>Initial application deadline</td></tr>
     <tr><td><b>{{ current_round.lateprojects }}</b></td><td>Project list finalized</td></tr>
-    <tr><td><b>Feb. 28, 2023 at 3pm UTC</b></td><td><a href="https://diode.zone/a/outreachy/video-channels">Live stream</a> - Tips for tackling the contribution period</td></tr>
+    <tr><td><b>Feb. 28, 2023 at 3pm UTC</b></td><td><a href="{% url '2023-01-initial-applications-open' %}#contribution-chat">Live stream</a> - Tips for tackling the contribution period</td></tr>
     <tr><td><b>{{ current_round.contributions_open }} to {{ current_round.contributions_close }}</b></td><td>Contribute to projects</td></tr>
     <tr><td><b>{{ current_round.contributions_close }}<br> at 4pm UTC</b></td><td>Final application deadline</td></tr>
     <tr><td><b>{{ current_round.internannounce }} at 4pm UTC</b></td><td>Accepted interns announced</td></tr>
