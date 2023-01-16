@@ -164,6 +164,7 @@ urlpatterns = [
     url(r'^blog/2022-08-09/december-2022-initial-applications-open/$', views.blog_2022_08_09_initial_applications_open, name='2022-08-initial-applications-open'),
     url(r'^blog/2022-12-05/thank-you-december-2022-mentors-and-coordinators/$', views.blog_2022_12_05_thank_you, name='2022-12-thank-you'),
     url(r'^blog/2023-01-05/may-2023-call-for-mentoring-organizations/$', views.blog_2023_01_05_cfp_open, name='2023-01-cfp-open'),
+    url(r'^blog/2023-01-16/may-2023-initial-applications-open/$', views.blog_2023_01_16_initial_applications_open, name='2023-01-initial-applications-open'),
 
     url(r'^privacy-policy/$', views.privacy_policy, name='privacy-policy'),
 ]

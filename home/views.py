@@ -2919,6 +2919,18 @@ def blog_2023_01_05_cfp_open(request):
         'current_round': current_round,
         })
 
+def blog_2023_01_16_initial_applications_open(request):
+    try:
+        current_round = RoundPage.objects.get(
+            internstarts__gte='2023-05-01',
+            internends__lte='2023-09-01',
+        )
+    except RoundPage.DoesNotExist:
+        current_round = None
+    return render(request, 'home/blog/2023-01-16-initial-applications-open.html', {
+        'current_round': current_round,
+        })
+
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(Feedback1FromMentor,
             fields=(
