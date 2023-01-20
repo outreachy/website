@@ -342,3 +342,17 @@ def initial_application_reviewer_availability_check(current_round, contact, requ
         recipient_list=emails,
         **kwargs)
 
+def mentoring_org_cfp_open(current_round, community, sponsorships, fully_outreachy_funded, request, template, **kwargs):
+    email_list = community.get_coordinator_email_list()
+    if email_list:
+        send_group_template_mail(template, {
+            'current_round': current_round,
+            'community': community,
+            'coordinators': email_list,
+            'sponsorships': sponsorships,
+            'fully_outreachy_funded': fully_outreachy_funded,
+            },
+            request=request,
+            recipient_list=[organizers],
+            **kwargs)
+

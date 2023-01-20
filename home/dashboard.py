@@ -53,6 +53,7 @@ from .models import Participation
 from .models import Project
 from .models import Role
 from .models import RoundPage
+from .models import Sponsorship
 from .models import get_deadline_date_for
 
 __all__ = ('get_dashboard_sections',)
@@ -871,6 +872,47 @@ class InitialApplicationReviewerAvailabilityCheck(SendEmailView):
         for contact in reviewers:
             email.initial_application_reviewer_availability_check(current_round, contact, self.request, template='home/email/initial-application-reviewer-availability-check.txt', connection=connection)
 
+class MentoringOrgCFPOpen(SendEmailView):
+    """
+    Create draft emails to past mentoring organizations to let them know the community CFP is open.
+    This creates draft emails to send individually to mentoring organization coordinators.
+    The emails will include details of past funding, which Outreachy organizers can use to customize the email.
+
+    When: After the community CFP opens, on the RoundPage.pingold date.
+
+    Template: home/templates/home/email/mentoring-org-cfp-open.txt
+    """
+    description = 'Contact past mentoring organizations about CFP being open'
+    slug = 'mentoring-org-cfp-open'
+
+    @staticmethod
+    def instance(current_round):
+        return current_round.pingold
+
+    def generate_messages(self, current_round, connection):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("You are not authorized to send emails.")
+
+        # Find all the communities who were approved
+        # within the last 4 cohorts (approximately 24 months).
+        # Exclude communities that have already signed up to participate.
+        cut_off_date = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=24*30)
+        communities = Community.objects.filter(models.Q(participation__participating_round__pingold__gte=cut_off_date) & models.Q(participation__approval_status=ApprovalStatus.APPROVED)).distinct().exclude(participation__participating_round=current_round).order_by('name')
+
+        for community in communities:
+            last_participation = Participation.objects.filter(community=community, approval_status=ApprovalStatus.APPROVED).latest('participating_round__internstarts')
+
+            # Look to see whether the community was fully funded by the Outreachy general fund
+            fully_outreachy_funded = True
+            sponsorships = Sponsorship.objects.filter(participation=last_participation).order_by('name')
+            for sponsorship in sponsorships:
+                if not sponsorship.name.startswith('Outreachy general fund'):
+                    fully_outreachy_funded = False
+
+            sponsorships = sponsorships.exclude(name__startswith='Outreachy general')
+
+            email.mentoring_org_cfp_open(current_round, community, sponsorships, fully_outreachy_funded, self.request, template='home/email/mentoring-org-cfp-open.txt', connection=connection)
+
 # This is a list of all reminders that staff need at different times in the
 # round. Each entry should be a subclass of both RoundEvent and View.
 #
@@ -878,6 +920,7 @@ class InitialApplicationReviewerAvailabilityCheck(SendEmailView):
 # if we keep it sorted by when in the round each event occurs.
 all_round_events = (
     CFPOpen,
+    MentoringOrgCFPOpen,
     InformalChatAvailabilityCheck,
     InitialApplicationReviewerAvailabilityCheck,
     CoordinatorProjectDeadline,
