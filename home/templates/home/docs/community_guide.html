@@ -54,7 +54,6 @@ Community Guide | Outreachy Documentation
 			</li>
 		</ul>
 	</li>
-	<li><a href='#project-guidelines'>Internship project guidelines</a></li>
 	<li><a href='#outreachy-schedule'>Outreachy schedule</a>
 		<ul>
 			<li><a href='#cfp-period'>Communities and projects sign up period</a></li>
@@ -68,6 +67,22 @@ Community Guide | Outreachy Documentation
 	</li>
 	<li><a href="#community-sign-up-process">Community sign up process</a></li>
 	<li><a href="#mentor-sign-up-process">Mentor sign up process</a></li>
+	<li><a href='#project-guidelines'>Internship project guidelines</a>
+		<ul>
+			<li><a href='#project-definition'>Deciding on a project</a></li>
+			<li><a href='#project-forms'>Project description</a></li>
+			<li><a href='#number-of-projects'>Number of projects</a></li>
+		</ul>
+	</li>
+	<li><a href='#contribution-period-tasks'>Contribution period tasks</a>
+		<ul>
+			<li><a href='#listing-contribution-period-tasks'>Listing contribution period tasks</a></li>
+			<li><a href='#example-contribution-period-tasks'>Example contribution period tasks</a></li>
+			<li><a href='#small-contribution-period-tasks'>Small contribution period tasks</a></li>
+			<li><a href='#medium-contribution-period-tasks'>Medium contribution period tasks</a></li>
+			<li><a href='#evaluating-contribution-period-tasks'>Evaluating contribution period tasks</a></li>
+		</ul>
+	</li>
 	<li><a href="#avoiding-mentor-burnout-during-contribution-period">Avoiding mentor burnout during the contribution period</a>
 		<ul>
 			<li><a href="#set-office-hours">Set office hours</a></li>
@@ -405,36 +420,23 @@ Community Guide | Outreachy Documentation
 <p><a href='#toc'><u>↑ table of contents</u></a></p>
 <hr>
 
-<h2 id='project-guidelines'><a href='#project-guidelines'>4. Internship project guidelines</a></h2>
-
-<p>What makes a good Outreachy internship project? (Credit to QEMU coordinator Stefan Hajnoczi's <a href="https://www.youtube.com/watch?v=xNVCX7YMUL8">talk at KVM Forum</a> for these tips.) A project that is suitable for interns to work on is:</p>
-<ul>
-	<li><b>Well-defined</b> - The project has a well defined scope.</li>
-	<li><b>Self-contained</b> - Has few dependencies on uncompleted work. Does not require interacting with multiple open source communities who are not on-board with interacting with an Outreachy intern.</li>
-	<li><b>Uncontroversial</b> - The community should agree that this project idea is acceptable (and ideally useful!) to be included in the community project.</li>
-	<li><b>Incremental</b> - The project should produce several deliverables during the internship period, rather than having only one large deliverable. This allows the project goals to be modified if the intern completes task faster or slower than expected. If the project does have one large deliverable, it's recommended that the intern complete a design document. This allows the intern to hand off unfinished work to the next intern, or the community.</li>
-</ul>
-
-<p><a href='#toc'><u>↑ table of contents</u></a></p>
-<hr>
-
-<h2 id='outreachy-schedule'><a href='#outreachy-schedule'>5. Outreachy schedule</a></h2>
+<h2 id='outreachy-schedule'><a href='#outreachy-schedule'>4. Outreachy schedule</a></h2>
 
 <p>Outreachy internships run twice a year.</p>
 
-<h3 id='general-timeline'><a href='#general-timeline'>5.1 General timeline</a></h3>
+<h3 id='general-timeline'><a href='#general-timeline'>4.1 General timeline</a></h3>
 
 <p>Here is our general schedule for each year:</p>
 
 {% include 'home/snippet/generic_timeline.html' %}
 
-<h3 id='current-timeline'><a href='#current-timeline'>5.2 Current internship round schedule</a></h3>
+<h3 id='current-timeline'><a href='#current-timeline'>4.2 Current internship round schedule</a></h3>
 
 <p><b>{{ current_round.official_name }} round schedule</b></p>
 
 {% include 'home/snippet/mentor-timeline.html' %}
 
-<h3 id='timeline-details'><a href='#timeline-details'>5.3 Timeline details</a></h3>
+<h3 id='timeline-details'><a href='#timeline-details'>4.3 Timeline details</a></h3>
 
 <p>The internship round begins when the Outreachy organizers open the call for participation communities. The community CFP period somewhat overlaps with the initial application period.<p>
 
@@ -481,14 +483,14 @@ Community Guide | Outreachy Documentation
 	<li>Coordinators review the intern selections</li>
 	<li>Outreachy organizers review Outreachy general funding requests</li>
 	<li>Outreachy organizers approve the intern selections</li>
-	<li>Applicants may (but are not required to) continue working on project tasks</li>
+	<li>Applicants may (but are not required to) continue working on contribution period tasks</li>
 	<li>Intern selections are not shared with applicants until <a href='{% url 'alums' %}'>interns are announced</a> on {{ current_round.internannounce }}</li>
 </ul>
 
 <p><a href='#toc'><u>↑ table of contents</u></a></p>
 <hr>
 
-<h2 id='community-sign-up-process'><a href="#community-sign-up-process">6. Community sign up process</a></h2>
+<h2 id='community-sign-up-process'><a href="#community-sign-up-process">5. Community sign up process</a></h2>
 
 <p>The first step for Free and Open Source Software (FOSS) communities who want to participate Outreachy is to <a href="{% url 'community-cfp' %}">fill out a community participation application.</a> Outreachy organizers and the Outreachy Project Leadership Committee will review your community participation application.</p>
 
@@ -499,7 +501,7 @@ Community Guide | Outreachy Documentation
 <p><a href='#toc'><u>↑ table of contents</u></a></p>
 <hr>
 
-<h2 id='mentor-sign-up-process'><a href="#mentor-sign-up-process">7. Mentor sign up process</a></h2>
+<h2 id='mentor-sign-up-process'><a href="#mentor-sign-up-process">6. Mentor sign up process</a></h2>
 
 <p>
 Mentors must submit their project descriptions through the Outreachy website. Co-mentors can sign up once the project has been submitted. Coordinators will approve the projects and any co-mentors.
@@ -514,13 +516,139 @@ Mentors will be granted read access to applications for their project and will b
 <p><a href='#toc'><u>↑ table of contents</u></a></p>
 <hr>
 
-<h2 id='avoiding-mentor-burnout-during-contribution-period'><a href="#avoiding-mentor-burnout-during-contribution-period">8. Avoiding mentor burnout during the contribution period</a></h2>
+<h2 id='project-guidelines'><a href='#project-guidelines'>7. Internship project guidelines</a></h2>
+
+<p>Outreachy mentors define a project for interns to work on during the three month internship. This is called the "internship project".</p>
+
+<h3 id='project-definition'><a href='#project-definition'>7.1 Deciding on a project</a></h3>
+<p>What makes a good Outreachy internship project? (Credit to QEMU coordinator Stefan Hajnoczi's <a href="https://www.youtube.com/watch?v=xNVCX7YMUL8">talk at KVM Forum</a> for these tips.) A project that is suitable for interns to work on is:</p>
+<ul>
+	<li><b>Well-defined</b> - The project has a well defined scope.</li>
+	<li><b>Self-contained</b> - Has few dependencies on uncompleted work. Does not require interacting with multiple open source communities who are not on-board with interacting with an Outreachy intern.</li>
+	<li><b>Uncontroversial</b> - The community should agree that this project idea is acceptable (and ideally useful!) to be included in the community project.</li>
+	<li><b>Incremental</b> - The project should produce several deliverables during the internship period, rather than having only one large deliverable. This allows the project goals to be modified if the intern completes task faster or slower than expected. If the project does have one large deliverable, it's recommended that the intern complete a design document. This allows the intern to hand off unfinished work to the next intern, or the community.</li>
+</ul>
+
+<p>Only Outreachy mentors should propose internship projects. Outreachy does not accept projects proposed by an applicant. Outreachy mentors are allowed to tailor a project to the applicant after selecting them as an intern. But novel or new projects should not be proposed by applicants.</p>
+
+<p>Outreachy does not allow mentors to submit a project with a particular applicant in mind. All project mentors should be willing to work with any applicant during the contribution phase. This allows all Outreachy applicants a fair chance at obtaining an internship based on their skills, rather than existing connections to a free software community.</p>
+
+<h3 id='project-forms'><a href='#project-forms'>7.2 Project description</a></h3>
+<p>Each Outreachy mentor will need to submit their project description to the Outreachy website. Projects can be submitted by selecting a participating community on the <a href="{% url 'community-cfp' %}">Community CFP page</a>.</p>
+
+<p>You can <a href="https://github.com/outreachy/creative-works-and-scripts/raw/master/docs/project-example-user-research-2022-05.pdf">download an example project description</a>, which includes screenshots of the forms used to create that project description.</p>
+
+<h3 id="number-of-projects"><a href='#number-of-projects'>7.3 Number of projects</a></h3>
+
+<p>Each Outreachy open source / open science community will have a set amount of interns it can fund. However, communities can apply for additional intern funding from the Outreachy general fund. Also, communities may find that one internship project is more popular than another.</p>
+
+<p>Therefore, it is encouraged for open source / open science communities to list more projects than they have internship funding (or mentors) for. For example, communities that intend to accept 1-2 interns often list 3-5 projects.</p>
+
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h2 id='contribution-period-tasks'><a href='#contribution-period-tasks'>8. Contribution period tasks</a></h2>
+
+<p>Outreachy mentors need to define a set of newcomer-friendly tasks (called "contribution period tasks"). Applicants will work on these tasks during the contribution period. The contribution period tasks for applicants are different than the work the intern will complete during the internship.</p>
+
+<p>The goal of contribution period tasks is for mentors to determine whether the applicant has the skills to be successful during the internship. Working on contribution period tasks also help applicants get familiar with the mentor and the open source / open science community norms.</p>
+
+<p>In order to be accepted as an intern, applicants need to complete at least one contribution period task.</p>
+
+<p>Popular Outreachy projects can have 100+ applicants all trying to complete contribution period tasks at once. Mentors can quickly become overwhelmed unless they prepare their contribution period task list ahead of time.</p>
+
+<p>Therefore, it is very important for mentors to prepare a well-detailed list of contribution period tasks</p>
+
+<p>You should have around 10-20 small contribution period tasks, and 5-10 medium-sized contribution period tasks.</p>
+
+<p>You should expect that most applicants will complete 1 or 2 contribution period tasks. Applicants who are selected as interns usually complete 4 tasks on average. Some interns have completed as many as 13 tasks during the application process.</p>
+
+<h3 id='listing-contribution-period-tasks'><a href='#listing-contribution-period-tasks'>8.1 Listing contribution period tasks</a></h3>
+
+<p>There are many places to list contribution period tasks for Outreachy applicants to work on.</p>
+
+<ul>
+	<li>open source / open science community issue tracker</li>
+	<li>welcome page on the open source / open science community website or wiki</li>
+	<li>shared online document</li>
+	<li>kanban board (useful to assign contribution period tasks and sort tasks into categories)</li>
+</ul>
+
+<p>Most open source / open science communities try to tag issues that are designed for newcomers. A 'tag' is a label that links to issues under the same topic. Tagging a group of issues specifically for Outreachy applicants (or all newcomers) ensures they won't try working on an issue that is too complex or not well defined.</p>
+
+<p>Here are some recommended tags for labeling contribution period tasks for Outreachy applicants:</p>
+<ul>
+	<li>"newcomer friendly"</li>
+	<li>"good first task", "good first issue", or "good first bug"</li>
+	<li>"Outreachy"</li>
+</ul>
+
+<p>It is best to define who the issue is aimed at ("newcomer" or someone working on their "first issue"). Avoid using the word "newbie" because it is often used in a negative manner (e.g. "n00b"). Additionally, the word "newbie" can be offensive for people who are not new to tech, but are new to open source. Using the word "newcomer" is more appropriate because it means someone is new to your project.</p>
+
+<p>If you want to assign task labels, use terms like "less complex" and "more complex". Everyone starts as a beginner on a project. Sometimes that means struggling for hours, days, or even weeks to solve your first issue. It can be disheartening to struggle for so long on an issue marked "easy", "easy win", "quick win", or "bite sized".
+
+<h3 id='example-contribution-period-tasks'><a href='#example-contribution-period-tasks'>8.2 Example contribution period tasks</a></h3>
+
+<p>Contribution period tasks should test the skills the applicants will use during their internship. Therefore, contribution period tasks for applicants will vary greatly from project to project. Here are some examples, depending on the type of internship project:</p>
+<ul>
+	<li><b>Testing:</b> write a test case that reproduces a bug</li>
+	<li><b>Programming:</b> update one function to use a newer API, or refactor some code</li>
+	<li><b>Documentation:</b> identify a missing section of documentation and outline what should be in that section</li>
+	<li><b>Translation:</b> translate one paragraph of documentation from English to your native language</li>
+	<li><b>Design:</b> design an example illustration for the open source / open science community website</li>
+	<li><b>Accessibility:</b> identify one accessibility bug using Web Content Accessibility Guidelines (WCAG) 2.1 standard levels</li>
+	<li><b>User research:</b> introduce the open source software to a friend, and record their impressions and challenges while trying to complete a task</li>
+</ul>
+
+<p>A contribution period task does not have result in code being merged into the project. For example, a user experience contribution period task could ask the applicant to use the open source software and write a short report on an aspect of the user interface that was confusing. That report could be uploaded to a file sharing service and shared with Outreachy mentors. The applicant could link to the shared report when recording their contribution on the Outreachy website.</p>
+
+<p>Here are some example lists of newcomer-friendly contribution period tasks:</p>
+<ul>
+	<li><a href="https://code.publiclab.org/">Public Lab newcomer welcome page</a></li>
+	<li><a href="https://zulip.readthedocs.io/en/latest/outreach/apply.html">Zulip contribution period tasks for GSoC and Outreachy applicants</a></li>
+	<li><a href="https://phabricator.wikimedia.org/T317083">Wikimedia contribution period task description</a></li>
+	<li>Oppia pinned a <a href="https://github.com/oppia/oppia/issues/16920">GitHub issue for newcomers</a> and created a <a href="https://github.com/oppia/oppia/wiki">GitHub wiki page for onboarding newcomers</a></li>
+	<li><a href="https://gitlab.com/qemu-project/qemu/-/issues/?sort=created_date&state=opened&label_name%5B%5D=Bite%20Sized&first_page_size=20">QEMU newcomer issues</a></li>
+</ul>
+<h3 id='small-contribution-period-tasks'><a href='#small-contribution-period-tasks'>8.3 Small contribution period tasks</a></h3>
+
+<p>A small contribution period task is designed to introduce the applicant to your project. The goal is not the task itself, but to encourage the applicant to familiarize themself with the community norms, development processes, and asking questions.</p>
+
+<p>For example, a good small contribution period task might be to install a local development environment, change some part of the user interface, and then add a screenshot of the changes to an open issue for Outreachy applicants. This will see whether the applicant can debug getting their development environment set up. They will likely get stuck, and need to reach out to ask for help. Mentors can see how the applicant asks questions, and responds to feedback. Contribution period tasks should be defined so that mentors can see how the applicant asks for help and their communication style.</p>
+
+<p>Smaller contribution period tasks will often need a very thorough description. They will often have several paragraphs to explain why the task needs to be done, how to complete the task, and what resources the applicant should read.</p>
+
+<p>Some applicants may "claim" a smaller task and then not complete it. You may want to limit the number of tasks one applicant can claim.</p>
+
+<p>It's good to have a lot of smaller tasks. You can also have smaller starter tasks that can be completed by multiple applicants (like a user experience survey or a graphic design proposal).</p>
+
+<h3 id='medium-contribution-period-tasks'><a href='#medium-contribution-period-tasks'>8.4 Medium contribution period tasks</a></h3>
+
+<p>Once an applicant has completed a few smaller tasks, they'll want to have a medium-sized task. This task is a chance for them to prove they have the skills needed for your project.</p>
+
+<p>A medium-sized task should test the skills that are necessary for an intern to be successful on this internship project. This is because Outreachy does not allow mentors to select an intern on the basis of educational background. Mentors should consider all applicants, regardless of whether they have a university degree, they have completed a coding school, or they are completely self-taught. You will be selecting an intern based on the quality of their contribution period tasks alone. In order to ensure you select an applicant who can successfully complete the internship, your tasks will need to test any skills you consider relevant to the internship project.</p>
+
+<h3 id='evaluating-contribution-period-tasks'><a href='#evaluating-contribution-period-tasks'>8.5 Evaluating contribution period tasks</a></h3>
+
+<p>A strong applicant submits thoughtful contribution period tasks, and edits their work when feedback is given.</p>
+
+<p>We encourage mentors to value communication first. Outreachy's goal is to help interns learn and grow their open source skills. Growth cannot happen without communication and collaboration. We encourage mentors to value applicants who communicate during the contribution period.</p>
+
+<p>We encourage mentors to value the quality of the applicant's contribution period tasks, over the number of contribution period tasks that an applicant completes. It is risky to accept an applicant who submits many small contributions with little substance. These small contributions may not be enough to judge whether the applicant will be successful during the internship.</p>
+
+<p>It is also risky to accept an applicant who submits a large contribution at the last minute. This does not allow mentors enough time to judge the applicant's skills. It also does not allow the applicant time to respond to feedback.</p>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h2 id='avoiding-mentor-burnout-during-contribution-period'><a href="#avoiding-mentor-burnout-during-contribution-period">9. Avoiding mentor burnout during the contribution period</a></h2>
 
 <p>The contribution period is often very busy and stressful for mentors. They will have around 10-15 applicants asking questions and working on tasks. It's often hard to keep track of who is working on what. You may be overwhelmed by the number of emails, chat notifications, or repository issue notifications.</p>
 
 <p>Communities that have participated in Outreachy in the past have some guidance to share on how to lower stress for mentors:</p>
 
-<h3 id='set-office-hours'><a href="#set-office-hours">8.1 Set office hours</a></h3>
+<h3 id='set-office-hours'><a href="#set-office-hours">9.1 Set office hours</a></h3>
 
 <p>Outreachy is open to anyone around the world. Unfortunately, that means you can get questions and contributions at any time of the day (or night!). It's important that mentors protect their personal time to unwind and do self-care. In your project description, mention what times you are best available to answer questions. Try to set aside at least one hour per week day to answer questions.</p>
 
@@ -528,7 +656,7 @@ Mentors will be granted read access to applications for their project and will b
 
 <p>On the other hand, you will need to set up regular check-in times with your intern. So being up front about when you are available to help will narrow the applicants down to ones that have a window to work with you. Some mentors have been able to make working with an applicant with a 12 hour timezone difference, and some mentors have struggled. You know yourself and your work habits. Make the best call for you, while still being open to working with Outreachy interns in many different timezones and countries.</p>
 
-<h3 id='find-volunteers'><a href="#find-volunteers">8.2 Find unofficial volunteers</a></h3>
+<h3 id='find-volunteers'><a href="#find-volunteers">9.2 Find unofficial volunteers</a></h3>
 
 <p>You can ask experienced contributors to your community to be "unofficial" volunteers. These volunteers could be past Outreachy or Google Summer of Code interns with your community, or other community members. They don't have to be official mentors, but they can help answer questions.</p>
 
@@ -536,7 +664,7 @@ Mentors will be granted read access to applications for their project and will b
 
 <p>Unofficial volunteers can also serve as a connector to other community members or external open source contributors. They can help introduce applicants to people who works on specific parts of the project, or external open source contributors who are experts with a particular tool (like git).</p>
 
-<h3 id='limit-simple-contributions'><a href="#limit-simple-contributions">8.3 Limit simple contributions</a></h3>
+<h3 id='limit-simple-contributions'><a href="#limit-simple-contributions">9.3 Limit simple contributions</a></h3>
 
 <p>A simpler contribution could be something like fixing a spelling error in the documentation. A more complex contribution could be something like refactoring code, writing a documentation section, or doing research. Applicants have a tendency to make a lot of simpler contributions. They may feel confident making smaller changes, but less confident tackling medium complexity tasks.</p>
 
@@ -544,7 +672,13 @@ Mentors will be granted read access to applications for their project and will b
 
 <p>Some communities have queues of simple, medium complexity, and highly complex tasks. Once an applicant completes 1-3 simple tasks, you can point them to the medium complexity task queue.</p>
 
-<h3 id='similar-applicant-tasks'><a href="#similar-applicant-tasks">8.4 Have applicants complete similar tasks</a></h3>
+<h3 id='withhold-applicant-tasks'><a href="#withhold-applicant-tasks">9.4 Withhold some contribution period tasks</a></h3>
+
+<p>You may want to save some smaller tasks for the last few weeks of the application period. Save those tasks and don't put them in your task tracker until the last two weeks. This allows applicants who come in later in the application period to have a chance at completing a smaller starter task.</p>
+
+<p>It's important that mentors remain responsive to applicants who are completing tasks during this period. Mentors can be honest with the applicant if they already have an intern selection in mind (and that applicant has completed a final application). However, mentors shouldn't ignore requests for help or requests for a starter task, as this leads to a bad experience for the applicants.</p>
+
+<h3 id='similar-applicant-tasks'><a href="#similar-applicant-tasks">9.5 Have applicants complete similar tasks</a></h3>
 
 <p>You can ask all applicants complete the same tasks. This task could be something like taking a screen shot showing which shows they got the contribution environment working and made a change to your project. They could also work on a document, like a review of the usability of your project or a design document for a feature they would be working on during the project.</p>
 
@@ -552,7 +686,7 @@ Mentors will be granted read access to applications for their project and will b
 
 <p>The downside of having applicants work on the same tasks is that some people might be intimidated by the other applicants' work. It may also encourage applicants to copy other applicants' work. If you ask applicants to complete the same task, be sure to have some other individualized tasks that test the applicants' skills.</p>
 
-<h3 id='encourage-collaboration'><a href="#encourage-collaboration">8.4 Encourage collaboration vs competition</a></h3>
+<h3 id='encourage-collaboration'><a href="#encourage-collaboration">9.6 Encourage collaboration vs competition</a></h3>
 
 <p>Open source is about collaborating with others in a community. It's important to encourage that collaborative mindset in your applicants. Otherwise they may be focused on a more competitive mindset, focusing only on how they can improve their changes of being accepted as an intern.</p>
 
@@ -564,7 +698,7 @@ Mentors will be granted read access to applications for their project and will b
 
 <p>Additionally, gender bias may come into play when you're looking for interns that collaborate with each other. Women and non-binary people who were assigned female at birth (AFAB) are often socially conditioned to not speak up unless they are extremely confident in their answer. You may find that men and non-binary people who were raised with masculine cultural norms are more likely to speak up and answer questions. Gender bias and gendered social norms should be considered when making intern selections.</p>
 
-<h3 id='discourage-new-applicants'><a href="#discourage-new-applicants">8.5 Close your project to new applicants</a></h3>
+<h3 id='discourage-new-applicants'><a href="#discourage-new-applicants">9.7 Close your project to new applicants</a></h3>
 
 <p>Often times, Outreachy applicants will wait until the last week or two of the contribution period to start making contributions. Sometimes this results in them finding a project that has few applicants. Sometimes this means they try to make contributions to a project where many people have already made a contribution. It's important to encourage applicants who are seeking a project to contribute to projects with few applicants.</p>
 
@@ -579,7 +713,7 @@ Mentors will be granted read access to applications for their project and will b
 <p><a href='#toc'><u>↑ table of contents</u></a></p>
 <hr>
 
-<h2 id='estimated-number-of-interns'><a href="#estimated-number-of-interns">9. Estimated number of interns</a></h2>
+<h2 id='estimated-number-of-interns'><a href="#estimated-number-of-interns">10. Estimated number of interns</a></h2>
 
 <p>
 On the <a href="{% url 'project-selection' %}">project list</a>, each community has an estimate of the number of interns it expects to accept.
@@ -631,7 +765,7 @@ Some times project mentors <a href="#contribution-evaluation">evaluated the cont
 <p><a href='#toc'><u>↑ table of contents</u></a></p>
 <hr>
 
-<h2 id='internship'><a href='#internship'>10. Internship</a></h2>
+<h2 id='internship'><a href='#internship'>11. Internship</a></h2>
 
 <p>Mentors and coordinators are encouraged to read the <a href='{% url 'docs-internship' %}'>Internship Guide</a>. The Internship Guide includes mentor duties and expectations during the internship. Mentors should familiarize themselves with the internship chat and blogging schedules.</p>
 
