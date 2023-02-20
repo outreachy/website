@@ -186,6 +186,9 @@
 
 	<h2>Essay Answers</h2>
 
+	{% if application.barrierstoparticipation.content_warnings %}
+		<p>Content warnings: <b>{{ application.barrierstoparticipation.content_warnings }}</b></p>
+	{% endif %}
 	{% if not application.barrierstoparticipation %}
 		<p>The essay answers have been removed after initial application processing.</p>
 	{% else %}

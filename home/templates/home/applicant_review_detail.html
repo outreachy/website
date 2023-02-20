@@ -25,10 +25,6 @@
 	{% include 'home/snippet/applicant_review_actions.html' %}
 	<h1>Initial Application</h1>
 
-	{% if application.barrierstoparticipation.content_warnings %}
-		<p>Content warnings: <b>{{ application.barrierstoparticipation.content_warnings }}</b></p>
-	{% endif %}
-
 	<h2>Time Commitment Details</h2>
 	{% include 'home/snippet/time_commitment_overview.html' %}
 	{% include 'home/snippet/applicant_review_time_commitments.html' %}
@@ -141,6 +137,10 @@
 	{% include 'home/snippet/applicant_review_essay_rating.html' %}
 
 	<h2>Essay Answers</h2>
+	{% if application.barrierstoparticipation.content_warnings %}
+		<p>Content warnings: <b>{{ application.barrierstoparticipation.content_warnings }}</b></p>
+	{% endif %}
+
 
 	{% if not application.barrierstoparticipation %}
 		<p>The essay answers have been removed after initial application processing.</p>
