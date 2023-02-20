@@ -66,7 +66,12 @@
 		{% endfor %}
 	</ul>
 	{% if application.barrierstoparticipation.content_warnings %}
-		<p>Content warnings: <b>{{ application.barrierstoparticipation.content_warnings }}</b></p>
+		<div class="card border-warning mb-3">
+			<div class="card-header text-white bg-warning">Content warning</div>
+			<div class="card-body">
+				<p class="card-text"><p>CW: <b>{{ application.barrierstoparticipation.content_warnings }}</b></p>
+			</div>
+		</div>
 	{% endif %}
 
 	{% for reviewer, comment in application.get_reviewer_comments %}
@@ -187,7 +192,12 @@
 	<h2>Essay Answers</h2>
 
 	{% if application.barrierstoparticipation.content_warnings %}
-		<p>Content warnings: <b>{{ application.barrierstoparticipation.content_warnings }}</b></p>
+		<div class="card border-warning mb-3">
+			<div class="card-header text-white bg-warning">Content warning</div>
+			<div class="card-body">
+				<p class="card-text"><p>CW: <b>{{ application.barrierstoparticipation.content_warnings }}</b></p>
+			</div>
+		</div>
 	{% endif %}
 	{% if not application.barrierstoparticipation %}
 		<p>The essay answers have been removed after initial application processing.</p>

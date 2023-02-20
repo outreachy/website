@@ -138,7 +138,12 @@
 
 	<h2>Essay Answers</h2>
 	{% if application.barrierstoparticipation.content_warnings %}
-		<p>Content warnings: <b>{{ application.barrierstoparticipation.content_warnings }}</b></p>
+		<div class="card border-warning mb-3">
+			<div class="card-header text-white bg-warning">Content warning</div>
+			<div class="card-body">
+				<p class="card-text"><p>CW: <b>{{ application.barrierstoparticipation.content_warnings }}</b></p>
+			</div>
+		</div>
 	{% endif %}
 
 
