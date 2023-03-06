@@ -150,7 +150,7 @@ class ProjectSubmissionTestCase(TestCase):
         response = self.client.get(reverse('eligibility-results'))
         self.assertNotContains(response, '<h1>Your initial application is under review</h1>', html=True)
         self.assertContains(response, '<h1>Initial application is not approved</h1>', html=True)
-        self.assertContains(response, '<p>Outreachy reviewed your essay answers. We found that your essays did not sufficiently explain why your application is aligned with Outreachy program goals.</p>', html=True)
+        self.assertContains(response, "<p>We're sorry, but your initial application was not accepted.</p>", html=True)
         self.assertEqual(response.status_code, 200)
 
     def test_initial_application_results_pending_after_contributions_open(self):

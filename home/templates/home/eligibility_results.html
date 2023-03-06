@@ -68,24 +68,21 @@ Outreachy eligibility results
 	<p>We're sorry, but your initial application was not accepted.
 	</p>
 
-	<p>Outreachy's goal is to support people who are from groups
-	underrepresented in the technology industry of their country, and who
-	face discrimination and systemic bias.</p>
-
-	<p>Outreachy reviewed your essay answers. We found that your essays did
-	not sufficiently explain why your application is aligned with Outreachy
-	program goals.</p>
-
 	<p>We encourage you to review the initial application essay tips in the
-	<a href="{% url 'docs-applicant' %}#essay-tips">Applicant Guide</a>.</p>
+	<a href="{% url 'docs-applicant' %}#essay-tips">Applicant Guide</a>
+	and apply to a future internship cohort.</p>
 
-	<p>If you want to apply to a future internship cohort, please
-	<a href='https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce'>subscribe to the Outreachy announcement mailing list</a>.
-	Subscribers will receive an email when the initial application period
-	opens for future internship cohorts.</p>
+	<p>
+	Outreachy receives thousands of initial applications each round.
+	We encourage you to apply early for a future round.
+	</p>
+
+	<p>
+	Please <a href='https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce'>subscribe to the Outreachy announcement mailing list</a>. Subscribers will receive an email when the initial application period opens for future internship cohorts.
+	</p>
 
 	<p>Outreachy internships run twice a year, May to August and December
-	to March. Applications for the May internship cohort open in February.
+	to March. Applications for the May internship cohort open in January.
 	Applications for the December internship cohort open in August.</p>
 
 	{% include 'home/snippet/initial_application.html' %}
@@ -114,7 +111,7 @@ Outreachy eligibility results
 
 	<p>Please <a href='https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce'>subscribe to the Outreachy announcement mailing list</a>. Subscribers will receive an email when the initial application period opens for future internship cohorts.
 	</p>
-	<p>Outreachy internships run twice a year, May to August and December to March. Applications for the May internship cohort open in February. Applications for the December internship cohort open in August.</p>
+	<p>Outreachy internships run twice a year, May to August and December to March. Applications for the May internship cohort open in January. Applications for the December internship cohort open in August.</p>
 
 	<h2>Your Time Commitments:</h2>
 
@@ -210,16 +207,23 @@ Outreachy eligibility results
 
 {% elif role.current_round.contributions_open.has_passed %}
 	<h1>Initial application is not approved</h1>
+	<p>We're sorry, but your initial application was not accepted.
+	</p>
+	
+	<p>We encourage you to review the initial application essay tips in the
+	<a href="{% url 'docs-applicant' %}#essay-tips">Applicant Guide</a>
+	and apply to a future internship cohort.</p>
+
 	<p>
-	We're sorry to say your initial application was not approved.
-	Outreachy receives over 1,000 initial applications each round.
+	Outreachy receives thousands of initial applications each round.
+	We encourage you to apply early for a future round.
 	</p>
 
-	<p>We encourage you to apply early for a future round.
+	<p>
 	Please <a href='https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce'>subscribe to the Outreachy announcement mailing list</a>. Subscribers will receive an email when the initial application period opens for future internship cohorts.
 	</p>
 
-	<p>Outreachy internships run twice a year, May to August and December to March. Applications for the May internship cohort open in February. Applications for the December internship cohort open in August.</p>
+	<p>Outreachy internships run twice a year, May to August and December to March. Applications for the May internship cohort open in January. Applications for the December internship cohort open in August.</p>
 
 	{% include 'home/snippet/initial_application.html' %}
 {% else %}
