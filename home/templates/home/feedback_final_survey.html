@@ -1,0 +1,61 @@
+{% extends "base.html" %} 
+{% load approval_status %}
+{% load compress %}
+{% load static %}
+
+{% block title %}
+Final Feedback Survey for {{ current_round.official_name }}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  .bar {
+    width: 25px;
+    height: 200px;
+    margin: 2px;
+    display: inline-block;
+    background-color: blue;
+  }
+</style>
+{% endblock %}
+{% block content %}
+{% if request.user.is_staff %}
+<h1>Mentor Survey Results</h1>
+<script type="text/javascript" src="https://d3js.org/d3.v7.min.js"></script>
+<div id="mentor-chart">
+{% comment %}
+This code was developed with the help of the FreeCodeCamp D3 tutorial
+https://www.freecodecamp.org/learn/data-visualization/data-visualization-with-d3/update-the-height-of-an-element-dynamically
+Licensed BSD 3-clause
+{% endcomment %}
+<script>
+	const svgWidth = 500
+	const svgHeight = 500
+	const padding = 60
+	var dataset = [6, 1, 1, 0, 2, 3, 8, 22, 40, 10, 6]
+
+	const svg = d3.select("#mentor-chart")
+		.append("svg")
+		.attr("width", svgWidth)
+		.attr("height", svgHeight)
+	{% comment %} Add one rectangle to the SVG for each datapoint {% endcomment %}
+	svg.selectAll("rect")
+		.data(dataset)
+		.enter()
+		.append("rect")
+		.attr("x", (d, i) => i*30)
+		.attr("y", (d) => svgHeight - padding - (d)*10)
+		.attr("width", 25)
+		.attr("height", (d) => (d)*10)
+
+	const xScale = d3.scaleLinear()
+		.domain([0, 10])
+		.range([0, 320]);
+	const xAxis = d3.axisBottom(xScale);
+	svg.append("g")
+		.attr("transform", "translate(0," + (svgHeight - padding) + ")")
+		.call(xAxis);
+</script>
+</div>
+{% endif %}
+{% endblock %}

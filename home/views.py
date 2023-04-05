@@ -3503,9 +3503,14 @@ def feedback_3_export_view(request, round_slug):
     dictionary_list = []
     for i in interns:
         try:
-            dictionary_list.append(export_feedback(i.feedback3frommentor))
+            # If intern has not been approved to be paid by the Outreachy organizers,
+            # and their mentor has marked them as needing to be paid,
+            # then put them in the batch to be exported
+            if not i.feedback3frommentor.organizer_payment_approved and i.feedback3frommentor.payment_approved:
+                dictionary_list.append(export_feedback(i.feedback3frommentor))
         except Feedback3FromMentor.DoesNotExist:
             continue
+    
     response = JsonResponse(dictionary_list, safe=False)
     response['Content-Disposition'] = 'attachment; filename="' + round_slug + '-midpoint-feedback.json"'
     return response
@@ -3751,6 +3756,17 @@ def feedback_4_summary(request, round_slug):
     current_round = get_object_or_404(RoundPage, slug=round_slug)
 
     return render(request, 'home/feedback4.html',
+            {
+            'current_round' : current_round,
+            },
+            )
+
+@login_required
+@staff_member_required
+def feedback_final_survey(request, round_slug):
+    current_round = get_object_or_404(RoundPage, slug=round_slug)
+
+    return render(request, 'home/feedback_final_survey.html',
             {
             'current_round' : current_round,
             },

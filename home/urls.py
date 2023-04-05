@@ -63,6 +63,7 @@ round_patterns = [
     url(r'^feedback-3-export/$', views.feedback_3_export_view, name='feedback-3-export'),
     url(r'^feedback-3-summary/$', views.feedback_3_summary, name='feedback-3-summary'),
     url(r'^feedback-4-summary/$', views.feedback_4_summary, name='final-feedback-summary'),
+    url(r'^feedback-final-survey/$', views.feedback_final_survey, name='feedback-final-survey'),
     url(r'^sponsor-info/$', views.sponsor_info, name='sponsor-info'),
     url(r'^sponsor-info-details/(?P<community_slug>[^/]+)/', views.sponsor_info_details, name='sponsor-info-details'),
     url(r'^review-interns/$', views.ReviewInterns.as_view(), name='review-interns'),
