@@ -83,6 +83,7 @@ urlpatterns = [
     url(r'^alums/$', views.alums_page, name='alums'),
     url(r'^alums/(?P<year>[1-9]\d*)-(?P<month>\d{2})/$', views.alums_page, name='cohort'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
+    url(r'^organizer-notes/(?P<comrade_pk>[^/]+)/$', views.OrganizerNotesUpdate.as_view(), name='organizer-notes'),
     # all pending applications
     url(r'^dashboard/pending-applications/$', views.applicant_review_summary, name='pending-applicants-summary', kwargs={'status': ApprovalStatus.PENDING, 'owner_username': 'all'}),
     url(r'^dashboard/strong-reviewed-applications/$', views.applicant_review_summary, name='strong-reviewed-applicants', kwargs={'review_status': 'reviewed', 'status': ApprovalStatus.PENDING, 'rating': InitialApplicationReview.STRONG }),

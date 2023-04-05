@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+{{ organizernotes.comrade.public_name }} - update Outreachy organizer notes
+{% endblock %}
+
+{% block content %}
+
+<h2>Update Outreachy organizer notes</h2>
+
+<div class="card border mb-3" id="intern-{{ organizernotes.comrade.account.pk }}">
+	<div class="card-body">
+		{% if organizernotes.comrade.photo %}
+			<img src="{{ organizernotes.comrade.photo.url }}" class="img-thumbnail float-left mr-3" alt="Photo of {{ organizernotes.comrade.public_name }}" height="200" width="200">
+		{% else %}
+			<img src='{% static 'outreachy-bot-200x200-avatar-1.png' %}' class="img-thumbnail float-left mr-3" height="200" width="200" alt="Default avatar for {{ organizernotes.comrade.public_name }}">
+		{% endif %}
+		<p><b>{{organizernotes.comrade.public_name }}</b></p>
+			<BR>Public name: {{ organizernotes.comrade.public_name }}
+			<BR>Legal name: {{ organizernotes.comrade.legal_name }}
+			<BR>Email: {{ organizernotes.comrade.account.email }}
+			<BR>Pronouns: {{ organizernotes.comrade.get_pronouns_html|safe }}<BR>
+			{% if organizernotes.comrade.location %}
+				<BR>Location: {{ organizernotes.comrade.location }}<BR>
+				Guessed city and country: {% with loc=organizernotes.comrade.get_city_country %}{{ loc.0 }}, {{ loc.1 }}{% endwith %}<BR>
+			{% else %}
+				<BR>Location: <span class="badge badge-pill badge-warning">unknown</span><BR>
+			{% endif %}
+			{% if organizernotes.comrade.timezone %}
+				Timezone: {{ organizernotes.comrade.timezone }}<BR><BR>
+			{% else %}
+				Timezone: <span class="badge badge-pill badge-warning">unknown</span><BR><BR>
+			{% endif %}
+			<div class="container">
+				{% if organizernotes.comrade.blog_url %}
+					<a href="{{ organizernotes.comrade.blog_url }}"><img src="{% static 'link-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="Blog"></a>
+				{% else %}
+					<img src="{% static 'link-grayed-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="no URL provided">
+				{% endif %}
+				{% if organizernotes.comrade.twitter_url %}
+					<a href="{{ organizernotes.comrade.twitter_url }}"><img src="{% static 'Twitter/Twitter_Social_Icon_Circle_Color-32px.png' %}" class="mx-1" alt="Twitter"></a>
+				{% else %}
+					<img src="{% static 'link-grayed-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="no URL provided">
+				{% endif %}
+				{% if organizernotes.comrade.mastodon_url %}
+					<a href="{{ organizernotes.comrade.mastodon_url }}"><img src="{% static 'Mastodon/logo-purple.png' %}" class="mx-1" alt="Mastodon"></a>
+				{% else %}
+					<img src="{% static 'link-grayed-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="no URL provided">
+				{% endif %}
+				{% if organizernotes.comrade.github_url %}
+					<a href="{{ organizernotes.comrade.github_url }}"><img src="{% static 'GitHub/PNG/GitHub-Mark-32px.png' %}" class="mx-1" alt="GitHub"></a>
+				{% else %}
+					<img src="{% static 'link-grayed-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="no URL provided">
+				{% endif %}
+				{% if organizernotes.comrade.gitlab_url %}
+					<a href="{{ organizernotes.comrade.gitlab_url }}"><img src="{% static 'GitLab/gitlab-logo-square-32px.png' %}" class="mx-1" alt="GitLab"></a>
+				{% else %}
+					<img src="{% static 'link-grayed-davivonsa-pathrpol-cc-by-3.0-32px.png' %}" class="mx-1" alt="no URL provided">
+				{% endif %}
+			</div>
+			{% if organizernotes.comrade.nick %}
+				<BR>IRC/Chat/Forum username: {{ organizernotes.comrade.nick }}<BR>
+			{% else %}
+				<BR>IRC/Chat/Forum username: <span class="badge badge-pill badge-warning">unknown</span><BR>
+			{% endif %}
+			{% if organizernotes.comrade.twitter_url %}
+				Twitter: {{ organizernotes.comrade.twitter_url }}<BR>
+			{% else %}
+				Twitter: <span class="badge badge-pill badge-warning">unknown</span><BR>
+			{% endif %}
+			{% if organizernotes.comrade.github_url %}
+				GitHub: {{ organizernotes.comrade.github_url }}<BR>
+			{% else %}
+				GitHub: <span class="badge badge-pill badge-warning">unknown</span><BR>
+			{% endif %}
+			{% if organizernotes.comrade.gitlab_url %}
+				GitLab: {{ organizernotes.comrade.gitlab_url }}<BR>
+			{% else %}
+				GitLab: <span class="badge badge-pill badge-warning">unknown</span><BR>
+			{% endif %}
+			{% if organizernotes.comrade.blog_url %}
+				Blog: {{ organizernotes.comrade.blog_url }}<BR>
+			{% else %}
+				Blog: <span class="badge badge-pill badge-warning">unknown</span><BR>
+			{% endif %}
+	</div>
+</div>
+
+<h3>Suggested emojis for status</h3>
+<p><b>General status</b></p>
+<ul>
+	<li>🚨 urgent issue</li>
+	<li>⚠️  warning sign</li>
+	<li>🕶️ concerning behavior</li>
+	<li>📩 sent mail about issue - please include date email was sent</li>
+	<li>✔️ Issue resolved</li>
+</ul>
+<p><b>Intern selection checking</b></p>
+<ul>
+	<li>⏲️ time commitment issue</li>
+	<li>👀 missing information</li>
+	<li>📝 read final application</li>
+	<li>👍 checked links provided by applicant</li>
+	<li>✅ passed intern selection checks</li>
+</ul>
+<p><b>Internship status</b></p>
+<ul>
+	<li>⏲️ Time commitment issue</li>
+	<li>📚 Time commitment issues related to school</li>
+	<li>🗣️ Communication issues</li>
+	<li>🔓 Mentor and intern don't communicate privately</li>
+	<li>😶 Intern is not reaching out when stuck</li>
+	<li>🐢 Mentor is slow to respond</li>
+	<li>👻 Mentor is not present</li>
+	<li>🙅🏾 Mentor miscommunicated Outreachy policies</li>
+	<li>🌉 Intern needs more support (e.g. no mentor that can help with learning project skills)</li>
+	<li>🥉 Quality issues (contribution-wise)</li>
+	<li>✍️ Blog issues (no blog, not enough posts)</li>
+	<li>🕐 Intern is working overtime</li>
+	<li>⏳ Intern reports not working full-time</li>
+	<li>🥀 Intern is facing personal issues (health issues, death in the family)</li>
+	<li>💡 Intern is facing issues with stable electricity or internet</li>
+</ul>
+
+<form method="post" action="">
+	{% csrf_token %}
+	{{ form.media }}
+	{{ form.non_field_errors }}
+	{% include "bootstrap_card_form.html" with form=form only %}
+<input type="submit" class="btn btn-block btn-primary" value="Save notes" />
+</form>
+
+{% endblock %}

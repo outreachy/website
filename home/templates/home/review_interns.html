@@ -10,10 +10,12 @@ Review interns for {{ current_round.official_name }}
 <h2>Intern Summary</h2>
 
 <table class="table table-striped table-bordered">
+	<th scope="col">Status</th>
 	<th scope="col">Community</th>
 	<th scope="col">Intern</th>
 	{% for intern in intern_selections %}
 		<tr>
+			<td>{{ intern.applicant.applicant.organizer_notes.status }}</td>
 			<td>{{ intern.project.project_round.community.name }}</td>
 			<td><a href="#intern-{{ intern.applicant.applicant.account.pk }}">{{ intern.applicant.applicant.public_name }}</a></td>
 		</tr>
@@ -46,7 +48,20 @@ Review interns for {{ current_round.official_name }}
 			<BR><a href="{{ i.project.get_applicants_url }}#{{ i.applicant.applicant.pk }}">Final application</a><br>
 			{% if not i.organizer_approved %}
 				<BR><span class="badge badge-pill badge-info">Not approved</span> - Outreachy organizers have not approved this intern selection
-			{% elif not i.in_good_standing %}
+			{% endif %}
+			<div class="card border mt-3">
+				{% if i.applicant.applicant.organizer_notes %}
+				<div class="card-header">{{ i.applicant.applicant.organizer_notes.status }}</div>
+				{% else %}
+				{% endif %}
+				<div class="card-body">
+					<div class="card-text">
+						{{ i.applicant.applicant.organizer_notes.notes|safe }}
+						<p><a href="{% url 'organizer-notes' comrade_pk=i.applicant.applicant.pk %}?next={{ request.path|urlencode }}#intern-{{ intern.account.pk }}"><button type="button" class="btn btn-info">Edit notes</button></a></p>
+					</div>
+				</div>
+			</div>
+			{% if i.organizer_approved and not i.in_good_standing %}
 				<BR><span class="badge badge-pill badge-warning">Internship terminated</span>
 			{% elif not i.intern_has_custom_dates %}
 				<BR>Standard internship dates

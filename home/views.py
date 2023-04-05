@@ -82,6 +82,7 @@ from .models import MentorRelationship
 from .models import NewCommunity
 from .models import NonCollegeSchoolTimeCommitment
 from .models import Notification
+from .models import OrganizerNotes
 from .models import Participation
 from .models import PaymentEligibility
 from .models import PriorFOSSExperience
@@ -178,6 +179,28 @@ class ActivationView(activation_views.ActivationView):
 
 class ActivationCompleteView(TemplateView):
     template_name = 'django_registration/activation_complete.html'
+
+class OrganizerNotesUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
+    model = OrganizerNotes
+    fields = ['status', 'notes',]
+
+    def get_object(self):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("Only Outreachy organizers can edit notes.")
+
+        # If the comrade already has associated notes, fetch the notes object.
+        # Otherwise create a new OrganizerNotes object.
+        comrade = get_object_or_404(Comrade, pk=self.kwargs['comrade_pk'])
+        if not comrade.organizer_notes:
+            return OrganizerNotes(comrade=comrade)
+
+        return comrade.organizer_notes
+
+    def get_success_url(self):
+        comrade = get_object_or_404(Comrade, pk=self.kwargs['comrade_pk'])
+        comrade.organizer_notes = self.object
+        comrade.save()
+        return self.request.GET.get('next', reverse('dashboard'))
 
 # FIXME - we need a way for comrades to update and re-verify their email address.
 class ComradeUpdate(LoginRequiredMixin, UpdateView):
