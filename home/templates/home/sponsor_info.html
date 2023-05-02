@@ -34,12 +34,28 @@ Sponsor info for {{ current_round.official_name }}
 {% if request.user.is_staff %}
 	<h2>Sponsor Summary</h2>
 
+	<p><b>Emoji status:</b></p>
+	<ul>
+		<li>✅ invoice request sent to Conservancy</li>
+		<li>🤝🏽 logo placed on Outreachy website</li>
+		<li>📩 Outreachy team sent mail about issue - please include date email was sent</li>
+		<li>🏦 invoicing details needed</li>
+		<li>🪧 logo needed</li>
+		<li>🤷🏾 uncommitted sponsorship</li>
+		<li>🚨 urgent issue</li>
+	</ul>
 	<table class="table table-striped table-bordered">
+		<th scope="col">Edit</th>
+		<th scope="col">Status</th>
+		<th scope="col">RT #</th>
 		<th scope="col">Sponsor</th>
 		<th scope="col">Amount</th>
 		<th scope="col">Community</th>
 		{% for s in sponsors_alpha %}
 		{% if s.funding_secured %}<tr>{% else %}<tr class="table-warning">{% endif %}
+				<td><a href=""><button type="button" class="btn btn-primary">✏️ Edit</button></a></td>
+				<td></td>
+				<td></td>
 				<td>{{ s.name }}</td>
 				<td>{{ s.amount }}</td>
 				{% if s.participation.approval_status == s.participation.APPROVED %}
