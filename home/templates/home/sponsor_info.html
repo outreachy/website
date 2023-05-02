@@ -6,6 +6,31 @@ Sponsor info for {{ current_round.official_name }}
 {% endblock %}
 
 {% block content %}
+
+<h1>Sponsorship information</h1>
+
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="col">
+			{% if previous_round %}
+			<a href="{% url 'sponsor-info' round_slug=previous_round.slug %}"><button type="button" class="btn btn-primary">« previous cohort</button></a>
+			{% else %}
+				<button type="button" class="btn btn-secondary">« previous cohort</button>
+			{% endif %}
+		</div>
+		<div class="col">
+			{{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }}
+		</div>
+		<div class="col">
+			{% if next_round %}
+				<a href="{% url 'sponsor-info' round_slug=next_round.slug %}"><button type="button" class="btn btn-primary">next cohort »</button></a>
+			{% else %}
+				<button type="button" class="btn btn-secondary">next cohort »</button>
+			{% endif %}
+		</div>
+	</div>
+</div>
+
 {% if request.user.is_staff %}
 	<h2>Sponsor Summary</h2>
 

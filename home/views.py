@@ -3790,6 +3790,18 @@ def sponsor_info(request, round_slug):
     """
     current_round = get_object_or_404(RoundPage, slug=round_slug)
 
+    previous_rounds = RoundPage.objects.filter(internstarts__lt=current_round.internstarts).order_by('-internstarts')
+    if previous_rounds:
+        previous_round = previous_rounds[0]
+    else:
+        previous_round = None
+
+    next_rounds = RoundPage.objects.filter(internstarts__gt=current_round.internstarts).order_by('internstarts')
+    if next_rounds:
+        next_round = next_rounds[0]
+    else:
+        next_round = None
+
     # Before new communities are approved,
     # it's helpful to know who is requesting Outreachy general funding.
     # Therefore, include both approved and pending communities.
@@ -3815,6 +3827,8 @@ def sponsor_info(request, round_slug):
     return render(request, 'home/sponsor_info.html',
             {
             'current_round' : current_round,
+            'previous_round' : previous_round,
+            'next_round' : next_round,
             'community_sponsors' : community_sponsors,
             'sponsors_alpha' : sponsors_alpha,
             },
