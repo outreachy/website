@@ -54,10 +54,16 @@ Sponsor info for {{ current_round.official_name }}
 		<th scope="col">Community</th>
 		{% for s in sponsors_alpha %}
 		{% if s.funding_secured %}<tr>{% else %}<tr class="table-warning">{% endif %}
-				<td><a href=""><button type="button" class="btn btn-primary">✏️ Edit</button></a></td>
-				<td></td>
-				<td></td>
-				<td>{{ s.name }}</td>
+				<td><a href="{% url 'edit-sponsorship' pk=s.pk %}?next={{ request.path|urlencode }}"><button type="button" class="btn btn-primary">✏️ Edit</button></a></td>
+				<td>{{ s.status }}</td>
+				<td>{% if s.ticket_number %}<a href='https://tix.sfconservancy.org/rt/Ticket/Display.html?id={{ s.ticket_number }}'</a>{{ s.ticket_number }}</a>{% endif %}</td>
+				<td>
+					<p>{{ s.name }}</p>
+					{% if s.organizer_notes %}
+					<p><b>Notes:</b></p>
+					{{ s.organizer_notes|safe }}
+					{% endif %}
+				</td>
 				<td>{{ s.amount }}</td>
 				{% if s.participation.approval_status == s.participation.APPROVED %}
 					<td><a href="#{{ s.participation.community.slug }}">{{ s.participation.community }}</a></td>

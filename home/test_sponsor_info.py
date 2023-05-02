@@ -93,11 +93,11 @@ class SponsorInfoTestCase(TestCase):
 
         response = self.client.get(reverse('sponsor-info', kwargs={'round_slug': current_round.slug}))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, '<td>Sponsor A</td>', html=True)
-        self.assertContains(response, '<td>Sponsor B</td>', html=True)
-        self.assertContains(response, '<td>Sponsor C</td>', html=True)
-        self.assertContains(response, '<h3>{}</h3>'.format(sponsorship_a.participation.community.name), html=True)
-        self.assertContains(response, '<h3>{}</h3>'.format(sponsorship_b.participation.community.name), html=True)
+        self.assertContains(response, '<p>Sponsor A</p>', html=True)
+        self.assertContains(response, '<p>Sponsor B</p>', html=True)
+        self.assertContains(response, '<p>Sponsor C</p>', html=True)
+        self.assertContains(response, '<h3 id="{}">{}</h3>'.format(sponsorship_a.participation.community.slug, sponsorship_a.participation.community.name), html=True)
+        self.assertContains(response, '<h3 id="{}">{}</h3>'.format(sponsorship_b.participation.community.slug, sponsorship_b.participation.community.name), html=True)
 
     def test_old_sponsor_info_correct_after_sponsorship_increase(self):
         """
@@ -172,12 +172,12 @@ class SponsorInfoTestCase(TestCase):
 
         response = self.client.get(reverse('sponsor-info', kwargs={'round_slug': last_cohort.slug}))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, '<td>Sponsor A</td>', html=True)
-        self.assertContains(response, '<h3>{}</h3>'.format(sponsorship_a.participation.community.name), html=True)
+        self.assertContains(response, '<p>Sponsor A</p>', html=True)
+        self.assertContains(response, '<h3 id="{}">{}</h3>'.format(sponsorship_a.participation.community.slug, sponsorship_a.participation.community.name), html=True)
         self.assertContains(response, '$15,000 total funding needed for 3 approved interns.', html=False)
 
         response = self.client.get(reverse('sponsor-info', kwargs={'round_slug': current_cohort.slug}))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, '<td>Sponsor B</td>', html=True)
-        self.assertContains(response, '<h3>{}</h3>'.format(sponsorship_b.participation.community.name), html=True)
+        self.assertContains(response, '<p>Sponsor B</p>', html=True)
+        self.assertContains(response, '<h3 id="{}">{}</h3>'.format(sponsorship_b.participation.community.slug, sponsorship_b.participation.community.name), html=True)
         self.assertContains(response, '$20,000 total funding needed for 2 approved interns.', html=False)

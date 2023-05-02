@@ -144,6 +144,7 @@ urlpatterns = [
     url(r'^informal-chat-contacts/$', views.InformalChatContacts.as_view(), name='informal-chat-contacts'),
     url(r'^sponsor/donate/$', views.donate, name='donate'),
     url(r'^sponsor/$', views.sponsor, name='sponsor'),
+    url(r'^edit-sponsorship/(?P<pk>[^/]+)/$', views.SponsorshipUpdate.as_view(), name='edit-sponsorship'),
     url(r'^opportunities/$', views.opportunities, name='opportunities'),
     url(r'^blog/(?P<round_slug>[^/]+)/application-period-statistics/$', views.round_statistics, name='blog-application-period-statistics'),
     url(r'^blog/2019-07-23/outreachy-schedule-changes/$', views.blog_schedule_changes, name='blog-schedule-changes'),

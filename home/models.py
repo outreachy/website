@@ -1745,6 +1745,11 @@ class Sponsorship(models.Model):
             this sponsorship.
             """)
 
+    # Fields for internal Outreachy organizer notes about this sponsorship
+    status = models.CharField(max_length=50, blank=True)
+    ticket_number = models.CharField(max_length=50, blank=True)
+    organizer_notes = CKEditorField(blank=True, help_text='Private Outreachy organizer notes, shared with Software Freedom Conservancy, and not community coordinators')
+
     def number_interns(self):
         return self.amount / self.participation.participating_round.sponsorship_per_intern
 

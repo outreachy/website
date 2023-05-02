@@ -1315,6 +1315,30 @@ class GeneralFundingApplication(LoginRequiredMixin, UpdateView):
                 })
         return self.object.get_preview_url()
 
+class SponsorshipUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
+    model = Sponsorship
+    fields = [
+            'status',
+            'ticket_number',
+            'name',
+            'amount',
+            'funding_secured',
+            'funding_decision_date',
+            'coordinator_can_update',
+            'additional_information',
+            ]
+
+    def get_object(self):
+        if not self.request.user.is_staff:
+            raise PermissionDenied("Only Outreachy organizers can edit notes.")
+
+        sponsorship = get_object_or_404(Sponsorship, pk=self.kwargs['pk'])
+
+        return sponsorship
+
+    def get_success_url(self):
+        return self.request.GET.get('next', reverse('dashboard'))
+
 class SponsorshipInlineFormSet(BaseInlineFormSet):
     def get_queryset(self):
         qs = super(SponsorshipInlineFormSet, self).get_queryset()

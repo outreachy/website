@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+{{ organizernotes.comrade.public_name }} - update Outreachy organizer notes
+{% endblock %}
+
+{% block content %}
+
+<h2>Update Sponsorship Information</h2>
+
+<p><a href="https://tix.sfconservancy.org/rt/Search/Results.html?Format=%27%3Cb%3E%3Ca%20href%3D%22__WebPath__%2FTicket%2FDisplay.html%3Fid%3D__id__%22%3E__id__%3C%2Fa%3E%3C%2Fb%3E%2FTITLE%3A%23%27%2C%0A%27%3Cb%3E%3Ca%20href%3D%22__WebPath__%2FTicket%2FDisplay.html%3Fid%3D__id__%22%3E__Subject__%3C%2Fa%3E%3C%2Fb%3E%2FTITLE%3ASubject%27%2C%0A-Status%2C%0AQueueName%2C%0AOwner%2C%0APriority%2C%0A%27__NEWLINE__%27%2C%0A%27__NBSP__%27%2C%0A%27%3Csmall%3E__Requestors__%3C%2Fsmall%3E%27%2C%0A%27%3Csmall%3E__CreatedRelative__%3C%2Fsmall%3E%27%2C%0A%27%3Csmall%3E__ToldRelative__%3C%2Fsmall%3E%27%2C%0A%27%3Csmall%3E__LastUpdatedRelative__%3C%2Fsmall%3E%27%2C%0A%27%3Csmall%3E__TimeLeft__%3C%2Fsmall%3E%27&Order=DESC&OrderBy=Created&Page=1&Query=Queue%20%3D%20%27accounts-receivable%27%20AND%20CF.%7Bproject%7D%20LIKE%20%27Outreachy%27&Rows=50&SavedChartSearchId=new&SavedSearchId=RT%3A%3AUser-60354-SavedSearch-3027" target="_blank">Open Outreachy RT invoice queue ↗️</a></p>
+<p><b>Emoji status:</b></p>
+<ul>
+	<li>✅ invoice request sent to Conservancy</li>
+	<li>🤝🏽 logo placed on Outreachy website</li>
+	<li>📩 Outreachy team sent mail about issue - please include date email was sent</li>
+	<li>🏦 invoicing details needed</li>
+	<li>🪧 logo needed</li>
+	<li>🤷🏾 uncommitted sponsorship</li>
+	<li>🚨 urgent issue</li>
+</ul>
+
+<div class='my-5'>
+	<p><b>Currently editing sponsorship for</b></p>
+	<table class="table table-striped table-bordered">
+		<th scope="col">Sponsor</th>
+		<th scope="col">Community</th>
+		<th scope="col">Cohort</th>
+		<tr>
+			<td>{{ sponsorship.name }}</td>
+			<td>{{ sponsorship.participation.community }}</td>
+			<td>{{ sponsorship.participation.participating_round.official_name }}</td>
+		</tr>
+	</table>
+</div>
+
+<form method="post" action="">
+	{% csrf_token %}
+	{{ form.media }}
+	{{ form.non_field_errors }}
+	{% include "bootstrap_card_form.html" with form=form only %}
+<input type="submit" class="btn btn-block btn-primary" value="Save notes" />
+</form>
+
+{% endblock %}
