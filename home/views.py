@@ -1326,6 +1326,7 @@ class SponsorshipUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
             'funding_decision_date',
             'coordinator_can_update',
             'additional_information',
+            'organizer_notes',
             ]
 
     def get_object(self):
