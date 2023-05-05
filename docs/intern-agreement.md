@@ -2,7 +2,7 @@
 
 **Internship Terms of Participation**
 
-_last edited - August 9, 2022_
+_last edited - May 5, 2023_
 
 **Dear Participant:**
 
@@ -86,14 +86,14 @@ will make best efforts to send out payments quickly after internship progress
 confirmations. Payments may be issued earlier than scheduled deadlines below,
 but interns should not rely on earlier payments.
 
- * $3,000 will be sent to you by or around January 20, 2023 if Outreachy
-   organizers confirm to Conservancy by December 12, 2022 that you are in good
+ * $3,000 will be sent to you by or around July 10, 2023 if Outreachy
+   organizers confirm to Conservancy by June 5, 2023 that you are in good
    standing. If Conservancy receives such confirmation late, your payment will
    be delayed. If such confirmation is not received, you will not receive
    payment.
 
- * $4,000 will be sent to you by or around March 3, 2023 if Outreachy organizers
-   confirm to Conservancy by January 31, 2023 that you are in good standing. If
+ * $4,000 will be sent to you by or around August 25, 2023 if Outreachy organizers
+   confirm to Conservancy by July 24, 2023 that you are in good standing. If
    Conservancy receives such confirmation late, your payment will be delayed. If
    such confirmation is not received, you will not receive payment.
 
@@ -157,7 +157,7 @@ and are not currently residing in one of these countries;
 (c) you are not a person or entity restricted by US export controls or
 sanctions programs;
 
-(d) you are or will be 18 years of age or older by December 5, 2022;
+(d) you are or will be 18 years of age or older by May 29, 2023;
 
 (e) (i) the contents of your Application and information you submitted for your
 Initial Application, including your stated availability and time commitment to
@@ -198,13 +198,13 @@ which furthers Conservancy’s charitable purposes.
 
 **Termination.**
 
-The internship will take place between December 5, 2022 and March 3, 2023. In
+The internship will take place between May 29, 2023 and August 25, 2023. In
 exceptional situations, your internship can be extended for up to five weeks,
 provided that both you and your Volunteer Mentor send a written request for an
 extension specifying a new end date to the Outreachy organizers, operating under
 Conservancy's auspices, and that the Outreachy organizers provide written
 approval. Notwithstanding the foregoing, all of Conservancy’s obligations to you
-will terminate with the **earlier** of issuance of the third and final stipend
+will terminate with the **earlier** of issuance of the second and final stipend
 payment -or- Conservancy receiving confirmation from your Volunteer Mentor that
 you have completed your internship, but have failed to perform at a satisfactory
 level.
