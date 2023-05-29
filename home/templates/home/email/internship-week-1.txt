@@ -67,7 +67,7 @@ If you have any questions, please ask us! You can get help by:
  - Talking to your mentor
  - Talking to your community coordinator
  - Asking questions on the Zulip chat #internship procedures or #help stream
- - Direct messaging Outreachy organizers Sage Sharp or Anna e só
+ - Direct messaging Outreachy organizers Anna e só, Omotola Omotayo, or Sage Sharp
  - Emailing organizers@outreachy.org
 
 Let us know what your questions are!
