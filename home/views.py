@@ -1354,7 +1354,7 @@ class SponsorshipInlineFormSet(BaseInlineFormSet):
 class ParticipationAction(ApprovalStatusAction):
     form_class = inlineformset_factory(Participation, Sponsorship,
             formset=SponsorshipInlineFormSet,
-            fields='__all__', exclude=['coordinator_can_update'])
+            fields='__all__', exclude=['coordinator_can_update', 'status', 'ticket_number', 'organizer_notes'])
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     def get_object(self):
