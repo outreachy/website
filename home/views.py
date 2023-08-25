@@ -2984,7 +2984,7 @@ def blog_2023_08_01_cfp_open(request):
     try:
         current_round = RoundPage.objects.get(
             internstarts__gte='2023-12-01',
-            internends__lte='2023-04-01',
+            internends__lte='2024-04-01',
         )
     except RoundPage.DoesNotExist:
         current_round = None
