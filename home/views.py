@@ -3004,6 +3004,9 @@ def blog_2023_08_08_initial_applications_open(request):
         'current_round': current_round,
         })
 
+def blog_2023_08_24_tilda(request):
+    return render(request, 'home/blog/2023-08-24-announcing-tilda-a-new-Outreachy-organizer.html')
+
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(Feedback1FromMentor,
             fields=(
