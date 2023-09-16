@@ -257,14 +257,15 @@ class InitialApplicationPrivacyTestCase(TestCase):
 
                 if approval_status == models.ApprovalStatus.APPROVED:
                     response = self.client.post(applicant_approval.get_approve_url())
-                    # Reload the object from the database after the invoked view modifies the database
-                    applicant_approval = models.ApplicantApproval.objects.get(pk=applicant_approval.pk)
-
-                    # Manually collect statistics and purge essay
-                    applicant_approval.collect_statistics()
-                    applicant_approval.purge_sensitive_data()
                 elif approval_status == models.ApprovalStatus.REJECTED:
                     response = self.client.post(applicant_approval.get_reject_url())
+
+                # Reload the object from the database after the invoked view modifies the database
+                applicant_approval = models.ApplicantApproval.objects.get(pk=applicant_approval.pk)
+
+                # Manually collect statistics and purge essay
+                applicant_approval.collect_statistics()
+                applicant_approval.purge_sensitive_data()
 
                 self.assertRedirects(response, applicant_approval.get_preview_url())
 

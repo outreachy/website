@@ -4072,17 +4072,8 @@ class ApplicantApprovalUpdate(ApprovalStatusAction):
                 application_round=current_round)
 
     def get_success_url(self):
-        # If the ApplicantApproval was just rejected
-        # collect aggregate anonymized statistics and delete:
-        # - essay answers
-        # - gender identity data
-        # - race and ethnicity demographics
-        if self.object.approval_status == ApprovalStatus.REJECTED:
-            self.object.collect_statistics()
-            self.object.purge_sensitive_data()
-
         # Outreachy organizers will manually collect statistics
-        # and purge essays of approved applications
+        # and purge application essays and sensitive information
 
         return self.object.get_preview_url()
 
