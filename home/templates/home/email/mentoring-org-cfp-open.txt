@@ -1,18 +1,22 @@
-[DRAFT] {{ community.name }} in Outreachy {{ current_round.internstarts|date:"F Y" }} cohort?
+{{ community.name }} in Outreachy {{ current_round.internstarts|date:"F Y" }} cohort?
 
 To: {% for email in coordinators %}{{ email }}, {% endfor %}
 
-{{ current_round.lateorgs }} is the deadline for Outreachy mentoring organizations to sign up to participate. Do you think {{ community.name }} will be able to participate in the {{ current_round.internstarts|date:"F Y" }} cohort?
+Hi folks,
+
+Do you think {{ community.name }} will be able to participate as a mentoring community in the Outreachy {{ current_round.internstarts|date:"F Y" }} internship cohort?
+
+{{ current_round.lateorgs }} at 4pm UTC is the deadline for communities to sign up to participate.
 
 If you have mentoring capacity, please sign up here:
 
-{{ request.scheme }}://{{ request.get_host }}{% url 'community-read-only' community_slug=community.slug %}
+https://www.outreachy.org{% url 'community-read-only' community_slug=community.slug %}
 
-Please note that the project submission deadline is {{ current_round.project_soft_deadline }} at 4pm UTC.
+Please note that mentors need to submit their projects before {{ current_round.project_soft_deadline }} at 4pm UTC.
 
-We also have some live-streamed mentor chats coming up on January 24 and February 6.
+We also have a live-streamed Outreachy mentor Q&A coming up on Tuesday, August 22 at 4pm UTC. If you know of any mentors who would like to participate in the mentor Q&A, please let us know!
 
-Please encourage potential mentors to attend our live chats. The chats will be especially helpful for people who are interested in becoming an Outreachy mentor for the first time. See details below.
+Please encourage potential mentors to attend our live-streamed mentor Q&A. The live chat will be especially helpful for people who are interested in becoming an Outreachy mentor for the first time. See details below.
 
 
 Intern funding
@@ -32,16 +36,13 @@ Do you think any of these sponsors will be able to commit to funding {{ current_
 Mentor chats
 ---
 
-Outreachy is hosting a series of live-streamed mentor chats to inspire Outreachy mentors.
+Outreachy is hosting a live-streamed Q&A chat to inspire people to become Outreachy mentors.
 
 The live-streamed mentor chats will include a panel of experienced mentors and mentors who participated in Outreachy for the first time last cohort. We'll discuss what it's like to be an Outreachy mentor, and provide tips for new mentors.
 
-Mentor chat dates:
+Live-streamed Q&A date: August 22 at 4pm UTC
 
- - Jan. 24, 2023 at 3pm UTC
- - Feb. 6, 2023 at 3pm UTC
-
-The mentor chats will be live-streamed on both YouTube and PeerTube:
+The Q&A will be live-streamed on YouTube and the video will be uploaded to PeerTube the following day:
 
 YouTube: https://www.youtube.com/@outreachyinternships
 PeerTube: https://diode.zone/a/outreachy/video-channels
