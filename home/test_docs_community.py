@@ -21,7 +21,7 @@ class CommunityDocsTestCase(TestCase):
         
         response = self.client.get(reverse('docs-community'))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, '<p>All communities must find finding for at least one intern ($5,000 USD):</p>', html=True)
+        self.assertContains(response, '<p>All communities must find funding for at least one intern ($5,000 USD):</p>', html=True)
         self.assertContains(response, '<p><b>Other communities</b> must secure their own funding for at least one intern ($5,000 USD). After that external funding is secured, they can apply for additional interns to be funded by the Outreachy general fund.</p>', html=True)
         self.assertContains(response, '<p>The sponsorship for each Outreachy intern is $5,000 USD.</p>', html=True)
 
@@ -30,7 +30,7 @@ class CommunityDocsTestCase(TestCase):
 
         response = self.client.get(reverse('docs-community'))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, '<p>All communities must find finding for at least one intern ($10,000 USD):</p>', html=True)
+        self.assertContains(response, '<p>All communities must find funding for at least one intern ($10,000 USD):</p>', html=True)
         self.assertContains(response, '<p><b>Other communities</b> must secure their own funding for at least one intern ($10,000 USD). After that external funding is secured, they can apply for additional interns to be funded by the Outreachy general fund.</p>', html=True)
         self.assertContains(response, '<p>The sponsorship for each Outreachy intern is $10,000 USD.</p>', html=True)
 
