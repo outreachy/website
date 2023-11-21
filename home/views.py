@@ -2147,7 +2147,7 @@ class ActiveTrustedVolunteersListView(UserPassesTestMixin, ListView):
         # For all interns with active internships, who are approved by Outreachy organizers,
         interns = InternSelection.objects.filter(
                 organizer_approved=True,
-                intern_starts__lte=today,
+                project__project_round__participating_round__internannounce__lte=today,
                 intern_ends__gte=today)
 
         # Find all mentors who signed up to mentor this intern,
