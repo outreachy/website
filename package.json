@@ -1,6 +1,10 @@
 {
   "name": "www.outreachy.org",
   "version": "0.0.1",
+  "engines": {
+	  "node": "12.x",
+	  "npm": "7.x"
+  },
   "repository": "https://github.com/outreachy/website",
   "license": "GPL-3.0",
   "dependencies": {
