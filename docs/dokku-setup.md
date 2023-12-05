@@ -378,6 +378,148 @@ Sometimes after you do a server update, dokku is not serving the website. You ca
 ssh -t dokku@outreachy.org ps:restart www
 ```
 
+# Stopping dokku containers
+
+Very rarely, it makes sense to stop dokku containers completely. This is usually because you want to debug one container's behavior alone (e.g. stopping the test website dokku containers).
+
+```
+ssh -t dokku@outreachy.org ps:stop test
+```
+
+Then run `docker ps` to make sure dokku was actually able to shutdown the containers. If the Outreachy web server is out of memory, it may not be able to. In that case, you should restart the server and quickly shut down the dokku containers. You may have to research how to turn off the automatic restart of docker containers (there's an option to dokku for that).
+
+# Debugging memory issues
+
+Commands to explore what's happening:
+
+See how much memory is free:
+```
+free -h
+```
+
+To see which processes are taking the most memory, run this command, hit F6, and use the arrow keys to select sort by memory usage, and hit enter:
+```
+htop
+```
+
+You may want to see if lowering the number of gunicorn processes (the python server HTTP) helps (but don't forget to set it back to 16 after you're done debugging!):
+
+```
+dokku config:set test WEB_CONCURRENCY=2
+dokku config:set www WEB_CONCURRENCY=4
+```
+
+If lowering the concurrency still doesn't help, move onto the debugging dokku and docker section to see if there are old unused docker containers taking up memory.
+
+# Debugging dokku and docker
+
+Dokku manages docker containers.
+
+To see which docker containers are currently running, run this on the server:
+
+```
+docker ps
+```
+
+There should be 4 docker containers running. Two will be for each of the postgres containers for both the www and test databases. Two will be for the test and www webserver containers. Example output:
+
+```
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+ID                  IMAGE ID            "/start web"             27 hours ago        Up 9 minutes                            test.web.1
+ID                  dokku/www:latest    "/start web"             13 days ago         Up 9 minutes                            www.web.1
+ID                  postgres:9.6.1      "/docker-entrypoint.…"   6 months ago        Up 9 minutes        5432/tcp            dokku.postgres.test-database-updated-DATE
+ID                  postgres:9.6.1      "/docker-entrypoint.…"   6 years ago         Up 9 minutes        5432/tcp            dokku.postgres.www-database
+```
+
+The first row is the container ID of the docker container.
+
+You can see what containers dokku expects to be running with this command:
+
+```
+# dokku ps:report
+=====> test ps information
+       Deployed:                      true
+       Processes:                     1
+       Ps can scale:                  true
+       Ps computed procfile path:     Procfile
+       Ps global procfile path:       Procfile
+       Ps procfile path:
+       Ps restart policy:             on-failure:10
+       Restore:                       false
+       Running:                       true
+       Status web 1:                  running (CID: ID)
+=====> www ps information
+       Deployed:                      true
+       Processes:                     1
+       Ps can scale:                  true
+       Ps computed procfile path:     Procfile
+       Ps global procfile path:       Procfile
+       Ps procfile path:
+       Ps restart policy:             on-failure:10
+       Restore:                       false
+       Running:                       true
+       Status web 1:                  running (CID: ID)
+```
+
+Match the two IDs that are running to the container IDs above. Any docker container ID that is not listed by dokku is not needed and can be shut down.
+
+Next, see what postgres docker containers dokku expects:
+
+```
+# dokku postgres:list
+NAME                              VERSION         STATUS   EXPOSED PORTS  LINKS
+test-database-updated-2022-11-21  postgres:9.6.1  running  -              -
+test-database-updated-2022-12-26  postgres:9.6.1  running  -              -
+test-database-updated-2023-05-31  postgres:9.6.1  running  -              test
+www-database                      postgres:9.6.1  running  -              www
+www-database-backup-2022-12-26    postgres:9.6.1  running  -              -
+```
+
+The postgres URL for the docker container should match the database name that is linked to either test or www. In the example above, www-database and test-database-updated-2023-05-31 are linked to the two web apps.
+
+Any postgres database not currently linked to the websites should be destroyed.
+
+Any docker containers that have a postgres URL that doesn't match a currently linked database can be shut down.
+
+If you see a old docker container, you can shut it down:
+
+```
+docker stop CONTAINERID
+```
+
+# Debugging high amounts of web traffic
+
+nginx is a generic web server, proxy, caching, and load balancing software. nginx is in charge of handing off HTTP requests to the python web server for the Outreachy Django website. That Python web server is called gunicorn.
+
+nginx logs are a great place to go to understand which web pages are being accessed, and by whom. Run the following command on the web server to see some examples:
+
+```
+# less /var/log/nginx/www-access.log
+```
+
+Examples:
+```
+97.xxx.xxx.xxx - - [04/Dec/2023:17:04:30 +0000] "HEAD / HTTP/2.0" 502 122 "https://www.outreachy.org/" "Mozilla/5.0 (X11; Linux x86_64; rv:xxx.0) Gecko/DATE Firefox/xxx.0"
+128.xxx.xxx.xxx - - [04/Dec/2023:21:13:11 +0000] "GET /sponsor HTTP/1.1" 301 0 "https://outreachy.org/sponsor" "Not A;Brand\x22;v=\x2299\x22, \x22Chromium\x22;v=\x2290\x22, \x22Google Chrome\x22;v=\x2290"
+```
+
+There are a few parts to these logs:
+ 1. IP address of the person who requested the website page. Note that this could be the exit node of a VPN or Tor onion server, not the actual person's local IP address.
+ 2. The time (based on the web server's internal clock) that someone accessed that page.
+ 3. The HTTP request sent, the HTTP status returned, and the number of bytes in the HTTP body that was returned.
+ 4. The website URL they were interacting with.
+ 5. The browser string. All browser strings typically start with Mozilla/5.0, and then go into further detail about the operating system and actual browser name and version string. If you see an odd browser string like the "Not A;Brand..." above, it's like to be a bot crawling the website.
+
+You can run a command to get an idea of how many times an IP address has accessed the website:
+
+```
+cut -d " " -f 1 /var/log/nginx/www-access.log | sort | uniq -c | sort -rn | less
+```
+
+The number of times is relative to how far back the www-access.log file goes. If you need to access more data, you might need to run zcat to unzip the gzipped log files and concatenate them together.
+
+In general, around 500 or 600 accesses per day is pretty standard for an Outreachy organizer.
+
 Sending mass emails
 -------------------
 
