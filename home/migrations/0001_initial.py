@@ -10,8 +10,8 @@ import modelcluster.fields
 import timezone_field.fields
 import wagtail.contrib.routable_page.models
 import wagtail.contrib.table_block.blocks
-import wagtail.core.blocks
-import wagtail.core.fields
+import wagtail.blocks
+import wagtail.fields
 import wagtail.images.blocks
 
 
@@ -141,11 +141,11 @@ class Migration(migrations.Migration):
             name='DonatePage',
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.page')),
-                ('intro', wagtail.core.fields.RichTextField(blank=True, default='<p>Individual donations can be made via PayPal, check, or wire. Donations are tax deductible, and are handled by our 501(c)(3) non-profit parent organization, Software Freedom Conservancy. Individual donations are directed to the Outreachy general fund, unless otherwise specified.</p>')),
-                ('paypal_text', wagtail.core.fields.RichTextField(blank=True, default='<p><strong>PayPal</strong> To donate through PayPal, please click on the "Donate" button below.</p>')),
-                ('check_text', wagtail.core.fields.RichTextField(blank=True, default='<p><strong>Check</strong> We can accept check donations drawn in USD from banks in the USA. Please make the check payable to "Software Freedom Conservancy, Inc." and put "Directed donation: Outreachy" in the memo field. Please mail the check to: <br/><span class="offset1">Software Freedom Conservancy, Inc.</span><br/><span class="offset1">137 Montague ST Ste 380</span><br/><span class="offset1">Brooklyn, NY 11201</span><br/><span class="offset1">USA</span></p>')),
-                ('wire_text', wagtail.core.fields.RichTextField(blank=True, default='<p><strong>Wire</strong> Please write to <a href="mailto:accounting@sfconservancy.org">accounting@sfconservancy.org</a> and include the country of origin of your wire transfer and the native currency of your donation to receive instructions for a donation via wire.</p>')),
-                ('outro', wagtail.core.fields.RichTextField(blank=True, default='<p>If you are a corporation seeking to sponsor Outreachy, please see <a href="https://www.outreachy.org/sponsor/">our sponsor page.</a></p>')),
+                ('intro', wagtail.fields.RichTextField(blank=True, default='<p>Individual donations can be made via PayPal, check, or wire. Donations are tax deductible, and are handled by our 501(c)(3) non-profit parent organization, Software Freedom Conservancy. Individual donations are directed to the Outreachy general fund, unless otherwise specified.</p>')),
+                ('paypal_text', wagtail.fields.RichTextField(blank=True, default='<p><strong>PayPal</strong> To donate through PayPal, please click on the "Donate" button below.</p>')),
+                ('check_text', wagtail.fields.RichTextField(blank=True, default='<p><strong>Check</strong> We can accept check donations drawn in USD from banks in the USA. Please make the check payable to "Software Freedom Conservancy, Inc." and put "Directed donation: Outreachy" in the memo field. Please mail the check to: <br/><span class="offset1">Software Freedom Conservancy, Inc.</span><br/><span class="offset1">137 Montague ST Ste 380</span><br/><span class="offset1">Brooklyn, NY 11201</span><br/><span class="offset1">USA</span></p>')),
+                ('wire_text', wagtail.fields.RichTextField(blank=True, default='<p><strong>Wire</strong> Please write to <a href="mailto:accounting@sfconservancy.org">accounting@sfconservancy.org</a> and include the country of origin of your wire transfer and the native currency of your donation to receive instructions for a donation via wire.</p>')),
+                ('outro', wagtail.fields.RichTextField(blank=True, default='<p>If you are a corporation seeking to sponsor Outreachy, please see <a href="https://www.outreachy.org/sponsor/">our sponsor page.</a></p>')),
             ],
             options={
                 'abstract': False,
@@ -168,7 +168,7 @@ class Migration(migrations.Migration):
             name='HomePage',
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.page')),
-                ('body', wagtail.core.fields.StreamField([('heading', wagtail.core.blocks.CharBlock(template='home/blocks/heading.html')), ('paragraph', wagtail.core.blocks.RichTextBlock()), ('image', wagtail.images.blocks.ImageChooserBlock()), ('logo', wagtail.images.blocks.ImageChooserBlock(template='home/blocks/logo.html')), ('date', wagtail.core.blocks.DateBlock()), ('table', wagtail.contrib.table_block.blocks.TableBlock(template='home/blocks/table.html')), ('quote', wagtail.core.blocks.RichTextBlock(template='home/blocks/quote.html'))])),
+                ('body', wagtail.fields.StreamField([('heading', wagtail.blocks.CharBlock(template='home/blocks/heading.html')), ('paragraph', wagtail.blocks.RichTextBlock()), ('image', wagtail.images.blocks.ImageChooserBlock()), ('logo', wagtail.images.blocks.ImageChooserBlock(template='home/blocks/logo.html')), ('date', wagtail.blocks.DateBlock()), ('table', wagtail.contrib.table_block.blocks.TableBlock(template='home/blocks/table.html')), ('quote', wagtail.blocks.RichTextBlock(template='home/blocks/quote.html'))])),
             ],
             options={
                 'abstract': False,
@@ -276,7 +276,7 @@ class Migration(migrations.Migration):
             name='RichTextOnly',
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.page')),
-                ('body', wagtail.core.fields.RichTextField(blank=True)),
+                ('body', wagtail.fields.RichTextField(blank=True)),
             ],
             options={
                 'abstract': False,
@@ -338,7 +338,7 @@ class Migration(migrations.Migration):
                 ('finalpayment', models.IntegerField(default=2500)),
                 ('internends', models.DateField(verbose_name='Date internships end')),
                 ('finalfeedback', models.DateField(verbose_name='Date final feedback is due')),
-                ('sponsordetails', wagtail.core.fields.RichTextField(default='<p>Outreachy is hosted by the <a href="https://sfconservancy.org/">Software Freedom Conservancy</a> with special support from Red Hat, GNOME, and <a href="http://otter.technology">Otter Tech</a>. We invite companies and free and open source communities to sponsor internships in the next round.</p>')),
+                ('sponsordetails', wagtail.fields.RichTextField(default='<p>Outreachy is hosted by the <a href="https://sfconservancy.org/">Software Freedom Conservancy</a> with special support from Red Hat, GNOME, and <a href="http://otter.technology">Otter Tech</a>. We invite companies and free and open source communities to sponsor internships in the next round.</p>')),
             ],
             options={
                 'abstract': False,
@@ -349,7 +349,7 @@ class Migration(migrations.Migration):
             name='RoundsIndexPage',
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.page')),
-                ('intro', wagtail.core.fields.RichTextField(blank=True)),
+                ('intro', wagtail.fields.RichTextField(blank=True)),
             ],
             options={
                 'abstract': False,
@@ -370,7 +370,7 @@ class Migration(migrations.Migration):
             name='StatsRoundFifteen',
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.page')),
-                ('unused', wagtail.core.fields.RichTextField(blank=True)),
+                ('unused', wagtail.fields.RichTextField(blank=True)),
             ],
             options={
                 'abstract': False,

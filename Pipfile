@@ -23,7 +23,7 @@ gunicorn = "*"
 psycopg2 = "*"
 pytz = "*"
 raven = "*"
-wagtail = "==4.1.1"
+wagtail = "==4.2.4"
 whitenoise = "*"
 factory_boy = "*"
 

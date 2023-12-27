@@ -7,7 +7,7 @@ from django.contrib import admin
 from wagtail.admin import urls as wagtailadmin_urls
 import debug_toolbar
 from home import urls as home_urls
-from wagtail.core import urls as wagtail_urls
+from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 from contacts import urls as contacts_urls
 

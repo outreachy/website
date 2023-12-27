@@ -30,13 +30,13 @@ from reversion.models import Version
 
 from timezone_field.fields import TimeZoneField
 
-from wagtail.core.models import Orderable
-from wagtail.core.models import Page
-from wagtail.core.fields import RichTextField
-from wagtail.core.fields import StreamField
-from wagtail.admin.edit_handlers import FieldPanel
-from wagtail.admin.edit_handlers import InlinePanel
-from wagtail.core import blocks
+from wagtail.models import Orderable
+from wagtail.models import Page
+from wagtail.fields import RichTextField
+from wagtail.fields import StreamField
+from wagtail.admin.panels import FieldPanel
+from wagtail.admin.panels import InlinePanel
+from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
