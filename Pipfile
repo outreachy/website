@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 dj-database-url = "*"
 dj-static = "*"
-django = "~=3.2"
+django = "~=4.2"
 django-ckeditor = "*"
 django-compressor = "*"
 django-compressor-postcss = "*"
