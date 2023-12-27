@@ -20,8 +20,7 @@
 					<div class="container">
 						<div class="row">
 							<div class="col">
-								<p>Location: <b>{% with location=application.applicant.get_city_country %}{% if location.0 %}{{ location.0}}, {% endif %}{% if location.1 %}{{ location.1 }}{% endif %}
-									{% if not location.0 and not location.1 %}Unknown{% endif %}{% endwith %}</b>
+								<p>Country: <b>{% include 'home/snippet/applicant_location.html' %}</b>
 								<br>Applicant is enrolled at <a href="{{ application.schoolinformation.university_website }}">{{ application.schoolinformation.university_name }}</a>
 								<br>Degree: {{ application.schoolinformation.degree_name }}
 								{% if application.schoolinformation.current_academic_calendar %}
@@ -90,8 +89,7 @@
 						</div>
 					</div>
 				{% else %}
-					<p>Location: <b>{% with location=application.applicant.get_city_country %}{% if location.0 %}{{ location.0}}, {% endif %}{% if location.1 %}{{ location.1 }}{% endif %}
-						{% if not location.0 and not location.1 %}Unknown{% endif %}{% endwith %}</b></p>
+					<p>Country: <b>{% include 'home/snippet/applicant_location.html' %}</b></p>
 				{% endif %}
 				{% if tcs.noncollege_school_time_commitments %}
 					<p>Coding school or online courses time commitments:</p>

@@ -23,7 +23,6 @@
 			<BR>Pronouns: {{ organizernotes.comrade.get_pronouns_html|safe }}<BR>
 			{% if organizernotes.comrade.location %}
 				<BR>Location: {{ organizernotes.comrade.location }}<BR>
-				Guessed city and country: {% with loc=organizernotes.comrade.get_city_country %}{{ loc.0 }}, {{ loc.1 }}{% endwith %}<BR>
 			{% else %}
 				<BR>Location: <span class="badge badge-pill badge-warning">unknown</span><BR>
 			{% endif %}

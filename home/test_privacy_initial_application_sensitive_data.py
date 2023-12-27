@@ -4,8 +4,8 @@ from django.core import mail
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils.formats import date_format
-import reversion
 from reversion.models import Version, Revision
+from reversion.errors import RegistrationError
 import unittest
 
 from home import models
@@ -201,7 +201,7 @@ class InitialApplicationPrivacyTestCase(TestCase):
                 try:
                     version_query = Version.objects.get_for_model(model)
                     self.assertFalse(True)
-                except reversion.errors.RegistrationError:
+                except RegistrationError:
                     pass
 
 

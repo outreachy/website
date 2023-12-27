@@ -84,9 +84,9 @@ Review interns for {{ current_round.official_name }}
 			<BR>Pronouns: {{ intern.get_pronouns_html|safe }}<BR>
 			{% if intern.location %}
 				<BR>Location: {{ intern.location }}<BR>
-				Guessed city and country: {% with loc=intern.get_city_country %}{{ loc.0 }}, {{ loc.1 }}{% endwith %}<BR>
 			{% else %}
 				<BR>Location: <span class="badge badge-pill badge-warning">unknown</span><BR>
+				Country: {% with application=i.applicant %}{% include 'home/snippet/applicant_location.html' %}{% endwith %}<BR>
 			{% endif %}
 			{% if intern.timezone %}
 				Timezone: {{ intern.timezone }}<BR><BR>

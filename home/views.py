@@ -1396,7 +1396,9 @@ class ParticipationAction(ApprovalStatusAction):
 
     def get_context_data(self, **kwargs):
         context = super(ParticipationAction, self).get_context_data(**kwargs)
-        context['readonly_sponsorships'] = self.object.sponsorship_set.filter(coordinator_can_update=False)
+        # There won't be any sponsorships if the Participation object was newly created
+        if not self.new:
+            context['readonly_sponsorships'] = self.object.sponsorship_set.filter(coordinator_can_update=False)
         return context
 
     def save_form(self, form):
