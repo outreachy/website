@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.utils.feedgenerator import Atom1Feed
 import operator
+# TODO: please replace the usage of pytz with the native timezone support introduced in Python 3.9
 from pytz import timezone
 
 
