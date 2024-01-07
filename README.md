@@ -1399,6 +1399,55 @@ Double check things are working on the production server. Check that any model c
 
 Once you are *absolutely positively sure* that the changes haven't caused any issues, you should delete the backup www database using the `postgres unlink` and `postgres destroy` dokku commands.
 
+# Updating the Outreachy web server
+
+Before updating the web server, make a back-up image. Also export the postgres www database to somewhere safe.
+
+Make sure to read the [dokku updating instructions](https://dokku.com/docs/getting-started/upgrading/) *before* you update Debian. Updating Debian will install a new version of dokku. That may mean you need to take extra steps after the Debian update.
+
+The Outreachy website Linux server should be running the latest [Debian stable release](https://wiki.debian.org/DebianStable). Read the [Debian releases page](https://wiki.debian.org/DebianReleases) to understand what Debian stable means. For now, consider 'stable' to be a Debian release that's tagged as the latest stable version.
+
+Check which Debian version is considered the current stable release. If the server is running 'oldstable' or older, it's time to upgrade. Otherwise, stick with the server running a stable release rather than a testing release. As the Debian wiki notes, "Only stable is recommended for production use."
+
+Read the paragraphs below, and then follow the [instructions for upgrading Debian](https://wiki.debian.org/DebianUpgrade) to the latest stable release.
+
+A Debian release is made up of different software versions, bundled into software 'packages'. You will update the Debian release by editing 'apt' files. These files tell the package manager which Debian release to fetch software packages from.
+
+You'll want to use the code name for the release (e.g. bookworm or trixie) in your apt files, rather than the release tag 'stable'. That's because which Debian version is tagged as 'stable' changes immediately when a new Debian release comes out. If you use a code name, your software packages will always come from that release. If you use the stable name in your apt sources, you be forced to use software packages from the newly released stable version as soon as it comes out. That's not advised, since Outreachy might be in the middle of a busy period. It's better to wait until December or July to upgrade Debian.
+
+Make sure to stop the Outreachy website Docker containers before you reboot the system:
+
+```
+ssh -t dokku@outreachy.org ps:stop test
+ssh -t dokku@outreachy.org ps:stop www
+```
+## Updating dokku
+
+Updating Debian will also update your base version of dokku. That may mean you need to update some dokku plugins (either core plugins or external plugins).
+
+Use the following commands to see what dokku plugins are installed:
+
+```
+dokku plugin:list
+```
+
+Read how to [manage dokku plugins](https://dokku.com/docs/advanced-usage/plugin-management/).
+
+You also need to rebuild the applications to use any new buildpacks that are installed.
+
+```
+dokku ps:rebuild --all
+```
+
+## Restarting dokku
+
+After you reboot the server, restart the Docker containers with the following commands:
+
+```
+ssh -t dokku@outreachy.org ps:start test
+ssh -t dokku@outreachy.org ps:start www
+```
+
 # Updating Packages
 
 ## Updating Python packages
@@ -1443,9 +1492,119 @@ npm update
 
 This commands will update `package-lock.json`. You will need to commit that file.
 
+## Testing and pushing updates
+
+Before upgrading anything, you should understand how to test upgrades.
+
+First, test your updates locally:
+
+1. **Run the test suite.** Make sure no new errors or warnings occur. Warnings about deprecated functions or deprecated Python modules are a sign you may need to update the Outreachy website code to align with the updated versions of Python packages.
+
+2. Start the web server for your local development environment.
+
+3. **Test image uploading.**
+
+We don't currently have tests for making sure Outreachy website image storage works. I don't think the test database has access to the image storage on the local machine. So we have to test manually on the local development environment via web browser.
+
+You can test that image uploading works by changing your profile picture twice. You can change your profile picture through your account page [http://localhost:8000/account](http://localhost:8000/account). Change your profile, save your account details, go back to the account page, and you should see your new profile picture. Change the profile picture again, save, go back to the account page, and verify the second picture is shown.
+
+4. **Test initial application submission.**
+
+While we have tests for each part of the initial application form, the tests rely on setting up some data in the database manually. That means we need to manually test going through each application page in a browser.
+
+Create a new Outreachy internship cohort. Set the date initial applications open to yesterday. (It's important to not set it to today, since initial applications open at 4pm UTC, and your current local time might be before that time.)
+
+```
+$ ./manage.py shell
+>>> from home import factories
+>>> current_round = factories.RoundPageFactory(start_from='initial_applications_open', days_after_today=-1)
+```
+
+You can use your superuser account to fill out an initial application.
+
+Open your web browser and go to `http://localhost:8000/eligibility/`.
+
+Fill out the application form, using your knowledge of the [eligibility criteria](http://localhost:8000/eligibility/).
+
+It's good to double check that the 'First step', 'Next Step', and 'Previous Step' buttons all work.
+
+To test all the form pages, answer 'yes' to the following questions:
+
+2-1: Are you a citizen, national, or permanent resident of the United States of America?
+2-2: Will you be living in the United States of America at any time from April 20, 2024 to August 21, 2024?
+7-1: Are you (or will you be) a university or college student?
+7-2: Are you (or will you be) enrolled in a coding school or self-paced online courses?
+7-3: Are you (or will you be) an employee?
+7-4: Are you (or will you be) a contractor?
+7-5: Are you (or will you be) a volunteer?
+
+Once your initial application is submitted, confirm that it shows up on your [Outreachy dashboard](http://localhost:8000/dashboard/).
+
+5. **Test your changes on the test web server.**
+
+Next, you'll need to push your changes to the Outreachy test web server, and test out how they deploy in a production environment. Sometimes when code is run on a web server, it behaves differently than when it's run locally. Pushing to the test web server allows you to try the code at different times in the Outreachy application and internship, without confusing Outreachy participants.
+
+Do note however, that Google search has picked up on the test website, so we should avoid having different dates between the two sites. FIXME: figure out how to set robots.txt differently for when we're deploying to the test website.
+
+If you don't already have ssh access to the test web server, ask Sage to set it up. Once you have ssh access, you can run the following command:
+
+```
+git remote add dokku-test dokku@outreachy.org:test
+```
+
+You may need to clone the production database to the test website. See the 'Updating the test database' section in `docs/dokku-setup.md`.
+
+Then you can push your changes to the test website by running this command:
+
+```
+git push dokku-test +BRANCH-NAME:master
+```
+
+BRANCH-NAME should be the name of the git branch you are currently testing your updates on. If you are testing on your master branch, you should remove the `+BRANCH-NAME:` part of the command.
+
+When you push to the test server, it will automatically apply any Django database migrations.
+
+You can view the test website at [https://test.outreachy.org](https://test.outreachy.org). Since the production database is copied to the test website, you can log into the website with your normal Outreachy website account.
+
+From there, test steps 2-4 again. When it comes to running Django shell scripts, you can start a shell on the test web server with this command:
+
+```
+ssh -t dokku@outreachy.org run test env --unset=SENTRY_DSN python manage.py shell
+```
+
 # Updating Python versions
 
-If you want to update the version of Python that the production server is using, there are several different things you'll need to know.
+## Picking a Python version
+
+It's important that we find a new Python version that is going to receive bug fix and security updates for the next 6 months. That's important because the Outreachy website only moves off Python major versions in December and July (when the website is not under heavy use).
+
+It's important not to pick a Python version that is too new. We don't want to run the Python version that is currently under feature development.
+
+We also don't want to run a Python version that is not yet included in Linux distributions.
+
+The Outreachy webserver runs Debian stable. Make sure the new Python version is available for Debian stable.
+
+We also want to make sure other Outreachy website developers have that Python version available. Otherwise they may not be able to test their work locally.
+
+First, check the Python development roadmap to see which versions will be in bugfix status for the next six months:
+
+[https://devguide.python.org/versions/](https://devguide.python.org/versions/)
+
+Next, check to see which Linux distributions have that Python version available:
+ - [Debian stable release](https://packages.debian.org/search?keywords=python3&searchon=names&suite=stable&section=all)
+ - [Debian release cycle](https://www.debian.org/releases/)
+ - [Fedora packages](https://packages.fedoraproject.org/search?query=python3)
+ - [Fedora release cycle](https://docs.fedoraproject.org/en-US/releases/)
+
+Pick a version of Python that is in the bugfix state for the next six months, and is included in Debian stable and the previous Fedora release.
+
+Make sure to install that version of Python on your local development machine. That may mean you need to update your system to a new release of your Linux distribution.
+
+Remember that Python version number you selected, and read the next section.
+
+## Dokku management of Python versions
+
+The Outreachy web server uses Dokku to manage the version of Python installed in the Docker container the website runs in.
 
 Dokku uses the "buildpacks" from Heroku to find the correct version of Python to install. Think of buildpacks as a series of scripts that download and install programming language files. Heroku has buildpacks for many different programming languages. The Outreachy website uses Python and Node.js Heroku buildpacks.
 
@@ -1459,11 +1618,19 @@ $ ssh root@www.outreachy.org
 # aptitude install herokuish
 ```
 
-2. Find the [latest version of Python that Heroku supports](https://devcenter.heroku.com/articles/python-support#supported-runtimes). Change the version in [runtime.txt](https://github.com/outreachy/website/blob/master/runtime.txt) to match the latest version of Python.
+Docker might complain that some images are still running. That's fine, because we want to leave them running until we restart them with new Python versions.
+
+2. Find the [latest minor version of Python that Heroku supports](https://devcenter.heroku.com/articles/python-support#supported-runtimes). For example, if you choose to install Python 3.11, the latest minor version of Python that Heroku supports might be Python 3.11.7. Each minor version includes bug fixes and updates, so you want to have the latest minor version you can.
+
+Change the Python version number in [runtime.txt](https://github.com/outreachy/website/blob/master/runtime.txt) to match the version of Python you want deployed on the web server.
 
 3. You will need to update the [Heroku Python buildpack version](https://devcenter.heroku.com/articles/python-support#checking-the-python-buildpack-version). Change the version in [.buildpacks](https://github.com/outreachy/website/blob/master/.buildpacks) to match the URL of the [latest Python buildpack GitHub tag](https://github.com/heroku/heroku-buildpack-python/tags). Use the format in the `.buildpack` file.
 
 4. Commit both files (`runtime.txt` and `.buildpack`).
+
+Delete your virtual environment and rebuild it with the new runtime.txt. Start your virtual environment, and make sure it's using the updated Python version.
+
+Run the test suite and manually test specific functionality, as described in the 'Testing and pushing updates' section above.
 
 5. Deploy to the Outreachy test server. DO NOT DEPLOY TO PRODUCTION WITHOUT TESTING ON THE TEST SERVER FIRST. In the deployment log, you should see lines like:
 
@@ -1525,6 +1692,143 @@ You'll note in this log that dokku is installing node version 14.x, which was th
 4. Test the updated code on the test server. Make sure you can change your account picture, see the community CFP page, edit a Wagtail page like the home page, etc.
 
 5. Deploy to the production server.
+
+## Updating postgres
+
+Each dokku container can run a different version of postgres (an open source database). dokku will not automatically update your postgres versions. You will need to do that manually.
+
+You can see which versions of postgres are running on the different website containers by running this command:
+
+```
+dokku postgres:info www-database
+```
+
+You can also replace www-database with the name of the database used in the test website.
+
+### Testing postgres updates
+
+First, export the Outreachy website database using the current postgres plugin version:
+
+```
+dokku postgres:export www-database > www-database.export
+```
+
+To make more recent versions of postgres available to the Docker containers, you'll need to update the dokku postgres plugin. You can see which version of the plugin you're running with this command:
+
+```
+dokku plugin:list
+...
+  postgres             1.4.12 enabled    dokku postgres service plugin
+``` 
+
+Look to see what the [latest version of the postgres plug in](https://github.com/dokku/dokku-postgres) is. As of when this section was written, the latest version is 1.36.1. Update the postgres plug in with this command:
+
+```
+dokku plugin:update postgres 1.36.1
+```
+
+Next, we need to test whether moving to a new postgres version works. We want try the new postgres version out on the test database first.
+
+Make a new database with the updated postgres plugin:
+
+```
+dokku postgres:create test-database
+```
+
+Import the www-database export into the newly created database:
+
+```
+cat www-database.export | dokku postgres:import test-database
+```
+
+Once the database is created, you should see in the output which postgres version it's using. You can also use the `dokku postgres:info DATABASE` command to see the postgres version.
+
+Now, stop the test website Docker container:
+
+```
+dokku ps:stop test
+```
+
+Unlink the old test database from the test Docker container:
+
+```
+dokku postgres:unlink test-database-updated-2024-01-07 test
+```
+
+Link the updated database into the test Docker container:
+
+```
+dokku postgres:link test-database test
+```
+
+Promote the updated database:
+
+```
+dokku postgres:promote test-database test
+```
+
+DO NOT destroy the old test database just yet!
+
+Restart the test Docker container:
+
+```
+dokku ps:restart test
+```
+
+Check the postgres version running of the test database is a newer version:
+
+```
+root@outreachy-website:~# dokku postgres:info test-database
+=====> test-database postgres service information
+...
+       Status:              running                  
+       Version:             postgres:16.1            
+```
+
+??? - I'm not clear whether we needed to rebuild the Docker containers, or where that rebuild should have happened. So you might need this command somewhere above:
+
+```
+dokku ps:rebuild test
+```
+
+Manually test that the Outreachy test website works. See a list above for what aspects to test.
+
+Once you are satisfied, it's time to upgrade the Outreachy production database.
+
+### Deploying postgres updates
+
+(Optional) If you have upgraded the dokku postgres plugin, and the test website was running a very old version of postgres, you may need to downgrade the dokku postgres plugin in order to export the database:
+
+```
+dokku plugin:update postgres 1.4.12
+```
+
+Stop the Outreachy website Docker container:
+```
+dokku ps:stop www
+```
+
+Export the www-database (note, this may be a good time to export it to your local system as well for a brief back-up):
+```
+dokku postgres:export www-database > www-database.export
+```
+
+(Optional) If you're updating from a very old version of postgres, update the dokku postgres plugin to the latest version:
+```
+dokku plugin:update postgres 1.36.1
+```
+
+Then follow similar steps you used on the test database:
+
+```
+dokku postgres:create www-database-updated
+cat www-database.export | dokku postgres:import www-database-updated
+dokku postgres:unlink www-database www
+dokku postgres:link www-database-updated www
+dokku postgres:promote www-database-updated www
+dokku ps:rebuild www
+dokku ps:start www
+```
 
 # Debugging errors
 

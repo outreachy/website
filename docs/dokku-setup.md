@@ -208,6 +208,15 @@ Dokku has two types of plugins: core plugins and external plugins. Core plugins 
 
 Upgrading the base dokku version doesn't automatically upgrade external plugins. The two external plugins we have are git-rev and letsencrypt.
 
+Read [dokku plugin management](https://dokku.com/docs/advanced-usage/plugin-management/)
+
+```
+dokku plugin:list
+```
+
+Updating dokku lets-encrypt plug-in
+---
+
 You'll need to periodically update the dokku let's encypt plug in, following the instructions in the [README](https://github.com/dokku/dokku-letsencrypt#upgrading-from-previous-versions). You need to actually ssh into the machine; you can't run this command remotely:
 ```
 dokku plugin:update letsencrypt [git tag]
