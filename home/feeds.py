@@ -244,6 +244,13 @@ class WagtailFeed(Feed):
             first_published_at=pacific.localize(datetime.datetime(2024, 1, 8, 16, 00, 0)),
             last_published_at=pacific.localize(datetime.datetime(2024, 1, 8, 16, 00, 0)),
         ))
+        items.append(PseudoPage(
+            title='Outreachy 2023: Year in Review',
+            full_url=reverse('outreachy-2023-year-in-review'),
+            owner=author,
+            first_published_at=pacific.localize(datetime.datetime(2024, 1, 11, 12, 00, 0)),
+            last_published_at=pacific.localize(datetime.datetime(2024, 1, 11, 12, 00, 0)),
+        ))
 
         # put the Wagtail pages and special posts together in the right order
         items.sort(key=operator.attrgetter('first_published_at'), reverse=True)

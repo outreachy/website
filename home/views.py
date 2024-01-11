@@ -3014,6 +3014,9 @@ def blog_2024_01_08_cfp_open(request):
         'current_round': current_round,
         })
 
+def blog_outreachy_2023_year_in_review(request):
+    return render(request, 'home/blog/2024-01-10-outreachy-2023-year-in-review.html')
+
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(Feedback1FromMentor,
             fields=(
