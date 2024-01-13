@@ -1017,7 +1017,7 @@ class OrganizerNotes(models.Model):
 # user: One who uses addictive drugs.
 class Comrade(models.Model):
     account = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
-    organizer_notes = models.OneToOneField(OrganizerNotes, on_delete=models.CASCADE, null=True)
+    organizer_notes = models.OneToOneField(OrganizerNotes, on_delete=models.CASCADE, null=True, blank=True)
     public_name = models.CharField(max_length=LONG_LEGAL_NAME, verbose_name="Name (public)", help_text="Your full name, which will be publicly displayed on the Outreachy website. This is typically your given name, followed by your family name. You may use a pseudonym or abbreviate your given or family names if you have concerns about privacy.")
 
     legal_name = models.CharField(max_length=LONG_LEGAL_NAME, verbose_name="Legal name (private)", help_text="Your name on your government identification. This is the name that you would use to sign a legal document. This will be used only by Outreachy organizers on any private legal contracts. Other applicants, coordinators, mentors, and volunteers will not see this name.")
