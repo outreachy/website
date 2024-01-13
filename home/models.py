@@ -2327,6 +2327,9 @@ def create_time_commitment_calendar(tcs, application_round):
             date = date + datetime.timedelta(days=1)
     return calendar
 
+# Note: We cannot add a uniqueness constraint here,
+# because we are using one Comrade to make multiple review queues.
+# We would need to make multiple dummy Comrade accounts on the Outreachy website.
 class ApplicationReviewer(ApprovalStatus):
     comrade = models.ForeignKey(Comrade, on_delete=models.CASCADE)
     reviewing_round = models.ForeignKey(RoundPage, on_delete=models.CASCADE)
