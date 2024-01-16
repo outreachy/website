@@ -3017,6 +3017,18 @@ def blog_2024_01_08_cfp_open(request):
 def blog_outreachy_2023_year_in_review(request):
     return render(request, 'home/blog/2024-01-10-outreachy-2023-year-in-review.html')
 
+def blog_2024_01_15_initial_applications_open(request):
+    try:
+        current_round = RoundPage.objects.get(
+            internstarts__gte='2024-01-01',
+            internends__lte='2024-09-01',
+        )
+    except RoundPage.DoesNotExist:
+        current_round = None
+    return render(request, 'home/blog/2024-01-15-initial-applications-open.html', {
+        'current_round': current_round,
+        })
+
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(Feedback1FromMentor,
             fields=(

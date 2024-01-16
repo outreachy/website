@@ -251,6 +251,13 @@ class WagtailFeed(Feed):
             first_published_at=pacific.localize(datetime.datetime(2024, 1, 11, 12, 00, 0)),
             last_published_at=pacific.localize(datetime.datetime(2024, 1, 11, 12, 00, 0)),
         ))
+        items.append(PseudoPage(
+            title='Outreachy May 2024 internship applications open',
+            full_url=reverse('2024-01-initial-applications-open'),
+            owner=author,
+            first_published_at=pacific.localize(datetime.datetime(2024, 1, 15, 21, 15, 0)),
+            last_published_at=pacific.localize(datetime.datetime(2024, 1, 15, 21, 15, 0)),
+        ))
 
         # put the Wagtail pages and special posts together in the right order
         items.sort(key=operator.attrgetter('first_published_at'), reverse=True)
