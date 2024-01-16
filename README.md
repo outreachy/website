@@ -1871,3 +1871,263 @@ CiviCRM proved too clunky to use, and ultimately their data model didn't necessa
 There are other proprietary tools for tracking sponsorship information, but since Outreachy is a project under the Software Freedom Conservancy and the Outreachy organizers believe in the power of free and open source, we have decided not to use proprietary software wherever possible.
 
 Django fit our needs for flexibility, data model definition, and future use cases. However, the Django admin interface is pretty clunky and intimidating. We wanted to have a very easy way for all our organizers to quickly edit content. The Wagtail CMS plugin provides a nice user interface and template system, while still allowing programmers to fully use Django to implement models. It also provides internal revision tracking for page content, which means we can easily roll back content changes from the wagtail admin web interface if necessary.
+
+# Creating blog posts
+
+## Django code method
+
+This method of publishing a blog post is best suited for blog posts that need to access information from the Outreachy website database. Examples include blog posts that reference internship cohort dates. When you change the date in the Outreachy Django admin interface, the date will change in any blog posts created this way.
+
+You will need to edit four different files to create a blog post:
+
+```
+home/feeds.py
+home/templates/home/blog/YOURBLOGPOST.html
+home/urls.py
+home/views.py
+```
+
+### HTML blog file
+
+```
+home/templates/home/blog/YOURBLOGPOST.html
+```
+
+This html file contains your blog post, written in HTML and <a href="https://docs.djangoproject.com/en/4.2/ref/templates/language/#top">Django templating language</a>. The HTML file must be located in the directory `home/templates/home/blog/`.
+
+The most basic blog post you can write is as follows:
+
+```
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Example blog post
+{% endblock %}
+
+{% block content %}
+{% load humanize %}
+
+<h1>Example blog post</h1>
+<p>This is my example blog post.</p>
+
+{% endblock %}
+```
+
+You'll see this is a mix of two lines of HTML and a lot of Django templating language code. You can read more about what each line:
+ - `{% extends "base.html" %}` - tells Django to use the standard headers and footers used across all Outreachy website pages.
+ - [`{% load static %}`](https://docs.djangoproject.com/en/4.2/ref/templates/builtins/#static) - tells Django to load static files (like pictures from the Outreachy website code base).
+ - [`{% load humanize %}`](2023-08-08-initial-applications-open.html) - Used to convert integers stored in the Django database to human-readable words (e.g. showing "two" instead of "2" or "$8,000" instead of "$8000").
+ - [`{% endblock %}`](https://docs.djangoproject.com/en/4.2/ref/templates/builtins/#block) - Django templating language defines different types of "blocks". Every type of block ends with an `{% endblock %}` tag.
+ - `{% block title %}` - converts the string into the title used in the HTML head section - i.e. the title that's displayed on your web browser titlebar or tab title.
+ - `{% block content %}` - Any HTML content between this block and the endblock is displayed in the HTML body section - i.e. it will be displayed in your web browser window.
+
+The easiest way to create a blog HTML file is to copy a similar blog post, and edit it.
+
+For example, if I want to create a blog post announcing initial applications are open for the May 2024 internship cohort, I might copy the HTML from the December 2023 cohort's blog post on the same subject:
+
+```
+cp home/templates/home/blog/2023-08-08-initial-applications-open.html home/templates/home/blog/2024-01-15-initial-applications-open.html
+```
+
+Then I would edit the newly created HTML, and update it for the new internship cohort. I would need to:
+ - update the blog post published date to be today's date
+ - change the internship cohort name to the correct one (e.g. May to August 2024 cohort)
+ - search for any date strings to change with the regex `Jan\|Feb\|Mar\|Apr\|May\|Jun\|Jul\|Aug\|Sep\|Oct\|Nov\|Dec\|2023\|2024`
+ - make sure the URLs for the date time converter website match the new live chat dates
+ - check that the eligibility rules about students from different hemispheres are correct for this cohort
+ - update the dates for the applicant live chat Q&A sessions
+ - see if you want to change any embedded videos to point to more recent live chats
+
+### URLs
+
+```
+home/urls.py
+```
+
+The `home/urls.py` file contains regular expressions that match against the URL that a remote viewer is trying to look at. It translates the URL into a Python function call in `home/views.py`. A URL can also contain encoded variables, which are passed to the Python function.
+
+In this case, we need to create a URL that will represent our blog post. I like to make sure blog URLs have both a date and include at least part of the blog post title.
+
+Here is what the line for adding this new blog post would look like:
+```
+    re_path(r'^blog/2024-01-15/may-2024-initial-applications-open/$', views.blog_2024_01_15_initial_applications_open, name='2024-01-initial-applications-open'),
+```
+
+The first part of the function call is the URL to match against. That's what will be in your web browser's address bar when you visit this blog post.
+
+The second part of the function lines is what Python function to call. In this case, Django will call into the code in `home/views.py`, into a Python function called `blog_2024_01_15_initial_applications_open`.
+
+The third part of the function is a shortcut for this URL. It means if you are writing an HTML page, you can ask Django to look up the URL associated with that shortcut.
+
+### Side note about Django URL shorts
+
+For example, assume we have the following URL pattern in home/urls.py:
+
+```
+re_path(r'^apply/eligibility/$', views.eligibility_information, name='eligibility-information'),
+```
+
+An inefficient way to reference the eligibility page would be to hard-code the link directly:
+
+```
+<p>Check our <a href="https://www.outreachy.org/apply/eligibility/">eligibility criteria</a> before you apply.</p>
+```
+
+However, if we ever decided to change the URL for eligibility page, that link would be broken, and would lead to a 404 error. For example, we might want to move the URL from `https://www.outreachy.org/apply/eligibility/` to `https://www.outreachy.org/apply/eligibility-rules/`
+
+A more efficient and resilient way to include a link is to use the [Django URL tag](https://docs.djangoproject.com/en/4.2/ref/templates/builtins/#url):
+
+```
+<p>Check our <a href="{% url 'eligibility-information' %}">eligibility criteria</a> before you apply.</p>
+```
+
+This is a best practice to use in templating, because the URL path might change, and you don't want to update every single HTML template that references it.
+
+### Views
+
+```
+home/views.py
+```
+
+In `home/urls.py`, we had a line that told Django which Python function to call when the blog post URL was accessed:
+
+```
+    re_path(r'^blog/2024-01-15/may-2024-initial-applications-open/$', views.blog_2024_01_15_initial_applications_open, name='2024-01-initial-applications-open'),
+```
+
+Now we need to write that Python function in `home/views.py`. Django handles a lot of the mundane processing of HTML GET or POST requests, but we do need to add a few function calls.
+
+First, we need to tell Django which HTML template file to render. The simplest (but incorrect) function we could create is this one:
+
+```
+def blog_2024_01_15_initial_applications_open(request):
+    return render(request, 'home/blog/2024-01-15-initial-applications-open.html')
+```
+
+This would produce incorrect output, because the blog post would not display dates from the May 2024 internship cohort. If you look at the HTML template, you can see lines where we reference that cohort as the <a href="https://docs.djangoproject.com/en/4.2/ref/templates/language/#variables">variable</a> `current_round`:
+
+```
+<p>📅 Important dates:
+<ul>
+	<li>{{ current_round.initial_applications_open }} at 4pm UTC - initial application opens</li>
+	<li>{{ current_round.initial_applications_close }} at 4pm UTC - initial application deadline</li>
+	<li><a href='#important-dates'>Full Outreachy schedule</a></li>
+</ul>
+</p>
+```
+
+If you try to view the blog post, you'll see the page doesn't show any dates in that list, only "at 4pm UTC".
+
+To fix that, we need to update the Python function to look up the correct cohort, and then pass that cohort object into the template rendering function. To find the right May 2024 cohort, we ask the database to find an internship cohort where the interns start after January 1, 2024 and the interns end before September 1, 2024. You can also use an exact date filter instead if you want, but this is more resilient if the dates move by a few days.
+
+The resulting correct code in `home/views.py` would be this:
+```
+def blog_2024_01_15_initial_applications_open(request):
+    try:
+        current_round = RoundPage.objects.get(
+            internstarts__gte='2024-01-01',
+            internends__lte='2024-09-01',
+        )
+    except RoundPage.DoesNotExist:
+        current_round = None
+    return render(request, 'home/blog/2024-01-15-initial-applications-open.html', {
+        'current_round': current_round,
+        })
+```
+
+We wrap the call to find the cohort in the database in a try-except block. This handles the case where the Django database can't find an object that matches your query. For example, this could be because your local testing database doesn't have a RoundPage object that represents the May 2024 cohort. You might need to create it using the internship scenarios section above.
+
+You can read more about why need excepting handling in the [Django get() method documentation](https://docs.djangoproject.com/en/5.0/ref/models/querysets/#django.db.models.query.QuerySet.get). See also [this tutorial on Python exception handling](https://www.w3schools.com/python/python_try_except.asp).
+
+### Testing the blog post
+
+Now that the URL and view function is added, you can test your code by starting the Django web server (runserver command) and then going to the localhost URL for that blog post:
+
+```
+http://localhost:8000/blog/2024-01-15/may-2024-initial-applications-open/
+```
+
+If you get an error, you may have a bug in either the Python functions or the template code. Common errors are things like forgetting to end a block, forgetting to end an if statement, or mistyping a URL shortcut.
+
+If you get a 404, it probably means you either have the URL wrong, or your pattern in `home/urls.py` is incorrect (or in the incorrect place, since URL patterns are evaluated from the top down).
+
+### Blog post feed
+
+In our Django website, there is a [blog index page](https://www.outreachy.org/blog/) that displays all blog posts. That page displays links to both Django code based blog posts and blog posts written in the Wagtail CMS. The blog posts written in Wagtail (as a child page of the blog index page) are automatically added to the blog index page. The Django code based blog posts must be added manually.
+
+The Python code that creates our [blog index page](https://www.outreachy.org/blog/) and [blog post RSS feed](https://www.outreachy.org/blog/feed/) is in `home/feeds.py`. This code creates a new Wagtail "PseudoPage" for every Django-code based blog post. A PseudoPage can be referenced by Wagtail, but is not shown as an editable page in the Wagtail admin interface. The blog's PseudoPage is inserted into our website's Wagtail page hierarchy as a child of the blog index page. Any pages that are children of a blog post index page will have their link and title added to the blog index page.
+
+In `home/feeds.py` we will need to manually add our blog post to the blog post index and RSS feed:
+
+```
+items.append(PseudoPage(
+    title='Outreachy May 2024 internship applications open',
+    full_url=reverse('2024-01-initial-applications-open'),
+    owner=author,
+    first_published_at=pacific.localize(datetime.datetime(2024, 1, 15, 21, 15, 0)),
+    last_published_at=pacific.localize(datetime.datetime(2024, 1, 15, 21, 15, 0)),
+))
+```
+
+The `title` should be the same as the title used in the HTML template. This is best practice, but not required to match.
+
+The `full_url` should be the URL shortcut used in `home/urls.py`. It must match the exact shortcut string.
+
+The `owner` field is used to tell Wagtail who authored the PseudoPage. We currently set all blog posts to be authored by Sage's account. You could use a database look-up to set the owner to your own account. However, we don't tell Wagtail to display the blog post author in the blog post index page, so it won't show up anywhere visible.
+
+The `first_published_at` field is used to set the date when the blog is first pushed to the website. This also controls when the blog post shows up in people's chronological RSS feeds.
+
+If you make blog post changes, you can modify the `last_published_at` field. This tells RSS readers that they should re-fetch the contents of the blog post.
+
+If you modify a blog post, it's best practice to note what changes were made in the HTML template. For example, in our blog post about Outreachy's response to COVID-19, we noted when changes were made, and what sections were added or modified:
+
+```
+<h1>Outreachy's Response to COVID-19</h1>
+
+<p><i>Date: March 27, 2020</i></p>
+<p><i>Last updated: May 1, 2020</i> - See the "New policies for students" section below.</p>
+```
+
+### Committing your new blog post
+
+Make sure to use git to commit the four files you've either created or modified:
+
+```
+home/feeds.py
+home/templates/home/blog/YOURBLOGPOST.html
+home/urls.py
+home/views.py
+```
+
+### Testing on the Outreachy test server
+
+You can also push your code to the Outreachy test website server.
+
+Run the following command to add a new git remote branch for the test server:
+
+```
+git remote add dokku-test dokku@outreachy.org:test
+```
+
+This tells git to push code to the dokku user account. The dokku username is important because the server won't let you push code under your own user account. The destination string `outreachy.org:test` tells the server that we're pushing code for the outreachy.org website, and specifically the Docker container named `test`. This Docker container runs the code for `test.outreachy.org`.
+
+Sage will need to give your website server account permission to directly push code. That is a separate permission from your account's permission to run a Django shell.
+
+Once you push your code, you'll see a lot of messages about dokku re-building the test container. If you come across any error messages, let Sage know and we'll debug them together.
+
+Once the code is deployed, go to the [blog index page on the test website](https://test.outreachy.org/blog/). Check the link to your blog is there. Click the link and check your blog is displayed properly.
+
+### Pushing to GitHub
+
+Then you'll need to either open a pull request on GitHub, or push directly to GitHub.
+
+### Deploying on the live site
+
+Run the following command to add a new git remote branch for the production (`www`) code base:
+
+```
+git remote add dokku-www dokku@outreachy.org:www
+```
+
+Then you can push your code and deploy it.
