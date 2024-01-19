@@ -1399,6 +1399,54 @@ Double check things are working on the production server. Check that any model c
 
 Once you are *absolutely positively sure* that the changes haven't caused any issues, you should delete the backup www database using the `postgres unlink` and `postgres destroy` dokku commands.
 
+# Testing locally with production database
+
+If you are one of the few people with access to the Outreachy production webserver, you can run a copy of the production database in your local development environment. Do this with extreme care on an updated, secure system with full-disk encryption.
+
+First, export the production website postgres database to a local file on your computer:
+
+```
+ssh dokku@outreachy.org postgres:export www-database-updated > outreachy-website-database-backup-DATE.sql
+```
+
+Next, install postgres using your Linux distribution package manager, or other operating system installation instructions. You will need postgres 16 or later.
+
+Installing postgres should also create a new postgres cluster for you. We'll use that default created cluster to add the Outreachy website database to.
+
+Login as the postgres user:
+
+```
+sudo -i -u postgres
+```
+
+In this new shell, create a database user with the same name as your local computer's login name:
+
+```
+createuser -DRS LOGIN_NAME
+```
+
+Then create a database that your user has access to:
+
+```
+createdb -O LOGIN_NAME www_database
+```
+
+Log out of the postgres user (typically you do this by pressing CTLR+d).
+
+Now as your normal user, import the exported production database to your newly created local database:
+
+```
+pg_restore --verbose --clean -d www_database outreachy-website-database-backup-DATE.sql
+```
+
+Now you can start a local website server that will read and write to your newly imported database:
+
+```
+PATH="$PWD/node_modules/.bin:$PATH" DATABASE_URL=postgresql:///www_database ./manage.py runserver
+```
+
+Now you can log in to localhost using your account username and password from the production server.
+
 # Updating the Outreachy web server
 
 Before updating the web server, make a back-up image. Also export the postgres www database to somewhere safe.
