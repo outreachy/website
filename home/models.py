@@ -3441,73 +3441,15 @@ class InitialApplicationReview(models.Model):
     application = models.ForeignKey(ApplicantApproval, on_delete=models.CASCADE)
     reviewer = models.ForeignKey(ApplicationReviewer, on_delete=models.CASCADE)
 
-    STRONG = '+3'
-    GOOD = '+2'
-    MAYBE = '+1'
-    UNCLEAR = '??'
-    UNRATED = '0'
-    NOTCOMPELLING = '-1'
-    NOTUNDERSTOOD = '-2'
-    SPAM = '-3'
-    # Change essay choices in home/templates/home/snippet/applicant_review_essay_rating.html
-    # if you update this text
-    RATING_CHOICES = (
-        (STRONG, '+3 - Essay is *strongly* compelling'),
-        (GOOD, '+2 - Essay is compelling'),
-        (MAYBE, '+1 - Essay is *weakly* compelling'),
-        (UNCLEAR, '?? - Essay questions were too short or unclear to make a decision'),
-        (UNRATED, 'Not rated'),
-        (NOTCOMPELLING, '-1 - Essay is not compelling'),
-        (NOTUNDERSTOOD, '-2 - Answers are unrelated to essay questions'),
-        (SPAM, '-3 - Essay answers were spam or trolling'),
-    )
-    essay_rating = models.CharField(
-            max_length=2,
-            choices=RATING_CHOICES,
-            default=UNRATED)
-
-    # Time commitments red flags
-    review_school = models.BooleanField(default=False,
-            verbose_name="School term info needs review or follow up")
-
-    missing_school = models.BooleanField(default=False,
-            verbose_name="Essay mentioned school, but no school term info was supplied")
-
-    review_work = models.BooleanField(default=False,
-            verbose_name="Work time commitments need review or follow up")
-
-    missing_work = models.BooleanField(default=False,
-            verbose_name="Essay mentioned work, but no work hours info was supplied")
-
-    incorrect_dates = models.BooleanField(default=False,
-            verbose_name="Dates on time commitments look incorrect")
-
+    # auto_now_add means when this object is created,
+    # we record the timestamp, and the timestamp cannot be modified later
+    # see https://docs.djangoproject.com/en/4.2/ref/models/fields/#django.db.models.DateField.auto_now_add
+    timestamp = models.DateTimeField(auto_now_add=True)
     comments = models.TextField(
             max_length=EIGHT_PARAGRAPH_LENGTH,
             blank=True,
             verbose_name="Reviewer comments",
             help_text="Please provide any comments on the status of this initial application, or questions you have while reviewing it.")
-
-    def get_essay_rating(self):
-        if self.essay_rating == self.UNRATED:
-            return ''
-
-        return (self.essay_rating, self.reviewer.comrade.public_name)
-
-    def get_red_flags(self):
-        red_flags = []
-        if self.review_school:
-            red_flags.append('Review school terms')
-        if self.missing_school:
-            red_flags.append('Missing school terms')
-        if self.review_work:
-            red_flags.append('Review work commitments')
-        if self.missing_work:
-            red_flags.append('Missing work hours')
-        if self.incorrect_dates:
-            red_flags.append('Needs organizer follow-up')
-
-        return (red_flags, self.reviewer.comrade.public_name)
 
 #class UniversityInformation(models.Model):
 #    university_name = models.CharField(

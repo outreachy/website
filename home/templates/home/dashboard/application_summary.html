@@ -24,17 +24,8 @@
 
 <p>Reviewed (and not assigned to a reviewer):</p>
 <ul>
-	{% if section.reviewed_strong_count %}
-		<li>{{ section.reviewed_strong_count }} - <a href="{% url 'process-strong-applications' %}">+3 rated applications</a></li>
-	{% endif %}
-	{% if section.reviewed_good_count %}
-		<li>{{ section.reviewed_good_count }} - <a href="{% url 'process-good-applications' %}">+2 rated applications</a></li>
-	{% endif %}
-	{% if section.reviewed_maybe_count %}
-		<li>{{ section.reviewed_maybe_count }} - <a href="{% url 'process-maybe-applications' %}">+1 rated applications</a></li>
-	{% endif %}
-	{% if section.reviewed_unclear_count %}
-		<li>{{ section.reviewed_unclear_count }} - <a href="{% url 'process-unclear-applications' %}">Unclear essays</a></li>
+	{% if section.reviewed_count %}
+		<li>{{ section.reviewed_count }} - <a href="{% url 'process-reviewed-applications' %}">Process reviewed applications</a></li>
 	{% endif %}
 </ul>
 

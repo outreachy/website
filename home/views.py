@@ -4005,7 +4005,7 @@ def privacy_policy(request):
         })
 
 @login_required
-def applicant_review_summary(request, status, owner_username=None, review_status=None, rating=None, process=False):
+def applicant_review_summary(request, status, owner_username=None, review_status=None, process=False):
     """
     For applicant reviewers and staff, show the status of applications that
     have the specified approval status.
@@ -4047,15 +4047,12 @@ def applicant_review_summary(request, status, owner_username=None, review_status
     # else don't filter on application ownership
 
     if review_status == 'unreviewed':
-        applications = applications.filter(initialapplicationreview__isnull=True)
+        applications = applications.filter(initialapplicationreview__isnull=True, essayquality__isnull=True)
     elif review_status == 'unreviewed-non-student':
-        applications = applications.filter(initialapplicationreview__isnull=True).filter(schoolinformation__isnull=True)
+        applications = applications.filter(initialapplicationreview__isnull=True, essayquality__isnull=True).filter(schoolinformation__isnull=True)
     elif review_status == 'reviewed':
-        applications = applications.filter(initialapplicationreview__isnull=False)
+        applications = applications.filter(initialapplicationreview__isnull=False, essayquality__isnull=False)
     # else don't filter on review status
-
-    if rating:
-        applications = applications.filter(initialapplicationreview__essay_rating=rating)
 
     applications = applications.distinct()
 
@@ -4219,8 +4216,7 @@ class SchoolInformationUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateVi
         self.object.save()
         return reverse('eligibility-results')
 
-
-def get_or_create_application_reviewer_and_review(self):
+def get_application_and_reviewer(self):
     # Only allow approved reviewers to rate applications for the current round
     current_round = get_current_round_for_initial_application_review()
 
@@ -4235,20 +4231,12 @@ def get_or_create_application_reviewer_and_review(self):
             applicant__account__username=self.kwargs['applicant_username'],
             application_round=current_round)
 
-    # If the reviewer gave an essay review, update it. Otherwise create a new review.
-    try:
-        review = InitialApplicationReview.objects.get(
-                application=application,
-                reviewer=reviewer)
-    except InitialApplicationReview.DoesNotExist:
-        review = InitialApplicationReview(application=application, reviewer=reviewer)
-
-    return (application, reviewer, review)
+    return (application, reviewer)
 
 class SetReviewOwner(LoginRequiredMixin, ComradeRequiredMixin, View):
     def post(self, request, *args, **kwargs):
 
-        application, requester, review = get_or_create_application_reviewer_and_review(self)
+        application, requester = get_application_and_reviewer(self)
         # Only allow approved reviewers to change review owners
         if self.kwargs['owner'] == 'None':
             reviewer = None
@@ -4262,84 +4250,6 @@ class SetReviewOwner(LoginRequiredMixin, ComradeRequiredMixin, View):
         application.save()
 
         return redirect(self.request.GET.get('next', application.get_preview_url()))
-
-class EssayRating(LoginRequiredMixin, ComradeRequiredMixin, View):
-    def post(self, request, *args, **kwargs):
-
-        application, reviewer, review = get_or_create_application_reviewer_and_review(self)
-
-        rating = kwargs['rating']
-        if rating == "STRONG":
-            review.essay_rating = review.STRONG
-        elif rating == "GOOD":
-            review.essay_rating = review.GOOD
-        elif rating == "MAYBE":
-            review.essay_rating = review.MAYBE
-        elif rating == "UNCLEAR":
-            review.essay_rating = review.UNCLEAR
-        elif rating == "UNRATED":
-            review.essay_rating = review.UNRATED
-        elif rating == "NOTCOMPELLING":
-            review.essay_rating = review.NOTCOMPELLING
-        elif rating == "NOTUNDERSTOOD":
-            review.essay_rating = review.NOTUNDERSTOOD
-        elif rating == "SPAM":
-            review.essay_rating = review.SPAM
-        review.save()
-
-        return redirect(self.request.GET.get('next', application.get_preview_url()))
-
-# When reviewing the application's time commitments, there are several red flags
-# reviewers can set or unset.
-class ChangeRedFlag(LoginRequiredMixin, ComradeRequiredMixin, View):
-    def post(self, request, *args, **kwargs):
-
-        flags = [
-                'review_school',
-                'missing_school',
-                'review_work',
-                'missing_work',
-                'incorrect_dates',
-                ]
-
-        # validate input
-        flag_value = kwargs['flag_value']
-        flag = kwargs['flag']
-        if flag_value != 'True' and flag_value != 'False':
-            raise PermissionDenied('Time commitment review flags must be True or False.')
-        if flag not in flags:
-            raise PermissionDenied('Unknown time commitment review flag.')
-
-        application, reviewer, review = get_or_create_application_reviewer_and_review(self)
-
-        if flag == "review_school":
-            if flag_value == 'True':
-                review.review_school = True
-            elif flag_value == 'False':
-                review.review_school = False
-        elif flag == "missing_school":
-            if flag_value == 'True':
-                review.missing_school = True
-            elif flag_value == 'False':
-                review.missing_school = False
-        elif flag == "review_work":
-            if flag_value == 'True':
-                review.review_work = True
-            elif flag_value == 'False':
-                review.review_work = False
-        elif flag == "missing_work":
-            if flag_value == 'True':
-                review.missing_work = True
-            elif flag_value == 'False':
-                review.missing_work = False
-        elif flag == "incorrect_dates":
-            if flag_value == 'True':
-                review.incorrect_dates = True
-            elif flag_value == 'False':
-                review.incorrect_dates = False
-        review.save()
-
-        return redirect(application.get_preview_url())
 
 class ReviewEssay(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     template_name = 'home/review_essay.html'
@@ -4355,18 +4265,7 @@ class ReviewEssay(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     )
 
     def get_object(self):
-        current_round = get_current_round_for_initial_application_review()
-
-        application = get_object_or_404(ApplicantApproval,
-                applicant__account__username=self.kwargs['applicant_username'],
-                application_round=current_round)
-        try:
-            reviewer = application.application_round.applicationreviewer_set.approved().get(
-                comrade__account=self.request.user,
-            )
-        except ApplicationReviewer.DoesNotExist:
-            raise PermissionDenied("You are not currently an approved application reviewer.")
-
+        application, reviewer = get_application_and_reviewer(self)
         return application
 
     def get_success_url(self):
@@ -4377,10 +4276,30 @@ class ReviewCommentUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     fields = ['comments',]
 
     def get_object(self):
-        application, reviewer, review = get_or_create_application_reviewer_and_review(self)
+        application, reviewer = get_application_and_reviewer(self)
+
+        # If the reviewer already commented on this application, update their comment.
+        # Otherwise create a new comment.
+        try:
+            review = InitialApplicationReview.objects.get(
+                    application=application,
+                    reviewer=reviewer)
+        except InitialApplicationReview.DoesNotExist:
+            review = InitialApplicationComment(application=application, reviewer=reviewer)
+
         return review
 
     def get_success_url(self):
+        application, reviewer = get_application_and_reviewer(self)
+
+        # Create a review statistic when a reviewer saves essay qualities
+        # Catch the very rare case where a uniqueness constraint fails because
+        # the database writes happen within 1 microsecond
+        try:
+            InitialApplicationReviewStatistic(application=application, reviewer=reviewer)
+        except IntegrityError:
+            pass
+
         return self.request.GET.get('next', self.object.application.get_preview_url())
 
 @login_required

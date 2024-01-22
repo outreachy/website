@@ -151,17 +151,14 @@ def application_summary(request, today):
     current_applicants = current_round.applicantapproval_set
 
     pending_applications_count = current_applicants.pending().distinct().count()
-    pending_unreviewed_unowned_count = current_applicants.pending().filter(initialapplicationreview__isnull=True, review_owner=None).distinct().count()
+    pending_unreviewed_unowned_count = current_applicants.pending().filter(essayquality__isnull=True, review_owner=None, initialapplicationcomment__isnull=True).distinct().count()
     pending_unreviewed_unowned_non_student_count = current_applicants.pending().filter(initialapplicationreview__isnull=True, review_owner=None, schoolinformation__isnull=True).distinct().count()
     pending_reviewed_unowned_count = current_applicants.pending().filter(initialapplicationreview__isnull=False, review_owner=None).distinct().count()
 
     rejected_applications_count = current_applicants.rejected().distinct().count()
     approved_applications_count = current_applicants.approved().distinct().count()
 
-    reviewed_strong_count = current_applicants.pending().filter(review_owner=None).filter(initialapplicationreview__essay_rating=InitialApplicationReview.STRONG).distinct().count()
-    reviewed_good_count = current_applicants.pending().filter(review_owner=None).filter(initialapplicationreview__essay_rating=InitialApplicationReview.GOOD).distinct().count()
-    reviewed_maybe_count = current_applicants.pending().filter(review_owner=None).filter(initialapplicationreview__essay_rating=InitialApplicationReview.MAYBE).distinct().count()
-    reviewed_unclear_count = current_applicants.pending().filter(review_owner=None).filter(initialapplicationreview__essay_rating=InitialApplicationReview.UNCLEAR).distinct().count()
+    reviewed_count = current_applicants.pending().filter(review_owner=None).filter(essayquality__isnull=False).distinct().count()
 
     reviewers = ApplicationReviewer.objects.filter(reviewing_round=current_round).approved().order_by('comrade__public_name').annotate(number_pending_applications_owned=models.Count('applicantapproval', filter=models.Q(applicantapproval__approval_status=ApprovalStatus.PENDING)))
 
@@ -170,10 +167,7 @@ def application_summary(request, today):
         'pending_unreviewed_unowned_count': pending_unreviewed_unowned_count,
         'pending_unreviewed_unowned_non_student_count': pending_unreviewed_unowned_non_student_count,
         'pending_reviewed_unowned_count': pending_reviewed_unowned_count,
-        'reviewed_strong_count': reviewed_strong_count,
-        'reviewed_good_count': reviewed_good_count,
-        'reviewed_maybe_count': reviewed_maybe_count,
-        'reviewed_unclear_count': reviewed_unclear_count,
+        'reviewed_count': reviewed_count,
         'rejected_applications_count': rejected_applications_count,
         'approved_applications_count': approved_applications_count,
         'reviewers': reviewers,
