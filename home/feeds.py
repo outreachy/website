@@ -258,6 +258,13 @@ class WagtailFeed(Feed):
             first_published_at=pacific.localize(datetime.datetime(2024, 1, 15, 21, 15, 0)),
             last_published_at=pacific.localize(datetime.datetime(2024, 1, 15, 21, 15, 0)),
         ))
+        items.append(PseudoPage(
+            title='Outreachy Mentor Spotlight: Agien Petra',
+            full_url=reverse('2024-02-mentor-spotlight-agien-petra'),
+            owner=author,
+            first_published_at=pacific.localize(datetime.datetime(2024, 2, 4, 13, 00, 0)),
+            last_published_at=pacific.localize(datetime.datetime(2024, 2, 4, 13, 00, 0)),
+        ))
 
         # put the Wagtail pages and special posts together in the right order
         items.sort(key=operator.attrgetter('first_published_at'), reverse=True)

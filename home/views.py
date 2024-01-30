@@ -3029,6 +3029,9 @@ def blog_2024_01_15_initial_applications_open(request):
         'current_round': current_round,
         })
 
+def blog_2024_02_04_mentor_spotlight_agien_petra(request):
+    return render(request, 'home/blog/2024-02-04-mentor-spotlight-agien-petra.html')
+
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(Feedback1FromMentor,
             fields=(
