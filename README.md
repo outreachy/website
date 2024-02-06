@@ -1422,10 +1422,12 @@ sudo -i -u postgres
 In this new shell, create a database user with the same name as your local computer's login name:
 
 ```
-createuser -DRS LOGIN_NAME
+createuser --interactive -DRS --pwprompt
 ```
 
-Then create a database that your user has access to:
+Pick a new password that is different from your computer's account password. This password will need to be passed on the shell prompt, so it will be stored in the shell command history in .bash_history. Therefore using your laptop's account password is not advised.
+
+Next, create a database that your user has access to:
 
 ```
 createdb -O LOGIN_NAME www_database
@@ -1439,11 +1441,19 @@ Now as your normal user, import the exported production database to your newly c
 pg_restore --verbose --clean -d www_database outreachy-website-database-backup-DATE.sql
 ```
 
-Now you can start a local website server that will read and write to your newly imported database:
+Find out which port postgres is running on. This command will list the port number in the third column:
 
 ```
-PATH="$PWD/node_modules/.bin:$PATH" DATABASE_URL=postgresql:///www_database ./manage.py runserver
+pg_lsclusters
 ```
+
+Now you can start a local website server that will read and write to your newly imported database. Replace the following variables with ones used or found in the previous commands: `LOGIN_NAME`, `PASSWORD`, and `PORT`.
+
+```
+PATH="$PWD/node_modules/.bin:$PATH" DATABASE_URL=postgresql:///LOGIN_NAME:'PASSWORD'@locahost:PORT/www_database ./manage.py runserver
+```
+
+That will start the local Django web server.
 
 Now you can log in to localhost using your account username and password from the production server.
 
