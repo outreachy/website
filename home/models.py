@@ -2344,6 +2344,7 @@ class EssayQuality(models.Model):
     category_name = models.CharField(
             max_length=SENTENCE_LENGTH,
             help_text='Which category list should this description be under?')
+    category = models.ForeignKey(EssayQualityCategory, on_delete=models.CASCADE, null=True, blank=True)
     description = models.CharField(
             max_length=SENTENCE_LENGTH,
             verbose_name='Essay quality description')
