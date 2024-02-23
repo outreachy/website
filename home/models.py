@@ -2340,6 +2340,9 @@ class EssayQualityCategory(models.Model):
             help_text='Essay quality category name',
             unique=True)
 
+    def __str__(self):
+        return self.name
+
 class EssayQuality(models.Model):
     category_name = models.CharField(
             max_length=SENTENCE_LENGTH,
