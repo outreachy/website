@@ -21,6 +21,7 @@ from .models import Contribution
 from .models import CoordinatorApproval
 from .models import EmploymentTimeCommitment
 from .models import EssayQuality
+from .models import EssayQualityCategory
 from .models import FinalApplication
 from .models import FinalInternFeedback
 from .models import FinalMentorFeedback
@@ -293,13 +294,25 @@ class ApplicationReviewerAdmin(reversion.admin.VersionAdmin):
             'reviewing_round',
             )
 
+class EssayQualityCategoryAdmin(admin.ModelAdmin):
+    list_display = (
+            'name',
+            )
+    list_filter = (
+            'name',
+            )
+    search_fields = (
+            'name',
+            )
+    verbose_name_plural = 'Essay Quality Categories'
+
 class EssayQualityAdmin(admin.ModelAdmin):
     list_display = (
-            'category',
+            'category_name',
             'description',
             )
     list_filter = (
-            'category',
+            'category_name',
             )
     search_fields = (
             'description',
@@ -674,6 +687,7 @@ admin.site.register(Comrade, OnlyComradeAdmin)
 admin.site.register(CoordinatorApproval, CoordinatorApprovalAdmin)
 admin.site.register(Contribution, ContributionAdmin)
 admin.site.register(EssayQuality, EssayQualityAdmin)
+admin.site.register(EssayQualityCategory, EssayQualityCategoryAdmin)
 admin.site.register(FinalApplication, FinalApplicationAdmin)
 admin.site.register(InformalChatContact, InformalChatContactAdmin)
 admin.site.register(InternSelection, InternSelectionAdmin)

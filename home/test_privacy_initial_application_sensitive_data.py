@@ -91,7 +91,7 @@ class InitialApplicationPrivacyTestCase(TestCase):
 
     def create_essay_quality(self):
         return models.EssayQuality.objects.create(
-                category='Category',
+                category_name='Category',
                 description='essay quality description',
                 )
 
@@ -287,6 +287,6 @@ class InitialApplicationPrivacyTestCase(TestCase):
                 # even after the application that had a foreign key reference
                 # to the essay quality gets deleted
                 models.EssayQuality.objects.get(
-                        category=essay_quality.category,
+                        category_name=essay_quality.category_name,
                         description=essay_quality.description,
                         )

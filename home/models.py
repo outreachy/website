@@ -2334,8 +2334,14 @@ class ApplicationReviewer(ApprovalStatus):
     comrade = models.ForeignKey(Comrade, on_delete=models.CASCADE)
     reviewing_round = models.ForeignKey(RoundPage, on_delete=models.CASCADE)
 
+class EssayQualityCategory(models.Model):
+    name = models.CharField(
+            max_length=SENTENCE_LENGTH,
+            help_text='Essay quality category name',
+            unique=True)
+
 class EssayQuality(models.Model):
-    category = models.CharField(
+    category_name = models.CharField(
             max_length=SENTENCE_LENGTH,
             help_text='Which category list should this description be under?')
     description = models.CharField(
@@ -2347,10 +2353,10 @@ class EssayQuality(models.Model):
             help_text='Help text to further clarify the short essay quality description')
 
     def __str__(self):
-        return '[' + self.category + '] ' + self.description
+        return '[' + self.category_name + '] ' + self.description
 
     class Meta:
-        ordering = ('category', 'description')
+        ordering = ('category_name', 'description')
 
 # This class stores information about whether an applicant is eligible to
 # participate in this round Automated checking will set the applicant to
