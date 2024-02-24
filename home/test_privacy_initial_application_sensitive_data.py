@@ -90,10 +90,20 @@ class InitialApplicationPrivacyTestCase(TestCase):
         return reviewer
 
     def create_essay_quality(self):
-        return models.EssayQuality.objects.create(
-                category_name='Category',
-                description='essay quality description',
-                )
+        try:
+            return models.EssayQuality.objects.get(
+                    category__name='Category',
+                    description='essay quality description')
+        except models.EssayQuality.DoesNotExist:
+            try:
+                category = models.EssayQualityCategory.objects.get(name='Category')
+            except models.EssayQualityCategory.DoesNotExist:
+                category = models.EssayQualityCategory.objects.create(name='Category')
+
+            return models.EssayQuality.objects.create(
+                    category=category,
+                    description='essay quality description',
+                    )
 
     def create_essay_review(self, reviewer, applicant_approval, essay_quality):
         reviewer_approval = models.ApplicationReviewer.objects.get(
@@ -287,6 +297,6 @@ class InitialApplicationPrivacyTestCase(TestCase):
                 # even after the application that had a foreign key reference
                 # to the essay quality gets deleted
                 models.EssayQuality.objects.get(
-                        category_name=essay_quality.category_name,
+                        category__name=essay_quality.category.name,
                         description=essay_quality.description,
                         )

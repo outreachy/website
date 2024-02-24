@@ -312,7 +312,7 @@ class EssayQualityAdmin(admin.ModelAdmin):
             'description',
             )
     list_filter = (
-            'category_name',
+            'category__name',
             )
     search_fields = (
             'description',

@@ -2344,10 +2344,7 @@ class EssayQualityCategory(models.Model):
         return self.name
 
 class EssayQuality(models.Model):
-    category_name = models.CharField(
-            max_length=SENTENCE_LENGTH,
-            help_text='Which category list should this description be under?')
-    category = models.ForeignKey(EssayQualityCategory, on_delete=models.CASCADE, null=True, blank=True)
+    category = models.ForeignKey(EssayQualityCategory, on_delete=models.CASCADE)
     description = models.CharField(
             max_length=SENTENCE_LENGTH,
             verbose_name='Essay quality description')
@@ -2356,11 +2353,14 @@ class EssayQuality(models.Model):
             blank=True,
             help_text='Help text to further clarify the short essay quality description')
 
+    def category_name(self):
+        return self.category.name
+
     def __str__(self):
-        return '[' + self.category_name + '] ' + self.description
+        return '[' + self.category.name + '] ' + self.description
 
     class Meta:
-        ordering = ('category_name', 'description')
+        ordering = ('category__name', 'description')
 
 # This class stores information about whether an applicant is eligible to
 # participate in this round Automated checking will set the applicant to
