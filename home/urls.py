@@ -173,7 +173,7 @@ urlpatterns = [
     re_path(r'^blog/2024-01-08/may-2024-call-for-mentoring-organizations/$', views.blog_2024_01_08_cfp_open, name='2024-01-cfp-open'),
     re_path(r'^blog/2024-01-11/outreachy-2023-in-review/$', views.blog_outreachy_2023_year_in_review, name='outreachy-2023-year-in-review'),
     re_path(r'^blog/2024-01-15/may-2024-initial-applications-open/$', views.blog_2024_01_15_initial_applications_open, name='2024-01-initial-applications-open'),
-    re_path(r'^blog/2024-02-04/mentor-spotlight-agien-petra/$', views.blog_2024_02_04_mentor_spotlight_agien_petra, name='2024-02-mentor-spotlight-agien-petra'),
+    re_path(r'^blog/2024-03-14/mentor-spotlight-agien-petra/$', views.blog_2024_03_14_mentor_spotlight_agien_petra, name='2024-03-mentor-spotlight-agien-petra'),
 
     re_path(r'^privacy-policy/$', views.privacy_policy, name='privacy-policy'),
 ]
