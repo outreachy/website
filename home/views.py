@@ -3896,7 +3896,7 @@ def sponsor_info(request, round_slug):
                     participation__approval_status=ApprovalStatus.PENDING
                 ),
                 participation__participating_round=current_round,
-            ).order_by('participation__community__name').order_by('name')
+            ).order_by('name', 'participation__community__name')
 
     return render(request, 'home/sponsor_info.html',
             {
