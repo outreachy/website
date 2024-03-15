@@ -318,7 +318,7 @@ class ProjectSubmissionTestCase(TestCase):
                 'round_slug': current_round.slug,
                 'community_slug': scenario.participation.community.slug,
         }))
-        self.assertContains(response, '<p>All communities must find finding for at least one intern ($10,000 USD):</p>', html=True)
+        self.assertContains(response, '<p>All communities must find funding for at least one intern ($10,000 USD):</p>', html=True)
         self.assertContains(response, '<div class="card-footer bg-white">Sponsorship for each intern is $10,000 USD.</div>', html=True)
                         
         response = self.coordinator_signs_up_community_to_participate(
