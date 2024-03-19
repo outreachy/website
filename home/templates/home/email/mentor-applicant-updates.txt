@@ -33,6 +33,8 @@ Kindly reply to this email with the following:
  - Link to the project on the Outreachy website
  - How many applicants you have worked with, and the status of their contributions
 
+Please send us this info ASAP (at least within two days). This allows Outreachy organizers to communicate with applicants in time for them to make a contribution to your project.
+
 Application Deadlines
 ---------------------
 
