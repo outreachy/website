@@ -25,13 +25,15 @@ Too Few Applicants?
 
 If you do not have enough applicants, please let us know. We will share the details of projects that require more contribution to all our approved applicants in this cohort and encourage them to look at your project.
 
-Kindly reply to this email with the following:
+Kindly reply to this email with the following information:
 
- - Community Name 
- - Project title
- - Required project skills
- - Link to the project on the Outreachy website
- - How many applicants you have worked with, and the status of their contributions
+1. How many applicants you have worked with, and what is the status of their contributions?
+
+2. Please include a short paragraph we can send to encourage applicants to apply. You can use a paragraph similar to the template below:
+
+{{ project.project_round.community.name }} project "{{ project.short_title }}" is looking for more applicants with the following required skills: {% for skill in project.required_skills %}{{ skill.skill }}{% if not forloop.last %}, {% else %}.{% endif %}{% endfor %} Read about the project here:
+
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_landing_url }}
 
 Please send us this info ASAP (at least within two days). This allows Outreachy organizers to communicate with applicants in time for them to make a contribution to your project.
 
