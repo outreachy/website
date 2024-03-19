@@ -9,9 +9,10 @@ Hi Outreachy mentor,
 
 We're grateful for the support and dedication you offer to Outreachy applicants. Your hard work doesn't go unnoticed, and we truly appreciate all your efforts! 
 
-We want to make sure that all Outreachy applicants get a chance to make a contribution.
+Too Many Applicants?
+---------------------
 
-If you're currently working with too many strong applicants, we encourage you to close your project to new applicants.
+If you're currently working with too many strong applicants, we encourage you to close your project to new applicants. This ensures that Outreachy applicants who start their contributions later know which project mentors have time to work with them.
 
 Closing your project to new applicants simply changes how the project is displayed on the projects list. Your project will be moved to a section at the end called "Closed Projects". Any applicant can still record contributions and create final applications for your project until {{ current_round.contributions_close }} at 4pm UTC.
 
@@ -26,9 +27,11 @@ If you do not have enough applicants, please let us know. We will share the deta
 
 Kindly reply to this email with the following:
 
-  - Community Name 
-  - Project title and link to the project on the Outreachy website.
-  - Status of contributions in your project
+ - Community Name 
+ - Project title
+ - Required project skills
+ - Link to the project on the Outreachy website
+ - How many applicants you have worked with, and the status of their contributions
 
 Application Deadlines
 ---------------------
