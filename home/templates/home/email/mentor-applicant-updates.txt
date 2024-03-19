@@ -35,7 +35,7 @@ Application Deadlines
 
 Applicants must record a contribution to your project and submit a final application by {{ current_round.contributions_close }} at 4pm UTC.
 
-Only applicants that record both a contribution and submit a final application will be eligible to be selected as interns. Kindly encourage applicants to record contributions or create an application by sending them the following URL. (Please note that this will redirect applicants to complete an eligibility check if they haven't already, so mentors shouldn't follow this link.)
+Only applicants that record both a contribution and submit a final application will be eligible to be selected as interns. Kindly encourage applicants to record contributions or create an application before the deadline by sending them the following URL. (Please note that this will redirect applicants to complete an eligibility check if they haven't already, so mentors shouldn't follow this link.)
 
 {{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}
 
