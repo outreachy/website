@@ -3916,12 +3916,14 @@ def sponsor_info_details(request, round_slug, community_slug):
     """
     current_round = get_object_or_404(RoundPage, slug=round_slug)
     participation = get_object_or_404(Participation, participating_round=current_round, approval_status=ApprovalStatus.APPROVED, community__slug=community_slug)
+    number_projects_approved = Project.objects.filter(project_round=participation).approved().count()
 
     return render(request, 'home/sponsor_info_details.html',
             {
             'current_round' : current_round,
             'participation' : participation,
             'number_interns_approved' : participation.number_interns_approved(),
+            'number_projects_approved' : number_projects_approved,
             'total_funding_needed' : participation.number_interns_approved() * participation.participating_round.sponsorship_per_intern,
             'community' : participation.community,
             'sponsor_set' : participation.sponsorship_set.all(),
