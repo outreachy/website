@@ -3,45 +3,68 @@
 {% with contributors=project.get_applicants_and_contributions_list %}
 {% with applicants=project.get_applications %}
 {% with coordinators=community.get_coordinator_email_list %}
-Too many Outreachy applicants? We can help!
+Too many Outreachy applicants? Too few? We can help!
 
 Hi Outreachy mentor,
 
-We want to make sure that all Outreachy applicants get a chance to make a contribution. If you're currently working with too many strong applicants, we want you to close your project to new applicants. The option is at the bottom of this page, in the "Project Deadline and Advertisement" section:
+We're grateful for the support and dedication you offer to Outreachy applicants. Your hard work doesn't go unnoticed, and we truly appreciate all your efforts! 
 
-{{ request.scheme }}://{{ request.get_host }}{{ project.get_submit_url }}
+Too Many Applicants?
+---------------------
+
+If you're currently working with too many strong applicants, we encourage you to close your project to new applicants. This ensures that Outreachy applicants who start their contributions later know which project mentors have time to work with them.
 
 Closing your project to new applicants simply changes how the project is displayed on the projects list. Your project will be moved to a section at the end called "Closed Projects". Any applicant can still record contributions and create final applications for your project until {{ current_round.contributions_close }} at 4pm UTC.
 
-Please follow this link to edit your project description. The option to close your project to new applicants is at the bottom of this page, in the "Project Deadline and Advertisement" section:
+Please follow this link to edit your project description. The option to close your project to new applicants is at the bottom of this page, in the "Accepting New Contributors?" section:
 
 {{ request.scheme }}://{{ request.get_host }}{{ project.get_submit_url }}
+
+Too Few Applicants?
+---------------------
+
+If you do not have enough applicants, please let us know. We will share the details of projects that require more contribution to all our approved applicants in this cohort and encourage them to look at your project.
+
+Kindly reply to this email with the following information:
+
+1. How many applicants you have worked with, and what is the status of their contributions?
+
+2. Please include a short paragraph we can send to encourage applicants to apply. You can use a paragraph similar to the template below:
+
+{{ project.project_round.community.name }} project "{{ project.short_title }}" is looking for more applicants with the following required skills: {% for skill in project.required_skills %}{{ skill.skill }}{% if not forloop.last %}, {% else %}.{% endif %}{% endfor %} Read about the project here:
+
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_landing_url }}
+
+Please send us this info ASAP (at least within two days). This allows Outreachy organizers to communicate with applicants in time for them to make a contribution to your project.
 
 Application Deadlines
 ---------------------
 
 Applicants must record a contribution to your project and submit a final application by {{ current_round.contributions_close }} at 4pm UTC.
 
+Only applicants that record both a contribution and submit a final application will be eligible to be selected as interns. Kindly encourage applicants to record contributions or create an application before the deadline by sending them the following URL. (Please note that this will redirect applicants to complete an eligibility check if they haven't already, so mentors shouldn't follow this link.)
+
+{{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}
+
 Your Project Applicants
 -----------------------
 
 You may receive this email for multiple projects you are mentoring for. This email is for the {{ community.name }} project "{{ project.short_title }}".
 
-{% if project.is_pending %}Your coordinator has not yet approved your project for this round, and it is not yet listed on the applicant project selection page.{% else %}{{ contributors|length }} applicant{{ contributors|pluralize:" has,s have" }} recorded their contributions to your project{% if contributors|length > 0 %}: {% for c in contributors %}{{ c.applicant.public_name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}.
+{% if project.is_pending %}Your coordinator has not yet approved your project for this round, and it is not yet listed on the applicant project selection page.{% else %}{{ contributors|length }} applicant{{ contributors|pluralize:" has,s have" }} recorded their contributions to your project.
 
-{{ applicants|length }} applicant{{ applicants|pluralize:" has,s have" }} created a final application for your project{% if applicants|length > 0 %}: {% for a in applicants %}{{ a.applicant.applicant.public_name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}.
+{{ applicants|length }} applicant{{ applicants|pluralize:" has,s have" }} created a final application for your project.
 
-Only applicants that record both a contribution and create an application will be eligible to be selected as interns. You can encourage applicants to record contributions or create an application by sending them the following URL. (Please note that this will redirect applications to complete an eligibility check if they haven't already, so mentors shouldn't follow this link. See the next link instead.)
-
-{{ request.scheme }}://{{ request.get_host }}{{ project.get_contributions_url }}
-
-You can review your project's applicants and rank them here:
+You can review your project's applicants here:
 
 {{ request.scheme }}://{{ request.get_host }}{{ project.get_applicants_url }}{% endif %}
 
-If you have any questions, please contact your community coordinator{{ coordinators|pluralize }} {% for c in coordinators %}{{ c }}{% if not forloop.last %}, {% endif %}{% endfor %}. You can always contact the Outreachy organizers <organizers@outreachy.org> for help.
+If you have any questions, please contact your community coordinator{{ coordinators|pluralize }} {% for c in coordinators %}{{ c }}{% if not forloop.last %}, {% endif %}{% endfor %}. Also, you can always reach out to the Outreachy organizers at <organizers@outreachy.org> for support.
 
-Outreachy Organizers
+Once again, thank you for your incredible support and dedication to Outreachy!
+
+Tilda Udufo
+Outreachy Organizer & Mentor Advocate
 {% include 'home/email/footer-mentor.txt' %}
 {% endwith %}
 {% endwith %}

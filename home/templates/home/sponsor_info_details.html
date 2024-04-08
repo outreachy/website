@@ -2,12 +2,14 @@
 {% load humanize %}
 
 {% block title %}
-Sponsor info for {{ community }} in {{ current_round.official_name }}
+Sponsorship leads from {{ community }} in {{ current_round.official_name }}
 {% endblock %}
 
 {% block content %}
 {% if request.user.is_staff %}
-	<h2>{{ community }} Sponsorship Details</h2>
+	<h2>Sponsorship Leads Notes</h2>
+	<p>Interns working with: <b>{{ community }}</b></p>
+	<p>Cohort: <b>{{ current_round.internstarts|date:"F Y" }} cohort</b></p>
 	<hr>
 	<p>
 	{% with approved_coordinator_list=community.coordinatorapproval_set.approved %}
@@ -19,49 +21,47 @@ Sponsor info for {{ community }} in {{ current_round.official_name }}
 		{% endif %}
 	{% endwith %}
 	</p>
-	<p><b>Funding required:</b></p>
+	<p><b>Internship application status:</b></p>
 	<ul>
-		<li>{{ number_interns_approved }} interns approved by Outreachy organizers</li>
-		<li>${{ total_funding_needed|intcomma }} is required to fund these interns</li>
+		<li>{{ number_projects_approved }} internship project(s) listed for this cohort</li>
+		<li>{{ number_interns_approved }} intern(s) approved by Outreachy organizers</li>
+		<li>${{ total_funding_needed|intcomma }} - total estimated funding required for internships with this community this cohort</li>
 	</ul>
 
-	<p><b>Sponsorship summary:</b></p>
+	<p><b>Potential sponsorships / funding sources:</b></p>
 	<ul>
 		{% for s in sponsor_set %}
 			<li>
-				{% if not s.funding_secured %}<span class="badge badge-pill badge-warning">Unconfirmed</span> {% endif %}
-				{{ s.name }}: ${{ s.amount|intcomma }}
+				{% if not s.funding_secured %} (Tentative) {% endif %}{{ s.name }}: ${{ s.amount|intcomma }}
 			</li>
 		{% endfor %}
 	</ul>
-	<p><b>Sponsorship editing history:</b></p>
+	<p><b>Notes about potential funding sources from coordinator or Outreachy organizers:</b></p>
 
 	<table class="table table-striped table-bordered">
 	{% for s in sponsor_set %}
 		<thead class="thead-dark">
 			<tr>
-				<th scope="col" colspan="4">Sponsor: {{ s.name }}</th>
+				<th scope="col" colspan="4">Potential funding source: {{ s.name }}</th>
 			</tr>
 		</thead>
 		<thead class="thead-light">
 			<tr>
-				<th scope="col">Revision date</th>
-				<th scope="col">Editor username</th>
-				<th scope="col">Editor contact</th>
-				<th scope="col">Sponsor information</th>
+				<th scope="col">Note revision date</th>
+				<th scope="col">Editor</th>
+				<th scope="col">Sponsorship lead notes after editing:</th>
 			</tr>
 		</thead>
 		<tbody>
 		{% for history in s.sponsorship_history %}
 			<tr>
 				<td>{{ history.0 }}</td>
-				<td>{{ history.1 }}</td>
 				<td>{{ history.2 }}</td>
 				<td>
 					<ul>
-						<li>Sponsor name: {{ history.3 }}</li>
-						<li>Amount: ${{ history.4|intcomma }}</li>
-						<li>Additional info: {{ history.7|safe }}</li>
+						<li>Potential sponsor / funding source: {{ history.3 }}</li>
+						<li>Potential funding amount: ${{ history.4|intcomma }}</li>
+						<li>Additional notes: {{ history.7|safe }}</li>
 					</ul>
 				</td>
 			</tr>
