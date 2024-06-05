@@ -1,6 +1,6 @@
-[Due {{ intern_selection.final_feedback_due|date:"M j" }}] Outreachy final feedback requested for {{ intern_selection.applicant.applicant.public_name }}
+[Due {{ intern_selection.final_feedback_due|date:"M j" }}] Outreachy feedback #4 requested for {{ intern_selection.applicant.applicant.public_name }}
 
-Greetings Outreachy interns and mentors! The Outreachy internship is almost over. We are asking both interns and one of their mentors to provide final feedback on the internship. We would especially like feedback from interns on some of the new things we tried this round.
+Greetings Outreachy interns and mentors! The Outreachy internship is almost over. We are asking both interns and one of their mentors to provide feedback on the internship. We would especially like feedback from interns on some of the new things we tried this round.
 
 This is an automated email to ask you to fill out your feedback form linked from your dashboard:
 
@@ -20,11 +20,11 @@ We encourage mentors and interns to provide honest feedback on how the internshi
 Survey
 ---
 
-An optional survey is included in the final feedback form. Both mentors and interns and encouraged to fill out the survey. The survey results will help us keep the parts of the internship program that are working, and improve the parts that aren't working.
+An optional survey is included in the feedback #4 form. Both mentors and interns and encouraged to fill out the survey. The survey results will help us keep the parts of the internship program that are working, and improve the parts that aren't working.
 
 Please share your feedback with us! We are open to both positive and negative feedback.
 
-Final Feedback Success Metrics
+Feedback #4 Success Metrics
 ---
 
 Outreachy organizers view this internship as a fellowship. Mentors should not expect a certain project to be completed by the intern, but rather expect that the intern's work will be adjusted to the level of their ability, their interests, and the project's priorities throughout the internship. Outreachy organizers prefer not to fail people in the program as long as they are working full-time on the project.
