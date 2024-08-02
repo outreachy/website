@@ -136,7 +136,7 @@ class ParticipationAdmin(reversion.admin.VersionAdmin):
         return obj.participating_round
     round.admin_order_field = '-participating_round__roundnumber'
 
-class CommunityAdmin(admin.ModelAdmin):
+class CommunityAdmin(reversion.admin.VersionAdmin):
     prepopulated_fields = {"slug": ("name",)}
     save_on_top = True
 

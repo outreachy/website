@@ -203,7 +203,7 @@ class OrganizerNotesUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView)
         return self.request.GET.get('next', reverse('dashboard'))
 
 # FIXME - we need a way for comrades to update and re-verify their email address.
-class ComradeUpdate(LoginRequiredMixin, UpdateView):
+class ComradeUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     fields = [
         'public_name',
         'legal_name',
