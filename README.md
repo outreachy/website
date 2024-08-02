@@ -679,6 +679,71 @@ The runserver command takes a snapshot of the Python code base when you start it
 
 You don't need to restart the shell if you're only making changes to HTML templates or CSS.
 
+# Outreachy website server
+
+The Outreachy website is deployed in two docker containers:
+ - www.outreachy.org - this is the production website, aka the one Outreachy participants use
+ - test.outreachy.org - this is the test deployment website, used to test new code without interrupting Outreachy participants
+
+Both www.outreachy.org and test.outreachy.org are deployed on the same Linux web server. They are deployed in two separate docker containers. Each docker container uses a separate database.
+
+It is good practice to push your code to the test deployment website (test.outreachy.org), try your code out, and then deploy to it to the production website (www.outreachy.org).
+
+## Adding website Linux server SSH access
+
+Although the docker containers can be debugged through dokku commands, it is often useful to access the Linux command line of the website server. We access the Linux server through SSH keys only (we do not allow users to use a password instead of an SSH key).
+
+To give another person SSH access to the website server SSH access to another person:
+
+1. Ask them to generate an ssh key
+
+2. Copy their key from your local system to the website server's .ssh directory:
+
+```
+scp /tmp/NEW-KEY.pub root@www.outreachy.org:/root/.ssh/
+```
+
+3. Log into the website server:
+
+```
+ssh root@www.outreachy.org
+```
+
+4. Add their key to the SSH list of authorized keys:
+
+```
+cat .ssh/NEW-KEY.pub >> .ssh/authorized_keys
+```
+
+5. Ask the person to log into the website server to test their SSH access with this command:
+
+```
+ssh root@www.outreachy.org
+```
+
+## Adding webserver dokku access
+
+Access to run dokku commands is separate from website server access. You can run dokku commands without having SSH webserver access. However, people often need access to the Linux command line to debug things like failing dokku deployments, and thus will need SSH access.
+
+Dokku has [documentation](https://dokku.com/docs/deployment/user-management/#user-management) about how to add users who can run dokku commands.
+
+1. See who already has dokku ssh access by running this command on your local system:
+
+```
+ssh -t dokku@www.outreachy.org ssh-keys:list
+```
+
+2. Tell dokku to add the ssh key you already copied over to its list of authorized users:
+
+```
+ssh -t root@www.outreachy.org dokku ssh-keys:add NEW-USERNAME /root/.ssh/NEW-KEY.pub
+```
+
+3. Check that NEW-USERNAME is added as a dokku ssh user by listing the authorized ssh keys again:
+```
+ssh -t dokku@www.outreachy.org ssh-keys:list
+```
+
 # Tour of the code base
 
 When you first clone this project, you'll see a couple top level directories:
