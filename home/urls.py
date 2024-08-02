@@ -174,6 +174,7 @@ urlpatterns = [
     re_path(r'^blog/2024-01-11/outreachy-2023-in-review/$', views.blog_outreachy_2023_year_in_review, name='outreachy-2023-year-in-review'),
     re_path(r'^blog/2024-01-15/may-2024-initial-applications-open/$', views.blog_2024_01_15_initial_applications_open, name='2024-01-initial-applications-open'),
     re_path(r'^blog/2024-04-03/mentor-spotlight-agien-petra/$', views.blog_2024_04_mentor_spotlight_agien_petra, name='2024-04-mentor-spotlight-agien-petra'),
+    re_path(r'^blog/2024-07-19/outreachy-impact-ahmed-rafiat/$', views.blog_2024_07_19_mentor_outreachy_impact_ahmed_rafiat, name='2024-07-outreachy-impact-ahmed-rafiat'),
 
     re_path(r'^privacy-policy/$', views.privacy_policy, name='privacy-policy'),
 ]

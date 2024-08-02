@@ -3032,6 +3032,9 @@ def blog_2024_01_15_initial_applications_open(request):
 def blog_2024_04_mentor_spotlight_agien_petra(request):
     return render(request, 'home/blog/2024-04-mentor-spotlight-agien-petra.html')
 
+def blog_2024_07_19_mentor_outreachy_impact_ahmed_rafiat(request):
+    return render(request, 'home/blog/2024-07-19-outreachy-impact-ahmed-rafiat.html')
+
 class InitialMentorFeedbackUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(Feedback1FromMentor,
             fields=(
