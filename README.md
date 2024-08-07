@@ -162,6 +162,10 @@ You'll need to set up a new internship round, following the instructions in the 
 
 # Misc virtual env topics
 
+## Debugging pipenv
+
+You can add the --verbose flag to any Pipenv command to understand what is happening behind the scenes. For example, when I was using a cellular network for my internet, `pipenv install` kept failing with the message "RuntimeError: Failed to lock Pipfile.lock!". When I enabled the verbose output, I could see that Pipenv was trying to clone a git repository, and that command was timing out after 1 minute with a `pipenv.exceptions.ResolutionFailure` error. It turned out my cellular network was very unstable, and would drop the connection for minutes at a time. The solution was to find a more stable internet connection (which had nothing to do with the file Pipfile.lock at all!).
+
 ## Removing a virtual env
 
 If you made a mistake in the directions above, you may need to remove your pipenv virtual environment. You can do that by running `pipenv --rm` in the website directory. If needed, you can delete the website directory and start over at the git clone command.
