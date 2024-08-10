@@ -1723,7 +1723,7 @@ Next, check to see which Linux distributions have that Python version available:
  - [Fedora packages](https://packages.fedoraproject.org/search?query=python3)
  - [Fedora release cycle](https://docs.fedoraproject.org/en-US/releases/)
 
-Pick a version of Python that is in the bugfix state for the next six months, and is included in Debian stable and the previous Fedora release.
+Pick a version of Python that is in the bugfix state for the next six months, and is included in Debian stable and the previous Fedora release. If Debian stable does not have a python version that is in the bugfix state, choose the latest version available that will have security releases for six months.
 
 Make sure to install that version of Python on your local development machine. That may mean you need to update your system to a new release of your Linux distribution.
 
