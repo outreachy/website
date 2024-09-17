@@ -101,7 +101,11 @@ You can edit your final application(s) until {{ current_round.contributions_clos
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}
 
-The final application will ask you to fill out a timeline for the internship project. If you have trouble with this, or a mentor isn't responsive to your questions about the timeline, do the best you can. You should submit a final application by the final application deadline, even if you feel the timeline isn't complete or perfect.
+The final application will ask you to fill out a timeline for the internship project. For guidance on how to prepare your project timeline, please refer to our documentation.
+
+{{ request.scheme }}://{{ request.get_host }}{% url 'docs-applicant' %}#final-application
+
+If you still have trouble with this, or a mentor isn't responsive to your questions about the timeline, do the best you can. You should submit a final application by the final application deadline, even if you feel the timeline isn't complete or perfect.
 
 {% if role.projects_contributed_to %}Your Project Contributions
 --------------------------
