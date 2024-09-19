@@ -105,7 +105,7 @@ The final application will ask you to fill out a timeline for the internship pro
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'docs-applicant' %}#final-application
 
-If you still have trouble with this, or a mentor isn't responsive to your questions about the timeline, do the best you can. You should submit a final application by the final application deadline, even if you feel the timeline isn't complete or perfect.
+Your project timeline doesn't need to be perfect, but it should be flexible enough to accommodate any changes in plans and time commitments, or unexpected blockers. Please submit your final application even if your project timeline isn't complete — if you're selected as an intern, you will have the chance to review it alongside your mentors.
 
 {% if role.projects_contributed_to %}Your Project Contributions
 --------------------------
