@@ -41,6 +41,29 @@ The Outreachy final application asks applicants to complete a internship project
 
 4. Finally, the project timeline provides mentors a chance to customize an internship plan with an applicant who may need more or less time to ramp up on specific goals. It also gives mentors a chance to re-evaluate any vague or uncertain project goals.
 
+Revised Project Timeline Guidelines
+-----------------------------------
+
+We've made an update to our applicant guide regarding the Outreachy internship project timeline.
+
+Previously, applicants were directed to work with their mentors to create a project timeline for their final applications. However, with a growing number of applicants each cohort, this approach became unsustainable for mentors.
+
+Our revised guidelines encourage applicants to develop project timelines independently, allowing mentors to focus on guiding selected interns.
+
+Important changes:
+
+1. We now advise applicants to create project timelines independently.
+
+2. Timelines should include bi-weekly milestones for project updates and feedback.
+
+3. Applicants are no longer directed to work with their mentors to create a project timeline.
+
+View the updated guidelines: {{ request.scheme }}://{{ request.get_host }}{% url 'docs-applicant' %}#final-application
+
+If your community or project has a specific timeline template, please inform applicants through the project description or community forums.
+
+If you have any questions or concerns about this change, please feel free to reach out to us.
+
 Thank you for participating as an Outreachy mentor! If you have any questions, please contact your community coordinator{{ coordinators|pluralize }} {% for c in coordinators %}{{ c }}{% if not forloop.last %}, {% endif %}{% endfor %}. You can always contact the Outreachy organizers <organizers@outreachy.org> for help.
 
 {% include 'home/email/footer-mentor.txt' %}{% endwith %} {% endwith %} {% endwith %} {% endwith %} {% endwith %}
