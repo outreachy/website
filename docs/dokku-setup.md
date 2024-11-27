@@ -530,6 +530,27 @@ $ ssh -t dokku@www.outreachy.org run www env --unset=SENTRY_DSN python manage.py
 ... 
 ```
 
+# Emailing applicants
+
+If you need to email applicants who filled out a final application:
+
+```
+>>> from home import models
+>>> from django.core.mail import send_mail
+>>> body = '''Hi {},
+... 
+... This is a multiline message.
+... 
+... This is the second line.
+... 
+... Outreachy Organizer'''
+>>> current_round = models.RoundPage.objects.latest('internstarts')
+>>> comrades = models.Comrade.objects.filter(applicantapproval__application_round=current_round, applicantapproval__finalapplication__isnull=False, applicantapproval__approval_status=models.ApprovalStatus.APPROVED).distinct()
+>>> for c in comrades:
+...     message = body.format(c.public_name.split()[0]).strip()
+...     send_mail(message=message, subject=subject.strip(), recipient_list=[c.email_address()], from_email=models.Address("Outreachy Organizers", "organizers", "outreachy.org"))
+```
+
 # Marking interns as paid
 
 If all interns can be paid:
