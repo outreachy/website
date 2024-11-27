@@ -243,9 +243,10 @@ We promote the cloned database to be used by the test container:
 ssh dokku@outreachy.org postgres:promote test-database-updated-2018-02-13 test
 ```
 
-Figure out what the name of the old database linked to the test app is with this command:
+Figure out what the name of the old database linked to the test app is with these commands:
 ```
 ssh dokku@outreachy.org postgres:list
+ssh dokku@outreachy.org postgres:app-links test
 ```
 
 Then we unlink the older database (use whatever was the old name):

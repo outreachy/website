@@ -1470,6 +1470,8 @@ Once you are *absolutely positively sure* that the changes haven't caused any is
 
 # Testing locally with production database
 
+## Initial set up of local production database
+
 If you are one of the few people with access to the Outreachy production webserver, you can run a copy of the production database in your local development environment. Do this with extreme care on an updated, secure system with full-disk encryption.
 
 First, export the production website postgres database to a local file on your computer:
@@ -1525,6 +1527,21 @@ PATH="$PWD/node_modules/.bin:$PATH" DATABASE_URL=postgresql:///LOGIN_NAME:'PASSW
 That will start the local Django web server.
 
 Now you can log in to localhost using your account username and password from the production server.
+
+## Refreshing the local production database
+
+These instructions will delete the contents of your local copy of the Outreachy website database, and replace it with an updated copy of the website database. This will allow you to test updated data when you need to investigate a bug or do data science research.
+
+postgres@macbeth:~$ dropdb www_database
+postgres@macbeth:~$ createdb -O LOGIN_NAME www_database
+
+Log out of the postgres user by pressing CTRL+D.
+
+Then run the command to import the updated copy of the Outreachy website database:
+
+$ pg_restore --verbose --create -d postgresql:// outreachy-website-database-backup-DATE.sql
+
+Make sure to run the command as your normal user. If you attempt to run this command as the postgres user, the command will not work if your login name for your computer is the same as your username for your Outreachy website account.
 
 # Updating the Outreachy web server
 
