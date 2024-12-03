@@ -2,7 +2,7 @@
 
 **Internship Terms of Participation**
 
-_last edited - November 27, 2024_
+_last edited - December 3, 2024_
 
 **Dear Participant:**
 
@@ -198,7 +198,7 @@ which furthers Conservancy’s charitable purposes.
 
 **Termination.**
 
-The internship will take place between Dec 9, 2024 and Mar 7, 2024. In
+The internship will take place between Dec 9, 2024 and Mar 7, 2025. In
 exceptional situations, your internship can be extended for up to five weeks,
 provided that both you and your Volunteer Mentor send a written request for an
 extension specifying a new end date to the Outreachy organizers, operating under
