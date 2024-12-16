@@ -1007,7 +1007,7 @@ def staff_intern_progress(request, today):
 
     try:
         current_round = RoundPage.objects.get(
-            initialfeedback__lte=today + datetime.timedelta(days=7),
+            internstarts__lte=today,
             finalfeedback__gt=today - datetime.timedelta(days=45),
         )
         current_round.today = today
