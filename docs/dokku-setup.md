@@ -504,6 +504,8 @@ If this is run on the test server, you should see lots of email bodies get print
 Sending mass emails manually
 ----------------------------
 
+To send a message to an Outreachy intern, and include their mentors (note this means the email will be sent with interns and mentors in the 'To' email header, but there's no way with Django to set the 'Cc' header):
+
 ```
 $ ssh -t dokku@www.outreachy.org run www env --unset=SENTRY_DSN python manage.py shell
 >>> from home import models
@@ -512,7 +514,9 @@ $ ssh -t dokku@www.outreachy.org run www env --unset=SENTRY_DSN python manage.py
 >>> interns = current_round.get_approved_intern_selections()
 >>> request = { 'scheme': 'https', 'get_host': 'www.outreachy.org' }
 >>> subject = '[Outreachy] Important information'
->>> body = '''This is a multiline message.
+>>> body = '''Hi {},
+... 
+... This is a multiline message.
 ... 
 ... This is the second line.
 ... 
@@ -520,13 +524,13 @@ $ ssh -t dokku@www.outreachy.org run www env --unset=SENTRY_DSN python manage.py
 ... 
 ... This is the final line.
 ... 
-... Sage Sharp
-... Outreachy Organizer'''
+... Outreachy Organizers'''
 >>> for i in interns:
 ...     emails = [ i.applicant.applicant.email_address() ]
+...     message = body.format(i.applicant.applicant.public_name.split()[0]).strip()
 ...     for m in i.mentors.all():
 ...             emails.append(m.mentor.email_address())
-...     send_mail(message=body.strip(), subject=subject.strip(), recipient_list=emails, from_email=models.Address("Outreachy Organizers", "organizers", "outreachy.org"))
+...     send_mail(message=message.strip(), subject=subject.strip(), recipient_list=emails, from_email=models.Address("Outreachy Organizers", "organizers", "outreachy.org"))
 ... 
 ```
 
