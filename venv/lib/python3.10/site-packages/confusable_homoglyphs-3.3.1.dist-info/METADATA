@@ -1,0 +1,169 @@
+Metadata-Version: 2.1
+Name: confusable-homoglyphs
+Version: 3.3.1
+Summary: Detect confusable usage of unicode homoglyphs, prevent homograph attacks.
+Home-page: https://github.com/vhf/confusable_homoglyphs
+Author: Victor Felder
+Author-email: victorfelder@gmail.com
+License: MIT
+Keywords: confusable,homoglyph,attack,homograph,unicode,spoofing
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Text Processing :: Filters
+Classifier: Topic :: Text Processing
+Classifier: Topic :: Utilities
+License-File: LICENSE
+License-File: AUTHORS.rst
+Provides-Extra: cli
+Requires-Dist: click ; extra == 'cli'
+
+confusable_homoglyphs `[doc] <http://confusable-homoglyphs.readthedocs.io/en/latest/>`__
+========================================================================================
+
+This project has been adopted from `the original confusable_homoglyphs
+by Victor Felder
+<https://github.com/vhf/confusable_homoglyphs/tree/master>`_.
+
+.. image:: https://builds.sr.ht/~valhalla/confusable_homoglyphs.svg
+      :target: https://builds.sr.ht/~valhalla/confusable_homoglyphs
+      :alt: Build Status
+
+.. image:: https://img.shields.io/pypi/v/confusable_homoglyphs.svg
+      :target: https://pypi.python.org/pypi/confusable_homoglyphs
+      :alt: Version on PyPi
+
+.. image:: https://readthedocs.org/projects/confusable_homoglyphs/badge/?version=latest
+      :target: http://confusable-homoglyphs.readthedocs.io/en/latest/
+      :alt: Documentation Status
+
+*a homoglyph is one of two or more graphemes, characters, or glyphs with
+shapes that appear identical or very similar*
+`wikipedia:Homoglyph <https://en.wikipedia.org/wiki/Homoglyph>`__
+
+Unicode homoglyphs can be a nuisance on the web. Your most popular
+client, AlaskaJazz, might be upset to be impersonated by a trickster who
+deliberately chose the username ΑlaskaJazz.
+
+-  ``AlaskaJazz`` is single script: only Latin characters.
+-  ``ΑlaskaJazz`` is mixed-script: the first character is a greek
+   letter.
+
+You might also want to avoid people being tricked into entering their
+password on ``www.micros﻿оft.com`` or ``www.faϲebook.com`` instead of
+``www.microsoft.com`` or ``www.facebook.com``. `Here is a
+utility <http://unicode.org/cldr/utility/confusables.jsp>`__ to play
+with these **confusable homoglyphs**.
+
+Not all mixed-script strings have to be ruled out though, you could only
+exclude mixed-script strings containing characters that might be
+confused with a character from some unicode blocks of your choosing.
+
+- ``Allo`` and ``ρττ`` are fine: single script.
+- ``AlloΓ`` is fine when our preferred script alias is 'latin': mixed
+  script, but ``Γ`` is not confusable.
+- ``Alloρ`` is dangerous: mixed script and ``ρ`` could be confused with
+  ``p``.
+
+This library is compatible with Python 3.
+
+`API documentation <http://confusable-homoglyphs.readthedocs.io/en/latest/apidocumentation.html>`__
+---------------------------------------------------------------------------------------------------
+
+Is the data up to date?
+-----------------------
+
+Yep.
+
+The unicode blocks aliases and names for each character are extracted
+from `this file <http://www.unicode.org/Public/UNIDATA/Scripts.txt>`__
+provided by the unicode consortium.
+
+The matrix of which character can be confused with which other
+characters is built using `this
+file <http://www.unicode.org/Public/security/latest/confusables.txt>`__
+provided by the unicode consortium.
+
+This data is stored in two JSON files: ``categories.json`` and
+``confusables.json``. If you delete them, they will both be recreated by
+downloading and parsing the two abovementioned files and stored as JSON
+files again.
+
+
+
+
+History
+-------
+
+1.0.0
+=====
+
+Initial release.
+
+2.0.0
+=====
+
+- `allowed_categories` renamed to `allowed_aliases`
+
+2.0.1
+=====
+
+- Fix a TypeError: https://github.com/vhf/confusable_homoglyphs/pull/2
+
+3.0.0
+=====
+
+Courtesy of Ryan P Kilby, via https://github.com/vhf/confusable_homoglyphs/pull/6 :
+
+- Changed file paths to be relative to the `confusable_homoglyphs`
+  package directory instead of the user's current working directory.
+- Data files are now distributed with the packaging.
+- Fixes tests so that they use the installed distribution instead of the
+  local files. (Originally, the data files were erroneously showing up
+  during testing, despite not being included in the distribution).
+- Moves the data file generation into a simple CLI. This way, users have
+  a method for controlling when the data files are updated.
+- Since the data files are now included in the distribution, the CLI is
+  made optional. Its dependencies can be installed with the `cli`
+  bundle, eg. `pip install confusable_homoglyphs[cli]`.
+
+3.1.0
+=====
+
+- Update unicode data
+
+3.1.1
+=====
+
+- Update unicode data (via ftp)
+
+3.2.0
+=====
+
+- Drop support for Python 3.3
+- Fix #11: work as expected when char not found in datafiles
+
+3.3.0
+=====
+
+- Drop support for Python 2
+- Drop support for Python < 3.7, add support for Python up to 3.12
+- Allow using data files from a custom location set with the
+  CONFUSABLE_DATA environment variable.
+- Fix the return value of confusables.is_dangerous() to the documented
+  API of a boolean value. It used to return either False or the list
+  output of confusable.is_confusable().
+- Added a check command for command line use.
+
+3.3.1
+=====
+
+- Update unicode data
