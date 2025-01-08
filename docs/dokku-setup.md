@@ -243,9 +243,10 @@ We promote the cloned database to be used by the test container:
 ssh dokku@outreachy.org postgres:promote test-database-updated-2018-02-13 test
 ```
 
-Figure out what the name of the old database linked to the test app is with this command:
+Figure out what the name of the old database linked to the test app is with these commands:
 ```
 ssh dokku@outreachy.org postgres:list
+ssh dokku@outreachy.org postgres:app-links test
 ```
 
 Then we unlink the older database (use whatever was the old name):
@@ -503,6 +504,8 @@ If this is run on the test server, you should see lots of email bodies get print
 Sending mass emails manually
 ----------------------------
 
+To send a message to an Outreachy intern, and include their mentors (note this means the email will be sent with interns and mentors in the 'To' email header, but there's no way with Django to set the 'Cc' header):
+
 ```
 $ ssh -t dokku@www.outreachy.org run www env --unset=SENTRY_DSN python manage.py shell
 >>> from home import models
@@ -511,7 +514,9 @@ $ ssh -t dokku@www.outreachy.org run www env --unset=SENTRY_DSN python manage.py
 >>> interns = current_round.get_approved_intern_selections()
 >>> request = { 'scheme': 'https', 'get_host': 'www.outreachy.org' }
 >>> subject = '[Outreachy] Important information'
->>> body = '''This is a multiline message.
+>>> body = '''Hi {},
+... 
+... This is a multiline message.
 ... 
 ... This is the second line.
 ... 
@@ -519,14 +524,35 @@ $ ssh -t dokku@www.outreachy.org run www env --unset=SENTRY_DSN python manage.py
 ... 
 ... This is the final line.
 ... 
-... Sage Sharp
-... Outreachy Organizer'''
+... Outreachy Organizers'''
 >>> for i in interns:
 ...     emails = [ i.applicant.applicant.email_address() ]
+...     message = body.format(i.applicant.applicant.public_name.split()[0]).strip()
 ...     for m in i.mentors.all():
 ...             emails.append(m.mentor.email_address())
-...     send_mail(message=body.strip(), subject=subject.strip(), recipient_list=emails, from_email=models.Address("Outreachy Organizers", "organizers", "outreachy.org"))
+...     send_mail(message=message.strip(), subject=subject.strip(), recipient_list=emails, from_email=models.Address("Outreachy Organizers", "organizers", "outreachy.org"))
 ... 
+```
+
+# Emailing applicants
+
+If you need to email applicants who filled out a final application:
+
+```
+>>> from home import models
+>>> from django.core.mail import send_mail
+>>> body = '''Hi {},
+... 
+... This is a multiline message.
+... 
+... This is the second line.
+... 
+... Outreachy Organizer'''
+>>> current_round = models.RoundPage.objects.latest('internstarts')
+>>> comrades = models.Comrade.objects.filter(applicantapproval__application_round=current_round, applicantapproval__finalapplication__isnull=False, applicantapproval__approval_status=models.ApprovalStatus.APPROVED).distinct()
+>>> for c in comrades:
+...     message = body.format(c.public_name.split()[0]).strip()
+...     send_mail(message=message, subject=subject.strip(), recipient_list=[c.email_address()], from_email=models.Address("Outreachy Organizers", "organizers", "outreachy.org"))
 ```
 
 # Marking interns as paid

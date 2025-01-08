@@ -3035,6 +3035,9 @@ def blog_2024_04_mentor_spotlight_agien_petra(request):
 def blog_2024_07_19_mentor_outreachy_impact_ahmed_rafiat(request):
     return render(request, 'home/blog/2024-07-19-outreachy-impact-ahmed-rafiat.html')
 
+def blog_2024_08_14_outreachy_needs_your_help(request):
+    return render(request, 'home/blog/2024-08-14-outreachy-needs-your-help.html')
+
 def blog_2024_08_14_cfp_open(request):
     try:
         current_round = RoundPage.objects.get(
