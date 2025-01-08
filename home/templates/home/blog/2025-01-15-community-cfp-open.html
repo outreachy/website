@@ -1,13 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Call for December 2024 mentoring communities{% endblock %}
+{% block title %}Call for May 2025 mentoring communities{% endblock %}
 {% block content %}
   {% load humanize %}
-  <h1>Call for December 2024 mentoring communities</h1>
+  <h1>Call for May 2025 mentoring communities</h1>
   <p>
-    <i>Date: August 14, 2024</i>
+    <i>Date: January 15, 2025</i>
   </p>
-  {% comment %}<p><i>Last updated: DATE</i> - See the "SECTION" section below.</p>{% endcomment %}
   <img src="{% static 'img/outreachy-nigerian-celebration-omotola-by-banner.jpg' %}"
        alt="Two black people are standing by an Outreachy banner. On the left, Omotola Omotayo, holds a sign that reads 'Outreachy - connecting mentors and mentees'. The Outreachy banner says 'Outreachy - Paid remote 3-month internships supporting diversity. Open source internships: software, documentation, design, translation, user experience.' Photo is cc-by 4.0 Outreachy"
        class="img-fluid">
@@ -16,15 +15,12 @@
   </p>
   <h2>Outreachy seeks mentors</h2>
   <p>
-    Outreachy is seeking open source and open science communities to mentor Outreachy interns in the December 2024 cohort.
+    Outreachy is seeking open source and open science communities to mentor Outreachy interns in the May 2025 cohort.
   </p>
   {% include 'home/snippet/funding_short_description.html' %}
   <h2>Important dates</h2>
   <p>
     <ul>
-      <li>
-        August 14 at 4pm UTC - <a href="#mentor-chats">Live Q&A for FOSS communities interested in mentoring Outreachy interns</a>
-      </li>
       <li>
         {{ current_round.lateorgs }} at 4pm UTC - deadline for FOSS communities to <a href="{% url 'community-cfp' %}">sign up to participate as a mentoring organization</a>
       </li>
@@ -44,7 +40,7 @@
   <p>
     <a href='#what-is-outreachy'>What is Outreachy?</a>
     <br>
-    <a href='#mentor-chats'>Live streamed mentor chats</a>
+    <a href='#mentor-chats'>Live-streamed mentor chats</a>
     <br>
     <a href='#community-faq'>What kinds of open source communities participate?</a>
   </br>
@@ -52,7 +48,7 @@
 </br>
 <a href='#mentor-duties'>Who makes a good Outreachy mentor?</a>
 </br>
-<a href='#important-dates'>December 2024 internship dates</a>
+<a href='#important-dates'>May 2025 internship dates</a>
 <br>
 <a href='#humanitarian-funding'>Humanitarian open source funding</a>
 <br>
@@ -90,7 +86,7 @@
 </p>
 <hr>
 <h2 id='mentor-chats'>
-  <a href='#mentor-chats'>Live streamed mentor chats</a>
+  <a href='#mentor-chats'>Live-streamed mentor chats</a>
 </h2>
 <p>
   Are you curious what it's like being an Outreachy mentor? Are you thinking about having your open source or open science community mentor Outreachy interns?
@@ -198,7 +194,7 @@
   <p>Mentors will need to provide a list of tasks for applicants to work on during the contribution period.</p>
   <hr>
   <h2 id='important-dates'>
-    <a href='#important-dates'>December 2024 internship dates</a>
+    <a href='#important-dates'>May 2025 internship dates</a>
   </h2>
   {% include 'home/snippet/mentor-timeline.html' %}
   <hr>
@@ -210,7 +206,7 @@
   <h2 id='humanitarian-funding'>
     <a href='#humanitarian-funding'>Humanitarian open source funding</a>
   </h2>
-  <p>Outreachy is seeking humanitarian open source communities to participate in the December 2024 internship round.</p>
+  <p>Outreachy is seeking humanitarian open source communities to participate in the May 2025 internship round.</p>
   <p>
     Outreachy welcomes applications from all open source communities that address humanitarian issues. You will need to meet <a href="{% url 'docs-community' %}#participation-rules">our eligibility criteria</a>.
   </p>
@@ -243,7 +239,7 @@
     <li>Ushahidi empowers people through citizen-generated data to develop solutions that strengthen their communities</li>
   </ul>
   <p>
-    Outreachy expects to fund 5-10 humanitarian open source communities in the December 2024 internship cohort. Humanitarian communities will be guaranteed funding for at least 1 intern.
+    Outreachy expects to fund 5-10 humanitarian open source communities in the May 2025 internship cohort. Humanitarian communities will be guaranteed funding for at least 1 intern.
   </p>
   <p>
     To apply for humanitarian open source intern funding, please <a href={% url 'community-cfp' %}>submit a community application</a>.
@@ -261,7 +257,7 @@
   <p>Outreachy welcomes open science communities who focus on any of the following areas:</p>
   {% include 'home/snippet/open_science_practices.html' %}
   <p>
-    Outreachy expects to fund interns with 5-10 open science communities in the December 2024 Outreachy internship cohort. Open Science communities will be guaranteed funding for at least 1 intern.
+    Outreachy expects to fund interns with 5-10 open science communities in the May 2025 Outreachy internship cohort. Open Science communities will be guaranteed funding for at least 1 intern.
   </p>
   <p>
     To apply for open science intern funding, please <a href={% url 'community-cfp' %}>submit a community application</a>.

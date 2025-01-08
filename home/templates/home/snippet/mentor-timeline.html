@@ -1,9 +1,6 @@
 <table class=table>
 	<tr><td width="175"><b>{{ current_round.pingnew }} at 4pm UTC</b></td><td>Community sign up opens</td></tr>
 	<tr><td width="175"><b>{{ current_round.initial_applications_open }} at 4pm UTC</b></td><td>Initial applications open</td></tr>
-	{% if not current_round.internstarts.has_passed %}
-		<tr><td><b>Aug. 14, 2024 at 4pm UTC</b></td><td><a href="https://www.youtube.com/@outreachyinternships">Live Q&A for FOSS communities mentoring Outreachy interns</a></td></tr>
-	{% endif %}
 	<tr><td><b>{{ current_round.initial_applications_close }} at 4pm UTC</b></td><td>Initial application deadline</td></tr>
 	<tr><td><b>{{ current_round.lateorgs }} at 4pm UTC</b></td><td>⚠️  Deadline for communities to sign up to mentor</td></tr>
 	<tr><td><b>{{ current_round.project_soft_deadline }} at 4pm UTC</b></td><td>⚠️  Deadline for mentors to subject project descriptions</td></tr>
