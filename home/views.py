@@ -3038,7 +3038,7 @@ def blog_2024_07_19_mentor_outreachy_impact_ahmed_rafiat(request):
 def blog_2024_08_14_outreachy_needs_your_help(request):
     return render(request, 'home/blog/2024-08-14-outreachy-needs-your-help.html')
 
-def blog_2025_01_15_cfp_open(request):
+def blog_2025_01_20_cfp_open(request):
     try:
         current_round = RoundPage.objects.get(
             internstarts__gte='2025-05-01',
