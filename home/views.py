@@ -3046,7 +3046,7 @@ def blog_2025_01_20_cfp_open(request):
         )
     except RoundPage.DoesNotExist:
         current_round = None
-    return render(request, 'home/blog/2025-01-15-community-cfp-open.html', {
+    return render(request, 'home/blog/2025-01-20-community-cfp-open.html', {
         'current_round': current_round,
         })
 
