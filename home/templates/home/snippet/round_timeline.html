@@ -2,15 +2,10 @@
 
 <table class="table">
 {% comment %}TODO: link the words "initial application" and "contribute to projects" to the right sections in the to-be-written documentation page{% endcomment %}
-	{% if not current_round.internstarts.has_passed %}
-		<tr><td><b>Jan. 8, 2023 at 3pm UTC</b></td><td><a href="https://www.youtube.com/@outreachyinternships">Coffee chat: Starting a career in open source</a></td></tr>
-	{% endif %}
     <tr><td><b>{{ current_round.initial_applications_open }} at 4pm UTC</b></td><td>Initial applications open</td></tr>
-	{% if not current_round.internstarts.has_passed %}
-		<tr><td><b>Jan. 15, 2024 at 3pm UTC</b></td><td><a href="https://www.youtube.com/@outreachyinternships">Live Q&A for FOSS communities mentoring Outreachy interns</a></td></tr>
-		<tr><td><b>Jan. 17, 2024 at 3pm UTC</b></td><td><a href="https://www.youtube.com/@outreachyinternships">Live Q&A for Outreachy applicants - initial application tips</a></td></tr>
-		<tr><td><b>Jan. 22, 2024 at 3pm UTC</b></td><td><a href="https://www.youtube.com/@outreachyinternships">Live Q&A for Outreachy mentors</a></td></tr>
-		<tr><td><b>Feb. 21, 2024 at 3pm UTC</b></td><td><a href="https://www.youtube.com/@outreachyinternships">Live Q&A for Outreachy applicants - contribution period tips</a></td></tr>
+    {% if not current_round.internstarts.has_passed %}
+		<tr><td><b>Jan. 29, 2025 at 3pm UTC</b></td><td><a href="https://www.youtube.com/@outreachyinternships">Live Q&A for FOSS communities mentoring Outreachy interns</a></td></tr>
+		<tr><td><b>Feb. 5, 2025 at 3pm UTC</b></td><td><a href="https://www.youtube.com/@outreachyinternships">Live Q&A for Outreachy mentors</a></td></tr>
 	{% endif %}
     <tr><td><b>{{ current_round.initial_applications_close }} at 4pm UTC</b></td><td>Initial application deadline</td></tr>
     <tr><td><b>{{ current_round.lateprojects }}</b></td><td>Project list finalized</td></tr>
