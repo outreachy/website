@@ -280,11 +280,18 @@ class WagtailFeed(Feed):
             last_published_at=pacific.localize(datetime.datetime(2024, 8, 14, 13, 00, 0)),
         ))
         items.append(PseudoPage(
+            title='Call for June 2025 mentoring communities',
+            full_url=reverse('2025-01-cfp-open'),
+            owner=author,
+            first_published_at=pacific.localize(datetime.datetime(2025, 1, 20, 16, 00, 0)),
+            last_published_at=pacific.localize(datetime.datetime(2025, 1, 20, 16, 00, 0)),
+        ))
+        items.append(PseudoPage(
             title='Outreachy June 2025 internship applications open',
             full_url=reverse('2025-01-initial-applications-open'),
             owner=author,
-            first_published_at=pacific.localize(datetime.datetime(2025, 1, 27, 16, 00, 0)),
-            last_published_at=pacific.localize(datetime.datetime(2025, 1, 27, 16, 00, 0)),
+            first_published_at=pacific.localize(datetime.datetime(2025, 1, 21, 16, 00, 0)),
+            last_published_at=pacific.localize(datetime.datetime(2025, 1, 21, 16, 00, 0)),
         ))
 
         # put the Wagtail pages and special posts together in the right order
