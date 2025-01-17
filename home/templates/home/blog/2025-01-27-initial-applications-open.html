@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Outreachy June 2025 internship applications
+{% endblock %}
+
+{% block content %}
+{% load humanize %}
+
+
+<h1>Outreachy June 2025 internship applications</h1>
+
+<p><i>Date: January 27, 2025</i></p>
+
+<img src="{% static 'img/apply-now-flickr-cc-by-CC-BY-2_0-GotCredit.jpg' %}" alt="cc-by 2.0 GotCredit" class="img-fluid">
+<p><i>Photo CC BY 2.0 GotCredit</i></p>
+
+<h2>Outreachy internship applications</h2>
+<p>
+Outreachy is seeking interns for the June to August 2025 internship cohort!
+</p>
+
+<p>📅 Important dates:
+<ul>
+	<li>{{ current_round.initial_applications_open }} at 4pm UTC - initial application opens</li>
+	<li>{{ current_round.initial_applications_close }} at 4pm UTC - initial application deadline</li>
+	<li><a href='#important-dates'>Full Outreachy schedule</a></li>
+</ul>
+</p>
+
+<p>
+We <b>strongly</b> recommend you <a href="{% url 'docs-applicant' %}#essay-tips">read our tips for application essays</a> before submitting your initial application.
+</p>
+
+<p><a href="{% url 'docs-applicant' %}" class="btn btn-info">Read applicant guide</a></p>
+
+<p>
+Initial applications are reviewed on a first-come-first-served basis. Don't wait until the last day to submit your application!
+</p>
+
+<p><a href="{% url 'eligibility-information' %}" class="btn btn-success">Apply for Outreachy</a></p>
+
+<hr>
+
+<h2 id='toc'>Important information</h2>
+
+<p>
+New to Outreachy? Start here:
+</p>
+<ul>
+	<li><a href='#what-is-outreachy'>🤔 What is Outreachy?</a></li>
+	<li><a href='#internship-projects'>💻 What internship projects do you have?</a></li>
+	<li><a href='#faq'>❓ Frequently asked questions (FAQ)</a>
+		<ul>
+			<li><a href='#non-student-eligibility'>👩🏾‍💻 Non-student eligibility policy</a></li>
+			<li><a href='#student-eligibility'>👩🏿‍🏫 Student eligibility policy</a></li>
+		</ul>
+	</li>
+</ul>
+
+<p>
+Important dates:
+</p>
+<ul>
+	<li><a href='#important-dates'>📅 Outreachy schedule</a></li>
+	<li><a href='#social-media'>🤝🏾 Connect with Outreachy</a></li>
+</ul>
+
+<hr>
+
+<h2 id='what-is-outreachy'><a href='#what-is-outreachy'>🤔 What is Outreachy?</a></h2>
+
+<p>Outreachy provides <b>internships in open source</b>. We provide internships to people subject to systemic bias and impacted by underrepresentation in the technical industry where they are living.
+</p>
+
+<p>
+Outreachy internships are:
+</p>
+
+<p>
+💵 Paid - $7,000 USD total internship stipend<br>
+🌍 Remote - interns work remotely<br>
+🕰 3 months - internships run May to August, or December to March<br>
+</p>
+
+<h2>Outreachy supports diversity in tech</h2>
+
+{% include 'home/snippet/diversity_statement.html' %}
+
+<hr>
+<h2 id='internship-projects'><a href='#internship-projects'>💻 What internship projects do you have?</a></h2>
+
+<p>
+Outreachy interns work on open source projects. Experienced mentors will guide you.
+</p>
+
+<h3 id='open-source-internships'><a href='#open-source-internships'>👩🏿‍💻 Open source internships</a></h3>
+
+<div class="container">
+	<div class="row align-items-center justify-content-center">
+		<div class="col-5 align-self-center">
+			<img src="{% static 'img/black-woman-at-computer-with-python-book-cc-by-2_0-WOCinTech-Chat.jpg' %}" alt="cc-by 2.0 #WOCinTech Chat" class="img-fluid align-self-start">
+			<p><i>Photo CC BY 2.0 #WOCinTech Chat</i></p>
+		</div>
+		<div class="col-7">
+
+			<p>What is open source? Open source software means anyone has the freedom to collaborate with others to improve code.</p>
+
+			<p>Open source software is code published online under a specific license. An open source license means anyone can download, modify, and share their changes to the code.</p>
+		</div>
+	</div>
+</div>
+
+<p>
+There are many ways to participate in open source. You don't have to be a programmer!</p>
+
+<p>Outreachy has many types of open source internship projects:
+</p>
+<ul>
+	<li>programming</li>
+	<li>documentation</li>
+	<li>user experience</li>
+	<li>graphical design</li>
+	<li>marketing</li>
+	<li>user advocacy</li>
+	<li>event planning</li>
+	<li>research</li>
+	<li>data science</li>
+</ul>
+
+<h3 id='project-list'><a href='#project-list'>Outreachy internship project list</a></h3>
+
+<p>
+Internship projects for the June 2025 cohort will be finalized on {{ current_round.contributions_open|date:"F j, Y" }}.
+</p>
+
+<p>
+<b>The internship project list will not be finalized before the initial application deadline.</b>
+Please submit an initial application ASAP.
+Submit an initial application even if you don't see a project that interests you.
+</p>
+
+<p><a href="{% url 'project-selection' %}" class="btn btn-info">View project list</a></p>
+
+<hr>
+<h2 id='faq'><a href='#faq'>❓ Frequently asked questions (FAQ)</a></h2>
+
+<p>The <a href="{% url 'docs-applicant' %}">Outreachy Applicant Guide</a> has answers to many common questions, such as:</p>
+
+<ul>
+	<li><a href="{% url 'docs-applicant' %}#am-i-experienced-enough">Am I experienced enough for an Outreachy internship?</a></li>
+	<li><a href="{% url 'docs-applicant' %}#non-programming-projects">Do I have to be a programmer to apply?</a></li>
+	<li><a href="{% url 'docs-applicant' %}#project-types">Do you have the type of project I'm interested in?</a></li>
+	<li><a href="{% url 'docs-applicant' %}#what-is-free-software">What is free software and open source?</a></li>
+</ul>
+
+<p><a href="{% url 'docs-applicant' %}" class="btn btn-info">Read applicant guide</a></p>
+
+<p>Please also watch our <a href='#live-streamed-chat'>past live-streamed chats</a>. Our chats will answer many of your questions about eligibility, how to apply, and how to make your application stand out.</a>
+
+<h2 id='non-student-eligibility'><a href='#non-student-eligibility'>👩🏾‍💻 Non-student eligibility policy</a></h2>
+
+<p>
+You do not have to be a student to apply to Outreachy!
+Outreachy is open to people who are not students.
+</p>
+
+<p>
+You do not need a university degree to apply to Outreachy.
+Many Outreachy interns learned their skills through online resources.
+</p>
+
+<p>
+Please read our full <a href="{% url 'eligibility-information' %}#rules">eligibility guidelines</a>.
+</p>
+
+<h2 id='student-eligibility'><a href='#student-eligibility'>👩🏿‍🏫 Student eligibility policy</a></h2>
+
+<p>
+Outreachy has some special eligibility rules for students.
+If you are (or will be) a student, please read the sections below.
+</p>
+
+<h3 id='hemisphere-rules'><a href='#hemisphere-rules'>Which cohort should students apply to?</a></h3>
+
+<p>
+Outreachy runs twice a year, May to August and December to March.
+</p>
+
+<p>
+Students in the <a href="https://en.wikipedia.org/wiki/Northern_Hemisphere">northern hemisphere</a> should apply to the June 2025 internship cohort.
+</p>
+
+<p>
+Students in the <a href="https://en.wikipedia.org/wiki/Southern_Hemisphere">southern hemisphere</a> should apply to the December 2025 internship cohort.
+</p>
+
+<p>
+We consider India to be in the northern hemisphere, regardless of where the university is located.
+Otherwise, if your university is near the equator, you are welcome to apply to either cohort.
+</p>
+
+<h3 id='graduating-students'><a href='#graduating-students'>What if I'm graduating?</a></h3>
+
+<p>If you are completing your last term for your degree, you are only eligible for the internship cohort designated to students of the hemisphere where your school is located.</p>
+
+<h3 id='no-student-policy-exceptions'><a href='#no-student-policy-exceptions'>Do you grant exceptions to these policies?</a></h3>
+
+<p>In order to apply our policies fairly, we do not grant exceptions to the student policies listed above.</p>
+
+<p>When determining student eligibility, Outreachy considers the hemisphere of the school's location. We do not consider the individual student's course load. We do not consider special arrangements students have made with their university. Students who plan on taking a school term off to pursue an internship are not eligible for Outreachy. We cannot accept letters from universities about pausing classes or joining classes at a later date.</p>
+
+<hr>
+<h2 id='important-dates'><a href='#important-dates'>📅 Outreachy schedule</a></h2>
+
+<p>
+The initial application system will open at {{ current_round.initial_applications_open }} at 4pm UTC. Initial applications are due {{ current_round.initial_applications_close }} at 4pm UTC.
+</p>
+
+<p>
+The Outreachy intern project list will not be finalized until {{ current_round.contributions_open }}.
+That is after the initial application deadline.
+</p>
+
+<p>
+Please fill out an initial application, even if you don't see a project that interests you.
+More projects will be added after the initial application deadline.
+</p>
+
+{% include 'home/snippet/round_timeline.html' %}
+
+<hr>
+    
+<h3 id='initial-application-chat'><a href='#initial-application-chat'>🎙️📝 Application Tips and Eligibility</a></h3>
+    
+<p>Do you want tips for making your initial application stand out? Do you have questions about whether you're eligible for Outreachy? Please watch videos from our previous live-streamed chats.</p>
+    
+<p>Here is a recording of a past Q&and;A on initial applications:</p>
+
+<iframe title="Lets talk about Outreachy initial application" src="https://diode.zone/videos/embed/d7c35ef0-9574-458d-a73e-367086f6f00a?start=34s&amp;warningTitle=0&amp;peertubeLink=0" allowfullscreen="" sandbox="allow-same-origin allow-scripts allow-popups" width="560" height="315" frameborder="0"></iframe>
+
+<h3 id='contribution-chat'><a href='contribution-chat'>🎙️⚒️ Contribution period tips</a></h3>
+
+<p>Once your initial application is accepted, the next step is to pick a project and complete a task for that project. Applicants work on project tasks during Outreachy's contribution period.</p>
+    
+<p>Here is a recording of a past Q&and;A on the contribution period:</p>
+
+<iframe title="Getting Ready for Outreachy Contribution Stage" src="https://diode.zone/videos/embed/1d54d72d-dd4a-426b-827f-000bec7ce81e?start=31s&amp;warningTitle=0" frameborder="0" allowfullscreen="" sandbox="allow-same-origin allow-scripts allow-popups" width="560" height="315" frameborder="0"></iframe>
+
+<hr>
+    
+<p>You can ask us questions about the Outreachy application through our <a href="https://www.twitter.com/outreachy">Twitter</a> or <a href="https://hachyderm.io/@outreachy">Mastodon</a> accounts. Make sure your questions on social media tag the Outreachy account, and use the hashtag #OutreachyChat.</p>
+
+<p>Example Twitter question: "Question? @outreachy #OutreachyChat"<BR>
+Example Mastodon question: "Question? @outreachy@hachyderm.io #OutreachyChat"</p>
+
+<p>Questions asked on Twitter, or Mastodon will be answered on the platform the question was asked on.</p>
+
+<h2 id='social-media'><a href='#social-media'>🤝🏾 Connect with Outreachy</a></h2>
+
+<p>Follow us on social media to get important announcements and updates:</p>
+<div class="container">
+	<div class="row">
+		<div class="col">
+			<p>
+			<a href="https://www.twitter.com/outreachy">🐦 Twitter</a></BR>
+			<a href="https://hachyderm.io/@outreachy">🐘 Mastodon</a></BR>
+			<a href="https://www.linkedin.com/company/outreachy">🖇️  LinkedIn</a></BR>
+			<a href="https://www.youtube.com/@outreachyinternships">▶️  YouTube</a></BR>
+			<a href="https://diode.zone/c/outreachy_internships/videos">▶️  PeerTube</a></BR>
+			<a href="https://lists.outreachy.org/cgi-bin/mailman/listinfo/announce">📬 Announcement email list</a></BR>
+			<a href="https://www.outreachy.org/blog/feed/">📰 RSS</a></BR>
+			</p>
+		</div>
+	</div>
+</div>
+
+<p>Applicants can also ask questions via our <a href='{% url 'contact-applicant-help' %}'>applicant help contact form</a>.</a>
+
+<hr>
+
+<h2>Apply to Outreachy</h2>
+
+<p>
+We <b>strongly</b> recommend you <a href="{% url 'docs-applicant' %}#essay-tips">read our tips for application essays</a> before submitting your initial application.
+</p>
+
+<p><a href="{% url 'docs-applicant' %}" class="btn btn-info">Read applicant guide</a></p>
+
+<p>
+Initial applications are reviewed on a first-come-first-served basis. Don't wait until the last day to submit your application!
+</p>
+
+<p><a href="{% url 'eligibility-information' %}" class="btn btn-success">Apply for Outreachy</a></p>
+
+
+{% endblock %}
