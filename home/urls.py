@@ -49,6 +49,7 @@ round_community_patterns = [
     re_path(r'^(?P<project_slug>[^/]+)/', include(round_community_project_patterns)),
     re_path(r'^applicants/$', views.community_applicants, name='community-applicants'),
     re_path(r'^(?P<action>[^/]+)-project/(?:(?P<project_slug>[^/]+)/)?$', views.ProjectAction.as_view(), name='project-action'),
+    re_path(r'^sponsorship-leads-update/(?P<new>[^/]+)/$', views.SponsorshipLeadsUpdate.as_view(), name='sponsorship-leads-update'),
     re_path(r'^(?P<action>[^/]+)/$', views.ParticipationAction.as_view(), name='participation-action'),
     re_path(r'^$', views.community_landing_view, name='community-landing'),
 ]

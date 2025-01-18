@@ -49,16 +49,10 @@ Community participation rules
 <h2>What you need to participate</h2>
 <hr>
 
-<h3>💵 Intern funding is required</h3>
+<h3>💵 Sponsorship Leads</h3>
 
 <div class="container mx-4">
-	<p>Open source communities must find <a href="{% url 'docs-community' %}#intern-funding">internship funding</a> (${{ current_round.sponsorship_per_intern|intcomma }} USD per intern):</p>
-	<ul>
-		<li>Humanitarian open source communities can apply for funding from the <a href="{% url 'docs-community' %}#outreachy-general-fund" %}>Outreachy general fund.</a></li>
-		<li>Open science communities can apply for funding from the <a href="{% url 'docs-community' %}#open-science-funding" %}>Outreachy general fund</a></li>
-		<li>Other communities must find funding elsewhere, either from community funds or from a community sponsor.</li>
-	</ul>
-	<p>Once funding for one intern is secured, communities can <a href="{% url 'docs-community' %}#partial-general-funding" %}>request additional funding</a> from the Outreachy general fund.</p>
+	{% include 'home/snippet/funding_short_description.html' %}
 </div>
 
 <h3>🗣️ A community coordinator is required</h3>

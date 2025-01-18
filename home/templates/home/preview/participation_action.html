@@ -3,124 +3,55 @@
 {% load humanize %}
 
 {% block title %}
-Intern Funding
+Participation Info for {{ participation.community.name }}
 {% endblock %}
 
 {% block content %}
 
-<div class="card border-warning mb-3">
-	<div class="card-header text-white bg-warning">Outreachy internship funding is required.</div>
-	<div class="card-body">
-		{% with current_round=participation.participating_round %}
-			{% include 'home/snippet/funding_short_description.html' %}
-		{% endwith %}
-	</div>
-</div>
+<h1>Open source community sign up</h1>
 
-<h1>Intern Funding</h1>
+<p>Thank you for your interest in mentoring Outreachy interns!</p>
 
-<p>Please <a href="{% url 'docs-community' %}#funding-requirements">read the community guide</a> for more information about intern funding.</p>
+<p>Please fill out the form below to sign your open source community up to participate in the COHORT Outreachy internship cohort.</p>
 
-<p>Sponsorship for one intern is ${{ participation.participating_round.sponsorship_per_intern|intcomma }} USD. Please list the <b>dollar amount</b> in the form below, not the number of interns.</p>
+<h2>Estimated number of interns</h2>
 
-<p>If you are applying for the Outreachy general fund, please list the sponsor as "Outreachy general fund".</p>
+<p>Please list the maximum number of interns your community has mentoring capacity to accept.
+</p>
 
-<p>If your community has unused funds from a past sponsorship, please list the sponsor as "Credit - SPONSOR NAME". If you are unsure if your community has a credit, please contact Outreachy organizers.</p>
-
-{% include "home/snippet/privacy_policy.html" %}
-
-{% if view.kwargs.action == 'submit' %}
-
-	{% if readonly_sponsorships %}
-	<p>The Outreachy organizers have indicated that you have the
-	following community funds, sponsorships, or credits
-	available:</p>
-	<ul>
-	{% for sponsorship in readonly_sponsorships %}
-	<li>
-		<p><strong>{{ sponsorship.funding_secured|yesno:"Confirmed,Tentative" }}</strong>:
-		${{ sponsorship.amount }} from {{ sponsorship.name }}
-		{% if not sponsorship.funding_secured %}
-		(decision by {{ sponsorship.funding_decision_date|date }})
-		{% endif %}
-		</p>
-		{{ sponsorship.additional_information|safe }}
-	</li>
-	{% endfor %}
-	</ul>
-	{% endif %}
-{% else %}
-<ul>
-	<li>Number of interns funded: {{ participation.interns_funded }}</li>
-</ul>
-{% endif %}
+<p>How many interns (max) does your community want to accept this internship cohort?  Outreachy requires a 1:1 mentor to intern ratio. We encourage co-mentoring for a 2:1 mentor to intern ratio. We encourage communities who are new to Outreachy to only accept one or two interns.
+</p>
 
 {% if view.kwargs.action == "submit" %}
-<p><form action="" method="post">
-	{% csrf_token %}
-	{{ form.management_form }}
-	{% for f in form %}
-		{% with forloop.counter as sponsor_number %}
-		<h2>Sponsor #{{ sponsor_number }}</h2>
-		{{ f.media }}
-		{% for hidden in f.hidden_fields %}
-			{{ hidden }}
-		{% endfor %}
-		{% for field in f.visible_fields %}
-			{% if 'Funding secured' in field.label_tag %}
-				<div class="form-group card">
-					<div class="card-header">
-						Sponsor {{ sponsor_number }} - {{ field.label_tag }}
-					</div>
-					<div class="card-body">
-						{{ field }}
-						{{ field.help_text|safe }}
-					</div>
-				</div>
-			{% elif 'Delete' in field.label_tag %}
-				<div class="form-group card border-warning">
-					<div class="card-header text-white bg-warning">
-						Delete Sponsor {{ sponsor_number }}?
-					</div>
-					<div class="card-body">
-						{{ field }} Check this box to delete this sponsorship information.
-						{{ field.help_text|safe }}
-					</div>
-				</div>
-			{% elif 'Sponsorship amount' in field.label_tag %}
-				<div class="form-group card">
-					{{ field.errors }}
-					<div class="card-header">
-						Sponsor {{ sponsor_number }} - {{ field.label_tag }}
-					</div>
-					<div class="card-body">
-						{{ field }}
-					</div>
-					{% if field.help_text %}
-						<div class="card-footer bg-white">Sponsorship for each intern is ${{ participation.participating_round.sponsorship_per_intern|intcomma }} USD.</div>
-					{% endif %}
-				</div>
-			{% else %}
-				<div class="form-group card">
-					{{ field.errors }}
-					<div class="card-header">
-						Sponsor {{ sponsor_number }} - {{ field.label_tag }}
-					</div>
-					<div class="card-body">
-						{{ field }}
-					</div>
-					{% if field.help_text %}
-						<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
-					{% endif %}
-				</div>
+	<form method="post" action="">
+{% csrf_token %}
+	{{ form.media }}
+	{{ form.non_field_errors }}
+	{% for field in form.visible_fields %}
+		{% if 'Is your community an open science community' in field.label_tag %}
+			<hr>
+			<h2>Open science communities</h2>
+		{% elif 'Is your community a humanitarian' in field.label_tag %}
+			<hr>
+			<h2>Humanitarian communities</h2>
+		{% endif %}
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class="card-header">
+				{{ field.label_tag }}
+			</div>
+			<div class="card-body">
+				{{ field }}
+			</div>
+			{% if field.help_text %}
+			<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
 			{% endif %}
-		{% endfor %}
-		{% endwith %}
+		</div>
 	{% endfor %}
-	<div class="my-5">
-		<input type="submit" class="btn btn-{% if view.kwargs.action == 'withdraw' %}warning{% elif view.kwargs.action == 'reject' %}danger{% else %}success{% endif %}" value="{{ view.kwargs.action|title }}" />
-	</div>
-</form></p>
+<input type="submit" class="btn btn-block btn-primary" value="Save" />
+<input type="hidden" name="next" value="{{ next }}" />
+
+</form>
 {% else %}{# action is something other than submit #}
 {% include "home/snippet/action_form.html" %}
 {% endif %}

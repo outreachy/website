@@ -1351,10 +1351,51 @@ class SponsorshipInlineFormSet(BaseInlineFormSet):
         form.instance.coordinator_can_update = True
         return super(SponsorshipInlineFormSet, self).save_new(form, commit)
 
-class ParticipationAction(ApprovalStatusAction):
+class SponsorshipLeadsUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
+    template_name = 'home/sponsorship_leads.html'
     form_class = inlineformset_factory(Participation, Sponsorship,
             formset=SponsorshipInlineFormSet,
-            fields='__all__', exclude=['coordinator_can_update', 'status', 'ticket_number', 'organizer_notes'])
+            fields='__all__', exclude=['amount', 'coordinator_can_update', 'status', 'ticket_number', 'organizer_notes'])
+
+    def get_object(self):
+        community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
+        if not community.is_coordinator(self.request.user):
+            raise PermissionDenied("You are not an approved coordinator for this community.")
+
+        # Sponsorship cannot be changed after the Outreachy internship starts
+        now = datetime.now(timezone.utc)
+        today = get_deadline_date_for(now)
+        participating_round = get_object_or_404(
+            RoundPage,
+            slug=self.kwargs['round_slug'],
+            pingnew__lte=today,
+            internstarts__gt=today,
+        )
+        return get_object_or_404(
+            Participation,
+            community=community,
+            participating_round=participating_round,
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super(SponsorshipLeadsUpdate, self).get_context_data(**kwargs)
+        # There won't be any sponsorships if the Participation object was newly created
+        if not self.kwargs['new']:
+            context['readonly_sponsorships'] = self.object.sponsorship_set.filter(coordinator_can_update=False)
+        return context
+
+    def get_success_url(self):
+        # FIXME -- email Outreachy organizers about the updated sponsorship leads
+        return reverse('community-general-funding', kwargs = {
+            'community_slug': self.kwargs['community_slug'],
+            'new': self.kwargs['new'],
+            })
+
+class ParticipationAction(ApprovalStatusAction):
+    model = Participation
+    fields = [
+            'number_interns',
+            ]
 
     # Make sure that someone can't feed us a bad community URL by fetching the Community.
     def get_object(self):
@@ -1392,28 +1433,8 @@ class ParticipationAction(ApprovalStatusAction):
             self.new = True
             return Participation(
                     community=community,
-                    participating_round=participating_round)
-
-    def get_context_data(self, **kwargs):
-        context = super(ParticipationAction, self).get_context_data(**kwargs)
-        # There won't be any sponsorships if the Participation object was newly created
-        if not self.new:
-            context['readonly_sponsorships'] = self.object.sponsorship_set.filter(coordinator_can_update=False)
-        return context
-
-    def save_form(self, form):
-        # We might be newly-creating the Participation or changing its
-        # approval_status even though the form the user sees has no
-        # fields off this object itself, so make sure to save it first
-        # so it gets assigned a primary key.
-        self.object.save()
-
-        # InlineFormSet's save method returns the list of created or
-        # changed Sponsorship objects, not the parent Participation.
-        form.save()
-
-        # Saving this form doesn't change which object is current.
-        return self.object
+                    participating_round=participating_round,
+                    number_interns=0)
 
     def notify(self):
         if self.prior_status == self.target_status:
@@ -1427,8 +1448,9 @@ class ParticipationAction(ApprovalStatusAction):
                 notification.delete()
 
     def get_success_url(self):
-        return reverse('community-general-funding', kwargs = {
+        return reverse('sponsorship-leads-update', kwargs = {
             'community_slug': self.object.community.slug,
+            'round_slug': self.object.participating_round.slug,
             'new': self.new,
             })
 

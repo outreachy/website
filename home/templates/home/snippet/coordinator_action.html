@@ -1,14 +1,36 @@
+{% load humanize %}
 			<div class="card border-info mb-3">
 				<div class="card-header text-white bg-info">Coordinator actions for {{ community.name }}</div>
 				<div class="card-body">
+					{% if current_round and not current_round.internannounce.has_passed %}
+						<p class="card-text">
+						Mentoring capacity: <b>{{ participation_info.number_interns }} interns will be accepted.</b>
+						</p>
+						<p class="card-text">
+						If you find more mentors, or a mentor decides they will not accept an intern, please update the number of interns you will accept.
+						</p>
+						<p class="card-text">
+						<a class="btn btn-primary" href="{{ participation_info.get_submit_url }}">Change Number of Interns</a>
+						</p>
+						<p class="card-text">
+						{% if participation_info.sponsorship_set.count == 0 %}
+						Your community has not provided any Outreachy sponsorship leads.
+						{% else %}
+						Your community has provided the following sponsorship leads:
+						<ul>
+							{% for s in participation_info.sponsor_set %}
+							<li>${{s.total_sponsorship_amount|intcomma }} USD from {{ s.name }}</li>
+							{% endfor %}
+						</ul>
+						{% endif %}
+						</p>
+						<p class="card-text">
+						<a class="btn btn-primary" href="{% url 'sponsorship-leads-update' round_slug=participation_info.participating_round.slug community_slug=participation_info.community.slug new='False' %}">Update Sponsorship Leads</a>
+						</p>
+					{% endif %}
 					<p class="card-text">
 					<a class="btn btn-primary" href="{% url 'community-update' community_slug=community.slug %}">Update Community Info</a>
 					</p>
-					{% if current_round and not current_round.internannounce.has_passed %}
-						<p class="card-text">
-						<a class="btn btn-primary" href="{{ participation_info.get_submit_url }}">Update Funding</a>
-						</p>
-					{% endif %}
 					{% if current_round and not current_round.lateprojects.has_passed %}
 						<p class="card-text">
 						<a class="btn btn-primary" href="{% url 'dashboard' %}#actions">Approve Projects</a>

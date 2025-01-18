@@ -1480,6 +1480,10 @@ class NewCommunity(Community):
 class Participation(ApprovalStatus):
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
     participating_round = models.ForeignKey(RoundPage, on_delete=models.CASCADE)
+    number_interns = models.PositiveIntegerField(
+            default=0,
+            verbose_name="Number of interns",
+            help_text="How many interns will your community accept this internship cohort?")
 
     class Meta:
         ordering = ('community__name',)
@@ -1583,7 +1587,42 @@ class Sponsorship(models.Model):
             verbose_name='Organization or company full legal name',
             help_text='The full sponsor name to be used on invoices.')
 
+    donation_for_outreachy_general_activities = models.PositiveIntegerField(
+            default=0,
+            verbose_name="Donation amount ($ USD) for Outreachy program activities")
+
+    donation_for_any_outreachy_internship = models.PositiveIntegerField(
+            default=0,
+            verbose_name="Donation amount ($ USD) for Outreachy internships")
+
+    donation_for_other = models.PositiveIntegerField(
+            default=0,
+            verbose_name="Donation amount ($ USD) for other")
+
+    donation_for_other_information = models.CharField(
+            max_length=PARAGRAPH_LENGTH,
+            blank=True)
+
+    sponsor_contact = models.CharField(
+            max_length=PARAGRAPH_LENGTH,
+            blank=True)
+
+    sponsor_relationship = models.CharField(
+            max_length=PARAGRAPH_LENGTH,
+            blank=True)
+
+    due_date = models.DateField(
+            default=datetime.date.today,
+            help_text='Due date to provide an invoice to the sponsoring organization')
+
+    due_date_info = models.CharField(
+            max_length=PARAGRAPH_LENGTH,
+            blank=True,
+            verbose_name='Information about due dates',
+            help_text='Please provide any additional information about due dates for this sponsorship')
+
     amount = models.PositiveIntegerField(
+            default=0,
             verbose_name="Sponsorship amount",
             help_text="Sponsorship for each intern is $6,500.")
 
@@ -1633,6 +1672,9 @@ class Sponsorship(models.Model):
                 v.field_dict['additional_information'],
                 ])
         return history
+
+    def total_sponsorship_amount(self):
+        return self.donation_for_outreachy_general_activities + self.donation_for_any_outreachy_internship + donation_for_other
 
     def __str__(self):
         return "{name} sponsorship for {community}".format(

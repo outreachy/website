@@ -84,8 +84,8 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 			    {% elif participation_info.is_approved %}
 				    <tr><td><span class="badge badge-pill badge-success">Participating</span></td><td>This community is approved to participate in the {{ current_round.internstarts|date:"F Y" }} to {{ current_round.internends|date:"F Y" }} internship round</td></tr>
 			    {% endif %}
-			    {% if participation_info and participation_info.interns_funded <= 0 %}
-			    <tr><td><span class="badge badge-pill badge-warning">Not Funded</span></td><td>The community has not found funding for at least one intern (${{ participation_info.participating_round.sponsorship_per_intern|intcomma }} USD).</td></tr>
+			    {% if participation_info.sponsorship_set.count == 0 %}
+			    <tr><td><span class="badge badge-pill badge-warning">No sponsorship leads provided</span></td><td>The coordinator has not provided any information about potential Outreachy sponsors.</td></tr>
 			    {% elif participation_info and participation_info.interns_funded > 0 %}
 				    <tr><td><span class="badge badge-pill badge-success">Funded</span></td><td>This community has funding for {{ participation_info.interns_funded }} intern{{ participation_info.interns_funded|length|pluralize }}.</td></tr>
 			    {% endif %}
@@ -113,7 +113,7 @@ This page is for potential mentors and coordinators only. If you are an Outreach
 	<h2>Participate in This Round</h2>
 	<p>You can sign the community up to participate in the current round.</p>
 	<p><a class="btn btn-success" href="{% url 'participation-action' action='submit' round_slug=current_round.slug community_slug=community.slug %}">Community will participate</a></p>
-	<p>If you don't have sponsorship funds or you can't find mentors for this round, you can indicate your community won't participate.
+	<p>If you don't have you can't find mentors for this round, you can indicate your community won't participate.
 	This will help direct mentors to communities that are participating.</p>
 	<p><a class="btn btn-warning" href="{% url 'participation-action' action='withdraw' round_slug=current_round.slug community_slug=community.slug %}">Community will not participate</a></p>
 {% endif %}
