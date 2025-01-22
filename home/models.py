@@ -1139,6 +1139,9 @@ class Comrade(models.Model):
         except InternSelection.DoesNotExist:
             return None
 
+    def get_professional_skills(self):
+        return ProfessionalSkill.objects.filter(comrade=self)
+
 class ApprovalStatusQuerySet(models.QuerySet):
     def approved(self):
         return self.filter(approval_status=ApprovalStatus.APPROVED)
@@ -1995,6 +1998,54 @@ def skill_is_valid(value):
     for w in verbosity:
         if re.compile(r'\b({0})\b'.format(w), flags=re.IGNORECASE).search(value):
             raise ValidationError("Please use 1-3 words to describe the project skill, and don't use sentences")
+
+class ProfessionalSkill(models.Model):
+    comrade = models.ForeignKey(Comrade, verbose_name="Comrade", on_delete=models.CASCADE)
+
+    skill = models.CharField(
+        max_length=SENTENCE_LENGTH,
+        verbose_name="Skill name",
+        validators=[skill_is_valid]
+    )
+
+    CONCEPTS = 'CON'
+    EXPLORING = 'EXP'
+    GROWING = 'GRW'
+    INDEPENDENT = 'IND'
+    EXPERIENCE_CHOICES = (
+        (CONCEPTS, 'Concepts'),
+        (EXPLORING, 'Exploring'),
+        (GROWING, 'Growing'),
+        (INDEPENDENT, 'Independent'),
+    )
+    experience_level = models.CharField(
+        max_length=3,
+        choices=EXPERIENCE_CHOICES,
+        default=CONCEPTS,
+        verbose_name="Experience level",
+    )
+
+    def get_skill_level_display(self):
+        match self.experience_level:
+            case self.CONCEPTS:
+                return "1"
+            case self.EXPLORING:
+                return "2"
+            case self.GROWING:
+                return "3"
+            case self.INDEPENDENT:
+                return "4"
+
+    def get_skill_experience_level_display(self):
+        match self.experience_level:
+            case self.CONCEPTS:
+                return "(Concepts) I have a basic understanding or theoretical knowledge of this skill"
+            case self.EXPLORING:
+                return "(Exploring) I have tried using this skill in classes or personal projects"
+            case self.GROWING:
+                return "(Growing) I have used this skill in several projects and can further develop it with mentorship"
+            case self.INDEPENDENT:
+                return "(Independent) I have used this skill in several projects and I can use this skill independently"
 
 class ProjectSkill(models.Model):
     project = models.ForeignKey(Project, verbose_name="Project", on_delete=models.CASCADE)
