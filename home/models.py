@@ -1139,7 +1139,7 @@ class Comrade(models.Model):
         except InternSelection.DoesNotExist:
             return None
 
-    def get_professional_skills(self):
+    def professional_skills(self):
         return ProfessionalSkill.objects.filter(comrade=self)
 
 class ApprovalStatusQuerySet(models.QuerySet):

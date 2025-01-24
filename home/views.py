@@ -695,7 +695,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWiz
     def get_template_names(self):
         return [self.TEMPLATES[self.steps.current]]
 
-    def show_results_if_any(self):
+    def show_professional_skills_form_if_any(self):
         # get_context_data() and done() both need a round; save it for them.
         self.current_round = get_current_round_for_initial_application()
 
@@ -708,17 +708,17 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWiz
             # Continue with the default get or post behavior.
             return None
 
-        return redirect(self.request.GET.get('next', reverse('eligibility-results')))
+        return redirect(self.request.GET.get('next', reverse('professional-skills')))
 
     def get(self, *args, **kwargs):
         # Using `or` this way returns the redirect from show_results_if_any,
         # unless that function returns None. Only in that case does it call the
         # superclass implementation of this method and return _that_.
-        return self.show_results_if_any() or super(EligibilityUpdateView, self).get(*args, **kwargs)
+        return self.show_professional_skills_form_if_any() or super(EligibilityUpdateView, self).get(*args, **kwargs)
 
     def post(self, *args, **kwargs):
         # See self.get(), above.
-        return self.show_results_if_any() or super(EligibilityUpdateView, self).post(*args, **kwargs)
+        return self.show_professional_skills_form_if_any() or super(EligibilityUpdateView, self).post(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(EligibilityUpdateView, self).get_context_data(**kwargs)
@@ -769,9 +769,9 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWiz
 
         self.object.save()
 
-        return redirect(self.request.GET.get('next', reverse('eligibility-results')))
+        return redirect(self.request.GET.get('next', reverse('professional-skills')))
 
-class ProfessionalSkillsUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversion.views.RevisionMixin, UpdateView):
+class ProfessionalSkillsUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
     template_name = 'home/comrade_professional_skills_form.html'
     form_class = inlineformset_factory(Comrade, ProfessionalSkill, fields='__all__', max_num=5, extra=5)
 
@@ -793,11 +793,16 @@ class ProfessionalSkillsUpdate(LoginRequiredMixin, ComradeRequiredMixin, reversi
         return context
 
     def get_success_url(self):
-        return reverse('dashboard')
+        return reverse('eligibility-results')
 
 class EligibilityResults(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
     template_name = 'home/eligibility_results.html'
     context_object_name = 'role'
+
+    def get_context_data(self, **kwargs):
+        context = super(EligibilityResults, self).get_context_data(**kwargs)
+        context['comrade'] = self.request.user.comrade
+        return context
 
     def get_object(self):
         now = datetime.now(timezone.utc)

@@ -325,14 +325,8 @@ Outreachy eligibility results
 	{% include 'home/snippet/initial_application.html' %}
 
 {% endif %}
-
-{% if request.user.comrade.get_professional_skills %}
-    {% for skill in request.user.comrade.get_professional_skills %}
-        <p>Skillname: {{ skill.skill }}</p>
-        <p>Experience Level: {{ skill.get_skill_level_display }}</p>
-        <br/>
-    {% endfor %}
-{% endif %}
-
+    
+{% include "home/snippet/professional_skills_display.html" with skills=comrade.professional_skills %}
+    
 {% endwith %}
 {% endblock %}

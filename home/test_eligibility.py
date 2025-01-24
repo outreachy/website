@@ -214,7 +214,7 @@ class EligibilityTests(TestCase):
 
             response = self.client.post("/eligibility/", answers)
 
-        self.assertRedirects(response, "/eligibility-results/")
+        self.assertRedirects(response, "/account/professional-skills/")
         self.assertEqual(set(data.keys()), set(completed_steps))
 
         result = applicant.applicantapproval_set.get()

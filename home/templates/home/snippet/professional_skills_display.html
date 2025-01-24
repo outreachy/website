@@ -1,0 +1,23 @@
+<div class="card border-secondary mb-3">
+	<div class="card-header text-white bg-secondary">
+        Your Professional Skills
+    </div>
+    <div class="card-body">
+        {% if skills %}
+            <div class="container card-text ">
+                <div class="row card-text">
+                    <div class="col-sm card-text"><strong>Skill description</strong></div>
+                    <div class="col-md card-text"><strong>Experience Level</strong></div>
+                </div>
+                {% for skill in skills %}
+                    <div class="row card-text">
+                        <div class="col-sm card-text border rounded p-1">{{ skill.skill }}</div>
+                        <div class="col-md card-text border rounded p-1"><button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="{{ skill.get_skill_experience_level_display }}">{{ skill.get_skill_level_display }}</button></div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="card-text">You have not listed any professional skills.</p>
+        {% endif %}
+    </div>
+</div>
