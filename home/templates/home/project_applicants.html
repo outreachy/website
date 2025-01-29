@@ -214,6 +214,9 @@ that timeline, taking into account any time commitments the applicant has.
 				{% endif %}
 			{% endif %}
 		</ul>
+        <hr>
+		<h3>{{ applicant.public_name }} - Professional Skills </h3>
+        {% include "home/snippet/professional_skills_display.html" with skills=applicant.professional_skills %}
 		<hr>
 		<h3>{{ applicant.public_name }} - Contributions</h3>
 		{% for c in applicant_contributions %}

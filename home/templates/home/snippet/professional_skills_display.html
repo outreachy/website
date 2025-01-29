@@ -1,12 +1,12 @@
 <div class="card border-secondary mb-3">
 	<div class="card-header text-white bg-secondary">
-        Your Professional Skills
+        Professional Skills
     </div>
     <div class="card-body">
         {% if skills %}
             <div class="container card-text ">
-                <div class="row card-text">
-                    <div class="col-sm card-text"><strong>Skill description</strong></div>
+                <div class="row mb-2 card-text">
+                    <div class="col-sm pl-0 card-text"><strong>Skill description</strong></div>
                     <div class="col-md card-text"><strong>Experience Level</strong></div>
                 </div>
                 {% for skill in skills %}
@@ -17,7 +17,7 @@
                 {% endfor %}
             </div>
         {% else %}
-            <p class="card-text">You have not listed any professional skills.</p>
+            <p class="card-text">No professional skills listed.</p>
         {% endif %}
     </div>
 </div>

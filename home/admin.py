@@ -46,6 +46,7 @@ from .models import Participation
 from .models import PaymentEligibility
 from .models import Project
 from .models import ProjectSkill
+from .models import ProfessionalSkill
 from .models import PromotionTracking
 from .models import RoundPage
 from .models import SchoolInformation
@@ -178,6 +179,20 @@ class ProjectSkillAdmin(reversion.admin.VersionAdmin):
         # Redirect to a page that renames all skills with old name to new name
         return redirect(reverse('rename-project-skills') + '?ids={}'.format(','.join([str(pk) for pk in selected_objects])))
 
+class ProfessionalSkillAdmin(reversion.admin.VersionAdmin):
+    model = ProfessionalSkill
+    verbose_name_plural = 'Professional Skills'
+    list_display = (
+            'skill',
+            )
+    ordering = ['skill']
+    search_fields = (
+            'skill',
+            )
+    raw_id_fields = (
+            'comrade',
+            )
+    
 class SkillsInline(admin.StackedInline):
     model = ProjectSkill
     can_delete = False
@@ -699,5 +714,6 @@ admin.site.register(OfficialSchool, OfficialSchoolAdmin)
 admin.site.register(Participation, ParticipationAdmin)
 admin.site.register(RoundPage, RoundPageAdmin)
 admin.site.register(Project, ProjectAdmin)
+admin.site.register(ProfessionalSkill, ProfessionalSkillAdmin)
 admin.site.register(ProjectSkill, ProjectSkillAdmin)
 admin.site.register(SignedContract, SignedContractAdmin)

@@ -2039,13 +2039,13 @@ class ProfessionalSkill(models.Model):
     def get_skill_experience_level_display(self):
         match self.experience_level:
             case self.CONCEPTS:
-                return "(Concepts) I have a basic understanding or theoretical knowledge of this skill"
+                return "(Concepts) Basic understanding or theoretical knowledge of this skill"
             case self.EXPLORING:
-                return "(Exploring) I have tried using this skill in classes or personal projects"
+                return "(Exploring) Tried using this skill in classes or personal projects"
             case self.GROWING:
-                return "(Growing) I have used this skill in several projects and can further develop it with mentorship"
+                return "(Growing) Used this skill in several projects and can further develop it with mentorship"
             case self.INDEPENDENT:
-                return "(Independent) I have used this skill in several projects and I can use this skill independently"
+                return "(Independent) Used this skill in several projects and I can use this skill independently"
 
 class ProjectSkill(models.Model):
     project = models.ForeignKey(Project, verbose_name="Project", on_delete=models.CASCADE)
