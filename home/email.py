@@ -100,6 +100,22 @@ def notify_organizers_of_new_community(new_community):
         recipient_list=[organizers]
     )
 
+def notify_organizers_of_updated_sponsorship_leads(participation, editor, time_edited):
+    # Don't email organizers if the coordinator submitted a blank sponsorship leads form
+    # This does mean we won't get a notification if a sponsorship lead is deleted, but that's pretty rare
+    if participation.sponsorship_set.count == 0:
+        return
+
+    send_template_mail(
+        'home/email/sponsorship-leads-updated.txt',
+        {
+            'participation': participation,
+            'editor': editor,
+            'time_edited': time_edited,
+        },
+        recipient_list=[organizers]
+    )
+
 def project_nonfree_warning(project, request):
     send_template_mail('home/email/project-warning.txt', {
         'project': project,

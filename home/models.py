@@ -1587,13 +1587,17 @@ class Sponsorship(models.Model):
             verbose_name='Organization or company full legal name',
             help_text='The full sponsor name to be used on invoices.')
 
+    coordinator_is_sponsor_rep = models.BooleanField(
+            default=False,
+            verbose_name='Are you a representative of the sponsoring organization?')
+
     donation_for_outreachy_general_activities = models.PositiveIntegerField(
             default=0,
             verbose_name="Donation amount ($ USD) for Outreachy program activities")
 
     donation_for_any_outreachy_internship = models.PositiveIntegerField(
             default=0,
-            verbose_name="Donation amount ($ USD) for Outreachy internships")
+            verbose_name="Donation amount ($ USD) for all Outreachy internships")
 
     donation_for_other = models.PositiveIntegerField(
             default=0,
@@ -1603,28 +1607,13 @@ class Sponsorship(models.Model):
             max_length=PARAGRAPH_LENGTH,
             blank=True)
 
-    sponsor_contact = models.CharField(
+    sponsor_relationship = models.TextField(
             max_length=PARAGRAPH_LENGTH,
             blank=True)
 
-    sponsor_relationship = models.CharField(
+    sponsor_contact = models.TextField(
             max_length=PARAGRAPH_LENGTH,
             blank=True)
-
-    due_date = models.DateField(
-            default=datetime.date.today,
-            help_text='Due date to provide an invoice to the sponsoring organization')
-
-    due_date_info = models.CharField(
-            max_length=PARAGRAPH_LENGTH,
-            blank=True,
-            verbose_name='Information about due dates',
-            help_text='Please provide any additional information about due dates for this sponsorship')
-
-    amount = models.PositiveIntegerField(
-            default=0,
-            verbose_name="Sponsorship amount",
-            help_text="Sponsorship for each intern is $6,500.")
 
     funding_secured = models.BooleanField(
             default=False,
@@ -1633,8 +1622,30 @@ class Sponsorship(models.Model):
             <br>Leave the box unchecked if the funding is tentative.
             """)
 
+    due_date = models.DateField(
+            blank=True,
+            null=True,
+            help_text='Due date to provide an invoice to the sponsoring organization')
+
+    due_date_info = models.TextField(
+            max_length=PARAGRAPH_LENGTH,
+            blank=True,
+            verbose_name='Information about due dates',
+            help_text='Please provide any additional information about due dates for this sponsorship')
+
+    legal_info = models.TextField(
+            max_length=PARAGRAPH_LENGTH,
+            blank=True)
+
+    # Depreciated
+    amount = models.PositiveIntegerField(
+            default=0,
+            verbose_name="Sponsorship amount",
+            help_text="Sponsorship for each intern is $6,500.")
+
     funding_decision_date = models.DateField(
-            default=datetime.date.today,
+            blank=True,
+            null=True,
             help_text='Date by which you will know if this funding is confirmed.')
 
     additional_information = CKEditorField(
@@ -1666,15 +1677,24 @@ class Sponsorship(models.Model):
                 v.revision.user.username,
                 email,
                 v.field_dict['name'],
-                v.field_dict['amount'],
+                v.field_dict['coordinator_is_sponsor_rep'],
+                v.field_dict['donation_for_outreachy_general_activities'],
+                v.field_dict['donation_for_any_outreachy_internship'],
+                v.field_dict['donation_for_other'],
+                v.field_dict['donation_for_other_information'],
+                v.field_dict['sponsor_relationship'],
+                v.field_dict['sponsor_contact'],
                 v.field_dict['funding_secured'],
+                v.field_dict['due_date'],
+                v.field_dict['due_date_info'],
+                v.field_dict['legal_info'],
                 v.field_dict['funding_decision_date'],
                 v.field_dict['additional_information'],
                 ])
         return history
 
     def total_sponsorship_amount(self):
-        return self.donation_for_outreachy_general_activities + self.donation_for_any_outreachy_internship + donation_for_other
+        return self.donation_for_outreachy_general_activities + self.donation_for_any_outreachy_internship + self.donation_for_other
 
     def __str__(self):
         return "{name} sponsorship for {community}".format(

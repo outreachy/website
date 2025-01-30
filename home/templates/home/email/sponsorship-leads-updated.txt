@@ -1,0 +1,46 @@
+Sponsorship lead update - {{ participation.community.name }}
+
+At {{ time_edited|date }} UTC, an Outreachy community coordinator provided updated information about Outreachy sponsorship leads through the Outreachy website.
+
+Information was updated by: {{ editor.email_address }}
+Who is a community coordinator for: {{ participation.community.name }}
+{% if participation.sponsorship_set == 0 %}No sponsorship leads provided, or all sponsorship leads were deleted.{% endif %}{% for s in participation.sponsorship_set.all %}{% with forloop.counter as sponsor_number %}
+
+Sponsorship lead #{{ sponsor_number}}
+---
+
+Summary
+===
+
+Organization name: {{ s.name }}
+Total sponsorship: ${{ s.total_sponsorship_amount }} USD
+ * ${{ s.donation_for_outreachy_general_activities }} USD "Charitable donation for Outreachy"
+ * ${{ s.donation_for_any_outreachy_internship }} USD "Charitable donation for Outreachy internships"
+ * ${{ s.donation_for_other }} USD - other donation: {{ s.donation_for_other_information }}
+
+Strength of sponsorship lead
+===
+
+Donation confirmed by sponsoring organization? {% if s.funding_secured %}YES{% else %}NO{% endif %}
+
+Is the original sponsorship lead submitter a representative of the sponsoring organization? {% if s.coordinator_is_sponsor_rep %}YES{% else %}NO{% endif %}
+
+Relationship of original sponsorship lead submitter to the sponsoring organization: {{ s.sponsor_relationship }}
+
+Timeline
+===
+
+{% if not s.funding_secured %}Unconfirmed sponsorship. Donation will be confirmed by: {{ s.funding_decision_date }}{% else %}Donation confirmed by sponsoring organization{% endif %}
+
+{% if s.due_date %}Invoice due date: {{ s.due_date }}{% else %}No invoice due date provided{% endif%}
+{% if s.due_date_info %}Notes about sponsorship due dates and deadlines: {{ s.due_date_info }}{% else %}No notes provided on due date or deadlines{% endif%}
+
+{% if s.legal_info %}Information about grants, external financial arrangements, or vendor agreements associated with this sponsorship: {{ s.legal_info }}{% else %}No information provided on grants, external financial arrangements, or vendor agreements associated with this sponsorship.{% endif%}
+
+Additional information
+===
+
+{% if s.additional_information %}{{ s.additional_information }}{% else %}No additional information provided.{% endif %}
+{% endwith %}{% endfor %}
+
+This mail is an automated email sent from the Outreachy Django website

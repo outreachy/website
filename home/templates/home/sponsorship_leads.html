@@ -3,7 +3,7 @@
 {% load humanize %}
 
 {% block title %}
-Sponsorship Leads
+Outreachy Sponsorship Leads
 {% endblock %}
 
 {% block content %}
@@ -15,16 +15,14 @@ Sponsorship Leads
 			{% include 'home/snippet/funding_short_description.html' %}
 		{% endwith %}
 </p>
-		<p>Please <a href="{% url 'docs-community' %}#funding-requirements">read the community guide</a> for more information about intern funding.</p>
-
-{% include "home/snippet/privacy_policy.html" %}
 
 <p><form action="" method="post">
 	{% csrf_token %}
 	{{ form.management_form }}
 	{% for f in form %}
 		{% with forloop.counter as sponsor_number %}
-		<h2>Sponsor #{{ sponsor_number }}</h2>
+		<h2>Outreachy Sponsorship Lead #{{ sponsor_number }}</h2>
+		<p>If you do not know of any potential Outreachy sponsors, please leave this form blank.</p>
 		{{ f.media }}
 		{% for hidden in f.hidden_fields %}
 			{{ hidden }}
@@ -50,7 +48,10 @@ Sponsorship Leads
 						{{ field.help_text|safe }}
 					</div>
 				</div>
-			{% elif 'Sponsorship amount' in field.label_tag %}
+			{% elif 'program activities' in field.label_tag %}
+			<p><u>Donation amount from Sponsor #{{ sponsor_number }}</u></p>
+			<p>If you are a representative of the sponsoring organization, please tell us how the sponsor wants to direct its donation by filling out the donation amounts below.</p>
+			<p>If you are not a representative of the sponsoring organizations, leave the donation amounts at zero. Outreachy will follow up with the sponsor to confirm their donation amount.</p>
 				<div class="form-group card">
 					{{ field.errors }}
 					<div class="card-header">
@@ -58,10 +59,88 @@ Sponsorship Leads
 					</div>
 					<div class="card-body">
 						{{ field }}
+						<br>
+						<p>Your donation to the Outreachy program activities helps us retain Outreachy interns in open source.</p>
 					</div>
-					{% if field.help_text %}
-						<div class="card-footer bg-white">Sponsorship for each intern is ${{ participation.participating_round.sponsorship_per_intern|intcomma }} USD.</div>
-					{% endif %}
+				</div>
+			{% elif 'Donation amount ($ USD) for all Outreachy internships' in field.label_tag %}
+				<div class="form-group card">
+					{{ field.errors }}
+					<div class="card-header">
+						Donation amount ($ USD) for all Outreachy internships:
+					</div>
+					<div class="card-body">
+						{{ field }}
+						<br>
+						<p>Your donation towards Outreachy internships are placed into one temporarily earmarked fund for <i>all Outreachy internships with any open source community</i>. This donation tracking method reduces our bookkeeping overhead and helps ease the burden on our small accounting team.</p>
+					</div>
+				</div>
+			{% elif 'Donation amount ($ USD) for other' in field.label_tag %}
+				<div class="form-group card">
+					<div class="card-header">
+						{{ field.label_tag }}
+					</div>
+					<div class="card-body">
+						{{ field.errors }}
+						{{ field }}
+						<br>
+						<p>Note that more restrictive earmarks will require additional information. Please summarize how the sponsoring organization would like to donate to Outreachy and we will follow up:</p>
+			{% elif 'Donation for other information' in field.label_tag %}
+						{{ field.errors }}
+						{{ field }}
+					</div>
+				</div>
+			{% elif 'Sponsor relationship' in field.label_tag %}
+				<p><u>Information about Sponsor #{{ sponsor_number }}</u>
+				<div class="form-group card">
+					{{ field.errors }}
+					<div class="card-header">
+						What is the sponsoring organization's relationship with you and your open source community?
+					</div>
+					<div class="card-body">
+						{{ field }}
+					</div>
+					<div class="card-footer bg-white">Please tell us your name, what your relationship to the sponsoring organization is, and how the sponsoring organization is connected to your open source community. For example: 'I am Jane Doe, and I work at Company. Company employees contribute to this open source community. I think my department at Company may be willing to sponsor Outreachy. I will connect you with my manager.</div>
+				</div>
+			{% elif 'Sponsor contact' in field.label_tag %}
+				<div class="form-group card">
+					{{ field.errors }}
+					<div class="card-header">
+						Who should we contact at the sponsoring organization to confirm this donation?
+					</div>
+					<div class="card-body">
+						{{ field }}
+					</div>
+					<div class="card-footer bg-white">Please provide the name, email address, and role or job title of the person at the organization who is the financial decision maker for this donation to Outreachy. Please let us know whether we should contact you before reaching out to this contact.</div>
+				</div>
+			{% elif 'Due date' in field.label_tag %}
+				<p><u>(Optional) Donation details for Sponsor #{{ sponsor_number }}</u></p>
+				<div class="form-group card">
+					<div class="card-header">
+						Due date
+					</div>
+					<div class="card-body">
+						<p>What is the deadline to provide an invoice to the sponsoring organization?<p>
+						{{ field.errors }}
+						{{ field }}
+			{% elif 'Information about due dates' in field.label_tag %}
+			<p>Please provide any additional information about due dates for this sponsorship:</p>
+						{{ field.errors }}
+						{{ field }}
+					</div>
+				</div>
+			{% elif 'Legal info' in field.label_tag %}
+				<div class="form-group card">
+					{{ field.errors }}
+					<div class="card-header">
+						Will the sponsoring organization require additional legal agreements before we can accept this donation?
+					</div>
+					<div class="card-body">
+						{{ field }}
+					</div>
+					<div class="card-footer bg-white">
+						Please provide more details if this donation is associated with a grant or other external financial arrangement. Let us know if the sponsoring company will require us to fill out a vendor agreement. This information helps us prioritize sponsorships that might require more lead time.
+					</div>
 				</div>
 			{% else %}
 				<div class="form-group card">
@@ -85,5 +164,7 @@ Sponsorship Leads
 		<input type="hidden" name="next" value="{{ next }}" />
 	</div>
 </form></p>
+{% include "home/snippet/privacy_policy.html" %}
+
 
 {% endblock %}

@@ -1355,7 +1355,7 @@ class SponsorshipLeadsUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateVie
     template_name = 'home/sponsorship_leads.html'
     form_class = inlineformset_factory(Participation, Sponsorship,
             formset=SponsorshipInlineFormSet,
-            fields='__all__', exclude=['amount', 'coordinator_can_update', 'status', 'ticket_number', 'organizer_notes'])
+            fields='__all__', exclude=['amount', 'coordinator_can_update', 'status', 'ticket_number', 'organizer_notes'], field_classes = { 'coordinator_is_sponsor_rep': RadioBooleanField })
 
     def get_object(self):
         community = get_object_or_404(Community, slug=self.kwargs['community_slug'])
@@ -1385,7 +1385,14 @@ class SponsorshipLeadsUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateVie
         return context
 
     def get_success_url(self):
-        # FIXME -- email Outreachy organizers about the updated sponsorship leads
+        editor = Comrade.objects.get(account=self.request.user)
+        now = datetime.now(timezone.utc)
+        participation = get_object_or_404(
+            Participation,
+            community__slug=self.kwargs['community_slug'],
+            participating_round__slug=self.kwargs['round_slug'],
+        )
+        email.notify_organizers_of_updated_sponsorship_leads(participation, editor, now)
         return reverse('community-general-funding', kwargs = {
             'community_slug': self.kwargs['community_slug'],
             'new': self.kwargs['new'],

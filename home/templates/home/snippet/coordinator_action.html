@@ -1,6 +1,6 @@
 {% load humanize %}
 			<div class="card border-info mb-3">
-				<div class="card-header text-white bg-info">Coordinator actions for {{ community.name }}</div>
+				<div class="card-header text-white bg-info">Coordinator actions for {{ community.name }} in {{ participation_info.participating_round.official_name }}</div>
 				<div class="card-body">
 					{% if current_round and not current_round.internannounce.has_passed %}
 						<p class="card-text">
@@ -18,8 +18,8 @@
 						{% else %}
 						Your community has provided the following sponsorship leads:
 						<ul>
-							{% for s in participation_info.sponsor_set %}
-							<li>${{s.total_sponsorship_amount|intcomma }} USD from {{ s.name }}</li>
+							{% for s in participation_info.sponsorship_set.all %}
+							<li>${{ s.total_sponsorship_amount|intcomma }} USD from {{ s.name }}</li>
 							{% endfor %}
 						</ul>
 						{% endif %}
