@@ -3,7 +3,7 @@ from django.conf import settings
 from django.core import mail
 from django.test import TestCase, override_settings
 from django.urls import reverse
-import pprint
+from pprint import pprint
 from reversion.models import Version
 from unittest import skip
 
@@ -178,7 +178,6 @@ class ProjectSubmissionTestCase(TestCase):
             follow=True,
         )
         self.assertEqual(response.status_code, 200)
-        print(reverse('community-read-only', kwargs={ 'community_slug': scenario.participation.community.slug, }))
         self.assertRedirects(response, reverse('community-read-only', kwargs={ 'community_slug': scenario.participation.community.slug, }))
 
     def submit_failed_community_signup(self, current_round):
