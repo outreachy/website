@@ -40,21 +40,34 @@ class ProjectSubmissionTestCase(TestCase):
             },
         )
 
-    def coordinator_submits_sponsorship_leads(self, sponsorship_leads_path, sponsor_name='Software in the Public Interest - Debian', donation_for_outreachy_general_activities=0, donation_for_any_outreachy_internship=0, donation_for_other=13000, donation_for_other_information='Outreachy internships with Debian', sponsor_contact='Debian Project Leader <email@example.com> and SPI Treasurer <email@example.com>'):
+    def coordinator_submits_sponsorship_leads(self,
+                                              sponsorship_leads_path,
+                                              name='Software in the Public Interest - Debian',
+                                              donation_for_outreachy_general_activities=0,
+                                              donation_for_any_outreachy_internship=0,
+                                              donation_for_other=13000,
+                                              donation_for_other_information='Outreachy internships with Debian',
+                                              sponsor_contact='Debian Project Leader <email@example.com> and SPI Treasurer <email@example.com>',
+                                              funding_secured=True,
+                                              coordinator_is_sponsor_rep=True,
+                                              sponsor_relationship="I am Jane Doe, a Debian developer, and I am passing on the Outreachy donation amounts the DPL has committed to funding from Debian's funds at SPI.",
+                                              ):
         return self.client.post(sponsorship_leads_path, {
             'sponsorship_set-TOTAL_FORMS': '1',
             'sponsorship_set-INITIAL_FORMS': '0',
             'sponsorship_set-MIN_NUM_FORMS': '0',
             'sponsorship_set-MAX_NUM_FORMS': '1000',
-            'sponsorship_set-0-name': sponsor_name,
+            'sponsorship_set-0-name': name,
             'sponsorship_set-0-donation_for_outreachy_general_activities': donation_for_outreachy_general_activities,
             'sponsorship_set-0-donation_for_any_outreachy_internship': donation_for_any_outreachy_internship,
             'sponsorship_set-0-donation_for_other': donation_for_other,
+            'sponsorship_set-0-donation_for_other_information': donation_for_other_information,
+            'sponsorship_set-0-coordinator_is_sponsor_rep': coordinator_is_sponsor_rep,
+            'sponsorship_set-0-sponsor_relationship': sponsor_relationship,
             'sponsorship_set-0-sponsor_contact': sponsor_contact,
-            'sponsorship_set-0-funding_secured': 'on',
-            'sponsorship_set-0-funding_decision_date': str(datetime.date.today()),
+            'sponsorship_set-0-funding_secured': funding_secured,
         },
-        follow=True)
+        follow=False)
 
     def test_new_coordinator_signs_up_community_to_participate(self):
         """
@@ -205,7 +218,6 @@ class ProjectSubmissionTestCase(TestCase):
         self.check_community_signup_marked_closed()
         self.submit_failed_community_signup(current_round)
 
-    @skip("Via hand-testing, I can see that the sponsorship objects are created, and can be edited and deleted. However, the response to the sponsorship form is 200 (okay) not 302 (redirect), and the next test to look the saved object up in the test database fails. I'm pretty sure this is a silly error in this test, and not a bug in the code itself. FIXME")
     def test_community_participation_signup_too_late(self):
         """
         This tests submitting an older community to participate in this round.
@@ -248,11 +260,6 @@ class ProjectSubmissionTestCase(TestCase):
         community_does_participate_path = reverse('participation-action', kwargs={'action': 'submit', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
         community_does_not_participate_path = reverse('participation-action', kwargs={'action': 'withdraw', 'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, })
         sponsorship_leads_path = reverse('sponsorship-leads-update', kwargs={'round_slug': current_round.slug, 'community_slug': scenario.participation.community.slug, 'new': False })
-        sponsor_name = 'Software in the Public Interest - Debian'
-        donation_for_outreachy_general_activities = 0
-        donation_for_any_outreachy_internship = 0
-        donation_for_other = 13000
-
         visitors = self.get_visitors_from_past_round(scenario)
         # There should not be a Participation for Debian in the current round yet
         with self.assertRaises(Participation.DoesNotExist):
@@ -280,11 +287,27 @@ class ProjectSubmissionTestCase(TestCase):
         # self.assertIn(str(sponsor_amount), mail.outbox[0].body)
 
         # Coordinator enters sponsorship leads
-        response = self.coordinator_submits_sponsorship_leads(sponsorship_leads_path)
+        name = 'Software in the Public Interest - Debian'
+        donation_for_outreachy_general_activities = 2000
+        donation_for_any_outreachy_internship = 1000
+        donation_for_other = 14000
+        response = self.coordinator_submits_sponsorship_leads(
+                sponsorship_leads_path=sponsorship_leads_path,
+                name=name,
+                donation_for_outreachy_general_activities=donation_for_outreachy_general_activities,
+                donation_for_any_outreachy_internship=donation_for_any_outreachy_internship,
+                donation_for_other=donation_for_other,
+                funding_secured=True)
         self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse(
+            'community-general-funding',
+            kwargs={
+                'community_slug': scenario.participation.community.slug,
+                'new': False,
+        }))
 
         # Make sure the Sponsorship object was created
-        sponsorship = Sponsorship.objects.get(participation=participation, coordinator_can_update=True, name=sponsor_name, donation_for_outreachy_general_activities=donation_for_outreachy_general_activities, donation_for_any_outreachy_internship=donation_for_any_outreachy_internship, donation_for_other=donation_for_other, funding_secured=True)
+        sponsorship = Sponsorship.objects.get(participation=participation, coordinator_can_update=True, name=name, donation_for_outreachy_general_activities=donation_for_outreachy_general_activities, donation_for_any_outreachy_internship=donation_for_any_outreachy_internship, donation_for_other=donation_for_other, funding_secured=True)
 
         for visitor_type, visitor in visitors:
             with self.subTest(visitor_type=visitor_type):
