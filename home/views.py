@@ -35,6 +35,8 @@ import reversion
 
 from . import email
 
+from .constants import PROFESSIONAL_SKILLS
+
 from .dashboard import get_dashboard_sections
 
 from .forms import InviteForm
@@ -86,6 +88,7 @@ from .models import OrganizerNotes
 from .models import Participation
 from .models import PaymentEligibility
 from .models import PriorFOSSExperience
+from .models import ProfessionalSkill
 from .models import Project
 from .models import ProjectSkill
 from .models import PromotionTracking
@@ -692,7 +695,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWiz
     def get_template_names(self):
         return [self.TEMPLATES[self.steps.current]]
 
-    def show_results_if_any(self):
+    def show_professional_skills_form_if_any(self):
         # get_context_data() and done() both need a round; save it for them.
         self.current_round = get_current_round_for_initial_application()
 
@@ -705,17 +708,17 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWiz
             # Continue with the default get or post behavior.
             return None
 
-        return redirect(self.request.GET.get('next', reverse('eligibility-results')))
+        return redirect(self.request.GET.get('next', reverse('professional-skills')))
 
     def get(self, *args, **kwargs):
         # Using `or` this way returns the redirect from show_results_if_any,
         # unless that function returns None. Only in that case does it call the
         # superclass implementation of this method and return _that_.
-        return self.show_results_if_any() or super(EligibilityUpdateView, self).get(*args, **kwargs)
+        return self.show_professional_skills_form_if_any() or super(EligibilityUpdateView, self).get(*args, **kwargs)
 
     def post(self, *args, **kwargs):
         # See self.get(), above.
-        return self.show_results_if_any() or super(EligibilityUpdateView, self).post(*args, **kwargs)
+        return self.show_professional_skills_form_if_any() or super(EligibilityUpdateView, self).post(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(EligibilityUpdateView, self).get_context_data(**kwargs)
@@ -752,7 +755,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWiz
                 r.save()
 
         # Now that all the related objects are saved, we can determine
-        # elegibility from them, which avoids duplicating some code that's
+        # eligibility from them, which avoids duplicating some code that's
         # already on the models. The cost is reading back some of the objects
         # we just wrote and then re-saving an object, but that isn't a big hit.
         self.object.approval_status, self.object.reason_denied = determine_eligibility(self, self.object)
@@ -766,11 +769,40 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWiz
 
         self.object.save()
 
-        return redirect(self.request.GET.get('next', reverse('eligibility-results')))
+        return redirect(self.request.GET.get('next', reverse('professional-skills')))
+
+class ProfessionalSkillsUpdate(LoginRequiredMixin, ComradeRequiredMixin, UpdateView):
+    template_name = 'home/comrade_professional_skills_form.html'
+    form_class = inlineformset_factory(Comrade, ProfessionalSkill, fields='__all__', max_num=5, extra=5)
+
+    def get_object(self):
+        # Return the current user's comrade object
+        return self.request.user.comrade
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfessionalSkillsUpdate, self).get_context_data(**kwargs)
+        context.update({
+            # Make sure that someone can't inject code in another person's
+            # browser by adding a maliciously encoded project skill.
+            # json.dumps() takes the skills list (encoded as a Python list)
+            # and encodes the list in JavaScript object notation.
+            # mark_safe means this data has already been cleaned,
+            # and the Django template code shouldn't clean it.
+            'suggested_skills': mark_safe(json.dumps(PROFESSIONAL_SKILLS)),
+        })
+        return context
+
+    def get_success_url(self):
+        return reverse('eligibility-results')
 
 class EligibilityResults(LoginRequiredMixin, ComradeRequiredMixin, DetailView):
     template_name = 'home/eligibility_results.html'
     context_object_name = 'role'
+
+    def get_context_data(self, **kwargs):
+        context = super(EligibilityResults, self).get_context_data(**kwargs)
+        context['comrade'] = self.request.user.comrade
+        return context
 
     def get_object(self):
         now = datetime.now(timezone.utc)

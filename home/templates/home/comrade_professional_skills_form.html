@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add Professional Skills
+{% endblock %}
+
+{% block content %}
+    
+<h1>Add Professional Skills</h1>
+<form action="" method="post">
+	{% csrf_token %}
+	{{ form.management_form }}
+	{{ form.non_field_errors }}
+	{% for f in form %}
+		{% with forloop.counter as skill_number %}
+		<div class="card my-3">
+			<div class="card-header bg-info text-white">
+				<h3>Professional Skill #{{ skill_number }}</h3>
+			</div>
+			<div class="card-body">
+				{{ f.media }}
+				{% for hidden in f.hidden_fields %}
+					{{ hidden }}
+				{% endfor %}
+				{% for field in f.visible_fields %}
+					{% if 'Delete' in field.label_tag %}
+						<div class="form-group card border-warning">
+							<div class="card-header text-white bg-warning">
+								Delete Professional Skill #{{ skill_number }}?
+							</div>
+							<div class="card-body">
+								{{ field }} Check this box to delete this skill information.
+								{{ field.help_text|safe }}
+							</div>
+						</div>
+					{% elif 'Experience level' in field.label_tag %}
+						<div class="form-group card">
+							{{ field.errors }}
+							<div class="card-header">
+								Experience level
+							</div>
+							<div class="card-body">
+                                <p>Choose the top skills you would like to highlight and best represent your strengths!</p>
+								<p>How much experience do I need in this skill?</p>
+								<ul>
+									<li><b>Concepts:</b> I have a basic understanding or theoretical knowledge of this skill</li>
+									<li><b>Exploring:</b> I have tried using this skill in classes or personal projects</li>
+									<li><b>Growing:</b> I have used this skill in several projects and can further develop it with mentorship</li>
+									<li><b>Independent:</b> I have used this skill in several projects and I can use this skill independently</li>
+								</ul>
+								{{ field }}
+							</div>
+						</div>
+					{% else %}
+						<div class="form-group card">
+							{{ field.errors }}
+							<div class="card-header">
+								{{ field.label_tag }}
+							</div>
+							<div class="card-body">
+								{{ field }}
+							</div>
+							{% if field.help_text %}
+							<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+							{% endif %}
+						</div>
+					{% endif %}
+				{% endfor %}
+			</div>
+		</div>
+		{% endwith %}
+	{% endfor %}
+	<input class="btn btn-primary" type="submit" value="Save professional skills" />
+</form>
+
+{% endblock %}
+
+{% block extra_css %}
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+{% endblock %}
+
+{% block extra_js %}
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script>
+		$(function() {
+			const suggested_skills = {{ suggested_skills }};
+            // Matches elements whose id starts with "id_professionalskill_set-" and ends with "-skill"
+			$("input[id^='id_professionalskill_set-'][id$='-skill']").each(function() {
+                $(this).autocomplete({
+                    source: suggested_skills
+                });
+            });
+		});
+	</script>
+{% endblock %}

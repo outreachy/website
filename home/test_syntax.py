@@ -207,6 +207,7 @@ class SyntaxTestCase(TestCase):
                 "/eligibility-results/",
                 # can't test AlumSurveyUpdate or survey_opt_out without a fake survey object
                 "/account/",
+                "/account/professional-skills/",
                 "/apply/project-selection/",
                 "/past-projects/",
                 "/apply/eligibility/",

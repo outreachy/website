@@ -325,6 +325,8 @@ Outreachy eligibility results
 	{% include 'home/snippet/initial_application.html' %}
 
 {% endif %}
-
+    
+{% include "home/snippet/professional_skills_display.html" with skills=comrade.professional_skills %}
+    
 {% endwith %}
 {% endblock %}

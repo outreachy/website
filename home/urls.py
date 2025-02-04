@@ -132,6 +132,7 @@ urlpatterns = [
     re_path(r'^eligibility/request-school-info-revision/(?P<applicant_username>[^/]+)/$', views.NotifySchoolInformationUpdating.as_view(), name='request-school-info-revision'),
     re_path(r'^eligibility-results/$', views.EligibilityResults.as_view(), name='eligibility-results'),
     re_path(r'^account/$', views.ComradeUpdate.as_view(), name='account'),
+    re_path(r'^account/professional-skills/$', views.ProfessionalSkillsUpdate.as_view(), name='professional-skills'),
     re_path(r'^apply/project-selection/$', views.current_round_page, name='project-selection'),
     re_path(r'^past-projects/$', views.past_rounds_page, name='past-rounds'),
     re_path(r'^promote/$', views.promote_page, name='promote'),
