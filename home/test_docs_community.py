@@ -4,6 +4,7 @@ from django.core import mail
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from reversion.models import Version
+from unittest import skip
 
 from home import models
 from home import factories
