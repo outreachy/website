@@ -4,7 +4,24 @@ To: {% for email in coordinators %}{{ email }}, {% endfor %}
 
 Hi folks,
 
-Do you think {{ community.name }} will be able to participate as a mentoring community in the Outreachy {{ current_round.internstarts|date:"F Y" }} internship cohort?
+Outreachy's call for mentoring communities is now open. Will {{ community.name }} be able to participate in the {{ current_round.internstarts|date:"F Y" }} internship cohort?
+
+We also wanted to let communities know some bad news -- donations to Outreachy have been greatly reduced in the past two years. Unfortunately, we may have to reduce Outreachy program activities unless we find additional funding.
+
+Do you have a contact at any companies or grant makers that might be interested in sponsoring Outreachy program activities? While we often find sponsors who want to donate towards internships with specific FOSS communities, it is harder to find sponsors who are willing to donate towards the labor-intensive work of running Outreachy. Let us know if you have any sponsorship leads.
+
+I also wondered if your community might be willing to donate an additional amount to the Outreachy program activities fund? Any additional donation will help close our funding gap.
+
+I hope we can work together to ensure a future for Outreachy -- a future where people who face discrimination and systemic bias become open source leaders.
+
+Let us know if you have ideas for potential Outreachy sponsors, or other opportunities to fund Outreachy program activities.
+
+Important dates
+---
+
+On February 5, 2025 at 3pm UTC Outreachy will host a Q&A chat to answer mentor questions:
+
+https://www.youtube.com/watch?v=PiOm6nqzTVQ
 
 {{ current_round.lateorgs }} at 4pm UTC is the deadline for communities to sign up to participate.
 
@@ -14,49 +31,34 @@ https://www.outreachy.org{% url 'community-read-only' community_slug=community.s
 
 Please note that mentors need to submit their projects before {{ current_round.project_soft_deadline }} at 4pm UTC.
 
-We also have a live-streamed Outreachy mentor Q&A coming up on Tuesday, August 22 at 4pm UTC. If you know of any mentors who would like to participate in the mentor Q&A, please let us know!
 
-Please encourage potential mentors to attend our live-streamed mentor Q&A. The live chat will be especially helpful for people who are interested in becoming an Outreachy mentor for the first time. See details below.
-
-
-Intern funding
+Inspiration for new mentors
 ---
 
-All mentoring organizations need to find funding for at least one intern ($8,000 USD).
-{% if fully_outreachy_funded or community.humanitarian_community or community.open_science_community %}
-Outreachy has internship funding available for humanitarian and open science communities. We encourage you to apply for the Outreachy general fund when you sign up to participate. We encourage communities to apply for 1-4 interns from the Outreachy general fund.
-{% endif %}{% if not fully_outreachy_funded %}
-In last Outreachy cohort you participated in, your mentoring organization received funding for interns from the following sponsors:
+If you want to inspire someone to be an Outreachy mentor, you can send them this 3 minute video with a past Outreachy intern who became a mentor:
 
-{% for sponsorship in sponsorships %} - {{ sponsorship.name }}: ${{ sponsorship.amount }}
-{% endfor %}
-Do you think any of these sponsors will be able to commit to funding {{ current_round.internstarts|date:"F Y" }} interns? Outreachy organizers are happy to help you reach out to sponsors if needed.
-{% endif %}
+https://www.youtube.com/watch?v=xUTks1gFrIs
 
-Mentor chats
----
+Every internship cohort, Outreachy has a live-streamed Q&A chat to inspire people to become Outreachy mentors.
 
-Outreachy is hosting a live-streamed Q&A chat to inspire people to become Outreachy mentors.
+On February 5, 2025 at 15:00 UTC Outreachy will host a Q&A chat for prospective mentors will be on 
 
-The live-streamed mentor chats will include a panel of experienced mentors and mentors who participated in Outreachy for the first time last cohort. We'll discuss what it's like to be an Outreachy mentor, and provide tips for new mentors.
+https://www.youtube.com/watch?v=PiOm6nqzTVQ
 
-Live-streamed Q&A date: August 22 at 4pm UTC
+People can ask our mentor panel questions via YouTube live chat. Questions can also be asked on social medial. Please be sure to tag Outreachy on Mastodon, and use the hashtag #OutreachyChat
 
-The Q&A will be live-streamed on YouTube and the video will be uploaded to PeerTube the following day:
+Recordings of past Outreachy mentor chats are available on both YouTube and PeerTube:
 
 YouTube: https://www.youtube.com/@outreachyinternships
 PeerTube: https://diode.zone/a/outreachy/video-channels
 
-People can ask our mentor panel questions via YouTube live chat. Questions can also be asked on social medial. Please be sure to tagging Outreachy on either Twitter or Mastodon, and use the hashtag #OutreachyChat
-
-Twitter: https://www.twitter.com/Outreachy
 Mastodon: https://hachyderm.io/@outreachy
 
 
 Community participation
 ---
 
-We hope that you will participate in the upcoming cohort! Please reply to this email to let us know if you will be participating.
+We hope that you will participate in the upcoming cohort! Let us know what questions you have.
 
 Outreachy Organizers
 {% include 'home/email/footer-coordinator.txt' %}
