@@ -31,9 +31,9 @@ We also have a list of people who have volunteered to chat with interns! They ar
 Week 9 Mentor & Intern Chat
 ----------------------------
 
-On {{ current_round.week_twelve_chat_text_date }} UTC we will host a chat for Outreachy interns, alums, and mentors:
+On {{ current_round.week_ten_chat_text_date }} UTC we will host a chat for Outreachy interns, alums, and mentors:
 
-{{ current_round.week_twelve_interviewing_chat_url }}
+{{ current_round.week_ten_career_chat_url }}
 
 We'll be discussing networking and how to conduct an informal chat. Details are in the Internship Guide:
 
