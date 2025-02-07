@@ -48,6 +48,32 @@ Outreachy Sponsorship Leads
 						{{ field.help_text|safe }}
 					</div>
 				</div>
+			{% elif 'full legal name' in field.label_tag %}
+				<div class="form-group card">
+					{{ field.errors }}
+					<div class="card-header">
+						What is the name of the sponsoring organization or company?
+					</div>
+					<div class="card-body">
+						{{ field }}
+					</div>
+					{% if field.help_text %}
+						<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+					{% endif %}
+				</div>
+			{% elif 'representative of the sponsor' in field.label_tag %}
+				<div class="form-group card">
+					{{ field.errors }}
+					<div class="card-header">
+						Are you a representative of the sponsor?
+					</div>
+					<div class="card-body">
+						{{ field }}
+					</div>
+					{% if field.help_text %}
+						<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
+					{% endif %}
+				</div>
 			{% elif 'program activities' in field.label_tag %}
 			<p><u>Donation amount from Sponsor #{{ sponsor_number }}</u></p>
 			<p>If you are a representative of the sponsoring organization, please tell us how the sponsor wants to direct its donation by filling out the donation amounts below.</p>
@@ -95,12 +121,17 @@ Outreachy Sponsorship Leads
 				<div class="form-group card">
 					{{ field.errors }}
 					<div class="card-header">
-						What is the sponsoring organization's relationship with you and your open source community?
+						What is the sponsoring organization's relationship with you?
 					</div>
 					<div class="card-body">
 						{{ field }}
 					</div>
-					<div class="card-footer bg-white">Please tell us your name, what your relationship to the sponsoring organization is, and how the sponsoring organization is connected to your open source community. For example: 'I am Jane Doe, and I work at Company. Company employees contribute to this open source community. I think my department at Company may be willing to sponsor Outreachy. I will connect you with my manager.</div>
+					<div class="card-footer bg-white">Please tell us your name and what your relationship to the sponsoring organization is. Examples:
+						<ul>
+							<li>"I am Ndidi Adebayo, and I'm on the board of directors of the sponsor organization."</li>
+							<li>"I am Shristi Gupta, and I work at Foo Company. I think my engineering department at Foo Company may be willing to sponsor Outreachy. I will connect you with my manager."</li>
+						</ul>
+					</div>
 				</div>
 			{% elif 'Sponsor contact' in field.label_tag %}
 				<div class="form-group card">
