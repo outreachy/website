@@ -10,11 +10,11 @@ Outreachy Sponsorship Leads
 
 <h1>Outreachy sponsorship leads</h1>
 
-<p>
-		{% with current_round=participation.participating_round %}
-			{% include 'home/snippet/funding_short_description.html' %}
-		{% endwith %}
-</p>
+{% with current_round=participation.participating_round %}
+	{% include 'home/snippet/funding_short_description.html' %}
+{% endwith %}
+
+<p>If you know of any organizations that may want to donate to Outreachy, please fill out the form below.</p>
 
 <p><form action="" method="post">
 	{% csrf_token %}
