@@ -8,52 +8,44 @@ Participation Info for {{ participation.community.name }}
 
 {% block content %}
 
-<h1>Open source community sign up</h1>
-
-<p>Thank you for your interest in mentoring Outreachy interns!</p>
-
-<p>Please fill out the form below to sign your open source community up to participate in the {{ participation.participating_round.official_name }}.</p>
-
-<h2>Estimated number of interns</h2>
-
-<p>Please list the maximum number of interns your community has mentoring capacity to accept.
-</p>
-
-<p>How many interns (max) does your community want to accept this internship cohort? Outreachy requires a 1:1 mentor to intern ratio. We encourage co-mentoring for a 2:1 mentor to intern ratio. We encourage communities who are new to Outreachy to only accept one or two interns.
-</p>
-
 {% if view.kwargs.action == "submit" %}
+	<h1>Open source community sign up</h1>
+
+	<p>Thank you for your interest in mentoring Outreachy interns! We're excited to have you part of the program.</p>
+
+	<p>Please fill out the form below to sign up your community ({{ participation.community.name }}) to participate in the {{ participation.participating_round.official_name }}.</p>
+
+	<h2>Estimated number of interns</h2>
+
+	<p>Please list the maximum number of interns your community has mentoring capacity to accept.
+	</p>
+
+	<p>How many interns (max) does your community believe you have the volunteer resources to accept this internship cohort? Outreachy requires a 1:1 mentor to intern ratio. We encourage co-mentoring for a 2:1 mentor to intern ratio. We encourage communities who are new to Outreachy to only accept one or two interns.
+	</p>
+
 	<form method="post" action="">
 {% csrf_token %}
 	{{ form.media }}
 	{{ form.non_field_errors }}
 	{% for field in form.visible_fields %}
-		{% if 'Is your community an open science community' in field.label_tag %}
-			<hr>
-			<h2>Open science communities</h2>
-		{% elif 'Is your community a humanitarian' in field.label_tag %}
-			<hr>
-			<h2>Humanitarian communities</h2>
-		{% endif %}
 		<div class="form-group card">
 			{{ field.errors }}
 			<div class="card-header">
-				{{ field.label_tag }}
+				{{ field.help_text|safe }}
 			</div>
 			<div class="card-body">
 				{{ field }}
 			</div>
-			{% if field.help_text %}
-			<div class="card-footer bg-white">{{ field.help_text|safe }}</div>
-			{% endif %}
 		</div>
 	{% endfor %}
 <input type="submit" class="btn btn-block btn-primary" value="Save" />
 <input type="hidden" name="next" value="{{ next }}" />
 
 </form>
-{% else %}{# action is something other than submit #}
-{% include "home/snippet/action_form.html" %}
+{% else %}{# action is something other than submit, like withdraw, or approve #}
+	<h1>{{ participation.community.name }} participation in {{ participation.participating_round.official_name }}</h1>
+
+	{% include "home/snippet/action_form.html" %}
 {% endif %}
 
 {% endblock %}
