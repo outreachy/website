@@ -370,7 +370,7 @@ class RoundPage(AugmentDeadlines, Page):
     ]
 
     def official_name(self):
-        return(self.internstarts.strftime("%B %Y") + " to " + self.internends.strftime("%B %Y") + " Outreachy internships")
+        return("{} Outreachy internship cohort".format(self.internstarts.strftime("%B %Y")))
 
     def project_soft_deadline(self):
         return self.lateprojects - datetime.timedelta(days=7)
