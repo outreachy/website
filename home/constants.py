@@ -78,7 +78,7 @@ PROFESSIONAL_SKILLS = [
     'Test driven development',
     'Technical writing',
     'Typescript',
-    'UI/UX Design',
+    'UIUX Design',
     'Video editing',
     'VueJS',
     'Web development',
