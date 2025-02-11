@@ -2020,8 +2020,6 @@ def skill_is_valid(value):
             'basics',
             'comfortable',
             'experienced',
-            'learn',
-            'learning',
             'concepts',
             ]
 
