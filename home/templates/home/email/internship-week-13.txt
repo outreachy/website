@@ -88,7 +88,7 @@ Think about your core values you talked about in your first blog post. Did any o
 Internship wrap-up social event
 ------------
 
-Before we finally officially draw down the curtain for the December 2024 cohort, the Outreachy organizers are hosting a social hour event for interns, mentors, and coordinators.
+Before we finally officially draw the curtain for the December 2024 cohort, the Outreachy organizers are hosting a social hour event for interns, mentors, and coordinators.
 
 This event is good for networking, sharing your stories, and appreciating the people who helped you in your internship (mentors, fellow interns, community members). Prepare to attend, engage, connect, and learn from others.
 
