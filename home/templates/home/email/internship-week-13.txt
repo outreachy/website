@@ -85,9 +85,20 @@ Here's some prompts that could get you started writing this blog post:
 
 Think about your core values you talked about in your first blog post. Did any of your core values help you during your internship?
 
+Internship wrap-up social event
+------------
+
+Before we finally officially draw the curtains for the December 2024 cohort, the Outreachy organizers are hosting a social hour event for interns, mentors, and coordinators.
+
+This event is good for networking, sharing your stories, and appreciating the people who helped you in your internship (mentors, fellow interns, community members). Prepare to attend, engage, connect, and learn from others.
+
+The social event will happen on Thursday, March 6, 2025, at 2:00 PM UTC.
+Venue: Big Blue Button (https://bbb.sfconservancy.org/b/sag-y6y-hcc-sww)
+
+We can’t wait to host and celebrate you.
 
 Sharing opportunities
----
+------------
 
 We love to share opportunities with past Outreachy participants!
 
