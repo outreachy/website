@@ -7,7 +7,6 @@ For more information on this file, see
 https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
 """
 
-from __future__ import absolute_import, unicode_literals
 
 import os
 
