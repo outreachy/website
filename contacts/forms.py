@@ -5,7 +5,6 @@ in the From header, and the topic field will be used to generate the
 Subject header.
 
 """
-from __future__ import unicode_literals
 
 from django_contact_form.forms import ContactForm
 from django import forms

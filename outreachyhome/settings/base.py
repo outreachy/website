@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
-from __future__ import absolute_import, unicode_literals
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
