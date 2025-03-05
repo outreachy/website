@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from .forms import OutreachyContactForm
 from django_contact_form.views import ContactFormView
 from django.shortcuts import render
