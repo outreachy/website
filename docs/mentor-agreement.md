@@ -2,7 +2,7 @@
 
 **Mentorship Terms of Participation**
 
-_last edited - November 8, 2024_
+_last edited - March 11, 2025_
 
 **Dear Mentor:**
 
@@ -61,7 +61,7 @@ North Korea, Russia, or Syria;
 (c) you are not a person or entity restricted by US export controls or
 sanctions programs; and
 
-(d) you are or will be 18 years of age or older by December 9, 2024.
+(d) you are or will be 18 years of age or older by June 2, 2025.
 
 **Indemnification.**
 
@@ -97,7 +97,7 @@ Conservancy’s charitable purposes.
 
 **Termination.**
 
-**Internships in the Program will take place between December 9, 2024 and March 7,
+**Internships in the Program will take place between June 2, 2025 and August 29,
 2025.** In exceptional situations, the internship can be extended for up to five
 weeks, provided that both you and your Intern send a written request for an
 extension specifying a new end date to the Outreachy Project's leadership
