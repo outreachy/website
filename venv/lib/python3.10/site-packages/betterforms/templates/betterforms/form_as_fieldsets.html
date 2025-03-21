@@ -1,0 +1,25 @@
+{% block form_head %}
+  {% if not no_head %}
+    {% if not csrf_exempt %}
+      {% csrf_token %}
+    {% endif %}
+    {% if next %}
+      <input type="hidden" name="next" value="{{ next }}">
+    {% endif %}
+    {{ form.media }}
+  {% endif %}
+{% endblock %}
+
+{% block form_body %}
+  {{ form.non_field_errors }}
+  {# Hack to allow recursive template inclusion #}
+  {% with fieldset_template_name="betterforms/fieldset_as_div.html" field_template_name="betterforms/field_as_div.html" %}
+    {% for thing in form %}
+      {% if thing.is_fieldset %}
+        {% include fieldset_template_name with fieldset=thing %}
+      {% else %}
+        {% include field_template_name with field=thing %}
+      {% endif %}
+    {% endfor %}
+  {% endwith %}
+{% endblock %}

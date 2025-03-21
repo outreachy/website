@@ -1,0 +1,9 @@
+django_js_asset-2.2.0.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
+django_js_asset-2.2.0.dist-info/METADATA,sha256=F0o9rh9krSByadok5IYBEtLgNaj8tiO2jOWu1zSgl4A,3488
+django_js_asset-2.2.0.dist-info/RECORD,,
+django_js_asset-2.2.0.dist-info/WHEEL,sha256=0wCxn4rnLsvRWBK-NC7mK2QMIQ_aZSl7Qvk-8IWl_pY,87
+django_js_asset-2.2.0.dist-info/licenses/LICENSE,sha256=Lb3gDwTsNRguja5rOUdQd1XtyVZCn0GP9HPTwaS1ozU,1550
+js_asset/__init__.py,sha256=iFQhMW93kW-JEIkqULBMi54kqAjowL76QkgWhlpxMPE,126
+js_asset/__pycache__/__init__.cpython-310.pyc,,
+js_asset/__pycache__/js.cpython-310.pyc,,
+js_asset/js.py,sha256=2-obvw-WWS-PsvOSxvNQsikLoqqyH0GT0fSN3bo_fIc,2723
