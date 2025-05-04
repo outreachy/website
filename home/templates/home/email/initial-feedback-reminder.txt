@@ -1,6 +1,6 @@
-[URGENT] Mentor feedback required for initial payment to {{ intern_selection.applicant.applicant.public_name }}
+[URGENT] Mentor feedback #1 required for stipend payment to {{ intern_selection.applicant.applicant.public_name }}
 
-Please provide feedback on your intern through the Outreachy website. Their initial feedback was due on {{ intern_selection.initial_feedback_due|date:"M d, Y" }}. Their initial ${{ current_round.initialpayment }} payment will be delayed until you provide feedback:
+Please provide feedback on your intern through the Outreachy website. Feedback #1 was due on {{ intern_selection.initial_feedback_due|date:"M d, Y" }}. Their ${{ current_round.initialpayment }} stipend payment will be delayed until you provide feedback:
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}#feedback
 
