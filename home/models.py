@@ -2426,7 +2426,7 @@ class CoordinatorApproval(ApprovalStatus):
 # --------------------------------------------------------------------------- #
 
 def create_time_commitment_calendar(tcs, application_round):
-    application_period_length = (application_round.internends - application_round.internstarts).days + 1
+    application_period_length = (application_round.internends - application_round.internstarts).days
     calendar = [0]*(application_period_length)
     for tc in tcs:
         date = application_round.internstarts
