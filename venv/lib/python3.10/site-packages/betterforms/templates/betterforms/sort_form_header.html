@@ -1,0 +1,16 @@
+<th class="{{ header.css_classes }}">
+  {% if header.is_sortable %}
+    <a href="?{{ header.querystring }}">{{ header.label }}</a>
+    {% if header.is_active %}
+      {% if header.is_ascending %}
+        ▾
+      {% elif header.is_descending %}
+        ▴
+      {% endif %}
+      <a href="" data-sort_by="title" data-direction="up"></a>
+      <span class="filterActive"><span>{{ header.priority }}</span> <a href="?{{ header.remove_querystring }}">x</a></span>
+    {% endif %}
+  {% else %}
+    {{ header.label }}
+  {% endif %}
+</th>
