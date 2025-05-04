@@ -2,9 +2,9 @@ This repository is for the code that comprises the [Outreachy website](https://w
 
 # What is Outreachy?
 
-Outreachy provides remote internships. Outreachy supports diversity in open source and free software!
+Outreachy is a diversity initiative of Software Freedom Conservancy. Outreachy provides remote internship opportunity and open-source software projects for people who are typically underrepresented in the STEM fields. Outreachy supports diversity in open source and free software
 
-Outreachy internships are 3 months long. Interns are paid an internship stipend of $7,000 USD.
+Outreachy internships are 13 weeks long. Interns are paid an internship stipend of $7,000 USD.
 
 Interns work with experienced mentors from open source communities. Outreachy internship projects may include programming, user experience, documentation, illustration, graphical design,  data science, project marketing, user advocacy, or community event planning.
 
