@@ -147,7 +147,6 @@ urlpatterns = [
     re_path(r'^sponsor/donate/$', views.donate, name='donate'),
     re_path(r'^sponsor/$', views.sponsor, name='sponsor'),
     re_path(r'^edit-sponsorship/(?P<pk>[^/]+)/$', views.SponsorshipUpdate.as_view(), name='edit-sponsorship'),
-    re_path(r'^opportunities/$', views.opportunities, name='opportunities'),
     re_path(r'^blog/(?P<round_slug>[^/]+)/application-period-statistics/$', views.round_statistics, name='blog-application-period-statistics'),
     re_path(r'^blog/2019-07-23/outreachy-schedule-changes/$', views.blog_schedule_changes, name='blog-schedule-changes'),
     re_path(r'^blog/2019-10-01/pick-a-project/$', views.blog_2019_pick_projects, name='2019-12-pick-a-project'),
