@@ -152,10 +152,6 @@ Outreachy wants to ensure you find additional opportunities. We have an opportun
 
 https://lists.outreachy.org/cgi-bin/mailman/listinfo/opportunities
 
-You can also see a list of sponsor job pages here:
-
-https://www.outreachy.org/opportunities/
-
 Twitter
 -------
 

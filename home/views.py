@@ -4624,9 +4624,6 @@ def sponsor(request):
         'current_round': get_current_round_for_sponsors(),
         })
 
-def opportunities(request):
-    return render(request, 'home/opportunities.html')
-
 class CommunityParticipationRules(LoginRequiredMixin, ComradeRequiredMixin, FormView, SingleObjectMixin):
     template_name = 'home/community_participation_rules.html'
     form_class = CommunityNameForm
