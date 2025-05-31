@@ -6,7 +6,7 @@ Internship feedback #3
 {% endblock %}
 
 {% block content %}
-<h1>Midpoint Feedback on {{ feedback3frommentor.intern_selection.applicant.applicant.public_name }}</h1>
+<h1>Feedback #3 on {{ feedback3frommentor.intern_selection.applicant.applicant.public_name }}</h1>
 
 <p>Outreachy organizers collect intern feedback from mentors four times during the Outreachy internship.</p>
 
@@ -76,7 +76,29 @@ Internship feedback #3
 		<hr>
 		<h2>Intern progress</h2>
 	{% endif %}
-	{% if 'What actions' in field.label_tag %}
+
+	{% if 'Please provide a paragraph describing your intern' in field.label_tag %}
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class="card-header">
+				{{ field.label_tag }}
+					<details>
+						<summary class="text-primary mb-3">Show additional guidance</summary>
+						<div class="bg-white p-3">
+							<p>Please provide a detailed report on your intern’s overall progress. This includes their participation in meetings, planning discussions, or research related to their project goals.</p>
+							<p>Also, include links to any public artifacts your intern has produced, such as Git commits, pull requests, or documentation. These help us understand the scope of your intern's progress so far.</p>
+							<p>You may also include the expected deliverables for the internship project. These don't have to be final, as we understand project goals can evolve over the course of the internship.</p>
+						</div>
+					</details>
+			</div>
+			<div class="card-body">
+				{{ field }}
+			</div>
+			{% if field.help_text %}
+				<div class="card-footer bg-white">{{ field.help_text }}</div>
+			{% endif %}
+		</div>
+	{% elif 'What actions' in field.label_tag %}
 		<hr>
 		<h2>Internship Schedule</h2>
 
