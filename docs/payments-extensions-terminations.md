@@ -4,7 +4,7 @@ Outreachy organizers view this internship as a fellowship. Our goal is to attrac
 
 ## Payments
 
-Outreachy mentors have to provide feedback on their interns three times during the internship period. On successful feedback, their intern is paid the stipend associated with that feedback check point (e.g. initial stipend, midpoint stipend, or final stipend).
+Outreachy mentors have to provide feedback on their interns four times during the internship period. On successful feedback, their intern is paid the stipend associated with that feedback check point (e.g. initial stipend, midpoint stipend, or final stipend).
 
 Outreachy interns are paid according to the intern payment schedule, unless their internship is extended or their internship contract is terminated. If the internship is extended, the modified feedback and payment schedule will be visible on both the intern and mentor's dashboards.
 

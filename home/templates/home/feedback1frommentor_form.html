@@ -6,9 +6,9 @@ Initial mentor feedback
 {% endblock %}
 
 {% block content %}
-<h1>Initial feedback on {{ feedback1frommentor.intern_selection.applicant.applicant.public_name }}</h1>
+<h1>Feedback #1 on {{ feedback1frommentor.intern_selection.applicant.applicant.public_name }}</h1>
 
-<p>Outreachy organizers collect intern feedback from mentors three times during the Outreachy internship.</p>
+<p>Outreachy organizers collect intern feedback from mentors four times during the Outreachy internship.</p>
 
 <hr>
 <h2>Instructions</h2>
@@ -59,11 +59,34 @@ Initial mentor feedback
 	{% elif 'What is the average number of hours per week you spend on mentoring' in field.label_tag %}
 		<hr>
 		<h2>4. Mentor support</h2>
-	{% elif 'Please provide a paragraph describing your intern' in field.label_tag %}
+	{% endif %}
+
+  	{% if 'Please provide a paragraph describing your intern' in field.label_tag %}
 		<hr>
 		<h2>5. Intern progress</h2>
-	{% endif %}
-	{% if 'What actions' in field.label_tag %}
+		<div class="form-group card">
+			{{ field.errors }}
+			<div class="card-header">
+				{{ field.label_tag }}
+					<details>
+						<summary class="text-primary mb-3">Show additional guidance</summary>
+						<div class="bg-white p-3">
+							<p>We recognize that this is the first feedback submission and that substantial project work may not yet be completed.
+								Please provide a detailed report of what your intern has been doing. This might include participation in meetings, planning discussions, or research related to their project goals.
+							</p>
+							<p>If available, please include links to any public artifacts your intern has created so far, such as Git commits, pull requests, or documentation.</p>
+							<p>You may also include the planned deliverables for the internship project. These don't have to be final, as we understand project goals can evolve over the course of the internship.</p>
+						</div>
+					</details>
+			</div>
+			<div class="card-body">
+				{{ field }}
+			</div>
+			{% if field.help_text %}
+				<div class="card-footer bg-white">{{ field.help_text }}</div>
+			{% endif %}
+		</div>
+	{% elif 'What actions' in field.label_tag %}
 		<hr>
 		<h2>6. Payments, extensions, or terminations</h2>
 		<h3>Internship Schedule</h3>
