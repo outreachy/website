@@ -1,0 +1,9 @@
+{% extends 'betterforms/form_as_fieldsets.html' %}
+
+{% block form_body %}
+  {{ form.non_field_errors }}
+  {# Hack to allow recursive template inclusion #}
+  {% for thing in form %}
+    {% include fieldset_template_name with fieldset=thing %}
+  {% endfor %}
+{% endblock %}

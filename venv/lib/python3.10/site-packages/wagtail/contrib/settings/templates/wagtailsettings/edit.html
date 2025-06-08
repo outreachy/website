@@ -1,0 +1,17 @@
+{% extends "wagtailadmin/generic/edit.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block before_form %}
+    {% if site_switcher %}
+        <form class="w-mb-8" method="get" id="settings-site-switch" novalidate>
+            <label for="{{ site_switcher.site.id_for_label }}">
+                {% trans "Site" %}:
+            </label>
+            {{ site_switcher.site }}
+        </form>
+    {% endif %}
+{% endblock %}
+
+{% block form_content %}
+    {{ edit_handler.render_form_content }}
+{% endblock %}

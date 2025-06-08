@@ -1,0 +1,12 @@
+{% if field.is_hidden %}
+  {{ field }}
+{% else %}
+<p{% if field.css_classes %} class="{{ field.css_classes }}"{% endif %}>
+    {{ field.errors }}
+    {{ field.label_tag }}
+    {{ field }}
+    {% if field.help_text %}
+      <span class="helptext">{{ field.help_text }}</span>
+    {% endif %}
+  </p>
+{% endif %}
