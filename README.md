@@ -1754,7 +1754,7 @@ Dokku uses the "buildpacks" from Heroku to find the correct version of Python to
 
 When you want to update the version of Python that the production server is running, you'll need to:
 
-1. Update herokuish using aptitude on the server:
+1. Update herokuish using aptitude on the server (this may not be advised, it's only necessary if updating the buildpack fails):
 
 ```
 $ ssh root@www.outreachy.org
@@ -1767,6 +1767,8 @@ Docker might complain that some images are still running. That's fine, because w
 2. Find the [latest minor version of Python that Heroku supports](https://devcenter.heroku.com/articles/python-support#supported-runtimes). For example, if you choose to install Python 3.11, the latest minor version of Python that Heroku supports might be Python 3.11.7. Each minor version includes bug fixes and updates, so you want to have the latest minor version you can.
 
 Change the Python version number in [runtime.txt](https://github.com/outreachy/website/blob/master/runtime.txt) to match the version of Python you want deployed on the web server.
+
+Heroku has started to exclude which specific versions of Pythons their buildpacks support, so you may need to dig into the [Heroku Python buildpack git tags](https://github.com/heroku/heroku-buildpack-python/tags).
 
 3. You will need to update the [Heroku Python buildpack version](https://devcenter.heroku.com/articles/python-support#checking-the-python-buildpack-version). Change the version in [.buildpacks](https://github.com/outreachy/website/blob/master/.buildpacks) to match the URL of the [latest Python buildpack GitHub tag](https://github.com/heroku/heroku-buildpack-python/tags). Use the format in the `.buildpack` file.
 
