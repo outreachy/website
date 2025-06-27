@@ -2,54 +2,15 @@ This repository is for the code that comprises the [Outreachy website](https://w
 
 # What is Outreachy?
 
-Outreachy provides remote internships. Outreachy supports diversity in open source and free software!
+Outreachy provides internships in open source. Outreachy provides internships to anyone from any background who faces underrepresentation, systemic bias, or discrimination in the technical industry where they are living.
 
-Outreachy internships are 3 months long. Interns are paid an internship stipend of $7,000 USD.
+Outreachy internships are:
 
-Interns work with experienced mentors from open source communities. Outreachy internship projects may include programming, user experience, documentation, illustration, graphical design,  data science, project marketing, user advocacy, or community event planning.
+ * 💵 Paid - $7,000 USD total internship stipend
+ * 🌍 Remote - both interns and mentors work remotely
+ * 🕰 3 months - internships run May to August, or December to March
 
-Outreachy internships are open to applicants around the world. Interns work remotely. Interns are not required to move.
-
-We expressly invite women (both cis and trans), trans men, and genderqueer people to apply. We also expressly invite applications from residents and nationals of the United States of any gender who are Black/African American, Hispanic/Latinx, Native American/American Indian, Alaska Native, Native Hawaiian, or Pacific Islander.
-
-Anyone who faces under-representation, systemic bias, or discrimination in the technology industry of their country is invited to apply.
-
-# Outreachy-specific terms
-
-Please use the gender-neutral ["they/them" pronouns](http://pronoun.is/they) and gender-neutral language to refer to all Outreachy participants.
-
-The Outreachy community uses the following terms:
-
- * **FOSS:** Free and Open Source Software.
- * **Project:** A series of intern tasks to improve FOSS.
- * **Community:** A community is a set of related projects. For instance, if Django participated as an Outreachy community, the community might mentor projects to improve Django core functionality, Django extensions, or Django documentation.
- * **Mentor:** A mentor defines a project. They work with applicants to help them complete contributions to the project during the application process. A mentor selects an applicant to be the intern for their project. The mentor works remotely with the selected intern during the internship. An intern can have one or more mentors. Most Outreachy mentors only mentor one intern.
- * **Coordinator:** Each internship project must be associated with a FOSS community participating in Outreachy. That community provides funding for interns, either directly from community funds, or by finding a company or foundation to sponsor interns. Each community has one or more coordinators, who review submitted projects, approve mentors, set internship funding sources, and generally provide a communication link between the mentors and Outreachy organizers. Some smaller communities have only one coordinator, who is also the only mentor.
- * **Outreachy organizers:** There is a small set of organizers who oversee the entire Outreachy program. They communicate with coordinators about funding, onboard new communities, review intern feedback, authorize intern payments, answer questions, and promote the program to potential applicants.
- * **Applicant:** During the application process, Outreachy applicants make contributions to projects and apply to be an Outreachy intern.
- * **Intern:** An accepted applicant works with a mentor for three months during the internship period.
-
-# Current state of Outreachy tech
-
-The Outreachy web presence is in a couple of different places:
- * [Outreachy website](https://www.outreachy.org)
- * [GitHub website code repository](https://github.com/outreachy/website/)
- * [GitHub repository for creative works and miscellaneous scripts](https://github.com/outreachy/creative-works-and-scripts/)
- * [Repository CI Status](https://travis-ci.org/outreachy/website.svg?branch=master)
-
-Older/deprecated websites include:
- - [GNOME Outreachy homepage](https://www.gnome.org/outreachy/) - shell homepage, where the outreachy.org domain currently redirects to
- - [GNOME wiki Outreachy pages](http://wiki.gnome.org/Outreachy) - moinmoin based wiki with information about how to apply and sponsor
- - [Outreachy application system](http://outreachy.gnome.org) - PHP-based application system currently hosted on OpenShift
- - irc.gnome.org #outreachy - Outreachy IRC channel - where applicants used to get help
- - [Outreachy Planeteria](http://www.planeteria.info/outreach) - blog aggregation for Outreachy interns
-
-# Future Long-term Goals
-
- - Replace planetaria with one hosted on our domain (that allows for filtering which blogs are displayed?)
- - Track longitudinal information of alumni, so we can share success stories and improve our program
- - Track sponsorship information
- - Create a better way of displaying the list of potential Outreachy projects - e.g. allow searching, tagging for programming language or design or documentation or user experience
+Internships are not linked to employment opportunities at supporting organizations.
 
 # Technology used in Outreachy website
 
