@@ -15,6 +15,11 @@
 {{ project.intern_tasks|safe }}
 {% endif %}
 
+{% if project.ai_policy %}
+<h4>AI tool usage policy</h4>
+{{ project.ai_policy|safe }}
+{% endif %}
+
 {% if project.intern_benefits %}
 <h4>Intern Benefits</h4>
 {{ project.intern_benefits|safe }}
