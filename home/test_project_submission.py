@@ -113,6 +113,7 @@ class ProjectSubmissionTestCase(TestCase):
         issue_tracker = 'https://bugs.debian.org/'
         newcomer_issue_tag = 'newcomers-welcome'
         intern_tasks = 'Interns will work on new tests for <a href="http://blends.debian.org/med/tasks/bio">Debian bioinformatics packages</a>.'
+        ai_policy = 'We strongly encourage applicants and interns to complete all work using their own skills and understanding.'
         intern_benefits = 'Interns will develop skills in quality assurance testing, learn Linux command-line tools, and gain knowledge in how Linux distributions like Debian package software.'
         community_benefits = 'Debian maintainers will spend less time tracking down bugs in newly released software.'
 
@@ -133,6 +134,7 @@ class ProjectSubmissionTestCase(TestCase):
             'issue_tracker': issue_tracker,
             'newcomer_issue_tag': newcomer_issue_tag,
             'intern_tasks': intern_tasks,
+            'ai_policy': ai_policy,
             'intern_benefits': intern_benefits,
             'community_benefits': community_benefits,
             'new_contributors_welcome': True,
@@ -152,6 +154,7 @@ class ProjectSubmissionTestCase(TestCase):
                 issue_tracker=issue_tracker,
                 newcomer_issue_tag=newcomer_issue_tag,
                 intern_tasks=intern_tasks,
+                ai_policy=ai_policy,
                 intern_benefits=intern_benefits,
                 community_benefits=community_benefits,
                 new_contributors_welcome=True,
