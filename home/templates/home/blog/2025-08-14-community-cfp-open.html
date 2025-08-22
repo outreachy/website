@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Call for December 2025 mentoring communities{% endblock %}
+{% block content %}
+  {% load humanize %}
+  <h1>Call for December 2025 mentoring communities</h1>
+  <p>
+    <i>Date: August 14, 2025</i>
+  </p>
+  <img src="{% static 'img/outreachy-nigerian-celebration-omotola-by-banner.jpg' %}"
+       alt="Two black people are standing by an Outreachy banner. On the left, Omotola Omotayo, holds a sign that reads 'Outreachy - connecting mentors and mentees'. The Outreachy banner says 'Outreachy - Paid remote 3-month internships supporting diversity. Open source internships: software, documentation, design, translation, user experience.' Photo is cc-by 4.0 Outreachy"
+       class="img-fluid">
+  <p>
+    <i>Photo CC BY 4.0 Outreachy</i>
+  </p>
+  <h2>Outreachy seeks mentors</h2>
+  <p>After careful review of our financial situation, Outreachy has decided to run our December 2025 internship cohort with reduced funding and activities. We are sad that we won't be able to fund internships out of Outreachy's general activities fund and further, we will have to reduce or simplify program activities during the internship period. Please <a href="#critical-funding-challenge">read about Outreachy's financial challenges</a> in the sections below for the full details.<p>
+  <p>After conducting a series of conversations with our participating communities, we are encouraged that communities are ready to bring not only their expert time but also, to the extent they are able, funding to the table to make the December cohort successful.</p>
+  <p>With the decision made to run the December 2025 cohort, that means Outreachy is enthusiastically seeking open source communities to mentor Outreachy interns!</p>
+  <p>Outreachy is a great way for your open source community to connect to new contributors from around the world. Outreachy provides internships to anyone from any background who faces underrepresentation, systemic bias, or discrimination in the technical industry where they are living. This December cohort is your community's chance to make a difference in the lives of new open source contributors.</p>
+
+  <h2>Important dates</h2>
+  <p>
+    <ul>
+      <li>
+        {{ current_round.lateorgs }} at 4pm UTC - deadline for FOSS communities to <a href="{% url 'community-cfp' %}">sign up to participate as a mentoring organization</a>
+      </li>
+      <li>
+        {{ current_round.project_soft_deadline }} at 4pm UTC - deadline for <a href="{% url 'community-cfp' %}">mentors to submit project descriptions</a>
+      </li>
+    </ul>
+  </p>
+
+  <p>If you are an <b>open source community that is new to Outreachy</b>, we encourage you to read the <a href="#important-dates">Mentoring FAQ</a> sections below.</p>
+
+  <p>If you are a <b>past mentoring community</b>, please read about <a href="#critical-financial-challenges">Outreachy's critical financial situation</a> for more information about changes to internship funding, how the Outreachy organizer team is scaling back our program activities, and what changes are coming to our internship format.</p>
+
+  <p>Additionally, past mentoring communities should <a href="#ai-policy">read about new tools Outreachy mentors can use to communicate their policy on AI generated contributions</a> to Outreachy applicants.</p>
+  <p>
+    <a class='btn btn-success' href="{% url 'community-cfp' %}">Submit Community Application</a>
+  </p>
+  <hr>
+  <h2 id='critical-financial-challenges'><a href="critical-financial-challenges">A Critical Moment: Outreachy's Financial Situation</a></h2>
+  <p>
+  As we communicated in August 2024, <a href="https://www.outreachy.org/blog/2024-08-14/outreachy-needs-your-help/#funding-loss">Outreachy is navigating significant financial challenges.</a>
+  </p>
+  <p>Donations for Outreachy program activities have significantly decreased, due to decreased corporate donations and grants. This reduction impacted Outreachy's general activities fund, which supports both paid staff and contractors running the Outreachy program and provides additional funding for internships. In response to reduced donations to the Outreachy general activities fund, in 2024, Outreachy scaled back contractor activities during the application period and reduced the number of internships it funded.</p>
+
+  <p>Other open source communities are also facing a reduction in funding and donations, which has, in turn, impacted Outreachy further.  As the overall open source ecosystem funding declines, communities interested in mentoring Outreachy interns are unable to secure funding to donate towards Outreachy internships. With Outreachy's decrease in donations, we are unable to cover that funding gap.</p>
+
+  <p>The result has been that our internship cohort size has shrunk by 60%, from an average cohort size of 65 interns to 25 interns.</p>
+
+  <p>With a decrease in internships, a significant reduction in donations, and a challenging grantmaker landscape, the Outreachy team and Software Freedom Conservancy agreed that we needed to scale back program activities.</p>
+
+  <p>In July, Outreachy ran a series of listening sessions with mentors and community coordinators to discuss potential financial cuts to the program. We discussed two possible options to reduce program costs: cutting the Outreachy cohorts from two per year to one (by not running any December cohorts) or reducing Outreachy program activities overall. Thank you for all the valuable feedback from mentors, communities, alums, and long-time supporters on this tough conversation.</p>
+
+  <h3>What This Means for Participating Communities</h3>
+
+  <p><b>Outreachy will not be able to fund any internships</b> out of its general program activity fund  this cohort.</p>
+
+  <p>Communities that wish to mentor Outreachy interns are required to donate at least $8,000 for each Outreachy internship ($8,000 USD). Communities are highly encouraged to add an additional ($2,000 USD) donation to support running the Outreachy program. Your donations to support Outreachy's program activities ensure we can continue to run the program during these tough financial times. We ask sponsors who are not communities to contribute $10,000.</p>
+
+  <h3>What does this mean for Outreachy interns?</h3>
+
+  <h4>Switching from text-based learning chats to video social hours</h4>
+
+  <p>One piece of feedback we received from mentors and alums was that interns were increasingly less engaged with our biweekly text chats during the internship period. These one-hour chats were designed to help interns learn how to work remotely, encourage them to attend events and conferences, introduce them to different kinds of careers in FOSS, and encourage them to connect with community members for informal networking chats.</p>
+
+  <p>While these chats are valuable for building a career in open source, not many interns participated in the text-based discussions during the chat. Additionally, it takes the Outreachy team several hours before each chat to prepare questions and discussion prompts.</p>
+
+  <p>With this feedback in mind, the Outreachy team has decided to drop these seven text-based chats and instead have three live video social hour chats with less structure. The Outreachy organizers will document the lessons and mentorship strategies from these chats in our upcoming Open Mentorship Handbook.</p>
+
+  <p>We hope that switching to a video chat will allow interns to connect more organically and ask questions on topics the interns feel are important to them. When interns ask questions about topics that text-based chats would normally cover, we can engage with the topic as much as the audience of the video chats wants, and also have additional relevant written materials from the Open Mentorship Handbook to point interns and mentors to.</p>
+
+  <h4>Switching from blog post prompts to public project reports.</h4>
+
+  <p>Since 2018, Outreachy has been refining a series of blog post prompts for interns. These blog post prompts are designed to encourage interns to document their learning journey, record their internship project progress and accomplishments, and share their career goals. Writing blog posts helps interns develop technical and professional writing skills. Outreachy also encourages our mentors to share the blog posts with the wider open source community and on social media, which in turn highlights the intern's work and helps them network further. Some interns find that blog posts serve as a portfolio piece that they can reference for job applications, conference talk proposals, or in their academic careers.</p>
+
+  <p>The Outreachy team spends a good deal of time encouraging interns to write blog posts. Outreachy organizers send biweekly emails to interns with our blog post prompts. We spend time answering questions about the blog post prompts from both interns and mentors. We also read every intern's blog posts during the four times we collect internship feedback. Before our cohort numbers expanded, Outreachy organizers used to engage interns by posting comments on their blog, sending them encouraging messages on our internal intern chat, or highlighting interns' blog posts on our social media. As cohort sizes grew, Outreachy organizers couldn't keep up with the large number of blog posts. This meant our encouraging words were not timely enough to make a difference in whether an intern blogged or not. We also found that Outreachy mentors were commenting on their own interns' blog posts and sharing them on social media. In previous years, the Outreachy organizer team has scaled back on our own engagement with blog posts.</p>
+
+  <p>Outreachy organizers and mentors have also noticed that interns are writing fewer blog posts, especially ones that document their learning and growth. Even mentors who were past Outreachy interns and enjoyed writing blogs during their internship have been unable to encourage their current interns to write blogs. Part of this may be due to a generational shift away from long-form personal writing to other mediums such as video posts.</p>
+
+  <p>After discussing what program activities to cut with mentors, Outreachy organizers decided to scale back the blog post prompts. We will eliminate the blog post prompts that focus on documenting the intern's personal learning and growth.</p>
+
+  <p>Instead, the interns will be required to write three project reports. The interns will write a public report at the beginning of the internship to explain what they are working on and their project timeline. The mid-point report will include what they have accomplished so far and how the project timeline has changed. The final report will summarize the project's accomplishments, what work remains on the project, and how the project will continue to be used or refined by their open source community.</p>
+
+  <h3>Help Us Fundraise for the Future</h3>
+
+  <p>This isn’t just about funding your intern. It’s about <b>securing the long-term sustainability of Outreachy</b>.</p>
+
+  <p>We invite your community to:</p>
+
+  <ul>
+	  <li>Please spread the word about our funding needs</li>
+	  <li>Share our sponsorship information with your networks: <a href="https://www.outreachy.org/sponsor/">https://www.outreachy.org/sponsor/</a></li>
+	  <li>Connect us with potential donors and organizations that align with our mission
+		  Together, we can continue creating life-changing opportunities in open source. </li>
+  </ul>
+
+  <hr>
+  <h2 id='toc'>Mentoring FAQ</h2>
+  <p>
+    <a href='#what-is-outreachy'>What is Outreachy?</a>
+    <br>
+    <a href='#internship-funding'>How are Outreachy internships funded?</a>
+    <br>
+    <a href='#community-faq'>What kinds of open source communities participate?</a>
+  </br>
+  <a href='#project-faq'>What kinds of projects do Outreachy interns work on?</a>
+</br>
+<a href='#mentor-duties'>Who makes a good Outreachy mentor?</a>
+</br>
+<a href='#ai-policy'>What is Outreachy's policy on generative AI?</a>
+</br>
+<a href='#important-dates'>December 2025 internship dates</a>
+<br>
+</p>
+<hr>
+<h2 id='what-is-outreachy'>
+  <a href="#what-is-outreachy">What is Outreachy?</a>
+</h2>
+<p>Outreachy is an internship program. Outreachy internships are:</p>
+<p class="ml-4 mb-0">
+  💵 <b>Paid</b> - $7,000 USD total internship stipend
+</p>
+<p class="ml-4 my-0">
+  🌍 <b>Remote</b> - both interns and mentors work remotely
+</p>
+<p class="ml-4 mt-0">
+  🕰 <b>3 months</b> - internships run {{ current_round.internstarts|date:"F d" }} to {{ current_round.internends|date:"F d" }}
+</p>
+<p>
+  Outreachy's goal is to increase <b>diversity in open source</b>. Past Outreachy interns are:
+</p>
+<p class="ml-4 mb-0">
+  ♀️ 92% women
+</li>
+<p class="ml-4 my-0">🏳️‍🌈 4% transgender, genderqueer, or non-binary people</p>
+<p class="ml-4 my-0">🧕🏾 64% people of color</p>
+<p class="ml-4 mt-0">🧑🏿 12% people from a historically disadvantaged caste or tribe</p>
+<p>
+  <i>Statistics are based on responses to the 2019 longitudinal study of Outreachy alums.</i>
+</p>
+<p>
+  <a class='btn btn-info' href="{% url 'docs-community' %}">Read Community Guide</a>
+</p>
+<hr>
+<h2 id='internship-funding'>
+  <a href='#internship-funding'>How are Outreachy internships funded?</a>
+</h2>
+
+  {% include 'home/snippet/funding_short_description.html' %}
+
+<p>Please share Outreachy's sponsorship information with any organization you think may want to donate: <a href="https://www.outreachy.org/sponsor/">https://www.outreachy.org/sponsor/</a></p>
+<hr>
+<h2 id='community-faq'>
+  <a href='#community-faq'>What kinds of open source communities participate?</a>
+</h2>
+<p>Outreachy is seeking mentors from open source communities.</p>
+<p>
+  Outreachy welcomes many different types of open source communities. Whether you are a three-person community focused on open science research, or a large open source community that needs better documentation, Outreachy welcomes you!
+</p>
+<p>Examples of open source communities that have participated in Outreachy include:</p>
+<ul>
+  <li>astronomy</li>
+  <li>art and design software</li>
+  <li>audio and sound</li>
+  <li>chat and forum software</li>
+  <li>citizen science</li>
+  <li>creative commons projects</li>
+  <li>data science</li>
+  <li>data storage</li>
+  <li>education</li>
+  <li>fruit gathering volunteer organizations</li>
+  <li>health care software</li>
+  <li>image processing libraries</li>
+  <li>infrastructure</li>
+  <li>Linux distributions</li>
+  <li>machine learning</li>
+  <li>mapping software</li>
+  <li>non-profit organizations</li>
+  <li>open hardware</li>
+  <li>open science</li>
+  <li>open source metrics</li>
+  <li>package managers</li>
+  <li>programming languages</li>
+  <li>web browsers</li>
+</ul>
+<p>
+  We encourage you to <a href='{% url 'docs-community' %}#participation-rules'>read our community participation rules</a>.
+</p>
+<hr>
+<h2 id='project-faq'>
+  <a href='#project-faq'>What kinds of projects do interns work on?</a>
+</h2>
+<p>In the past, Outreachy internship projects have included:</p>
+<ul>
+  <li>programming</li>
+  <li>research</li>
+  <li>user experience</li>
+  <li>documentation</li>
+  <li>video tutorials</li>
+  <li>graphical design</li>
+  <li>data science</li>
+  <li>citizen science</li>
+  <li>marketing</li>
+  <li>user advocacy</li>
+  <li>event planning</li>
+  <li>zines on open source</li>
+  <li>and more!</li>
+</ul>
+<p>There are two main rules for internship projects:</p>
+<p>
+  If you want to check whether your project idea is suitable for Outreachy, contact <a href="{% url 'contact-organizers' %}">Outreachy organizers</a>
+  <hr>
+  <h2 id='mentor-duties'>
+    <a href='#mentor-duties'>Who makes a good Outreachy mentor?</a>
+  </h2>
+  <p>The heart of Outreachy is our volunteer mentors. Mentors work directly with Outreachy applicants and interns.</p>
+  <p>
+    Outreachy looks for mentors who are <i>helpful, patient, welcoming, and kind</i>.
+  </p>
+  <p>
+    <b>Mentor time commitment:</b>
+  </p>
+  <ul>
+    <li>
+      {{ current_round.contributions_open|date:"F j" }} to {{ current_round.contributions_close|date:"F j" }}: Mentors spend <b>5 to 10 hours per week</b> during the applicant contribution period.
+    </li>
+    <li>
+      {{ current_round.internstarts|date:"F j" }} to {{ current_round.internends|date:"F j" }}: Mentors spend <b>5 hours per week</b> during the internship period.
+    </li>
+  </ul>
+  <p>
+    Mentors will need to provide an internship project description. Outreachy does not allow applicants to submit project ideas.
+  </p>
+  <p>
+    It is okay for mentors to submit multiple project ideas. Communities with sponsorship for one intern tend to list 1 to 3 projects. Some communities list as many as 5 to 7 projects.
+  </p>
+  <p>Outreachy encourages co-mentoring! Co-mentoring is when two or more people mentor the same Outreachy intern.</p>
+  <p>Mentors will need to provide a list of tasks for applicants to work on during the contribution period.</p>
+  <hr>
+  <h2 id='ai-policy'>
+    <a href='#ai-policy'>What is Outreachy's policy on generative AI?</a>
+  </h2>
+  <h3>No generative AI for initial applications</h3>
+
+  <p><b>Outreachy applicants should not under any circumstances use generative AI or Large Language Models (LLMs) to write or edit their initial application essays.</b></p>
+
+  <p>Outreachy applicants should not under any circumstances use generative AI to write or edit their initial application essays. Applicants are asked to write essays about their experiences with underrepresentation, discrimination, and systemic bias. Outreachy organizers do not judge the writing style, grammar or spelling used in essays. Instead, the essays are reviewed for their expression of the applicant's lived experience with underrepresentation, discrimination, and systemic bias.</p>
+
+  <p>Only the applicant can accurately and authentically write about their own lived experiences. Using generative AI, even to polish the essay's writing, can introduce inaccuracies and an inauthentic writing style.</p>
+
+  <p>Generative AI is well known for "AI hallucinations", which is just another way to say that they are well known to output incorrect facts or made-up concepts. These errors can significantly worsen your essay and may confuse initial application reviewers. </p>
+
+  <p>These tools also tend to produce wordy writing with little substance. Using generative AI to polish your essay may actually remove or downplay your strong personal experiences and prevent the reviewers from understanding your personal perspective. </p>
+
+  <h3>Community-set generative AI contribution policies</h3>
+
+  <p>Each Outreachy mentoring organization sets its own policy on whether or how generative AI can be used for open source contributions. Some communities have a community-wide generative AI policy. Some mentors prefer to have their own more restrictive policy for their Outreachy internship project.</p>
+
+  <p>Outreachy has introduced a new field in our internship project description form for mentors to provide a generative AI policy. We encourage mentors to discuss a policy with their coordinators and community. Please reach out to Outreachy organizers via email or through the Outreachy Zulip chat mentors' channel if you would like advice about crafting a generative AI policy.</p>
+
+  <p>Many experienced mentors have commented that the use of generative AI by new contributors is poor in quality and difficult to review, and that they believe that the use of these tools can interfere with the learning process.</p>
+
+  <p>If used, regardless of the mentoring organization's policy, all Outreachy applicants and interns must use generative AI in a deliberate, documented, and precise manner. Applicants and interns should note when they used generative AI in a contribution, and the name and version of that generative AI tool. They should also share the steps they took to have the generative AI create or edit the contribution.</p>
+
+  <p>Outreachy applicants and interns must be able to answer questions and correct any contributions generated by AI. Applicants and interns should be able to explain why the AI generated contribution is related to the problem they are trying to solve. They should be able to explain in detail what the generated contribution does. Applicants and interns are expected to submit contributions that meet the testing, documentation, style and quality guidelines of the community.</p>
+
+  <p><b>We strongly discourage the use of generative AI tools. When used, they should be only used pursuant to explicit conversations with mentors. Applicants who submit unedited AI-generated contributions that they cannot explain or correct will NOT be accepted for Outreachy internships.</b></p>
+
+  <p><b>Outreachy interns who over-rely on having AI generate their contributions may have their internship terminated.</b></p>
+
+  <h2 id='important-dates'>
+    <a href='#important-dates'>December 2025 internship dates</a>
+  </h2>
+  {% include 'home/snippet/mentor-timeline.html' %}
+  <hr>
+  <h2 id='intern-funding'>
+    <a href='#intern-funding'>Intern funding</a>
+  </h2>
+  {% include 'home/snippet/funding_short_description.html' %}
+  <hr>
+  <h2>Apply to participate</h2>
+  <p class="mt-4">
+    <a class='btn btn-success' href="{% url 'community-cfp' %}">Submit Community Application</a>
+  </p>
+{% endblock %}

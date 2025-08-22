@@ -179,5 +179,6 @@ urlpatterns = [
     re_path(r'^blog/2024-08-14/outreachy-needs-your-help/$', views.blog_2024_08_14_outreachy_needs_your_help, name='2024-08-outreachy-needs-your-help'),
     re_path(r'^blog/2025-01-20/june-2025-call-for-mentoring-organizations/$', views.blog_2025_01_20_cfp_open, name='2025-01-cfp-open'),
     re_path(r'^blog/2025-01-27/june-2025-initial-applications-open/$', views.blog_2025_01_27_initial_applications_open, name='2025-01-initial-applications-open'),
+    re_path(r'^blog/2025-08-14/december-2025-call-for-mentoring-organizations/$', views.blog_2025_08_cfp_open, name='2025-08-cfp-open'),
     re_path(r'^privacy-policy/$', views.privacy_policy, name='privacy-policy'),
 ]
