@@ -1813,6 +1813,11 @@ class Project(ApprovalStatus):
         ),
     )
 
+    ai_policy = CKEditorField(
+        blank=True,
+        verbose_name="AI tool usage policy",
+        help_text="(Optional) Please describe your policy on the use of AI tools (e.g., ChatGPT, GitHub Copilot) for contributions to this project. Indicate whether AI-assisted code, documentation, or other work is permitted, prohibited, or allowed under specific conditions (e.g., with attribution or review). You may also link to your community's AI policy if one exists. This information will help applicants understand expectations during the contribution and internship periods.")
+
     class Meta:
         unique_together = (
                 ('slug', 'project_round'),
