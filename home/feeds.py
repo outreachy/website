@@ -302,7 +302,7 @@ class WagtailFeed(Feed):
         ))
         items.append(PseudoPage(
             title='Outreachy December 2025 internship applications open',
-            full_url=reverse('2025-08-initial-applications-open'),
+            full_url=reverse('2025-08-25-initial-applications-open'),
             owner=author,
             first_published_at=pacific.localize(datetime.datetime(2025, 8, 25, 16, 00, 0)),
             last_published_at=pacific.localize(datetime.datetime(2025, 8, 25, 16, 00, 0)),
