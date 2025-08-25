@@ -23,6 +23,8 @@ The answer to this question will only be seen by the <a href="{% url 'contact-us
 It will not be shared with mentors, coordinators, or other applicants.
 </p>
 
+{% include 'home/snippet/no-generative-ai-essays.html' %}
+
 <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
 
 <div class="card border-warning mb-3" id="essay-accordian">
