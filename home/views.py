@@ -3320,7 +3320,9 @@ def initial_mentor_feedback_export_view(request, round_slug):
         except Feedback1FromMentor.DoesNotExist:
             continue
     response = JsonResponse(dictionary_list, safe=False)
-    response['Content-Disposition'] = 'attachment; filename="' + round_slug + '-initial-feedback.json"'
+    # Format: YYYY-MM-DD-HH-mm (UTC)
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d-%H-%M")
+    response['Content-Disposition'] = 'attachment; filename="' + round_slug + '-initial-feedback-' + timestamp + '.json"'
     return response
 
 @login_required
@@ -3749,7 +3751,9 @@ def feedback_3_export_view(request, round_slug):
         except Feedback3FromMentor.DoesNotExist:
             continue
     response = JsonResponse(dictionary_list, safe=False)
-    response['Content-Disposition'] = 'attachment; filename="' + round_slug + '-midpoint-feedback.json"'
+    # Format: YYYY-MM-DD-HH-mm (UTC)
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d-%H-%M")
+    response['Content-Disposition'] = 'attachment; filename="' + round_slug + '-midpoint-feedback-' + timestamp + '.json"'
     return response
 
 @login_required
