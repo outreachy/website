@@ -245,6 +245,22 @@ Once project is approved by coordinator (and organizer if necessary):
 
 Project title only is posted on the community page with an 'Apply to co-mentor' and status of project
 
+## Internship Credits
+
+When an internship is terminated, any sponsorship funds from that internship are **held as a credit for the Outreachy community**. This ensures that funds are not wasted and can still benefit future interns or programs.
+
+**Details:**
+
+- **Credit Duration:** The funds remain available for **up to two years** from the date of termination.  
+- **Reversion:** After two years, any unused funds revert to the **Outreachy general fund**.  
+- **Usage:** Coordinators can allocate these credits to support future interns, events, or community programs.  
+- **Transparency:** All credit usage is tracked and documented to ensure accountability.  
+
+**Example Scenario:**  
+> If a sponsored internship ends prematurely, the $500 sponsorship from that internship will remain as a credit. The next year, this credit can be applied to support a new intern or Outreachy community event. If unused for two years, the credit automatically becomes part of the general fund.
+
+This documentation ensures that **new coordinators understand how internship funds are managed**, and prevents confusion about fund allocation.
+
 Co-mentor or surrogate mentor flow
 ----
 
