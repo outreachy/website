@@ -46,6 +46,19 @@
 	<p>Project: <a href="{{ project.get_preview_url }}">{{ project.short_title }}</a></p>
 	<p>"{{ mentor.public_name }}" &lt;{{ mentor.account.email }}&gt;</p>
 
+{% elif view.kwargs.action == 'withdraw' %}
+	<h1>Withdraw as Mentor</h1>
+
+	<p>Project: <a href="{{ project.get_preview_url }}">{{ project.short_title }}</a></p>
+	<p>"{{ mentor.public_name }}" &lt;{{ mentor.account.email }}&gt;</p>
+	<p>This will remove YOU as a mentor from this project.</p>
+	<div class="card border-warning mb-3">
+		<div class="card-header text-dark bg-warning">Warning</div>
+		<div class="card-body">
+			<strong>This action cannot be undone.</strong>
+		</div>
+	</div>
+
 {% else %}
 	<h1>Mentor Profile</h1>
 
@@ -132,7 +145,7 @@
 			</div>
 		{% endif %}
 	{% endfor %}
-	<input type="submit" class="btn btn-{% if view.kwargs.action == 'withdraw' %}warning{% elif view.kwargs.action == 'reject' %}danger{% else %}success{% endif %}" value="{{ view.kwargs.action|title }}" />
+	<input type="submit" class="btn btn-{% if view.kwargs.action == 'withdraw' %}warning{% elif view.kwargs.action == 'reject' %}danger{% else %}success{% endif %}" value="{% if view.kwargs.action == 'withdraw' %}Remove Me as Mentor{% else %}{{ view.kwargs.action|title }}{% endif %}" />
 </form></p>
 
 {% endwith %}

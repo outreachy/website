@@ -27,6 +27,24 @@
 	{% with mentors=project.get_mentor_names %}
 		<p>"{{ project.short_title }}" with mentor{{ mentors|pluralize }} {{ mentors }}.</p>
 	{% endwith %}
+{% elif view.kwargs.action == 'withdraw' %}
+	<h1>Withdraw Project</h1>
+	<p>This will permanently remove the project from the system.</p>
+	<div class="card border-danger mb-3">
+		<div class="card-header text-white bg-danger">Warning</div>
+		<div class="card-body">
+			<strong>This action cannot be undone.</strong>
+		</div>
+	</div>
+{% elif view.kwargs.action == 'reject' %}
+	<h1>Reject Project</h1>
+	<p>This will reject the project submission.</p>
+	<div class="card border-danger mb-3">
+		<div class="card-header text-white bg-danger">Warning</div>
+		<div class="card-body">
+			<strong>This action cannot be undone.</strong>
+		</div>
+	</div>
 {% endif %}
 
 
@@ -110,7 +128,7 @@
 			</div>
 		{% endif %}
 	{% endfor %}
-	<input type="submit" class="btn btn-{% if view.kwargs.action == 'withdraw' %}warning{% elif view.kwargs.action == 'reject' %}danger{% else %}success{% endif %}" value="{{ view.kwargs.action|title }}" />
+	<input type="submit" class="btn btn-{% if view.kwargs.action == 'withdraw' %}danger{% elif view.kwargs.action == 'reject' %}danger{% else %}success{% endif %}" value="{% if view.kwargs.action == 'withdraw' %}Withdraw Project{% elif view.kwargs.action == 'reject' %}Reject Project{% else %}{{ view.kwargs.action|title }}{% endif %}" />
 </form></p>
 
 {% endblock %}
