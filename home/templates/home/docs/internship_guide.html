@@ -20,18 +20,13 @@ Internship Guide | Outreachy Documentation
 	<li><a href='#payments'>Payments</a></li>
 	<li><a href='#blog'>Blogging</a>
 		<ul>
-			<li><a href="#blog-week-1">Blog Week 1: Introduce yourself</a></li>
+			<li><a href="#blog-report-1">Report #1: Introduce yourself</a></li>
+			<li><a href="#blog-report-2">Report #2: Mid-point check-in</a></li>
+			<li><a href="#blog-report-3">Report #3: Wrapping up</a></li>
 		</ul>
 	</li>
 	<li><a href='#blogging-faq'>Blogging FAQ</a></li>
 	<li><a href='#chats'>Chats with interns, mentors, and alums</a>
-		<ul>
-			<li><a href='#week-1-chat'>Week 1 chat: Tips for remote work</a></li>
-			<li><a href='#week-5-chat'>Week 5 chat: Conferences</a></li>
-			<li><a href="#week-7-chat">Week 7 chat: Careers in Open Source</a></li>
-			<li><a href="#week-9-chat">Week 9 chat: Networking and informal chats</a></li>
-			<li><a href="#week-11-chat">Week 11 chat: Continuing your open source journey</a></li>
-		</ul>
 	</li>
 </ol>
 
@@ -81,7 +76,6 @@ Internship Guide | Outreachy Documentation
 <p>Outreachy is working to improve the career development services we offer interns. We currently offer a very limited set of career development opportunities:</p>
 
 <ul>
-	<li>Resume review</li>
 	<li>Encouragement to conduct informational chats with open source professionals during week 9 of the internship</li>
 </ul>
 
@@ -128,9 +122,7 @@ Internship Guide | Outreachy Documentation
 
 <h2 id='blog'><a href='#blog'>Blogging</a></h2>
 
-<p>Interns are required to blog every two weeks about their internship.</p>
-
-<p>The Outreachy organizers will provide blog post prompts via email. Once interns receive the email, they will have two weeks to write the blog post. If an intern gets behind on blog posts, it's okay to publish the blogs up to 1 week later. Otherwise, move onto writing a blog post for the most recent blog post prompt.</p>
+<p>Interns are required to publish at least three reports about their internship. See the <a href="#blog-length">blog FAQ</a> for suggested blog post length.</p>
 
 <h3>Blogging schedule</h3>
 
@@ -139,13 +131,9 @@ Internship Guide | Outreachy Documentation
 {% if applicant_round %}
 	{% with current_round=applicant_round %}
 		<table class="table">
-			<tr><th width="175">{{ current_round.internship_week_1_email_date }}</th><td>Blog prompt: <a href="#blog-week-1">"Introduce yourself"<a/></td></tr>
-			<tr><th>{{ current_round.internship_week_3_email_date }}</th><td>Blog prompt: "Everybody struggles"</td></tr>
-			<tr><th>{{ current_round.internship_week_5_email_date }}</th><td>Blog prompt: "Think about your audience"</td></tr>
-			<tr><th>{{ current_round.internship_week_7_email_date }}</th><td>Mid-point project progress blog post</td></tr>
-			<tr><th>{{ current_round.internship_week_9_email_date }}</th><td>Blog prompt: "Career opportunities"</td></tr>
-			<tr><th>{{ current_round.internship_week_11_email_date }}</th><td>No blog post - interns work on their resume</td></tr>
-			<tr><th>{{ current_round.internship_week_13_email_date }}</th><td>Final project progress blog post</td></tr>
+			<tr><th width="175">Start of June <br> or mid-December</th><td>Blog prompt: <a href="#blog-report-1">Introduce yourself</a></td></tr>
+			<tr><th>End of June or <br> end of January</th><td>Blog prompt: <a href="#blog-report-2">Mid-point check-in</a></td></tr>
+			<tr><th>Start of August or <br>start of March</th><td>Blog prompt: <a href="#blog-report-3">Wrapping up</a></td></tr>
 		</table>
 	{% endwith %}
 {% endif %}
@@ -153,25 +141,21 @@ Internship Guide | Outreachy Documentation
 {% if intern_round %}
 	{% with current_round=intern_round %}
 		<table class="table">
-			<tr><th width="175">{{ current_round.internship_week_1_email_date }}</th><td>Blog prompt: <a href="#blog-week-1">"Introduce yourself"</a></td></tr>
-			<tr><th>{{ current_round.internship_week_3_email_date }}</th><td>Blog prompt: "Everybody struggles"</td></tr>
-			<tr><th>{{ current_round.internship_week_5_email_date }}</th><td>Blog prompt: "Think about your audience"</td></tr>
-			<tr><th>{{ current_round.internship_week_7_email_date }}</th><td>Mid-point project progress blog post</td></tr>
-			<tr><th>{{ current_round.internship_week_9_email_date }}</th><td>Blog prompt: "Career opportunities"</td></tr>
-			<tr><th>{{ current_round.internship_week_11_email_date }}</th><td>No blog post - interns work on their resume</td></tr>
-			<tr><th>{{ current_round.internship_week_13_email_date }}</th><td>Final project progress blog post</td></tr>
+			<tr><th width="175">Start of June <br> or mid-December</th><td>Blog prompt: <a href="#blog-report-1">Introduce yourself</a></td></tr>
+			<tr><th>End of June or <br> end of January</th><td>Blog prompt: <a href="#blog-report-2">Mid-point check-in</a></td></tr>
+			<tr><th>Start of August or <br>start of March</th><td>Blog prompt: <a href="#blog-report-3">Wrapping up</a></td></tr>
 		</table>
 	{% endwith %}
 {% endif %}
 
-<h3 id="blog-week-1"><a href="#blog-week-1">Blog Week 1: Introduce yourself</a></h3>
+<h3 id="blog-report-1"><a href="#blog-report-1">Report #1: Introduce yourself</a></h3>
 <!-- Please keep the blog prompt in sync with the email text in home/templates/home/email/internship-week-1.txt -->
 
 <p><b>Blog prompt</b></p>
-<p>In your first internship blog post, you should:</p>
+<p>Welcome to Outreachy! In your first internship report, you should:</p>
 
 <ol>
-	<li>Introduce yourself.</li>
+	<li>Introduce yourself, your community and your project.</li>
 	<li>Tell people what motivated you to apply to Outreachy and what kept you going during all application stages.</li>
 	<li>Describe your experience during the contribution period and everything you've learned during that stage.</li>
 	<li>List your proudest contributions.</li>
@@ -179,7 +163,35 @@ Internship Guide | Outreachy Documentation
 
 </ol>
 
-<p>See the <a href="#blog-length">blog faq</a> for suggested blog post length.</p>
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h3 id="blog-report-2"><a href="#blog-report-2">Report #2: Mid-point check-in</a></h3>
+<p><b>Blog prompt</b></p>
+<p>You're halfway done! In your second internship report, you should:</p>
+<ol>
+	<li>Describe your progress, providing descriptions, images and/or links to contributions you've created or submitted.</li>
+	<li>Highlight what you've learned from other interns, mentors and your community.</li>
+	<li>Tell people what you're most proud of building so far.</li>
+	<li>Talk about adjustments to project scope, timeline or tasks, if any.</li>
+
+</ol>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+<h3 id="blog-report-3"><a href="#blog-report-3">Report #3: Wrapping up</a></h3>
+<p><b>Blog prompt</b></p>
+
+<p>You're almost done! In your third and last internship report, you should:</p>
+
+<ol>
+	<li>Present the results of your work, providing descriptions, images and/or links to contributions you've created or submitted.</li>
+	<li>Tell people if there's any way someone can help you or your community expand or continue your work.</li>
+	<li>Talk about everything you've learned throughout the internship.</li>
+	<li>Describe your career prospects and post-internship plans.</li>
+
+</ol>
 
 <p><a href='#toc'><u>↑ table of contents</u></a></p>
 <hr>
@@ -218,7 +230,7 @@ Internship Guide | Outreachy Documentation
 
 <h3>How should I promote my blog?</h3>
 
-<p>You're welcome to post a link to your blog on Twitter. If you tag @outreachy, we'll retweet your post. It's best if you include a description of your blog post that would make sense to someone who isn't familiar with Outreachy.</p>
+<p>You're welcome to post a link to your blog on social media. Outreachy is present on Mastodon (@outreachy@hachyderm.io) and LinkedIn. If you tag us, we'll reshare your post. . It's best if you include a description of your blog post that would make sense to someone who isn't familiar with Outreachy.</p>
 
 <p>Examples:</p>
 <ul>
@@ -234,145 +246,17 @@ Internship Guide | Outreachy Documentation
 
 <h2 id='chats'><a href='#chats'>Chats with interns, mentors, and alums</a></h2>
 
-<p>Every two weeks, Outreachy interns, mentors, and alums will have an informal chat on the private Outreachy Zulip chat server. The goal of these chats is to encourage the interns to connect with each other.<p>
+<p>Outreachy interns, mentors, and alums will have an informal chat on a BigBlueButton room three times throughout the internship. The goal of these chats is to encourage the interns to connect with each other.<p>
 
 <p>We encourage you to honestly share your experiences. We are all learning, and no one will judge you. We especially encourage you to participate if you're shy. You may make some new friends or find a new support group!</p>
 
-<p>You may not be able to make the chat because of your timezone. If so, it's okay to read through the log and comment later.</p>
-
-<p>Interns will receive an invitation to the Outreachy Zulip chat once interns are announced. The login will expire in a week. If you need us to send another invitation, email the Outreachy organizers.</p>
-
 <h3>Chat schedule</h3>
 
-{% if applicant_round %}
-	{% with current_round=applicant_round %}
-		<table class="table">
-			<tr><th width="250">{{ current_round.week_two_chat_text_date }} UTC</th><td>Tips for remote work</td></tr>
-			<tr><th>{{ current_round.week_four_chat_text_date }} UTC</th><td>Share something you're stuck on</td></tr>
-			<tr><th>{{ current_round.week_six_chat_text_date }} UTC</th><td>Open source conferences (Alums invited!)</td></tr>
-			<tr><th>{{ current_round.week_eight_chat_text_date }} UTC</th><td>Advancing your career (Alums invited!)</td></tr>
-			<tr><th>{{ current_round.week_ten_chat_text_date }} UTC</th><td>Networking skills and informal chats</td></tr>
-			<tr><th>{{ current_round.week_twelve_chat_text_date }} UTC</th><td>Continuing your open source journey</td></tr>
-			<tr><th>{{ current_round.week_fourteen_chat_text_date }} UTC</th><td>Internship wrap up chat</td></tr>
-		</table>
-	{% endwith %}
-{% endif %}
-
-{% if intern_round %}
-	{% with current_round=intern_round %}
-		<table class="table">
-			<tr><th width="250">{{ current_round.week_two_chat_text_date }} UTC</th><td>Tips for remote work</td></tr>
-			<tr><th>{{ current_round.week_four_chat_text_date }} UTC</th><td>Share something you're stuck on</td></tr>
-			<tr><th>{{ current_round.week_six_chat_text_date }} UTC</th><td>Open source conferences (Alums invited!)</td></tr>
-			<tr><th>{{ current_round.week_eight_chat_text_date }} UTC</th><td>Advancing your career (Alums invited!)</td></tr>
-			<tr><th>{{ current_round.week_ten_chat_text_date }} UTC</th><td>Networking skills and informal chats</td></tr>
-			<tr><th>{{ current_round.week_twelve_chat_text_date }} UTC</th><td>Continuing your open source journey</td></tr>
-			<tr><th>{{ current_round.week_fourteen_chat_text_date }} UTC</th><td>Internship wrap up chat</td></tr>
-		</table>
-	{% endwith %}
-{% endif %}
-
-<p><a href='#toc'><u>↑ table of contents</u></a></p>
-<hr>
-
-<a href="#week-1-chat"><h3 id="week-1-chat">Week 1 chat: Tips for remote work</h3></a>
-
-<p>We will be talking about how to effectively work remotely! We understand many interns (and some mentors) will be new to working remotely. This is your chance to learn more.</p>
-
-<p>We invite people who are new to collaborating remotely to bring your concerns and questions. We invite people who are experienced in collaborating remotely to answer questions and give tips.</p>
-
-<p>Topics for this conversation may include:</p>
-<ul>
-	<li>effective remote communication</li>
-	<li>how to deal with timezone differences</li>
-	<li>how a daily stand up works</li>
-	<li>what to expect from a weekly video or phone chat between interns and mentors</li>
-	<li>tools for collaborating effectively</li>
-	<li>setting up your work space and work schedule</li>
-	<li>work-life balance</li>
-</ul>
-<p><a href='#toc'><u>↑ table of contents</u></a></p>
-<hr>
-
-<a href="#week-5-chat"><h3 id="week-5-chat">Week 5 chat: Open source conferences</h3></a>
-
-<p>We will be discussing open source conferences. Conferences and events are a big part of free software and open source culture!</p>
-
-<p>If you haven't been to an open source conference before, come to our chat to learn more. If you have been to an open source conference before, come to our chat to share your experiences and tips.</p>
-
-<p>Topics for this conversation may include:</p>
-<ul>
-	<li>what you can get out of a conference</li>
-	<li>conference vocabulary and jargon</li>
-	<li>different types of event formats</li>
-	<li>funds to cover conference cost and travel</li>
-	<li>ways to network at conferences: exhibitor booths, hackathons/sprints, "birds of a feather" sessions, "hallway track"</li>
-	<li>ways to speak at conferences: lightning talks, short talks, tutorials, the "call for proposals/speakers" process, and new speaker coaching</li>
-</ul>
-
-<p>Anyone who has been to an open source conference is welcome to share their tips for getting the most out of conferences. Anyone is welcome to share information about open source conferences they know about.</p>
-
-<p><a href='#toc'><u>↑ table of contents</u></a></p>
-<hr>
-
-<a href="#week-7-chat"><h3 id="week-7-chat">Week 7 chat: Careers in Open Source</h3></a>
-
-<p>We'll be discussing all the different ways you can advance your career by participating in open source. The discussion will have two parts.</p>
-
-<p>The first part of the discussion will be everyone brainstorming different career paths in the technology industry and open source. Many people have part-time or full-time jobs working in the technology industry. Some people may be self-employed contractors, paid to work on open source. People may have taken a while to find a job. They may have participated in other internship programs, volunteer opportunities, grants, or networked at conferences and events.</p>
-
-<p>We encourage everyone to share their stories of how they advanced their career. What did you try that didn't work? Where did you hear about opportunities? How did you network and connect with people who helped you advance your goals?</p>
-
-<p>The second part of the discussion is brainstorming additional opportunities to work on open source. We encourage both mentors and interns to provide information about paid opportunities, but information about unpaid opportunities is also welcome. Sharing information about resource groups or job posting boards is also encouraged.</p>
-
-<p><a href='#toc'><u>↑ table of contents</u></a></p>
-<hr>
-
-<a href="#week-9-chat"><h3 id="week-9-chat">Week 9 chat: Networking and informal chats</h3></a>
-
-<p>Asking to network with another person can be intimidating. This chat will cover a low-stakes way to network with people. We call them "informal chats" or "coffee chats".</p>
-
-<p>An informal chat is an conversation with another person about their career or their role as a free software contributor. An informal chat lets you get insight into what they work on, how they got their job or became a leader in free software, and who they network with. After you talk with the person, you can ask them for three other people you can talk to. This helps you expand your network!</p>
-
-<p>We'll be discussing how to do an informal chat. We'll cover:
-
-<ul>
-	<li>What an informal chat is</li>
-	<li>Who you might want to approach</li>
-	<li>How to approach them</li>
-	<li>What questions you can ask</li>
-	<li>How to maximize your networking</li>
-</ul>
-</p>
-
-<p>For mentors and alums, please share your experiences with informal networking. Who did you ask to talk to? What did you feel (nervous, excited, etc)? What did you gain from networking? What tips would you give for someone who wants to network and learn about career opportunities in open source?</p>
-
-<p><a href='#toc'><u>↑ table of contents</u></a></p>
-<hr>
-
-<a href="#week-11-chat"><h3 id="week-11-chat">Week 11 chat: Continuing your open source journey</h3></a>
-
-<p>The goal for week 11 is for interns to brain storm ways they can continue to work on open source or open science.</p>
-
-<p>We'll be brainstorming next steps in our open source journey that we could take. Come share your ideas, hopes, and dreams. What you do envision your open source or open science journey to look like after your Outreachy internship ends?</p>
-
-<p>Ideas could include:
-<ul>
-	<li>using more open source in your projects</li>
-	<li>finding other open source internships</li>
-	<li>using open source in your student projects</li>
-	<li>finding a job in open source</li>
-	<li>becoming an open source contractor</li>
-	<li>identifying another project to work on within your open source or open science community</li>
-	<li>finding local open source or open science meet-ups to attend (or starting your own meet-up!)</li>
-	<li>attending virtual open source or open science events</li>
-	<li>helping applicants to the next Outreachy cohort</li>
-	<li>co-mentoring an Outreachy project with your mentor</li>
-</ul></p>
-
-<p>Outreachy mentors and alums are encouraged to share their open source journey. Think of an important moment in your life when you wanted to change your career or role in open source / open science. How did you think you would achieve it? How did you actually achieve it? What advice would you give to someone who wants to continue working or volunteering with open source and/or open science?</p>
-
-<p>Outreachy mentors are also encouraged to share how they became a mentor. There are many ways to provide mentorship, and becoming a mentor can seem intimidating. How did you start helping other people out? What are simple ways your intern can help other people?</p>
+<table class="table">
+	<tr><th width="175">End of May or<br> mid-December</th><td>Chat #1:  Working remotely & Conferences</td></tr>
+	<tr><th>End of June or <br>end of January</th><td>Chat #2: Careers in open source & Informal chats</td></tr>
+	<tr><th>Start of August or <br>start of March</th><td>Chat #3: Continuing your open source journey</td></tr>
+</table>
 
 <p><a href='#toc'><u>↑ table of contents</u></a></p>
 <hr>
