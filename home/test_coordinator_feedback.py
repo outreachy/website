@@ -12,9 +12,11 @@ FEEDBACK_SUMMARY_URLS = [
     'final-feedback-summary',
 ]
 
-def make_feedback1_from_intern(intern_selection, share_with_coordinator=False,
-                                mentor_support='Test mentor support',
-                                progress_report='Test intern progress report'):
+def make_feedback1_from_intern(
+    intern_selection, share_with_coordinator=False,
+    mentor_support='Test mentor support',
+    progress_report='Test intern progress report'
+):
     return models.Feedback1FromIntern.objects.create(
         intern_selection=intern_selection,
         allow_edits=False,
