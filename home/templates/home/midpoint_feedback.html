@@ -6,10 +6,8 @@ Midpoint Feedback for {{ current_round.official_name }}
 {% endblock %}
 
 {% block content %}
-{% if request.user.is_staff %}
-	{% with interns=current_round.get_approved_intern_selections %}
-		{% for i in interns %}
-			<h2>{{ i.community_name }} - {{ i.intern_name }}</h2>
+	{% for i in interns %}
+		<h2>{{ i.community_name }} - {{ i.intern_name }}</h2>
 
 			{% with midpoint_mentor_status=i.get_mentor_midpoint_feedback_status midpoint_intern_status=i.get_intern_midpoint_feedback_status %}
 				{% if midpoint_mentor_status == i.PAY or midpoint_mentor_status == i.PAID %}
@@ -497,7 +495,7 @@ Midpoint Feedback for {{ current_round.official_name }}
 						<td colspan="3"><b>Mentor support</b></td>
 					</tr>
 
-					{% if midpoint_intern_status == i.SUBMITTED %}<tr><td colspan="3"><p>Intern's report on mentor support:</p><p>{{ i.feedback2fromintern.mentor_support|linebreaksbr }}</p></td></tr>{% endif %}
+					{% if midpoint_intern_status == i.SUBMITTED %}{% if request.user.is_staff or i.feedback2fromintern.share_mentor_feedback_with_community_coordinator %}<tr><td colspan="3"><p>Intern's report on mentor support:</p><p>{{ i.feedback2fromintern.mentor_support|linebreaksbr }}</p></td></tr>{% endif %}{% endif %}
 
 					{% if i.feedback2frommentor %}<tr><td colspan="3"><p>Mentor's report on mentor support:</p><p>{{ i.feedback2frommentor.mentors_report|linebreaksbr }}</p></td></tr>{% endif %}
 
@@ -525,7 +523,5 @@ Midpoint Feedback for {{ current_round.official_name }}
 					</tr>
 				{% endwith %}
 			</table>
-		{% endfor %}
-	{% endwith %}
-{% endif %}
+	{% endfor %}
 {% endblock %}

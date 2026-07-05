@@ -3324,15 +3324,19 @@ def initial_mentor_feedback_export_view(request, round_slug):
     return response
 
 @login_required
-@staff_member_required
 def initial_feedback_summary(request, round_slug):
     current_round = get_object_or_404(RoundPage, slug=round_slug)
-
+    if request.user.is_staff:
+        interns = current_round.get_approved_intern_selections()
+    elif current_round.is_coordinator(request.user):
+        interns = current_round.get_approved_intern_selections().filter(
+            project__project_round__community__coordinatorapproval__coordinator__account=request.user,
+            project__project_round__community__coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+        )
+    else:
+        raise PermissionDenied("You must be a staff member or community coordinator to view feedback.")
     return render(request, 'home/initial_feedback.html',
-            {
-            'current_round' : current_round,
-            },
-            )
+            {'current_round': current_round, 'interns': interns})
 
 class Feedback2FromMentorUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(Feedback2FromMentor,
@@ -3528,15 +3532,19 @@ class Feedback2FromInternUpdate(LoginRequiredMixin, reversion.views.RevisionMixi
         return redirect(reverse('dashboard') + '#feedback')
 
 @login_required
-@staff_member_required
 def midpoint_feedback_summary(request, round_slug):
     current_round = get_object_or_404(RoundPage, slug=round_slug)
-
+    if request.user.is_staff:
+        interns = current_round.get_approved_intern_selections()
+    elif current_round.is_coordinator(request.user):
+        interns = current_round.get_approved_intern_selections().filter(
+            project__project_round__community__coordinatorapproval__coordinator__account=request.user,
+            project__project_round__community__coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+        )
+    else:
+        raise PermissionDenied("You must be a staff member or community coordinator to view feedback.")
     return render(request, 'home/midpoint_feedback.html',
-            {
-            'current_round' : current_round,
-            },
-            )
+            {'current_round': current_round, 'interns': interns})
 
 class Feedback3FromMentorUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(Feedback3FromMentor,
@@ -3753,15 +3761,19 @@ def feedback_3_export_view(request, round_slug):
     return response
 
 @login_required
-@staff_member_required
 def feedback_3_summary(request, round_slug):
     current_round = get_object_or_404(RoundPage, slug=round_slug)
-
+    if request.user.is_staff:
+        interns = current_round.get_approved_intern_selections()
+    elif current_round.is_coordinator(request.user):
+        interns = current_round.get_approved_intern_selections().filter(
+            project__project_round__community__coordinatorapproval__coordinator__account=request.user,
+            project__project_round__community__coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+        )
+    else:
+        raise PermissionDenied("You must be a staff member or community coordinator to view feedback.")
     return render(request, 'home/feedback3.html',
-            {
-            'current_round' : current_round,
-            },
-            )
+            {'current_round': current_round, 'interns': interns})
 
 class Feedback4FromMentorUpdate(LoginRequiredMixin, reversion.views.RevisionMixin, UpdateView):
     form_class = modelform_factory(Feedback4FromMentor,
@@ -3988,15 +4000,19 @@ class Feedback4FromInternUpdate(LoginRequiredMixin, reversion.views.RevisionMixi
         return redirect(reverse('dashboard') + '#feedback')
 
 @login_required
-@staff_member_required
 def feedback_4_summary(request, round_slug):
     current_round = get_object_or_404(RoundPage, slug=round_slug)
-
+    if request.user.is_staff:
+        interns = current_round.get_approved_intern_selections()
+    elif current_round.is_coordinator(request.user):
+        interns = current_round.get_approved_intern_selections().filter(
+            project__project_round__community__coordinatorapproval__coordinator__account=request.user,
+            project__project_round__community__coordinatorapproval__approval_status=ApprovalStatus.APPROVED,
+        )
+    else:
+        raise PermissionDenied("You must be a staff member or community coordinator to view feedback.")
     return render(request, 'home/feedback4.html',
-            {
-            'current_round' : current_round,
-            },
-            )
+            {'current_round': current_round, 'interns': interns})
 
 @login_required
 @staff_member_required

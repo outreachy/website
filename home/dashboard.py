@@ -1129,6 +1129,24 @@ def unselected_intern(request, today):
     return applicant
 
 
+def coordinator_feedback(request, today):
+    try:
+        current_round = RoundPage.objects.get(
+            internstarts__lte=today,
+            # Keep the section visible for 45 days after the final feedback deadline
+            # so coordinators can still review late or newly-submitted feedback.
+            finalfeedback__gt=today - datetime.timedelta(days=45),
+        )
+        current_round.today = today
+    except RoundPage.DoesNotExist:
+        return None
+
+    if not current_round.is_coordinator(request.user):
+        return None
+
+    return current_round
+
+
 def mentor(request, today):
     return MentorRelationship.objects.filter(mentor__mentor__account=request.user)
 
@@ -1219,6 +1237,7 @@ DASHBOARD_SECTIONS = (
     intern,
     eligibility_prompts,
     unselected_intern,
+    coordinator_feedback,
     mentor,
     mentor_projects,
     approval_status,

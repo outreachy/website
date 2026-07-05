@@ -6,10 +6,8 @@ Feedback #4 for {{ current_round.official_name }}
 {% endblock %}
 
 {% block content %}
-{% if request.user.is_staff %}
-	{% with interns=current_round.get_approved_intern_selections %}
-		{% for i in interns %}
-			<h2>{{ i.community_name }} - {{ i.intern_name }}</h2>
+	{% for i in interns %}
+		<h2>{{ i.community_name }} - {{ i.intern_name }}</h2>
 
 			{% with mentor_status=i.get_feedback_4_status_from_mentor intern_status=i.get_feedback_4_status_from_intern %}
 				{% if mentor_status == i.PAY or mentor_status == i.PAID %}
@@ -557,7 +555,7 @@ Feedback #4 for {{ current_round.official_name }}
 						<td colspan="3"><b>Mentor support</b></td>
 					</tr>
 
-					{% if intern_status == i.SUBMITTED %}<tr><td colspan="3"><p>Intern's report on mentor support:</p><p>{{ i.feedback4fromintern.mentor_support|linebreaksbr }}</p></td></tr>{% endif %}
+					{% if intern_status == i.SUBMITTED %}{% if request.user.is_staff or i.feedback4fromintern.share_mentor_feedback_with_community_coordinator %}<tr><td colspan="3"><p>Intern's report on mentor support:</p><p>{{ i.feedback4fromintern.mentor_support|linebreaksbr }}</p></td></tr>{% endif %}{% endif %}
 
 					{% if i.feedback4frommentor %}<tr><td colspan="3"><p>Mentor's report on mentor support:</p><p>{{ i.feedback4frommentor.mentors_report|linebreaksbr }}</p></td></tr>{% endif %}
 
@@ -601,7 +599,5 @@ Feedback #4 for {{ current_round.official_name }}
 					</tr>
 				{% endwith %}
 			</table>
-		{% endfor %}
-	{% endwith %}
-{% endif %}
+	{% endfor %}
 {% endblock %}

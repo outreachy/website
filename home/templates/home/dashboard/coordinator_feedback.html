@@ -1,0 +1,19 @@
+{% with current_round=section %}
+<h2>Internship Feedback</h2>
+<p>You can review feedback submitted by mentors and interns in your community for the {{ current_round.official_name }} round.</p>
+<ul>
+	{% if current_round.initialfeedback %}
+		<li><a href="{% url 'initial-feedback-summary' round_slug=current_round.slug %}">Feedback #1 summary</a></li>
+	{% endif %}
+	{% if current_round.midfeedback %}
+		<li><a href="{% url 'midpoint-feedback-summary' round_slug=current_round.slug %}">Feedback #2 summary</a></li>
+	{% endif %}
+	{% if current_round.feedback3_due %}
+		<li><a href="{% url 'feedback-3-summary' round_slug=current_round.slug %}">Feedback #3 summary</a></li>
+	{% endif %}
+	{% if current_round.finalfeedback %}
+		<li><a href="{% url 'final-feedback-summary' round_slug=current_round.slug %}">Feedback #4 summary</a></li>
+	{% endif %}
+</ul>
+<p>Note: intern comments about their mentor are only shown if the intern opted to share them with community coordinators.</p>
+{% endwith %}

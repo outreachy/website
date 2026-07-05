@@ -6,11 +6,9 @@ Initial Feedback for {{ current_round.official_name }}
 {% endblock %}
 
 {% block content %}
-{% if request.user.is_staff %}
-	{% with interns=current_round.get_approved_intern_selections %}
-		{% for i in interns %}
-			<h2>{{ i.community_name }} - {{ i.intern_name }}</h2>
-			<hr>
+	{% for i in interns %}
+		<h2>{{ i.community_name }} - {{ i.intern_name }}</h2>
+		<hr>
 
 			{% with initial_mentor_status=i.get_mentor_initial_feedback_status initial_intern_status=i.get_intern_initial_feedback_status %}
 				{% if initial_mentor_status == i.PAY or initial_mentor_status == i.PAID %}
@@ -222,7 +220,7 @@ Initial Feedback for {{ current_round.official_name }}
 						<td colspan="3"><b>4. Mentor support</b></td>
 					</tr>
 
-					{% if initial_intern_status == i.SUBMITTED %}<tr><td colspan="3"><p>Intern's report on mentor support:</p><p>{{ i.feedback1fromintern.mentor_support|linebreaksbr }}</p></td></tr>{% endif %}
+					{% if initial_intern_status == i.SUBMITTED %}{% if request.user.is_staff or i.feedback1fromintern.share_mentor_feedback_with_community_coordinator %}<tr><td colspan="3"><p>Intern's report on mentor support:</p><p>{{ i.feedback1fromintern.mentor_support|linebreaksbr }}</p></td></tr>{% endif %}{% endif %}
 
 					{% if i.feedback1frommentor %}<tr><td colspan="3"><p>Mentor's report on mentor support:</p><p>{{ i.feedback1frommentor.mentors_report|linebreaksbr }}</p></td></tr>{% endif %}
 
@@ -250,7 +248,5 @@ Initial Feedback for {{ current_round.official_name }}
 					</tr>
 				{% endwith %}
 			</table>
-		{% endfor %}
-	{% endwith %}
-{% endif %}
+	{% endfor %}
 {% endblock %}
