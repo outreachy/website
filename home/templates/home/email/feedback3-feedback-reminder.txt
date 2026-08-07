@@ -1,6 +1,6 @@
-[URGENT] Mentor feedback #3 required for {{ intern_selection.applicant.applicant.public_name }}
+[URGENT] Mentor feedback #3 required for stipend payment to {{ intern_selection.applicant.applicant.public_name }}
 
-Please provide feedback on your intern through the Outreachy website. Feedback #3 was due on {{ intern_selection.feedback3_due|date:"M d, Y" }}. Please fill out the feedback form ASAP:
+Please provide feedback on your intern through the Outreachy website. Feedback #3 was due on {{ intern_selection.feedback3_due|date:"M d, Y" }}. Their ${{ current_round.finalpayment }} stipend payment will be delayed until you provide feedback:
 
 {{ request.scheme }}://{{ request.get_host }}{% url 'dashboard' %}#feedback
 

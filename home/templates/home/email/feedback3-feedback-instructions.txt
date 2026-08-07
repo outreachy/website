@@ -10,7 +10,7 @@ You can only submit feedback once. If your dashboard shows you have already subm
 
 Only one mentor can submit feedback for one intern. If you are co-mentoring an intern, please talk with your co-mentor to decide what feedback to submit, and who should submit it.
 
-Feedback from both interns and mentors will help Outreachy organizers understand how we all can better support each other.
+The mentor feedback will determine whether the intern is paid their ${{ current_round.finalpayment }} stipend. Feedback from both interns and mentors will help Outreachy organizers understand how we all can better support each other.
 
 Privacy
 ---

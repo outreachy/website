@@ -1,4 +1,4 @@
-[Due {{ intern_selection.initial_feedback_due|date:"M j" }}] Outreachy initial feedback requested for {{ intern_selection.applicant.applicant.public_name }}
+[Due {{ intern_selection.initial_feedback_due|date:"M j" }}] Outreachy feedback #1 requested for {{ intern_selection.applicant.applicant.public_name }}
 
 Greetings Outreachy interns and mentors! We are asking both interns and one of their mentors to provide feedback on the internship.
 
@@ -10,7 +10,7 @@ You can only submit feedback once. If your dashboard shows you have already subm
 
 Only one mentor can submit feedback for one intern. If you are co-mentoring an intern, please talk with your co-mentor to decide what feedback to submit, and who should submit it.
 
-The mentor feedback will determine whether the intern is paid their ${{ current_round.initialpayment }} initial stipend. Feedback from both interns and mentors will help Outreachy organizers understand how we all can better support each other.
+The mentor feedback will determine whether the intern is paid their ${{ current_round.initialpayment }} stipend. Feedback from both interns and mentors will help Outreachy organizers understand how we all can better support each other.
 
 Privacy
 ---
@@ -37,7 +37,7 @@ Mentors will be asked:
  * Please provide a paragraph describing your intern's progress on establishing communication with you, connecting to your FOSS community, and ramping up on their first tasks. This will only be shown to Outreachy organizers and Software Freedom Conservancy accounting staff.
  * Please provide a paragraph describing what support you are providing as an Outreachy mentor. This will be shared with Outreachy organizers and your community coordinator.
  * Do you believe your Outreachy intern is putting in a full-time, 30 hours a week effort into the internship?
- * Should your Outreachy intern be paid the initial ${{ current_round.initialpayment }} payment?
+ * Should your Outreachy intern be paid the ${{ current_round.initialpayment }} stipend?
  * Questions about whether the intern needs an internship extension.
  * Questions about whether the internship contract may need to be terminated.
  * (The questions about internship extensions and terminations aren't needed for most internships, but our form asks them of all mentors.)
@@ -48,7 +48,7 @@ Interns will be asked:
  * Please provide a paragraph describing how your mentor has (or has not) been helping you. This information will only be seen by Outreachy mentors. We want you to be honest with us if you are having trouble with your mentor, so we can help you get a better internship experience.
  * Please provide a paragraph describing your progress on establishing communication with your mentor, and ramping up on your first tasks. This information will only be seen by Outreachy organizers. If you are having any difficulties or facing any barriers, please let us know, so we can help you.
 
-Initial Feedback Success Metrics
+Feedback #1 Success Metrics
 ---
 
 Outreachy organizers view this internship as a fellowship. Mentors should not expect a certain project to be completed by the intern, but rather expect that the intern's work will be adjusted to the level of their ability, their interests, and the project's priorities throughout the internship. Outreachy organizers prefer not to fail people in the program as long as they are working full-time on the project.
