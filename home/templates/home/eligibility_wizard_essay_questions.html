@@ -198,6 +198,16 @@ It will not be shared with mentors, coordinators, or other applicants.
 				    Outreachy Organizers strongly encourage you to write your personal stories. We want you to know that we won't judge your writing style, grammar or spelling.</p>
 				</div>
 			</div>
+		{% elif 'technical task or project' in field.label_tag %}
+			<div class="form-group card">
+				{{ field.errors }}
+				<div class="card-header">
+					{{ field.label_tag }}
+				</div>
+				<div class="card-body">
+					{{ field }}
+				</div>
+			</div>
 		{% elif 'Content warnings' in field.label_tag %}
 			<div class="form-group card">
 				{{ field.errors }}
