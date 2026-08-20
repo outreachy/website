@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}
+Outreachy Applicant FAQ | Outreachy Documentation
+{% endblock %}
+
+{% block content %}
+
+<p><a href='{% url "docs" %}'>← back to Outreachy documentation</a></p>
+<h1>Outreachy Applicant FAQ</h1>
+
+<h2 id="toc">Table of Contents</h2>
+<ol>
+  <li><a href="#faq-country">What country is the internship in?</a></li>
+  <li><a href="#faq-work-visa">Do I need a work visa?</a></li>
+  <li><a href="#faq-reapply">Can I apply again if I am not selected?</a></li>
+  <li><a href="#faq-age-eligibility">What are the eligibility requirements?</a></li>
+  <li><a href="#faq-mentor-project">How are projects and mentors assigned?</a></li>
+  <li><a href="#faq-timeline">Internship timeline questions</a></li>
+</ol>
+
+<hr>
+
+<h2 id="faq-country">What country is the internship in?</h2>
+<p>It's completely remote. Both interns and mentors work remotely.</p>
+
+<h2 id="faq-work-visa">Do I need a work visa?</h2>
+<p>You need to be eligible to work in all the countries you will be living in during the internship. For some people, that means they need a work visa. For others, such as citizens or permanent residents, they won't need one. If in doubt, ask your immigration officer or international student advisor whether you're eligible to work 40 hours a week during the internship dates.</p>
+
+<h2 id="faq-reapply">Can I apply again if I am not selected?</h2>
+<p>Yes, you can apply as many times as you like. However, you can only participate as an intern once.</p>
+
+<h2 id="faq-age-eligibility">What are the eligibility requirements?</h2>
+<p>You must meet Outreachy's eligibility criteria, including:</p>
+<ul>
+  <li>Being legally allowed to work in your country of residence</li>
+  <li>Being 18 years or older (or the age of majority in your country)</li>
+  <li>Not having been an Outreachy intern before</li>
+</ul>
+
+<h2 id="faq-mentor-project">How are projects and mentors assigned?</h2>
+<p>Mentors select interns based on contribution quality, communication, and skills. If an applicant is selected for multiple projects, organizers help resolve the conflict by:</p>
+<ol>
+  <li>Consulting the mentors about the applicant's skills and consistency.</li>
+  <li>Considering which project has other strong applicants.</li>
+  <li>Considering project funding source (slight preference to community-funded).</li>
+  <li>Asking the applicant for their preference if both mentors want them.</li>
+</ol>
+
+<h2 id="faq-timeline">Internship timeline questions</h2>
+<p>The internship lasts 13 weeks, and you are expected to work 30 hours per week for at least 12 weeks. Mentors provide guidance and feedback throughout the internship. Detailed timelines are available in the <a href="{% url 'docs' %}">Outreachy documentation</a>.</p>
+
+<p><a href='#toc'><u>↑ table of contents</u></a></p>
+<hr>
+
+{% endblock %}
