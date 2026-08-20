@@ -1,0 +1,18 @@
+<h1>Mentor Project Submission FAQ</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <h2>Project Form</h2>
+    {{ project_form.as_p }}
+
+    <h2>Mentor Approval Form</h2>
+    {{ mentor_approval_form.as_p }}
+
+    <h2>Project Skill Form</h2>
+    {{ project_skill_form.as_p }}
+
+    <h2>Communication Channel Form</h2>
+    {{ communication_channel_form.as_p }}
+
+    <button type="submit">Submit</button>
+</form>
