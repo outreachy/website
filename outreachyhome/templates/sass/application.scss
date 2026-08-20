@@ -42,6 +42,10 @@ h3 {
 
   img {
     width: 180px;
+
+    @media (max-width: 576px) {
+      width: 135px;
+    }
   }
 }
 
@@ -49,6 +53,25 @@ h3 {
 .navbar-dark .navbar-nav .nav-link {
   color: white;
   border-color: rgba(255,255,255,.75);
+}
+
+@media (max-width: 576px) {
+  .navbar {
+    .nav-link {
+      padding-left: 0.25rem;
+      padding-right: 0.25rem;
+    }
+
+    .btn-sm {
+      font-size: 0.8rem;
+      padding: 0.25rem 0.4rem;
+    }
+
+    .navbar-toggler {
+      padding: 0.25rem 0.5rem;
+      font-size: 1rem;
+    }
+  }
 }
 
 :target:before { // Offset for anchor link jumping
