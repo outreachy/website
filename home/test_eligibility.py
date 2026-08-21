@@ -158,6 +158,7 @@ class EligibilityTests(TestCase):
             'employment_bias': 'Yes',
             'lacking_representation': 'Yes',
             'systemic_bias': 'Yes',
+            'technical_task_or_project': 'I built a web scraper.',
         }
         defaults.update(kwargs)
         return ('Barriers-to-Participation', defaults)

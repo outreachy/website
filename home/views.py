@@ -568,6 +568,7 @@ class EligibilityUpdateView(LoginRequiredMixin, ComradeRequiredMixin, SessionWiz
                     'employment_bias',
                     'lacking_representation',
                     'systemic_bias',
+                    'technical_task_or_project',
                     'content_warnings',
                 ),
                 widgets={
@@ -4309,6 +4310,7 @@ class BarriersToParticipationUpdate(LoginRequiredMixin, ComradeRequiredMixin, Up
             'employment_bias',
             'lacking_representation',
             'systemic_bias',
+            'technical_task_or_project',
             ]
 
     def get_object(self):

@@ -3150,7 +3150,13 @@ class BarriersToParticipation(models.Model):
 
     employment_bias = models.TextField(verbose_name='What systemic bias or discrimination would you face if you applied for a job in the technology industry of your country?',
             max_length=ESSAY_LENGTH)
-    
+
+    technical_task_or_project = models.TextField(
+            verbose_name='Tell us about a technical task or project you\'ve worked on. It could be anything from a class assignment or personal project. What did you enjoy about it and what was challenging? You are welcome to share links to your work if you have them. If you\'re very early in your career journey, tell us something technical you\'d like to work on and what you have already done to start exploring it.',
+            max_length=ESSAY_LENGTH,
+            default=''
+    )
+
     applicant_should_update = models.BooleanField(default=False)
 
     def get_answers(self):
@@ -3174,6 +3180,10 @@ class BarriersToParticipation(models.Model):
                 ({ 'verbose_name':
                     'What systemic bias or discrimination would you face if you applied for a job in the technology industry of your country?',
                     }, self.employment_bias
+                ),
+                ({ 'verbose_name':
+                    'Tell us about a technical task or project you\'ve worked on. It could be anything from a class assignment or personal project. What did you enjoy about it and what was challenging? You are welcome to share links to your work if you have them. If you\'re very early in your career journey, tell us something technical you\'d like to work on and what you have already done to start exploring it.',
+                    }, self.technical_task_or_project
                 ),
         ]
 
