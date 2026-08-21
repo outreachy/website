@@ -165,11 +165,14 @@ WSGI_APPLICATION = 'outreachyhome.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 # Update database configuration with $DATABASE_URL.
 
-import dj_database_url  # noqa: E402
+import dj_database_url
+import os
+
 DATABASES = {
     'default': dj_database_url.config(
+        default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3'),
         conn_max_age=600,
-        default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3'))
+    )
 }
 
 # In Django 3.2, developers introduced a new way to generate object IDs (pks)
