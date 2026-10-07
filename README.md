@@ -26,7 +26,7 @@ The Outreachy website uses the [Bootstrap](https://getbootstrap.com/docs/4.3/) f
 
 There are a few pages that use [jQuery](https://learn.jquery.com/). You should not need to learn jQuery unless you're working on that code.
 
-The Outreachy website uses a content management system called [Wagtail](https://wagtail.io/), which builds on top of Django. Wagtail is being depreciated from the Outreachy website, so you should not need to know much about it. What you do need to know is that Wagtail allows people to add static webpages and images to the Outreachy website.
+The Outreachy website uses a content management system called [Wagtail](https://wagtail.io/), which builds on top of Django. Wagtail is being deprecated from the Outreachy website, so you should not need to know much about it. What you do need to know is that Wagtail allows people to add static webpages and images to the Outreachy website.
 
 Pages created and images uploaded to Wagtail do not become a part of this repository. Instead, the pages and images are stored on the website's remote database. So if you come across content that is not the git repository, it is probably stored in Wagtail on the Outreachy website server.
 
@@ -76,7 +76,7 @@ Next, you'll need to create a new virtualenv. A "virtualenv" is a separate virtu
 
 These instructions will help you create a new virtualenv that will have all the python packages installed that you need to work on the Outreachy website. We use [pipenv](https://pipenv.readthedocs.io/en/latest/) for this purpose.
 
-If you're using Linux, you may be able to install pipenv through your Linux package manager. On Debian or Ubuntu, you can run `sudo aptitude install pipenv`. Others distributions, like Arch Linux, may call it `python-pipenv`. Check [Pipenv's documentation on installing pipenv](https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv) for more information.
+If you're using Linux, you may be able to install pipenv through your Linux package manager. On Debian or Ubuntu, you can run `sudo aptitude install pipenv`. Other distributions, like Arch Linux, may call it `python-pipenv`. Check [Pipenv's documentation on installing pipenv](https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv) for more information.
 
 The following command will automatically create a virtual environment and install the Python dependencies specified in the `Pipfile`. If you need help understanding pipenv, run `pipenv --help`.
 
@@ -364,7 +364,7 @@ This scenario creates the following accounts:
 This scenario will also create the following database objects:
  - The community will be marked as being approved to participate in the current internship round (`class Participation`).
  - Information about which organization is sponsoring that community's interns this internship round (`class Sponsorship`).
- - Three projects has been submitted (`class Project`) by mentors mentor1, mentor2, and mentor3 for this community. The projects have been approved by the coordinator. The project titles will be randomly generated.
+ - Three projects have been submitted (`class Project`) by mentors mentor1, mentor2, and mentor3 for this community. The projects have been approved by the coordinator. The project titles will be randomly generated.
  - Initial application (`class ApplicantApproval`) for applicant1, applicant2, applicant3, and applicant8 have been approved
  - Initial application (`class ApplicantApproval`) for applicant4 is pending review by initial application reviewers
  - Initial application (`class ApplicantApproval`) for applicant5 has been rejected because they have too many full-time commitments during the internship period
