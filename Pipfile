@@ -28,6 +28,7 @@ whitenoise = "*"
 factory_boy = "*"
 setuptools = "*"
 django-betterforms = {git = "https://github.com/jpic/django-betterforms.git"}
+tzdata = "*"
 
 [dev-packages]
 coverage = "*"

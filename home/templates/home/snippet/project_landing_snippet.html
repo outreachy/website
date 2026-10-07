@@ -89,9 +89,17 @@ This community requires applicants to complete a tutorial before they can make t
 						{% endif %}
 					{% elif url_parsed.netloc == 'oftc.net' or url_parsed.netloc == 'irc.oftc.net' or url_parsed.netloc == 'irc.debian.org' %}
 						{% if url_parsed.fragment %}
-							<a href="https://webchat.oftc.net/?channels={{ url_parsed.fragment }}" target="_blank">Follow this link</a> to join this project's public chat.
+							{% if url_parsed.fragment|slice:":1" == "#" %}
+								<a href="https://webchat.oftc.net/?channels=#{{ url_parsed.fragment|slice:"1:" }}" target="_blank">Follow this link</a> to join this project's public chat.
+							{% else %}
+								<a href="https://webchat.oftc.net/?channels=#{{ url_parsed.fragment }}" target="_blank">Follow this link</a> to join this project's public chat.
+							{% endif %}
 						{% else %}
-							<a href="https://webchat.oftc.net/?channels={{ url_parsed.path|slice:"1:" }}" target="_blank">Follow this link</a> to join this project's public chat.
+							{% if url_parsed.path|slice:"1:2" == "#" %}
+								<a href="https://webchat.oftc.net/?channels=#{{ url_parsed.path|slice:"2:" }}" target="_blank">Follow this link</a> to join this project's public chat.
+							{% else %}
+								<a href="https://webchat.oftc.net/?channels=#{{ url_parsed.path|slice:"1:" }}" target="_blank">Follow this link</a> to join this project's public chat.
+							{% endif %}
 						{% endif %}
 					{% else %}
 						<a href="https://kiwiirc.com/nextclient/{{ url_parsed.netloc }}{{ url_parsed.path }}" target="_blank">Follow this link</a> to join this project's public chat.

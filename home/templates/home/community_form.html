@@ -3,8 +3,10 @@
 {% block content %}
 
 <h1>Public Community Information</h1>
-
-<p>This information is shown to Outreachy applicants on the community project page.</p>
+<p>
+This information will be displayed to Outreachy applicants on the community project page.
+Please ensure the details are accurate and clearly written.
+</p>
 
 <form action="" method="post">
 	{% csrf_token %}
@@ -24,7 +26,7 @@
 			{% endif %}
 		</div>
 	{% endfor %}
-	<input class="btn btn-success" type="submit" value="Save community info" />
+	<input class="btn btn-success mt-3" type="submit" value="Save community info" />
 </form>
 
 {% endblock %}

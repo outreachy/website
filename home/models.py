@@ -2089,26 +2089,24 @@ class ProfessionalSkill(models.Model):
     )
 
     def get_skill_level_display(self):
-        match self.experience_level:
-            case self.CONCEPTS:
-                return "1"
-            case self.EXPLORING:
-                return "2"
-            case self.GROWING:
-                return "3"
-            case self.INDEPENDENT:
-                return "4"
+        if self.experience_level == self.CONCEPTS:
+            return "1"
+        elif self.experience_level == self.EXPLORING:
+            return "2"
+        elif self.experience_level == self.GROWING:
+            return "3"
+        elif self.experience_level == self.INDEPENDENT:
+            return "4"
 
     def get_skill_experience_level_display(self):
-        match self.experience_level:
-            case self.CONCEPTS:
-                return "(Concepts) Basic understanding or theoretical knowledge of this skill"
-            case self.EXPLORING:
-                return "(Exploring) Tried using this skill in classes or personal projects"
-            case self.GROWING:
-                return "(Growing) Used this skill in several projects and can further develop it with mentorship"
-            case self.INDEPENDENT:
-                return "(Independent) Used this skill in several projects and I can use this skill independently"
+        if self.experience_level == self.CONCEPTS:
+            return "(Concepts) Basic understanding or theoretical knowledge of this skill"
+        elif self.experience_level == self.EXPLORING:
+            return "(Exploring) Tried using this skill in classes or personal projects"
+        elif self.experience_level == self.GROWING:
+            return "(Growing) Used this skill in several projects and can further develop it with mentorship"
+        elif self.experience_level == self.INDEPENDENT:
+            return "(Independent) Used this skill in several projects and I can use this skill independently"
 
 class ProjectSkill(models.Model):
     project = models.ForeignKey(Project, verbose_name="Project", on_delete=models.CASCADE)
@@ -2346,6 +2344,65 @@ class MentorApproval(ApprovalStatus):
                 | models.Q(mentor__account=user)
                 )
 
+def validate_irc_url(value):
+    parsed = urlparse(value)
+
+    def irc_channel_name():
+        """
+        Accept channel in either the path or fragment:
+        - irc://host/#channel  -> fragment=channel, path="/"
+        - irc://host/channel   -> path="/channel"
+        """
+        channel = parsed.fragment or parsed.path.lstrip("/")
+        if channel.startswith("#"):
+            channel = channel[1:]
+        return channel
+
+    hostname = (parsed.hostname or "").lower()
+
+    gnome_like_hosts = {"irc.gnome.org", "irc.gimp.org", "irc.mozilla.org"}
+    freenode_hosts = {"freenode.net", "irc.freenode.net", "freenode.org", "irc.freenode.org"}
+    is_freenode = hostname in freenode_hosts or hostname.endswith(".freenode.net")
+    must_be_irc_scheme = hostname in gnome_like_hosts or is_freenode
+
+    oftc_irc_hosts = {"oftc.net", "irc.oftc.net", "irc.debian.org"}
+    is_oftc_webchat = hostname == "webchat.oftc.net"
+
+    if parsed.scheme == "irc":
+        if hostname in oftc_irc_hosts:
+            raise ValidationError("Please use the format https://webchat.oftc.net/?channels=#channel")
+        if must_be_irc_scheme:
+            channel = irc_channel_name()
+            if not channel:
+                raise ValidationError("Please use the format irc://<host>[:port]/<channel>")
+        else:
+            # For all IRC URLs, require a channel somewhere (path or fragment).
+            channel = irc_channel_name()
+            if not channel:
+                raise ValidationError("Please use the format irc://<host>[:port]/<channel>")
+
+    if parsed.scheme in ("http", "https"):
+        if must_be_irc_scheme:
+            raise ValidationError("Please use the format irc://<host>[:port]/<channel>")
+
+        if hostname in oftc_irc_hosts:
+            raise ValidationError("Please use the format https://webchat.oftc.net/?channels=#channel")
+
+        if is_oftc_webchat:
+            if parsed.scheme != "https":
+                raise ValidationError("Please use the format https://webchat.oftc.net/?channels=#channel")
+
+            # Required format places the channel in the fragment after `?channels=#`.
+            # Accept the fragment form, plus a percent-encoded `#` in the query.
+            channel = parsed.fragment
+            if not channel:
+                m = re.search(r"(?:^|&)channels=(?:%23|#)([^&]+)", parsed.query or "")
+                channel = m.group(1) if m else ""
+            if channel.startswith("#"):
+                channel = channel[1:]
+            if not channel:
+                raise ValidationError("Please use the format https://webchat.oftc.net/?channels=#channel")
+
 class CommunicationChannel(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
@@ -2356,9 +2413,9 @@ class CommunicationChannel(models.Model):
 
     url = models.CharField(
             max_length=200,
-            validators=[validators.URLValidator(schemes=['http', 'https', 'irc'])],
+            validators=[validators.URLValidator(schemes=['http', 'https', 'irc']), validate_irc_url],
             verbose_name="Communication channel URL",
-            help_text='URL for the communication channel applicants will use to reach mentors and ask questions about this internship project. IRC URLs should be in the form irc://&lt;host&gt;[:port]/[channel]. Since many applicants have issues with IRC port blocking at their universities, IRC communication links will use <a href="https://kiwiirc.com/">Kiwi IRC</a> to direct applicants to a web-based IRC client. If this is a mailing list, the URL should be the mailing list subscription page.')
+            help_text='URL for the communication channel applicants will use to reach mentors and ask questions about this internship project. IRC URLs should be in the form irc://&lt;host&gt;[:port]/&lt;channel&gt;. Since many applicants have issues with IRC port blocking at their universities, IRC communication links will use <a href="https://kiwiirc.com/">Kiwi IRC</a> to direct applicants to a web-based IRC client. If this is a mailing list, the URL should be the mailing list subscription page. For OFTC use: https://webchat.oftc.net/?channels=#channel')
 
     instructions = CKEditorField(
             blank=True,
