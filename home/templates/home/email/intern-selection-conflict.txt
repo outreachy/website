@@ -21,4 +21,8 @@ Please let us know what your decision is ASAP.
 Thanks,
 Outreachy Organizers
 
-{% include 'home/email/footer-mentor.txt' %}{% endwith %} {% endwith %} {% endwith %} {% endwith %}
+---
+
+This is an automated email sent via Django on {{ request.scheme }}://{{ request.get_host }}
+You are receiving this email because you are a mentor for one of the projects involved in this intern selection conflict.
+If you feel you have received this email in error, please contact "Outreachy Organizers" <organizers@outreachy.org>
